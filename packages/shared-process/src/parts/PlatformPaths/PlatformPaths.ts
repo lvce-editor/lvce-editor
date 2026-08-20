@@ -141,6 +141,10 @@ export const getConfigDir = (): any => {
   return configDir
 }
 
+export const getConfigUri = (): any => {
+  return pathToFileURL(configDir).toString()
+}
+
 export const getConfigJsonPath = (): any => {
   return GetConfigJsonPath.getConfigJsonPath({
     getStaticPath: StaticPath.getStaticPath,

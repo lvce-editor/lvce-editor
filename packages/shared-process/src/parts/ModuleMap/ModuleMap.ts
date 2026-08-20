@@ -249,6 +249,7 @@ export const getModuleId = (commandId: any): any => {
     case 'Platform.getCommit':
     case 'Platform.getConfigDir':
     case 'Platform.getConfigJsonPath':
+    case 'Platform.getConfigUri':
     case 'Platform.getDataDir':
     case 'Platform.getDate':
     case 'Platform.getDisabledExtensionsPath':

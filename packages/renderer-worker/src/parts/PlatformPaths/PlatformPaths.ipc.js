@@ -10,4 +10,5 @@ export const Commands = {
   getCacheUri: PlatformPaths.getCacheUri,
   getDisabledExtensionsJsonPath: PlatformPaths.getDisabledExtensionsJsonPath,
   getConfigJsonPath: PlatformPaths.getConfigJsonPath,
+  getUserDataDir: PlatformPaths.getUserDataDir,
 }
