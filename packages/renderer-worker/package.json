@@ -81,7 +81,7 @@
     "@lvce-editor/markdown-worker": "^4.13.2",
     "@lvce-editor/menu-worker": "^4.14.3",
     "@lvce-editor/opener-worker": "^1.17.0",
-    "@lvce-editor/output-view": "^2.21.0",
+    "@lvce-editor/output-view": "^2.21.1",
     "@lvce-editor/panel-worker": "^2.12.0",
     "@lvce-editor/preview-sandbox-worker": "^4.11.1",
     "@lvce-editor/preview-worker": "^6.14.2",
