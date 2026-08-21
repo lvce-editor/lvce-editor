@@ -64,7 +64,7 @@
   {
     "name": "builtin.eslint",
     "repository": "github.com/lvce-editor/eslint",
-    "version": "1.12.0",
+    "version": "1.13.0",
     "created": "2026-08-01"
   },
   {
