@@ -6,7 +6,7 @@ import * as IpcTrace from '../IpcTrace/IpcTrace.js'
 
 /** @param {any} options */
 export const create = async (options) => {
-  const { url, name, port, id, traceId = '' } = options
+  const { url, name, port, id, rpcId, traceId = '' } = options
   // TODO no need to create port if worker
   // has been prelaunched in renderer process
   const { port1, port2 } = GetPortTuple.getPortTuple(port)
@@ -23,6 +23,7 @@ export const create = async (options) => {
     raw: true,
     port: workerPort,
     id,
+    ...(rpcId === undefined ? {} : { rpcId }),
   })
   return port1
 }
