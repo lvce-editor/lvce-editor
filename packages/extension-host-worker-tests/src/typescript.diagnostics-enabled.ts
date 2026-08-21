@@ -23,7 +23,8 @@ export const test: Test = async ({ Editor, expect, FileSystem, Locator, Main, Se
   await Settings.update({ 'editor.diagnostics': true })
   await Workspace.setPath(tmpDir)
   await Main.openUri(uri)
-  await expect(Locator('.EditorContainer > .Viewlet.Editor')).toHaveCount(1)
+  const editor = Locator('.EditorContainer > .Viewlet.Editor')
+  await expect(editor).toHaveCount(1)
 
   const expectedDiagnostics = [
     {
@@ -39,4 +40,8 @@ export const test: Test = async ({ Editor, expect, FileSystem, Locator, Main, Se
     },
   ] as const
   await waitFor(() => Editor.shouldHaveDiagnostics(expectedDiagnostics))
+  const scrollBarDiagnostics = editor.locator('.ScrollBarDiagnostic')
+  const errorScrollBarDiagnostics = editor.locator('.ScrollBarDiagnosticError')
+  await waitFor(() => expect(scrollBarDiagnostics).toHaveCount(expectedDiagnostics.length))
+  await expect(errorScrollBarDiagnostics).toHaveCount(expectedDiagnostics.length)
 }
