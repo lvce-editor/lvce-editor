@@ -21,6 +21,14 @@ test('jpg', () => {
   expect(GetMimeType.getMimeType('.jpg')).toBe('image/jpg')
 })
 
+test('jpeg', () => {
+  expect(GetMimeType.getMimeType('.jpeg')).toBe('image/jpg')
+})
+
+test('avif', () => {
+  expect(GetMimeType.getMimeType('.avif')).toBe('image/avif')
+})
+
 test('heic', () => {
   expect(GetMimeType.getMimeType('.heic')).toBe('image/heic')
 })

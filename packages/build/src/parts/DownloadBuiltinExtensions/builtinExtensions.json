@@ -64,7 +64,7 @@
   {
     "name": "builtin.eslint",
     "repository": "github.com/lvce-editor/eslint",
-    "version": "1.11.1",
+    "version": "1.14.0",
     "created": "2026-08-01"
   },
   {
@@ -202,7 +202,7 @@
   {
     "name": "builtin.video-preview",
     "repository": "github.com/lvce-editor/video-preview",
-    "version": "1.23.1",
+    "version": "1.23.2",
     "created": "2024-09-26"
   },
   {
@@ -418,7 +418,7 @@
   {
     "name": "builtin.language-features-typescript",
     "repository": "github.com/lvce-editor/language-features-typescript",
-    "version": "5.20.3",
+    "version": "5.21.0",
     "created": "2022-06-16"
   },
   {

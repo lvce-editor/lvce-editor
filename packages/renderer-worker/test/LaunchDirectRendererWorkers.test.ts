@@ -34,6 +34,8 @@ jest.unstable_mockModule('../src/parts/EditorWorker/EditorWorker.ts', () => ({
 
 const GetPortTuple = await import('../src/parts/GetPortTuple/GetPortTuple.js')
 const EditorWorker = await import('../src/parts/EditorWorker/EditorWorker.ts')
+const IpcParent = await import('../src/parts/IpcParent/IpcParent.js')
+const IpcParentType = await import('../src/parts/IpcParentType/IpcParentType.js')
 const JsonRpc = await import('../src/parts/JsonRpc/JsonRpc.js')
 const LaunchAboutViewWorker = await import('../src/parts/LaunchAboutViewWorker/LaunchAboutViewWorker.js')
 const LaunchActivityBarWorker = await import('../src/parts/LaunchActivityBarWorker/LaunchActivityBarWorker.ts')
@@ -70,7 +72,6 @@ test.each([
   ['extension search', LaunchExtensionSearchViewWorker.launchExtensionSearchViewWorker, 'SearchExtensions.handleMessagePort', 'SearchExtensions'],
   ['keybindings', LaunchKeyBindingsViewWorker.launchKeyBindingsViewWorker, 'KeyBindings.handleMessagePort', 'KeyBindings'],
   ['language models', LaunchLanguageModelsViewWorker.launchLanguageModelsViewWorker, 'LanguageModels.handleMessagePort', 'LanguageModels'],
-  ['main area', LaunchMainAreaWorker.launchMainAreaWorker, 'MainArea.handleMessagePort', 'MainArea'],
   ['output', LaunchOutputViewWorker.launchOutputViewWorker, 'Output.handleMessagePort', 'Output'],
   ['panel', LaunchPanelWorker.launchPanelWorker, 'Panel.handleMessagePort', 'Panel'],
   ['problems', LaunchProblemsWorker.launchProblemsWorker, 'Problems.handleMessagePort', 'Problems'],
@@ -93,6 +94,19 @@ test.each([
   expect(GetPortTuple.getPortTuple).toHaveBeenCalledTimes(1)
   expect(JsonRpc.invokeAndTransfer).toHaveBeenCalledWith(ipc, command, 'worker-port')
   expect(RendererProcess.invokeAndTransfer).toHaveBeenCalledWith('HandleMessagePort.handleMessagePort', 'renderer-process-port', rpcId)
+})
+
+test('main area worker connects directly to the renderer process', async () => {
+  await LaunchMainAreaWorker.launchMainAreaWorker()
+
+  expect(IpcParent.create).toHaveBeenCalledWith({
+    method: IpcParentType.ModuleWorkerAndWorkaroundForChromeDevtoolsBug,
+    name: 'Main Area Worker',
+    url: 'file:///worker.js',
+  })
+  expect(GetPortTuple.getPortTuple).toHaveBeenCalledTimes(1)
+  expect(JsonRpc.invokeAndTransfer).toHaveBeenCalledWith(ipc, 'MainArea.handleMessagePort', 'worker-port')
+  expect(RendererProcess.invokeAndTransfer).toHaveBeenCalledWith('HandleMessagePort.handleMessagePort', 'renderer-process-port', 'MainArea')
 })
 
 test('status bar worker listens for editor status changes over a direct connection', async () => {

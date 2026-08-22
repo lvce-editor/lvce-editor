@@ -55,6 +55,32 @@ test('getDiagnostics returns an empty array when there is no active editor', asy
   expect(invoke).not.toHaveBeenCalled()
 })
 
+test('getTextDocument returns the active text document', async () => {
+  ViewletStates.set(1, {
+    factory: {},
+    moduleId: 'EditorText',
+    renderedState: {},
+    state: {
+      id: 42,
+      uri: 'file:///test.js',
+    },
+  })
+  const invoke = jest.fn(async () => 'debugger')
+
+  await expect(GetActiveEditor.getTextDocumentWithInvoke(invoke)).resolves.toEqual({
+    text: 'debugger',
+    uri: 'file:///test.js',
+  })
+  expect(invoke).toHaveBeenCalledWith('Editor.getText', 42)
+})
+
+test('getTextDocument returns undefined when there is no active editor', async () => {
+  const invoke = jest.fn()
+
+  await expect(GetActiveEditor.getTextDocumentWithInvoke(invoke)).resolves.toBeUndefined()
+  expect(invoke).not.toHaveBeenCalled()
+})
+
 test('getSelections returns selections for the active editor', async () => {
   ViewletStates.set(1, {
     factory: {},

@@ -28,6 +28,23 @@ export const getDiagnostics = async () => {
   return getDiagnosticsWithInvoke(EditorWorker.invoke)
 }
 
+export const getTextDocumentWithInvoke = async (invoke) => {
+  const instance = ViewletStates.getInstance(ViewletModuleId.EditorText)
+  if (!instance) {
+    return undefined
+  }
+  const { id, uri } = instance.state
+  const text = await invoke('Editor.getText', id)
+  return {
+    text,
+    uri,
+  }
+}
+
+export const getTextDocument = async () => {
+  return getTextDocumentWithInvoke(EditorWorker.invoke)
+}
+
 export const getSelectionsWithInvoke = async (invoke) => {
   const instance = ViewletStates.getInstance(ViewletModuleId.EditorText)
   if (!instance) {

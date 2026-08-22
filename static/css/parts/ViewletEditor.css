@@ -134,13 +134,24 @@
   bottom: 0;
   position: absolute;
   width: 14px;
+  pointer-events: none;
+  z-index: 1;
 }
 
 .ScrollBarDiagnostic {
-  height: 5px;
-  background: red;
-  width: 100%;
+  right: 1px;
+  width: 3px;
   position: absolute;
+  border-radius: 1px;
+  contain: strict;
+}
+
+.ScrollBarDiagnosticError {
+  background: var(--EditorErrorForeground, #f14c4c);
+}
+
+.ScrollBarDiagnosticWarning {
+  background: var(--EditorWarningForeground, #cca700);
 }
 
 .EditorInput {

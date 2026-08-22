@@ -80,6 +80,5 @@ export const HandleMessagePortForAuthProcess = 86
 export const LanguageServer = 87
 export const SendMessagePortToMainProcess = 88
 export const SecretStorage = 89
-export const ChromeCookieImport = 90
 export const FirefoxCookieImport = 91
 export const IpcTrace = 92
