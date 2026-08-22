@@ -13,32 +13,27 @@ test('ttf', () => {
   expect(GetMimeType.getMimeType('.ttf')).toBe('font/ttf')
 })
 
-test('png', () => {
-  expect(GetMimeType.getMimeType('.png')).toBe('image/png')
-})
-
-test('jpg', () => {
-  expect(GetMimeType.getMimeType('.jpg')).toBe('image/jpg')
-})
-
-test('jpeg', () => {
-  expect(GetMimeType.getMimeType('.jpeg')).toBe('image/jpg')
-})
-
-test('avif', () => {
-  expect(GetMimeType.getMimeType('.avif')).toBe('image/avif')
-})
-
-test('heic', () => {
-  expect(GetMimeType.getMimeType('.heic')).toBe('image/heic')
-})
-
-test('uppercase heic', () => {
-  expect(GetMimeType.getMimeType('.HEIC')).toBe('image/heic')
-})
-
-test('webp', () => {
-  expect(GetMimeType.getMimeType('.webp')).toBe('image/webp')
+test.each([
+  ['.apng', 'image/apng'],
+  ['.avif', 'image/avif'],
+  ['.bmp', 'image/bmp'],
+  ['.gif', 'image/gif'],
+  ['.heic', 'image/heic'],
+  ['.HEIC', 'image/heic'],
+  ['.heif', 'image/heif'],
+  ['.HEIF', 'image/heif'],
+  ['.ico', 'image/x-icon'],
+  ['.jpe', 'image/jpg'],
+  ['.jpeg', 'image/jpg'],
+  ['.jfif', 'image/jpg'],
+  ['.jpg', 'image/jpg'],
+  ['.png', 'image/png'],
+  ['.svg', 'image/svg+xml'],
+  ['.tif', 'image/tiff'],
+  ['.tiff', 'image/tiff'],
+  ['.webp', 'image/webp'],
+])('media type %s', (extension, expected) => {
+  expect(GetMimeType.getMimeType(extension)).toBe(expected)
 })
 
 test('json', () => {

@@ -1,16 +1,27 @@
 import * as MimeType from '../MimeType/MimeType.ts'
 
-export const getMimeType = (fileExtension: any): any => {
-  switch (fileExtension) {
+export const getMimeType = (fileExtension: string): string => {
+  switch (fileExtension.toLowerCase()) {
+    case '.apng':
+      return MimeType.ImageApng
     case '.avif':
       return MimeType.ImageAvif
+    case '.bmp':
+      return MimeType.ImageBmp
     case '.css':
       return MimeType.TextCss
-    case '.HEIC':
+    case '.gif':
+      return MimeType.ImageGif
     case '.heic':
       return MimeType.ImageHeic
+    case '.heif':
+      return MimeType.ImageHeif
     case '.html':
       return MimeType.TextHtml
+    case '.ico':
+      return MimeType.ImageXIcon
+    case '.jfif':
+    case '.jpe':
     case '.jpeg':
     case '.jpg':
       return MimeType.ImageJpg
@@ -29,6 +40,9 @@ export const getMimeType = (fileExtension: any): any => {
       return MimeType.ImagePng
     case '.svg':
       return MimeType.ImageSvgXml
+    case '.tif':
+    case '.tiff':
+      return MimeType.ImageTiff
     case '.ttf':
       return MimeType.FontTtf
     case '.webm':
