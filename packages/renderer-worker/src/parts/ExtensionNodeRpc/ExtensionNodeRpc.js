@@ -4,20 +4,17 @@ import * as IpcParent from '../IpcParent/IpcParent.js'
 import * as IpcParentType from '../IpcParentType/IpcParentType.js'
 import * as JsonRpc from '../JsonRpc/JsonRpc.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
-import * as WorkspaceBackend from '../WorkspaceBackend/WorkspaceBackend.js'
+import * as WebSocketCapability from '../WebSocketCapability/WebSocketCapability.js'
 
 const rpcs = Object.create(null)
 
 export const createConnection = async (extensionId, rpcId) => {
-  const value = WorkspaceBackend.getWebSocketUrl('extension-node-process')
-  if (!value) {
-    throw new Error('ExtensionNodeRpc.createConnection command not found without a remote workspace backend')
-  }
-  const url = new URL(value)
+  const connection = WebSocketCapability.create('extension-node-process')
+  const url = new URL(connection.url)
   url.searchParams.set('extensionId', extensionId)
   url.searchParams.set('rpcId', rpcId)
   return {
-    protocols: [],
+    ...connection,
     url: url.toString(),
   }
 }
