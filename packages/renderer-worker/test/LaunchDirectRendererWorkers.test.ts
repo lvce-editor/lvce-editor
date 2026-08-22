@@ -96,18 +96,17 @@ test.each([
   expect(RendererProcess.invokeAndTransfer).toHaveBeenCalledWith('HandleMessagePort.handleMessagePort', 'renderer-process-port', rpcId)
 })
 
-test('main area worker uses its native worker rpc for renderer process events', async () => {
+test('main area worker connects directly to the renderer process', async () => {
   await LaunchMainAreaWorker.launchMainAreaWorker()
 
   expect(IpcParent.create).toHaveBeenCalledWith({
     method: IpcParentType.ModuleWorkerAndWorkaroundForChromeDevtoolsBug,
     name: 'Main Area Worker',
-    rpcId: 'MainArea',
     url: 'file:///worker.js',
   })
-  expect(GetPortTuple.getPortTuple).not.toHaveBeenCalled()
-  expect(JsonRpc.invokeAndTransfer).not.toHaveBeenCalled()
-  expect(RendererProcess.invokeAndTransfer).not.toHaveBeenCalled()
+  expect(GetPortTuple.getPortTuple).toHaveBeenCalledTimes(1)
+  expect(JsonRpc.invokeAndTransfer).toHaveBeenCalledWith(ipc, 'MainArea.handleMessagePort', 'worker-port')
+  expect(RendererProcess.invokeAndTransfer).toHaveBeenCalledWith('HandleMessagePort.handleMessagePort', 'renderer-process-port', 'MainArea')
 })
 
 test('status bar worker listens for editor status changes over a direct connection', async () => {
