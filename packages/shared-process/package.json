@@ -31,7 +31,6 @@
     "@lvce-editor/rpc-registry": "^9.54.0",
     "@lvce-editor/verror": "^1.7.0",
     "is-object": "^1.0.2",
-    "markdown-it": "^15.0.0",
     "xdg-basedir": "^5.1.0"
   },
   "optionalDependencies": {
