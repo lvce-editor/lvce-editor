@@ -34,15 +34,14 @@ export const isAllowedWebSocketOrigin = (request: any): any => {
   if (!origin) {
     return false
   }
-  try {
-    const url = new URL(origin)
-    if (url.protocol !== 'http:' && url.protocol !== 'https:') {
-      return false
-    }
-    const originHost = url.host.toLowerCase()
-    const allowedHosts = getAllowedHosts(headers)
-    return allowedHosts.includes(originHost)
-  } catch {
+  if (!URL.canParse(origin)) {
     return false
   }
+  const url = new URL(origin)
+  if (url.protocol !== 'http:' && url.protocol !== 'https:') {
+    return false
+  }
+  const originHost = url.host.toLowerCase()
+  const allowedHosts = getAllowedHosts(headers)
+  return allowedHosts.includes(originHost)
 }
