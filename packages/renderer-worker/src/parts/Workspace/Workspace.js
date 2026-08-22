@@ -11,6 +11,7 @@ import * as Notification from '../Notification/Notification.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as Product from '../Product/Product.js'
+import * as StatusBarWorker from '../StatusBarWorker/StatusBarWorker.js'
 import * as TextSearchWorker from '../TextSearchWorker/TextSearchWorker.js'
 import * as WindowTitle from '../WindowTitle/WindowTitle.js'
 import * as WorkspaceBackend from '../WorkspaceBackend/WorkspaceBackend.js'
@@ -87,6 +88,7 @@ export const close = async () => {
     return
   }
   await setPath('')
+  await StatusBarWorker.invoke('StatusBar.handleEditorStatusChanged', undefined)
 }
 
 export { isTest } from '../IsTest/IsTest.js'
