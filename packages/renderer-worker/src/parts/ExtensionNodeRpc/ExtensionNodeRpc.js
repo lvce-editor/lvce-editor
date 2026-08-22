@@ -3,12 +3,13 @@ import * as Id from '../Id/Id.js'
 import * as IpcParent from '../IpcParent/IpcParent.js'
 import * as IpcParentType from '../IpcParentType/IpcParentType.js'
 import * as JsonRpc from '../JsonRpc/JsonRpc.js'
+import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as WorkspaceBackend from '../WorkspaceBackend/WorkspaceBackend.js'
 
 const rpcs = Object.create(null)
 
 export const createConnection = async (extensionId, rpcId) => {
-  const value = WorkspaceBackend.getWebSocketUrl('extension-host-helper-process')
+  const value = WorkspaceBackend.getWebSocketUrl('extension-node-process')
   if (!value) {
     throw new Error('ExtensionNodeRpc.createConnection command not found without a remote workspace backend')
   }
@@ -19,6 +20,12 @@ export const createConnection = async (extensionId, rpcId) => {
     protocols: [],
     url: url.toString(),
   }
+}
+
+export const supportsDirectConnection = () => true
+
+export const createMessagePort = async (port, extensionId, rpcId) => {
+  await SharedProcess.invokeAndTransfer('HandleMessagePortForExtensionNodeProcess.handleMessagePortForExtensionNodeProcess', port, extensionId, rpcId)
 }
 
 const getRpc = (id) => {

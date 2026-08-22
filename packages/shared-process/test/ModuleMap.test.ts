@@ -33,3 +33,9 @@ test('getModuleId - IpcTrace.append', () => {
 test('getModuleId - LanguageServer.disposeAll', () => {
   expect(ModuleMap.getModuleId('LanguageServer.disposeAll')).toBe(ModuleId.LanguageServer)
 })
+
+test('getModuleId - HandleMessagePortForExtensionNodeProcess.handleMessagePortForExtensionNodeProcess', () => {
+  expect(ModuleMap.getModuleId('HandleMessagePortForExtensionNodeProcess.handleMessagePortForExtensionNodeProcess')).toBe(
+    ModuleId.HandleMessagePortForExtensionNodeProcess,
+  )
+})

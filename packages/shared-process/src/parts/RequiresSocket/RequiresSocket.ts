@@ -11,6 +11,7 @@ const METHODS_THAT_REQUIRE_SOCKET = new Set([
   'IncrementalTextSearch.start',
   'ElectronApplicationMenu.setItems',
   'HandleMessagePortForExtensionHostHelperProcess.handleMessagePortForExtensionHostHelperProcess',
+  'HandleMessagePortForExtensionNodeProcess.handleMessagePortForExtensionNodeProcess',
   'ElectronBrowserView.createBrowserView',
   'ElectronWebContentsView.createWebContentsView',
   'FileWatcher.dispose',

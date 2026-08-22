@@ -184,6 +184,8 @@ export const getModuleId = (commandId: any): any => {
     case 'HandleMessagePortForExtensionHostHelperProcess.handleMessagePortForExtensionHostHelperProcess':
     case 'HandleMessagePortForExtensionHostHelperProcess.handlePreloadedMessagePortForExtensionHostHelperProcess':
       return ModuleId.HandleMessagePortForExtensionHostHelperProcess
+    case 'HandleMessagePortForExtensionNodeProcess.handleMessagePortForExtensionNodeProcess':
+      return ModuleId.HandleMessagePortForExtensionNodeProcess
     case 'HandleMessagePortForFileSystemProcess.handleMessagePortForFileSystemProcess':
       return ModuleId.HandleMessagePortForFileSystemProcess
     case 'HandleMessagePortForProcessExplorer.handleMessagePortForProcessExplorer':

@@ -88,6 +88,8 @@ export const load = (moduleId: any): any => {
       return import('../HandleMessagePortForEmbedsProcess/HandleMessagePortForEmbedsProcess.ipc.ts')
     case ModuleId.HandleMessagePortForExtensionHostHelperProcess:
       return import('../HandleMessagePortForExtensionHostHelperProcess/HandleMessagePortForExtensionHostHelperProcess.ipc.ts')
+    case ModuleId.HandleMessagePortForExtensionNodeProcess:
+      return import('../HandleMessagePortForExtensionNodeProcess/HandleMessagePortForExtensionNodeProcess.ipc.ts')
     case ModuleId.HandleMessagePortForFileSystemProcess:
       return import('../HandleMessagePortForFileSystemProcess/HandleMessagePortForFileSystemProcess.ipc.ts')
     case ModuleId.HandleMessagePortForProcessExplorer:
