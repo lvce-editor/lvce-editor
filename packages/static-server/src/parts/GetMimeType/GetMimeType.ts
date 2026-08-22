@@ -2,6 +2,8 @@ import * as MimeType from '../MimeType/MimeType.ts'
 
 export const getMimeType = (fileExtension: string): string => {
   switch (fileExtension) {
+    case '.avif':
+      return MimeType.ImageAvif
     case '.html':
       return MimeType.TextHtml
     case '.css':
@@ -16,6 +18,8 @@ export const getMimeType = (fileExtension: string): string => {
       return MimeType.ImageSvgXml
     case '.png':
       return MimeType.ImagePng
+    case '.jpeg':
+      return MimeType.ImageJpg
     case '.json':
     case '.map':
       return MimeType.ApplicationJson
