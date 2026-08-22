@@ -181,9 +181,6 @@ export const getModuleId = (commandId: any): any => {
     case 'HandleMessagePortForEmbedsProcess.handleEmbedsProcessIpcClosed':
     case 'HandleMessagePortForEmbedsProcess.handleMessagePortForEmbedsProcess':
       return ModuleId.HandleMessagePortForEmbedsProcess
-    case 'HandleMessagePortForExtensionHostHelperProcess.handleMessagePortForExtensionHostHelperProcess':
-    case 'HandleMessagePortForExtensionHostHelperProcess.handlePreloadedMessagePortForExtensionHostHelperProcess':
-      return ModuleId.HandleMessagePortForExtensionHostHelperProcess
     case 'HandleMessagePortForExtensionNodeProcess.handleMessagePortForExtensionNodeProcess':
       return ModuleId.HandleMessagePortForExtensionNodeProcess
     case 'HandleMessagePortForFileSystemProcess.handleMessagePortForFileSystemProcess':

@@ -60,7 +60,6 @@ export const HandleMessagePortForTerminalProcess = 61
 export const TemporaryMessagePort = 62
 export const GetElectronFileResponse = 63
 export const HandleRemoteRequest = 64
-export const HandleMessagePortForExtensionHostHelperProcess = 65
 export const HandleRequestTest = 69
 export const ContentSecurityPolicy = 70
 export const HandleMessagePortForEmbedsProcess = 72

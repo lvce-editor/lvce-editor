@@ -1,5 +1,4 @@
 export const ExtensionHost = 'extension-host'
-export const ExtensionHostHelperProcess = 'extension-host-helper-process'
 export const ExtensionNodeProcess = 'extension-node-process'
 export const SearchProcess = 'search-process'
 export const ProcessExplorer = 'process-explorer'

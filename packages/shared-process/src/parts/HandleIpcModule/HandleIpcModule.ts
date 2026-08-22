@@ -2,7 +2,6 @@ import * as Assert from '../Assert/Assert.ts'
 import * as HandleIpcAuthProcess from '../HandleIpcAuthProcess/HandleIpcAuthProcess.ts'
 import * as HandleIpcClipBoardProcess from '../HandleIpcClipBoardProcess/HandleIpcClipBoardProcess.ts'
 import * as HandleIpcEmbedsProcess from '../HandleIpcEmbedsProcess/HandleIpcEmbedsProcess.ts'
-import * as HandleIpcExtensionHostHelperProcess from '../HandleIpcExtensionHostHelperProcess/HandleIpcExtensionHostHelperProcess.ts'
 import * as HandleIpcFileSystemProcess from '../HandleIpcFileSystemProcess/HandleIpcFileSystemProcess.ts'
 import * as HandleIpcProcessExplorer from '../HandleIpcProcessExplorer/HandleIpcProcessExplorer.ts'
 import * as HandleIpcSearchProcess from '../HandleIpcSearchProcess/HandleIpcSearchProcess.ts'
@@ -19,8 +18,6 @@ export const getModule = (ipcId: any): any => {
       return HandleIpcClipBoardProcess
     case IpcId.EmbedsProcess:
       return HandleIpcEmbedsProcess
-    case IpcId.ExtensionHostHelperProcess:
-      return HandleIpcExtensionHostHelperProcess
     case IpcId.FileSystemProcess:
       return HandleIpcFileSystemProcess
     case IpcId.ProcessExplorer:

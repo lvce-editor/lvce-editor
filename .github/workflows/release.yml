@@ -354,8 +354,6 @@ jobs:
           node-version-file: '.nvmrc'
           registry-url: 'https://registry.npmjs.org'
       - run: npm publish --access public
-        working-directory: ./packages/build/.tmp/server/extension-host-helper-process
-      - run: npm publish --access public
         working-directory: ./packages/build/.tmp/server/static-server
       - run: npm publish --access public
         working-directory: ./packages/build/.tmp/server/shared-process

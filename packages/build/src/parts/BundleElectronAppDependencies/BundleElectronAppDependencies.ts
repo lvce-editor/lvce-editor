@@ -1,14 +1,6 @@
 // @ts-nocheck
-import * as BundleExtensionHostHelperProcessDependencies from '../BundleExtensionHostHelperProcessDependencies/BundleExtensionHostHelperProcessDependencies.ts'
 import * as BundleMainProcessDependencies from '../BundleMainProcessDependencies/BundleMainProcessDependencies.ts'
 import * as BundleSharedProcessDependencies from '../BundleSharedProcessDependencies/BundleSharedProcessDependencies.ts'
-
-const copyExtensionHostHelperProcessFiles = async ({ cachePath }) => {
-  await BundleExtensionHostHelperProcessDependencies.bundleExtensionHostHelperProcessDependencies({
-    to: `${cachePath}/extension-host-helper-process`,
-    exclude: ['ws', '@lvce-editor/web-socket-server'],
-  })
-}
 
 const copySharedProcessFiles = async ({ cachePath, arch, electronVersion, platform }) => {
   await BundleSharedProcessDependencies.bundleSharedProcessDependencies({
@@ -40,12 +32,6 @@ export const bundleElectronAppDependencies = async ({
   platform,
   target,
 }) => {
-  console.time('copyExtensionHostHelperProcessFiles')
-  await copyExtensionHostHelperProcessFiles({
-    cachePath,
-  })
-  console.timeEnd('copyExtensionHostHelperProcessFiles')
-
   console.time('copySharedProcessFiles')
   await copySharedProcessFiles({
     cachePath,

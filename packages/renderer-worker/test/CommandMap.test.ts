@@ -29,3 +29,11 @@ test('registers the menu select-current command', () => {
 test('registers the drop data command', () => {
   expect(commandMap['DropData.get']).toBeDefined()
 })
+
+test('registers only direct extension node process commands', () => {
+  expect(commandMap['ExtensionNodeRpc.createConnection']).toBeDefined()
+  expect(commandMap['ExtensionNodeRpc.createMessagePort']).toBeDefined()
+  expect(commandMap['ExtensionNodeRpc.create']).toBeUndefined()
+  expect(commandMap['ExtensionNodeRpc.dispose']).toBeUndefined()
+  expect(commandMap['ExtensionNodeRpc.invoke']).toBeUndefined()
+})

@@ -30,7 +30,6 @@ function updateDependencies {
 
                                                        updateDependencies             &&
 cd packages/build                                   && updateDependencies && cd ../.. &&
-cd packages/extension-host-helper-process           && updateDependencies && cd ../.. &&
 cd packages/extension-host-worker-tests             && updateDependencies && cd ../.. &&
 cd packages/main-process                            && updateDependencies && cd ../.. &&
 cd packages/renderer-worker                         && updateDependencies && cd ../.. &&

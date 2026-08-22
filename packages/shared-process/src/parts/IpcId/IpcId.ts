@@ -3,7 +3,6 @@ import { RpcId } from '@lvce-editor/rpc-registry'
 export const AuthProcess = RpcId.AuthWorker
 export const EmbedsProcess = RpcId.EmbedsProcess
 export const EmbedsWorker = RpcId.EmbedsWorker
-export const ExtensionHostHelperProcess = 3
 export const MainProcess = RpcId.MainProcess
 export const ProcessExplorer = 11
 export const SearchProcess = RpcId.SearchProcess
