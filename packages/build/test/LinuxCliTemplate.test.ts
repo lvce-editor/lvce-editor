@@ -75,6 +75,13 @@ describe('linux cli templates', () => {
     expect(cli).toContain("stdio: foreground ? ['inherit', 'inherit', 'pipe'] : 'ignore'")
   })
 
+  test('uses promise resolvers for child process events', async () => {
+    const cli = await readTemplate('linux_cli_js')
+
+    expect(cli).toContain('Promise.withResolvers()')
+    expect(cli).not.toContain('new Promise')
+  })
+
   test('only filters structured Electron diagnostics for non-verbose cli commands', async () => {
     const cli = await readTemplate('linux_cli_js')
 
