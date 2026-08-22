@@ -12,8 +12,6 @@ export const load = (moduleId: any): any => {
       return import('../AutoUpdaterWindowsNsis/AutoUpdaterWindowsNsis.ipc.ts')
     case ModuleId.BulkReplacement:
       return import('../BulkReplacement/BulkReplacement.ipc.ts')
-    case ModuleId.ChromeCookieImport:
-      return import('../ChromeCookieImport/ChromeCookieImport.ipc.ts')
     case ModuleId.ClipBoard:
       return import('../ClipBoard/ClipBoard.ipc.ts')
     case ModuleId.ContentSecurityPolicy:

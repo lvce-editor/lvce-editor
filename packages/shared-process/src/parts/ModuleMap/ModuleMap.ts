@@ -18,9 +18,6 @@ export const getModuleId = (commandId: any): any => {
       return ModuleId.AutoUpdaterWindowsNsis
     case 'BulkReplacement.applyBulkReplacement':
       return ModuleId.BulkReplacement
-    case 'ChromeCookieImport.getInfo':
-    case 'ChromeCookieImport.importCookies':
-      return ModuleId.ChromeCookieImport
     case 'ChromeExtension.install':
     case 'ChromeExtension.uninstall':
       return ModuleId.ChromeExtension
