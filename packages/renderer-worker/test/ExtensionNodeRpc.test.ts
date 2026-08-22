@@ -25,8 +25,8 @@ jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => ({
   invokeAndTransfer: jest.fn(),
 }))
 
-jest.unstable_mockModule('../src/parts/WorkspaceBackend/WorkspaceBackend.js', () => ({
-  getWebSocketUrl: jest.fn(),
+jest.unstable_mockModule('../src/parts/WebSocketCapability/WebSocketCapability.js', () => ({
+  create: jest.fn(),
 }))
 
 const ExtensionNodeRpc = await import('../src/parts/ExtensionNodeRpc/ExtensionNodeRpc.js')
@@ -35,25 +35,33 @@ const Id = await import('../src/parts/Id/Id.js')
 const IpcParent = await import('../src/parts/IpcParent/IpcParent.js')
 const JsonRpc = await import('../src/parts/JsonRpc/JsonRpc.js')
 const SharedProcess = await import('../src/parts/SharedProcess/SharedProcess.js')
-const WorkspaceBackend = await import('../src/parts/WorkspaceBackend/WorkspaceBackend.js')
+const WebSocketCapability = await import('../src/parts/WebSocketCapability/WebSocketCapability.js')
 
 test('createConnection returns an authenticated remote node process URL', async () => {
   // @ts-ignore
-  WorkspaceBackend.getWebSocketUrl.mockReturnValue('ws://127.0.0.1:3000/websocket/extension-node-process?token=test-token')
+  WebSocketCapability.create.mockReturnValue({
+    protocols: [],
+    url: 'ws://127.0.0.1:3000/websocket/extension-node-process?token=test-token',
+  })
 
   await expect(ExtensionNodeRpc.createConnection('builtin.git', 'git-client')).resolves.toEqual({
     protocols: [],
     url: 'ws://127.0.0.1:3000/websocket/extension-node-process?token=test-token&extensionId=builtin.git&rpcId=git-client',
   })
+  expect(WebSocketCapability.create).toHaveBeenCalledWith('extension-node-process')
 })
 
-test('createConnection rejects when no remote workspace backend is active', async () => {
+test('createConnection returns a current-server node process URL without a remote workspace backend', async () => {
   // @ts-ignore
-  WorkspaceBackend.getWebSocketUrl.mockReturnValue('')
+  WebSocketCapability.create.mockReturnValue({
+    protocols: [],
+    url: 'ws://localhost:3000/websocket/extension-node-process',
+  })
 
-  await expect(ExtensionNodeRpc.createConnection('builtin.git', 'git-client')).rejects.toThrow(
-    'ExtensionNodeRpc.createConnection command not found without a remote workspace backend',
-  )
+  await expect(ExtensionNodeRpc.createConnection('builtin.git', 'git-client')).resolves.toEqual({
+    protocols: [],
+    url: 'ws://localhost:3000/websocket/extension-node-process?extensionId=builtin.git&rpcId=git-client',
+  })
 })
 
 test('supports direct Electron connections', () => {
