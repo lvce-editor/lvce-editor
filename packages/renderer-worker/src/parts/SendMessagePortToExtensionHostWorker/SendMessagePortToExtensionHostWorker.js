@@ -15,7 +15,6 @@ import * as ClipBoardWorker from '../ClipBoardWorker/ClipBoardWorker.js'
 import * as DialogWorker from '../DialogWorker/DialogWorker.js'
 import * as DiffViewWorker from '../DiffViewWorker/DiffViewWorker.js'
 import * as DiffWorker from '../DiffWorker/DiffWorker.js'
-import * as DragAndDropWorker from '../DragAndDropWorker/DragAndDropWorker.js'
 import * as EditorWorker from '../EditorWorker/EditorWorker.ts'
 import * as ErrorWorker from '../ErrorWorker/ErrorWorker.ts'
 import * as ExplorerViewWorker from '../ExplorerViewWorker/ExplorerViewWorker.js'
@@ -280,12 +279,6 @@ export const sendMessagePortToDiffWorker = async (port, initialCommand, rpcId) =
   Assert.object(port)
   Assert.string(initialCommand)
   await DiffWorker.invokeAndTransfer(initialCommand, port, rpcId)
-}
-
-export const sendMessagePortToDragAndDropWorker = async (port, initialCommand) => {
-  Assert.object(port)
-  Assert.string(initialCommand)
-  await DragAndDropWorker.invokeAndTransfer(initialCommand, port)
 }
 
 // TODO add only one function sendMessagePortToRpc(rpcId) which sends it to the matching rpc module
