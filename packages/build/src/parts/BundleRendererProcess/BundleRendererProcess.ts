@@ -5,6 +5,7 @@ import * as JsonFile from '../JsonFile/JsonFile.ts'
 import * as Replace from '../Replace/Replace.ts'
 
 const workersJsonPath = 'packages/renderer-worker/src/parts/Workers/Workers.json'
+const electronPlatformCode = '2'
 
 const getWorkerPathReplacements = async () => {
   const workers = await JsonFile.readJson(workersJsonPath)
@@ -37,7 +38,7 @@ const replaceWorkerPaths = async (path) => {
 const getPlatformCode = (platform) => {
   switch (platform) {
     case 'electron':
-      return `Electron`
+      return electronPlatformCode
     case 'remote':
       return `Remote`
     case 'web':
