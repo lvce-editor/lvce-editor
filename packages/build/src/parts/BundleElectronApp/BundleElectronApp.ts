@@ -34,10 +34,8 @@ const getDependencyCacheHash = async ({ electronVersion, arch, supportsAutoUpdat
   const files = [
     'packages/main-process/package-lock.json',
     'packages/shared-process/package-lock.json',
-    'packages/extension-host-helper-process/package-lock.json',
     'packages/build/src/parts/BundleElectronApp/BundleElectronApp.ts',
     'packages/build/src/parts/BundleElectronAppDependencies/BundleElectronAppDependencies.ts',
-    'packages/build/src/parts/BundleExtensionHostHelperProcessDependencies/BundleExtensionHostHelperProcessDependencies.ts',
     'packages/build/src/parts/BundleSharedProcessDependencies/BundleSharedProcessDependencies.ts',
     'packages/build/src/parts/FilterSharedProcessDependencies/FilterSharedProcessDependencies.ts',
     'packages/build/src/parts/CopyDependencies/CopyDependencies.ts',
@@ -89,13 +87,6 @@ const copyDependencies = async ({ cachePath, resourcesPath }) => {
   await Copy.copy({
     from: cachePath,
     to: `${resourcesPath}/app/packages`,
-  })
-}
-
-const copyExtensionHostHelperProcessSources = async ({ resourcesPath }) => {
-  await Copy.copy({
-    from: 'packages/extension-host-helper-process/src',
-    to: `${resourcesPath}/app/packages/extension-host-helper-process/src`,
   })
 }
 
@@ -300,10 +291,6 @@ export const build = async ({
     to: `${resourcesPath}/app/packages/shared-process`,
   })
   console.timeEnd('copySharedProcessFiles')
-
-  console.time('copyExtensionHostHelperProcessSources')
-  await copyExtensionHostHelperProcessSources({ resourcesPath })
-  console.timeEnd('copyExtensionHostHelperProcessSources')
 
   console.time('copyExtensions')
   await copyExtensions({ resourcesPath, commitHash })

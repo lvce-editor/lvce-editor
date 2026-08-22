@@ -1,7 +1,6 @@
 import { expect, test } from '@jest/globals'
 import * as HandleIpcAuthProcess from '../src/parts/HandleIpcAuthProcess/HandleIpcAuthProcess.js'
 import * as HandleIpcEmbedsProcess from '../src/parts/HandleIpcEmbedsProcess/HandleIpcEmbedsProcess.js'
-import * as HandleIpcExtensionHostHelperProcess from '../src/parts/HandleIpcExtensionHostHelperProcess/HandleIpcExtensionHostHelperProcess.js'
 import * as HandleIpcModule from '../src/parts/HandleIpcModule/HandleIpcModule.js'
 import * as HandleIpcProcessExplorer from '../src/parts/HandleIpcProcessExplorer/HandleIpcProcessExplorer.js'
 import * as HandleIpcSearchProcess from '../src/parts/HandleIpcSearchProcess/HandleIpcSearchProcess.js'
@@ -23,10 +22,6 @@ test('embeds process', () => {
 
 test('terminal process', () => {
   expect(HandleIpcModule.getModule(IpcId.TerminalProcess)).toBe(HandleIpcTerminalProcess)
-})
-
-test('extension host helper process', () => {
-  expect(HandleIpcModule.getModule(IpcId.ExtensionHostHelperProcess)).toBe(HandleIpcExtensionHostHelperProcess)
 })
 
 test('process explorer', () => {

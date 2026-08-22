@@ -87,10 +87,6 @@ export const getUserKeyBindingsPath = (): any => {
   return Path.join(configDir, 'keybindings.json')
 }
 
-export const getExtensionHostHelperProcessPath = async (): Promise<any> => {
-  return Path.join(Root.root, 'packages', 'extension-host-helper-process', 'src', 'extensionHostHelperProcessMain.js')
-}
-
 export const getWebViewRoot = (relativePath: any): any => {
   return Path.join(Root.root, relativePath)
 }

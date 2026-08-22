@@ -262,21 +262,6 @@ export const getBuiltinExtensionsPath = () => {
       replacement: `const isElectron = false`,
     })
     await Replace.replace({
-      path: `${cachePath}/src/parts/PlatformPaths/PlatformPaths.js`,
-      occurrence: `export const getExtensionHostHelperProcessPath = async () => {
-  return Path.join(Root.root, 'packages', 'extension-host-helper-process', 'src', 'extensionHostHelperProcessMain.js')
-}
-`,
-      replacement: `export const getExtensionHostHelperProcessPath = async () => {
-  const { extensionHostHelperProcessPath } = await import(
-    '@lvce-editor/extension-host-helper-process'
-  )
-  return extensionHostHelperProcessPath
-}
-`,
-    })
-
-    await Replace.replace({
       path: `${cachePath}/src/parts/SearchProcessPath/SearchProcessPath.js`,
       occurrence: `import * as Path from '../Path/Path.js'
 import * as Root from '../Root/Root.js'
