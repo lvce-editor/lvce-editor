@@ -164,3 +164,35 @@ test.skip('pathBaseName - windows', () => {
   Workspace.state.pathSeparator = '\\'
   expect(Workspace.pathBaseName('\\test\\file.txt')).toBe('file.txt')
 })
+
+test('close closes editors before clearing the workspace', async () => {
+  const closeAllEditors = jest.fn(async () => undefined)
+  const hasDirtyTabs = jest.fn(async () => false)
+  Command.register('Main.closeAllEditorsAndSave', closeAllEditors)
+  Command.register('Main.hasDirtyTabs', hasDirtyTabs)
+  jest.mocked(RendererProcess.invoke).mockResolvedValue(undefined)
+  Workspace.state.workspacePath = '/test'
+
+  await Workspace.close()
+
+  expect(closeAllEditors).toHaveBeenCalledTimes(1)
+  expect(hasDirtyTabs).toHaveBeenCalledTimes(1)
+  expect(Workspace.state.workspacePath).toBe('')
+})
+
+test('close keeps the workspace open when closing a dirty editor is canceled', async () => {
+  const closeAllEditors = jest.fn(async () => undefined)
+  const hasDirtyTabs = jest.fn(async () => true)
+  Command.register('Main.closeAllEditorsAndSave', closeAllEditors)
+  Command.register('Main.hasDirtyTabs', hasDirtyTabs)
+  Workspace.state.workspacePath = '/test'
+  Workspace.state.workspaceUri = 'file:///test'
+
+  await Workspace.close()
+
+  expect(closeAllEditors).toHaveBeenCalledTimes(1)
+  expect(hasDirtyTabs).toHaveBeenCalledTimes(1)
+  expect(Workspace.state.workspacePath).toBe('/test')
+  expect(Workspace.state.workspaceUri).toBe('file:///test')
+  expect(RendererProcess.invoke).not.toHaveBeenCalled()
+})

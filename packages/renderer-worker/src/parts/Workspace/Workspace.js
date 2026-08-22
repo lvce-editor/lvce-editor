@@ -1,5 +1,6 @@
 import * as Assert from '../Assert/Assert.ts'
 import * as Character from '../Character/Character.js'
+import * as Command from '../Command/Command.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as GetResolvedRoot from '../GetResolvedRoot/GetResolvedRoot.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
@@ -79,8 +80,13 @@ export const getUri = () => {
   return state.workspaceUri
 }
 
-export const close = () => {
-  return setPath('')
+export const close = async () => {
+  await Command.execute('Main.closeAllEditorsAndSave')
+  const hasDirtyTabs = await Command.execute('Main.hasDirtyTabs')
+  if (hasDirtyTabs) {
+    return
+  }
+  await setPath('')
 }
 
 export { isTest } from '../IsTest/IsTest.js'
