@@ -131,24 +131,11 @@ const copyServerFiles = async ({ commitHash, product }) => {
   })
 }
 
-const copyExtensionHostHelperProcessFiles = async () => {
-  await Copy.copy({
-    from: 'packages/extension-host-helper-process',
-    to: 'packages/build/.tmp/server/extension-host-helper-process',
-    ignore: ['tsconfig.json', 'node_modules', 'distmin', 'example', 'test', 'package-lock.json'],
-  })
-  await Copy.copyFile({
-    from: 'LICENSE',
-    to: 'packages/build/.tmp/server/extension-host-helper-process/LICENSE',
-  })
-}
-
 const sortObject = (object) => {
   return JSON.parse(JSON.stringify(object, Object.keys(object).sort()))
 }
 
 const serverPackageJsonFiles = [
-  'packages/build/.tmp/server/extension-host-helper-process/package.json',
   'packages/build/.tmp/server/server/package.json',
   'packages/build/.tmp/server/shared-process/package.json',
   'packages/build/.tmp/server/static-server/package.json',
@@ -172,7 +159,6 @@ export const setVersionsAndDependencies = async ({ version, files = serverPackag
     }
     if (json.name === '@lvce-editor/shared-process') {
       json.dependencies ||= {}
-      json.dependencies['@lvce-editor/extension-host-helper-process'] = version
       const processExplorerVersion = json.optionalDependencies?.['@lvce-editor/process-explorer']
       if (processExplorerVersion) {
         json.dependencies['@lvce-editor/process-explorer'] = processExplorerVersion
@@ -182,9 +168,6 @@ export const setVersionsAndDependencies = async ({ version, files = serverPackag
     }
     if (json.dependencies && json.dependencies['@lvce-editor/shared-process']) {
       json.dependencies['@lvce-editor/shared-process'] = version
-    }
-    if (json.dependencies && json.dependencies['@lvce-editor/extension-host-helper-process']) {
-      json.dependencies['@lvce-editor/extension-host-helper-process'] = version
     }
     if (json.dependencies) {
       json.dependencies = sortObject(json.dependencies)
@@ -238,10 +221,6 @@ export const build = async ({ product }) => {
     to: 'packages/build/.tmp/server/shared-process',
   })
   console.timeEnd('copySharedProcessFiles')
-
-  console.time('copyExtensionHostHelperProcessFiles')
-  await copyExtensionHostHelperProcessFiles()
-  console.timeEnd('copyExtensionHostHelperProcessFiles')
 
   console.time('setVersions')
   await setVersionsAndDependencies({ version })

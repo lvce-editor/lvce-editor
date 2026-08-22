@@ -1,6 +1,5 @@
 export const EmbedsProcess = 2
 export const EmbedsWorker = 77
-export const ExtensionHostHelperProcess = 3
 export const MainProcess = -5
 export const ProcessExplorer = 11
 export const SearchProcess = 13
