@@ -82,3 +82,4 @@ export const SendMessagePortToMainProcess = 88
 export const SecretStorage = 89
 export const FirefoxCookieImport = 91
 export const IpcTrace = 92
+export const HandleMessagePortForExtensionNodeProcess = 93

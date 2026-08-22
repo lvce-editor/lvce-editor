@@ -1,5 +1,6 @@
 import * as HandleWebSocketForClipBoardProcess from '../HandleWebSocketForClipBoardProcess/HandleWebSocketForClipBoardProcess.ts'
 import * as HandleWebSocketForExtensionHostHelperProcess from '../HandleWebSocketForExtensionHostHelperProcess/HandleWebSocketForExtensionHostHelperProcess.ts'
+import * as HandleWebSocketForExtensionNodeProcess from '../HandleWebSocketForExtensionNodeProcess/HandleWebSocketForExtensionNodeProcess.ts'
 import * as HandleWebSocketForFileSystemProcess from '../HandleWebSocketForFileSystemProcess/HandleWebSocketForFileSystemProcess.ts'
 import * as HandleWebSocketForProcessExplorer from '../HandleWebSocketForProcessExplorer/HandleWebSocketForProcessExplorer.ts'
 import * as HandleWebSocketForSearchProcess from '../HandleWebSocketForSearchProcess/HandleWebSocketForSearchProcess.ts'
@@ -18,6 +19,8 @@ export const load = (protocol: any): any => {
       return HandleWebSocketForClipBoardProcess
     case ProtocolType.ExtensionHostHelperProcess:
       return HandleWebSocketForExtensionHostHelperProcess
+    case ProtocolType.ExtensionNodeProcess:
+      return HandleWebSocketForExtensionNodeProcess
     case ProtocolType.FileSystemProcess:
       return HandleWebSocketForFileSystemProcess
     case ProtocolType.ProcessExplorer:
