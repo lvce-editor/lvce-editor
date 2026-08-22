@@ -47,6 +47,17 @@ export const extendModule = (workerViewlet) => ({
   saveWithoutFormatting,
 })
 
-export const wrapCommand = (command) => {
+const wrapReturnValueCommand = (command, worker) => {
+  const fn = (state, ...args) => {
+    return worker.invoke(`MainArea.${command}`, state.uid, ...args)
+  }
+  fn.returnValue = true
+  return fn
+}
+
+export const wrapCommand = (command, _defaultWrapCommand, { worker }) => {
+  if (command === 'hasDirtyTabs') {
+    return wrapReturnValueCommand(command, worker)
+  }
   return wrapMainAreaCommand(command)
 }

@@ -193,6 +193,30 @@ test('returns preview runtime diagnostics without treating them as viewlet state
   expect(invoke).toHaveBeenCalledWith('Preview.getRuntimeDiagnostics', 12)
 })
 
+test('returns the main-area dirty-tab status without treating it as viewlet state', async () => {
+  const invoke = jest.fn(async (method: string, ..._args: readonly unknown[]) => {
+    if (method === 'MainArea.getCommandIds') {
+      return ['hasDirtyTabs']
+    }
+    if (method === 'MainArea.hasDirtyTabs') {
+      return true
+    }
+    return undefined
+  })
+  const viewlet = createWorkerViewletWithDependencies({
+    adapter: getWorkerViewletAdapter('mainArea'),
+    config: getWorkerViewletConfig('mainArea'),
+    context: { assetDir: '/test', platform: 1 },
+    worker: { invoke, restart: jest.fn() },
+  })
+  const commands = await viewlet.getCommands!()
+  const state = viewlet.create(13, '', 0, 0, 640, 480)
+
+  expect(commands.hasDirtyTabs.returnValue).toBe(true)
+  await expect(commands.hasDirtyTabs(state)).resolves.toBe(true)
+  expect(invoke).toHaveBeenCalledWith('MainArea.hasDirtyTabs', 13)
+})
+
 test('forwards preview bounds changes to the preview worker', async () => {
   const invoke = jest.fn(async (method: string, ..._args: readonly unknown[]) => {
     if (method === 'Preview.diff2' || method === 'Preview.render2') {
