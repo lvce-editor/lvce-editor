@@ -259,6 +259,10 @@
   contain: content;
 }
 
+.LineNumberActive {
+  color: var(--EditorLineNumberActiveForeground, rgba(155, 162, 160, 0.7));
+}
+
 .LineNumberLightBulb {
   background: var(--EditorLightBulbForeground, #ffcc00);
   cursor: pointer;
