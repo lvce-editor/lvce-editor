@@ -21,9 +21,9 @@ export const handleMessagePortForExtensionNodeProcess = async (
     ipc.dispose()
   }
   const removeRendererCloseListener = (): void => {
-    rendererWorkerIpc.off('close', dispose)
+    rendererWorkerIpc.removeEventListener('close', dispose)
   }
-  rendererWorkerIpc.on('close', dispose)
+  rendererWorkerIpc.addEventListener('close', dispose)
   ipc.on('close', removeRendererCloseListener)
   try {
     await JsonRpc.invokeAndTransfer(ipc, 'NodeRpcProcess.handleElectronMessagePort', port)

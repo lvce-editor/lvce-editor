@@ -26,7 +26,9 @@ beforeEach(() => {
 })
 
 test('launches one extension process and transfers its restricted message port', async () => {
-  const rendererWorkerIpc = { off: jest.fn(), on: jest.fn() }
+  const rendererWorkerIpc = new EventTarget()
+  const addEventListenerSpy = jest.spyOn(rendererWorkerIpc, 'addEventListener')
+  const removeEventListenerSpy = jest.spyOn(rendererWorkerIpc, 'removeEventListener')
   const { port1, port2 } = new MessageChannel()
 
   await HandleMessagePortForExtensionNodeProcess.handleMessagePortForExtensionNodeProcess(rendererWorkerIpc, port1, 'builtin.git', 'git-client')
@@ -37,27 +39,27 @@ test('launches one extension process and transfers its restricted message port',
     rpcId: 'git-client',
   })
   expect(JsonRpc.invokeAndTransfer).toHaveBeenCalledWith(ipc, 'NodeRpcProcess.handleElectronMessagePort', port1)
-  expect(rendererWorkerIpc.on).toHaveBeenCalledWith('close', expect.any(Function))
+  expect(addEventListenerSpy).toHaveBeenCalledWith('close', expect.any(Function))
   expect(ipc.on).toHaveBeenCalledWith('close', expect.any(Function))
-  const handleRendererClose = rendererWorkerIpc.on.mock.calls[0][1] as () => void
-  handleRendererClose()
+  rendererWorkerIpc.dispatchEvent(new Event('close'))
   expect(ipc.dispose).toHaveBeenCalledTimes(1)
   const handleProcessClose = ipc.on.mock.calls[0][1] as () => void
   handleProcessClose()
-  expect(rendererWorkerIpc.off).toHaveBeenCalledWith('close', handleRendererClose)
+  expect(removeEventListenerSpy).toHaveBeenCalledWith('close', expect.any(Function))
   port1.close()
   port2.close()
 })
 
 test('disposes the process when attachment fails', async () => {
-  const rendererWorkerIpc = { off: jest.fn(), on: jest.fn() }
+  const rendererWorkerIpc = new EventTarget()
+  const removeEventListenerSpy = jest.spyOn(rendererWorkerIpc, 'removeEventListener')
   const { port1, port2 } = new MessageChannel()
   jest.mocked(JsonRpc.invokeAndTransfer).mockRejectedValue(new Error('attach failed'))
 
   await expect(
     HandleMessagePortForExtensionNodeProcess.handleMessagePortForExtensionNodeProcess(rendererWorkerIpc, port1, 'builtin.git', 'git-client'),
   ).rejects.toThrow('attach failed')
-  expect(rendererWorkerIpc.off).toHaveBeenCalledWith('close', expect.any(Function))
+  expect(removeEventListenerSpy).toHaveBeenCalledWith('close', expect.any(Function))
   expect(ipc.dispose).toHaveBeenCalledTimes(1)
   port1.close()
   port2.close()
