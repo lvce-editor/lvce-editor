@@ -4,6 +4,7 @@ import { beforeEach, expect, jest, test } from '@jest/globals'
 const ipc = {
   send(): void {},
 }
+const quickPickMenuEntries = [{ id: 'test.command', label: 'Test Command' }]
 
 jest.unstable_mockModule('../src/parts/GetConfiguredWorkerUrl/GetConfiguredWorkerUrl.ts', () => ({
   getConfiguredWorkerUrl: jest.fn(() => 'file:///worker.js'),
@@ -20,6 +21,9 @@ jest.unstable_mockModule('../src/parts/IpcParent/IpcParent.js', () => ({
 jest.unstable_mockModule('../src/parts/JsonRpc/JsonRpc.js', () => ({
   invoke: jest.fn(async () => undefined),
   invokeAndTransfer: jest.fn(async () => undefined),
+}))
+jest.unstable_mockModule('../src/parts/MenuEntriesState/MenuEntriesState.js', () => ({
+  getAll: jest.fn(() => quickPickMenuEntries),
 }))
 jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () => ({
   invokeAndTransfer: jest.fn(async () => undefined),
@@ -107,6 +111,12 @@ test('main area worker connects directly to the renderer process', async () => {
   expect(GetPortTuple.getPortTuple).toHaveBeenCalledTimes(1)
   expect(JsonRpc.invokeAndTransfer).toHaveBeenCalledWith(ipc, 'MainArea.handleMessagePort', 'worker-port')
   expect(RendererProcess.invokeAndTransfer).toHaveBeenCalledWith('HandleMessagePort.handleMessagePort', 'renderer-process-port', 'MainArea')
+})
+
+test('quick pick worker receives menu entries when it is launched', async () => {
+  await LaunchQuickPickWorker.launchQuickPickWorker()
+
+  expect(JsonRpc.invoke).toHaveBeenCalledWith(ipc, 'QuickPick.addMenuEntries', quickPickMenuEntries)
 })
 
 test('status bar worker listens for editor status changes over a direct connection', async () => {

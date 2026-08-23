@@ -4,6 +4,7 @@ import * as HandleIpc from '../HandleIpc/HandleIpc.js'
 import * as IpcParent from '../IpcParent/IpcParent.js'
 import * as IpcParentType from '../IpcParentType/IpcParentType.js'
 import * as JsonRpc from '../JsonRpc/JsonRpc.js'
+import * as MenuEntriesState from '../MenuEntriesState/MenuEntriesState.js'
 import { quickPickWorkerUrl } from '../QuickPickWorkerUrl/QuickPickWorkerUrl.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 
@@ -20,5 +21,9 @@ export const launchQuickPickWorker = async () => {
     JsonRpc.invokeAndTransfer(ipc, 'QuickPick.handleRendererProcessMessagePort', port1),
     RendererProcess.invokeAndTransfer('HandleMessagePort.handleMessagePort', port2, 'QuickPick'),
   ])
+  const menuEntries = MenuEntriesState.getAll()
+  if (menuEntries.length > 0) {
+    await JsonRpc.invoke(ipc, 'QuickPick.addMenuEntries', menuEntries)
+  }
   return ipc
 }
