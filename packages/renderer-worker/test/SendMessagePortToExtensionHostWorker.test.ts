@@ -17,12 +17,6 @@ jest.unstable_mockModule('../src/parts/DialogWorker/DialogWorker.js', () => {
   }
 })
 
-jest.unstable_mockModule('../src/parts/DragAndDropWorker/DragAndDropWorker.js', () => {
-  return {
-    invokeAndTransfer: jest.fn(),
-  }
-})
-
 jest.unstable_mockModule('../src/parts/ExtensionManagementWorker/ExtensionManagementWorker.js', () => {
   return {
     invokeAndTransfer: jest.fn(),
@@ -54,7 +48,6 @@ jest.unstable_mockModule('../src/parts/WorkspaceBackend/WorkspaceBackend.js', ()
 })
 
 const DialogWorker = await import('../src/parts/DialogWorker/DialogWorker.js')
-const DragAndDropWorker = await import('../src/parts/DragAndDropWorker/DragAndDropWorker.js')
 const ExtensionManagementWorker = await import('../src/parts/ExtensionManagementWorker/ExtensionManagementWorker.js')
 const ExplorerViewWorker = await import('../src/parts/ExplorerViewWorker/ExplorerViewWorker.js')
 const MainAreaWorker = await import('../src/parts/MainAreaWorker/MainAreaWorker.js')
@@ -93,15 +86,6 @@ test('sendMessagePortToDialogWorker', async () => {
 
   expect(DialogWorker.invokeAndTransfer).toHaveBeenCalledTimes(1)
   expect(DialogWorker.invokeAndTransfer).toHaveBeenCalledWith('HandleMessagePort.handleMessagePort', port)
-})
-
-test('sendMessagePortToDragAndDropWorker', async () => {
-  const port = {}
-
-  await SendMessagePortToExtensionHostWorker.sendMessagePortToDragAndDropWorker(port, 'DragAndDrop.handleMessagePort')
-
-  expect(DragAndDropWorker.invokeAndTransfer).toHaveBeenCalledTimes(1)
-  expect(DragAndDropWorker.invokeAndTransfer).toHaveBeenCalledWith('DragAndDrop.handleMessagePort', port)
 })
 
 test('sendMessagePortToExtensionHostWorker forwards to extension management worker', async () => {
