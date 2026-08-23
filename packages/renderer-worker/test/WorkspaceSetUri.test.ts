@@ -1,4 +1,5 @@
 import { beforeEach, expect, jest, test } from '@jest/globals'
+import * as PlatformType from '../src/parts/PlatformType/PlatformType.js'
 
 const getPathSeparator = jest.fn<(uri: string) => Promise<string>>(async () => '/')
 const exists = jest.fn<(uri: string) => Promise<boolean>>(async () => true)
@@ -6,6 +7,8 @@ const createNotification = jest.fn<(type: string, text: string) => Promise<void>
 const setWindowTitle = jest.fn<(title: string) => Promise<void>>(async () => {})
 const disposeTextSearchWorker = jest.fn<() => Promise<void>>(async () => {})
 const isTest = jest.fn<() => boolean>(() => false)
+const getPlatform = jest.fn(() => PlatformType.Test)
+const setWorkspaceUri = jest.fn(async (_uri: string) => {})
 
 jest.unstable_mockModule('../src/parts/FileSystem/FileSystem.js', () => ({
   exists,
@@ -35,6 +38,15 @@ jest.unstable_mockModule('../src/parts/TextSearchWorker/TextSearchWorker.js', ()
   dispose: disposeTextSearchWorker,
 }))
 
+jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => ({
+  getPlatform,
+}))
+
+jest.unstable_mockModule('../src/parts/Location/Location.js', () => ({
+  setPathName: jest.fn(async () => {}),
+  setWorkspaceUri,
+}))
+
 const GlobalEventBus = await import('../src/parts/GlobalEventBus/GlobalEventBus.js')
 const Workspace = await import('../src/parts/Workspace/Workspace.js')
 
@@ -47,6 +59,9 @@ beforeEach(() => {
   disposeTextSearchWorker.mockClear()
   isTest.mockClear()
   isTest.mockReturnValue(false)
+  getPlatform.mockClear()
+  getPlatform.mockReturnValue(PlatformType.Test)
+  setWorkspaceUri.mockClear()
   GlobalEventBus.state.listenerMap = Object.create(null)
   Workspace.state.pathSeparator = '/'
   Workspace.state.workspacePath = ''
@@ -153,4 +168,16 @@ test('setUri uses the remote backend workspace path', async () => {
   expect(Workspace.getWorkspaceUri()).toBe('remote-ssh://host/work')
   expect(Workspace.state.pathSeparator).toBe('/')
   expect(getPathSeparator).not.toHaveBeenCalled()
+})
+
+test('setUri persists the workspace uri in an Electron window', async () => {
+  getPlatform.mockReturnValue(PlatformType.Electron)
+
+  await Workspace.setUri('remote-ssh://host/work', '/', {
+    token: 'secret',
+    url: 'ws://127.0.0.1:45123',
+    workspacePath: '/work',
+  })
+
+  expect(setWorkspaceUri).toHaveBeenCalledWith('remote-ssh://host/work')
 })
