@@ -30,29 +30,47 @@ const toUri = (path: any): any => {
   return pathToFileURL(path).toString()
 }
 
-const getWindowWorkspacePath = (href: string): string => {
+interface WindowWorkspace {
+  readonly path: string
+  readonly pathSeparator: string
+  readonly uri: string
+}
+
+const getWindowWorkspace = (href: string): WindowWorkspace | undefined => {
   if (!href) {
-    return ''
+    return undefined
   }
   const workspaceUri = new URL(href).searchParams.get('workspace')
   if (!workspaceUri) {
-    return ''
+    return undefined
   }
-  return fileURLToPath(workspaceUri)
+  const url = new URL(workspaceUri)
+  if (url.protocol === 'file:') {
+    return {
+      path: fileURLToPath(url),
+      pathSeparator: Platform.getPathSeparator(),
+      uri: url.href,
+    }
+  }
+  return {
+    path: url.href,
+    pathSeparator: '/',
+    uri: url.href,
+  }
 }
 
 export const resolveRoot = async (href = ''): Promise<any> => {
   if (IsElectron.isElectron) {
-    const windowWorkspacePath = getWindowWorkspacePath(href)
-    if (windowWorkspacePath) {
+    const windowWorkspace = getWindowWorkspace(href)
+    if (windowWorkspace) {
       return {
         homeDir: PlatformPaths.getHomeDir(),
         homeDirUri: toUri(PlatformPaths.getHomeDir()),
-        path: windowWorkspacePath,
-        pathSeparator: Platform.getPathSeparator(),
+        path: windowWorkspace.path,
+        pathSeparator: windowWorkspace.pathSeparator,
         source: WorkspaceSource.SharedProcessCliArg,
-        uri: toUri(windowWorkspacePath),
-        workspaceId: GetWorkspaceId.getWorkspaceId(windowWorkspacePath),
+        uri: windowWorkspace.uri,
+        workspaceId: GetWorkspaceId.getWorkspaceId(windowWorkspace.uri),
       }
     }
     const argv = await ParentIpc.invoke('Process.getArgv')

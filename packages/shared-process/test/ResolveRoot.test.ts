@@ -63,6 +63,22 @@ test('resolveRoot - resolves the workspace for a second window', async () => {
   expect(MainProcess.invoke).not.toHaveBeenCalled()
 })
 
+test('resolveRoot - preserves a remote workspace uri for a second window', async () => {
+  const workspaceUri = 'remote-ssh://user@example.com:2222/home'
+  const url = new URL('lvce-oss://-/')
+  url.searchParams.set('workspace', workspaceUri)
+
+  const resolvedRoot = await ResolveRoot.resolveRoot(url.toString())
+
+  expect(resolvedRoot).toMatchObject({
+    path: workspaceUri,
+    pathSeparator: '/',
+    source: 'shared-process-cli-arg',
+    uri: workspaceUri,
+  })
+  expect(MainProcess.invoke).not.toHaveBeenCalled()
+})
+
 test('resolveRoot - uses cwd in prompt mode', async () => {
   // @ts-ignore
   MainProcess.invoke.mockResolvedValue(['/usr/lib/lvce-oss/lvce-oss', '--prompt', 'Fix the tests'])
