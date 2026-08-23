@@ -58,6 +58,9 @@ export const setUri = async (uri, providedPathSeparator, backend) => {
   }
   const pathSeparator = providedPathSeparator ?? (await FileSystem.getPathSeparator(uri))
   await updateWindowTitle(path, pathSeparator)
+  if (Platform.getPlatform() === PlatformType.Electron) {
+    await Location.setWorkspaceUri(uri)
+  }
   if (path !== state.workspacePath) {
     await GlobalEventBus.emitEvent('workspace.beforeChange', state.workspacePath, path)
   }
