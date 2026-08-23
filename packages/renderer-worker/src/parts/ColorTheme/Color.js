@@ -114,8 +114,8 @@ export const EditorSelectionForeground = {
   highContrast: undefined,
 }
 
-export const EditorInactiveSelection = {
-  id: 'EditorSelectionBackground',
+export const EditorInactiveSelectionBackground = {
+  id: 'EditorInactiveSelectionBackground',
   dark: transparent('EditorSelectionBackground', 0.5),
   light: transparent('EditorSelectionBackground', 0.5),
   highContrast: transparent('EditorSelectionBackground', 0.5),

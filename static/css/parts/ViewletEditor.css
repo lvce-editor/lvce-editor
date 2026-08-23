@@ -189,6 +189,10 @@
   background: var(--EditorSelectionBackground);
 }
 
+.SelectionUnfocused {
+  background: var(--EditorInactiveSelectionBackground, color-mix(in srgb, var(--EditorSelectionBackground) 50%, transparent));
+}
+
 .Token {
   contain: content;
 }
