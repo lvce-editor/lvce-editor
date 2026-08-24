@@ -18,13 +18,17 @@ export const activateLifecycleExtension = async ({ Command }) => {
   await Command.execute('Layout.handleExtensionsChanged')
 }
 
-export const addLifecycleExtension = async ({ ActivityBar, Command, Extension, Workspace }) => {
-  await Workspace.setPath(workspaceUri)
+export const addLifecycleExtension = async ({ ActivityBar, Command, Extension }) => {
   const uri = new URL('.', import.meta.url).toString().replace(/\/$/, '')
   await Extension.addWebExtension(uri)
   await Extension.enableWorkspace(extensionId)
   await ActivityBar.handleExtensionsChanged()
   await activateLifecycleExtension({ Command })
+}
+
+export const addWorkspaceLifecycleExtension = async ({ ActivityBar, Command, Extension, Workspace }) => {
+  await Workspace.setPath(workspaceUri)
+  await addLifecycleExtension({ ActivityBar, Command, Extension })
 }
 
 export const disableLifecycleExtension = async ({ ExtensionDetail }) => {
@@ -39,14 +43,12 @@ export const enableLifecycleExtension = async ({ Command, ExtensionDetail }) => 
   }
 }
 
-export const disableWorkspaceLifecycleExtension = async ({ ContextMenu, ExtensionDetail, Locator }) => {
+export const disableWorkspaceLifecycleExtension = async ({ Command, ExtensionDetail }) => {
   await ExtensionDetail.open(extensionId)
-  await Locator('[name="DisableOptions"]').click()
-  await ContextMenu.selectItem('Disable (Workspace)')
+  await Command.execute('ExtensionDetail.handleClickDisableWorkspace')
 }
 
-export const enableWorkspaceLifecycleExtension = async ({ ContextMenu, ExtensionDetail, Locator }) => {
+export const enableWorkspaceLifecycleExtension = async ({ Command, ExtensionDetail }) => {
   await ExtensionDetail.open(extensionId)
-  await Locator('[name="EnableOptions"]').click()
-  await ContextMenu.selectItem('Enable (Workspace)')
+  await Command.execute('ExtensionDetail.handleClickEnableWorkspace')
 }

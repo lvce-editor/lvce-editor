@@ -1,6 +1,6 @@
 import type { Test } from '@lvce-editor/test-with-playwright'
 import {
-  addLifecycleExtension,
+  addWorkspaceLifecycleExtension,
   disableWorkspaceLifecycleExtension,
   enableLifecycleExtension,
   workspaceUri,
@@ -9,8 +9,8 @@ import {
 export const name = 'extension.workspace-storage-does-not-clutter-project'
 
 export const test: Test = async ({ ExtensionDetail, FileSystem, Locator, ...api }) => {
-  await addLifecycleExtension(api)
-  await disableWorkspaceLifecycleExtension({ ExtensionDetail, Locator, ...api })
+  await addWorkspaceLifecycleExtension(api)
+  await disableWorkspaceLifecycleExtension({ ExtensionDetail, ...api })
 
   const entries = await FileSystem.readDir(workspaceUri)
   if (entries.some((entry) => entry.name === '.lvce')) {

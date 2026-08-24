@@ -1,6 +1,6 @@
 import type { Test } from '@lvce-editor/test-with-playwright'
 import {
-  addLifecycleExtension,
+  addWorkspaceLifecycleExtension,
   disableWorkspaceLifecycleExtension,
   enableLifecycleExtension,
 } from '../fixtures/sample.extension-disable-lifecycle/test.js'
@@ -8,8 +8,8 @@ import {
 export const name = 'extension.workspace-disable-updates-buttons'
 
 export const test: Test = async ({ expect, ExtensionDetail, Locator, ...api }) => {
-  await addLifecycleExtension(api)
-  await disableWorkspaceLifecycleExtension({ ExtensionDetail, Locator, ...api })
+  await addWorkspaceLifecycleExtension(api)
+  await disableWorkspaceLifecycleExtension({ ExtensionDetail, ...api })
 
   await expect(Locator('[name="Disable"]')).toBeHidden()
   await expect(Locator('[name="DisableOptions"]')).toBeHidden()

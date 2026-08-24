@@ -1,7 +1,7 @@
 import type { Test } from '@lvce-editor/test-with-playwright'
 import {
   activateLifecycleExtension,
-  addLifecycleExtension,
+  addWorkspaceLifecycleExtension,
   enableLifecycleExtension,
   enableWorkspaceLifecycleExtension,
   extensionId,
@@ -11,14 +11,14 @@ import {
 export const name = 'extension.workspace-enable-overrides-global-disable'
 
 export const test: Test = async ({ expect, ExtensionDetail, Locator, RunningExtensions, ...api }) => {
-  await addLifecycleExtension(api)
+  await addWorkspaceLifecycleExtension(api)
   await ExtensionDetail.open(extensionId)
   await ExtensionDetail.handleClickDisable()
   await RunningExtensions.show()
   const runningExtension = Locator(runningExtensionSelector, { hasText: extensionId })
   await expect(runningExtension).toBeHidden()
 
-  await enableWorkspaceLifecycleExtension({ ExtensionDetail, Locator, ...api })
+  await enableWorkspaceLifecycleExtension({ ExtensionDetail, ...api })
   await activateLifecycleExtension(api)
   await RunningExtensions.show()
 
