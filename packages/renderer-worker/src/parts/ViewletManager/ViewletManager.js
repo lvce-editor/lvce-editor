@@ -694,6 +694,7 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
     if (viewlet.disposed) {
       return
     }
+    await ViewletManagerVisitor.loadInstance(viewlet.id, module)
     state = ViewletState.ContentLoaded
     if (viewlet.show === false) {
     } else {
@@ -712,6 +713,7 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
 
     const instance = {
       actionsUid: viewlet.actionsUid,
+      cssLoaded: true,
       state: newState,
       renderedState: viewletState,
       factory: module,

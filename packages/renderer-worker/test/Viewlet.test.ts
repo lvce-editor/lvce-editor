@@ -31,6 +31,10 @@ jest.unstable_mockModule('../src/parts/ViewletManager/ViewletManager.js', () => 
     runLoadContentLater: jest.fn(),
   }
 })
+jest.unstable_mockModule('../src/parts/ViewletManagerVisitor/ViewletManagerVisitor.js', () => ({
+  disposeInstance: jest.fn(() => []),
+  loadInstance: jest.fn(),
+}))
 jest.unstable_mockModule('../src/parts/Id/Id.js', () => {
   return {
     create: jest.fn(),
@@ -47,6 +51,7 @@ jest.unstable_mockModule('../src/parts/SaveState/SaveState.js', () => ({
 }))
 
 const ViewletManager = await import('../src/parts/ViewletManager/ViewletManager.js')
+const ViewletManagerVisitor = await import('../src/parts/ViewletManagerVisitor/ViewletManagerVisitor.js')
 const RendererProcess = await import('../src/parts/RendererProcess/RendererProcess.js')
 const Id = await import('../src/parts/Id/Id.js')
 const SaveState = await import('../src/parts/SaveState/SaveState.js')
@@ -260,6 +265,30 @@ test('disposeFunctional disposes owned runtime viewlets', () => {
   expect(ViewletStates.getInstance(10)).toBeUndefined()
   expect(ViewletStates.getInstance(11)).toBeUndefined()
   expect(ViewletStates.getInstance(12)).toBeUndefined()
+})
+
+test('hideFunctional releases view css and showFunctional acquires it again', async () => {
+  const factory = {
+    create: jest.fn(() => ({ uid: 2 })),
+    hide: jest.fn(),
+    show: jest.fn(),
+  }
+  ViewletStates.set(2, {
+    cssLoaded: true,
+    factory,
+    moduleId: 'SimpleBrowser',
+    renderedState: { uid: 2 },
+    state: { uid: 2 },
+  })
+  jest.mocked(ViewletManagerVisitor.disposeInstance).mockReturnValue([['Css.removeCssStyleSheet', 'Css-ViewletSimpleBrowser']])
+  jest.mocked(ViewletManager.render).mockReturnValue([])
+
+  expect(Viewlet.hideFunctional(2)).toEqual([['Css.removeCssStyleSheet', 'Css-ViewletSimpleBrowser']])
+  expect(ViewletStates.getInstance(2).cssLoaded).toBe(false)
+
+  await expect(Viewlet.showFunctional(2)).resolves.toEqual([])
+  expect(ViewletManagerVisitor.loadInstance).toHaveBeenCalledWith('SimpleBrowser', factory)
+  expect(ViewletStates.getInstance(2).cssLoaded).toBe(true)
 })
 
 test('getFocusCommands returns focus render commands without sending them', async () => {

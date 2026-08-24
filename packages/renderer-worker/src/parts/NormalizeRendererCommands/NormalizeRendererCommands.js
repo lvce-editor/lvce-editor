@@ -1,4 +1,5 @@
 const kDispose = 'Viewlet.dispose'
+const kRemoveCssStyleSheet = 'Css.removeCssStyleSheet'
 const kSetCss = 'Viewlet.setCss'
 const kSetPatches = 'Viewlet.setPatches'
 
@@ -31,7 +32,7 @@ const normalizeCommand = (command) => {
   if (command[0] === kSetCss) {
     return normalizeSetCss(command)
   }
-  if (command[0] === kDispose) {
+  if (command[0] === kDispose || command[0] === kRemoveCssStyleSheet) {
     state.cssTexts.delete(command[1])
   }
   return command

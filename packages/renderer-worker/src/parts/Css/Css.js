@@ -28,6 +28,26 @@ export const loadCssStyleSheets = (css) => {
   return Promise.all(css.map(loadCssStyleSheet))
 }
 
+export const acquireCssStyleSheet = async (css) => {
+  CssState.addReference(css)
+  try {
+    await loadCssStyleSheet(css)
+  } catch (error) {
+    CssState.removeReference(css)
+    CssState.remove(css)
+    throw error
+  }
+}
+
+export const releaseCssStyleSheet = (css) => {
+  const count = CssState.removeReference(css)
+  if (count !== 0) {
+    return []
+  }
+  CssState.remove(css)
+  return [['Css.removeCssStyleSheet', GetCssId.getCssId(css)]]
+}
+
 export const addCssStyleSheet = (id, css) => {
   return RendererProcess.invoke('Css.addCssStyleSheet', id, css)
 }
@@ -42,6 +62,26 @@ export const addDynamicCss = (id, getCss, preferences) => {
     CssState.set(id, actuallyAddDynamicCss(id, getCss, preferences))
   }
   return CssState.get(id)
+}
+
+export const acquireDynamicCss = async (id, getCss, preferences) => {
+  CssState.addReference(id)
+  try {
+    await addDynamicCss(id, getCss, preferences)
+  } catch (error) {
+    CssState.removeReference(id)
+    CssState.remove(id)
+    throw error
+  }
+}
+
+export const releaseDynamicCss = (id) => {
+  const count = CssState.removeReference(id)
+  if (count !== 0) {
+    return []
+  }
+  CssState.remove(id)
+  return [['Css.removeCssStyleSheet', id]]
 }
 
 export const reload = async (css) => {
