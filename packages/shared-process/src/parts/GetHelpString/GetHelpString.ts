@@ -8,6 +8,7 @@ Usage:
 
 Extension development:
   --link <path>              Link an extension for this run. May be repeated.
+  --hot-reload              Restart linked extensions when their files change.
 
 Diagnostics:
   --trace-ipc=<worker-ids>  Trace comma-separated worker IDs (or *) to JSONL.

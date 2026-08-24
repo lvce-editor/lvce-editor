@@ -6,6 +6,7 @@ import * as ErrorCodes from '../src/parts/ErrorCodes/ErrorCodes.js'
 import * as TransientLinkedExtensions from '../src/parts/TransientLinkedExtensions/TransientLinkedExtensions.js'
 
 const originalArgv = process.argv
+const fileUriRegex = /^file:\/\//
 
 afterEach(() => {
   process.argv = originalArgv
@@ -26,6 +27,29 @@ test('getLinkedExtensions - reads repeated --link args', () => {
       source: '--link',
     },
   ])
+})
+
+test('getDevelopmentConfig - enables hot reload for linked extension roots', () => {
+  process.argv = [...originalArgv, '--link', 'packages/one', '--hot-reload']
+
+  expect(TransientLinkedExtensions.getDevelopmentConfig()).toEqual({
+    extensions: [
+      {
+        path: join(process.cwd(), 'packages/one'),
+        uri: expect.stringMatching(fileUriRegex),
+      },
+    ],
+    hotReload: true,
+  })
+})
+
+test('getDevelopmentConfig - ignores hot reload without linked extensions', () => {
+  process.argv = [...originalArgv, '--hot-reload']
+
+  expect(TransientLinkedExtensions.getDevelopmentConfig()).toEqual({
+    extensions: [],
+    hotReload: false,
+  })
 })
 
 test('validate - fails when --link path is missing', async () => {

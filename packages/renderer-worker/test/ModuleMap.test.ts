@@ -11,6 +11,7 @@ test('getModule - not found', () => {
 test('getModule', () => {
   expect(ModuleMap.getModuleId('About.showAbout')).toBe(ModuleId.About)
   expect(ModuleMap.getModuleId('ExtensionHostManagement.activateByEvent')).toBe(ModuleId.ExtensionManagement)
+  expect(ModuleMap.getModuleId('ExtensionHotReload.watch')).toBe(ModuleId.ExtensionHotReload)
   expect(ModuleMap.getModuleId('ExtensionHostSourceControl.getChangedFiles')).toBe(ModuleId.ExtensionManagement)
   expect(ModuleMap.getModuleId('ExtensionHostTextDocument.syncFull')).toBe(ModuleId.ExtensionHostCode)
   expect(ModuleMap.getModuleId('License.openLicense')).toBe(ModuleId.License)

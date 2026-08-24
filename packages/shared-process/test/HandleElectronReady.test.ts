@@ -16,6 +16,10 @@ jest.unstable_mockModule('../src/parts/Logger/Logger.js', () => ({
   error: jest.fn(),
 }))
 
+jest.unstable_mockModule('../src/parts/LinkedExtensionDevServers/LinkedExtensionDevServers.js', () => ({
+  startDevServers: jest.fn(),
+}))
+
 jest.unstable_mockModule('../src/parts/Process/Process.js', () => ({
   exit: jest.fn(),
 }))
@@ -31,6 +35,7 @@ jest.unstable_mockModule('../src/parts/TransientLinkedExtensions/TransientLinked
 const AppWindow = await import('../src/parts/AppWindow/AppWindow.js')
 const HandleElectronReady = await import('../src/parts/HandleElectronReady/HandleElectronReady.js')
 const Logger = await import('../src/parts/Logger/Logger.js')
+const LinkedExtensionDevServers = await import('../src/parts/LinkedExtensionDevServers/LinkedExtensionDevServers.js')
 const Preferences = await import('../src/parts/Preferences/Preferences.js')
 const Process = await import('../src/parts/Process/Process.js')
 const TransientLinkedExtensions = await import('../src/parts/TransientLinkedExtensions/TransientLinkedExtensions.js')
@@ -42,6 +47,7 @@ test('handleElectronReady - uses safe preferences when creating the app window',
   await HandleElectronReady.handleElectronReady({}, '/tmp')
 
   expect(TransientLinkedExtensions.validate).toHaveBeenCalledTimes(1)
+  expect(LinkedExtensionDevServers.startDevServers).toHaveBeenCalledTimes(1)
   expect(AppWindow.createAppWindow).toHaveBeenCalledTimes(1)
   expect(AppWindow.createAppWindow).toHaveBeenCalledWith({
     parsedArgs: {},

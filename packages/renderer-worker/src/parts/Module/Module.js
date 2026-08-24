@@ -227,6 +227,8 @@ export const load = (moduleId) => {
       return import('../FileSystem/FileSystemMemory.ipc.js')
     case ModuleId.WebSocketCapability:
       return import('../WebSocketCapability/WebSocketCapability.ipc.js')
+    case ModuleId.ExtensionHotReload:
+      return import('../ExtensionHotReload/ExtensionHotReload.ipc.js')
     default:
       throw new Error(`module ${moduleId} not found`)
   }

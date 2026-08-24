@@ -1,3 +1,4 @@
+import { pathToFileURL } from 'node:url'
 import * as ErrorCodes from '../ErrorCodes/ErrorCodes.ts'
 import * as ExtensionManifest from '../ExtensionManifest/ExtensionManifest.ts'
 import * as ExtensionManifestStatus from '../ExtensionManifestStatus/ExtensionManifestStatus.ts'
@@ -44,6 +45,17 @@ export const getLinkedExtensions = (): any => {
       resolvedPath: resolveLinkPath(link.path),
     }
   })
+}
+
+export const getDevelopmentConfig = (): any => {
+  const extensions = getLinkedExtensions().map((link: any) => ({
+    path: link.resolvedPath,
+    uri: pathToFileURL(link.resolvedPath).toString(),
+  }))
+  return {
+    extensions,
+    hotReload: Process.argv.includes('--hot-reload') && extensions.length > 0,
+  }
 }
 
 const createMissingPathError = (link: any): any => {

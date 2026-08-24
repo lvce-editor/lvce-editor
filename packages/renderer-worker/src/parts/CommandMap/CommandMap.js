@@ -144,6 +144,8 @@ export const commandMap = {
   'ExtensionHostTextSearch.textSearchMemory2': lazy('ExtensionHostTextSearch.textSearchMemory2'),
   'ExtensionHostTypeDefinition.executeTypeDefinitionProvider': lazy('ExtensionHostTypeDefinition.executeTypeDefinitionProvider'),
   'ExtensionHostWorkerContentSecurityPolicy.set': lazy('ExtensionHostWorkerContentSecurityPolicy.set'),
+  'ExtensionHotReload.dispose': lazy('ExtensionHotReload.dispose'),
+  'ExtensionHotReload.watch': lazy('ExtensionHotReload.watch'),
   'ExtensionManagement.activateByEvent': lazy('ExtensionManagement.activateByEvent'),
   'ExtensionManagement.disable': lazy('ExtensionManagement.disable'),
   'ExtensionManagement.enable': lazy('ExtensionManagement.enable'),
