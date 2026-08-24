@@ -63,6 +63,18 @@ test('handleElectronReady - exits with helpful error when transient link validat
   expect(Logger.error).toHaveBeenCalledTimes(1)
   expect(Logger.error).toHaveBeenCalledWith(error)
   expect(Process.exit).toHaveBeenCalledTimes(1)
+  expect(Process.exit).toHaveBeenCalledWith(1)
+  expect(AppWindow.createAppWindow).not.toHaveBeenCalled()
+})
+
+test('handleElectronReady - preserves the expected error code for other startup failures', async () => {
+  const error = new Error('Failed to load preferences')
+  // @ts-ignore
+  Preferences.getAllSafe.mockRejectedValue(error)
+
+  await HandleElectronReady.handleElectronReady({}, '/tmp')
+
+  expect(Logger.error).toHaveBeenCalledWith(error)
   expect(Process.exit).toHaveBeenCalledWith(128)
   expect(AppWindow.createAppWindow).not.toHaveBeenCalled()
 })
