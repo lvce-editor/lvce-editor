@@ -12,6 +12,7 @@ import * as SimpleBrowserOverlay from '../SimpleBrowserOverlay/SimpleBrowserOver
 import * as UpdateDynamicFocusContext from '../UpdateDynamicFocusContext/UpdateDynamicFocusContext.js'
 import { VError } from '../VError/VError.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
+import * as ViewletManagerVisitor from '../ViewletManagerVisitor/ViewletManagerVisitor.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
@@ -19,6 +20,14 @@ import * as ViewletElectron from './ViewletElectron.js'
 
 const getKeyBindingSetId = (instance, fallback) => {
   return instance.moduleId || fallback
+}
+
+const getCssDisposeCommands = (instance) => {
+  if (!instance.cssLoaded) {
+    return []
+  }
+  instance.cssLoaded = false
+  return ViewletManagerVisitor.disposeInstance(instance.moduleId, instance.factory)
 }
 
 export const getTitle = (id) => {
@@ -187,8 +196,9 @@ export const dispose = async (id) => {
     if (instance.factory.dispose) {
       await instance.factory.dispose(instance.state)
     }
-    if (widgetDisposeCommands.length > 0) {
-      await RendererProcess.invoke('Viewlet.sendMultiple', [...widgetDisposeCommands, ['Viewlet.dispose', instanceUid]])
+    const cssDisposeCommands = getCssDisposeCommands(instance)
+    if (widgetDisposeCommands.length > 0 || cssDisposeCommands.length > 0) {
+      await RendererProcess.invoke('Viewlet.sendMultiple', [...widgetDisposeCommands, ['Viewlet.dispose', instanceUid], ...cssDisposeCommands])
     } else {
       await RendererProcess.invoke(/* Viewlet.dispose */ 'Viewlet.dispose', /* id */ instanceUid)
     }
@@ -226,7 +236,11 @@ export const disposeFunctional = (id) => {
     }
     const uid = instance.state.uid
     Assert.number(uid)
-    const commands = [...LayoutWidgets.removeOwnedWidgets(uid), [/* Viewlet.dispose */ 'Viewlet.dispose', /* id */ uid]]
+    const commands = [
+      ...LayoutWidgets.removeOwnedWidgets(uid),
+      [/* Viewlet.dispose */ 'Viewlet.dispose', /* id */ uid],
+      ...getCssDisposeCommands(instance),
+    ]
 
     if (instance.factory.getKeyBindings) {
       KeyBindingsState.removeKeyBindings(getKeyBindingSetId(instance, id))
@@ -256,8 +270,12 @@ export const disposeFunctional = (id) => {
   }
 }
 
-export const showFunctional = (id) => {
+export const showFunctional = async (id) => {
   const instance = ViewletStates.getInstance(id)
+  if (!instance.cssLoaded) {
+    await ViewletManagerVisitor.loadInstance(instance.moduleId, instance.factory)
+    instance.cssLoaded = true
+  }
   const initialState = instance.factory.create()
   // TODO resize
   const commands = ViewletManager.render(instance.factory, initialState, instance.state)
@@ -289,14 +307,19 @@ export const hideFunctional = (id) => {
     }
     if (instance.factory.hide) {
       instance.factory.hide(instance.state)
-      return []
+      instance.status = 'hidden'
+      return getCssDisposeCommands(instance)
     }
     if (instance.factory.dispose) {
       instance.factory.dispose(instance.state)
     }
     const uid = instance.state.uid
     Assert.number(uid)
-    const commands = [...LayoutWidgets.removeOwnedWidgets(uid), [/* Viewlet.dispose */ 'Viewlet.dispose', /* id */ uid]]
+    const commands = [
+      ...LayoutWidgets.removeOwnedWidgets(uid),
+      [/* Viewlet.dispose */ 'Viewlet.dispose', /* id */ uid],
+      ...getCssDisposeCommands(instance),
+    ]
 
     if (instance.factory.getKeyBindings) {
       KeyBindingsState.removeKeyBindings(getKeyBindingSetId(instance, id))
@@ -620,7 +643,7 @@ export const disposeWidgetWithValue = async (id, value) => {
     }
     const { parentUid, uid } = instance.state
     Assert.number(uid)
-    const commands = [...LayoutWidgets.removeWidget(uid)]
+    const commands = [...LayoutWidgets.removeWidget(uid), ...getCssDisposeCommands(instance)]
     if (instance.factory.getKeyBindings) {
       KeyBindingsState.removeKeyBindings(getKeyBindingSetId(instance, uid))
     }

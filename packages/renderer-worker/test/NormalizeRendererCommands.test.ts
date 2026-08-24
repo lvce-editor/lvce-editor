@@ -44,6 +44,14 @@ test('disposal clears stylesheet state', () => {
   expect(NormalizeRendererCommands.normalizeCommands([command])).toEqual([command])
 })
 
+test('stylesheet removal clears stylesheet state', () => {
+  NormalizeRendererCommands.setCssText('Css-Explorer', '.Explorer {}')
+
+  NormalizeRendererCommands.normalizeCommands([['Css.removeCssStyleSheet', 'Css-Explorer']])
+
+  expect(NormalizeRendererCommands.getCssText('Css-Explorer')).toBeUndefined()
+})
+
 test('tracks stylesheets independently by id', () => {
   const css = '.item {}'
 

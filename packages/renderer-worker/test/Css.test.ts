@@ -26,6 +26,7 @@ beforeEach(() => {
     throw new Error('not implemented')
   }
   CssState.state.pending = Object.create(null)
+  CssState.state.references = Object.create(null)
 })
 
 jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () => {
@@ -87,4 +88,42 @@ test('loadCssStyleSheet - twice', async () => {
     'Css-test-Component',
     '/* /test/Component.css (Css-test-Component) */\nh1 { font-size: 20px; }',
   )
+})
+
+test('acquireCssStyleSheet keeps a shared stylesheet until its last view releases it', async () => {
+  // @ts-ignore
+  globalThis.fetch = jest.fn(() => {
+    return new Response({
+      ok: true,
+      statusText: 'ok',
+      // @ts-ignore
+      text: 'h1 { font-size: 20px; }',
+    })
+  })
+
+  await Css.acquireCssStyleSheet('/test/Component.css')
+  await Css.acquireCssStyleSheet('/test/Component.css')
+
+  expect(fetch).toHaveBeenCalledTimes(1)
+  expect(Css.releaseCssStyleSheet('/test/Component.css')).toEqual([])
+  expect(Css.releaseCssStyleSheet('/test/Component.css')).toEqual([['Css.removeCssStyleSheet', 'Css-test-Component']])
+})
+
+test('acquireCssStyleSheet adopts a stylesheet again after its last view released it', async () => {
+  // @ts-ignore
+  globalThis.fetch = jest.fn(() => {
+    return new Response({
+      ok: true,
+      statusText: 'ok',
+      // @ts-ignore
+      text: 'h1 { font-size: 20px; }',
+    })
+  })
+
+  await Css.acquireCssStyleSheet('/test/Component.css')
+  Css.releaseCssStyleSheet('/test/Component.css')
+  await Css.acquireCssStyleSheet('/test/Component.css')
+
+  expect(fetch).toHaveBeenCalledTimes(2)
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(2)
 })

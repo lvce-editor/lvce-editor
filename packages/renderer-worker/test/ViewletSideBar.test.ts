@@ -40,11 +40,13 @@ const RendererProcess = await import('../src/parts/RendererProcess/RendererProce
 const SaveState = await import('../src/parts/SaveState/SaveState.js')
 const ViewletManager = await import('../src/parts/ViewletManager/ViewletManager.js')
 const ViewletSideBar = await import('../src/parts/ViewletSideBar/ViewletSideBar.js')
+const ViewletStates = await import('../src/parts/ViewletStates/ViewletStates.js')
 const SharedProcess = await import('../src/parts/SharedProcess/SharedProcess.js')
 const JsonRpcVersion = await import('../src/parts/JsonRpcVersion/JsonRpcVersion.js')
 
 beforeEach(() => {
   jest.resetAllMocks()
+  ViewletStates.reset()
   Command.execute.mockResolvedValue('Search')
   RendererProcess.invoke.mockResolvedValue(undefined)
   SaveState.saveViewletState.mockResolvedValue(undefined)
@@ -172,6 +174,34 @@ test('handleSideBarViewletChange saves the concrete sidebar child under the view
 
   expect(SaveState.saveViewletStateWithStorageId).toHaveBeenCalledWith(99, 'Search')
   expect(SaveState.saveViewletState).not.toHaveBeenCalled()
+})
+
+test('handleSideBarViewletChange disposes the previously visible child', async () => {
+  const childState = { uid: 99 }
+  ViewletStates.set(99, {
+    factory: {},
+    moduleId: 'Search',
+    renderedState: childState,
+    state: childState,
+  })
+  const state = {
+    ...ViewletSideBar.create(1, '', 0, 0, 300, 500),
+    childUid: 99,
+    currentViewletId: 'Search',
+  }
+
+  await ViewletSideBar.handleSideBarViewletChange(state, 'Explorer')
+
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.sendMultiple', [
+    ['Viewlet.dispose', 99],
+    ['Viewlet.createFunctionalRoot', 'Explorer', 2, true],
+  ])
+  expect(ViewletStates.getInstance(99)).toBeUndefined()
+})
+
+test('getOwnedViewletIds returns the visible sidebar child', () => {
+  expect(ViewletSideBar.getOwnedViewletIds({ childUid: 99 })).toEqual([99])
+  expect(ViewletSideBar.getOwnedViewletIds({ childUid: -1 })).toEqual([])
 })
 
 test('handleSideBarViewletChange gives an opted-out extension view the full sidebar', async () => {
