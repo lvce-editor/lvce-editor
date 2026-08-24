@@ -98,12 +98,8 @@ export const load = (moduleId: any): any => {
       return import('../HandleMessagePortForTerminalProcess/HandleMessagePortForTerminalProcess.ipc.ts')
     case ModuleId.HandleNodeMessagePort:
       return import('../HandleNodeMessagePort/HandleNodeMessagePort.ipc.ts')
-    case ModuleId.HandleRemoteRequest:
-      return import('../HandleRemoteRequest/HandleRemoteRequest.ipc.ts')
     case ModuleId.HandleRequest:
       return import('../HandleRequest/HandleRequest.ipc.ts')
-    case ModuleId.HandleRequestTest:
-      return import('../HandleRequestTest/HandleRequestTest.ipc.ts')
     case ModuleId.HandleWebSocket:
       return import('../HandleWebSocket/HandleWebSocket.ipc.ts')
     case ModuleId.HandleWindowAllClosed:

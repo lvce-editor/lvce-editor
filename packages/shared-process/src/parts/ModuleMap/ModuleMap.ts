@@ -193,12 +193,8 @@ export const getModuleId = (commandId: any): any => {
       return ModuleId.HandleMessagePortForTerminalProcess
     case 'HandleNodeMessagePort.handleNodeMessagePort':
       return ModuleId.HandleNodeMessagePort
-    case 'HandleRemoteRequest.handleRemoteRequest':
-      return ModuleId.HandleRemoteRequest
     case 'HandleRequest.handleRequest':
       return ModuleId.HandleRequest
-    case 'HandleRequestTest.handleRequestTest':
-      return ModuleId.HandleRequestTest
     case 'HandleWebSocket.handleWebSocket':
       return ModuleId.HandleWebSocket
     case 'HandleWindowAllClosed.handleWindowAllClosed':

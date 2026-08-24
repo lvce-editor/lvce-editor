@@ -1,22 +1,28 @@
 import { join } from 'path'
 import * as Assert from '../Assert/Assert.ts'
 import * as GetElectronFileResponse from '../GetElectronFileResponse/GetElectronFileResponse.ts'
-import * as HandleRequestTest from '../HandleRequestTest/HandleRequestTest.ts'
-import * as HttpServerResponse from '../HttpServerResponse/HttpServerResponse.ts'
+import * as GetTestRequestResponse from '../GetTestRequestResponse/GetTestRequestResponse.ts'
+import * as HttpStatusCode from '../HttpStatusCode/HttpStatusCode.ts'
 import * as StaticPath from '../StaticPath/StaticPath.ts'
 
-export const handleRequest = async (socket: any, request: any): Promise<any> => {
-  if (!request) {
-    // socket might have been closed during transfer
-    return
+const toHttpResponse = (request: any, response: any): any => {
+  const { body, init } = response
+  return {
+    body,
+    hasBody: request.method !== 'HEAD' && init.status !== HttpStatusCode.NotModifed,
+    headers: init.headers || {},
+    status: init.status,
   }
-  Assert.object(socket)
+}
+
+export const handleRequest = async (request: any): Promise<any> => {
   Assert.object(request)
   if (request.url.startsWith('/tests')) {
     const staticPath = StaticPath.getStaticPath()
     const indexHtmlPath = join(staticPath, 'index.html')
-    return HandleRequestTest.handleRequestTest(socket, request, indexHtmlPath)
+    const response = await GetTestRequestResponse.getTestRequestResponse(request, indexHtmlPath)
+    return toHttpResponse(request, response)
   }
-  const fileResponse = await GetElectronFileResponse.getElectronFileResponse(request.url, request)
-  HttpServerResponse.send(request, socket, fileResponse)
+  const response = await GetElectronFileResponse.getElectronFileResponse(request.url, request)
+  return toHttpResponse(request, response)
 }
