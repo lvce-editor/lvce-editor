@@ -260,14 +260,6 @@ const getContentAreaVirtualDomLeft = (state: LayoutState) => {
     mainId,
     secondarySideBarVisible,
     secondarySideBarId,
-    previewActionsUid,
-    previewSashVisible,
-    previewVisible,
-    previewId,
-    secondaryPreviewActionsUid,
-    secondaryPreviewSashVisible,
-    secondaryPreviewVisible,
-    secondaryPreviewId,
   } = state
   const children: any[] = []
 
@@ -296,26 +288,6 @@ const getContentAreaVirtualDomLeft = (state: LayoutState) => {
     children.push(getSecondarySideBarDom(secondarySideBarId))
   }
 
-  if (previewSashVisible) {
-    children.push(getSashPreviewDom())
-  }
-
-  if (previewVisible) {
-    const previewAreaDom = getPreviewAreaDom(previewId, previewActionsUid, false)
-    children.push(...previewAreaDom)
-    delta -= previewAreaDom.length - 1
-  }
-
-  if (secondaryPreviewSashVisible) {
-    children.push(getSashSecondaryPreviewDom())
-  }
-
-  if (secondaryPreviewVisible) {
-    const previewAreaDom = getPreviewAreaDom(secondaryPreviewId, secondaryPreviewActionsUid, true)
-    children.push(...previewAreaDom)
-    delta -= previewAreaDom.length - 1
-  }
-
   return [
     {
       type: VirtualDomElements.Div,
@@ -337,14 +309,6 @@ const getContentAreaVirtualDomRight = (state: LayoutState) => {
     sideBarId,
     activityBarVisible,
     activityBarId,
-    previewActionsUid,
-    previewSashVisible,
-    previewVisible,
-    previewId,
-    secondaryPreviewActionsUid,
-    secondaryPreviewSashVisible,
-    secondaryPreviewVisible,
-    secondaryPreviewId,
   } = state
   const children: any[] = []
   let delta = 0
@@ -366,23 +330,6 @@ const getContentAreaVirtualDomRight = (state: LayoutState) => {
   if (activityBarVisible) {
     children.push(getActivityBarDom(activityBarId))
   }
-  if (previewSashVisible) {
-    children.push(getSashPreviewDom())
-  }
-  if (previewVisible) {
-    const previewAreaDom = getPreviewAreaDom(previewId, previewActionsUid, false)
-    children.push(...previewAreaDom)
-    delta -= previewAreaDom.length - 1
-  }
-  if (secondaryPreviewSashVisible) {
-    children.push(getSashSecondaryPreviewDom())
-  }
-  if (secondaryPreviewVisible) {
-    const previewAreaDom = getPreviewAreaDom(secondaryPreviewId, secondaryPreviewActionsUid, true)
-    children.push(...previewAreaDom)
-    delta -= previewAreaDom.length - 1
-  }
-
   return [
     {
       type: VirtualDomElements.Div,
@@ -445,18 +392,77 @@ const getContentAreaVirtualDom = (state: LayoutState) => {
   return getContentAreaVirtualDomRight(state)
 }
 
-export const getLayoutVirtualDom = (state: LayoutState) => {
+const getWorkbenchMainDom = (state: LayoutState) => {
+  const { panelVisible, panelId, statusBarVisible, statusBarId } = state
+  const children: any[] = [...getContentAreaVirtualDom(state)]
+  let childCount = 1
+
+  if (panelVisible) {
+    childCount++
+    children.push(getPanelDom(panelId))
+  }
+
+  if (statusBarVisible) {
+    childCount++
+    children.push(getStatusBarDom(statusBarId))
+  }
+
+  return [
+    {
+      childCount,
+      className: 'WorkbenchMain',
+      type: VirtualDomElements.Div,
+    },
+    ...children,
+  ]
+}
+
+const getWorkbenchBodyDom = (state: LayoutState) => {
   const {
-    titleBarVisible,
-    titleBarId,
-    statusBarVisible,
-    statusBarId,
-    panelSashVisible,
-    panelVisible,
-    panelId,
-    widgetReferences = [],
-    mountedViewletsBySource = {},
+    previewActionsUid,
+    previewId,
+    previewSashVisible,
+    previewVisible,
+    secondaryPreviewActionsUid,
+    secondaryPreviewId,
+    secondaryPreviewSashVisible,
+    secondaryPreviewVisible,
   } = state
+  const children: any[] = [...getWorkbenchMainDom(state)]
+  let childCount = 1
+
+  if (previewSashVisible) {
+    childCount++
+    children.push(getSashPreviewDom())
+  }
+
+  if (previewVisible) {
+    childCount++
+    children.push(...getPreviewAreaDom(previewId, previewActionsUid, false))
+  }
+
+  if (secondaryPreviewSashVisible) {
+    childCount++
+    children.push(getSashSecondaryPreviewDom())
+  }
+
+  if (secondaryPreviewVisible) {
+    childCount++
+    children.push(...getPreviewAreaDom(secondaryPreviewId, secondaryPreviewActionsUid, true))
+  }
+
+  return [
+    {
+      childCount,
+      className: 'WorkbenchBody',
+      type: VirtualDomElements.Div,
+    },
+    ...children,
+  ]
+}
+
+export const getLayoutVirtualDom = (state: LayoutState) => {
+  const { titleBarVisible, titleBarId, panelSashVisible, panelVisible, widgetReferences = [], mountedViewletsBySource = {} } = state
   const dom: any[] = []
   let workbenchChildCount = 0
 
@@ -474,21 +480,11 @@ export const getLayoutVirtualDom = (state: LayoutState) => {
   }
 
   workbenchChildCount++
-  dom.push(...getContentAreaVirtualDom(state))
+  dom.push(...getWorkbenchBodyDom(state))
 
   if (panelVisible && panelSashVisible) {
     workbenchChildCount++
     dom.push(getSashPanelDom())
-  }
-
-  if (panelVisible) {
-    workbenchChildCount++
-    dom.push(getPanelDom(panelId))
-  }
-  // Add StatusBar if visible
-  if (statusBarVisible) {
-    workbenchChildCount++
-    dom.push(getStatusBarDom(statusBarId))
   }
 
   const mountedSources = Object.values(mountedViewletsBySource)

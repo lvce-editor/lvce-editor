@@ -38,7 +38,7 @@ test('bundleCss does not add filename comment to App.css', async () => {
   }
 }, 30_000)
 
-test('bundleCss preserves the simple browser preview width', async () => {
+test('bundleCss lets the simple browser fill the preview area height', async () => {
   const dir = await mkdtemp(join(tmpdir(), 'lvce-bundle-css-'))
 
   try {
@@ -49,8 +49,12 @@ test('bundleCss preserves the simple browser preview width', async () => {
 
     const css = await readFile(join(dir, 'parts', 'ViewletSimpleBrowser.css'), 'utf8')
 
-    expect(css).toContain(`.ContentArea > .SimpleBrowser {
-  flex: 0 0 var(--PreviewWidth);
+    expect(css).toContain(`.SimpleBrowser {
+  contain: strict;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
 }`)
   } finally {
     await rm(dir, { recursive: true, force: true })
@@ -89,7 +93,7 @@ test('bundleCss keeps the preview sash transparent', async () => {
   }
 }, 30_000)
 
-test('bundleCss keeps the panel and panel sash within the non-preview area', async () => {
+test('bundleCss keeps the main workbench column separate from the full-height preview', async () => {
   const dir = await mkdtemp(join(tmpdir(), 'lvce-bundle-css-'))
 
   try {
@@ -100,7 +104,29 @@ test('bundleCss keeps the panel and panel sash within the non-preview area', asy
 
     const css = await readFile(join(dir, 'App.css'), 'utf8')
 
-    expect(css).toContain('contain: size layout style;')
+    expect(css).toContain(`.WorkbenchBody {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  position: relative;
+}`)
+    expect(css).toContain(`.WorkbenchMain {
+  contain: size layout style;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+  min-width: 0;
+}`)
+    expect(css).toContain(`.PreviewArea {
+  display: flex;
+  flex: 0 0 var(--PreviewWidth);
+  flex-direction: column;
+  min-height: 0;
+  min-width: 0;
+  overflow: hidden;
+  position: relative;
+}`)
     expect(css).toContain(`.Panel {
   background: var(--PanelBackground);
   height: var(--PanelHeight);
