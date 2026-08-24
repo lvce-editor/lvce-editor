@@ -132,8 +132,7 @@ export const handleSideBarViewletChange = async (state, moduleId, restore = true
   // TODO set it in layout
   const { childUid: currentChildUid, currentViewletId } = state
   const requestId = state.currentViewletRequestId + 1
-  const savePromise =
-    restore && currentChildUid !== -1 ? SaveState.saveViewletStateWithStorageId(currentChildUid, currentViewletId) : undefined
+  const savePromise = restore && currentChildUid !== -1 ? SaveState.saveViewletStateWithStorageId(currentChildUid, currentViewletId) : undefined
   state.currentViewletRequestId = requestId
   state.currentViewletId = moduleId
 
@@ -180,7 +179,10 @@ export const handleSideBarViewletChange = async (state, moduleId, restore = true
     restore ? undefined : { restore: false },
   )
   if (state.currentViewletRequestId !== requestId || state.currentViewletId !== moduleId) {
-    Viewlet.disposeFunctional(childUid)
+    const disposeCommands = Viewlet.disposeFunctional(childUid)
+    if (disposeCommands.length > 0) {
+      await RendererProcess.invoke('Viewlet.sendMultiple', disposeCommands)
+    }
     await savePromise
     return state
   }
@@ -189,6 +191,9 @@ export const handleSideBarViewletChange = async (state, moduleId, restore = true
   let actionsUid = -1
   let title = Character.EmptyString
   if (commands) {
+    if (currentChildUid !== -1) {
+      commands.unshift(...Viewlet.disposeFunctional(currentChildUid))
+    }
     const actionsDomIndex = commands.findIndex((command) => command[2] === 'setActionsDom')
     if (actionsDomIndex >= 0) {
       const nextActionsDom = commands[actionsDomIndex][3]
@@ -215,7 +220,10 @@ export const handleSideBarViewletChange = async (state, moduleId, restore = true
       commands.push(['Viewlet.setDom2', actionsUid, actionsDom], ['Viewlet.setUid', actionsUid, childUid])
     }
     if (state.currentViewletRequestId !== requestId || state.currentViewletId !== moduleId) {
-      Viewlet.disposeFunctional(childUid)
+      const disposeCommands = Viewlet.disposeFunctional(childUid)
+      if (disposeCommands.length > 0) {
+        await RendererProcess.invoke('Viewlet.sendMultiple', disposeCommands)
+      }
       await savePromise
       return state
     }
@@ -301,6 +309,10 @@ export const openViewlet = async (state, moduleId, focus = false, args) => {
 
 export const dispose = (state) => {
   // state.currentViewletId = undefined
+}
+
+export const getOwnedViewletIds = (state) => {
+  return state.childUid === -1 ? [] : [state.childUid]
 }
 
 export const openDefaultViewlet = async (state) => {

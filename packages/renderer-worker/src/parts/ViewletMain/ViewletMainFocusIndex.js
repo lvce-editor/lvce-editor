@@ -44,7 +44,7 @@ export const focusIndex = async (state, index) => {
 
   const maybeHiddenEditorInstance = ViewletStates.getInstance(editor.uid)
   if (maybeHiddenEditorInstance) {
-    const commands = Viewlet.showFunctional(editor.uid)
+    const commands = await Viewlet.showFunctional(editor.uid)
     const allCommands = [...disposeCommands, ...commands]
     return {
       newState,
