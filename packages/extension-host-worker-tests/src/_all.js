@@ -61,7 +61,7 @@ const handleConsole = (event) => {
 }
 
 const getTmpDir = () => {
-  return mkdtemp(join(tmpdir(), 'foo-'))
+  return mkdtemp(join(tmpdir(), 'lvce-extension-host-worker-tests-'))
 }
 
 const getServerArgs = (argv) => {
@@ -152,6 +152,11 @@ const runTests = async () => {
     await context.close()
     await browser.close()
     server.dispose()
+    await Promise.all([
+      rm(configDir, { recursive: true, force: true }),
+      rm(cacheDir, { recursive: true, force: true }),
+      rm(dataDir, { recursive: true, force: true }),
+    ])
   }
 }
 

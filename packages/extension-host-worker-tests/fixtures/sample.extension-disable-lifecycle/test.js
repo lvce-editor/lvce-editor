@@ -8,16 +8,27 @@ export const statusBarItemSelector = '.StatusBarItem[name="extension-lifecycle"]
 
 export const runningExtensionSelector = '.RunningExtensionId'
 
-export const addLifecycleExtension = async ({ ActivityBar, Command, Extension }) => {
-  const uri = new URL('.', import.meta.url).toString().replace(/\/$/, '')
-  await Extension.addWebExtension(uri)
-  await Extension.enableWorkspace(extensionId)
-  await ActivityBar.handleExtensionsChanged()
+export const workspaceUri = 'memfs:///workspace'
+
+export const activateLifecycleExtension = async ({ Command }) => {
   const activationResult = await Command.execute('ExtensionManagement.activateByEvent', 'onStatusBarItem', '', 0)
   if (activationResult.error) {
     throw activationResult.error
   }
   await Command.execute('Layout.handleExtensionsChanged')
+}
+
+export const addLifecycleExtension = async ({ ActivityBar, Command, Extension }) => {
+  const uri = new URL('.', import.meta.url).toString().replace(/\/$/, '')
+  await Extension.addWebExtension(uri)
+  await Extension.enableWorkspace(extensionId)
+  await ActivityBar.handleExtensionsChanged()
+  await activateLifecycleExtension({ Command })
+}
+
+export const addWorkspaceLifecycleExtension = async ({ ActivityBar, Command, Extension, Workspace }) => {
+  await Workspace.setPath(workspaceUri)
+  await addLifecycleExtension({ ActivityBar, Command, Extension })
 }
 
 export const disableLifecycleExtension = async ({ ExtensionDetail }) => {
@@ -28,10 +39,16 @@ export const disableLifecycleExtension = async ({ ExtensionDetail }) => {
 export const enableLifecycleExtension = async ({ Command, ExtensionDetail }) => {
   await ExtensionDetail.handleClickEnable()
   if (Command) {
-    const activationResult = await Command.execute('ExtensionManagement.activateByEvent', 'onStatusBarItem', '', 0)
-    if (activationResult.error) {
-      throw activationResult.error
-    }
-    await Command.execute('Layout.handleExtensionsChanged')
+    await activateLifecycleExtension({ Command })
   }
+}
+
+export const disableWorkspaceLifecycleExtension = async ({ Command, ExtensionDetail }) => {
+  await ExtensionDetail.open(extensionId)
+  await Command.execute('ExtensionDetail.handleClickDisableWorkspace')
+}
+
+export const enableWorkspaceLifecycleExtension = async ({ Command, ExtensionDetail }) => {
+  await ExtensionDetail.open(extensionId)
+  await Command.execute('ExtensionDetail.handleClickEnableWorkspace')
 }
