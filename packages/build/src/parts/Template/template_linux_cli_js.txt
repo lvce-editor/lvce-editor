@@ -40,7 +40,7 @@ const launchElectron = async (args) => {
   const foreground = isForegroundRequest(args)
   const verbose = args.includes('--verbose')
   const child = spawn(process.execPath, args, {
-    detached: !foreground,
+    detached: true,
     env,
     stdio: foreground ? ['inherit', 'inherit', 'pipe'] : 'ignore',
   })
@@ -60,10 +60,19 @@ const launchElectron = async (args) => {
     forwardElectronStderr(child.stderr)
   }
 
-  const { promise, resolve, reject } = Promise.withResolvers()
-  child.once('error', reject)
-  child.once('exit', (code) => resolve(code ?? 1))
-  return promise
+  const forwardSigInt = () => child.kill('SIGINT')
+  const forwardSigTerm = () => child.kill('SIGTERM')
+  process.on('SIGINT', forwardSigInt)
+  process.on('SIGTERM', forwardSigTerm)
+  try {
+    const { promise, resolve, reject } = Promise.withResolvers()
+    child.once('error', reject)
+    child.once('exit', (code) => resolve(code ?? 1))
+    return await promise
+  } finally {
+    process.off('SIGINT', forwardSigInt)
+    process.off('SIGTERM', forwardSigTerm)
+  }
 }
 
 const main = async () => {

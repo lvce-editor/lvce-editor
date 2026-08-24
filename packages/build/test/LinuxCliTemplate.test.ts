@@ -1,5 +1,5 @@
 import { describe, expect, test } from '@jest/globals'
-import { execFile } from 'node:child_process'
+import { execFile, spawn } from 'node:child_process'
 import { chmod, mkdir, mkdtemp, readFile, realpath, rm, symlink, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
@@ -68,11 +68,80 @@ describe('linux cli templates', () => {
     }
   })
 
-  test('detaches graphical launches and ignores their output', async () => {
+  test('detaches Electron launches and ignores graphical output', async () => {
     const cli = await readTemplate('linux_cli_js')
 
-    expect(cli).toContain('detached: !foreground')
+    expect(cli).toContain('detached: true')
     expect(cli).toContain("stdio: foreground ? ['inherit', 'inherit', 'pipe'] : 'ignore'")
+  })
+
+  testPosix('forwards SIGINT to the foreground Electron process', async () => {
+    const root = await mkdtemp(join(tmpdir(), 'lvce-linux-cli-sigint-'))
+    const binPath = join(root, 'bin')
+    const fakeElectronPath = join(root, 'fake-electron')
+    let cliProcess: ReturnType<typeof spawn> | undefined
+    let electronPid = 0
+    try {
+      await mkdir(binPath)
+      await writeFile(
+        fakeElectronPath,
+        `#!/usr/bin/env node
+console.log(\`ready \${process.pid}\`)
+process.on('SIGINT', () => {
+  console.log('received SIGINT')
+  process.exit(0)
+})
+setInterval(() => {}, 1000)
+`,
+      )
+      await chmod(fakeElectronPath, 0o755)
+      const cli = (await readTemplate('linux_cli_js')).replace(
+        'spawn(process.execPath, args, {',
+        `spawn(${JSON.stringify(fakeElectronPath)}, args, {`,
+      )
+      const cliPath = join(binPath, 'cli.js')
+      await writeFile(cliPath, cli)
+
+      const spawnedCliProcess = spawn(process.execPath, [cliPath, '--wait'], {
+        detached: true,
+        stdio: ['ignore', 'pipe', 'pipe'],
+      })
+      cliProcess = spawnedCliProcess
+      let stdout = ''
+      await new Promise<void>((resolve) => {
+        spawnedCliProcess.stdout!.on('data', (chunk) => {
+          stdout += chunk
+          const match = stdout.match(/ready (\d+)/)
+          if (match) {
+            electronPid = Number(match[1])
+            resolve()
+          }
+        })
+      })
+
+      if (!spawnedCliProcess.pid) {
+        throw new Error('Failed to start CLI process')
+      }
+      process.kill(-spawnedCliProcess.pid, 'SIGINT')
+      const { code, signal } = await new Promise<{ code: number | null; signal: NodeJS.Signals | null }>((resolve) => {
+        spawnedCliProcess.once('exit', (code, signal) => resolve({ code, signal }))
+      })
+
+      expect({ code, signal }).toEqual({ code: 0, signal: null })
+      expect(stdout).toContain('received SIGINT')
+    } finally {
+      if (electronPid) {
+        try {
+          process.kill(electronPid, 'SIGKILL')
+        } catch {}
+      }
+      if (cliProcess?.pid) {
+        try {
+          process.kill(-cliProcess.pid, 'SIGKILL')
+        } catch {}
+      }
+      await rm(root, { recursive: true })
+    }
   })
 
   test('uses promise resolvers for child process events', async () => {
