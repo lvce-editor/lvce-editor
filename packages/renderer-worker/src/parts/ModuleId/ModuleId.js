@@ -115,3 +115,4 @@ export const License = 150
 export const SendMessagePortToMainProcess = 151
 export const FileSystemMemory = 152
 export const WebSocketCapability = 153
+export const ExtensionHotReload = 154

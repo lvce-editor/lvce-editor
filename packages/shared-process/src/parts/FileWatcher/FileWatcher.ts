@@ -26,7 +26,7 @@ const removeCloseListener = (ipc: any, listener: any): void => {
   }
 }
 
-export const watch = async (ipc: any, id: any, { exclude, roots }: any): Promise<any> => {
+export const watch = async (ipc: any, id: any, { exclude, roots, useGitIgnore }: any): Promise<any> => {
   const internalId = Id.create()
   const handleClose = async (): Promise<void> => {
     removeCloseListener(ipc, handleClose)
@@ -39,6 +39,7 @@ export const watch = async (ipc: any, id: any, { exclude, roots }: any): Promise
     exclude,
     id: internalId,
     roots,
+    ...(useGitIgnore === undefined ? {} : { useGitIgnore }),
   })
 }
 

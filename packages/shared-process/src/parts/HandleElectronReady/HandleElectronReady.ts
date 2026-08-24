@@ -1,6 +1,7 @@
 import * as AppWindow from '../AppWindow/AppWindow.ts'
 import * as Assert from '../Assert/Assert.ts'
 import * as ExitCode from '../ExitCode/ExitCode.ts'
+import * as LinkedExtensionDevServers from '../LinkedExtensionDevServers/LinkedExtensionDevServers.ts'
 import * as Logger from '../Logger/Logger.ts'
 import * as Preferences from '../Preferences/Preferences.ts'
 import * as PreloadUrl from '../PreloadUrl/PreloadUrl.ts'
@@ -11,7 +12,8 @@ export const handleElectronReady = async (parsedArgs: any, workingDirectory: any
   Assert.object(parsedArgs)
   Assert.string(workingDirectory)
   try {
-    await TransientLinkedExtensions.validate()
+    const links = await TransientLinkedExtensions.validate()
+    await LinkedExtensionDevServers.startDevServers(links)
   } catch (error) {
     Logger.error(error)
     Process.exit(ExitCode.Error)

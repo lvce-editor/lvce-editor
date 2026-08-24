@@ -169,6 +169,10 @@ export const getExtensionsEtag = async (): Promise<any> => {
   return etag
 }
 
+export const getLinkedExtensionDevelopmentConfig = (): any => {
+  return TransientLinkedExtensions.getDevelopmentConfig()
+}
+
 export const getDisabledExtensions = (): any => {
   return ExtensionManifests.getAll(
     [

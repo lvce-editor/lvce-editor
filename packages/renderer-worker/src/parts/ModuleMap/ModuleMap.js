@@ -81,6 +81,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.Exit
     case 'ExtensionHost':
       return ModuleId.ExtensionHostCode
+    case 'ExtensionHotReload':
+      return ModuleId.ExtensionHotReload
     case 'ExtensionMeta':
       return ModuleId.ExtensionMeta
     case 'ExtensionNodeRpc':

@@ -44,6 +44,7 @@ test.each([
   const options = {
     exclude: ['node_modules'],
     roots: ['file:///workspace'],
+    useGitIgnore: true,
   }
 
   await expect(FileWatcher.watch(ipc, 1, options)).resolves.toBe(result)
@@ -53,6 +54,7 @@ test.each([
     exclude: options.exclude,
     id: 123,
     roots: options.roots,
+    useGitIgnore: true,
   })
 })
 
