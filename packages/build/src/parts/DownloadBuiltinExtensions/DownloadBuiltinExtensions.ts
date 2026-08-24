@@ -11,6 +11,7 @@ import * as ExitCode from '../ExitCode/ExitCode.ts'
 import * as JsonFile from '../JsonFile/JsonFile.ts'
 import * as Path from '../Path/Path.ts'
 import * as Process from '../Process/Process.ts'
+import { computeFileSha256, isSha256 } from '../Sha256/Sha256.ts'
 import extensions from './builtinExtensions.json' with { type: 'json' }
 
 const downloadUrl = async (url, outFile) => {
@@ -31,13 +32,22 @@ const downloadExtension = async (extension) => {
     Assert.string(extension.name)
     Assert.string(extension.version)
     Assert.string(extension.created)
+    Assert.string(extension.sha256)
+    if (!isSha256(extension.sha256)) {
+      throw new VError(`invalid SHA-256 digest ${extension.sha256}`)
+    }
     if (!extension.repository.startsWith('github.com/')) {
       throw new VError('currenly only extensions from github releases are supported')
     }
     const baseName = Path.baseName(extension.repository)
+    const assetName = extension.assetName || `${baseName}-v${extension.version}.tar.br`
+    Assert.string(assetName)
     const cacheName = baseName + '-' + extension.version + '.tar.br'
     const cachedPath = Path.absolute(Path.join('packages', 'build', '.tmp', `cachedExtensions`, cacheName))
     const outPath = Path.absolute(Path.join(`extensions`, extension.name))
+    if (existsSync(cachedPath) && (await computeFileSha256(cachedPath)) !== extension.sha256) {
+      await rm(cachedPath)
+    }
     if (existsSync(cachedPath)) {
       if (!existsSync(outPath)) {
         // TODO check version of unpackaged extension and when it is different, unpack the new extension
@@ -46,8 +56,13 @@ const downloadExtension = async (extension) => {
       await applyExtensionMetadata(extension, outPath)
       return
     }
-    const url = `https://${extension.repository}/releases/download/v${extension.version}/${baseName}-v${extension.version}.tar.br`
+    const url = `https://${extension.repository}/releases/download/v${extension.version}/${assetName}`
     await downloadUrl(url, cachedPath)
+    const actualSha256 = await computeFileSha256(cachedPath)
+    if (actualSha256 !== extension.sha256) {
+      await rm(cachedPath)
+      throw new VError(`SHA-256 mismatch for "${url}": expected ${extension.sha256}, received ${actualSha256}`)
+    }
     await extract(cachedPath, outPath)
     await applyExtensionMetadata(extension, outPath)
   } catch (error) {
@@ -85,8 +100,9 @@ const downloadExtensionAndLog = async (extension) => {
   console.time(`[download] ${extension.name}`)
   try {
     await downloadExtension(extension)
-  } catch (error) {}
-  console.timeEnd(`[download] ${extension.name}`)
+  } finally {
+    console.timeEnd(`[download] ${extension.name}`)
+  }
 }
 
 const downloadExtensions = async (extensions) => {
