@@ -3,10 +3,7 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-}
-
-.ContentArea > .SimpleBrowser {
-  flex: 0 0 var(--PreviewWidth);
+  min-height: 0;
 }
 
 .SimpleBrowserHeader {

@@ -3,6 +3,18 @@ import * as DomEventListenerFunctions from '../src/parts/DomEventListenerFunctio
 import * as SideBarLocationType from '../src/parts/SideBarLocationType/SideBarLocationType.js'
 import { getLayoutVirtualDom } from '../src/parts/GetLayoutVirtualDom/GetLayoutVirtualDom.ts'
 
+const parseVirtualDom = (dom: readonly any[]) => {
+  let index = 0
+  const parseNode = (): any => {
+    const node = dom[index++]
+    const children = Array.from({ length: node.childCount || 0 }, parseNode)
+    return { children, node }
+  }
+  const root = parseNode()
+  expect(index).toBe(dom.length)
+  return root
+}
+
 test('getLayoutVirtualDom renders sashes with tabIndex -1', () => {
   const state = {
     activityBarVisible: false,
@@ -104,16 +116,16 @@ test('getLayoutVirtualDom does not render the preview close button when preview 
 test.each([
   ['left', SideBarLocationType.Left],
   ['right', SideBarLocationType.Right],
-])('getLayoutVirtualDom wraps preview content with the side bar on the %s', (_name, sideBarLocation) => {
+])('getLayoutVirtualDom places the preview beside the main workbench column with the side bar on the %s', (_name, sideBarLocation) => {
   const state = {
     activityBarVisible: false,
     mainVisible: true,
     mainId: 1,
     panelSashVisible: false,
-    panelVisible: false,
-    panelId: -1,
+    panelVisible: true,
+    panelId: 4,
     previewActionsUid: 3,
-    previewSashVisible: false,
+    previewSashVisible: true,
     previewVisible: true,
     previewId: 2,
     secondarySideBarVisible: false,
@@ -122,35 +134,25 @@ test.each([
     sideBarSashVisible: false,
     sideBarVisible: false,
     sideBarId: -1,
-    statusBarVisible: false,
-    statusBarId: -1,
-    titleBarVisible: false,
-    titleBarId: -1,
+    statusBarVisible: true,
+    statusBarId: 5,
+    titleBarVisible: true,
+    titleBarId: 10,
   }
 
   // @ts-ignore
   const dom = getLayoutVirtualDom(state)
-  const previewAreaIndex = dom.findIndex((node) => node.className === 'PreviewArea')
+  const workbench = parseVirtualDom(dom)
+  const body = workbench.children[1]
+  const mainColumn = body.children[0]
+  const contentArea = mainColumn.children[0]
+  const previewArea = body.children[2]
 
-  expect(dom.slice(previewAreaIndex, previewAreaIndex + 5)).toEqual([
-    {
-      childCount: 3,
-      className: 'PreviewArea',
-      type: 4,
-    },
-    { type: 100, uid: 2 },
-    { type: 100, uid: 3 },
-    expect.objectContaining({
-      ariaLabel: 'Close Preview',
-      childCount: 1,
-      className: 'IconButton PreviewCloseButton',
-    }),
-    {
-      childCount: 0,
-      className: 'MaskIcon MaskIconClose',
-      type: 4,
-    },
-  ])
+  expect(workbench.children.map(({ node }) => node.uid ?? node.className)).toEqual([10, 'WorkbenchBody'])
+  expect(body.children.map(({ node }) => node.className)).toEqual(['WorkbenchMain', 'Viewlet Sash SashVertical SashPreview', 'PreviewArea'])
+  expect(mainColumn.children.map(({ node }) => node.uid ?? node.className)).toEqual(['ContentArea', 4, 5])
+  expect(contentArea.children.map(({ node }) => node.uid)).toEqual([1])
+  expect(previewArea.children.map(({ node }) => node.uid ?? node.className)).toEqual([2, 3, 'IconButton PreviewCloseButton'])
 })
 
 test('getLayoutVirtualDom renders an independently closable secondary preview', () => {

@@ -8,6 +8,22 @@
   flex-direction: column;
 }
 
+.WorkbenchBody {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  position: relative;
+}
+
+.WorkbenchMain {
+  contain: size layout style;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+  min-width: 0;
+}
+
 .ContentArea {
   flex: 1;
   display: flex;
@@ -17,10 +33,19 @@
 }
 
 .PreviewArea {
+  display: flex;
   flex: 0 0 var(--PreviewWidth);
+  flex-direction: column;
+  min-height: 0;
   min-width: 0;
   overflow: hidden;
   position: relative;
+}
+
+.PreviewArea > :first-child {
+  flex: 1;
+  min-height: 0;
+  min-width: 0;
 }
 
 .SecondaryPreviewArea {
