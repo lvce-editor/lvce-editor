@@ -63,6 +63,7 @@ const ErrorCodes = {
   ERR_STREAM_PREMATURE_CLOSE: 'ERR_STREAM_PREMATURE_CLOSE',
   EISDIR: 'EISDIR',
   ECONNRESET: 'ECONNRESET',
+  EPIPE: 'EPIPE',
   ENOENT: 'ENOENT',
   EADDRINUSE: 'EADDRINUSE',
 }
@@ -120,9 +121,9 @@ const handleRequest = (req, res) => {
     return
   }
   if (isStatic(req.url)) {
-    return handleResponseViaStaticServer(req, res, 'StaticServer.getResponse')
+    return handleResponseViaProcess(req, res, getOrCreateStaticServerPathProcess, 'StaticServer.getResponse')
   }
-  return sendHandleSharedProcess(req, res.socket, 'HandleRequest.handleRequest')
+  return handleResponseViaProcess(req, res, getOrCreateSharedProcess, 'HandleRequest.handleRequest')
 }
 
 const state = {
@@ -211,6 +212,7 @@ const launchProcess = async (processPath, execArgv) => {
         ...process.env,
       },
       execArgv: [],
+      serialization: 'advanced',
     })
     childProcess.on('exit', handleExit)
     childProcess.on('disconnect', handleSharedProcessDisconnect)
@@ -225,7 +227,9 @@ const launchProcess = async (processPath, execArgv) => {
  */
 const launchSharedProcess = async () => {
   const sharedProcessPath = join(ROOT, 'packages', 'shared-process', 'src', 'sharedProcessMain.ts')
-  return launchProcess(sharedProcessPath, ['--enable-source-maps', '--ipc-type=node-forked-process', ...argvSliced])
+  const ipc = await launchProcess(sharedProcessPath, ['--enable-source-maps', '--ipc-type=node-forked-process', ...argvSliced])
+  ipc.on('message', handleMessage)
+  return ipc
 }
 
 /**
@@ -277,25 +281,21 @@ const getHandleMessage = (request) => {
   }
 }
 
-const handleRequestError = (error) => {
-  if (error && error.code === 'ECONNRESET') {
-    // ignore
-    return
-  }
-  console.info('[info]: request upgrade error', error)
+const isExpectedConnectionError = (error) => {
+  return error && (error.code === ErrorCodes.ECONNRESET || error.code === ErrorCodes.EPIPE)
 }
 
-const handleSocketUpgradeError = (error) => {
-  // @ts-ignore
-  console.info('[info] request socket upgrade error', error)
+const handleRequestError = (error) => {
+  if (!isExpectedConnectionError(error)) {
+    console.info('[info]: request error', error)
+  }
 }
 
 const handleSocketError = (error) => {
-  if (error && error.code === 'ECONNRESET') {
-    return
+  if (!isExpectedConnectionError(error)) {
+    // @ts-ignore
+    console.info('[info] request socket error', error)
   }
-  // @ts-ignore
-  console.info('[info] request socket error', error)
 }
 
 const sendHandleSharedProcess = async (request, socket, method, ...params) => {
@@ -303,7 +303,7 @@ const sendHandleSharedProcess = async (request, socket, method, ...params) => {
   if (!socket) {
     return
   }
-  socket.on('error', handleSocketUpgradeError)
+  socket.on('error', handleSocketError)
   const sharedProcess = await getOrCreateSharedProcess()
   sharedProcess.send(
     {
@@ -352,26 +352,28 @@ const handleMessage = (message) => {
 
 const hasErrorListener = new WeakSet()
 
-const handleResponseViaStaticServer = async (request, res, method, ...params) => {
-  request.on('error', handleRequestError)
-  if (res.socket && !hasErrorListener.has(res.socket)) {
-    res.socket.on('error', handleSocketError)
-    hasErrorListener.add(res.socket)
-  }
-  const staticServerProcess = await getOrCreateStaticServerPathProcess()
+const invoke = async (ipc, method, ...params) => {
   const { id, promise } = registerCallback()
-  // TODO use rpc and invoke
-  staticServerProcess.send({
+  ipc.send({
     jsonrpc: '2.0',
     id,
     method,
-    params: [getHandleMessage(request), ...params],
+    params,
   })
   const response = await promise
-  const { result } = response
+  if (response.error) {
+    throw new Error(response.error.message)
+  }
+  return response.result
+}
+
+const sendResponse = (res, result) => {
   const { status, headers, body, hasBody } = result
   if (!status) {
     throw new Error('invalid status')
+  }
+  if (res.destroyed) {
+    return
   }
   res.statusCode = status
   setHeaders(res, headers)
@@ -380,6 +382,18 @@ const handleResponseViaStaticServer = async (request, res, method, ...params) =>
   } else {
     res.end()
   }
+}
+
+const handleResponseViaProcess = async (request, res, getProcess, method, ...params) => {
+  request.on('error', handleRequestError)
+  res.on('error', handleSocketError)
+  if (res.socket && !hasErrorListener.has(res.socket)) {
+    res.socket.on('error', handleSocketError)
+    hasErrorListener.add(res.socket)
+  }
+  const ipc = await getProcess()
+  const result = await invoke(ipc, method, getHandleMessage(request), ...params)
+  sendResponse(res, result)
 }
 
 /**
