@@ -41,7 +41,7 @@
     }
   },
   "dependencies": {
-    "@lvce-editor/rpc": "^6.18.0"
+    "@lvce-editor/rpc": "^6.19.3"
   },
   "devDependencies": {
     "@jest/globals": "^30.4.1"
