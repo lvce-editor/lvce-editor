@@ -52,6 +52,19 @@ export const readFile = (uri) => {
   })
 }
 
+export const getBlob = async (uri, type = '') => {
+  const content = await readFile(uri)
+  if (content instanceof Blob) {
+    return content
+  }
+  return new Blob([content], { type })
+}
+
+export const getBlobUrl = async (uri, type = '') => {
+  const blob = await getBlob(uri, type)
+  return URL.createObjectURL(blob)
+}
+
 export const remove = async (uri) => {
   const { protocol, path, uri: providerUri } = getProviderProtocolPathAndUri(uri)
   const result = await executeProvider({

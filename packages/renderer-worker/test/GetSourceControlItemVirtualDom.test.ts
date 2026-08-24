@@ -46,3 +46,22 @@ test('wraps the filename in a separate span', () => {
     },
   ])
 })
+
+test('does not render an empty file icon', () => {
+  const dom = GetSourceControlItemVirtualDom.getSourceControlItemVirtualDom({
+    posInSet: 1,
+    setSize: 1,
+    icon: '',
+    file: '/workspace/src/file.js',
+    label: 'file.js',
+    decorationIcon: '/modified.svg',
+    decorationIconTitle: 'Modified',
+    decorationStrikeThrough: false,
+    detail: 'src/',
+    buttons: EmptySourceControlButtons.emptySourceControlButtons,
+    type: DirentType.File,
+  })
+
+  expect(dom[0].childCount).toBe(2)
+  expect(dom.some((node) => node.className === 'FileIcon')).toBe(false)
+})

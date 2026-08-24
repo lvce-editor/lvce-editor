@@ -59,6 +59,31 @@ test('readFile - error', async () => {
   await expect(ExtensionHostFileSystem.readFile('memfs:///test.txt')).rejects.toThrow(new TypeError('x is not a function'))
 })
 
+test('getBlob preserves binary provider content', async () => {
+  const audio = new Blob(['recorded audio'], { type: 'audio/webm' })
+  invoke.mockResolvedValue({ found: true, result: audio })
+
+  await expect(ExtensionHostFileSystem.getBlob('gpt-voice-audio:///message.webm', 'video/webm')).resolves.toBe(audio)
+})
+
+test('getBlob converts text provider content using the requested mime type', async () => {
+  invoke.mockResolvedValue({ found: true, result: 'test content' })
+
+  const blob = await ExtensionHostFileSystem.getBlob('memfs:///test.txt', 'text/plain')
+
+  expect(blob.type).toBe('text/plain')
+  await expect(blob.text()).resolves.toBe('test content')
+})
+
+test('getBlobUrl creates an object url for provider content', async () => {
+  const createObjectURL = jest.spyOn(URL, 'createObjectURL').mockReturnValue('blob:recording')
+  const audio = new Blob(['recorded audio'], { type: 'audio/webm' })
+  invoke.mockResolvedValue({ found: true, result: audio })
+
+  await expect(ExtensionHostFileSystem.getBlobUrl('gpt-voice-audio:///message.webm', 'video/webm')).resolves.toBe('blob:recording')
+  expect(createObjectURL).toHaveBeenCalledWith(audio)
+})
+
 test('remove', async () => {
   // @ts-ignore
   ExtensionHostShared.executeProvider.mockImplementation(() => {})

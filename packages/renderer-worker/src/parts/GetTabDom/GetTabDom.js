@@ -7,14 +7,19 @@ import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
 const getIconDom = (icon) => {
-  if (icon.startsWith('MaskIcon')) {
-    return {
-      type: VirtualDomElements.Div,
-      className: `TabIcon ${icon}`,
-      childCount: 0,
-    }
+  if (!icon) {
+    return []
   }
-  return GetFileIconVirtualDom.getFileIconVirtualDom(icon)
+  if (icon.startsWith('MaskIcon')) {
+    return [
+      {
+        type: VirtualDomElements.Div,
+        className: `TabIcon ${icon}`,
+        childCount: 0,
+      },
+    ]
+  }
+  return [GetFileIconVirtualDom.getFileIconVirtualDom(icon)]
 }
 
 export const getTabDom = (tab) => {
@@ -27,6 +32,7 @@ export const getTabDom = (tab) => {
   // @ts-ignore
   const isHovered = flags & TabFlags.Hovered
   const actualTabWidth = fixedWidth || tabWidth
+  const iconDom = getIconDom(icon)
   const tabElement = {
     type: VirtualDomElements.Div,
     className: tabClassName,
@@ -35,7 +41,7 @@ export const getTabDom = (tab) => {
     width: actualTabWidth,
     ariaSelected: isActive,
     title,
-    childCount: 2,
+    childCount: 1 + iconDom.length,
     'data-dragUid': uid,
   }
   DragData.set(uid, {
@@ -46,7 +52,7 @@ export const getTabDom = (tab) => {
 
   dom.push(
     tabElement,
-    getIconDom(icon),
+    ...iconDom,
     {
       type: VirtualDomElements.Div,
       className: ClassNames.TabLabel,
