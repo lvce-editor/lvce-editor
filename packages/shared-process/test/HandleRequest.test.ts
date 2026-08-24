@@ -1,4 +1,5 @@
 import { beforeEach, expect, jest, test } from '@jest/globals'
+import { join } from 'node:path'
 
 beforeEach(() => {
   jest.clearAllMocks()
@@ -58,7 +59,7 @@ test('returns a test page response', async () => {
 
   const result = await HandleRequest.handleRequest(request)
 
-  expect(GetTestRequestResponse.getTestRequestResponse).toHaveBeenCalledWith(request, '/test/static/index.html')
+  expect(GetTestRequestResponse.getTestRequestResponse).toHaveBeenCalledWith(request, join('/test/static', 'index.html'))
   expect(result).toEqual({
     body: '<!doctype html>',
     hasBody: true,
