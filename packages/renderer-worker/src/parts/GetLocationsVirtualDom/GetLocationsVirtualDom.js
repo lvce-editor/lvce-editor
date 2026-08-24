@@ -63,20 +63,25 @@ const getCollapsedVirtualDom = (location) => {
 
 const getExpandedVirtualDom = (location) => {
   const { index, name, icon } = location
+  const fileIconDom = icon
+    ? [
+        {
+          type: VirtualDomElements.Img,
+          className: ClassNames.FileIcon,
+          src: icon,
+        },
+      ]
+    : []
   return [
     {
       type: VirtualDomElements.Div,
       className: ClassNames.TreeItem,
       ariaExpanded: true,
       id: `Reference-${index}`,
-      childCount: 2,
+      childCount: 1 + fileIconDom.length,
       paddingLeft: '1rem',
     },
-    {
-      type: VirtualDomElements.Img,
-      className: ClassNames.FileIcon,
-      src: icon,
-    },
+    ...fileIconDom,
     text(name),
   ]
 }
