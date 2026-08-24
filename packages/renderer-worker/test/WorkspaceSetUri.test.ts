@@ -6,6 +6,7 @@ const exists = jest.fn<(uri: string) => Promise<boolean>>(async () => true)
 const createNotification = jest.fn<(type: string, text: string) => Promise<void>>(async () => {})
 const setWindowTitle = jest.fn<(title: string) => Promise<void>>(async () => {})
 const disposeTextSearchWorker = jest.fn<() => Promise<void>>(async () => {})
+const disposeFileSystemWorker = jest.fn<() => Promise<void>>(async () => {})
 const isTest = jest.fn<() => boolean>(() => false)
 const getPlatform = jest.fn(() => PlatformType.Test)
 const setWorkspaceUri = jest.fn(async (_uri: string) => {})
@@ -38,6 +39,10 @@ jest.unstable_mockModule('../src/parts/TextSearchWorker/TextSearchWorker.js', ()
   dispose: disposeTextSearchWorker,
 }))
 
+jest.unstable_mockModule('../src/parts/FileSystemWorker/FileSystemWorker.js', () => ({
+  dispose: disposeFileSystemWorker,
+}))
+
 jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => ({
   getPlatform,
 }))
@@ -57,6 +62,7 @@ beforeEach(() => {
   getPathSeparator.mockClear()
   setWindowTitle.mockClear()
   disposeTextSearchWorker.mockClear()
+  disposeFileSystemWorker.mockClear()
   isTest.mockClear()
   isTest.mockReturnValue(false)
   getPlatform.mockClear()
@@ -73,6 +79,7 @@ test('setPath uses the product name for an empty workspace', async () => {
 
   expect(setWindowTitle).toHaveBeenCalledWith('Lvce Editor')
   expect(disposeTextSearchWorker).toHaveBeenCalledTimes(1)
+  expect(disposeFileSystemWorker).toHaveBeenCalledTimes(1)
 })
 
 test('setPath uses the folder name for a workspace', async () => {
@@ -96,9 +103,7 @@ test('setPath preserves the current workspace when the folder does not exist', a
   Workspace.state.workspaceUri = '/home/test/current'
   exists.mockResolvedValue(false)
 
-  await expect(Workspace.setPath('/home/test/missing')).rejects.toThrow(
-    new Error("Workspace folder does not exist: '/home/test/missing'"),
-  )
+  await expect(Workspace.setPath('/home/test/missing')).rejects.toThrow(new Error("Workspace folder does not exist: '/home/test/missing'"))
 
   expect(exists).toHaveBeenCalledWith('/home/test/missing')
   expect(createNotification).toHaveBeenCalledWith('error', "Workspace folder does not exist: '/home/test/missing'")
@@ -157,15 +162,14 @@ test('setUri uses a provided provider path separator', async () => {
   expect(disposeTextSearchWorker).toHaveBeenCalledTimes(1)
 })
 
-test('setUri uses the remote backend workspace path', async () => {
-  await Workspace.setUri('remote-ssh://host/work', '/', {
-    token: 'secret',
-    url: 'ws://127.0.0.1:45123',
+test('setUri uses the workspace connection path', async () => {
+  await Workspace.setUri('workspace-provider://host/work', '/', {
+    command: 'workspace-provider.getWebSocketUrl',
     workspacePath: '/work',
   })
 
   expect(Workspace.getWorkspacePath()).toBe('/work')
-  expect(Workspace.getWorkspaceUri()).toBe('remote-ssh://host/work')
+  expect(Workspace.getWorkspaceUri()).toBe('workspace-provider://host/work')
   expect(Workspace.state.pathSeparator).toBe('/')
   expect(getPathSeparator).not.toHaveBeenCalled()
 })
@@ -173,11 +177,10 @@ test('setUri uses the remote backend workspace path', async () => {
 test('setUri persists the workspace uri in an Electron window', async () => {
   getPlatform.mockReturnValue(PlatformType.Electron)
 
-  await Workspace.setUri('remote-ssh://host/work', '/', {
-    token: 'secret',
-    url: 'ws://127.0.0.1:45123',
+  await Workspace.setUri('workspace-provider://host/work', '/', {
+    command: 'workspace-provider.getWebSocketUrl',
     workspacePath: '/work',
   })
 
-  expect(setWorkspaceUri).toHaveBeenCalledWith('remote-ssh://host/work')
+  expect(setWorkspaceUri).toHaveBeenCalledWith('workspace-provider://host/work')
 })

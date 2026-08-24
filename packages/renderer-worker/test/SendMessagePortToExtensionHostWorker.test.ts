@@ -41,7 +41,7 @@ jest.unstable_mockModule('../src/parts/SettingsWorker/SettingsWorker.js', () => 
   }
 })
 
-jest.unstable_mockModule('../src/parts/WorkspaceBackend/WorkspaceBackend.js', () => {
+jest.unstable_mockModule('../src/parts/WorkspaceConnection/WorkspaceConnection.js', () => {
   return {
     connectMessagePort: jest.fn(async () => false),
   }
@@ -53,7 +53,7 @@ const ExplorerViewWorker = await import('../src/parts/ExplorerViewWorker/Explore
 const MainAreaWorker = await import('../src/parts/MainAreaWorker/MainAreaWorker.js')
 const SettingsWorker = await import('../src/parts/SettingsWorker/SettingsWorker.js')
 const SharedProcess = await import('../src/parts/SharedProcess/SharedProcess.js')
-const WorkspaceBackend = await import('../src/parts/WorkspaceBackend/WorkspaceBackend.js')
+const WorkspaceConnection = await import('../src/parts/WorkspaceConnection/WorkspaceConnection.js')
 const SendMessagePortToExtensionHostWorker = await import('../src/parts/SendMessagePortToExtensionHostWorker/SendMessagePortToExtensionHostWorker.js')
 
 test('sendMessagePortToProcessExplorer', async () => {
@@ -65,9 +65,9 @@ test('sendMessagePortToProcessExplorer', async () => {
   expect(SharedProcess.invokeAndTransfer).toHaveBeenCalledWith('HandleMessagePortForProcessExplorer.handleMessagePortForProcessExplorer', port)
 })
 
-test('sendMessagePortToTerminalProcess uses the remote workspace backend', async () => {
+test('sendMessagePortToTerminalProcess uses the workspace connection', async () => {
   const port = {}
-  jest.mocked(WorkspaceBackend.connectMessagePort).mockResolvedValueOnce(true)
+  jest.mocked(WorkspaceConnection.connectMessagePort).mockResolvedValueOnce(true)
 
   await SendMessagePortToExtensionHostWorker.sendMessagePortToTerminalProcess(
     port,
@@ -75,7 +75,7 @@ test('sendMessagePortToTerminalProcess uses the remote workspace backend', async
     1,
   )
 
-  expect(WorkspaceBackend.connectMessagePort).toHaveBeenCalledWith('terminal-process', port)
+  expect(WorkspaceConnection.connectMessagePort).toHaveBeenCalledWith('terminal-process', port)
   expect(SharedProcess.invokeAndTransfer).not.toHaveBeenCalled()
 })
 

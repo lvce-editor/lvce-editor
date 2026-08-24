@@ -3,12 +3,12 @@ import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as SendMessagePortToElectron from '../SendMessagePortToElectron/SendMessagePortToElectron.js'
 import * as GetPortTuple from '../GetPortTuple/GetPortTuple.js'
-import * as WorkspaceBackend from '../WorkspaceBackend/WorkspaceBackend.js'
+import * as WorkspaceConnection from '../WorkspaceConnection/WorkspaceConnection.js'
 
 export const create = async (options) => {
-  if (WorkspaceBackend.isActive()) {
+  if (WorkspaceConnection.isActive()) {
     const module = await import('../IpcParentWithWebSocket/IpcParentWithWebSocket.js')
-    const rawIpc = await module.create({ ...options, getUrl: () => WorkspaceBackend.getWebSocketUrl(options.type) })
+    const rawIpc = await module.create({ ...options, getUrl: () => WorkspaceConnection.getWebSocketUrl(options.type) })
     if (options.raw) {
       return rawIpc
     }

@@ -1,9 +1,9 @@
 import * as GetWebSocketUrl from '../GetWebSocketUrl/GetWebSocketUrl.js'
 import * as Location from '../Location/Location.js'
-import * as WorkspaceBackend from '../WorkspaceBackend/WorkspaceBackend.js'
+import * as WorkspaceConnection from '../WorkspaceConnection/WorkspaceConnection.js'
 
 export const create = async (type) => {
-  const remoteUrl = await WorkspaceBackend.getWebSocketUrl(type)
+  const remoteUrl = await WorkspaceConnection.getWebSocketUrl(type)
   return {
     protocols: [],
     url: remoteUrl || GetWebSocketUrl.getWebSocketUrl(type, Location.getHost()),

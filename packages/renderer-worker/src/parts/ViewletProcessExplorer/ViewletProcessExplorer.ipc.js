@@ -1,9 +1,9 @@
 import { createWorkerViewlet } from '../CreateWorkerViewlet/CreateWorkerViewlet.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
-import * as WorkspaceBackend from '../WorkspaceBackend/WorkspaceBackend.js'
+import * as WorkspaceConnection from '../WorkspaceConnection/WorkspaceConnection.js'
 
-const getPlatform = () => (WorkspaceBackend.isActive() ? PlatformType.Remote : Platform.getPlatform())
+const getPlatform = () => (WorkspaceConnection.isActive() ? PlatformType.Remote : Platform.getPlatform())
 
 export const {
   Commands,

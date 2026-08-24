@@ -47,7 +47,7 @@ import * as TextMeasurementWorker from '../TextMeasurementWorker/TextMeasurement
 import * as TextSearchViewWorker from '../TextSearchViewWorker/TextSearchViewWorker.js'
 import * as TextSearchWorker from '../TextSearchWorker/TextSearchWorker.js'
 import * as TitleBarWorker from '../TitleBarWorker/TitleBarWorker.js'
-import * as WorkspaceBackend from '../WorkspaceBackend/WorkspaceBackend.js'
+import * as WorkspaceConnection from '../WorkspaceConnection/WorkspaceConnection.js'
 
 const directViewWorkers = {
   About: [AboutViewWorker, 'About.handleMessagePort'],
@@ -88,7 +88,7 @@ export const sendMessagePortToSharedProcess = async (port, initialCommand, rpcId
 
 export const sendMessagePortToProcessExplorer = async (port) => {
   Assert.object(port)
-  if (await WorkspaceBackend.connectMessagePort('process-explorer', port)) {
+  if (await WorkspaceConnection.connectMessagePort('process-explorer', port)) {
     return
   }
   await SharedProcess.invokeAndTransfer('HandleMessagePortForProcessExplorer.handleMessagePortForProcessExplorer', port)
@@ -97,7 +97,7 @@ export const sendMessagePortToProcessExplorer = async (port) => {
 export const sendMessagePortToTerminalProcess = async (port, initialCommand, rpcId) => {
   Assert.object(port)
   Assert.string(initialCommand)
-  if (await WorkspaceBackend.connectMessagePort('terminal-process', port)) {
+  if (await WorkspaceConnection.connectMessagePort('terminal-process', port)) {
     return
   }
   await SharedProcess.invokeAndTransfer(initialCommand, port, rpcId)
