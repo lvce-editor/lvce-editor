@@ -31,6 +31,7 @@ import * as Performance from '../Performance/Performance.js'
 import * as PerformanceMarkerType from '../PerformanceMarkerType/PerformanceMarkerType.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as Preferences from '../Preferences/Preferences.js'
+import * as PreferencesFileWatcher from '../PreferencesFileWatcher/PreferencesFileWatcher.js'
 import * as PreferencesState from '../PreferencesState/PreferencesState.js'
 import * as PromptMode from '../PromptMode/PromptMode.js'
 import * as RecentlyOpened from '../RecentlyOpened/RecentlyOpened.js'
@@ -271,7 +272,12 @@ export const startup = async (platform, assetDir) => {
   await Location.hydrate()
   Performance.mark(PerformanceMarkerType.DidLoadLocation)
 
-  const watcherPromises = Promise.all([DevelopFileWatcher.hydrate(), WatchFilesForHotReload.watchFilesForHotReload(), WorkspaceFileWatcher.hydrate()])
+  const watcherPromises = Promise.all([
+    DevelopFileWatcher.hydrate(),
+    PreferencesFileWatcher.hydrate(),
+    WatchFilesForHotReload.watchFilesForHotReload(),
+    WorkspaceFileWatcher.hydrate(),
+  ])
 
   Performance.measure(PerformanceMarkerType.OpenWorkspace, PerformanceMarkerType.WillOpenWorkspace, PerformanceMarkerType.DidOpenWorkspace)
   Performance.measure(PerformanceMarkerType.LoadMain, PerformanceMarkerType.WillLoadMain, PerformanceMarkerType.DidLoadMain)

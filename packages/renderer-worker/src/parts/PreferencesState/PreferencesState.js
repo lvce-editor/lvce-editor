@@ -1,6 +1,9 @@
 export const state = Object.create(null)
 
 export const setAll = (preferences) => {
+  for (const key of Object.keys(state)) {
+    delete state[key]
+  }
   Object.assign(state, preferences)
 }
 

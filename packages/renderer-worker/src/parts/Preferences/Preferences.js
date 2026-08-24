@@ -44,15 +44,29 @@ const getPreferences = async () => {
   return preferences
 }
 
+const load = async () => {
+  const preferences = await getPreferences()
+  PreferencesState.setAll(preferences)
+}
+
 export const hydrate = async () => {
   try {
     // TODO should configuration be together with all other preferences (e.g. selecting color theme code is not needed on startup)
     // TODO probably not all preferences need to be kept in memory
-    const preferences = await getPreferences()
-    PreferencesState.setAll(preferences)
+    await load()
   } catch (error) {
     ErrorHandling.logError(error)
   }
+}
+
+export const reload = async () => {
+  try {
+    await load()
+  } catch (error) {
+    ErrorHandling.logError(error)
+    return
+  }
+  await GlobalEventBus.emitEvent('preferences.changed')
 }
 
 export const get = (key) => {

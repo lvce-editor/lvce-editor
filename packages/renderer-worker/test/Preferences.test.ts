@@ -4,6 +4,7 @@ import * as PlatformType from '../src/parts/PlatformType/PlatformType.js'
 beforeEach(() => {
   jest.resetAllMocks()
   IsTest.state.isTest = true
+  GlobalEventBus.state.listenerMap = Object.create(null)
   for (const key in Preferences.state) {
     delete Preferences.state[key]
   }
@@ -45,6 +46,7 @@ jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
 const RendererProcess = await import('../src/parts/RendererProcess/RendererProcess.js')
 const SharedProcess = await import('../src/parts/SharedProcess/SharedProcess.js')
 const ErrorHandling = await import('../src/parts/ErrorHandling/ErrorHandling.js')
+const GlobalEventBus = await import('../src/parts/GlobalEventBus/GlobalEventBus.js')
 const IsTest = await import('../src/parts/IsTest/IsTest.js')
 const Preferences = await import('../src/parts/Preferences/Preferences.js')
 
@@ -94,6 +96,31 @@ test('hydrate', async () => {
     'editor.fontSize': 14,
     'editor.fontFamily': "'Fira Code'",
   })
+})
+
+test('reload replaces preferences and emits a change event', async () => {
+  Object.assign(Preferences.state, {
+    'workbench.iconTheme': null,
+    stale: true,
+  })
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation((method) => {
+    if (method === 'Preferences.getAll') {
+      return {
+        'editor.fontSize': 14,
+      }
+    }
+    throw new Error('unexpected message')
+  })
+  const listener = jest.fn()
+  GlobalEventBus.addListener('preferences.changed', listener)
+
+  await Preferences.reload()
+
+  expect(Preferences.state).toEqual({
+    'editor.fontSize': 14,
+  })
+  expect(listener).toHaveBeenCalledTimes(1)
 })
 
 test.skip('hydrate - error', async () => {
