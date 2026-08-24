@@ -6,10 +6,9 @@ import * as GetPortTuple from '../GetPortTuple/GetPortTuple.js'
 import * as WorkspaceBackend from '../WorkspaceBackend/WorkspaceBackend.js'
 
 export const create = async (options) => {
-  const remoteUrl = WorkspaceBackend.getWebSocketUrl(options.type)
-  if (remoteUrl) {
+  if (WorkspaceBackend.isActive()) {
     const module = await import('../IpcParentWithWebSocket/IpcParentWithWebSocket.js')
-    const rawIpc = await module.create({ ...options, url: remoteUrl })
+    const rawIpc = await module.create({ ...options, getUrl: () => WorkspaceBackend.getWebSocketUrl(options.type) })
     if (options.raw) {
       return rawIpc
     }

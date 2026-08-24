@@ -2,7 +2,7 @@ import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as WebSocketCapability from '../WebSocketCapability/WebSocketCapability.js'
 
 export const createConnection = async (extensionId, rpcId) => {
-  const connection = WebSocketCapability.create('extension-node-process')
+  const connection = await WebSocketCapability.create('extension-node-process')
   const url = new URL(connection.url)
   url.searchParams.set('extensionId', extensionId)
   url.searchParams.set('rpcId', rpcId)

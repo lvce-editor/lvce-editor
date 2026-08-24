@@ -22,7 +22,7 @@ const getConnectSrc = ({ isForElectronProduction }: ContentSecurityPolicyOptions
   if (isForElectronProduction) {
     return []
   }
-  return [`connect-src 'self' ws://127.0.0.1:* ws://localhost:*`]
+  return [`connect-src 'self' https: wss: http://127.0.0.1:* http://localhost:* ws://127.0.0.1:* ws://localhost:*`]
 }
 
 const getFrameAncestors = () => {

@@ -68,7 +68,7 @@ export const setUri = async (uri, providedPathSeparator, backend) => {
   state.workspaceUri = uri
   state.pathSeparator = pathSeparator
   if (backend) {
-    WorkspaceBackend.set(uri, backend.url, backend.token)
+    WorkspaceBackend.set(uri, backend.url, backend.token, backend.authentication)
   } else {
     WorkspaceBackend.reset()
   }
