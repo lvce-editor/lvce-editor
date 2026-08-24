@@ -66,7 +66,7 @@
     "@lvce-editor/explorer-view": "^7.30.0",
     "@lvce-editor/extension-detail-view": "^7.41.0",
     "@lvce-editor/extension-host-sub-worker": "^3.14.0",
-    "@lvce-editor/extension-management-worker": "^4.68.1",
+    "@lvce-editor/extension-management-worker": "^4.69.0",
     "@lvce-editor/extension-search-view": "^7.20.2",
     "@lvce-editor/file-search-worker": "^8.12.0",
     "@lvce-editor/file-system-worker": "^5.17.0",
