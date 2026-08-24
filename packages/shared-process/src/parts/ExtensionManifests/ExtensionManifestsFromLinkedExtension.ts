@@ -12,6 +12,7 @@ export const getExtensionManifests = async (path: any): Promise<any> => {
   return [
     {
       ...manifest,
+      linked: true,
       symlink: path,
     },
   ]

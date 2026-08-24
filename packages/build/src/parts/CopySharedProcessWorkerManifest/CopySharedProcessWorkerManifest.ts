@@ -10,7 +10,7 @@ export const copySharedProcessWorkerManifest = async (cachePath: string): Promis
     to: `${cachePath}/src/parts/Workers/Workers.json`,
   })
   await Replace.replace({
-    path: `${cachePath}/src/parts/LinkedWorkerPreferences/LinkedWorkerPreferences.js`,
+    path: `${cachePath}/src/parts/LinkedWorkerManifest/LinkedWorkerManifest.js`,
     occurrence: workerManifestImport,
     replacement: '../Workers/Workers.json',
   })

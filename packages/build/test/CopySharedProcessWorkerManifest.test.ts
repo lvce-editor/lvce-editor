@@ -20,7 +20,7 @@ test('copies the worker manifest and makes the linked-worker import package-loca
     to: '/tmp/shared-process/src/parts/Workers/Workers.json',
   })
   expect(Replace.replace).toHaveBeenCalledWith({
-    path: '/tmp/shared-process/src/parts/LinkedWorkerPreferences/LinkedWorkerPreferences.js',
+    path: '/tmp/shared-process/src/parts/LinkedWorkerManifest/LinkedWorkerManifest.js',
     occurrence: '../../../../renderer-worker/src/parts/Workers/Workers.json',
     replacement: '../Workers/Workers.json',
   })
