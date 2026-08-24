@@ -9,7 +9,7 @@ const getCommandsFromExtension = (extension) => {
   if (!extension || !extension.commands) {
     return []
   }
-  return extension.commands
+  return extension.commands.filter((command) => command.internal !== true)
 }
 
 const getCommandsFromExtensions = (extensions) => {

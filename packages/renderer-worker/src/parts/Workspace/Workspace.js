@@ -2,6 +2,7 @@ import * as Assert from '../Assert/Assert.ts'
 import * as Character from '../Character/Character.js'
 import * as Command from '../Command/Command.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
+import * as FileSystemWorker from '../FileSystemWorker/FileSystemWorker.js'
 import * as GetResolvedRoot from '../GetResolvedRoot/GetResolvedRoot.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as GetProtocol from '../GetProtocol/GetProtocol.js'
@@ -14,7 +15,7 @@ import * as Product from '../Product/Product.js'
 import * as StatusBarWorker from '../StatusBarWorker/StatusBarWorker.js'
 import * as TextSearchWorker from '../TextSearchWorker/TextSearchWorker.js'
 import * as WindowTitle from '../WindowTitle/WindowTitle.js'
-import * as WorkspaceBackend from '../WorkspaceBackend/WorkspaceBackend.js'
+import * as WorkspaceConnection from '../WorkspaceConnection/WorkspaceConnection.js'
 import { state } from '../WorkspaceState/WorkspaceState.js'
 
 const validateLocalPath = async (path) => {
@@ -45,15 +46,16 @@ export const setPath = async (path) => {
   // @ts-ignore
   state.workspaceUri = path
   state.pathSeparator = pathSeparator
-  WorkspaceBackend.reset()
+  WorkspaceConnection.reset()
+  await FileSystemWorker.dispose()
   await TextSearchWorker.dispose()
   await onWorkspaceChange()
 }
 
-export const setUri = async (uri, providedPathSeparator, backend) => {
+export const setUri = async (uri, providedPathSeparator, connection) => {
   const protocol = GetProtocol.getProtocol(uri)
-  const path = backend?.workspacePath || (protocol === 'file' ? decodeURIComponent(uri.slice('file://'.length)) : uri)
-  if (protocol === 'file' && !backend) {
+  const path = connection?.workspacePath || (protocol === 'file' ? decodeURIComponent(uri.slice('file://'.length)) : uri)
+  if (protocol === 'file' && !connection) {
     await validateLocalPath(path)
   }
   const pathSeparator = providedPathSeparator ?? (await FileSystem.getPathSeparator(uri))
@@ -67,11 +69,12 @@ export const setUri = async (uri, providedPathSeparator, backend) => {
   state.workspacePath = path
   state.workspaceUri = uri
   state.pathSeparator = pathSeparator
-  if (backend) {
-    WorkspaceBackend.set(uri, backend.url, backend.token)
+  if (connection) {
+    WorkspaceConnection.set(uri, connection.command)
   } else {
-    WorkspaceBackend.reset()
+    WorkspaceConnection.reset()
   }
+  await FileSystemWorker.dispose()
   await TextSearchWorker.dispose()
   await onWorkspaceChange()
 }
@@ -83,6 +86,8 @@ export const getPath = () => {
 export const getUri = () => {
   return state.workspaceUri
 }
+
+export const supportsConnectionCommand = () => true
 
 export const close = async () => {
   await Command.execute('Main.closeAllEditorsAndSave')

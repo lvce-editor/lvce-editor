@@ -1,15 +1,15 @@
 import { beforeEach, expect, jest, test } from '@jest/globals'
 
-jest.unstable_mockModule('../src/parts/WorkspaceBackend/WorkspaceBackend.js', () => ({
+jest.unstable_mockModule('../src/parts/WorkspaceConnection/WorkspaceConnection.js', () => ({
   isActive: jest.fn(() => false),
 }))
 
 const LoadProcessExplorerViewletModule = await import('../src/parts/LoadProcessExplorerViewletModule/LoadProcessExplorerViewletModule.js')
 const PlatformType = await import('../src/parts/PlatformType/PlatformType.js')
-const WorkspaceBackend = await import('../src/parts/WorkspaceBackend/WorkspaceBackend.js')
+const WorkspaceConnection = await import('../src/parts/WorkspaceConnection/WorkspaceConnection.js')
 
 beforeEach(() => {
-  jest.mocked(WorkspaceBackend.isActive).mockReturnValue(false)
+  jest.mocked(WorkspaceConnection.isActive).mockReturnValue(false)
 })
 
 test('loads unsupported viewlet on web', async () => {
@@ -24,8 +24,8 @@ test('loads unsupported viewlet on web', async () => {
   expect(module.getKeyBindings()).toEqual([])
 })
 
-test('loads worker-backed viewlet on web with an active remote workspace backend', async () => {
-  jest.mocked(WorkspaceBackend.isActive).mockReturnValue(true)
+test('loads worker-backed viewlet on web with an active workspace connection', async () => {
+  jest.mocked(WorkspaceConnection.isActive).mockReturnValue(true)
 
   const module = await LoadProcessExplorerViewletModule.loadProcessExplorerViewletModule(PlatformType.Web)
 

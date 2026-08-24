@@ -8,13 +8,13 @@ import * as WaitForWebSocketToBeOpen from '../WaitForWebSocketToBeOpen/WaitForWe
 import * as Location from '../Location/Location.js'
 
 /**
- * @param {{ readonly type: string, readonly url?: string }} options
+ * @param {{ readonly getUrl?: () => Promise<string>, readonly type: string, readonly url?: string }} options
  */
-export const create = async ({ type, url = '' }) => {
+export const create = async ({ getUrl, type, url = '' }) => {
   Assert.string(type)
   const host = Location.getHost()
   const wsUrl = url || GetWebSocketUrl.getWebSocketUrl(type, host)
-  const webSocket = ReconnectingWebSocket.create(wsUrl)
+  const webSocket = getUrl ? await ReconnectingWebSocket.createWithUrlFactory(getUrl) : ReconnectingWebSocket.create(wsUrl)
   let firstWebSocketEvent = await WaitForWebSocketToBeOpen.waitForWebSocketToBeOpen(webSocket)
   if (firstWebSocketEvent.type === FirstWebSocketEventType.Close) {
     firstWebSocketEvent = await WaitForWebSocketToBeOpen.waitForWebSocketToBeOpen(webSocket)

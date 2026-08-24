@@ -1235,7 +1235,7 @@
   {
     "id": "processExplorer",
     "fileName": "process-explorer-worker/index.js",
-    "contentSecurityPolicy": ["default-src 'none'", "connect-src 'self' ws://127.0.0.1:* ws://localhost:*"],
+    "contentSecurityPolicy": ["default-src 'none'", "connect-src 'self' https: wss: http://127.0.0.1:* http://localhost:* ws://127.0.0.1:* ws://localhost:*"],
     "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/process-explorer-worker/index.js",
     "productionPath": "/packages/process-explorer-worker/index.js",
     "settingName": "develop.processExplorerWorkerPath",
@@ -1541,7 +1541,7 @@
   {
     "id": "terminalWorker",
     "fileName": "terminalWorkerMain.js",
-    "contentSecurityPolicy": ["default-src 'none'", "connect-src 'self' ws://127.0.0.1:* ws://localhost:*", "script-src 'self'"],
+    "contentSecurityPolicy": ["default-src 'none'", "connect-src 'self' https: wss: http://127.0.0.1:* http://localhost:* ws://127.0.0.1:* ws://localhost:*", "script-src 'self'"],
     "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/terminal-worker/dist/terminalWorkerMain.js",
     "productionPath": "/packages/terminal-worker/dist/terminalWorkerMain.js",
     "settingName": "develop.terminalWorkerPath",
@@ -1572,7 +1572,7 @@
     "productionPath": "/packages/text-search-worker/dist/textSearchWorkerMain.js",
     "settingName": "develop.textSearchWorkerPath",
     "hotReloadCommand": "Search.hotReload",
-    "contentSecurityPolicy": ["default-src 'none'", "connect-src 'self' ws://127.0.0.1:* ws://localhost:*", "sandbox allow-same-origin"]
+    "contentSecurityPolicy": ["default-src 'none'", "connect-src 'self' https: wss: http://127.0.0.1:* http://localhost:* ws://127.0.0.1:* ws://localhost:*", "sandbox allow-same-origin"]
   },
   {
     "id": "titleBar",

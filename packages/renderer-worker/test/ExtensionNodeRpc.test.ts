@@ -18,7 +18,7 @@ const WebSocketCapability = await import('../src/parts/WebSocketCapability/WebSo
 
 test('createConnection returns an authenticated remote node process URL', async () => {
   // @ts-ignore
-  WebSocketCapability.create.mockReturnValue({
+  WebSocketCapability.create.mockResolvedValue({
     protocols: [],
     url: 'ws://127.0.0.1:3000/websocket/extension-node-process?token=test-token',
   })
@@ -30,9 +30,9 @@ test('createConnection returns an authenticated remote node process URL', async 
   expect(WebSocketCapability.create).toHaveBeenCalledWith('extension-node-process')
 })
 
-test('createConnection returns a current-server node process URL without a remote workspace backend', async () => {
+test('createConnection returns a current-server node process URL without a workspace connection', async () => {
   // @ts-ignore
-  WebSocketCapability.create.mockReturnValue({
+  WebSocketCapability.create.mockResolvedValue({
     protocols: [],
     url: 'ws://localhost:3000/websocket/extension-node-process',
   })
