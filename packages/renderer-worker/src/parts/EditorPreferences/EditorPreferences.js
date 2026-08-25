@@ -12,7 +12,7 @@ const kFormatOnSave = 'editor.formatOnSave'
 const kDiagnostics = 'editor.diagnostics'
 const kQuickSuggestions = 'editor.quickSuggestions'
 const kAutoClosingQuotes = 'editor.autoClosingQuotes'
-const kAutoClosingBrackets = 'editor.autoclosingBrackets'
+const kAutoClosingBrackets = 'editor.autoClosingBrackets'
 const kFontWeight = 'editor.fontWeight'
 const kHover = 'editor.hover'
 

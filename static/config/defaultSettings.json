@@ -1,9 +1,14 @@
 {
+  "application.updateMode": "none",
+
   "breadcrumbs.enabled": false,
+
+  "colorTheme.cache": "",
 
   "completions.loadingDelay": 1200,
 
   "development.watchColorTheme": true,
+  "develop.fileWatcher": false,
 
   "editor.fontSize": 15,
   "editor.fontFamily": "'Fira Code'",
@@ -21,6 +26,7 @@
   "editor.cache": true,
   "editor.diagnostics": true,
   "editor.quickSuggestions": false,
+  "editor.semanticTokens": false,
 
   "extensions.autoUpdate": true,
 
@@ -36,14 +42,24 @@
 
   "languages.jsFilesAsJsx": false,
 
+  "layout.backendUrl": "",
+
+  "icon-theme.cache": true,
+
   "search.threads": 1,
 
   "sessionReplay.enabled": false,
 
   "simpleBrowser.suggestions": false,
+  "simpleBrowser.shortcuts": [],
+
+  "statusBar.itemsVisible": false,
 
   "terminal.backend": "real",
   "terminal.separateConnection": false,
+  "terminal.tabs.enabled": true,
+
+  "titleBar.titleEnabled": false,
 
   "window.titleBarStyle": "custom",
   "window.zoomLevel": 0,
