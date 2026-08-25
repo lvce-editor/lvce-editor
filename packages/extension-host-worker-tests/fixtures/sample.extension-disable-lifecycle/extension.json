@@ -5,7 +5,12 @@
   "version": "0.0.0",
   "browser": "main.js",
   "isolated": true,
-  "activation": ["onStatusBarItem"],
+  "activation": ["onSourceControl:memfs", "onStatusBarItem"],
+  "sourceControlProviders": [
+    {
+      "id": "extension-lifecycle-source-control"
+    }
+  ],
   "statusBarItems": [
     {
       "id": "extension-lifecycle"

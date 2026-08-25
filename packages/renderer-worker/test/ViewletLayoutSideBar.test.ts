@@ -30,6 +30,14 @@ jest.unstable_mockModule('../src/parts/SaveState/SaveState.js', () => {
   }
 })
 
+jest.unstable_mockModule('../src/parts/SourceControlWorker/SourceControlWorker.js', () => {
+  return {
+    invoke: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+  }
+})
+
 jest.unstable_mockModule('../src/parts/Viewlet/Viewlet.js', () => {
   return {
     disposeFunctional: jest.fn(() => []),
@@ -51,6 +59,7 @@ jest.unstable_mockModule('../src/parts/ViewletStates/ViewletStates.js', () => {
 const ActivityBarWorker = await import('../src/parts/ActivityBarWorker/ActivityBarWorker.js')
 const GetExtensionViews = await import('../src/parts/GetExtensionViews/GetExtensionViews.ts')
 const SaveState = await import('../src/parts/SaveState/SaveState.js')
+const SourceControlWorker = await import('../src/parts/SourceControlWorker/SourceControlWorker.js')
 const Viewlet = await import('../src/parts/Viewlet/Viewlet.js')
 const ViewletManager = await import('../src/parts/ViewletManager/ViewletManager.js')
 const LayoutPoints = await import('../src/parts/ViewletLayout/LayoutPoints.ts')
@@ -85,6 +94,10 @@ beforeEach(() => {
   ViewletStates.getInstance.mockReturnValue(undefined)
   // @ts-ignore
   ViewletStates.getState.mockReturnValue({ uid: 12 })
+  // @ts-ignore
+  SourceControlWorker.invoke.mockImplementation(() => {
+    throw new Error('not implemented')
+  })
 })
 
 test('setActionsDom creates preview actions with the child event listeners', () => {
@@ -267,6 +280,22 @@ test('handleExtensionsChanged preserves the active sidebar view when another ext
 
   expect(result.newState.sideBarView).toBe('sample.views.testing')
   expect(ActivityBarWorker.invoke).not.toHaveBeenCalled()
+})
+
+test('handleExtensionsChanged recomputes the source control badge count', async () => {
+  // @ts-ignore
+  SourceControlWorker.invoke.mockResolvedValue(0)
+  const state = {
+    ...ViewletLayout.create(1),
+    badgeCounts: {
+      'Source Control': 3,
+    },
+  }
+
+  const result = await ViewletLayout.handleExtensionsChanged(state, 'sample.extension', true)
+
+  expect(SourceControlWorker.invoke).toHaveBeenCalledWith('SourceControl.getWorkspaceBadgeCount', '', '', 4)
+  expect(result.newState.badgeCounts['Source Control']).toBe(0)
 })
 
 test('showSideBar disables restore when the layout disables restore', async () => {

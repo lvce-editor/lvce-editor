@@ -147,6 +147,20 @@ export const handleWorkspaceChange = async (state) => {
   }
 }
 
+export const handleExtensionsChanged = async (state) => {
+  await SourceControlWorker.invoke('SourceControl.loadContent', state.uid, state.savedState)
+  const diffResult = await SourceControlWorker.invoke('SourceControl.diff2', state.uid)
+  const commands = await SourceControlWorker.invoke('SourceControl.render2', state.uid, diffResult)
+  const actionsDom = await SourceControlWorker.invoke('SourceControl.renderActions2', state.uid)
+  const badgeCount = await SourceControlWorker.invoke('SourceControl.getBadgeCount', state.uid)
+  return {
+    ...state,
+    actionsDom,
+    badgeCount,
+    commands,
+  }
+}
+
 export const handleMouseOut = (state, index) => {
   if (index === -1) {
     return {
