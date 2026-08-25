@@ -21,6 +21,28 @@ const commandMap = {
     }
   },
   'ExtensionApi.disposeViewInstance'() {},
+  'ExtensionApi.executeSourceControlGetBadgeCount'() {
+    return 3
+  },
+  'ExtensionApi.executeSourceControlGetFeatures'() {
+    return {}
+  },
+  'ExtensionApi.executeSourceControlGetGroups'() {
+    return [
+      {
+        id: 'changes',
+        items: [
+          { file: 'first.txt', type: 8 },
+          { file: 'second.txt', type: 8 },
+          { file: 'third.txt', type: 8 },
+        ],
+        label: 'Changes',
+      },
+    ]
+  },
+  'ExtensionApi.executeSourceControlIsActive'(_id, scheme) {
+    return scheme === 'memfs'
+  },
   'ExtensionApi.getViewActions'() {
     return []
   },
@@ -36,6 +58,15 @@ const commandMap = {
         text: 'Lifecycle Ready',
       },
     ]
+  },
+  'ExtensionApi.getSourceControlProviderRegistrySnapshot'() {
+    return {
+      providers: [
+        {
+          id: 'extension-lifecycle-source-control',
+        },
+      ],
+    }
   },
   'ExtensionApi.getViewRegistrySnapshot'() {
     return {

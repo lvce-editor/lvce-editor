@@ -2624,13 +2624,18 @@ const getActiveSideBarExtensionId = (state: LayoutState): string => {
 
 export const handleExtensionsChanged = async (state: LayoutState, extensionId?: string, disabled?: boolean): Promise<LayoutStateResult> => {
   const globalEventResult = await callGlobalEvent(state, 'handleExtensionsChanged')
-  if (!disabled || !extensionId || getActiveSideBarExtensionId(state) !== extensionId) {
-    return globalEventResult
+  const sourceControlBadgeResult = await refreshSourceControlBadgeCount(globalEventResult.newState)
+  const extensionChangeResult = {
+    newState: sourceControlBadgeResult.newState,
+    commands: [...globalEventResult.commands, ...sourceControlBadgeResult.commands],
   }
-  const fallbackResult = await showSideBar(globalEventResult.newState, ViewletModuleId.Explorer, false)
+  if (!disabled || !extensionId || getActiveSideBarExtensionId(extensionChangeResult.newState) !== extensionId) {
+    return extensionChangeResult
+  }
+  const fallbackResult = await showSideBar(extensionChangeResult.newState, ViewletModuleId.Explorer, false)
   return {
     newState: fallbackResult.newState,
-    commands: [...globalEventResult.commands, ...fallbackResult.commands],
+    commands: [...extensionChangeResult.commands, ...fallbackResult.commands],
   }
 }
 
