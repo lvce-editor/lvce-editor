@@ -13,7 +13,9 @@ export const handleElectronReady = async (parsedArgs: any, workingDirectory: any
   Assert.string(workingDirectory)
   try {
     const links = await TransientLinkedExtensions.validate()
-    await LinkedExtensionDevServers.startDevServers(links)
+    if (parsedArgs['start-dev-server'] === true) {
+      await LinkedExtensionDevServers.startDevServers(links)
+    }
   } catch (error) {
     Logger.error(error)
     Process.exit(ExitCode.Error)

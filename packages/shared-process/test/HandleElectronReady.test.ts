@@ -47,7 +47,7 @@ test('handleElectronReady - uses safe preferences when creating the app window',
   await HandleElectronReady.handleElectronReady({}, '/tmp')
 
   expect(TransientLinkedExtensions.validate).toHaveBeenCalledTimes(1)
-  expect(LinkedExtensionDevServers.startDevServers).toHaveBeenCalledTimes(1)
+  expect(LinkedExtensionDevServers.startDevServers).not.toHaveBeenCalled()
   expect(AppWindow.createAppWindow).toHaveBeenCalledTimes(1)
   expect(AppWindow.createAppWindow).toHaveBeenCalledWith({
     parsedArgs: {},
@@ -57,6 +57,18 @@ test('handleElectronReady - uses safe preferences when creating the app window',
     preloadUrl: 'file:///preload.js',
     workingDirectory: '/tmp',
   })
+})
+
+test('handleElectronReady - starts linked extension dev servers when enabled', async () => {
+  const links = [{ resolvedPath: '/extension' }]
+  // @ts-ignore
+  TransientLinkedExtensions.validate.mockResolvedValue(links)
+
+  await HandleElectronReady.handleElectronReady({ 'start-dev-server': true }, '/tmp')
+
+  expect(LinkedExtensionDevServers.startDevServers).toHaveBeenCalledTimes(1)
+  expect(LinkedExtensionDevServers.startDevServers).toHaveBeenCalledWith(links)
+  expect(AppWindow.createAppWindow).toHaveBeenCalledTimes(1)
 })
 
 test('handleElectronReady - exits with helpful error when transient link validation fails', async () => {

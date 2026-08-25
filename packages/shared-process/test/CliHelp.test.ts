@@ -28,7 +28,8 @@ Usage:
   lvce-oss [path]
 
 Extension development:
-  --link <path>              Link an extension for this run. May be repeated.
+  --link <path>             Link an extension for this run. May be repeated.
+  --start-dev-server        Run npm run dev in linked extension folders.
   --hot-reload              Restart linked extensions when their files change.
 
 Diagnostics:
