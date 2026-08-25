@@ -13,6 +13,7 @@ import { renderActions as renderExtensionActions } from '../ViewletExtensions/Vi
 import { getKeyBindings as getProblemsKeyBindings } from '../ViewletProblems/ViewletProblemsKeyBindings.js'
 import { menus as processExplorerMenus } from '../ViewletProcessExplorer/ViewletProcessExplorerMenuEntries.js'
 import { resize as resizeTitleBar } from '../ViewletTitleBar/ViewletTitleBarResize.js'
+import { wrapTitleBarCommand } from '../ViewletTitleBar/WrapTitleBarCommand.js'
 import { wrapActivityBarCommand } from '../WrapActivityBarCommand/WrapActivityBarCommand.ts'
 import { wrapDiffViewCommand } from '../WrapDiffViewCommand/WrapDiffViewCommand.ts'
 import { wrapExplorerCommand } from '../WrapExplorerCommand/WrapExplorerCommand.ts'
@@ -300,4 +301,5 @@ export const titleBar = {
       titleBarStyleCustom: Preferences.get('window.titleBarStyle') === 'custom',
     }
   },
+  wrapCommand: wrapTitleBarCommand,
 }

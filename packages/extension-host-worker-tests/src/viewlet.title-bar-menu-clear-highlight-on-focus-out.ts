@@ -29,20 +29,22 @@ export const test: Test = async ({ expect, FileSystem, Locator, Main, TitleBarMe
   const editorRow = Locator('.EditorRow').first()
   const editorInput = Locator('[name="editor"]')
 
-  await helpMenuItem.click()
-  await waitFor(() => expect(menu).toBeVisible())
+  for (let iteration = 0; iteration < 20; iteration++) {
+    await helpMenuItem.click()
+    await waitFor(() => expect(menu).toBeVisible())
 
-  await TitleBarMenuBar.handleKeyEscape()
-  await waitFor(() => expect(menu).toBeHidden())
-  await expect(helpMenuItem).toHaveAttribute('id', 'TitleBarEntryActive')
-  // The test locator's synthetic mouse click omits the browser's default button focus behavior.
-  await helpMenuItem.type('')
-  await waitFor(() => expect(helpMenuItem).toBeFocused())
+    await TitleBarMenuBar.handleKeyEscape()
+    await waitFor(() => expect(menu).toBeHidden())
+    await expect(helpMenuItem).toHaveAttribute('id', 'TitleBarEntryActive')
+    // The test locator's synthetic mouse click omits the browser's default button focus behavior.
+    await helpMenuItem.type('')
+    await waitFor(() => expect(helpMenuItem).toBeFocused())
 
-  await new Promise((resolve) => setTimeout(resolve, 200))
-  await editorRow.click()
-  await waitFor(() => expect(editorInput).toBeFocused())
-  await waitFor(() => expect(helpMenuItem).toHaveAttribute('id', null))
-  await waitFor(() => expect(helpMenuItem).toHaveAttribute('aria-expanded', 'false'))
-  await waitFor(() => expect(titleBarMenuBar).toHaveAttribute('aria-activedescendant', null))
+    await new Promise((resolve) => setTimeout(resolve, 200))
+    await editorRow.click()
+    await waitFor(() => expect(editorInput).toBeFocused())
+    await waitFor(() => expect(helpMenuItem).toHaveAttribute('id', null))
+    await waitFor(() => expect(helpMenuItem).toHaveAttribute('aria-expanded', 'false'))
+    await waitFor(() => expect(titleBarMenuBar).toHaveAttribute('aria-activedescendant', null))
+  }
 }
