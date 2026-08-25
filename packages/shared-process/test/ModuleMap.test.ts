@@ -39,3 +39,7 @@ test('getModuleId - HandleMessagePortForExtensionNodeProcess.handleMessagePortFo
     ModuleId.HandleMessagePortForExtensionNodeProcess,
   )
 })
+
+test('getModuleId - ExtensionManagement.getLinkedExtensionDevelopmentConfig', () => {
+  expect(ModuleMap.getModuleId('ExtensionManagement.getLinkedExtensionDevelopmentConfig')).toBe(ModuleId.ExtensionManagement)
+})

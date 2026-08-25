@@ -115,6 +115,7 @@ export const getModuleId = (commandId: any): any => {
     case 'ExtensionManagement.getAllExtensions':
     case 'ExtensionManagement.getExtensions':
     case 'ExtensionManagement.getExtensionsEtag':
+    case 'ExtensionManagement.getLinkedExtensionDevelopmentConfig':
     case 'ExtensionManagement.install':
     case 'ExtensionManagement.uninstall':
       return ModuleId.ExtensionManagement
