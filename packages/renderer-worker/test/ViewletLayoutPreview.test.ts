@@ -109,6 +109,43 @@ test('loadContent restores both preview areas independently', () => {
   })
 })
 
+test('loadSecondaryPreviewIfVisible restores the simple browser in the secondary preview', async () => {
+  const state = ViewletLayout.create(1)
+
+  const result = ViewletLayout.loadContent(state, {
+    Layout: {
+      bounds: {
+        windowWidth: 1200,
+        windowHeight: 800,
+      },
+    },
+    secondaryPreviewUri: 'simple-browser://12',
+    secondaryPreviewViewletId: 'SimpleBrowser',
+    secondaryPreviewVisible: true,
+    secondaryPreviewWidth: 400,
+  })
+
+  expect(result).toMatchObject({
+    secondaryPreviewUri: 'simple-browser://12',
+    secondaryPreviewViewletId: 'SimpleBrowser',
+    secondaryPreviewVisible: true,
+  })
+  // @ts-ignore
+  ViewletStates.getState.mockReturnValue(result)
+
+  await ViewletLayout.loadSecondaryPreviewIfVisible(result)
+
+  expect(ViewletManager.load).toHaveBeenCalledWith(
+    expect.objectContaining({
+      id: 'SimpleBrowser',
+      uri: 'simple-browser://12',
+    }),
+    false,
+    true,
+    undefined,
+  )
+})
+
 test('loadPreviewIfVisible restores the simple browser preview', async () => {
   const state = ViewletLayout.loadContent(ViewletLayout.create(1), {
     Layout: {
@@ -280,6 +317,67 @@ test('showPreview opens the simple browser in the preview area', async () => {
     expect.objectContaining({
       id: 'SimpleBrowser',
       uri: 'simple-browser://',
+    }),
+    false,
+    true,
+    undefined,
+  )
+})
+
+test('showPreview moves an open simple browser to the secondary preview before opening an html preview', async () => {
+  // @ts-ignore
+  ViewletStates.getInstance.mockImplementation((id) => (id === 7 ? { state: { uid: 7 } } : undefined))
+  const state = LayoutPoints.getPoints({
+    ...ViewletLayout.create(1),
+    previewActionsEventListeners: ['click'],
+    previewActionsUid: 9,
+    previewId: 7,
+    previewMinWidth: 100,
+    previewUri: 'simple-browser://12',
+    previewViewletId: 'SimpleBrowser',
+    previewVisible: true,
+    previewWidth: 600,
+    secondaryPreviewMinWidth: 100,
+    statusBarHeight: 20,
+    statusBarVisible: true,
+    titleBarHeight: 35,
+    titleBarVisible: true,
+    windowHeight: 800,
+    windowWidth: 1200,
+  })
+
+  const result = await ViewletLayout.showPreview(state, 'file:///test.html')
+
+  expect(result.newState).toMatchObject({
+    previewLeft: 400,
+    previewUri: 'file:///test.html',
+    previewViewletId: 'Preview',
+    previewVisible: true,
+    previewWidth: 400,
+    secondaryPreviewActionsEventListeners: ['click'],
+    secondaryPreviewActionsUid: 9,
+    secondaryPreviewId: 7,
+    secondaryPreviewLeft: 800,
+    secondaryPreviewUri: 'simple-browser://12',
+    secondaryPreviewViewletId: 'SimpleBrowser',
+    secondaryPreviewVisible: true,
+    secondaryPreviewWidth: 400,
+  })
+  expect(Viewlet.disposeFunctional).not.toHaveBeenCalledWith(7)
+  expect(Viewlet.disposeFunctional).not.toHaveBeenCalledWith(9)
+  expect(Viewlet.resize).toHaveBeenCalledWith(7, {
+    x: result.newState.secondaryPreviewLeft,
+    y: result.newState.secondaryPreviewTop,
+    width: result.newState.secondaryPreviewWidth,
+    height: result.newState.secondaryPreviewHeight,
+  })
+  expect(ViewletManager.load).toHaveBeenCalledTimes(1)
+  expect(ViewletManager.load).toHaveBeenCalledWith(
+    expect.objectContaining({
+      id: 'Preview',
+      uri: 'file:///test.html',
+      x: 400,
+      width: 400,
     }),
     false,
     true,
