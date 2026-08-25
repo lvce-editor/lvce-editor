@@ -86,11 +86,11 @@ describe('linux cli templates', () => {
       await writeFile(
         fakeElectronPath,
         `#!/usr/bin/env node
-console.log(\`ready \${process.pid}\`)
 process.on('SIGINT', () => {
   console.log('received SIGINT')
   process.exit(0)
 })
+console.log(\`ready \${process.pid}\`)
 setInterval(() => {}, 1000)
 `,
       )
