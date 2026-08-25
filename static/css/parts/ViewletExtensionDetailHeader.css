@@ -80,6 +80,11 @@
   padding-top: 10px;
 }
 
+.ExtensionDetailHeaderActions [name='Disable'],
+.ExtensionDetailHeaderActions [name='Enable'] {
+  user-select: none;
+}
+
 .ExtensionEnablementSplitButton {
   display: inline-flex;
 }
