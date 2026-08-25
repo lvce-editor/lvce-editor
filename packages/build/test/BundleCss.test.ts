@@ -55,6 +55,7 @@ test('bundleCss lets the simple browser fill the preview area height', async () 
   display: flex;
   flex-direction: column;
   min-height: 0;
+  position: relative;
 }`)
   } finally {
     await rm(dir, { recursive: true, force: true })
