@@ -366,6 +366,13 @@ const getSavedPreviewViewletId = (savedState) => {
   return ViewletModuleId.Preview
 }
 
+const getSavedSecondaryPreviewViewletId = (savedState) => {
+  if (savedState?.secondaryPreviewViewletId === ViewletModuleId.SimpleBrowser) {
+    return ViewletModuleId.SimpleBrowser
+  }
+  return savedState?.secondaryPreviewUri ? ViewletModuleId.ExtensionView : ViewletModuleId.Noop
+}
+
 const isPreviewModule = (module: LayoutModules.LayoutModule): boolean => {
   return module === LayoutModules.Preview || module === LayoutModules.SecondaryPreview
 }
@@ -418,7 +425,7 @@ export const loadContent = (state: LayoutState, savedState: any): LayoutState =>
   const previewUri = stateToRestore?.previewUri || ''
   const previewViewletId = getSavedPreviewViewletId(stateToRestore)
   const secondaryPreviewUri = stateToRestore?.secondaryPreviewUri || ''
-  const secondaryPreviewViewletId = secondaryPreviewUri ? ViewletModuleId.ExtensionView : ViewletModuleId.Noop
+  const secondaryPreviewViewletId = getSavedSecondaryPreviewViewletId(stateToRestore)
   const intermediateState: LayoutState = {
     ...state,
     activityBarVisible: true,
@@ -1159,11 +1166,51 @@ const replacePreview = async (state: LayoutState, uri: string, previewViewletId:
   }
 }
 
+const movePreviewToSecondaryPreview = async (state: LayoutState): Promise<LayoutStateResult> => {
+  const newState = getPoints({
+    ...state,
+    previewActionsEventListeners: [],
+    previewActionsUid: -1,
+    previewId: -1,
+    previewSashVisible: false,
+    previewVisible: false,
+    previewWidth: state.windowWidth / 3,
+    secondaryPreviewActionsEventListeners: state.previewActionsEventListeners,
+    secondaryPreviewActionsUid: state.previewActionsUid,
+    secondaryPreviewId: state.previewId,
+    secondaryPreviewSashVisible: true,
+    secondaryPreviewUri: state.previewUri,
+    secondaryPreviewViewletId: state.previewViewletId,
+    secondaryPreviewVisible: true,
+    secondaryPreviewWidth: state.windowWidth / 3,
+  })
+  ViewletStates.setState(state.uid, newState)
+  const commands = await getResizeCommands(state, newState)
+  return {
+    newState,
+    commands,
+  }
+}
+
 export const showPreview = async (
   initialState: LayoutState,
   uri: string = initialState.previewUri,
   previewViewletId: string = getPreviewViewletId(uri),
 ) => {
+  if (
+    initialState.previewVisible &&
+    initialState.previewId !== -1 &&
+    initialState.previewViewletId === ViewletModuleId.SimpleBrowser &&
+    previewViewletId === ViewletModuleId.Preview &&
+    !initialState.secondaryPreviewVisible
+  ) {
+    const moveResult = await movePreviewToSecondaryPreview(initialState)
+    const showResult = await showPreview(moveResult.newState, uri, previewViewletId)
+    return {
+      newState: showResult.newState,
+      commands: [...moveResult.commands, ...showResult.commands],
+    }
+  }
   const stateWithRestoredWidth =
     !initialState.previewVisible && initialState.previewWidthBeforeClose > 0
       ? {
