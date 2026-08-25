@@ -29,3 +29,25 @@ test('rerenders when suggestions change', () => {
 
   expect(ViewletSimpleBrowserRender.render[0].isEqual(state, newState)).toBe(false)
 })
+
+test('restores address input focus while suggestions are visible', () => {
+  const newState = {
+    ...state,
+    suggestions: ['what is'],
+  }
+
+  const commands = ViewletSimpleBrowserRender.render[0].apply(state, newState)
+
+  expect(commands.at(-1)).toEqual(['Viewlet.focusElementByName', 'simple-browser-address'])
+})
+
+test('does not focus the address input after suggestions close', () => {
+  const oldState = {
+    ...state,
+    suggestions: ['what is'],
+  }
+
+  const commands = ViewletSimpleBrowserRender.render[0].apply(oldState, state)
+
+  expect(commands).toHaveLength(1)
+})

@@ -15,6 +15,17 @@ test('renders a snapshot below the browser header', () => {
   })
 })
 
+test('names the address input so focus can be restored after rendering', () => {
+  const dom = GetSimpleBrowserVirtualDom.getSimpleBrowserVirtualDom(false, false, false, 'what is')
+
+  expect(dom).toContainEqual(
+    expect.objectContaining({
+      name: 'simple-browser-address',
+      type: VirtualDomElements.Input,
+    }),
+  )
+})
+
 test('renders accessible search suggestions above an undimmed snapshot', () => {
   const dom = GetSimpleBrowserVirtualDom.getSimpleBrowserVirtualDom(
     true,
