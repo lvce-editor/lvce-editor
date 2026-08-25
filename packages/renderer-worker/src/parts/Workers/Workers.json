@@ -709,7 +709,7 @@
   {
     "id": "fileSystemWorker",
     "fileName": "fileSystemWorkerMain.js",
-    "contentSecurityPolicy": ["default-src 'none'", "connect-src 'self'"],
+    "contentSecurityPolicy": ["default-src 'none'", "connect-src 'self' ws://127.0.0.1:* ws://localhost:*"],
     "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/file-system-worker/dist/fileSystemWorkerMain.js",
     "productionPath": "/packages/file-system-worker/dist/fileSystemWorkerMain.js",
     "settingName": "develop.fileSystemWorkerPath",
