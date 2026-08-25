@@ -243,8 +243,8 @@
   {
     "name": "builtin.media-preview",
     "repository": "github.com/lvce-editor/media-preview",
-    "version": "2.13.6",
-    "sha256": "db60d83d798f0890ca57ecd3aace765bdfd506c2e7f525010adbfc1b61e9a6fd",
+    "version": "2.13.7",
+    "sha256": "be2ac7cc22c6d1874bf80fad3ed61a0c0f34b608e06b7d520457e6463c799061",
     "created": "2024-09-07"
   },
   {
@@ -264,8 +264,8 @@
   {
     "name": "builtin.language-basics-json",
     "repository": "github.com/lvce-editor/language-basics-json",
-    "version": "2.9.0",
-    "sha256": "91cfca87ef29cb8ef7bf5943770e6df0546e5c848686aa57c0412eea7c511bd5",
+    "version": "2.10.0",
+    "sha256": "73656a310a5df7a212ad28981749cf001bc725aa0c180e74acd16517773d424e",
     "created": "2022-06-16"
   },
   {
@@ -425,8 +425,8 @@
   {
     "name": "builtin.language-basics-typescript",
     "repository": "github.com/lvce-editor/language-basics-typescript",
-    "version": "3.11.0",
-    "sha256": "12aaf754ed787a4faead611810a1948a869f1834c3cb325de310fdb71d288f32",
+    "version": "3.11.1",
+    "sha256": "3402dbf436f48eb0a41dee48224c675d878877c6e7f1919872e1df0886866e6f",
     "created": "2022-06-26"
   },
   {
@@ -474,8 +474,8 @@
   {
     "name": "builtin.language-features-json",
     "repository": "github.com/lvce-editor/language-features-json",
-    "version": "1.17.0",
-    "sha256": "0ae682587e403869dc882f4c33f2089db6bc1883cff8b6d5a0da8880c4d7ea7a",
+    "version": "1.18.0",
+    "sha256": "ac4b8f82cbd3a50056a2d6ebe5542bf630dbc89c92af99be32bb09495bcb6e98",
     "created": "2024-02-28"
   },
   {
