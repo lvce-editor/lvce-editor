@@ -90,7 +90,7 @@
     "@lvce-editor/quick-pick-worker": "^4.18.1",
     "@lvce-editor/references-view": "^2.16.1",
     "@lvce-editor/rename-worker": "^1.39.0",
-    "@lvce-editor/renderer-process": "^30.43.5",
+    "@lvce-editor/renderer-process": "^30.44.0",
     "@lvce-editor/running-extensions-view": "^1.26.0",
     "@lvce-editor/settings-view": "^2.26.2",
     "@lvce-editor/settings-worker": "^1.18.0",

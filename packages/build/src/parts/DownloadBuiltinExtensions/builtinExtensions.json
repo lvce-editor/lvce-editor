@@ -222,8 +222,8 @@
   {
     "name": "builtin.language-basics-html",
     "repository": "github.com/lvce-editor/language-basics-html",
-    "version": "1.8.0",
-    "sha256": "89a3e27c6be3ffd334621306a18ae6fbe8b7108fd3866cc508c284cbb48498da",
+    "version": "1.8.1",
+    "sha256": "89dd641d81cfb319205bb3ea69f8dc29078acc122696e63d915fb80ae4834bc2",
     "created": "2022-06-16"
   },
   {
@@ -474,8 +474,8 @@
   {
     "name": "builtin.language-features-json",
     "repository": "github.com/lvce-editor/language-features-json",
-    "version": "1.16.0",
-    "sha256": "8be3ef21ed43bcddc82edd30c871cc90a6b0c7e903f3779ca9dad8b082a1217e",
+    "version": "1.17.0",
+    "sha256": "0ae682587e403869dc882f4c33f2089db6bc1883cff8b6d5a0da8880c4d7ea7a",
     "created": "2024-02-28"
   },
   {
