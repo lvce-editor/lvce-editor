@@ -4,6 +4,9 @@ import * as ViewletSimpleBrowserInsertCss from './ViewletSimpleBrowserInsertCss.
 import * as ViewletSimpleBrowserInsertJavaScript from './ViewletSimpleBrowserInsertJavaScript.js'
 
 export const Commands = {
+  acceptSuggestion: SimpleBrowser.acceptSuggestion,
+  applySuggestions: SimpleBrowser.applySuggestions,
+  closeSuggestions: SimpleBrowser.closeSuggestions,
   getDomTree: ViewletSimpleBrowserGetDomTree.getDomTree,
   go: SimpleBrowser.go,
   handleDidNavigate: SimpleBrowser.handleDidNavigate,
@@ -16,6 +19,8 @@ export const Commands = {
   insertCss: ViewletSimpleBrowserInsertCss.insertCss,
   insertJavaScript: ViewletSimpleBrowserInsertJavaScript.insertJavaScript,
   setUrl: SimpleBrowser.setUrl,
+  selectNextSuggestion: SimpleBrowser.selectNextSuggestion,
+  selectPreviousSuggestion: SimpleBrowser.selectPreviousSuggestion,
   showOverlay: SimpleBrowser.showOverlay,
 }
 

@@ -21,6 +21,9 @@ jest.unstable_mockModule('../src/parts/ElectronWebContentsViewFunctions/Electron
     forward: jest.fn(() => {
       throw new Error('not implemented')
     }),
+    focus: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
     backward: jest.fn(() => {
       throw new Error('not implemented')
     }),
@@ -62,7 +65,17 @@ jest.unstable_mockModule('../src/parts/KeyBindingsInitial/KeyBindingsInitial.js'
   }
 })
 
+jest.unstable_mockModule('../src/parts/BrowserSearchSuggestions/BrowserSearchSuggestions.js', () => ({
+  get: jest.fn(),
+}))
+
+jest.unstable_mockModule('../src/parts/Command/Command.js', () => ({
+  execute: jest.fn(),
+}))
+
 const ViewletSimpleBrowser = await import('../src/parts/ViewletSimpleBrowser/ViewletSimpleBrowser.js')
+const BrowserSearchSuggestions = await import('../src/parts/BrowserSearchSuggestions/BrowserSearchSuggestions.js')
+const Command = await import('../src/parts/Command/Command.js')
 const ElectronWebContentsViewFunctions = await import('../src/parts/ElectronWebContentsViewFunctions/ElectronWebContentsViewFunctions.js')
 const ElectronWebContentsView = await import('../src/parts/ElectronWebContentsView/ElectronWebContentsView.js')
 
@@ -214,4 +227,145 @@ test('overlays share one snapshot and restore after the last overlay closes', as
     overlayIds: [],
     snapshot: '',
   })
+})
+
+test('handleInput does not request suggestions when disabled', async () => {
+  const state = { ...ViewletSimpleBrowser.create(7), suggestionsEnabled: false }
+
+  const newState = await ViewletSimpleBrowser.handleInput(state, 'what is')
+
+  expect(newState.inputValue).toBe('what is')
+  expect(BrowserSearchSuggestions.get).not.toHaveBeenCalled()
+})
+
+test('handleInput requests suggestions when enabled', async () => {
+  // @ts-ignore
+  BrowserSearchSuggestions.get.mockResolvedValue(['what is my ip'])
+  // @ts-ignore
+  Command.execute.mockResolvedValue(undefined)
+  const state = { ...ViewletSimpleBrowser.create(7), suggestionsEnabled: true }
+
+  const newState = await ViewletSimpleBrowser.handleInput(state, 'what is')
+  await new Promise((resolve) => setTimeout(resolve, 0))
+
+  expect(newState).toMatchObject({ inputValue: 'what is', selectedSuggestionIndex: -1 })
+  expect(BrowserSearchSuggestions.get).toHaveBeenCalledWith('what is')
+  expect(Command.execute).toHaveBeenCalledWith('SimpleBrowser.applySuggestions', 7, 'what is', ['what is my ip'])
+})
+
+test('handleInput does not disclose URL-like values to the suggestions provider', async () => {
+  const state = { ...ViewletSimpleBrowser.create(7), suggestionsEnabled: true }
+
+  await ViewletSimpleBrowser.handleInput(state, 'https://example.com/private')
+
+  expect(BrowserSearchSuggestions.get).not.toHaveBeenCalled()
+})
+
+test('applySuggestions ignores stale results', async () => {
+  const state = {
+    ...ViewletSimpleBrowser.create(7),
+    browserViewId: 12,
+    inputValue: 'new query',
+    suggestionsEnabled: true,
+  }
+
+  const newState = await ViewletSimpleBrowser.applySuggestions(state, 7, 'old query', ['old query result'])
+
+  expect(newState).toBe(state)
+  expect(ElectronWebContentsViewFunctions.capturePage).not.toHaveBeenCalled()
+})
+
+test('applySuggestions captures the page and shows provider results', async () => {
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.capturePage.mockResolvedValue('data:image/png;base64,c25hcHNob3Q=')
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.hide.mockResolvedValue(undefined)
+  const state = {
+    ...ViewletSimpleBrowser.create(7),
+    browserViewId: 12,
+    inputValue: 'what is',
+    suggestionsEnabled: true,
+  }
+
+  const newState = await ViewletSimpleBrowser.applySuggestions(state, 7, 'what is', ['what is my ip', 'what is love'])
+
+  expect(newState).toMatchObject({
+    hasSuggestionsOverlay: true,
+    overlayIds: ['search-suggestions'],
+    selectedSuggestionIndex: 0,
+    snapshot: 'data:image/png;base64,c25hcHNob3Q=',
+    suggestions: ['what is', 'what is my ip', 'what is love'],
+  })
+})
+
+test('applySuggestions closes an existing popup after a provider failure', async () => {
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.show.mockResolvedValue(undefined)
+  const state = {
+    ...ViewletSimpleBrowser.create(7),
+    browserViewId: 12,
+    hasSuggestionsOverlay: true,
+    inputValue: 'what is',
+    overlayIds: ['search-suggestions'],
+    selectedSuggestionIndex: 0,
+    snapshot: 'data:image/png;base64,c25hcHNob3Q=',
+    suggestions: ['what is'],
+    suggestionsEnabled: true,
+  }
+
+  const newState = await ViewletSimpleBrowser.applySuggestions(state, 7, 'what is', [])
+
+  expect(newState).toMatchObject({
+    hasSuggestionsOverlay: false,
+    overlayIds: [],
+    selectedSuggestionIndex: -1,
+    snapshot: '',
+    suggestions: [],
+  })
+  expect(ElectronWebContentsViewFunctions.show).toHaveBeenCalledWith(12)
+})
+
+test('suggestion selection stays within the available results', () => {
+  const state = {
+    ...ViewletSimpleBrowser.create(7),
+    hasSuggestionsOverlay: true,
+    selectedSuggestionIndex: 0,
+    suggestions: ['one', 'two'],
+  }
+
+  const second = ViewletSimpleBrowser.selectNextSuggestion(state)
+  const stillSecond = ViewletSimpleBrowser.selectNextSuggestion(second)
+  const first = ViewletSimpleBrowser.selectPreviousSuggestion(stillSecond)
+
+  expect(second.selectedSuggestionIndex).toBe(1)
+  expect(stillSecond.selectedSuggestionIndex).toBe(1)
+  expect(first.selectedSuggestionIndex).toBe(0)
+})
+
+test('acceptSuggestion restores the page and navigates', async () => {
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.show.mockResolvedValue(undefined)
+  const state = {
+    ...ViewletSimpleBrowser.create(7),
+    browserViewId: 12,
+    hasSuggestionsOverlay: true,
+    overlayIds: ['search-suggestions'],
+    selectedSuggestionIndex: 1,
+    snapshot: 'data:image/png;base64,c25hcHNob3Q=',
+    suggestions: ['what is', 'what is my ip'],
+    suggestionsEnabled: true,
+  }
+
+  const newState = await ViewletSimpleBrowser.acceptSuggestion(state)
+
+  expect(newState).toMatchObject({
+    hasSuggestionsOverlay: false,
+    iframeSrc: 'https://www.google.com/search?q=what+is+my+ip',
+    inputValue: 'what is my ip',
+    isLoading: true,
+    snapshot: '',
+    suggestions: [],
+  })
+  expect(ElectronWebContentsViewFunctions.show).toHaveBeenCalledWith(12)
+  expect(ElectronWebContentsViewFunctions.setIframeSrc).toHaveBeenCalledWith(12, 'https://www.google.com/search?q=what+is+my+ip')
 })
