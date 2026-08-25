@@ -3,6 +3,7 @@ import * as DirentType from '../src/parts/DirentType/DirentType.js'
 
 const invoke = jest.fn<(...args: readonly any[]) => Promise<any>>()
 const execute = jest.fn<(...args: readonly any[]) => Promise<any>>()
+const rendererInvoke = jest.fn<(...args: readonly any[]) => Promise<any>>()
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -15,6 +16,10 @@ jest.unstable_mockModule('../src/parts/ExtensionManagementWorker/ExtensionManage
 
 jest.unstable_mockModule('../src/parts/Command/Command.js', () => ({
   execute,
+}))
+
+jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () => ({
+  invoke: rendererInvoke,
 }))
 
 jest.unstable_mockModule('../src/parts/ExtensionHost/ExtensionHostShared.js', () => {
@@ -75,13 +80,13 @@ test('getBlob converts text provider content using the requested mime type', asy
   await expect(blob.text()).resolves.toBe('test content')
 })
 
-test('getBlobUrl creates an object url for provider content', async () => {
-  const createObjectURL = jest.spyOn(URL, 'createObjectURL').mockReturnValue('blob:recording')
+test('getBlobUrl creates an object url in the renderer process', async () => {
   const audio = new Blob(['recorded audio'], { type: 'audio/webm' })
   invoke.mockResolvedValue({ found: true, result: audio })
+  rendererInvoke.mockResolvedValue('blob:recording')
 
   await expect(ExtensionHostFileSystem.getBlobUrl('gpt-voice-audio:///message.webm', 'video/webm')).resolves.toBe('blob:recording')
-  expect(createObjectURL).toHaveBeenCalledWith(audio)
+  expect(rendererInvoke).toHaveBeenCalledWith('ObjectUrl.create', audio)
 })
 
 test('remove', async () => {
