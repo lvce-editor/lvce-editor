@@ -1,10 +1,22 @@
 import * as Clamp from '../Clamp/Clamp.js'
 import * as GetDefaultTitleBarHeight from '../GetDefaultTitleBarHeight/GetDefaultTitleBarHeight.js'
 import * as LayoutKeys from '../LayoutKeys/LayoutKeys.js'
+import * as PreviewOrientation from '../PreviewOrientation/PreviewOrientation.js'
 import * as SideBarLocationType from '../SideBarLocationType/SideBarLocationType.js'
 import type { LayoutState } from './LayoutState.ts'
 
 const mainMinWidth = 100
+
+const getPreviewHeights = (source: LayoutState, totalHeight: number): readonly [number, number] => {
+  if (source.previewOrientation !== PreviewOrientation.Vertical || !source.previewVisible || !source.secondaryPreviewVisible) {
+    return [totalHeight, totalHeight]
+  }
+  const previewMinHeight = Math.min(source.previewMinHeight, totalHeight / 2)
+  const secondaryPreviewMinHeight = Math.min(source.secondaryPreviewMinHeight, totalHeight / 2)
+  const preferredPreviewHeight = source.previewHeight > 0 ? source.previewHeight : totalHeight / 2
+  const previewHeight = Clamp.clamp(preferredPreviewHeight, previewMinHeight, totalHeight - secondaryPreviewMinHeight)
+  return [previewHeight, totalHeight - previewHeight]
+}
 
 export const getPoints = (source: LayoutState, sideBarLocation = source.sideBarLocation ?? SideBarLocationType.Right): LayoutState => {
   const activityBarVisible = source[LayoutKeys.ActivityBarVisible]
@@ -38,12 +50,24 @@ export const getPoints = (source: LayoutState, sideBarLocation = source.sideBarL
   const newPanelHeight = Clamp.clamp(panelHeight, panelMinHeight, panelMaxHeight) // TODO check that it is in bounds of window
   const preferredPreviewWidth = previewWidth > 0 ? previewWidth : windowWidth / 2
   const preferredSecondaryPreviewWidth = secondaryPreviewWidth > 0 ? secondaryPreviewWidth : windowWidth / 3
-  const destinationSecondaryPreviewWidth = secondaryPreviewVisible
-    ? Math.min(windowWidth, Math.max(secondaryPreviewMinWidth, preferredSecondaryPreviewWidth))
-    : 0
+  const previewsAreVertical = source.previewOrientation === PreviewOrientation.Vertical && previewVisible && secondaryPreviewVisible
+  const preferredVerticalPreviewWidth = Math.max(preferredPreviewWidth, preferredSecondaryPreviewWidth)
+  const verticalPreviewMinWidth = Math.max(previewMinWidth, secondaryPreviewMinWidth)
+  const verticalPreviewWidth = Math.min(windowWidth, Math.max(verticalPreviewMinWidth, preferredVerticalPreviewWidth))
+  const destinationSecondaryPreviewWidth = previewsAreVertical
+    ? verticalPreviewWidth
+    : secondaryPreviewVisible
+      ? Math.min(windowWidth, Math.max(secondaryPreviewMinWidth, preferredSecondaryPreviewWidth))
+      : 0
   const widthBeforeSecondaryPreview = windowWidth - destinationSecondaryPreviewWidth
-  const destinationPreviewWidth = previewVisible ? Math.min(widthBeforeSecondaryPreview, Math.max(previewMinWidth, preferredPreviewWidth)) : 0
-  const availableWidth = Math.max(0, widthBeforeSecondaryPreview - destinationPreviewWidth)
+  const destinationPreviewWidth = previewsAreVertical
+    ? verticalPreviewWidth
+    : previewVisible
+      ? Math.min(widthBeforeSecondaryPreview, Math.max(previewMinWidth, preferredPreviewWidth))
+      : 0
+  const availableWidth = previewsAreVertical
+    ? Math.max(0, windowWidth - verticalPreviewWidth)
+    : Math.max(0, widthBeforeSecondaryPreview - destinationPreviewWidth)
 
   if (source.sideBarFocusMode) {
     const contentTop = titleBarVisible ? titleBarHeight : 0
@@ -169,15 +193,13 @@ export const getPoints = (source: LayoutState, sideBarLocation = source.sideBarL
 
     const destinationPreviewTop = p2
     const destinationPreviewLeft = previewVisible ? availableWidth : 0
-    const destinationPreviewHeight =
-      p3 - p2 + (previewVisible && panelVisible ? destinationPanelHeight : 0) + (previewVisible && statusBarVisible ? statusBarHeight : 0)
+    const anyPreviewVisible = previewVisible || secondaryPreviewVisible
+    const totalPreviewHeight =
+      p3 - p2 + (anyPreviewVisible && panelVisible ? destinationPanelHeight : 0) + (anyPreviewVisible && statusBarVisible ? statusBarHeight : 0)
+    const [destinationPreviewHeight, destinationSecondaryPreviewHeight] = getPreviewHeights(source, totalPreviewHeight)
     const destinationPreviewVisible = previewVisible
-    const destinationSecondaryPreviewLeft = availableWidth + destinationPreviewWidth
-    const destinationSecondaryPreviewHeight =
-      p3 -
-      p2 +
-      (secondaryPreviewVisible && panelVisible ? destinationPanelHeight : 0) +
-      (secondaryPreviewVisible && statusBarVisible ? statusBarHeight : 0)
+    const destinationSecondaryPreviewLeft = previewsAreVertical ? availableWidth : availableWidth + destinationPreviewWidth
+    const destinationSecondaryPreviewTop = previewsAreVertical ? destinationPreviewTop + destinationPreviewHeight : destinationPreviewTop
     return {
       ...source,
       activityBarTop: destinationActivityBarTop,
@@ -221,7 +243,7 @@ export const getPoints = (source: LayoutState, sideBarLocation = source.sideBarL
       previewHeight: destinationPreviewHeight,
       previewVisible: destinationPreviewVisible,
       secondaryPreviewLeft: destinationSecondaryPreviewLeft,
-      secondaryPreviewTop: destinationPreviewTop,
+      secondaryPreviewTop: destinationSecondaryPreviewTop,
       secondaryPreviewWidth: destinationSecondaryPreviewWidth,
       secondaryPreviewHeight: destinationSecondaryPreviewHeight,
       secondaryPreviewVisible,
@@ -310,15 +332,13 @@ export const getPoints = (source: LayoutState, sideBarLocation = source.sideBarL
 
     const destinationPreviewTop = p2
     const destinationPreviewLeft = previewVisible ? availableWidth : 0
-    const destinationPreviewHeight =
-      p3 - p2 + (previewVisible && panelVisible ? destinationPanelHeight : 0) + (previewVisible && statusBarVisible ? statusBarHeight : 0)
+    const anyPreviewVisible = previewVisible || secondaryPreviewVisible
+    const totalPreviewHeight =
+      p3 - p2 + (anyPreviewVisible && panelVisible ? destinationPanelHeight : 0) + (anyPreviewVisible && statusBarVisible ? statusBarHeight : 0)
+    const [destinationPreviewHeight, destinationSecondaryPreviewHeight] = getPreviewHeights(source, totalPreviewHeight)
     const destinationPreviewVisible = previewVisible
-    const destinationSecondaryPreviewLeft = availableWidth + destinationPreviewWidth
-    const destinationSecondaryPreviewHeight =
-      p3 -
-      p2 +
-      (secondaryPreviewVisible && panelVisible ? destinationPanelHeight : 0) +
-      (secondaryPreviewVisible && statusBarVisible ? statusBarHeight : 0)
+    const destinationSecondaryPreviewLeft = previewsAreVertical ? availableWidth : availableWidth + destinationPreviewWidth
+    const destinationSecondaryPreviewTop = previewsAreVertical ? destinationPreviewTop + destinationPreviewHeight : destinationPreviewTop
     return {
       ...source,
       activityBarTop: destinationActivityBarTop,
@@ -362,7 +382,7 @@ export const getPoints = (source: LayoutState, sideBarLocation = source.sideBarL
       previewHeight: destinationPreviewHeight,
       previewVisible: destinationPreviewVisible,
       secondaryPreviewLeft: destinationSecondaryPreviewLeft,
-      secondaryPreviewTop: destinationPreviewTop,
+      secondaryPreviewTop: destinationSecondaryPreviewTop,
       secondaryPreviewWidth: destinationSecondaryPreviewWidth,
       secondaryPreviewHeight: destinationSecondaryPreviewHeight,
       secondaryPreviewVisible,

@@ -96,7 +96,6 @@ test('loadContent restores both preview areas independently', () => {
     secondaryPreviewVisible: true,
     secondaryPreviewWidth: 400,
   })
-
   expect(result).toMatchObject({
     previewLeft: 400,
     previewSashVisible: true,
@@ -106,6 +105,41 @@ test('loadContent restores both preview areas independently', () => {
     secondaryPreviewSashVisible: true,
     secondaryPreviewUri: 'gpt-voice.views.default',
     secondaryPreviewVisible: true,
+  })
+})
+
+test('loadContent restores vertically stacked preview areas', () => {
+  const state = ViewletLayout.create(1)
+
+  const result = ViewletLayout.loadContent(state, {
+    Layout: {
+      bounds: {
+        windowWidth: 1200,
+        windowHeight: 800,
+      },
+    },
+    previewHeight: 300,
+    previewOrientation: 'vertical',
+    previewVisible: true,
+    previewWidth: 400,
+    secondaryPreviewVisible: true,
+    secondaryPreviewWidth: 400,
+  })
+
+  expect(result).toMatchObject({
+    previewHeight: 300,
+    previewLeft: 800,
+    previewOrientation: 'vertical',
+    previewTop: 20,
+    previewWidth: 400,
+    secondaryPreviewHeight: 480,
+    secondaryPreviewLeft: 800,
+    secondaryPreviewTop: 320,
+    secondaryPreviewWidth: 400,
+  })
+  expect(ViewletLayout.saveState(result)).toMatchObject({
+    previewHeight: 300,
+    previewOrientation: 'vertical',
   })
 })
 
@@ -412,6 +446,7 @@ test.each([
     previewWidth: 400,
     statusBarWidth: 800,
   })
+
 })
 
 test.each([
@@ -471,6 +506,94 @@ test.each([
     secondaryPreviewLeft: 800,
     secondaryPreviewWidth: 400,
     statusBarWidth: 400,
+  })
+})
+
+test.each([
+  ['left', SideBarLocationType.Left],
+  ['right', SideBarLocationType.Right],
+])('togglePreviewOrientation stacks both previews with the side bar on the %s', async (_name, sideBarLocation) => {
+  const state = LayoutPoints.getPoints(
+    {
+      ...ViewletLayout.create(1),
+      previewMinHeight: 100,
+      previewMinWidth: 100,
+      previewVisible: true,
+      previewWidth: 400,
+      secondaryPreviewMinHeight: 100,
+      secondaryPreviewMinWidth: 100,
+      secondaryPreviewVisible: true,
+      secondaryPreviewWidth: 400,
+      statusBarHeight: 20,
+      statusBarVisible: true,
+      titleBarHeight: 20,
+      titleBarVisible: true,
+      windowHeight: 800,
+      windowWidth: 1200,
+    },
+    sideBarLocation,
+  )
+
+  const result = await ViewletLayout.togglePreviewOrientation(state)
+
+  expect(result.newState).toMatchObject({
+    panelWidth: 800,
+    previewHeight: 390,
+    previewLeft: 800,
+    previewOrientation: 'vertical',
+    previewTop: 20,
+    previewWidth: 400,
+    secondaryPreviewHeight: 390,
+    secondaryPreviewLeft: 800,
+    secondaryPreviewTop: 410,
+    secondaryPreviewWidth: 400,
+    statusBarWidth: 800,
+  })
+
+  const horizontalResult = await ViewletLayout.togglePreviewOrientation(result.newState)
+
+  expect(horizontalResult.newState).toMatchObject({
+    panelWidth: 400,
+    previewHeight: 780,
+    previewLeft: 400,
+    previewOrientation: 'horizontal',
+    previewWidth: 400,
+    secondaryPreviewHeight: 780,
+    secondaryPreviewLeft: 800,
+    secondaryPreviewTop: 20,
+    secondaryPreviewWidth: 400,
+    statusBarWidth: 400,
+  })
+})
+
+test('resizing the divider between vertically stacked previews changes their heights', async () => {
+  const state = LayoutPoints.getPoints({
+    ...ViewletLayout.create(1),
+    previewHeight: 300,
+    previewMinHeight: 100,
+    previewMinWidth: 100,
+    previewOrientation: 'vertical',
+    previewVisible: true,
+    previewWidth: 400,
+    sashId: 'SecondaryPreview',
+    secondaryPreviewMinHeight: 100,
+    secondaryPreviewMinWidth: 100,
+    secondaryPreviewVisible: true,
+    secondaryPreviewWidth: 400,
+    statusBarHeight: 20,
+    statusBarVisible: true,
+    titleBarHeight: 20,
+    titleBarVisible: true,
+    windowHeight: 800,
+    windowWidth: 1200,
+  })
+
+  const result = await ViewletLayout.handleSashPointerMove(state, 800, 500)
+
+  expect(result.newState).toMatchObject({
+    previewHeight: 480,
+    secondaryPreviewHeight: 300,
+    secondaryPreviewTop: 500,
   })
 })
 

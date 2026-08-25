@@ -48,6 +48,32 @@
   min-width: 0;
 }
 
+.PreviewAreas {
+  display: flex;
+  flex: 0 0 var(--PreviewAreasWidth);
+  min-height: 0;
+  min-width: 0;
+  position: relative;
+}
+
+.PreviewAreasVertical {
+  flex-direction: column;
+}
+
+.PreviewAreasVertical > .PreviewArea {
+  flex: 0 0 var(--PreviewHeight);
+}
+
+.PreviewAreasVertical > .SecondaryPreviewArea {
+  flex-basis: var(--SecondaryPreviewHeight);
+}
+
+.PreviewAreasVertical .SecondaryPreview {
+  border-left: 0;
+  border-top: 1px solid var(--SeparatorBorder);
+  width: 100%;
+}
+
 .SecondaryPreviewArea {
   flex-basis: var(--SecondaryPreviewWidth);
 }

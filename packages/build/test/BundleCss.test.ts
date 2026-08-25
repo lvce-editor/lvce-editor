@@ -128,6 +128,9 @@ test('bundleCss keeps the main workbench column separate from the full-height pr
   overflow: hidden;
   position: relative;
 }`)
+    expect(css).toContain(`.PreviewAreasVertical {
+  flex-direction: column;
+}`)
     expect(css).toContain(`.Panel {
   background: var(--PanelBackground);
   height: var(--PanelHeight);
@@ -136,6 +139,10 @@ test('bundleCss keeps the main workbench column separate from the full-height pr
     expect(css).toContain(`.SashPanel {
   top: calc(var(--SashPanelTop) - 2px);
   width: var(--PanelWidth);
+}`)
+    expect(css).toContain(`.SashHorizontal.SashSecondaryPreview {
+  left: 0;
+  top: calc(var(--SashSecondaryPreviewTop) - 2px);
 }`)
   } finally {
     await rm(dir, { recursive: true, force: true })
@@ -153,7 +160,7 @@ test('bundleCss centers quick pick in the non-preview area', async () => {
 
     const css = await readFile(join(dir, 'App.css'), 'utf8')
 
-    expect(css).toContain('left: calc((100% - var(--PreviewWidth, 0px) - var(--SecondaryPreviewWidth, 0px)) / 2);')
+    expect(css).toContain('left: calc((100% - var(--PreviewAreasWidth, 0px)) / 2);')
   } finally {
     await rm(dir, { recursive: true, force: true })
   }

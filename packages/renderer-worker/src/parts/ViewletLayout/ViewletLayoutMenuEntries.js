@@ -75,6 +75,11 @@ export const getQuickPickMenuEntries = () => {
       label: 'Layout: Toggle Preview',
     },
     {
+      id: 'Layout.togglePreviewOrientation',
+      label: 'Preview: Toggle Orientation',
+      aliases: ['Toggle Preview Orientation', 'Stack Preview Areas'],
+    },
+    {
       id: 'Layout.hidePreview',
       label: 'Layout: Hide Preview',
     },
