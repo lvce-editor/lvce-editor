@@ -12,7 +12,10 @@ const renderDom = {
       oldState.canGoBack === newState.canGoBack &&
       oldState.canGoForward === newState.canGoForward &&
       oldState.isLoading === newState.isLoading &&
-      oldState.snapshot === newState.snapshot
+      oldState.inputValue === newState.inputValue &&
+      oldState.snapshot === newState.snapshot &&
+      oldState.suggestions === newState.suggestions &&
+      oldState.selectedSuggestionIndex === newState.selectedSuggestionIndex
     )
   },
   apply(oldState, newState) {
@@ -20,8 +23,10 @@ const renderDom = {
       newState.canGoBack,
       newState.canGoForward,
       newState.isLoading,
-      newState.iframeSrc,
+      newState.inputValue,
       newState.snapshot,
+      newState.suggestions,
+      newState.selectedSuggestionIndex,
     )
     return ['Viewlet.setDom2', dom]
   },
