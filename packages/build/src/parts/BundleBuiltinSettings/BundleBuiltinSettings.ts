@@ -3,6 +3,55 @@ import * as Copy from '../Copy/Copy.ts'
 import * as JsonFile from '../JsonFile/JsonFile.ts'
 import * as Path from '../Path/Path.ts'
 
+const SettingTypeString = 2
+const SettingTypeBoolean = 3
+const SettingTypeArray = 4
+const SettingTypeNumber = 5
+
+interface SettingsContribution {
+  readonly id: string
+  readonly type: number
+  readonly value: unknown
+}
+
+const getSettingType = (value: unknown): number => {
+  if (typeof value === 'string') {
+    return SettingTypeString
+  }
+  if (typeof value === 'boolean') {
+    return SettingTypeBoolean
+  }
+  if (typeof value === 'number') {
+    return SettingTypeNumber
+  }
+  if (value && typeof value === 'object') {
+    return SettingTypeArray
+  }
+  throw new TypeError(`Unsupported default setting value: ${value}`)
+}
+
+export const createSettingsContribution = (defaultSettings: Readonly<Record<string, unknown>>): readonly SettingsContribution[] => {
+  return Object.entries(defaultSettings).map(([id, value]) => ({
+    id,
+    type: getSettingType(value),
+    value,
+  }))
+}
+
+export const createWorkerPathSettingsContribution = (workers: readonly any[]): readonly SettingsContribution[] => {
+  const settingNames = new Set<string>()
+  for (const worker of workers) {
+    if (worker.settingName) {
+      settingNames.add(worker.settingName)
+    }
+  }
+  return [...settingNames].sort().map((id) => ({
+    id,
+    type: SettingTypeString,
+    value: '',
+  }))
+}
+
 const stripLeadingSlash = (path: string): string => {
   return path.replaceAll('\\', '/').replace(/^\/+/, '')
 }
@@ -61,6 +110,13 @@ export const bundleBuiltinSettings = async ({ workers, toRoot }): Promise<void> 
     })
     fileNames.push(fileName)
   }
+  const defaultSettings = await JsonFile.readJson(Path.absolute('static/config/defaultSettings.json'))
+  const coreFileName = 'renderer-worker.json'
+  await JsonFile.writeJson({
+    to: Path.join(toRoot, 'builtin-settings', coreFileName),
+    value: [...createWorkerPathSettingsContribution(workers), ...createSettingsContribution(defaultSettings)],
+  })
+  fileNames.push(coreFileName)
   await JsonFile.writeJson({
     to: Path.join(toRoot, 'builtin-settings', 'index.json'),
     value: fileNames,
