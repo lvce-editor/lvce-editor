@@ -12,7 +12,6 @@ const renderDom = {
       oldState.canGoBack === newState.canGoBack &&
       oldState.canGoForward === newState.canGoForward &&
       oldState.isLoading === newState.isLoading &&
-      oldState.inputValue === newState.inputValue &&
       oldState.snapshot === newState.snapshot &&
       oldState.suggestions === newState.suggestions &&
       oldState.selectedSuggestionIndex === newState.selectedSuggestionIndex
