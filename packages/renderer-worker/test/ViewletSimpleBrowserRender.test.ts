@@ -10,6 +10,7 @@ const state = {
   selectedSuggestionIndex: -1,
   snapshot: '',
   suggestions: [],
+  uid: 42,
 }
 
 test('does not rerender the native address input while typing', () => {
@@ -38,7 +39,8 @@ test('restores address input focus while suggestions are visible', () => {
 
   const commands = ViewletSimpleBrowserRender.render[0].apply(state, newState)
 
-  expect(commands.at(-1)).toEqual(['Viewlet.focusElementByName', 'simple-browser-address'])
+  expect(commands[0].slice(0, 2)).toEqual(['Viewlet.setDom2', 42])
+  expect(commands.at(-1)).toEqual(['Viewlet.focusElementByName', 42, 'simple-browser-address'])
 })
 
 test('does not focus the address input after suggestions close', () => {
