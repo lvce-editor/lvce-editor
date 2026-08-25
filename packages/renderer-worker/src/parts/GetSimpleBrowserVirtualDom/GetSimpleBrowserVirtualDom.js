@@ -3,6 +3,7 @@ import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as HtmlInputType from '../HtmlInputType/HtmlInputType.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.js'
+import * as InputName from '../InputName/InputName.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
 export const getSimpleBrowserVirtualDom = (
@@ -70,6 +71,7 @@ export const getSimpleBrowserVirtualDom = (
       onInput: DomEventListenerFunctions.HandleInput,
       onFocus: DomEventListenerFunctions.HandleFocus,
       onBlur: DomEventListenerFunctions.HandleBlur,
+      name: InputName.SimpleBrowserAddress,
       value,
     },
     {

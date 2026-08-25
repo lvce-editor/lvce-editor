@@ -1,4 +1,5 @@
 import * as GetSimpleBrowserVirtualDom from '../GetSimpleBrowserVirtualDom/GetSimpleBrowserVirtualDom.js'
+import * as InputName from '../InputName/InputName.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
 export const hasFunctionalRender = true
@@ -27,8 +28,13 @@ const renderDom = {
       newState.suggestions,
       newState.selectedSuggestionIndex,
     )
-    return ['Viewlet.setDom2', dom]
+    const commands = [['Viewlet.setDom2', dom]]
+    if (newState.suggestions.length > 0) {
+      commands.push(['Viewlet.focusElementByName', InputName.SimpleBrowserAddress])
+    }
+    return commands
   },
+  multiple: true,
 }
 
 // TODO this component shouldn't depend on Main
