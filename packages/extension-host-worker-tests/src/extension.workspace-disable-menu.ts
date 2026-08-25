@@ -12,6 +12,7 @@ export const test: Test = async ({ expect, ExtensionDetail, Locator, ...api }) =
   const optionsButton = Locator('[name="DisableOptions"]')
   await expect(splitButton).toHaveCount(1)
   await expect(primaryButton).toBeVisible()
+  await expect(primaryButton).toHaveCSS('user-select', 'none')
   await expect(optionsButton).toHaveAttribute('aria-label', 'Disable options')
   await expect(optionsButton).toHaveAttribute('title', 'Disable options')
   await expect(optionsButton).toHaveClass('ExtensionEnablementSplitButtonDropDown')
