@@ -112,7 +112,7 @@ export const getSimpleBrowserVirtualDom = (
           role: AriaRoles.Option,
           ariaSelected: selected,
           'data-value': suggestion,
-          onClick: 'handleClickSuggestion',
+          onClick: DomEventListenerFunctions.HandleClickSuggestion,
           childCount: 2,
         },
         {
