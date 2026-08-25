@@ -190,7 +190,12 @@ test.skip('writeImage', async () => {
 
 test('writeImageUrl fetches and writes the image blob', async () => {
   const blob = new Blob(['image'], { type: 'image/png' })
-  const fetchImage = jest.fn<typeof fetch>(async () => new Response(blob))
+  const fetchImage = jest.fn<typeof fetch>(async () => {
+    return {
+      blob: async () => blob,
+      ok: true,
+    } as Response
+  })
   // @ts-ignore
   ClipBoardWorker.invoke.mockResolvedValue(undefined)
 
