@@ -65,6 +65,11 @@
   left: var(--SashSecondaryPreviewLeft);
 }
 
+.SashHorizontal.SashSecondaryPreview {
+  left: 0;
+  top: calc(var(--SashSecondaryPreviewTop) - 2px);
+}
+
 .SashSecondarySideBar {
   left: var(--SashSecondarySideBarLeft);
 }

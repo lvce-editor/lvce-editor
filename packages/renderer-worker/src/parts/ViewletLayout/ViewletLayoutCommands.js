@@ -108,6 +108,7 @@ export const CommandsWithSideEffects = {
   maximizePanel: ViewletLayout.maximizePanel,
   unmaximizePanel: ViewletLayout.unmaximizePanel,
   togglePreview: ViewletLayout.togglePreview,
+  togglePreviewOrientation: ViewletLayout.togglePreviewOrientation,
   toggleSecondaryPreview: ViewletLayout.toggleSecondaryPreview,
   toggleSideBar: ViewletLayout.toggleSideBar,
   toggleSecondarySideBar: ViewletLayout.toggleSecondarySideBar,

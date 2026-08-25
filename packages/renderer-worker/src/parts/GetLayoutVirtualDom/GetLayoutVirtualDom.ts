@@ -1,6 +1,7 @@
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import * as SideBarLocationType from '../SideBarLocationType/SideBarLocationType.js'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.js'
+import * as PreviewOrientation from '../PreviewOrientation/PreviewOrientation.js'
 import type { LayoutState } from '../ViewletLayout/LayoutState.ts'
 
 const getMainContentsVirtualDom = (state: LayoutState) => {
@@ -83,10 +84,10 @@ const getSashPreviewDom = () => {
   }
 }
 
-const getSashSecondaryPreviewDom = () => {
+const getSashSecondaryPreviewDom = (horizontal = false) => {
   return {
     type: VirtualDomElements.Div,
-    className: 'Viewlet Sash SashVertical SashSecondaryPreview',
+    className: `Viewlet Sash ${horizontal ? 'SashHorizontal' : 'SashVertical'} SashSecondaryPreview`,
     tabIndex: -1,
     role: 'none',
     onPointerDown: DomEventListenerFunctions.HandleSashSecondaryPreviewPointerDown,
@@ -246,6 +247,20 @@ const getPreviewAreaDom = (previewId: number, previewActionsUid: number | undefi
     previewDom,
     ...actionsDom,
     ...closeButtonDom,
+  ]
+}
+
+const getVerticalPreviewAreasDom = (state: LayoutState) => {
+  const secondaryPreviewSashDom = state.secondaryPreviewSashVisible ? [getSashSecondaryPreviewDom(true)] : []
+  return [
+    {
+      childCount: 2 + secondaryPreviewSashDom.length,
+      className: 'PreviewAreas PreviewAreasVertical',
+      type: VirtualDomElements.Div,
+    },
+    ...getPreviewAreaDom(state.previewId, state.previewActionsUid, false),
+    ...secondaryPreviewSashDom,
+    ...getPreviewAreaDom(state.secondaryPreviewId, state.secondaryPreviewActionsUid, true),
   ]
 }
 
@@ -430,6 +445,24 @@ const getWorkbenchBodyDom = (state: LayoutState) => {
   } = state
   const children: any[] = [...getWorkbenchMainDom(state)]
   let childCount = 1
+  const previewsAreVertical = state.previewOrientation === PreviewOrientation.Vertical && state.previewVisible && state.secondaryPreviewVisible
+
+  if (previewsAreVertical) {
+    if (previewSashVisible) {
+      childCount++
+      children.push(getSashPreviewDom())
+    }
+    childCount++
+    children.push(...getVerticalPreviewAreasDom(state))
+    return [
+      {
+        childCount,
+        className: 'WorkbenchBody',
+        type: VirtualDomElements.Div,
+      },
+      ...children,
+    ]
+  }
 
   if (previewSashVisible) {
     childCount++

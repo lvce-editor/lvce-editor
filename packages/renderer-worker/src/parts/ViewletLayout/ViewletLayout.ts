@@ -20,6 +20,7 @@ import * as PanelWorker from '../PanelWorker/PanelWorker.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as Preferences from '../Preferences/Preferences.js'
+import * as PreviewOrientation from '../PreviewOrientation/PreviewOrientation.js'
 import * as ProblemsWorker from '../ProblemsWorker/ProblemsWorker.ts'
 import * as Product from '../Product/Product.js'
 import * as RenderMainAreaPending from '../RenderMainAreaPending/RenderMainAreaPending.ts'
@@ -42,6 +43,15 @@ import { getPoints } from './LayoutPoints.ts'
 import type { LayoutState, LayoutStateResult, SideBarFocusModeLayoutStateSnapshot } from './LayoutState.ts'
 
 const mainMinWidth = 100
+
+const getTwoPreviewAreasWidth = (state: LayoutState): number => {
+  return state.previewOrientation === PreviewOrientation.Vertical ? state.windowWidth / 2 : state.windowWidth / 3
+}
+
+const getTwoPreviewAreasHeight = (state: LayoutState): number => {
+  const previewTop = state.titleBarVisible ? state.titleBarHeight : 0
+  return Math.max(0, state.windowHeight - previewTop) / 2
+}
 
 const getInitialBackendUrl = () => {
   return Preferences.get('layout.backendUrl') || Product.getBackendUrl()
@@ -198,6 +208,7 @@ export const create = (id: number): LayoutState => {
     previewMaxWidth: 0,
     previewMinHeight: 0,
     previewMinWidth: 0,
+    previewOrientation: PreviewOrientation.Horizontal,
     secondaryPreviewMaxHeight: 0,
     secondaryPreviewMaxWidth: 0,
     secondaryPreviewMinHeight: 0,
@@ -255,6 +266,8 @@ export const saveState = (state: LayoutState) => {
     previewViewletId,
     previewVisible,
     previewWidth,
+    previewHeight,
+    previewOrientation,
     secondaryPreviewUri,
     secondaryPreviewViewletId,
     secondaryPreviewVisible,
@@ -275,6 +288,8 @@ export const saveState = (state: LayoutState) => {
     previewViewletId,
     previewVisible,
     previewWidth,
+    previewHeight,
+    previewOrientation,
     secondaryPreviewUri,
     secondaryPreviewViewletId,
     secondaryPreviewVisible,
@@ -307,6 +322,8 @@ const getSavedPoints = (savedState) => {
       secondarySideBarVisible: false,
       secondarySideBarWidth: 300,
       previewWidth: 0,
+      previewHeight: 0,
+      previewOrientation: 'horizontal' as const,
       previewVisible: false,
       secondaryPreviewWidth: 0,
       secondaryPreviewVisible: false,
@@ -320,6 +337,8 @@ const getSavedPoints = (savedState) => {
     secondarySideBarVisible,
     secondarySideBarWidth,
     previewWidth,
+    previewHeight,
+    previewOrientation,
     previewVisible,
     secondaryPreviewWidth,
     secondaryPreviewVisible,
@@ -333,6 +352,8 @@ const getSavedPoints = (savedState) => {
     secondarySideBarVisible: secondarySideBarVisible ?? false,
     secondarySideBarWidth: secondarySideBarWidth ?? 300,
     previewWidth: previewWidth ?? 0,
+    previewHeight: previewHeight ?? 0,
+    previewOrientation: previewOrientation === PreviewOrientation.Vertical ? ('vertical' as const) : ('horizontal' as const),
     previewVisible: previewVisible ?? false,
     secondaryPreviewWidth: secondaryPreviewWidth ?? 0,
     secondaryPreviewVisible: secondaryPreviewVisible ?? false,
@@ -417,6 +438,8 @@ export const loadContent = (state: LayoutState, savedState: any): LayoutState =>
     secondarySideBarWidth,
     previewVisible,
     previewWidth,
+    previewHeight,
+    previewOrientation,
     secondaryPreviewVisible,
     secondaryPreviewWidth,
   } = getSavedPoints(stateToRestore)
@@ -447,16 +470,17 @@ export const loadContent = (state: LayoutState, savedState: any): LayoutState =>
     statusBarHeight: 20,
     statusBarVisible: true,
     previewVisible,
-    previewHeight: 350,
+    previewHeight: previewHeight || 350,
+    previewOrientation,
 
-    previewMinHeight: Math.max(200, windowHeight / 2),
+    previewMinHeight: 200,
     previewMaxHeight: 1200,
     previewWidth,
     previewMinWidth: 100,
     previewMaxWidth: Math.max(1800, windowWidth / 2),
     secondaryPreviewVisible,
     secondaryPreviewHeight: 350,
-    secondaryPreviewMinHeight: Math.max(200, windowHeight / 2),
+    secondaryPreviewMinHeight: 200,
     secondaryPreviewMaxHeight: 1200,
     secondaryPreviewWidth,
     secondaryPreviewMinWidth: 100,
@@ -840,8 +864,10 @@ export const toggleSideBarView = async (state: LayoutState, moduleId): Promise<L
     }
     const secondaryPreviewState = {
       ...state,
-      previewWidth: state.previewVisible ? state.windowWidth / 3 : state.previewWidth,
-      secondaryPreviewWidth: state.previewVisible ? state.windowWidth / 3 : state.windowWidth / 2,
+      previewHeight:
+        state.previewOrientation === PreviewOrientation.Vertical && state.previewVisible ? getTwoPreviewAreasHeight(state) : state.previewHeight,
+      previewWidth: state.previewVisible ? getTwoPreviewAreasWidth(state) : state.previewWidth,
+      secondaryPreviewWidth: state.previewVisible ? getTwoPreviewAreasWidth(state) : state.windowWidth / 2,
     }
     const result = await showSecondaryPreview(secondaryPreviewState, sideBarView)
     const focusCommands = await Viewlet.getFocusCommands(sideBarView)
@@ -856,7 +882,11 @@ export const toggleSideBarView = async (state: LayoutState, moduleId): Promise<L
     }
     const previewState = {
       ...state,
-      previewWidth: state.previewWidthBeforeClose || (state.secondaryPreviewVisible ? state.windowWidth / 3 : state.windowWidth / 2),
+      previewHeight:
+        state.previewOrientation === PreviewOrientation.Vertical && state.secondaryPreviewVisible
+          ? getTwoPreviewAreasHeight(state)
+          : state.previewHeight,
+      previewWidth: state.previewWidthBeforeClose || (state.secondaryPreviewVisible ? getTwoPreviewAreasWidth(state) : state.windowWidth / 2),
     }
     const previewResult = await showPreview(previewState, sideBarView, ViewletModuleId.ExtensionView)
     const focusCommands = await Viewlet.getFocusCommands(sideBarView)
@@ -1174,7 +1204,7 @@ const movePreviewToSecondaryPreview = async (state: LayoutState): Promise<Layout
     previewId: -1,
     previewSashVisible: false,
     previewVisible: false,
-    previewWidth: state.windowWidth / 3,
+    previewWidth: getTwoPreviewAreasWidth(state),
     secondaryPreviewActionsEventListeners: state.previewActionsEventListeners,
     secondaryPreviewActionsUid: state.previewActionsUid,
     secondaryPreviewId: state.previewId,
@@ -1182,7 +1212,7 @@ const movePreviewToSecondaryPreview = async (state: LayoutState): Promise<Layout
     secondaryPreviewUri: state.previewUri,
     secondaryPreviewViewletId: state.previewViewletId,
     secondaryPreviewVisible: true,
-    secondaryPreviewWidth: state.windowWidth / 3,
+    secondaryPreviewWidth: getTwoPreviewAreasWidth(state),
   })
   ViewletStates.setState(state.uid, newState)
   const commands = await getResizeCommands(state, newState)
@@ -1222,8 +1252,12 @@ export const showPreview = async (
     !stateWithRestoredWidth.previewVisible && stateWithRestoredWidth.secondaryPreviewVisible
       ? {
           ...stateWithRestoredWidth,
-          previewWidth: stateWithRestoredWidth.windowWidth / 3,
-          secondaryPreviewWidth: stateWithRestoredWidth.windowWidth / 3,
+          previewHeight:
+            stateWithRestoredWidth.previewOrientation === PreviewOrientation.Vertical
+              ? getTwoPreviewAreasHeight(stateWithRestoredWidth)
+              : stateWithRestoredWidth.previewHeight,
+          previewWidth: getTwoPreviewAreasWidth(stateWithRestoredWidth),
+          secondaryPreviewWidth: getTwoPreviewAreasWidth(stateWithRestoredWidth),
         }
       : stateWithRestoredWidth
   const { previewVisible, previewId, uid } = state
@@ -1334,8 +1368,10 @@ export const showSecondaryPreview = async (initialState: LayoutState, uri: strin
     !initialState.secondaryPreviewVisible && initialState.previewVisible
       ? {
           ...initialState,
-          previewWidth: initialState.windowWidth / 3,
-          secondaryPreviewWidth: initialState.windowWidth / 3,
+          previewHeight:
+            initialState.previewOrientation === PreviewOrientation.Vertical ? getTwoPreviewAreasHeight(initialState) : initialState.previewHeight,
+          previewWidth: getTwoPreviewAreasWidth(initialState),
+          secondaryPreviewWidth: getTwoPreviewAreasWidth(initialState),
         }
       : initialState
   if (state.secondaryPreviewVisible && state.secondaryPreviewId !== -1) {
@@ -1381,6 +1417,26 @@ export const toggleSecondaryPreview = (state: LayoutState, uri: string = state.s
     return hideSecondaryPreview(state)
   }
   return showSecondaryPreview(state, uri)
+}
+
+export const togglePreviewOrientation = async (state: LayoutState): Promise<LayoutStateResult> => {
+  const previewOrientation: LayoutState['previewOrientation'] =
+    state.previewOrientation === PreviewOrientation.Vertical ? PreviewOrientation.Horizontal : PreviewOrientation.Vertical
+  const previewTop = state.titleBarVisible ? state.titleBarHeight : 0
+  const previewHeight = previewOrientation === PreviewOrientation.Vertical ? Math.max(0, state.windowHeight - previewTop) / 2 : state.previewHeight
+  const newState = getPoints(
+    {
+      ...state,
+      previewHeight,
+      previewOrientation,
+    },
+    state.sideBarLocation,
+  )
+  const commands = await getResizeCommands(state, newState)
+  return {
+    newState,
+    commands,
+  }
 }
 
 export const showTitleBar = (state: LayoutState) => {
@@ -1956,13 +2012,15 @@ const getNewStatePointerMovePanel = async (state: LayoutState, x: number, y: num
 }
 
 const getNewStatePointerMovePreview = async (state: LayoutState, x: number): Promise<{ newState: LayoutState; commands: any[] }> => {
-  const previewRight = state.secondaryPreviewVisible ? state.secondaryPreviewLeft : state.windowWidth
+  const previewsAreVertical = state.previewOrientation === PreviewOrientation.Vertical && state.secondaryPreviewVisible
+  const previewRight = previewsAreVertical ? state.windowWidth : state.secondaryPreviewVisible ? state.secondaryPreviewLeft : state.windowWidth
   const previewWidth = Math.max(state.previewMinWidth, previewRight - x)
   return {
     newState: getPoints(
       {
         ...state,
         previewWidth,
+        ...(previewsAreVertical ? { secondaryPreviewWidth: previewWidth } : {}),
       },
       state.sideBarLocation,
     ),
@@ -1970,7 +2028,24 @@ const getNewStatePointerMovePreview = async (state: LayoutState, x: number): Pro
   }
 }
 
-const getNewStatePointerMoveSecondaryPreview = async (state: LayoutState, x: number): Promise<{ newState: LayoutState; commands: any[] }> => {
+const getNewStatePointerMoveSecondaryPreview = async (
+  state: LayoutState,
+  x: number,
+  y: number,
+): Promise<{ newState: LayoutState; commands: any[] }> => {
+  if (state.previewOrientation === PreviewOrientation.Vertical && state.previewVisible) {
+    const previewHeight = y - state.previewTop
+    return {
+      newState: getPoints(
+        {
+          ...state,
+          previewHeight,
+        },
+        state.sideBarLocation,
+      ),
+      commands: [],
+    }
+  }
   const secondaryPreviewWidth = Math.max(state.secondaryPreviewMinWidth, state.windowWidth - x)
   return {
     newState: getPoints(
@@ -2000,7 +2075,7 @@ const getNewStatePointerMove = async (
     case SashType.Preview:
       return getNewStatePointerMovePreview(state, x)
     case SashType.SecondaryPreview:
-      return getNewStatePointerMoveSecondaryPreview(state, x)
+      return getNewStatePointerMoveSecondaryPreview(state, x, y)
     case SashType.ActivityBar:
       return getNewStatePointerMoveActivityBar(state, x, y)
     default:

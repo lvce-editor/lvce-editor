@@ -6,7 +6,7 @@
   position: absolute;
   width: 600px;
   top: 50px;
-  left: calc((100% - var(--PreviewWidth, 0px) - var(--SecondaryPreviewWidth, 0px)) / 2);
+  left: calc((100% - var(--PreviewAreasWidth, 0px)) / 2);
   margin-left: -300px; /* TODO maybe this should be 301px because of padding to be centered */
   padding: 0 1px 6px;
   background: var(--QuickPickBackground);

@@ -71,6 +71,7 @@ export interface LayoutState {
   readonly previewMaxWidth: number
   readonly previewMinHeight: number
   readonly previewMinWidth: number
+  readonly previewOrientation: 'horizontal' | 'vertical'
   readonly previewSashId: number
   readonly previewSashVisible: boolean
   readonly previewTop: number

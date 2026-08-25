@@ -202,6 +202,52 @@ test('getLayoutVirtualDom renders an independently closable secondary preview', 
   )
 })
 
+test('getLayoutVirtualDom groups vertically stacked preview areas', () => {
+  const state = {
+    activityBarVisible: false,
+    mainVisible: true,
+    mainId: 1,
+    panelSashVisible: false,
+    panelVisible: false,
+    panelId: -1,
+    previewActionsUid: -1,
+    previewOrientation: 'vertical',
+    previewSashVisible: true,
+    previewVisible: true,
+    previewId: 2,
+    secondaryPreviewActionsUid: -1,
+    secondaryPreviewSashVisible: true,
+    secondaryPreviewVisible: true,
+    secondaryPreviewId: 3,
+    secondarySideBarVisible: false,
+    secondarySideBarId: -1,
+    sideBarLocation: SideBarLocationType.Left,
+    sideBarSashVisible: false,
+    sideBarVisible: false,
+    sideBarId: -1,
+    statusBarVisible: false,
+    statusBarId: -1,
+    titleBarVisible: false,
+    titleBarId: -1,
+  }
+
+  // @ts-ignore
+  const workbench = parseVirtualDom(getLayoutVirtualDom(state))
+  const body = workbench.children[0]
+  const previewAreas = body.children[2]
+
+  expect(body.children.map(({ node }) => node.className)).toEqual([
+    'WorkbenchMain',
+    'Viewlet Sash SashVertical SashPreview',
+    'PreviewAreas PreviewAreasVertical',
+  ])
+  expect(previewAreas.children.map(({ node }) => node.className)).toEqual([
+    'PreviewArea',
+    'Viewlet Sash SashHorizontal SashSecondaryPreview',
+    'PreviewArea SecondaryPreviewArea',
+  ])
+})
+
 test('getLayoutVirtualDom renders visible widgets as the final Workbench children', () => {
   const state = {
     activityBarVisible: false,

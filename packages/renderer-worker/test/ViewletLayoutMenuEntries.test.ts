@@ -40,6 +40,16 @@ test('getQuickPickMenuEntries includes reset view locations command', () => {
   })
 })
 
+test('getQuickPickMenuEntries includes preview orientation command', () => {
+  const entries = ViewletLayoutMenuEntries.getQuickPickMenuEntries()
+
+  expect(entries).toContainEqual({
+    id: 'Layout.togglePreviewOrientation',
+    label: 'Preview: Toggle Orientation',
+    aliases: ['Toggle Preview Orientation', 'Stack Preview Areas'],
+  })
+})
+
 test('getQuickPickMenuEntries includes GPU info command', () => {
   const entries = ViewletLayoutMenuEntries.getQuickPickMenuEntries()
 
