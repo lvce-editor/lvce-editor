@@ -24,18 +24,25 @@ export const test: Test = async ({ expect, FileSystem, Locator, Main, TitleBarMe
   await Main.openUri(file)
 
   const titleBarMenuBar = Locator('.TitleBarMenuBar')
-  const fileMenuItem = Locator('.TitleBarTopLevelEntry', { hasText: 'File' })
+  const helpMenuItem = Locator('.TitleBarTopLevelEntry', { hasText: 'Help' })
+  const menu = Locator('.Menu')
+  const editorRow = Locator('.EditorRow').first()
   const editorInput = Locator('[name="editor"]')
 
-  await TitleBarMenuBar.focus()
-  await TitleBarMenuBar.handleKeyArrowDown()
-  await expect(Locator('.Menu')).toBeVisible()
+  await helpMenuItem.click()
+  await waitFor(() => expect(menu).toBeVisible())
 
   await TitleBarMenuBar.handleKeyEscape()
-  await expect(fileMenuItem).toHaveAttribute('id', 'TitleBarEntryActive')
+  await waitFor(() => expect(menu).toBeHidden())
+  await expect(helpMenuItem).toHaveAttribute('id', 'TitleBarEntryActive')
+  // The test locator's synthetic mouse click omits the browser's default button focus behavior.
+  await helpMenuItem.type('')
+  await waitFor(() => expect(helpMenuItem).toBeFocused())
 
-  await editorInput.click()
-  await titleBarMenuBar.dispatchEvent('focusout', { bubbles: true } as unknown as string)
-  await waitFor(() => expect(fileMenuItem).toHaveAttribute('id', null))
+  await new Promise((resolve) => setTimeout(resolve, 200))
+  await editorRow.click()
+  await waitFor(() => expect(editorInput).toBeFocused())
+  await waitFor(() => expect(helpMenuItem).toHaveAttribute('id', null))
+  await waitFor(() => expect(helpMenuItem).toHaveAttribute('aria-expanded', 'false'))
   await waitFor(() => expect(titleBarMenuBar).toHaveAttribute('aria-activedescendant', null))
 }
