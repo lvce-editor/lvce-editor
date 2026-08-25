@@ -27,6 +27,19 @@ test('text search worker allows authenticated loopback websocket connections', (
   expect(headers['Content-Security-Policy']).toContain(`ws://127.0.0.1:* ws://localhost:*`)
 })
 
+test('file system worker allows authenticated loopback websocket connections', () => {
+  const headers = GetHeaders.getHeaders({
+    absolutePath: '/test/fileSystemWorkerMain.js',
+    etag: 'test-etag',
+    isImmutable: false,
+    isForElectronProduction: false,
+    applicationName: 'lvce',
+  })
+
+  expect(headers['Content-Security-Policy']).toContain(`connect-src 'self'`)
+  expect(headers['Content-Security-Policy']).toContain(`ws://127.0.0.1:* ws://localhost:*`)
+})
+
 test('process explorer worker allows authenticated loopback websocket connections', () => {
   const headers = GetHeaders.getHeaders({
     absolutePath: '/test/process-explorer-worker/index.js',
