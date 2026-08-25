@@ -4,6 +4,7 @@ import * as ExtensionHostCommandType from '../ExtensionHostCommandType/Extension
 import * as ExtensionManagementWorker from '../ExtensionManagementWorker/ExtensionManagementWorker.js'
 import * as FileSystemProtocol from '../FileSystemProtocol/FileSystemProtocol.js'
 import * as GetProtocol from '../GetProtocol/GetProtocol.js'
+import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as ExtensionHostShared from './ExtensionHostShared.js'
 
 const notifyWorkspaceChanged = async (changes) => {
@@ -62,7 +63,7 @@ export const getBlob = async (uri, type = '') => {
 
 export const getBlobUrl = async (uri, type = '') => {
   const blob = await getBlob(uri, type)
-  return URL.createObjectURL(blob)
+  return RendererProcess.invoke('ObjectUrl.create', blob)
 }
 
 export const remove = async (uri) => {

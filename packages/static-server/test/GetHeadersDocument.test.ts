@@ -12,6 +12,7 @@ test('uses default application name when missing', () => {
   expect(headers['Content-Security-Policy']).toContain(`style-src 'self' 'unsafe-inline'`)
   expect(headers['Content-Security-Policy']).toContain(`connect-src 'self' https: wss:`)
   expect(headers['Content-Security-Policy']).toContain(`ws://127.0.0.1:* ws://localhost:*`)
+  expect(headers['Content-Security-Policy']).toContain(`media-src 'self' blob:`)
   expect(headers['Content-Security-Policy']).not.toContain('undefined-webview:')
 })
 

@@ -88,6 +88,7 @@ test('getTestRequestResponse - _all.html serves index html', async () => {
       status: 200,
     },
   })
+  expect(result.init.headers['Content-Security-Policy']).toContain(`media-src 'self' blob:`)
   expect(result.body).toContain('<title>Tests</title>')
 })
 
