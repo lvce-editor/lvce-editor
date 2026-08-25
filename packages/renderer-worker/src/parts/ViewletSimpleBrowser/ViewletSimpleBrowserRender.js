@@ -28,9 +28,9 @@ const renderDom = {
       newState.suggestions,
       newState.selectedSuggestionIndex,
     )
-    const commands = [['Viewlet.setDom2', dom]]
+    const commands = [['Viewlet.setDom2', newState.uid, dom]]
     if (newState.suggestions.length > 0) {
-      commands.push(['Viewlet.focusElementByName', InputName.SimpleBrowserAddress])
+      commands.push(['Viewlet.focusElementByName', newState.uid, InputName.SimpleBrowserAddress])
     }
     return commands
   },
