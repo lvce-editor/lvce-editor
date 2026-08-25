@@ -30,9 +30,9 @@
   {
     "name": "builtin.gpt-voice",
     "repository": "github.com/lvce-editor/gpt-voice-extension",
-    "version": "2.5.0",
-    "sha256": "7d69e9be708eb10a96dd6cb0b35c041cbd185b8c08185fdba31976a25e1a0f8f",
-    "created": "2026-08-24",
+    "version": "2.6.0",
+    "sha256": "04dc882dc7ae563fef1ccc39f50a542d7e75d9bc0c4a8ca9bd258efb4c91b1d6",
+    "created": "2026-08-25",
     "enabled": false
   },
   {
