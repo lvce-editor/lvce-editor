@@ -35,6 +35,5 @@
 }
 
 .ExtensionDetailTabSelected {
-  border-bottom: 1px solid var(--PanelTabActiveForeground, var(--FocusBorder, currentColor));
   color: var(--PanelTabActiveForeground, var(--WorkbenchForeground));
 }

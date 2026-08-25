@@ -207,6 +207,30 @@ test('bundleCss preserves the extension detail sash divider', async () => {
   }
 }, 30_000)
 
+test('bundleCss keeps only the row separator for extension detail tabs', async () => {
+  const dir = await mkdtemp(join(tmpdir(), 'lvce-bundle-css-'))
+
+  try {
+    await bundleCss({
+      outDir: dir,
+      assetDir: '',
+    })
+
+    const css = await readFile(join(dir, 'parts', 'ViewletExtensionDetailTabs.css'), 'utf8')
+
+    expect(css).toContain(`.ExtensionDetailTabs {
+  display: flex;
+  gap: 10px;
+  contain: content;
+  border-bottom: 1px solid var(--PanelBorderTopColor, color-mix(in srgb, var(--WorkbenchForeground) 28%, transparent));`)
+    expect(css).toContain(`.ExtensionDetailTabSelected {
+  color: var(--PanelTabActiveForeground, var(--WorkbenchForeground));
+}`)
+  } finally {
+    await rm(dir, { recursive: true, force: true })
+  }
+}, 30_000)
+
 test('bundleCss preserves the color theme link foreground', async () => {
   const dir = await mkdtemp(join(tmpdir(), 'lvce-bundle-css-'))
 
