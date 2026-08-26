@@ -543,9 +543,11 @@ const show = async (state: LayoutState, module, currentViewletId, restore?: bool
   const height = intermediateState[kHeight]
   const uid = state.uid
   const childUid = Id.create()
+  // Keep preview visibility unrendered until its root creation commands are ready.
   if (module === LayoutModules.Preview) {
     ViewletStates.setState(uid, {
       ...intermediateState,
+      previewVisible: state.previewVisible,
       previewActionsEventListeners: [],
       previewActionsUid: -1,
       previewId: childUid,
@@ -553,6 +555,7 @@ const show = async (state: LayoutState, module, currentViewletId, restore?: bool
   } else if (module === LayoutModules.SecondaryPreview) {
     ViewletStates.setState(uid, {
       ...intermediateState,
+      secondaryPreviewVisible: state.secondaryPreviewVisible,
       secondaryPreviewActionsEventListeners: [],
       secondaryPreviewActionsUid: -1,
       secondaryPreviewId: childUid,
@@ -595,6 +598,7 @@ const show = async (state: LayoutState, module, currentViewletId, restore?: bool
     newState: {
       ...intermediateState,
       ...latestState,
+      [kVisible]: intermediateState[kVisible],
       [kId]: childUid,
     },
     commands,
