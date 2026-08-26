@@ -7,6 +7,8 @@ const dispatch =
   }
 export const handleDidNavigate = dispatch('browser-view-did-navigate')
 
+export const handlePageFaviconUpdated = dispatch('browser-view-page-favicon-updated')
+
 export const handleTitleUpdated = dispatch('browser-view-title-updated')
 
 export const handleWillNavigate = dispatch('browser-view-will-navigate')

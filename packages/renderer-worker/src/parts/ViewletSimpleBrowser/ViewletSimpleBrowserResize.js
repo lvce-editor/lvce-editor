@@ -10,6 +10,8 @@ export const resize = (state, dimensions) => {
 }
 
 export const resizeEffect = async (state) => {
-  const { headerHeight, browserViewId, x, y, width, height } = state
-  await ElectronWebContentsViewFunctions.resizeWebContentsView(browserViewId, x, y + headerHeight, width, height - headerHeight)
+  const { headerHeight, tabs, x, y, width, height } = state
+  await Promise.all(
+    tabs.map((tab) => ElectronWebContentsViewFunctions.resizeWebContentsView(tab.browserViewId, x, y + headerHeight, width, height - headerHeight)),
+  )
 }

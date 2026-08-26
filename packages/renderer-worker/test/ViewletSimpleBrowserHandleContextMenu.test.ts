@@ -29,5 +29,5 @@ test('openContextMenu', async () => {
     y: 20,
   })
   expect(ElectronContextMenu.openContextMenu).toHaveBeenCalledTimes(1)
-  expect(ElectronContextMenu.openContextMenu).toHaveBeenCalledWith(30, 60, MenuEntryId.SimpleBrowser, 30, 60, { x: 20, y: 20 })
+  expect(ElectronContextMenu.openContextMenu).toHaveBeenCalledWith(30, 95, MenuEntryId.SimpleBrowser, 30, 95, { x: 20, y: 20 })
 })

@@ -98,6 +98,7 @@ export const commandMap = {
   'EditorDiagnostics.hydrate': lazy('EditorDiagnostics.hydrate'),
   'EditorError.3900': lazy('EditorError.3900'),
   'ElectronBrowserView.handleDidNavigate': lazy('ElectronBrowserView.handleDidNavigate'),
+  'ElectronBrowserView.handlePageFaviconUpdated': lazy('ElectronBrowserView.handlePageFaviconUpdated'),
   'ElectronBrowserView.handleTitleUpdated': lazy('ElectronBrowserView.handleTitleUpdated'),
   'ElectronBrowserView.handleWillNavigate': lazy('ElectronBrowserView.handleWillNavigate'),
   'ElectronClipBoard.writeText': lazy('ElectronClipBoard.writeText'),
