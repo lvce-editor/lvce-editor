@@ -143,6 +143,34 @@ test('creates command wrappers through the same lifecycle seam', async () => {
   expect(result.commands).toEqual([['setText', 'selected']])
 })
 
+test('recomputes configured outputs after commands', async () => {
+  const config: any = createConfig()
+  config.outputs = [{ method: { name: 'Example.renderActions', parameters: [stateParameter('uid')] }, stateField: 'actionsDom' }]
+  const invoke = jest.fn(async (method: string, ..._args: readonly unknown[]) => {
+    if (method === 'Example.getCommandIds') {
+      return ['select']
+    }
+    if (method === 'Example.diff3') {
+      return ['diff']
+    }
+    if (method === 'Example.render3') {
+      return [['setText', 'selected']]
+    }
+    if (method === 'Example.renderActions') {
+      return [['enabled-button']]
+    }
+    return undefined
+  })
+  const viewlet = createWorkerViewletWithDependencies({ config, context: { platform: 1 }, worker: { invoke, restart: jest.fn() } })
+  const commands = await viewlet.getCommands!()
+  const state = { ...viewlet.create(9, '', 0, 0, 0, 0), actionsDom: [['disabled-button']] }
+
+  const result = await commands.select(state, 'item-1')
+
+  expect(invoke).toHaveBeenCalledWith('Example.renderActions', 9)
+  expect(result.actionsDom).toEqual([['enabled-button']])
+})
+
 test('renders pending worker state without replaying a command', async () => {
   const invoke = jest.fn(async (method: string) => {
     if (method === 'Example.diff3') {

@@ -157,6 +157,19 @@ const createWorkerViewletInternal = ({ adapter, config, context, worker }) => {
     return adapter.transformState(initialState)
   }
 
+  const applyOutputs = async (state, invocation, isHotReload = false) => {
+    const newState = { ...state }
+    for (const output of config.outputs || []) {
+      if (isHotReload && output.hotReload === false) {
+        continue
+      }
+      invocation.state = newState
+      invocation.results[output.stateField] = await invokeConfiguredMethod(worker, output.method, invocation)
+      newState[output.stateField] = invocation.results[output.stateField]
+    }
+    return newState
+  }
+
   const runRenderPipeline = async (
     currentState,
     invocationArguments = {},
@@ -167,18 +180,11 @@ const createWorkerViewletInternal = ({ adapter, config, context, worker }) => {
     const invocation = createInvocation(currentState, context, invocationArguments)
     invocation.results.diff = await invokeConfiguredMethod(worker, diffMethod, invocation)
     invocation.results.commands = await invokeConfiguredMethod(worker, renderMethod, invocation)
-    const newState = {
+    const renderedState = {
       ...currentState,
       commands: invocation.results.commands,
     }
-    for (const output of config.outputs || []) {
-      if (isHotReload && output.hotReload === false) {
-        continue
-      }
-      invocation.state = newState
-      invocation.results[output.stateField] = await invokeConfiguredMethod(worker, output.method, invocation)
-      newState[output.stateField] = invocation.results[output.stateField]
-    }
+    const newState = await applyOutputs(renderedState, invocation, isHotReload)
     return adapter.transformRenderedState(newState)
   }
 
@@ -208,10 +214,12 @@ const createWorkerViewletInternal = ({ adapter, config, context, worker }) => {
     if (config.commandReturnStateWhenCommandsEmpty && invocation.results.commands.length === 0) {
       return currentState
     }
-    return adapter.transformRenderedState({
+    const renderedState = {
       ...currentState,
       commands: invocation.results.commands,
-    })
+    }
+    const newState = await applyOutputs(renderedState, invocation)
+    return adapter.transformRenderedState(newState)
   }
 
   Object.defineProperty(Commands, '__renderPending', {
