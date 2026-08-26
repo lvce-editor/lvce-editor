@@ -2,7 +2,11 @@ import { expect, test } from '@jest/globals'
 import { mkdtemp, readFile, readdir, rm } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
-import { bundleBuiltinSettings, getSettingsContributionCandidates } from '../src/parts/BundleBuiltinSettings/BundleBuiltinSettings.ts'
+import {
+  bundleBuiltinSettings,
+  deduplicateSettingsContributions,
+  getSettingsContributionCandidates,
+} from '../src/parts/BundleBuiltinSettings/BundleBuiltinSettings.ts'
 
 test('gets one settings contribution candidate per worker package', () => {
   const workers = [
@@ -47,4 +51,28 @@ test('does not expose renderer worker defaults as settings contributions', async
   } finally {
     await rm(toRoot, { force: true, recursive: true })
   }
+})
+
+test('deduplicates identical settings contributions', () => {
+  const settingA = { category: 'chat', description: 'A setting', heading: 'A', id: 'chat.a', type: 3, value: true }
+  const settingB = { category: 'chat', description: 'B setting', heading: 'B', id: 'chat.b', type: 3, value: false }
+
+  expect(
+    deduplicateSettingsContributions([
+      { fileName: 'chat-view.json', settings: [settingA] },
+      { fileName: 'chat-view-model.json', settings: [settingA, settingB] },
+    ]),
+  ).toEqual([
+    { fileName: 'chat-view.json', settings: [settingA] },
+    { fileName: 'chat-view-model.json', settings: [settingB] },
+  ])
+})
+
+test('rejects conflicting settings contributions', () => {
+  expect(() =>
+    deduplicateSettingsContributions([
+      { fileName: 'first.json', settings: [{ id: 'chat.enabled', value: true }] },
+      { fileName: 'second.json', settings: [{ id: 'chat.enabled', value: false }] },
+    ]),
+  ).toThrow('Conflicting builtin setting chat.enabled')
 })
