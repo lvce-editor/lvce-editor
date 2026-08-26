@@ -161,9 +161,7 @@ test('loadContent reuses running terminals when the panel is reopened', async ()
     x: 10,
     y: 20,
   })
-  expect(rendererProcessInvoke).toHaveBeenCalledWith('Viewlet.sendMultiple', [
-    ['Viewlet.setBounds', 41, { height: 400, width: 800, x: 10, y: 20 }],
-  ])
+  expect(rendererProcessInvoke).toHaveBeenCalledWith('Viewlet.sendMultiple', [['Viewlet.setBounds', 41, { height: 400, width: 800, x: 10, y: 20 }]])
   expect(viewletStatesRemove).toHaveBeenCalledWith(7)
   expect(newState).toMatchObject({
     childUid: 41,
@@ -414,6 +412,68 @@ test('killTerminal disposes the active split and expands the remaining split', a
     focusVersion: 1,
     tabs: [{ terminalUids: [41] }],
   })
+})
+
+test('handleTerminalExit disposes an exited split and keeps the active split focused', async () => {
+  const state = {
+    ...createLoadedState(),
+    activeTerminalUids: [42],
+    childUid: 42,
+    childUids: [41, 42],
+    tabs: [{ icon: 'terminal-bash', label: 'bash', terminalUids: [41, 42], uid: 41 }],
+  }
+
+  const newState = await ViewletTerminals.handleTerminalExit(state, 41)
+
+  expect(viewletDisposeFunctional).toHaveBeenCalledWith(41)
+  expect(viewletResize).toHaveBeenCalledWith(42, {
+    height: 400,
+    width: 800,
+    x: 10,
+    y: 20,
+  })
+  expect(newState).toMatchObject({
+    activeTerminalUids: [42],
+    childUid: 42,
+    childUids: [42],
+    focusVersion: 0,
+    tabs: [{ terminalUids: [42] }],
+  })
+})
+
+test('handleTerminalExit removes a background tab without changing the selected terminal', async () => {
+  const state = {
+    ...createLoadedState(),
+    activeTerminalUids: [41, 42],
+    childUid: 42,
+    childUids: [42],
+    selectedIndex: 1,
+    tabs: [
+      { icon: 'terminal-bash', label: 'bash', terminalUids: [41], uid: 41 },
+      { icon: 'terminal-bash', label: 'bash', terminalUids: [42], uid: 42 },
+    ],
+  }
+
+  const newState = await ViewletTerminals.handleTerminalExit(state, 41)
+
+  expect(viewletDisposeFunctional).toHaveBeenCalledWith(41)
+  expect(newState).toMatchObject({
+    activeTerminalUids: [42],
+    childUid: 42,
+    childUids: [42],
+    focusVersion: 0,
+    selectedIndex: 0,
+    tabs: [{ terminalUids: [42] }],
+  })
+})
+
+test('handleTerminalExit ignores a terminal that is no longer owned', async () => {
+  const state = createLoadedState()
+
+  await expect(ViewletTerminals.handleTerminalExit(state, 99)).resolves.toBe(state)
+
+  expect(viewletDisposeFunctional).not.toHaveBeenCalled()
+  expect(rendererProcessInvoke).not.toHaveBeenCalled()
 })
 
 test('killTerminal removes an empty tab and selects the next terminal tab', async () => {
