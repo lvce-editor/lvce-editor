@@ -41,7 +41,7 @@
     }
   },
   "dependencies": {
-    "@lvce-editor/about-view": "^7.25.0",
+    "@lvce-editor/about-view": "^7.26.0",
     "@lvce-editor/activity-bar-worker": "^7.25.0",
     "@lvce-editor/auth-worker": "^3.11.0",
     "@lvce-editor/chat-coordinator-worker": "^5.2.0",
@@ -51,7 +51,7 @@
     "@lvce-editor/chat-storage-worker": "^3.13.0",
     "@lvce-editor/chat-tool-worker": "^9.21.0",
     "@lvce-editor/chat-view": "^10.16.0",
-    "@lvce-editor/chat-view-model": "^10.15.0",
+    "@lvce-editor/chat-view-model": "^10.16.0",
     "@lvce-editor/clipboard-worker": "^1.28.2",
     "@lvce-editor/color-picker-worker": "^3.15.0",
     "@lvce-editor/completion-worker": "^4.17.0",
@@ -97,7 +97,7 @@
     "@lvce-editor/simple-browser-view": "^2.13.0",
     "@lvce-editor/source-action-worker": "^1.17.1",
     "@lvce-editor/source-control-worker": "^3.17.1",
-    "@lvce-editor/status-bar-worker": "^3.23.0",
+    "@lvce-editor/status-bar-worker": "^3.24.0",
     "@lvce-editor/syntax-highlighting-worker": "^2.5.1",
     "@lvce-editor/terminal-worker": "^2.9.0",
     "@lvce-editor/test-worker": "^17.15.0",
