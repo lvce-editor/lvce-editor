@@ -214,6 +214,7 @@ export const commandMap = {
   'GetActiveEditor.getDiagnostics': lazy('GetActiveEditor.getDiagnostics'),
   'GetActiveEditor.getOpenEditorUris': lazy('GetActiveEditor.getOpenEditorUris'),
   'GetActiveEditor.getSelections': lazy('GetActiveEditor.getSelections'),
+  'GetActiveEditor.getTextDocument': lazy('GetActiveEditor.getTextDocument'),
   'GetActiveEditor.setSelections': lazy('GetActiveEditor.setSelections'),
   'GetActiveEditor.updateAllDiagnostics': lazy('GetActiveEditor.updateAllDiagnostics'),
   'GetActiveEditor.updateDiagnostics': lazy('GetActiveEditor.updateDiagnostics'),

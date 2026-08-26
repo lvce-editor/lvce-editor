@@ -35,6 +35,10 @@ test('registers the drop data command', () => {
   expect(commandMap['DropData.get']).toBeDefined()
 })
 
+test('registers the active text document command', () => {
+  expect(commandMap['GetActiveEditor.getTextDocument']).toBeDefined()
+})
+
 test('registers only direct extension node process commands', () => {
   expect(commandMap['ExtensionNodeRpc.createConnection']).toBeDefined()
   expect(commandMap['ExtensionNodeRpc.createMessagePort']).toBeDefined()
