@@ -88,7 +88,7 @@
   {
     "name": "builtin.remote-ssh",
     "repository": "github.com/lvce-editor/remote-ssh",
-    "version": "0.9.7",
+    "version": "0.10.0",
     "sha256": "8f959a5962362377fd1461e17142519fd9383b57aa0514ea0064faa5da1730c6",
     "created": "2026-08-03"
   },
@@ -222,7 +222,7 @@
   {
     "name": "builtin.language-basics-html",
     "repository": "github.com/lvce-editor/language-basics-html",
-    "version": "1.8.1",
+    "version": "1.9.0",
     "sha256": "89dd641d81cfb319205bb3ea69f8dc29078acc122696e63d915fb80ae4834bc2",
     "created": "2022-06-16"
   },
@@ -236,14 +236,14 @@
   {
     "name": "builtin.video-preview",
     "repository": "github.com/lvce-editor/video-preview",
-    "version": "1.23.5",
+    "version": "1.24.0",
     "sha256": "f9aebb35d19e87ca53d84cab1547204efe7ba047e7c2f53b7ed434603647c75c",
     "created": "2024-09-26"
   },
   {
     "name": "builtin.media-preview",
     "repository": "github.com/lvce-editor/media-preview",
-    "version": "2.13.7",
+    "version": "2.14.0",
     "sha256": "be2ac7cc22c6d1874bf80fad3ed61a0c0f34b608e06b7d520457e6463c799061",
     "created": "2024-09-07"
   },
