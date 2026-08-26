@@ -328,6 +328,45 @@ test('showPreview enables preview sash', async () => {
   })
 })
 
+test('showPreview keeps the preview hidden until its viewlet has loaded', async () => {
+  let resolveLoad: (commands: unknown[][]) => void = () => {}
+  const loading = new Promise<unknown[][]>((resolve) => {
+    resolveLoad = resolve
+  })
+  let latestState
+  // @ts-ignore
+  ViewletManager.load.mockReturnValue(loading)
+  // @ts-ignore
+  ViewletStates.setState.mockImplementation((_uid, state) => {
+    latestState = state
+  })
+  // @ts-ignore
+  ViewletStates.getState.mockImplementation(() => latestState)
+  const state = {
+    ...ViewletLayout.create(1),
+    activityBarVisible: true,
+    activityBarWidth: 48,
+    statusBarHeight: 20,
+    titleBarHeight: 35,
+    windowHeight: 800,
+    windowWidth: 1200,
+  }
+
+  const resultPromise = ViewletLayout.showPreview(state, 'file:///test.html')
+
+  expect(latestState).toMatchObject({
+    previewVisible: false,
+    previewUri: 'file:///test.html',
+  })
+
+  resolveLoad([['Viewlet.createFunctionalRoot', 'Preview', 2, true]])
+  const result = await resultPromise
+  expect(result.newState).toMatchObject({
+    previewVisible: true,
+    previewUri: 'file:///test.html',
+  })
+})
+
 test('showPreview opens the simple browser in the preview area', async () => {
   const state = {
     ...ViewletLayout.create(1),
