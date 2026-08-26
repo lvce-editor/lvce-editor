@@ -5,6 +5,8 @@ const rendererProcessInvoke = jest.fn()
 const viewletDisposeFunctional = jest.fn((uid) => [['Viewlet.dispose', uid]])
 const viewletExecuteViewletCommand = jest.fn()
 const viewletResize = jest.fn(async (uid, dimensions) => [['Viewlet.setBounds', uid, dimensions]])
+const viewletStatesGetInstance = jest.fn()
+const viewletStatesRemove = jest.fn()
 let nextId = 42
 let terminalTabsPreference: boolean | undefined
 const terminalSpawnOptions = {
@@ -16,6 +18,7 @@ beforeEach(() => {
   jest.clearAllMocks()
   nextId = 42
   terminalTabsPreference = undefined
+  viewletStatesGetInstance.mockReturnValue(undefined)
   terminalSpawnOptions.args = ['-i']
   terminalSpawnOptions.command = 'bash'
 })
@@ -64,6 +67,13 @@ jest.unstable_mockModule('../src/parts/Viewlet/Viewlet.js', () => {
     disposeFunctional: viewletDisposeFunctional,
     executeViewletCommand: viewletExecuteViewletCommand,
     resize: viewletResize,
+  }
+})
+
+jest.unstable_mockModule('../src/parts/ViewletStates/ViewletStates.js', () => {
+  return {
+    getInstance: viewletStatesGetInstance,
+    remove: viewletStatesRemove,
   }
 })
 
@@ -128,6 +138,68 @@ test('loadContent preserves an explicit disabled terminal tabs preference', asyn
     [terminalSpawnOptions],
   )
   expect(newState.terminalTabsEnabled).toBe(false)
+})
+
+test('loadContent reuses running terminals when the panel is reopened', async () => {
+  const existingState = {
+    ...createLoadedState(),
+    height: 200,
+    uid: 7,
+    width: 600,
+    x: 1,
+    y: 2,
+  }
+  viewletStatesGetInstance.mockReturnValue({ state: existingState })
+  const state = ViewletTerminals.create(9, 'file:///workspace/folder', 10, 20, 800, 400)
+
+  const newState = await ViewletTerminals.loadContent(state)
+
+  expect(commandExecute).not.toHaveBeenCalled()
+  expect(viewletResize).toHaveBeenCalledWith(41, {
+    height: 400,
+    width: 800,
+    x: 10,
+    y: 20,
+  })
+  expect(rendererProcessInvoke).toHaveBeenCalledWith('Viewlet.sendMultiple', [
+    ['Viewlet.setBounds', 41, { height: 400, width: 800, x: 10, y: 20 }],
+  ])
+  expect(viewletStatesRemove).toHaveBeenCalledWith(7)
+  expect(newState).toMatchObject({
+    childUid: 41,
+    childUids: [41],
+    selectedIndex: 0,
+    tabs: existingState.tabs,
+    uid: 9,
+  })
+})
+
+test('loadContent creates a terminal after the previous terminal was killed', async () => {
+  const existingState = {
+    ...createLoadedState(),
+    activeTerminalUids: [],
+    childUid: -1,
+    childUids: [],
+    selectedIndex: -1,
+    tabs: [],
+    uid: 7,
+  }
+  viewletStatesGetInstance.mockReturnValue({ state: existingState })
+  const state = ViewletTerminals.create(9, 'file:///workspace/folder', 10, 20, 800, 400)
+
+  const newState = await ViewletTerminals.loadContent(state)
+
+  expect(commandExecute).toHaveBeenCalledWith(
+    'Layout.createViewlet',
+    ViewletModuleId.Terminal2,
+    42,
+    0,
+    expect.anything(),
+    'file:///workspace/folder',
+    [terminalSpawnOptions],
+  )
+  expect(viewletStatesRemove).toHaveBeenCalledWith(7)
+  expect(newState.childUid).toBe(42)
 })
 
 test('loadContent derives the terminal label and icon from the shell executable', async () => {
