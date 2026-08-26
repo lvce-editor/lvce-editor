@@ -257,8 +257,13 @@ export const setActionsDom = (state, actionsDom, childUid, eventListeners = stat
     }
   }
   if (state.actionsUid !== -1) {
+    const commands = []
+    if (eventListeners.length > 0) {
+      commands.push(['Viewlet.registerEventListeners', state.actionsUid, eventListeners])
+    }
+    commands.push(['Viewlet.setDom2', state.actionsUid, actionsDom])
     return {
-      commands: [['Viewlet.setDom2', state.actionsUid, actionsDom]],
+      commands,
       handled: true,
       renderParent: false,
       statePatch: {
@@ -278,8 +283,8 @@ export const setActionsDom = (state, actionsDom, childUid, eventListeners = stat
   }
   const actionsUid = Id.create()
   const commands = [['Viewlet.createFunctionalRoot', state.currentViewletId, actionsUid, true]]
-  if (state.actionsEventListeners.length > 0) {
-    commands.push(['Viewlet.registerEventListeners', actionsUid, state.actionsEventListeners])
+  if (eventListeners.length > 0) {
+    commands.push(['Viewlet.registerEventListeners', actionsUid, eventListeners])
   }
   commands.push(['Viewlet.setDom2', actionsUid, actionsDom], ['Viewlet.setUid', actionsUid, childUid])
   return {
