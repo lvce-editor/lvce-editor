@@ -1,13 +1,21 @@
 import { beforeEach, expect, jest, test } from '@jest/globals'
 
+const commandExecute = jest.fn()
 const focusSetFocus = jest.fn()
 const rendererProcessInvoke = jest.fn()
 const terminalWorkerInvoke = jest.fn()
 
 beforeEach(() => {
   focusSetFocus.mockClear()
+  commandExecute.mockClear()
   rendererProcessInvoke.mockClear()
   terminalWorkerInvoke.mockClear()
+})
+
+jest.unstable_mockModule('../src/parts/Command/Command.js', () => {
+  return {
+    execute: commandExecute,
+  }
 })
 
 jest.unstable_mockModule('../src/parts/Focus/Focus.js', () => {
@@ -119,6 +127,14 @@ test('handleData forwards pty output to renderer-process xterm', async () => {
   const data = new Uint8Array([97, 98, 99])
   await expect(ViewletTerminal2.handleData(state, data)).resolves.toBe(state)
   expect(rendererProcessInvoke).toHaveBeenCalledWith('Viewlet.send', 4, 'write', data)
+})
+
+test('handleExit removes the exited terminal from its parent', async () => {
+  const state = ViewletTerminal2.create(10)
+
+  await expect(ViewletTerminal2.handleExit(state)).resolves.toBe(state)
+
+  expect(commandExecute).toHaveBeenCalledWith('Terminals.handleTerminalExit', 10)
 })
 
 test('resizeEffect forwards xterm dimensions to the terminal worker', async () => {

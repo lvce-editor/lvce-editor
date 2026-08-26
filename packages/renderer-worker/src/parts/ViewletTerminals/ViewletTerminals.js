@@ -233,55 +233,74 @@ export const handleMouseDown = (state, childUid) => {
   }
 }
 
-export const killTerminal = async (state) => {
-  const { activeTerminalUids: oldActiveTerminalUids, childUid, focusVersion, selectedIndex, tabs: oldTabs } = state
-  if (childUid === -1 || selectedIndex === -1) {
+const removeTerminal = async (state, terminalUid) => {
+  const { activeTerminalUids: oldActiveTerminalUids, childUid: oldChildUid, focusVersion, selectedIndex: oldSelectedIndex, tabs: oldTabs } = state
+  if (terminalUid === -1) {
     return state
   }
-  const tab = oldTabs[selectedIndex]
+  const terminalTabIndex = oldTabs.findIndex((tab) => getTerminalUids(tab).includes(terminalUid))
+  if (terminalTabIndex === -1) {
+    return state
+  }
+  const tab = oldTabs[terminalTabIndex]
   const terminalUids = getTerminalUids(tab)
-  const terminalIndex = terminalUids.indexOf(childUid)
-  if (terminalIndex === -1) {
-    return state
-  }
+  const terminalIndex = terminalUids.indexOf(terminalUid)
 
-  const remainingTerminalUids = terminalUids.filter((uid) => uid !== childUid)
+  const remainingTerminalUids = terminalUids.filter((uid) => uid !== terminalUid)
   let tabs = oldTabs
   let activeTerminalUids = oldActiveTerminalUids
-  let newSelectedIndex = selectedIndex
-  let childUids = remainingTerminalUids
-  let newChildUid
+  let selectedIndex = oldSelectedIndex
 
   if (remainingTerminalUids.length > 0) {
-    newChildUid = remainingTerminalUids[Math.min(terminalIndex, remainingTerminalUids.length - 1)]
-    tabs = tabs.with(selectedIndex, {
+    const oldActiveTerminalUid = oldActiveTerminalUids[terminalTabIndex]
+    const activeTerminalUid = remainingTerminalUids.includes(oldActiveTerminalUid)
+      ? oldActiveTerminalUid
+      : remainingTerminalUids[Math.min(terminalIndex, remainingTerminalUids.length - 1)]
+    tabs = tabs.with(terminalTabIndex, {
       ...tab,
       terminalUids: remainingTerminalUids,
     })
-    activeTerminalUids = activeTerminalUids.with(selectedIndex, newChildUid)
+    activeTerminalUids = activeTerminalUids.with(terminalTabIndex, activeTerminalUid)
   } else {
-    tabs = tabs.toSpliced(selectedIndex, 1)
-    activeTerminalUids = activeTerminalUids.toSpliced(selectedIndex, 1)
-    newSelectedIndex = tabs.length === 0 ? -1 : Math.min(selectedIndex, tabs.length - 1)
-    childUids = newSelectedIndex === -1 ? [] : getTerminalUids(tabs[newSelectedIndex])
-    newChildUid = newSelectedIndex === -1 ? -1 : activeTerminalUids[newSelectedIndex] || childUids[0]
+    tabs = tabs.toSpliced(terminalTabIndex, 1)
+    activeTerminalUids = activeTerminalUids.toSpliced(terminalTabIndex, 1)
+    if (tabs.length === 0) {
+      selectedIndex = -1
+    } else if (terminalTabIndex < oldSelectedIndex) {
+      selectedIndex = oldSelectedIndex - 1
+    } else if (terminalTabIndex === oldSelectedIndex) {
+      selectedIndex = Math.min(oldSelectedIndex, tabs.length - 1)
+    }
   }
+
+  const childUids = selectedIndex === -1 ? [] : getTerminalUids(tabs[selectedIndex])
+  const childUid = selectedIndex === -1 ? -1 : activeTerminalUids[selectedIndex] || childUids[0]
 
   const newState = {
     ...state,
     activeTerminalUids,
-    childUid: newChildUid,
+    childUid,
     childUids,
-    focusVersion: newChildUid === -1 ? focusVersion : focusVersion + 1,
-    selectedIndex: newSelectedIndex,
+    focusVersion: childUid !== -1 && childUid !== oldChildUid ? focusVersion + 1 : focusVersion,
+    selectedIndex,
     tabs,
   }
-  const commands = Viewlet.disposeFunctional(childUid)
-  if (childUids.length > 0) {
-    commands.push(...(await resizeTerminals(newState, childUids)))
+  const commands = Viewlet.disposeFunctional(terminalUid)
+  const terminalUidsToResize = remainingTerminalUids.length > 0 ? remainingTerminalUids : childUids
+  if (terminalUidsToResize.length > 0) {
+    commands.push(...(await resizeTerminals(newState, terminalUidsToResize)))
   }
   await sendCommands(commands)
   return newState
+}
+
+export const handleTerminalExit = (state, terminalUid) => {
+  Assert.number(terminalUid)
+  return removeTerminal(state, terminalUid)
+}
+
+export const killTerminal = (state) => {
+  return removeTerminal(state, state.childUid)
 }
 
 export const handleClickTab = (state, index) => {

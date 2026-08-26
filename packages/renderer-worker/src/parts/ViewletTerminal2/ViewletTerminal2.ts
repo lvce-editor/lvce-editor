@@ -1,4 +1,5 @@
 import * as Assert from '../Assert/Assert.ts'
+import * as Command from '../Command/Command.js'
 import * as Focus from '../Focus/Focus.js'
 import * as GetTerminalSpawnOptions from '../GetTerminalSpawnOptions/GetTerminalSpawnOptions.js'
 import * as Preferences from '../Preferences/Preferences.js'
@@ -51,6 +52,11 @@ export const handleInput = async (state, data) => {
 
 export const handleData = async (state, data) => {
   await RendererProcess.invoke('Viewlet.send', state.uid, 'write', data)
+  return state
+}
+
+export const handleExit = async (state) => {
+  await Command.execute('Terminals.handleTerminalExit', state.uid)
   return state
 }
 

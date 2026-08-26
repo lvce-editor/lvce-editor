@@ -28,4 +28,14 @@ export const test: Test = async ({ Command, KeyBoard, Locator, Settings, expect 
   await expect(reopenedTerminal).toBeVisible()
   await expect(reopenedTerminal).toContainText('ls')
   await expect(reopenedTerminal).toContainText('persistent-terminal.txt')
+
+  for (const character of 'exit') {
+    await KeyBoard.press(character)
+  }
+  await KeyBoard.press('Enter')
+  await expect(reopenedTerminal).toHaveCount(0)
+
+  await Command.execute('Layout.hidePanel')
+  await Command.execute('Layout.showPanel', 'Terminals')
+  await expect(Locator('.XtermTerminal')).toBeVisible()
 }
