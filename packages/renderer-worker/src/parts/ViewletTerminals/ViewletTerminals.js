@@ -6,6 +6,7 @@ import * as Preferences from '../Preferences/Preferences.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
+import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
 export const create = (id, uri, x, y, width, height) => {
   Assert.number(id)
@@ -100,9 +101,37 @@ const sendCommands = async (commands) => {
   }
 }
 
+const restoreExistingTerminals = async (state, terminalTabsEnabled) => {
+  const existingInstance = ViewletStates.getInstance(ViewletModuleId.Terminals)
+  const existingState = existingInstance?.state
+  if (!existingState || existingState.uid === state.uid) {
+    return undefined
+  }
+  if (existingState.tabs.length === 0) {
+    ViewletStates.remove(existingState.uid)
+    return undefined
+  }
+  const restoredState = {
+    ...existingState,
+    uid: state.uid,
+    x: state.x,
+    y: state.y,
+    width: state.width,
+    height: state.height,
+    terminalTabsEnabled,
+  }
+  await sendCommands(await resizeTerminals(restoredState, restoredState.childUids))
+  ViewletStates.remove(existingState.uid)
+  return restoredState
+}
+
 export const loadContent = async (state) => {
   const { cwd } = state
   const terminalTabsEnabled = Preferences.get('terminal.tabs.enabled') !== false
+  const restoredState = await restoreExistingTerminals(state, terminalTabsEnabled)
+  if (restoredState) {
+    return restoredState
+  }
   const spawnOptions = await GetTerminalSpawnOptions.getTerminalSpawnOptions()
   const childUid = Id.create()
   const newState = {
