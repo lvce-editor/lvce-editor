@@ -5,7 +5,7 @@ import * as VirtualDomElements from '../src/parts/VirtualDomElements/VirtualDomE
 test('renders a snapshot below the browser header', () => {
   const dom = GetSimpleBrowserVirtualDom.getSimpleBrowserVirtualDom(true, true, false, 'https://example.com', 'data:image/png;base64,c25hcHNob3Q=')
 
-  expect(dom[0].childCount).toBe(2)
+  expect(dom[0].childCount).toBe(3)
   expect(dom.at(-1)).toEqual({
     type: VirtualDomElements.Img,
     className: 'SimpleBrowserSnapshot',
@@ -37,7 +37,7 @@ test('renders accessible search suggestions above an undimmed snapshot', () => {
     1,
   )
 
-  expect(dom[0].childCount).toBe(3)
+  expect(dom[0].childCount).toBe(4)
   expect(dom).toContainEqual({
     type: VirtualDomElements.Img,
     className: 'SimpleBrowserSnapshot SimpleBrowserSnapshotSearchSuggestions',
@@ -54,4 +54,24 @@ test('renders accessible search suggestions above an undimmed snapshot', () => {
       onClick: 'handleClickSuggestion',
     }),
   )
+})
+
+test('renders selectable tabs with favicon, title, close, and new tab controls', () => {
+  const dom = GetSimpleBrowserVirtualDom.getSimpleBrowserVirtualDom(false, false, false, '', '', [], -1, [
+    { favicon: 'https://example.com/favicon.png', title: 'Example' },
+  ])
+
+  expect(dom).toContainEqual(
+    expect.objectContaining({ className: 'SimpleBrowserTab SimpleBrowserTabSelected', onClick: 'handleClickSimpleBrowserTab', role: 'tab' }),
+  )
+  expect(dom).toContainEqual(expect.objectContaining({ className: 'SimpleBrowserTabFavicon', src: 'https://example.com/favicon.png' }))
+  expect(dom).toContainEqual(expect.objectContaining({ className: 'SimpleBrowserTabClose', onClick: 'handleClickSimpleBrowserTabClose' }))
+  expect(dom).toContainEqual(expect.objectContaining({ className: 'SimpleBrowserNewTab', onClick: 'handleClickSimpleBrowserNewTab' }))
+})
+
+test('omits the tab strip when tabs are disabled', () => {
+  const dom = GetSimpleBrowserVirtualDom.getSimpleBrowserVirtualDom(false, false, false, '', '', [], -1, [], 0, false)
+
+  expect(dom[0].childCount).toBe(1)
+  expect(dom).not.toContainEqual(expect.objectContaining({ className: 'SimpleBrowserTabs' }))
 })

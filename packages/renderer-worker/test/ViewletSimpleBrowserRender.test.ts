@@ -53,3 +53,11 @@ test('does not focus the address input after suggestions close', () => {
 
   expect(commands).toHaveLength(1)
 })
+
+test('focuses the address input for a new empty tab', () => {
+  const oldState = { ...state, focusAddressVersion: 0 }
+  const newState = { ...state, focusAddressVersion: 1 }
+
+  expect(ViewletSimpleBrowserRender.render[2].isEqual(oldState, newState)).toBe(false)
+  expect(ViewletSimpleBrowserRender.render[2].apply(oldState, newState)).toEqual(['Viewlet.focusElementByName', 42, 'simple-browser-address'])
+})

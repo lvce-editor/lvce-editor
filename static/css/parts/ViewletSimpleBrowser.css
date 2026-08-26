@@ -21,6 +21,83 @@
   flex: 1;
 }
 
+.SimpleBrowserTabs {
+  align-items: stretch;
+  background: var(--TitleBarBackground, var(--EditorBackground));
+  border-bottom: 1px solid var(--PanelBorder, transparent);
+  box-sizing: border-box;
+  contain: strict;
+  display: flex;
+  flex: 0 0 35px;
+  height: 35px;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.SimpleBrowserTab {
+  align-items: center;
+  background: var(--TabInactiveBackground, transparent);
+  border: 0;
+  border-right: 1px solid var(--PanelBorder, transparent);
+  color: var(--TabInactiveForeground, var(--WorkbenchForeground));
+  contain: content;
+  display: flex;
+  flex: 0 1 180px;
+  gap: 6px;
+  min-width: 90px;
+  padding: 0 5px 0 9px;
+}
+
+.SimpleBrowserTab:hover {
+  background: var(--TabHoverBackground, var(--ListHoverBackground));
+  color: var(--TabHoverForeground, var(--WorkbenchForeground));
+}
+
+.SimpleBrowserTabSelected {
+  background: var(--TabActiveBackground, var(--EditorBackground));
+  color: var(--TabActiveForeground, var(--WorkbenchForeground));
+}
+
+.SimpleBrowserTabFavicon {
+  flex: 0 0 16px;
+  height: 16px;
+  object-fit: contain;
+  width: 16px;
+}
+
+.SimpleBrowserTabTitle {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.SimpleBrowserTabClose,
+.SimpleBrowserNewTab {
+  align-items: center;
+  background: transparent;
+  border: 0;
+  border-radius: 4px;
+  color: inherit;
+  display: flex;
+  flex: 0 0 24px;
+  height: 24px;
+  justify-content: center;
+  padding: 0;
+  width: 24px;
+}
+
+.SimpleBrowserTabClose:hover,
+.SimpleBrowserNewTab:hover {
+  background: var(--ToolbarHoverBackground, rgb(90 93 94 / 31%));
+}
+
+.SimpleBrowserNewTab {
+  align-self: center;
+  margin: 0 4px;
+}
+
 .SimpleBrowserIframe {
   width: 100%;
   height: 100%;
@@ -53,6 +130,10 @@
   right: 30px;
   top: 30px;
   z-index: 2;
+}
+
+.SimpleBrowserTabsEnabled .SimpleBrowserSuggestions {
+  top: 65px;
 }
 
 .SimpleBrowserSuggestion {

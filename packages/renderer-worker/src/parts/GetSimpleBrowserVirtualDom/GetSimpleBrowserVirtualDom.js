@@ -14,14 +14,89 @@ export const getSimpleBrowserVirtualDom = (
   snapshot = '',
   suggestions = [],
   selectedSuggestionIndex = -1,
+  tabs = [],
+  selectedTabIndex = 0,
+  tabsEnabled = true,
 ) => {
   /** @type {any[]} */
   const dom = [
     {
       type: VirtualDomElements.Div,
-      className: 'Viewlet SimpleBrowser',
-      childCount: 1 + (snapshot ? 1 : 0) + (suggestions.length > 0 ? 1 : 0),
+      className: tabsEnabled ? 'Viewlet SimpleBrowser SimpleBrowserTabsEnabled' : 'Viewlet SimpleBrowser',
+      childCount: 1 + (tabsEnabled ? 1 : 0) + (snapshot ? 1 : 0) + (suggestions.length > 0 ? 1 : 0),
     },
+  ]
+  if (tabsEnabled) {
+    dom.push({
+      type: VirtualDomElements.Div,
+      className: 'SimpleBrowserTabs',
+      role: AriaRoles.TabList,
+      ariaLabel: 'Browser tabs',
+      childCount: tabs.length + 1,
+    })
+    for (let index = 0; index < tabs.length; index++) {
+      const tab = tabs[index]
+      const isSelected = index === selectedTabIndex
+      dom.push({
+        type: VirtualDomElements.Div,
+        className: isSelected ? 'SimpleBrowserTab SimpleBrowserTabSelected' : 'SimpleBrowserTab',
+        role: AriaRoles.Tab,
+        ariaSelected: isSelected,
+        tabIndex: isSelected ? 0 : -1,
+        'data-index': index,
+        onClick: DomEventListenerFunctions.HandleClickSimpleBrowserTab,
+        title: tab.title || 'New Tab',
+        childCount: tab.favicon ? 3 : 2,
+      })
+      if (tab.favicon) {
+        dom.push({
+          type: VirtualDomElements.Img,
+          className: 'SimpleBrowserTabFavicon',
+          src: tab.favicon,
+          draggable: false,
+          childCount: 0,
+        })
+      }
+      dom.push(
+        {
+          type: VirtualDomElements.Span,
+          className: 'SimpleBrowserTabTitle',
+          childCount: 1,
+        },
+        text(tab.title || 'New Tab'),
+        {
+          type: VirtualDomElements.Button,
+          className: 'SimpleBrowserTabClose',
+          ariaLabel: `Close ${tab.title || 'New Tab'}`,
+          'data-index': index,
+          onClick: DomEventListenerFunctions.HandleClickSimpleBrowserTabClose,
+          title: 'Close Tab',
+          childCount: 1,
+        },
+        {
+          type: VirtualDomElements.Div,
+          className: 'MaskIcon MaskIconClose',
+          childCount: 0,
+        },
+      )
+    }
+    dom.push(
+      {
+        type: VirtualDomElements.Button,
+        className: 'SimpleBrowserNewTab',
+        ariaLabel: 'New Tab',
+        onClick: DomEventListenerFunctions.HandleClickSimpleBrowserNewTab,
+        title: 'New Tab',
+        childCount: 1,
+      },
+      {
+        type: VirtualDomElements.Div,
+        className: 'MaskIcon MaskIconAdd',
+        childCount: 0,
+      },
+    )
+  }
+  dom.push(
     {
       type: VirtualDomElements.Div,
       className: ClassNames.SimpleBrowserHeader,
@@ -86,7 +161,7 @@ export const getSimpleBrowserVirtualDom = (
       childCount: 0,
       onClick: DomEventListenerFunctions.HandleClickOpenExternal,
     },
-  ]
+  )
   if (snapshot) {
     dom.push({
       type: VirtualDomElements.Img,

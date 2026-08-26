@@ -1,3 +1,4 @@
+import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.js'
 import * as GetSimpleBrowserVirtualDom from '../GetSimpleBrowserVirtualDom/GetSimpleBrowserVirtualDom.js'
 import * as InputName from '../InputName/InputName.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
@@ -5,6 +6,37 @@ import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 export const hasFunctionalRender = true
 
 export const hasFunctionalRootRender = true
+
+export const renderEventListeners = () => {
+  return [
+    {
+      name: DomEventListenerFunctions.HandleClickSimpleBrowserTab,
+      params: ['selectTab', 'event.currentTarget.dataset.index'],
+    },
+    {
+      name: DomEventListenerFunctions.HandleClickSimpleBrowserTabClose,
+      params: ['closeTab', 'event.currentTarget.dataset.index'],
+      stopPropagation: true,
+    },
+    {
+      name: DomEventListenerFunctions.HandleClickSimpleBrowserNewTab,
+      params: ['createNewTab'],
+    },
+  ]
+}
+
+const areTabsEqual = (oldTabs, newTabs) => {
+  if (oldTabs === newTabs) {
+    return true
+  }
+  if (oldTabs.length !== newTabs.length) {
+    return false
+  }
+  return oldTabs.every((oldTab, index) => {
+    const newTab = newTabs[index]
+    return oldTab.browserViewId === newTab.browserViewId && oldTab.favicon === newTab.favicon && oldTab.title === newTab.title
+  })
+}
 
 const renderDom = {
   isEqual(oldState, newState) {
@@ -15,7 +47,10 @@ const renderDom = {
       oldState.isLoading === newState.isLoading &&
       oldState.snapshot === newState.snapshot &&
       oldState.suggestions === newState.suggestions &&
-      oldState.selectedSuggestionIndex === newState.selectedSuggestionIndex
+      oldState.selectedSuggestionIndex === newState.selectedSuggestionIndex &&
+      oldState.selectedTabIndex === newState.selectedTabIndex &&
+      oldState.tabsEnabled === newState.tabsEnabled &&
+      areTabsEqual(oldState.tabs, newState.tabs)
     )
   },
   apply(oldState, newState) {
@@ -27,6 +62,9 @@ const renderDom = {
       newState.snapshot,
       newState.suggestions,
       newState.selectedSuggestionIndex,
+      newState.tabs,
+      newState.selectedTabIndex,
+      newState.tabsEnabled,
     )
     const commands = [['Viewlet.setDom2', newState.uid, dom]]
     if (newState.suggestions.length > 0) {
@@ -47,4 +85,13 @@ const renderTitle = {
   },
 }
 
-export const render = [renderDom, renderTitle]
+const renderFocusAddress = {
+  isEqual(oldState, newState) {
+    return oldState.focusAddressVersion === newState.focusAddressVersion
+  },
+  apply(oldState, newState) {
+    return ['Viewlet.focusElementByName', newState.uid, InputName.SimpleBrowserAddress]
+  },
+}
+
+export const render = [renderDom, renderTitle, renderFocusAddress]

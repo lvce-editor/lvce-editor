@@ -22,6 +22,10 @@ test('registers the simple browser suggestion event bridge commands', () => {
   expect(commandMap['SimpleBrowser.closeSuggestions']).toBeDefined()
 })
 
+test('registers the simple browser favicon event bridge command', () => {
+  expect(commandMap['ElectronBrowserView.handlePageFaviconUpdated']).toBeDefined()
+})
+
 test('registers the panel maximize commands', () => {
   expect(commandMap['Layout.maximizePanel']).toBeDefined()
   expect(commandMap['Layout.unmaximizePanel']).toBeDefined()
