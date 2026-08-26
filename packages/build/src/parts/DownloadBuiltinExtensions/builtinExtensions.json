@@ -236,8 +236,8 @@
   {
     "name": "builtin.video-preview",
     "repository": "github.com/lvce-editor/video-preview",
-    "version": "1.23.5",
-    "sha256": "f9aebb35d19e87ca53d84cab1547204efe7ba047e7c2f53b7ed434603647c75c",
+    "version": "1.24.1",
+    "sha256": "939b75aae8af519c5ece3cd9a3a5e9a00787f8351f470c213301e9e32cb3d172",
     "created": "2024-09-26"
   },
   {
