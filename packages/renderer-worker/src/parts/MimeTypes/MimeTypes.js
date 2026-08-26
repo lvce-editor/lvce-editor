@@ -57,6 +57,7 @@ export const mapExtToMediaMimes = {
   '.tif': 'image/tiff',
   '.tiff': 'image/tiff',
   '.wav': 'audio/x-wav',
+  '.weba': 'audio/webm',
   '.webm': 'video/webm',
   '.webp': 'image/webp',
   '.wma': 'audio/x-ms-wma',

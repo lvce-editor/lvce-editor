@@ -21,6 +21,10 @@ test('getMediaMimeType - webp', () => {
   expect(Mime.getMediaMimeType('/test/file.webp')).toBe('image/webp')
 })
 
+test('getMediaMimeType - audio-only webm', () => {
+  expect(Mime.getMediaMimeType('/test/file.weba')).toBe('audio/webm')
+})
+
 test('getMediaMimeType - x-icon', () => {
   expect(Mime.getMediaMimeType('/test/file.ico')).toBe('image/x-icon')
 })

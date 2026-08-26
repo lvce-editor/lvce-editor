@@ -28,6 +28,10 @@ test('audio - opus', async () => {
   expect(await ViewletMap.getModuleId('/test/file.opus')).toBe(ViewletModuleId.Audio)
 })
 
+test('audio - audio-only webm', async () => {
+  expect(await ViewletMap.getModuleId('/test/file.weba')).toBe(ViewletModuleId.Audio)
+})
+
 test('process explorer', async () => {
   expect(await ViewletMap.getModuleId('process-explorer://')).toBe(ViewletModuleId.ProcessExplorer)
 })
