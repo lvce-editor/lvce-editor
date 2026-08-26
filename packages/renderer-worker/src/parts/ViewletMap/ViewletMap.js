@@ -9,6 +9,7 @@ const mapExtToEditorType = {
   '.mp3': ViewletModuleId.Audio,
   '.ogg': ViewletModuleId.Audio,
   '.opus': ViewletModuleId.Audio,
+  '.weba': ViewletModuleId.Audio,
 }
 
 const getModuleIdForOpener = async (opener) => {
