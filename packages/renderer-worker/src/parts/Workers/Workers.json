@@ -1,4 +1,4 @@
-[
+[H[2J[3J[
   {
     "id": "notificationCenterView",
     "fileName": "notificationCenterWorkerMain.js",
@@ -1372,6 +1372,50 @@
       },
       "extraCommands": [{ "name": "handleExtensionsChanged", "method": "refresh" }],
       "capabilities": { "directRender": true, "events": true, "render": true, "rootRender": true },
+      "renderComparison": "emptyCommands"
+    }
+  },
+  {
+    "id": "secretsView",
+    "fileName": "secretsViewWorkerMain.js",
+    "contentSecurityPolicy": ["default-src 'none'"],
+    "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/secrets-view/dist/secretsViewWorkerMain.js",
+    "productionPath": "/packages/secrets-view/dist/secretsViewWorkerMain.js",
+    "settingName": "develop.secretsViewPath",
+    "hotReloadCommand": "",
+    "viewlet": {
+      "name": "Secrets",
+      "title": "Secrets",
+      "css": ["/css/parts/Button.css", "/css/parts/InputBox.css", "/css/parts/ViewletSecrets.css"],
+      "state": {
+        "idKey": "uid",
+        "fields": ["uri", "x", "y", "width", "height"],
+        "defaults": { "title": "Secrets" }
+      },
+      "commandPrefix": "SecretsView",
+      "methods": {
+        "create": {
+          "name": "SecretsView.create",
+          "parameters": [
+            { "source": "state", "name": "uid" }, { "source": "state", "name": "uri" }, { "source": "state", "name": "x" },
+            { "source": "state", "name": "y" }, { "source": "state", "name": "width" }, { "source": "state", "name": "height" }
+          ]
+        },
+        "loadContent": { "name": "SecretsView.loadContent", "parameters": [{ "source": "state", "name": "uid" }] },
+        "diff": { "name": "SecretsView.diff2", "parameters": [{ "source": "state", "name": "uid" }] },
+        "render": {
+          "name": "SecretsView.render2",
+          "parameters": [{ "source": "state", "name": "uid" }, { "source": "result", "name": "diff" }]
+        },
+        "dispose": { "name": "SecretsView.dispose", "parameters": [{ "source": "state", "name": "uid" }] },
+        "resize": {
+          "name": "SecretsView.resize",
+          "parameters": [{ "source": "state", "name": "uid" }, { "source": "argument", "name": "dimensions" }]
+        },
+        "getCommandIds": { "name": "SecretsView.getCommandIds", "parameters": [] },
+        "renderEventListeners": { "name": "SecretsView.renderEventListeners", "parameters": [] }
+      },
+      "capabilities": { "directRender": true, "events": true, "render": true, "resize": true, "rootRender": true },
       "renderComparison": "emptyCommands"
     }
   },

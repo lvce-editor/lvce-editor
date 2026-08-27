@@ -69,6 +69,17 @@ test('getQuickPickMenuEntries includes running extensions command', () => {
   })
 })
 
+test('getQuickPickMenuEntries includes secrets command', () => {
+  const entries = ViewletLayoutMenuEntries.getQuickPickMenuEntries()
+
+  expect(entries).toContainEqual({
+    id: 'Main.openUri',
+    label: 'Preferences: Open Secrets',
+    args: ['secrets://'],
+    aliases: ['Manage Secrets'],
+  })
+})
+
 test('getQuickPickMenuEntries includes extension management worker latency command', () => {
   const entries = ViewletLayoutMenuEntries.getQuickPickMenuEntries()
 

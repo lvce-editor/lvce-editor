@@ -50,6 +50,9 @@ export const getLabel = (uri) => {
   if (uri.startsWith('running-extensions://')) {
     return 'Running Extensions'
   }
+  if (uri.startsWith('secrets://')) {
+    return 'Secrets'
+  }
   return Workspace.pathBaseName(getDisplayUri(uri))
 }
 
@@ -70,6 +73,9 @@ export const getFileIcon = (uri) => {
   }
   if (uri.startsWith('running-extensions://')) {
     return `MaskIcon${Icon.Extensions}`
+  }
+  if (uri.startsWith('secrets://')) {
+    return `MaskIcon${Icon.RecordKey}`
   }
   const baseName = Workspace.pathBaseName(getDisplayUri(uri))
   const icon = IconTheme.getFileIcon({ name: baseName })

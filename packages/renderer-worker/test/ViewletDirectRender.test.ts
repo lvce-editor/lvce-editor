@@ -18,6 +18,7 @@ import * as ViewletStatusBar from '../src/parts/ViewletStatusBar/ViewletStatusBa
 import * as ViewletMain from '../src/parts/ViewletMain/ViewletMain.ipc.js'
 import * as ViewletSearch from '../src/parts/ViewletSearch/ViewletSearch.ipc.ts'
 import * as ViewletRunningExtensions from '../src/parts/ViewletRunningExtensions/ViewletRunningExtensions.ipc.ts'
+import * as ViewletSecrets from '../src/parts/ViewletSecrets/ViewletSecrets.ipc.ts'
 import * as ViewletSettings from '../src/parts/ViewletSettings/ViewletSettings.ipc.js'
 import * as ViewletTitleBar from '../src/parts/ViewletTitleBar/ViewletTitleBar.ipc.js'
 
@@ -39,6 +40,7 @@ test.each([
   ['quick pick', ViewletQuickPick],
   ['source control', ViewletSourceControl],
   ['running extensions', ViewletRunningExtensions],
+  ['secrets', ViewletSecrets],
   ['settings', ViewletSettings],
   ['status bar', ViewletStatusBar],
   ['text search', ViewletSearch],

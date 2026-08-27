@@ -18,6 +18,14 @@ test('getFileIcon - running extensions', () => {
   expect(PathDisplay.getFileIcon('running-extensions://')).toBe('MaskIconExtensions')
 })
 
+test('getLabel - secrets', () => {
+  expect(PathDisplay.getLabel('secrets://')).toBe('Secrets')
+})
+
+test('getFileIcon - secrets', () => {
+  expect(PathDisplay.getFileIcon('secrets://')).toBe('MaskIconRecordKey')
+})
+
 test('getLabel - diff editor', () => {
   expect(PathDisplay.getLabel('diff://data://const value = 1<->/workspace/src/example.ts')).toBe('example.ts')
 })
