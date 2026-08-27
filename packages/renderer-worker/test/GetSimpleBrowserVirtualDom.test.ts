@@ -64,7 +64,9 @@ test('renders selectable tabs with favicon, title, close, and new tab controls',
   expect(dom).toContainEqual(
     expect.objectContaining({ className: 'SimpleBrowserTab SimpleBrowserTabSelected', onClick: 'handleClickSimpleBrowserTab', role: 'tab' }),
   )
-  expect(dom).toContainEqual(expect.objectContaining({ className: 'SimpleBrowserTabFavicon', src: 'https://example.com/favicon.png' }))
+  expect(dom).toContainEqual(
+    expect.objectContaining({ className: 'SimpleBrowserTabFavicon', crossOrigin: 'anonymous', src: 'https://example.com/favicon.png' }),
+  )
   expect(dom).toContainEqual(expect.objectContaining({ className: 'SimpleBrowserTabClose', onClick: 'handleClickSimpleBrowserTabClose' }))
   expect(dom).toContainEqual(expect.objectContaining({ className: 'SimpleBrowserNewTab', onClick: 'handleClickSimpleBrowserNewTab' }))
 })
