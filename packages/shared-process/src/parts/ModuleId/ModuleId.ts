@@ -80,3 +80,4 @@ export const IpcTrace = 92
 export const HandleMessagePortForExtensionNodeProcess = 93
 export const FileWatcherExplorer = 94
 export const HandleMessagePortForFileWatcherExplorer = 95
+export const RemoteCli = 96

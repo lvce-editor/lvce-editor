@@ -27,6 +27,8 @@ class MockWebSocket extends EventTarget {
   }
 
   send(): void {}
+
+  close(): void {}
 }
 
 beforeEach(() => {
@@ -121,4 +123,14 @@ test('waits for the existing websocket to reconnect during startup', async () =>
   const webSocket = await ipcPromise
   expect(MockWebSocket.instances).toHaveLength(2)
   expect(webSocket.webSocket).toBe(MockWebSocket.instances[1])
+})
+
+test('does not reconnect after being closed', async () => {
+  const webSocket = ReconnectingWebSocket.create('ws://localhost:3000')
+
+  webSocket.close()
+  MockWebSocket.instances[0].emitClose()
+  await jest.advanceTimersByTimeAsync(2000)
+
+  expect(MockWebSocket.instances).toHaveLength(1)
 })

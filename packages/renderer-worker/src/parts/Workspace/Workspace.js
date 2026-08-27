@@ -12,6 +12,7 @@ import * as Notification from '../Notification/Notification.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as Product from '../Product/Product.js'
+import * as RemoteCli from '../RemoteCli/RemoteCli.js'
 import * as StatusBarWorker from '../StatusBarWorker/StatusBarWorker.js'
 import * as TextSearchWorker from '../TextSearchWorker/TextSearchWorker.js'
 import * as WindowTitle from '../WindowTitle/WindowTitle.js'
@@ -47,6 +48,7 @@ export const setPath = async (path) => {
   state.workspaceUri = path
   state.pathSeparator = pathSeparator
   WorkspaceConnection.reset()
+  RemoteCli.stop()
   await FileSystemWorker.dispose()
   await TextSearchWorker.dispose()
   await onWorkspaceChange()
@@ -70,13 +72,37 @@ export const setUri = async (uri, providedPathSeparator, connection) => {
   state.workspaceUri = uri
   state.pathSeparator = pathSeparator
   if (connection) {
-    WorkspaceConnection.set(uri, connection.command)
+    WorkspaceConnection.set(uri, connection.command, connection.remoteCliUrl)
+    if (connection.remoteCliUrl) {
+      void RemoteCli.start(connection.remoteCliUrl, connection.remoteCliUrl, handleRemoteCliOpenRequest).catch(() => {})
+    } else {
+      RemoteCli.stop()
+    }
   } else {
     WorkspaceConnection.reset()
+    RemoteCli.stop()
   }
   await FileSystemWorker.dispose()
   await TextSearchWorker.dispose()
   await onWorkspaceChange()
+}
+
+const handleRemoteCliOpenRequest = async (request) => {
+  const currentUri = state.workspaceUri
+  const command = WorkspaceConnection.getCommand()
+  const remoteCliUrl = WorkspaceConnection.getRemoteCliUrl()
+  if (!currentUri || !command) {
+    throw new Error('Remote workspace connection is not available')
+  }
+  const resolved = RemoteCli.resolveOpenRequest(currentUri, request)
+  await setUri(resolved.workspaceUri, state.pathSeparator || '/', {
+    command,
+    remoteCliUrl,
+    workspacePath: resolved.workspacePath,
+  })
+  if (resolved.fileUri) {
+    await Command.execute('Main.openUri', resolved.fileUri)
+  }
 }
 
 export const getPath = () => {

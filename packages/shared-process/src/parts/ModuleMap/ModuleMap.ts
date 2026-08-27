@@ -283,6 +283,9 @@ export const getModuleId = (commandId: any): any => {
       return ModuleId.RebuildNodePty
     case 'RecentlyOpened.addPath':
       return ModuleId.RecentlyOpened
+    case 'RemoteCli.open':
+    case 'RemoteCli.waitForOpenRequest':
+      return ModuleId.RemoteCli
     case 'Screen.getBounds':
     case 'Screen.getHeight':
     case 'Screen.getWidth':

@@ -140,6 +140,8 @@ export const load = (moduleId: any): any => {
       return import('../RebuildNodePty/RebuildNodePty.ipc.ts')
     case ModuleId.RecentlyOpened:
       return import('../RecentlyOpened/RecentlyOpened.ipc.ts')
+    case ModuleId.RemoteCli:
+      return import('../RemoteCli/RemoteCli.ipc.ts')
     case ModuleId.Screen:
       return import('../Screen/Screen.ipc.ts')
     case ModuleId.SendMessagePortToMainProcess:
