@@ -52,6 +52,7 @@ export const getSimpleBrowserVirtualDom = (
         dom.push({
           type: VirtualDomElements.Img,
           className: 'SimpleBrowserTabFavicon',
+          crossOrigin: 'anonymous',
           src: tab.favicon,
           draggable: false,
           childCount: 0,
