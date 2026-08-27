@@ -1,6 +1,7 @@
 import { expect, test } from '@jest/globals'
 import * as HandleIpcAuthProcess from '../src/parts/HandleIpcAuthProcess/HandleIpcAuthProcess.js'
 import * as HandleIpcEmbedsProcess from '../src/parts/HandleIpcEmbedsProcess/HandleIpcEmbedsProcess.js'
+import * as HandleIpcFileWatcherExplorer from '../src/parts/HandleIpcFileWatcherExplorer/HandleIpcFileWatcherExplorer.js'
 import * as HandleIpcModule from '../src/parts/HandleIpcModule/HandleIpcModule.js'
 import * as HandleIpcProcessExplorer from '../src/parts/HandleIpcProcessExplorer/HandleIpcProcessExplorer.js'
 import * as HandleIpcSearchProcess from '../src/parts/HandleIpcSearchProcess/HandleIpcSearchProcess.js'
@@ -26,6 +27,10 @@ test('terminal process', () => {
 
 test('process explorer', () => {
   expect(HandleIpcModule.getModule(IpcId.ProcessExplorer)).toBe(HandleIpcProcessExplorer)
+})
+
+test('file watcher explorer', () => {
+  expect(HandleIpcModule.getModule(IpcId.FileWatcherExplorer)).toBe(HandleIpcFileWatcherExplorer)
 })
 
 test('search process', () => {

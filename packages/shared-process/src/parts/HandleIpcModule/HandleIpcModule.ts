@@ -3,6 +3,7 @@ import * as HandleIpcAuthProcess from '../HandleIpcAuthProcess/HandleIpcAuthProc
 import * as HandleIpcClipBoardProcess from '../HandleIpcClipBoardProcess/HandleIpcClipBoardProcess.ts'
 import * as HandleIpcEmbedsProcess from '../HandleIpcEmbedsProcess/HandleIpcEmbedsProcess.ts'
 import * as HandleIpcFileSystemProcess from '../HandleIpcFileSystemProcess/HandleIpcFileSystemProcess.ts'
+import * as HandleIpcFileWatcherExplorer from '../HandleIpcFileWatcherExplorer/HandleIpcFileWatcherExplorer.ts'
 import * as HandleIpcProcessExplorer from '../HandleIpcProcessExplorer/HandleIpcProcessExplorer.ts'
 import * as HandleIpcSearchProcess from '../HandleIpcSearchProcess/HandleIpcSearchProcess.ts'
 import * as HandleIpcSharedProcess from '../HandleIpcSharedProcess/HandleIpcSharedProcess.ts'
@@ -20,6 +21,8 @@ export const getModule = (ipcId: any): any => {
       return HandleIpcEmbedsProcess
     case IpcId.FileSystemProcess:
       return HandleIpcFileSystemProcess
+    case IpcId.FileWatcherExplorer:
+      return HandleIpcFileWatcherExplorer
     case IpcId.ProcessExplorer:
       return HandleIpcProcessExplorer
     case IpcId.SearchProcess:

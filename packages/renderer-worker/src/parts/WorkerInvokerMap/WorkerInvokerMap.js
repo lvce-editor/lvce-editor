@@ -17,6 +17,7 @@ import * as PanelWorker from '../PanelWorker/PanelWorker.js'
 import * as PreviewWorker from '../PreviewWorker/PreviewWorker.js'
 import * as ProblemsWorker from '../ProblemsWorker/ProblemsWorker.ts'
 import * as ProcessExplorerWorker from '../ProcessExplorerWorker/ProcessExplorerWorker.js'
+import * as FileWatcherViewWorker from '../FileWatcherViewWorker/FileWatcherViewWorker.js'
 import * as QuickPickWorker from '../QuickPickWorker/QuickPickWorker.js'
 import * as RunningExtensionsViewWorker from '../RunningExtensionsViewWorker/RunningExtensionsViewWorker.ts'
 import * as SecretsViewWorker from '../SecretsViewWorker/SecretsViewWorker.ts'
@@ -45,6 +46,7 @@ const workerInvokers = {
   preview: PreviewWorker,
   problemsViewWorker: ProblemsWorker,
   processExplorer: ProcessExplorerWorker,
+  fileWatcherView: FileWatcherViewWorker,
   quickPickWorker: QuickPickWorker,
   runningExtensionsView: RunningExtensionsViewWorker,
   secretsView: SecretsViewWorker,

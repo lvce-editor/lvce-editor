@@ -78,3 +78,5 @@ export const SendMessagePortToMainProcess = 88
 export const FirefoxCookieImport = 91
 export const IpcTrace = 92
 export const HandleMessagePortForExtensionNodeProcess = 93
+export const FileWatcherExplorer = 94
+export const HandleMessagePortForFileWatcherExplorer = 95

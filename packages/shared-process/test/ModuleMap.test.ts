@@ -36,6 +36,16 @@ test('getModuleId - HandleMessagePortForExtensionNodeProcess.handleMessagePortFo
   )
 })
 
+test('getModuleId - HandleMessagePortForFileWatcherExplorer.handleMessagePortForFileWatcherExplorer', () => {
+  expect(ModuleMap.getModuleId('HandleMessagePortForFileWatcherExplorer.handleMessagePortForFileWatcherExplorer')).toBe(
+    ModuleId.HandleMessagePortForFileWatcherExplorer,
+  )
+})
+
+test('getModuleId - FileWatcherExplorer.decreaseRefCount', () => {
+  expect(ModuleMap.getModuleId('FileWatcherExplorer.decreaseRefCount')).toBe(ModuleId.FileWatcherExplorer)
+})
+
 test('getModuleId - ExtensionManagement.getLinkedExtensionDevelopmentConfig', () => {
   expect(ModuleMap.getModuleId('ExtensionManagement.getLinkedExtensionDevelopmentConfig')).toBe(ModuleId.ExtensionManagement)
 })

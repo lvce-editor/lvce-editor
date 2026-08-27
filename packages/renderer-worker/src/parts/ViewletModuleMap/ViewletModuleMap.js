@@ -1,4 +1,5 @@
 import * as LoadProcessExplorerViewletModule from '../LoadProcessExplorerViewletModule/LoadProcessExplorerViewletModule.js'
+import * as LoadFileWatcherExplorerViewletModule from '../LoadFileWatcherExplorerViewletModule/LoadFileWatcherExplorerViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
 export const map = {
@@ -40,6 +41,7 @@ export const map = {
   [ViewletModuleId.Panel]: () => import('../ViewletPanel/ViewletPanel.ipc.ts'),
   [ViewletModuleId.Problems]: () => import('../ViewletProblems/ViewletProblems.ipc.js'),
   [ViewletModuleId.ProcessExplorer]: LoadProcessExplorerViewletModule.loadProcessExplorerViewletModule,
+  [ViewletModuleId.FileWatcherExplorer]: LoadFileWatcherExplorerViewletModule.loadFileWatcherExplorerViewletModule,
   [ViewletModuleId.QuickPick]: () => import('../ViewletQuickPick/ViewletQuickPick.ipc.js'),
   [ViewletModuleId.References]: () => import('../ViewletReferences/ViewletReferences.ipc.js'),
   [ViewletModuleId.RunAndDebug]: () => import('../ViewletRunAndDebug/ViewletRunAndDebug.ipc.js'),

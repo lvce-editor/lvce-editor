@@ -47,6 +47,9 @@ export const getLabel = (uri) => {
   if (uri.startsWith('process-explorer://')) {
     return 'Process Explorer'
   }
+  if (uri.startsWith('file-watcher-explorer://')) {
+    return 'File Watcher Explorer'
+  }
   if (uri.startsWith('running-extensions://')) {
     return 'Running Extensions'
   }
@@ -69,6 +72,9 @@ export const getFileIcon = (uri) => {
     return `MaskIcon${Icon.Extensions}`
   }
   if (uri.startsWith('process-explorer://')) {
+    return `MaskIcon${Icon.DebugAlt2}`
+  }
+  if (uri.startsWith('file-watcher-explorer://')) {
     return `MaskIcon${Icon.DebugAlt2}`
   }
   if (uri.startsWith('running-extensions://')) {

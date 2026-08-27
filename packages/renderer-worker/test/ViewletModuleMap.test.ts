@@ -22,6 +22,15 @@ test('process explorer uses worker-backed module', async () => {
   expect(typeof module.getKeyBindings).toBe('function')
 })
 
+test('file watcher explorer uses worker-backed module', async () => {
+  const module = await ViewletModuleMap.map[ViewletModuleId.FileWatcherExplorer]()
+
+  expect(module.hasFunctionalRender).toBe(true)
+  expect(typeof module.loadContent).toBe('function')
+  expect(typeof module.getCommands).toBe('function')
+  expect(typeof module.getKeyBindings).toBe('function')
+})
+
 test('running extensions uses worker-backed module', async () => {
   const module = await ViewletModuleMap.map[ViewletModuleId.RunningExtensions]()
 
@@ -50,6 +59,7 @@ const genericWorkerViewlets = [
   ViewletModuleId.Preview,
   ViewletModuleId.Problems,
   ViewletModuleId.ProcessExplorer,
+  ViewletModuleId.FileWatcherExplorer,
   ViewletModuleId.QuickPick,
   ViewletModuleId.RunningExtensions,
   ViewletModuleId.Search,

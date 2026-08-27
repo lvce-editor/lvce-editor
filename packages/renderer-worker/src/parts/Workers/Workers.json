@@ -1233,6 +1233,39 @@
     }
   },
   {
+    "id": "fileWatcherView",
+    "fileName": "file-watcher-view/index.js",
+    "contentSecurityPolicy": ["default-src 'none'", "connect-src 'self' https: wss: http://127.0.0.1:* http://localhost:* ws://127.0.0.1:* ws://localhost:*"],
+    "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/file-watcher-view/index.js",
+    "productionPath": "/packages/file-watcher-view/index.js",
+    "settingName": "develop.fileWatcherViewPath",
+    "hotReloadCommand": "",
+    "viewlet": {
+      "name": "FileWatcherExplorer",
+      "css": ["/css/parts/ViewletFileWatcherExplorer.css"],
+      "state": { "idKey": "uid", "fields": ["parentUid", "uri", "x", "y", "width", "height"], "contextFields": ["platform", "assetDir"] },
+      "commandPrefix": "FileWatcherExplorer",
+      "methods": {
+        "create": { "name": "FileWatcherExplorer.create", "parameters": [
+          { "source": "state", "name": "uid" }, { "source": "state", "name": "uri" }, { "source": "state", "name": "x" },
+          { "source": "state", "name": "y" }, { "source": "state", "name": "width" }, { "source": "state", "name": "height" },
+          { "source": "literal", "value": null }, { "source": "state", "name": "parentUid" }, { "source": "state", "name": "platform" },
+          { "source": "state", "name": "assetDir" }
+        ] },
+        "loadContent": { "name": "FileWatcherExplorer.loadContent", "parameters": [{ "source": "state", "name": "uid" }, { "source": "argument", "name": "savedState" }] },
+        "diff": { "name": "FileWatcherExplorer.diff2", "parameters": [{ "source": "state", "name": "uid" }] },
+        "render": { "name": "FileWatcherExplorer.render2", "parameters": [{ "source": "state", "name": "uid" }, { "source": "result", "name": "diff" }] },
+        "dispose": { "name": "FileWatcherExplorer.dispose", "parameters": [{ "source": "state", "name": "uid" }] },
+        "terminate": { "name": "FileWatcherExplorer.terminate", "parameters": [] },
+        "getCommandIds": { "name": "FileWatcherExplorer.getCommandIds", "parameters": [] },
+        "getKeyBindings": { "name": "FileWatcherExplorer.getKeyBindings", "parameters": [] },
+        "renderEventListeners": { "name": "FileWatcherExplorer.renderEventListeners", "parameters": [] }
+      },
+      "renderComparison": "emptyCommands",
+      "capabilities": { "directRender": true, "events": true, "render": true, "rootRender": true }
+    }
+  },
+  {
     "id": "processExplorer",
     "fileName": "process-explorer-worker/index.js",
     "contentSecurityPolicy": ["default-src 'none'", "connect-src 'self' https: wss: http://127.0.0.1:* http://localhost:* ws://127.0.0.1:* ws://localhost:*"],

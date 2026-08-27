@@ -36,6 +36,10 @@ test('process explorer', async () => {
   expect(await ViewletMap.getModuleId('process-explorer://')).toBe(ViewletModuleId.ProcessExplorer)
 })
 
+test('file watcher explorer', async () => {
+  expect(await ViewletMap.getModuleId('file-watcher-explorer:///')).toBe(ViewletModuleId.FileWatcherExplorer)
+})
+
 test('running extensions', async () => {
   expect(await ViewletMap.getModuleId('running-extensions://')).toBe(ViewletModuleId.RunningExtensions)
 })

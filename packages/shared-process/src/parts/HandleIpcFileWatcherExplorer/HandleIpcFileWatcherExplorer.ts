@@ -1,0 +1,27 @@
+import * as Assert from '../Assert/Assert.ts'
+import * as FileWatcherExplorer from '../FileWatcherExplorer/FileWatcherExplorer.ts'
+
+export const targetMessagePort = (): any => {
+  return FileWatcherExplorer.acquire()
+}
+
+export const targetWebSocket = (): any => {
+  return FileWatcherExplorer.acquire()
+}
+
+export const upgradeMessagePort = (port: any): any => {
+  Assert.object(port)
+  return {
+    method: 'HandleElectronMessagePort.handleElectronMessagePort',
+    params: [port],
+    type: 'send',
+  }
+}
+
+export const upgradeWebSocket = (handle: any, message: any): any => {
+  return {
+    method: 'HandleWebSocket.handleWebSocket',
+    params: [handle, message],
+    type: 'send',
+  }
+}

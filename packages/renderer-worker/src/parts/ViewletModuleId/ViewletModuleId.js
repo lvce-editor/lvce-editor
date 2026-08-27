@@ -74,6 +74,8 @@ export const Problems = 'Problems'
 
 export const ProcessExplorer = 'ProcessExplorer'
 
+export const FileWatcherExplorer = 'FileWatcherExplorer'
+
 export const QuickPick = 'QuickPick'
 
 export const References = 'References'
