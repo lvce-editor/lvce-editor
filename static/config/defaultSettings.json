@@ -31,6 +31,7 @@
   "extensions.autoUpdate": true,
 
   "files.autoSave": "off",
+  "files.workspaceWatcher.enabled": false,
 
   "files.exclude": {
     "**/.git": true,
