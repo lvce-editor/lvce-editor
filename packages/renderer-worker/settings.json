@@ -74,6 +74,14 @@
   },
   {
     "category": "text-editor",
+    "description": "Controls whether changes to files in the workspace are watched",
+    "heading": "Workspace File Watching",
+    "id": "files.workspaceWatcher.enabled",
+    "type": 3,
+    "value": false
+  },
+  {
+    "category": "text-editor",
     "description": "Treats JavaScript files as JSX files",
     "heading": "JavaScript Files As JSX",
     "id": "languages.jsFilesAsJsx",

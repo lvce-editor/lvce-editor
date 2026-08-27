@@ -1,6 +1,7 @@
 import * as Command from '../Command/Command.js'
 import * as FileWatcher from '../FileWatcher/FileWatcher.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
+import * as Preferences from '../Preferences/Preferences.js'
 import * as Workspace from '../Workspace/Workspace.js'
 
 const RefreshDelay = 100
@@ -76,6 +77,9 @@ const handleWorkspaceChange = async () => {
 }
 
 export const hydrate = async () => {
+  if (Preferences.get('files.workspaceWatcher.enabled') !== true) {
+    return
+  }
   GlobalEventBus.addListener('workspace.change', handleWorkspaceChange)
   await watchWorkspace(Workspace.getWorkspaceUri())
 }
