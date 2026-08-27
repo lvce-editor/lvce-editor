@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+readonly dmg_path="${1:-packages/build/.tmp/releases/lvce-arm64.dmg}"
+
+: "${APPLE_API_KEY:?APPLE_API_KEY is required}"
+: "${APPLE_API_KEY_ID:?APPLE_API_KEY_ID is required}"
+: "${APPLE_API_ISSUER:?APPLE_API_ISSUER is required}"
+
+test -f "$dmg_path"
+xcrun notarytool submit "$dmg_path" \
+  --key "$APPLE_API_KEY" \
+  --key-id "$APPLE_API_KEY_ID" \
+  --issuer "$APPLE_API_ISSUER" \
+  --wait
+xcrun stapler staple "$dmg_path"

@@ -71,32 +71,7 @@ jobs:
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
           CSC_LINK: ${{ secrets.CSC_LINK }}
           CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
-        run: |
-          for secret in APPLE_API_KEY_BASE64 APPLE_API_KEY_ID APPLE_API_ISSUER APPLE_TEAM_ID CSC_LINK CSC_KEY_PASSWORD; do
-            if [ -z "${!secret}" ]; then
-              echo "Missing required macOS signing secret: $secret" >&2
-              exit 1
-            fi
-          done
-          api_key_path="$RUNNER_TEMP/AuthKey_${APPLE_API_KEY_ID}.p8"
-          certificate_path="$RUNNER_TEMP/developer-id-application.p12"
-          keychain_path="$RUNNER_TEMP/lvce-signing.keychain-db"
-          keychain_password="$(uuidgen)"
-          printf '%s' "$APPLE_API_KEY_BASE64" | base64 -D > "$api_key_path"
-          printf '%s' "$CSC_LINK" | base64 -D > "$certificate_path"
-          test -s "$api_key_path"
-          test -s "$certificate_path"
-          chmod 600 "$api_key_path"
-          security create-keychain -p "$keychain_password" "$keychain_path"
-          security set-keychain-settings -lut 21600 "$keychain_path"
-          security unlock-keychain -p "$keychain_password" "$keychain_path"
-          security list-keychains -d user -s "$keychain_path"
-          security import "$certificate_path" -k "$keychain_path" -P "$CSC_KEY_PASSWORD" -T /usr/bin/codesign
-          security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$keychain_password" "$keychain_path"
-          security find-identity -v -p codesigning "$keychain_path" | grep 'Developer ID Application'
-          rm "$certificate_path"
-          echo "APPLE_API_KEY_PATH=$api_key_path" >> "$GITHUB_ENV"
-          echo "CSC_KEYCHAIN_PATH=$keychain_path" >> "$GITHUB_ENV"
+        run: bash packages/build/scripts/github-actions/prepare-macos-signing.sh required
       - name: Build signed macOS DMG
         run: npm run build:electron:mac:arm64 -- --product=lvce
         env:
@@ -111,24 +86,7 @@ jobs:
           APPLE_API_KEY: ${{ env.APPLE_API_KEY_PATH }}
           APPLE_API_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
           APPLE_API_ISSUER: ${{ secrets.APPLE_API_ISSUER }}
-        run: |
-          dmg_path="packages/build/.tmp/releases/lvce-arm64.dmg"
-          xcrun notarytool submit "$dmg_path" --key "$APPLE_API_KEY" --key-id "$APPLE_API_KEY_ID" --issuer "$APPLE_API_ISSUER" --wait
-          xcrun stapler staple "$dmg_path"
+        run: bash packages/build/scripts/github-actions/notarize-macos-dmg.sh
       - name: Verify signing and notarization
         shell: bash
-        run: |
-          dmg_path="packages/build/.tmp/releases/lvce-arm64.dmg"
-          test -f "$dmg_path"
-          mount_point="$(mktemp -d "${RUNNER_TEMP}/lvce-dmg.XXXXXX")"
-          cleanup() {
-            hdiutil detach "$mount_point" >/dev/null 2>&1 || true
-            rmdir "$mount_point" >/dev/null 2>&1 || true
-          }
-          trap cleanup EXIT
-          hdiutil attach "$dmg_path" -nobrowse -readonly -mountpoint "$mount_point"
-          app_path="$(find "$mount_point" -maxdepth 2 -name '*.app' -print -quit)"
-          test -n "$app_path"
-          codesign --verify --deep --strict --verbose=2 "$app_path"
-          spctl --assess --type execute --verbose "$app_path"
-          xcrun stapler validate "$dmg_path"
+        run: bash packages/build/scripts/github-actions/verify-macos-dmg.sh
