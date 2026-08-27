@@ -144,17 +144,17 @@ jobs:
           APPLE_API_KEY: ${{ env.APPLE_API_KEY_PATH }}
           APPLE_API_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
           APPLE_API_ISSUER: ${{ secrets.APPLE_API_ISSUER }}
-        run: bash packages/build/scripts/github-actions/notarize-macos-dmg.sh
+        run: bash packages/build/scripts/github-actions/notarize-macos-dmg.sh packages/build/.tmp/releases/lvce-oss-arm64.dmg
       - name: Verify signed and notarized macOS installer
         if: matrix.versions.os == 'macos-26' && matrix.versions.arch == 'arm64' && steps.macos-signing.outputs.enabled == 'true'
         shell: bash
-        run: bash packages/build/scripts/github-actions/verify-macos-dmg.sh
+        run: bash packages/build/scripts/github-actions/verify-macos-dmg.sh packages/build/.tmp/releases/lvce-oss-arm64.dmg
       - name: Upload signed macOS installer
         if: matrix.versions.os == 'macos-26' && matrix.versions.arch == 'arm64' && steps.macos-signing.outputs.enabled == 'true'
         uses: actions/upload-artifact@v7
         with:
           name: lvce-macos-arm64
-          path: packages/build/.tmp/releases/lvce-arm64.dmg
+          path: packages/build/.tmp/releases/lvce-oss-arm64.dmg
           if-no-files-found: error
       - name: Cache Electron Builder Dependencies (Windows)
         uses: actions/cache@v6
