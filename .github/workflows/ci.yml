@@ -155,10 +155,17 @@ jobs:
         if: matrix.versions.os == 'macos-26' && matrix.versions.arch == 'arm64' && steps.macos-signing.outputs.enabled == 'true'
         shell: bash
         run: |
-          app_path="$(find packages/build/.tmp/electron-builder/dist -maxdepth 3 -name '*.app' -print -quit)"
           dmg_path="packages/build/.tmp/releases/lvce-arm64.dmg"
-          test -n "$app_path"
           test -f "$dmg_path"
+          mount_point="$(mktemp -d "${RUNNER_TEMP}/lvce-dmg.XXXXXX")"
+          cleanup() {
+            hdiutil detach "$mount_point" >/dev/null 2>&1 || true
+            rmdir "$mount_point" >/dev/null 2>&1 || true
+          }
+          trap cleanup EXIT
+          hdiutil attach "$dmg_path" -nobrowse -readonly -mountpoint "$mount_point"
+          app_path="$(find "$mount_point" -maxdepth 2 -name '*.app' -print -quit)"
+          test -n "$app_path"
           codesign --verify --deep --strict --verbose=2 "$app_path"
           spctl --assess --type execute --verbose "$app_path"
           xcrun stapler validate "$app_path"
