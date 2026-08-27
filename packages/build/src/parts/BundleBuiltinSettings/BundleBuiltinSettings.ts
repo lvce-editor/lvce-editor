@@ -12,6 +12,8 @@ interface SettingsFile {
   readonly settings: readonly SettingsContribution[]
 }
 
+const rendererSettingsPath = 'packages/renderer-worker/settings.json'
+
 export const deduplicateSettingsContributions = (files: readonly SettingsFile[]): readonly SettingsFile[] => {
   const seenSettings = new Map<string, string>()
   const result: SettingsFile[] = []
@@ -84,7 +86,12 @@ export const getSettingsContributionCandidates = (workers: readonly any[]): read
 }
 
 export const bundleBuiltinSettings = async ({ workers, toRoot }): Promise<void> => {
-  const settingsFiles: SettingsFile[] = []
+  const settingsFiles: SettingsFile[] = [
+    {
+      fileName: 'renderer-worker.json',
+      settings: await JsonFile.readJson(Path.absolute(rendererSettingsPath)),
+    },
+  ]
   for (const candidate of getSettingsContributionCandidates(workers)) {
     const from = getSourcePath(candidate.sourcePath)
     if (!from) {
