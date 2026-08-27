@@ -38,6 +38,12 @@ Required secrets:
 
 The workflows decode `APPLE_API_KEY_BASE64` into a temporary `.p8` file and import `CSC_LINK` into a temporary keychain. The build signs the prepackaged app before electron-builder creates and signs the DMG; the workflow then notarizes and staples the finished DMG. Keep these as repository secrets, never repository variables.
 
+The GitHub Actions shell logic is shared by the scripts in `scripts/github-actions`:
+
+- `prepare-macos-signing.sh` validates the secrets and creates the temporary signing keychain.
+- `notarize-macos-dmg.sh` submits the DMG to Apple and staples the accepted ticket.
+- `verify-macos-dmg.sh` mounts the DMG and verifies its app signature, Gatekeeper assessment, and stapled ticket.
+
 ### Bundle identifiers
 
 - `lvce`: `com.lvceeditor.lvce`
@@ -50,6 +56,5 @@ Run the `macos-signing-smoke` workflow manually from GitHub Actions after adding
 ```sh
 codesign --verify --deep --strict --verbose=2 path/to/Lvce.app
 spctl --assess --type execute --verbose path/to/Lvce.app
-xcrun stapler validate path/to/Lvce.app
 xcrun stapler validate path/to/lvce-arm64.dmg
 ```
