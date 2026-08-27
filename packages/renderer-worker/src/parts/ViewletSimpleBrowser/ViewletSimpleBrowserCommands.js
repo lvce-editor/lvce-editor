@@ -47,4 +47,5 @@ export const Events = {
   'browser-view-page-favicon-updated': SimpleBrowser.handlePageFaviconUpdated,
   'browser-view-title-updated': SimpleBrowser.handleTitleUpdated,
   'browser-view-will-navigate': SimpleBrowser.handleWillNavigate,
+  'browser-view-window-open': SimpleBrowser.handleWindowOpen,
 }

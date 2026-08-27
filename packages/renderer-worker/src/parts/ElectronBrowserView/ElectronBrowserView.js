@@ -13,6 +13,8 @@ export const handleTitleUpdated = dispatch('browser-view-title-updated')
 
 export const handleWillNavigate = dispatch('browser-view-will-navigate')
 
+export const handleWindowOpen = dispatch('browser-view-window-open')
+
 export const isOpen = () => {
   return false
 }
