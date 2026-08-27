@@ -36,7 +36,7 @@ test('gets one settings contribution candidate per worker package', () => {
   ])
 })
 
-test('does not expose renderer worker defaults as settings contributions', async () => {
+test('bundles schema-complete renderer settings contributions', async () => {
   const toRoot = await mkdtemp(join(tmpdir(), 'lvce-builtin-settings-'))
   try {
     await bundleBuiltinSettings({
@@ -45,9 +45,41 @@ test('does not expose renderer worker defaults as settings contributions', async
     })
 
     const index = JSON.parse(await readFile(join(toRoot, 'builtin-settings', 'index.json'), 'utf8'))
+    const settings = JSON.parse(await readFile(join(toRoot, 'builtin-settings', 'renderer-worker.json'), 'utf8'))
     const fileNames = await readdir(join(toRoot, 'builtin-settings'))
-    expect(index).toEqual([])
-    expect(fileNames).toEqual(['index.json'])
+    expect(index).toEqual(['renderer-worker.json'])
+    expect(fileNames).toEqual(['index.json', 'renderer-worker.json'])
+    expect(settings).toEqual(
+      expect.arrayContaining([
+        {
+          category: 'workbench',
+          description: 'Controls the location of the side bar',
+          heading: 'Side Bar Location',
+          id: 'workbench.sideBarLocation',
+          type: 2,
+          value: 'right',
+        },
+      ]),
+    )
+    expect(settings.every(({ category, description, heading, id, type }) => category && description && heading && id && type)).toBe(true)
+  } finally {
+    await rm(toRoot, { force: true, recursive: true })
+  }
+})
+
+test('declares every default setting', async () => {
+  const defaultSettingsUrl = new URL('../../../static/config/defaultSettings.json', import.meta.url)
+  const workersUrl = new URL('../../renderer-worker/src/parts/Workers/Workers.json', import.meta.url)
+  const defaultSettings = JSON.parse(await readFile(defaultSettingsUrl, 'utf8'))
+  const workers = JSON.parse(await readFile(workersUrl, 'utf8'))
+  const toRoot = await mkdtemp(join(tmpdir(), 'lvce-builtin-settings-'))
+  try {
+    await bundleBuiltinSettings({ toRoot, workers })
+    const index = JSON.parse(await readFile(join(toRoot, 'builtin-settings', 'index.json'), 'utf8'))
+    const settings = await Promise.all(index.map(async (fileName) => JSON.parse(await readFile(join(toRoot, 'builtin-settings', fileName), 'utf8'))))
+    const declaredIds = new Set(settings.flat().map(({ id }) => id))
+
+    expect(Object.keys(defaultSettings).filter((id) => !declaredIds.has(id))).toEqual([])
   } finally {
     await rm(toRoot, { force: true, recursive: true })
   }
