@@ -7,7 +7,7 @@ const watcher = {
   removeEventListener,
 }
 const getWorkspaceUri = jest.fn(() => 'file:///workspace')
-const getPreference = jest.fn(() => false)
+const getPreference = jest.fn((_key: string) => false)
 
 jest.unstable_mockModule('../src/parts/Command/Command.js', () => ({
   execute: jest.fn(),
