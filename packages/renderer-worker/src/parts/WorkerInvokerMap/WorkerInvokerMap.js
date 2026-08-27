@@ -19,6 +19,7 @@ import * as ProblemsWorker from '../ProblemsWorker/ProblemsWorker.ts'
 import * as ProcessExplorerWorker from '../ProcessExplorerWorker/ProcessExplorerWorker.js'
 import * as QuickPickWorker from '../QuickPickWorker/QuickPickWorker.js'
 import * as RunningExtensionsViewWorker from '../RunningExtensionsViewWorker/RunningExtensionsViewWorker.ts'
+import * as SecretsViewWorker from '../SecretsViewWorker/SecretsViewWorker.ts'
 import * as SettingsViewWorker from '../SettingsViewWorker/SettingsViewWorker.js'
 import * as StatusBarWorker from '../StatusBarWorker/StatusBarWorker.js'
 import * as TextSearchViewWorker from '../TextSearchViewWorker/TextSearchViewWorker.js'
@@ -46,6 +47,7 @@ const workerInvokers = {
   processExplorer: ProcessExplorerWorker,
   quickPickWorker: QuickPickWorker,
   runningExtensionsView: RunningExtensionsViewWorker,
+  secretsView: SecretsViewWorker,
   settingsView: SettingsViewWorker,
   statusBar: StatusBarWorker,
   textSearchView: TextSearchViewWorker,
