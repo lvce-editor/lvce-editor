@@ -148,6 +148,8 @@ export const getModuleId = (commandId: any): any => {
     case 'FileWatcher.watch':
     case 'FileWatcher.watchFile2':
       return ModuleId.FileWatcher
+    case 'FileWatcherExplorer.decreaseRefCount':
+      return ModuleId.FileWatcherExplorer
     case 'FirefoxCookieImport.getInfo':
     case 'FirefoxCookieImport.importCookies':
       return ModuleId.FirefoxCookieImport
@@ -182,6 +184,8 @@ export const getModuleId = (commandId: any): any => {
       return ModuleId.HandleMessagePortForExtensionNodeProcess
     case 'HandleMessagePortForFileSystemProcess.handleMessagePortForFileSystemProcess':
       return ModuleId.HandleMessagePortForFileSystemProcess
+    case 'HandleMessagePortForFileWatcherExplorer.handleMessagePortForFileWatcherExplorer':
+      return ModuleId.HandleMessagePortForFileWatcherExplorer
     case 'HandleMessagePortForProcessExplorer.handleMessagePortForProcessExplorer':
       return ModuleId.HandleMessagePortForProcessExplorer
     case 'HandleMessagePortForSearchProcess.handleMessagePortForSearchProcess':

@@ -12,6 +12,7 @@ import * as ViewletOutput from '../src/parts/ViewletOutput/ViewletOutput.ipc.ts'
 import * as ViewletPanel from '../src/parts/ViewletPanel/ViewletPanel.ipc.ts'
 import * as ViewletProblems from '../src/parts/ViewletProblems/ViewletProblems.ipc.js'
 import * as ViewletProcessExplorer from '../src/parts/ViewletProcessExplorer/ViewletProcessExplorer.ipc.js'
+import * as ViewletFileWatcherExplorer from '../src/parts/ViewletFileWatcherExplorer/ViewletFileWatcherExplorer.ipc.js'
 import * as ViewletQuickPick from '../src/parts/ViewletQuickPick/ViewletQuickPick.ipc.js'
 import * as ViewletSourceControl from '../src/parts/ViewletSourceControl/ViewletSourceControl.ipc.js'
 import * as ViewletStatusBar from '../src/parts/ViewletStatusBar/ViewletStatusBar.ipc.js'
@@ -36,6 +37,7 @@ test.each([
   ['panel', ViewletPanel],
   ['problems', ViewletProblems],
   ['process explorer', ViewletProcessExplorer],
+  ['file watcher explorer', ViewletFileWatcherExplorer],
   ['main area', ViewletMain],
   ['quick pick', ViewletQuickPick],
   ['source control', ViewletSourceControl],

@@ -72,6 +72,18 @@ test('sendMessagePortToProcessExplorer', async () => {
   expect(SharedProcess.invokeAndTransfer).toHaveBeenCalledWith('HandleMessagePortForProcessExplorer.handleMessagePortForProcessExplorer', port)
 })
 
+test('sendMessagePortToFileWatcherExplorer', async () => {
+  const port = {}
+
+  await SendMessagePortToExtensionHostWorker.sendMessagePortToFileWatcherExplorer(port)
+
+  expect(WorkspaceConnection.connectMessagePort).toHaveBeenCalledWith('file-watcher-explorer', port)
+  expect(SharedProcess.invokeAndTransfer).toHaveBeenCalledWith(
+    'HandleMessagePortForFileWatcherExplorer.handleMessagePortForFileWatcherExplorer',
+    port,
+  )
+})
+
 test('sendMessagePortToTerminalProcess uses the workspace connection', async () => {
   const port = {}
   jest.mocked(WorkspaceConnection.connectMessagePort).mockResolvedValueOnce(true)
