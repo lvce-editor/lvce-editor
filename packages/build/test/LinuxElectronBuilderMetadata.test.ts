@@ -67,7 +67,7 @@ describe('mac electron-builder metadata', () => {
     expect(json.build.mac.target).toBe('dmg')
     expect(json.build.mac.category).toBe('public.app-category.developer-tools')
     expect(json.build.mac.hardenedRuntime).toBe(true)
-    expect(json.build.mac.notarize).toBe(true)
+    expect(json.build.mac.notarize).toBe(false)
     expect(json.build.mac.entitlements).toBe('build/entitlements.mac.plist')
     expect(json.build.mac.entitlementsInherit).toBe('build/entitlements.mac.inherit.plist')
   })

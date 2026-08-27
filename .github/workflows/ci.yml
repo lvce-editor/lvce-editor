@@ -116,52 +116,39 @@ jobs:
         if: matrix.versions.os == 'macos-26' && matrix.versions.arch == 'arm64'
         shell: bash
         env:
-          APPLE_API_KEY_BASE64: ${{ secrets.APPLE_API_KEY }}
+          APPLE_API_KEY_BASE64: ${{ secrets.APPLE_API_KEY_BASE64 }}
           APPLE_API_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
           APPLE_API_ISSUER: ${{ secrets.APPLE_API_ISSUER }}
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
-          MAC_CSC_LINK: ${{ secrets.MAC_CSC_LINK }}
-          MAC_CSC_KEY_PASSWORD: ${{ secrets.MAC_CSC_KEY_PASSWORD }}
-        run: |
-          for secret in APPLE_API_KEY_BASE64 APPLE_API_KEY_ID APPLE_API_ISSUER APPLE_TEAM_ID MAC_CSC_LINK MAC_CSC_KEY_PASSWORD; do
-            if [ -z "${!secret}" ]; then
-              echo "macOS signing is disabled because one or more signing secrets are unavailable."
-              echo "enabled=false" >> "$GITHUB_OUTPUT"
-              exit 0
-            fi
-          done
-          api_key_path="$RUNNER_TEMP/AuthKey_${APPLE_API_KEY_ID}.p8"
-          printf '%s' "$APPLE_API_KEY_BASE64" | base64 -D > "$api_key_path"
-          chmod 600 "$api_key_path"
-          echo "APPLE_API_KEY_PATH=$api_key_path" >> "$GITHUB_ENV"
-          echo "enabled=true" >> "$GITHUB_OUTPUT"
+          CSC_LINK: ${{ secrets.CSC_LINK }}
+          CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
+        run: bash packages/build/scripts/github-actions/prepare-macos-signing.sh optional
       - name: Build Electron App (Macos dmg, arm64, unsigned)
         if: matrix.versions.os == 'macos-26' && matrix.versions.arch == 'arm64' && steps.macos-signing.outputs.enabled != 'true'
         run: npm run build:electron:mac:arm64
         env:
           CSC_IDENTITY_AUTO_DISCOVERY: 'false'
-      - name: Build Electron App (Macos dmg, arm64, signed)
+      - name: Build signed Electron App (Macos dmg, arm64)
         if: matrix.versions.os == 'macos-26' && matrix.versions.arch == 'arm64' && steps.macos-signing.outputs.enabled == 'true'
         run: npm run build:electron:mac:arm64
         env:
-          CSC_LINK: ${{ secrets.MAC_CSC_LINK }}
-          CSC_KEY_PASSWORD: ${{ secrets.MAC_CSC_KEY_PASSWORD }}
+          CSC_KEYCHAIN: ${{ env.CSC_KEYCHAIN_PATH }}
           APPLE_API_KEY: ${{ env.APPLE_API_KEY_PATH }}
           APPLE_API_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
           APPLE_API_ISSUER: ${{ secrets.APPLE_API_ISSUER }}
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+      - name: Notarize macOS installer
+        if: matrix.versions.os == 'macos-26' && matrix.versions.arch == 'arm64' && steps.macos-signing.outputs.enabled == 'true'
+        shell: bash
+        env:
+          APPLE_API_KEY: ${{ env.APPLE_API_KEY_PATH }}
+          APPLE_API_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
+          APPLE_API_ISSUER: ${{ secrets.APPLE_API_ISSUER }}
+        run: bash packages/build/scripts/github-actions/notarize-macos-dmg.sh
       - name: Verify signed and notarized macOS installer
         if: matrix.versions.os == 'macos-26' && matrix.versions.arch == 'arm64' && steps.macos-signing.outputs.enabled == 'true'
         shell: bash
-        run: |
-          app_path="$(find packages/build/.tmp/electron-builder/dist -maxdepth 3 -name '*.app' -print -quit)"
-          dmg_path="packages/build/.tmp/releases/lvce-arm64.dmg"
-          test -n "$app_path"
-          test -f "$dmg_path"
-          codesign --verify --deep --strict --verbose=2 "$app_path"
-          spctl --assess --type execute --verbose "$app_path"
-          xcrun stapler validate "$app_path"
-          xcrun stapler validate "$dmg_path"
+        run: bash packages/build/scripts/github-actions/verify-macos-dmg.sh
       - name: Upload signed macOS installer
         if: matrix.versions.os == 'macos-26' && matrix.versions.arch == 'arm64' && steps.macos-signing.outputs.enabled == 'true'
         uses: actions/upload-artifact@v7

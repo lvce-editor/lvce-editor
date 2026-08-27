@@ -62,33 +62,31 @@ jobs:
         if: steps.builtin-extensions-cache.outputs.cache-hit != 'true'
       - run: npm run type-check
       - run: npm test
-      - name: Prepare Apple API key
+      - name: Prepare Apple signing credentials
         shell: bash
         env:
-          APPLE_API_KEY_BASE64: ${{ secrets.APPLE_API_KEY }}
+          APPLE_API_KEY_BASE64: ${{ secrets.APPLE_API_KEY_BASE64 }}
           APPLE_API_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
-        run: |
-          api_key_path="$RUNNER_TEMP/AuthKey_${APPLE_API_KEY_ID}.p8"
-          printf '%s' "$APPLE_API_KEY_BASE64" | base64 -D > "$api_key_path"
-          chmod 600 "$api_key_path"
-          echo "APPLE_API_KEY_PATH=$api_key_path" >> $GITHUB_ENV
-      - name: Build signed and notarized macOS DMG
+          APPLE_API_ISSUER: ${{ secrets.APPLE_API_ISSUER }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          CSC_LINK: ${{ secrets.CSC_LINK }}
+          CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
+        run: bash packages/build/scripts/github-actions/prepare-macos-signing.sh required
+      - name: Build signed macOS DMG
         run: npm run build:electron:mac:arm64 -- --product=lvce
         env:
-          CSC_LINK: ${{ secrets.MAC_CSC_LINK }}
-          CSC_KEY_PASSWORD: ${{ secrets.MAC_CSC_KEY_PASSWORD }}
+          CSC_KEYCHAIN: ${{ env.CSC_KEYCHAIN_PATH }}
           APPLE_API_KEY: ${{ env.APPLE_API_KEY_PATH }}
           APPLE_API_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
           APPLE_API_ISSUER: ${{ secrets.APPLE_API_ISSUER }}
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+      - name: Notarize macOS DMG
+        shell: bash
+        env:
+          APPLE_API_KEY: ${{ env.APPLE_API_KEY_PATH }}
+          APPLE_API_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
+          APPLE_API_ISSUER: ${{ secrets.APPLE_API_ISSUER }}
+        run: bash packages/build/scripts/github-actions/notarize-macos-dmg.sh
       - name: Verify signing and notarization
         shell: bash
-        run: |
-          app_path="$(find packages/build/.tmp/electron-builder/dist -maxdepth 3 -name '*.app' -print -quit)"
-          dmg_path="packages/build/.tmp/releases/lvce-arm64.dmg"
-          test -n "$app_path"
-          test -f "$dmg_path"
-          codesign --verify --deep --strict --verbose=2 "$app_path"
-          spctl --assess --type execute --verbose "$app_path"
-          xcrun stapler validate "$app_path"
-          xcrun stapler validate "$dmg_path"
+        run: bash packages/build/scripts/github-actions/verify-macos-dmg.sh

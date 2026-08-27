@@ -8,14 +8,15 @@ node bin/build.js --target=electron-builder-mac
 
 ## Code signing and notarization
 
-Release DMGs and builds from the trusted `main` CI workflow are signed and notarized when the macOS signing secrets are present. The CI workflow verifies the signature and notarization ticket before uploading the arm64 DMG as an artifact. Pull-request builds intentionally remain unsigned because repository secrets are not exposed to untrusted pull-request code.
+Release DMGs must be signed and notarized. The release workflow fails before building the macOS artifact when a signing secret is missing, and verifies the signature and notarization ticket before uploading the DMG. Builds from the trusted `main` CI workflow are also signed when all credentials are present. Pull-request builds intentionally remain unsigned.
 
 ### Apple setup
 
 1. Enroll in the Apple Developer Program.
-2. Create a `Developer ID Application` certificate for direct distribution.
-3. Export the certificate from Keychain Access as a password-protected `.p12`.
-4. Create an App Store Connect API key and download the `.p8` file.
+2. As the Account Holder, create a `Developer ID Application` certificate for direct distribution. A `Developer ID Installer` certificate is not needed for the DMG target.
+3. Export the certificate and its private key as a password-protected `.p12`.
+4. In App Store Connect, create a team API key with the `Developer` role and download the `.p8` file. Individual API keys cannot access Apple's notarization service.
+5. Record the key ID, issuer ID, and Apple Developer team ID. The `.p8` file can only be downloaded once, so retain a secure backup.
 
 ### GitHub secrets
 
@@ -28,14 +29,20 @@ base64 -i AuthKey_KEYID.p8 -o AuthKey_KEYID.p8.base64
 
 Required secrets:
 
-- `MAC_CSC_LINK`: base64-encoded `.p12`
-- `MAC_CSC_KEY_PASSWORD`: `.p12` export password
-- `APPLE_API_KEY`: base64-encoded `.p8`
+- `CSC_LINK`: base64-encoded `.p12`
+- `CSC_KEY_PASSWORD`: `.p12` export password
+- `APPLE_API_KEY_BASE64`: base64-encoded `.p8`
 - `APPLE_API_KEY_ID`: App Store Connect key ID
 - `APPLE_API_ISSUER`: App Store Connect issuer ID
 - `APPLE_TEAM_ID`: Apple developer team ID
 
-The workflows decode `APPLE_API_KEY` into a temporary `.p8` file and pass that file path to electron-builder as `APPLE_API_KEY`.
+The workflows decode `APPLE_API_KEY_BASE64` into a temporary `.p8` file and import `CSC_LINK` into a temporary keychain. The build signs the prepackaged app before electron-builder creates and signs the DMG; the workflow then notarizes and staples the finished DMG. Keep these as repository secrets, never repository variables.
+
+The GitHub Actions shell logic is shared by the scripts in `scripts/github-actions`:
+
+- `prepare-macos-signing.sh` validates the secrets and creates the temporary signing keychain.
+- `notarize-macos-dmg.sh` submits the DMG to Apple and staples the accepted ticket.
+- `verify-macos-dmg.sh` mounts the DMG and verifies its app signature, Gatekeeper assessment, and stapled ticket.
 
 ### Bundle identifiers
 
@@ -49,6 +56,5 @@ Run the `macos-signing-smoke` workflow manually from GitHub Actions after adding
 ```sh
 codesign --verify --deep --strict --verbose=2 path/to/Lvce.app
 spctl --assess --type execute --verbose path/to/Lvce.app
-xcrun stapler validate path/to/Lvce.app
 xcrun stapler validate path/to/lvce-arm64.dmg
 ```
