@@ -40,6 +40,10 @@ test('running extensions', async () => {
   expect(await ViewletMap.getModuleId('running-extensions://')).toBe(ViewletModuleId.RunningExtensions)
 })
 
+test('secrets', async () => {
+  expect(await ViewletMap.getModuleId('secrets://')).toBe(ViewletModuleId.Secrets)
+})
+
 test('search editor', async () => {
   expect(await ViewletMap.getModuleId('search-editor://1/Search')).toBe(ViewletModuleId.Search)
 })

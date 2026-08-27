@@ -289,6 +289,7 @@ export const getModuleId = (commandId: any): any => {
       return ModuleId.Screen
     case 'SecretStorage.delete':
     case 'SecretStorage.get':
+    case 'SecretStorage.list':
     case 'SecretStorage.store':
       return ModuleId.SecretStorage
     case 'SendMessagePortToMainProcess.sendMessagePortToMainProcess':

@@ -50,6 +50,9 @@ export const getModuleId = async (uri, opener) => {
   if (uri.startsWith('running-extensions://')) {
     return ViewletModuleId.RunningExtensions
   }
+  if (uri.startsWith('secrets://')) {
+    return ViewletModuleId.Secrets
+  }
   if (uri.startsWith('search-editor://')) {
     return ViewletModuleId.Search
   }

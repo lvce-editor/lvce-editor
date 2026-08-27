@@ -37,6 +37,22 @@ export const get = async (extensionId: string, key: string): Promise<string | un
   return ElectronSafeStorage.decryptString(encrypted)
 }
 
+export const list = async (): Promise<readonly { readonly extensionId: string; readonly key: string }[]> => {
+  const stored = await readStoredSecrets()
+  const secrets: { extensionId: string; key: string }[] = []
+  for (const [extensionId, extensionSecrets] of Object.entries(stored)) {
+    if (!extensionSecrets || typeof extensionSecrets !== 'object' || Array.isArray(extensionSecrets)) {
+      continue
+    }
+    for (const [key, encrypted] of Object.entries(extensionSecrets)) {
+      if (typeof encrypted === 'string') {
+        secrets.push({ extensionId, key })
+      }
+    }
+  }
+  return secrets
+}
+
 export const store = async (extensionId: string, key: string, value: string): Promise<void> => {
   await Queue.add(queueKey, async () => {
     const encrypted = await ElectronSafeStorage.encryptString(value)

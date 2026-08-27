@@ -47,6 +47,29 @@ test('get decrypts the extension-scoped value', async () => {
   expect(ElectronSafeStorage.decryptString).toHaveBeenCalledWith('encrypted')
 })
 
+test('list returns secret metadata without decrypting values', async () => {
+  jest.mocked(JsonFile.readJson).mockResolvedValue({
+    'other.extension': {
+      password: 'other-encrypted',
+    },
+    'sample.extension': {
+      token: 'encrypted',
+    },
+  })
+
+  await expect(SecretStorage.list()).resolves.toEqual([
+    { extensionId: 'other.extension', key: 'password' },
+    { extensionId: 'sample.extension', key: 'token' },
+  ])
+  expect(ElectronSafeStorage.decryptString).not.toHaveBeenCalled()
+})
+
+test('list returns an empty array when the secret file does not exist', async () => {
+  jest.mocked(JsonFile.readJson).mockRejectedValue(new FileNotFoundError(storagePath))
+
+  await expect(SecretStorage.list()).resolves.toEqual([])
+})
+
 test('store encrypts values before persisting them outside the browser cache', async () => {
   jest.mocked(JsonFile.readJson).mockResolvedValue({
     'sample.extension': {
