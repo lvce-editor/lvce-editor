@@ -244,6 +244,21 @@
   mask-image: url(/icons/trash.svg);
 }
 
+.MaskIconCopy,
+.IconCopy {
+  mask-image: url(/icons/copy.svg);
+}
+
+.MaskIconEye,
+.IconEye {
+  mask-image: url(/icons/eye.svg);
+}
+
+.MaskIconEyeClosed,
+.IconEyeClosed {
+  mask-image: url(/icons/eye-closed.svg);
+}
+
 .MaskIconSplitHorizontal,
 .IconSplitHorizontal {
   mask-image: url(/icons/split-horizontal.svg);
