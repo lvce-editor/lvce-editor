@@ -5,16 +5,25 @@ import { handleSecretsViewMessagePort } from '../HandleSecretsViewMessagePort/Ha
 import * as IpcParent from '../IpcParent/IpcParent.js'
 import * as IpcParentType from '../IpcParentType/IpcParentType.js'
 import * as JsonRpc from '../JsonRpc/JsonRpc.js'
+import * as Platform from '../Platform/Platform.js'
+import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import { secretsViewWorkerUrl } from '../SecretsViewWorkerUrl/SecretsViewWorkerUrl.ts'
 
-export const launchSecretsViewWorker = async () => {
+export const launchSecretsViewWorker = async (): Promise<any> => {
   const ipc = await IpcParent.create({
     method: IpcParentType.ModuleWorkerAndWorkaroundForChromeDevtoolsBug,
     name: 'Secrets View Worker',
     url: getConfiguredWorkerUrl('develop.secretsViewPath', secretsViewWorkerUrl),
   })
   HandleIpc.handleIpc(ipc)
-  const { port1, port2 } = GetPortTuple.getPortTuple()
-  await Promise.all([JsonRpc.invokeAndTransfer(ipc, 'SecretsView.handleMessagePort', port1), handleSecretsViewMessagePort(port2)])
+  await JsonRpc.invoke(ipc, 'SecretsView.initialize', Platform.getPlatform())
+  const { port1: bridgeWorkerPort, port2: bridgeHostPort } = GetPortTuple.getPortTuple()
+  const { port1: directWorkerPort, port2: directHostPort } = GetPortTuple.getPortTuple()
+  await Promise.all([
+    JsonRpc.invokeAndTransfer(ipc, 'SecretsView.handleMessagePort', bridgeWorkerPort),
+    handleSecretsViewMessagePort(bridgeHostPort),
+    JsonRpc.invokeAndTransfer(ipc, 'SecretsView.handleMessagePort', directWorkerPort, false),
+    RendererProcess.invokeAndTransfer('HandleMessagePort.handleMessagePort', directHostPort, 'SecretsView'),
+  ])
   return ipc
 }

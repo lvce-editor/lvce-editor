@@ -6,7 +6,10 @@ jest.unstable_mockModule('../src/parts/GetConfiguredWorkerUrl/GetConfiguredWorke
 }))
 
 jest.unstable_mockModule('../src/parts/GetPortTuple/GetPortTuple.js', () => ({
-  getPortTuple: jest.fn(() => ({ port1: 'worker-port', port2: 'host-port' })),
+  getPortTuple: jest
+    .fn()
+    .mockReturnValueOnce({ port1: 'bridge-worker-port', port2: 'bridge-host-port' })
+    .mockReturnValueOnce({ port1: 'direct-worker-port', port2: 'direct-host-port' }),
 }))
 
 jest.unstable_mockModule('../src/parts/HandleIpc/HandleIpc.js', () => ({
@@ -22,6 +25,15 @@ jest.unstable_mockModule('../src/parts/IpcParent/IpcParent.js', () => ({
 }))
 
 jest.unstable_mockModule('../src/parts/JsonRpc/JsonRpc.js', () => ({
+  invoke: jest.fn(async () => undefined),
+  invokeAndTransfer: jest.fn(async () => undefined),
+}))
+
+jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => ({
+  getPlatform: jest.fn(() => 2),
+}))
+
+jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () => ({
   invokeAndTransfer: jest.fn(async () => undefined),
 }))
 
@@ -31,6 +43,7 @@ const HandleIpc = await import('../src/parts/HandleIpc/HandleIpc.js')
 const HandleSecretsViewMessagePort = await import('../src/parts/HandleSecretsViewMessagePort/HandleSecretsViewMessagePort.ts')
 const IpcParent = await import('../src/parts/IpcParent/IpcParent.js')
 const JsonRpc = await import('../src/parts/JsonRpc/JsonRpc.js')
+const RendererProcess = await import('../src/parts/RendererProcess/RendererProcess.js')
 const { launchSecretsViewWorker } = await import('../src/parts/LaunchSecretsViewWorker/LaunchSecretsViewWorker.ts')
 
 beforeEach(() => {
@@ -54,7 +67,10 @@ test('launches and connects the secrets view worker', async () => {
     url: 'file:///secrets-view-worker.js',
   })
   expect(HandleIpc.handleIpc).toHaveBeenCalledWith(ipc)
-  expect(GetPortTuple.getPortTuple).toHaveBeenCalledTimes(1)
-  expect(JsonRpc.invokeAndTransfer).toHaveBeenCalledWith(ipc, 'SecretsView.handleMessagePort', 'worker-port')
-  expect(HandleSecretsViewMessagePort.handleSecretsViewMessagePort).toHaveBeenCalledWith('host-port' as any)
+  expect(JsonRpc.invoke).toHaveBeenCalledWith(ipc, 'SecretsView.initialize', 2)
+  expect(GetPortTuple.getPortTuple).toHaveBeenCalledTimes(2)
+  expect(JsonRpc.invokeAndTransfer).toHaveBeenCalledWith(ipc, 'SecretsView.handleMessagePort', 'bridge-worker-port')
+  expect(HandleSecretsViewMessagePort.handleSecretsViewMessagePort).toHaveBeenCalledWith('bridge-host-port' as any)
+  expect(JsonRpc.invokeAndTransfer).toHaveBeenCalledWith(ipc, 'SecretsView.handleMessagePort', 'direct-worker-port', false)
+  expect(RendererProcess.invokeAndTransfer).toHaveBeenCalledWith('HandleMessagePort.handleMessagePort', 'direct-host-port', 'SecretsView')
 })
