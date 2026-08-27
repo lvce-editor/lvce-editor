@@ -4,7 +4,10 @@ set -euo pipefail
 
 readonly dmg_path="${1:-packages/build/.tmp/releases/lvce-arm64.dmg}"
 
-test -f "$dmg_path"
+if [[ ! -f "$dmg_path" ]]; then
+  echo "macOS DMG not found: $dmg_path" >&2
+  exit 1
+fi
 mount_point="$(mktemp -d "${RUNNER_TEMP:?RUNNER_TEMP is required}/lvce-dmg.XXXXXX")"
 readonly mount_point
 
