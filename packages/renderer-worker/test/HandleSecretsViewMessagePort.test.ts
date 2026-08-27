@@ -3,14 +3,14 @@ import { afterEach, expect, jest, test } from '@jest/globals'
 import { PlainMessagePortRpc } from '../../../static/js/lvce-editor-rpc.js'
 
 const rendererProcessInvoke = jest.fn<(...args: readonly any[]) => Promise<any>>()
-const sharedProcessInvoke = jest.fn<(...args: readonly any[]) => Promise<any>>()
+const sendMessagePortToMainProcess = jest.fn<(...args: readonly any[]) => Promise<any>>()
 
 jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () => ({
   invoke: rendererProcessInvoke,
 }))
 
-jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => ({
-  invoke: sharedProcessInvoke,
+jest.unstable_mockModule('../src/parts/SendMessagePortToMainProcess/SendMessagePortToMainProcess.js', () => ({
+  sendMessagePortToMainProcess,
 }))
 
 const { handleSecretsViewMessagePort } = await import('../src/parts/HandleSecretsViewMessagePort/HandleSecretsViewMessagePort.ts')
@@ -21,7 +21,7 @@ afterEach(async () => {
   await rpc?.dispose()
   rpc = undefined
   rendererProcessInvoke.mockReset()
-  sharedProcessInvoke.mockReset()
+  sendMessagePortToMainProcess.mockReset()
 })
 
 test('forwards rendering commands to the renderer process', async () => {
@@ -34,12 +34,19 @@ test('forwards rendering commands to the renderer process', async () => {
   expect(rendererProcessInvoke).toHaveBeenCalledWith('Viewlet.queueCommands', 1, [])
 })
 
-test.each(['get', 'list', 'store'])('forwards SecretStorage.%s to the shared process', async (method) => {
+test('forwards a transferred message port to the main process', async () => {
   const { port1, port2 } = new MessageChannel()
+  const { port1: mainProcessPort, port2: mainProcessPortPeer } = new MessageChannel()
   rpc = await PlainMessagePortRpc.create({ commandMap: {}, messagePort: port1 })
-  sharedProcessInvoke.mockResolvedValue(undefined)
+  sendMessagePortToMainProcess.mockResolvedValue(undefined)
   await handleSecretsViewMessagePort(port2)
 
-  await rpc.invoke(`SecretStorage.${method}`, 'extension', 'key', 'value')
-  expect(sharedProcessInvoke).toHaveBeenCalledWith(`SecretStorage.${method}`, 'extension', 'key', 'value')
+  await rpc.invokeAndTransfer(
+    'SendMessagePortToMainProcess.sendMessagePortToMainProcess',
+    mainProcessPort,
+    'HandleElectronMessagePort.handleElectronMessagePort',
+    0,
+  )
+  expect(sendMessagePortToMainProcess).toHaveBeenCalledWith(expect.any(MessagePort), 'HandleElectronMessagePort.handleElectronMessagePort', 0)
+  mainProcessPortPeer.close()
 })

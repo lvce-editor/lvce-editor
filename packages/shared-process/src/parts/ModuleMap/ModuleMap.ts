@@ -73,10 +73,6 @@ export const getModuleId = (commandId: any): any => {
     case 'ElectronProcess.writeStderr':
     case 'ElectronProcess.writeStdout':
       return ModuleId.ElectronProcess
-    case 'ElectronSafeStorage.decryptString':
-    case 'ElectronSafeStorage.encryptString':
-    case 'ElectronSafeStorage.isEncryptionAvailable':
-      return ModuleId.ElectronSafeStorage
     case 'ElectronWindow.close':
     case 'ElectronWindow.focus':
     case 'ElectronWindow.getZoom':
@@ -287,11 +283,6 @@ export const getModuleId = (commandId: any): any => {
     case 'Screen.getHeight':
     case 'Screen.getWidth':
       return ModuleId.Screen
-    case 'SecretStorage.delete':
-    case 'SecretStorage.get':
-    case 'SecretStorage.list':
-    case 'SecretStorage.store':
-      return ModuleId.SecretStorage
     case 'SendMessagePortToMainProcess.sendMessagePortToMainProcess':
       return ModuleId.SendMessagePortToMainProcess
     case 'TemporaryMessagePort.getPortTuple2':

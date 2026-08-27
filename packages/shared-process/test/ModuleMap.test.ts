@@ -14,14 +14,6 @@ test('getModuleId - SendMessagePortToMainProcess.sendMessagePortToMainProcess', 
   expect(ModuleMap.getModuleId('SendMessagePortToMainProcess.sendMessagePortToMainProcess')).toBe(ModuleId.SendMessagePortToMainProcess)
 })
 
-test('getModuleId - SecretStorage.get', () => {
-  expect(ModuleMap.getModuleId('SecretStorage.get')).toBe(ModuleId.SecretStorage)
-})
-
-test('getModuleId - SecretStorage.list', () => {
-  expect(ModuleMap.getModuleId('SecretStorage.list')).toBe(ModuleId.SecretStorage)
-})
-
 test('getModuleId - FirefoxCookieImport.importCookies', () => {
   expect(ModuleMap.getModuleId('FirefoxCookieImport.importCookies')).toBe(ModuleId.FirefoxCookieImport)
 })
