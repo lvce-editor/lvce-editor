@@ -248,7 +248,7 @@ jobs:
           rm "$certificate_path"
           echo "APPLE_API_KEY_PATH=$api_key_path" >> "$GITHUB_ENV"
           echo "CSC_KEYCHAIN_PATH=$keychain_path" >> "$GITHUB_ENV"
-      - name: Build signed and notarized Electron App (Macos dmg, arm64)
+      - name: Build signed Electron App (Macos dmg, arm64)
         if: matrix.versions.os == 'macos-26' && matrix.versions.arch == 'arm64'
         run: npm run build:electron:mac:arm64 -- --product=lvce
         env:
@@ -285,7 +285,6 @@ jobs:
           test -n "$app_path"
           codesign --verify --deep --strict --verbose=2 "$app_path"
           spctl --assess --type execute --verbose "$app_path"
-          xcrun stapler validate "$app_path"
           xcrun stapler validate "$dmg_path"
       - name: Rename Electron App (Macos dmg, arm64)
         if: matrix.versions.os == 'macos-26' && matrix.versions.arch == 'arm64'

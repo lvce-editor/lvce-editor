@@ -15,7 +15,7 @@ import * as Remove from '../Remove/Remove.ts'
 import * as Rename from '../Rename/Rename.ts'
 import * as Replace from '../Replace/Replace.ts'
 import * as ResolveBuiltArtifactPath from '../ResolveBuiltArtifactPath/ResolveBuiltArtifactPath.ts'
-import * as SignAndNotarizeMacApp from '../SignAndNotarizeMacApp/SignAndNotarizeMacApp.ts'
+import * as SignMacApp from '../SignMacApp/SignMacApp.ts'
 import * as Stat from '../Stat/Stat.ts'
 import * as Tag from '../Tag/Tag.ts'
 import * as Template from '../Template/Template.ts'
@@ -393,13 +393,13 @@ export const build = async ({
   console.timeEnd('copyElectronResult')
 
   if (config === ElectronBuilderConfigType.Mac) {
-    console.time('signAndNotarizeMacApp')
-    await SignAndNotarizeMacApp.signAndNotarizeMacApp({
+    console.time('signMacApp')
+    await SignMacApp.signMacApp({
       appPath: getPrepackagedPath({ config, product }),
       entitlementsPath: Path.absolute('packages/build/files/mac/entitlements.mac.plist'),
       entitlementsInheritPath: Path.absolute('packages/build/files/mac/entitlements.mac.inherit.plist'),
     })
-    console.timeEnd('signAndNotarizeMacApp')
+    console.timeEnd('signMacApp')
   }
 
   console.time('copyElectronBuilderConfig')

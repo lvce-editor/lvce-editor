@@ -97,7 +97,7 @@ jobs:
           rm "$certificate_path"
           echo "APPLE_API_KEY_PATH=$api_key_path" >> "$GITHUB_ENV"
           echo "CSC_KEYCHAIN_PATH=$keychain_path" >> "$GITHUB_ENV"
-      - name: Build signed and notarized macOS DMG
+      - name: Build signed macOS DMG
         run: npm run build:electron:mac:arm64 -- --product=lvce
         env:
           CSC_KEYCHAIN: ${{ env.CSC_KEYCHAIN_PATH }}
@@ -131,5 +131,4 @@ jobs:
           test -n "$app_path"
           codesign --verify --deep --strict --verbose=2 "$app_path"
           spctl --assess --type execute --verbose "$app_path"
-          xcrun stapler validate "$app_path"
           xcrun stapler validate "$dmg_path"

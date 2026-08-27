@@ -36,7 +36,7 @@ Required secrets:
 - `APPLE_API_ISSUER`: App Store Connect issuer ID
 - `APPLE_TEAM_ID`: Apple developer team ID
 
-The workflows decode `APPLE_API_KEY_BASE64` into a temporary `.p8` file and import `CSC_LINK` into a temporary keychain. The build signs and notarizes the prepackaged app before electron-builder creates and signs the DMG; the workflow then notarizes and staples the finished DMG. Keep these as repository secrets, never repository variables.
+The workflows decode `APPLE_API_KEY_BASE64` into a temporary `.p8` file and import `CSC_LINK` into a temporary keychain. The build signs the prepackaged app before electron-builder creates and signs the DMG; the workflow then notarizes and staples the finished DMG. Keep these as repository secrets, never repository variables.
 
 ### Bundle identifiers
 

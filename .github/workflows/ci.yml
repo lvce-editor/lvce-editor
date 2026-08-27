@@ -155,7 +155,7 @@ jobs:
         run: npm run build:electron:mac:arm64
         env:
           CSC_IDENTITY_AUTO_DISCOVERY: 'false'
-      - name: Build Electron App (Macos dmg, arm64, signed)
+      - name: Build signed Electron App (Macos dmg, arm64)
         if: matrix.versions.os == 'macos-26' && matrix.versions.arch == 'arm64' && steps.macos-signing.outputs.enabled == 'true'
         run: npm run build:electron:mac:arm64
         env:
@@ -192,7 +192,6 @@ jobs:
           test -n "$app_path"
           codesign --verify --deep --strict --verbose=2 "$app_path"
           spctl --assess --type execute --verbose "$app_path"
-          xcrun stapler validate "$app_path"
           xcrun stapler validate "$dmg_path"
       - name: Upload signed macOS installer
         if: matrix.versions.os == 'macos-26' && matrix.versions.arch == 'arm64' && steps.macos-signing.outputs.enabled == 'true'
