@@ -349,6 +349,16 @@ test('setUrl applies the loading state before navigation completes', async () =>
   })
 })
 
+test('setUrl opens cookie import urls as a main-area view', async () => {
+  const state = { ...ViewletSimpleBrowser.create(), browserViewId: 12 }
+
+  const newState = await ViewletSimpleBrowser.setUrl(state, 'cookie-import-view:///firefox/default')
+
+  expect(Command.execute).toHaveBeenCalledWith('Main.openUri', 'cookie-import-view:///firefox/default')
+  expect(ElectronWebContentsViewFunctions.setIframeSrc).not.toHaveBeenCalled()
+  expect(newState).toMatchObject({ inputValue: 'cookie-import-view:///firefox/default' })
+})
+
 test('handleDidNavigate', () => {
   const state = { ...ViewletSimpleBrowser.create(), isLoading: true }
   // @ts-ignore

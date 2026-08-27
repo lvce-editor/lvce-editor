@@ -11,6 +11,7 @@ export const map = {
   [ViewletModuleId.ChatDebug]: () => import('../ViewletChatDebug/ViewletChatDebug.ipc.js'),
   [ViewletModuleId.Clock]: () => import('../ViewletClock/ViewletClock.ipc.js'),
   [ViewletModuleId.Confirm]: () => import('../ViewletConfirm/ViewletConfirm.ipc.js'),
+  [ViewletModuleId.CookieImport]: () => import('../ViewletCookieImport/ViewletCookieImport.ipc.ts'),
   [ViewletModuleId.DebugConsole]: () => import('../ViewletDebugConsole/ViewletDebugConsole.ipc.js'),
   [ViewletModuleId.DefineKeyBinding]: () => import('../ViewletDefineKeyBinding/ViewletDefineKeyBinding.ipc.js'),
   [ViewletModuleId.Dialog]: () => import('../ViewletDialog/ViewletDialog.ipc.js'),

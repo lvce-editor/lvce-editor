@@ -29,6 +29,46 @@
     }
   },
   {
+    "id": "cookieImportView",
+    "fileName": "cookieImportViewWorkerMain.js",
+    "contentSecurityPolicy": ["default-src 'none'", "sandbox allow-same-origin"],
+    "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/cookie-import-view/dist/cookieImportViewWorkerMain.js",
+    "productionPath": "/packages/cookie-import-view/dist/cookieImportViewWorkerMain.js",
+    "settingName": "develop.cookieImportViewWorkerPath",
+    "hotReloadCommand": "",
+    "viewlet": {
+      "name": "CookieImportView",
+      "title": "Cookie Import",
+      "css": ["/css/parts/Button.css", "/css/parts/InputBox.css", "/css/parts/ViewletCookieImport.css"],
+      "state": { "idKey": "uid", "fields": ["uri", "x", "y", "width", "height"] },
+      "commandPrefix": "CookieImportView",
+      "commandReturnStateWhenCommandsEmpty": true,
+      "methods": {
+        "create": {
+          "name": "CookieImportView.create",
+          "parameters": [
+            { "source": "state", "name": "uid" }, { "source": "state", "name": "uri" }, { "source": "state", "name": "x" },
+            { "source": "state", "name": "y" }, { "source": "state", "name": "width" }, { "source": "state", "name": "height" }
+          ]
+        },
+        "loadContent": { "name": "CookieImportView.loadContent", "parameters": [{ "source": "state", "name": "uid" }] },
+        "diff": { "name": "CookieImportView.diff2", "parameters": [{ "source": "state", "name": "uid" }] },
+        "render": {
+          "name": "CookieImportView.render2",
+          "parameters": [{ "source": "state", "name": "uid" }, { "source": "result", "name": "diff" }]
+        },
+        "resize": {
+          "name": "CookieImportView.resize",
+          "parameters": [{ "source": "state", "name": "uid" }, { "source": "argument", "name": "dimensions" }]
+        },
+        "getCommandIds": { "name": "CookieImportView.getCommandIds", "parameters": [] },
+        "renderEventListeners": { "name": "CookieImportView.renderEventListeners", "parameters": [] }
+      },
+      "capabilities": { "directRender": true, "events": true, "render": true, "resize": true, "rootRender": true },
+      "renderComparison": "always"
+    }
+  },
+  {
     "id": "aboutWorker",
     "fileName": "aboutWorkerMain.js",
     "contentSecurityPolicy": ["default-src 'none'", "sandbox allow-same-origin"],

@@ -1,0 +1,69 @@
+.CookieImportView {
+  align-items: center;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  overflow: auto;
+  padding: 48px 32px;
+}
+
+.CookieImportViewHeader,
+.CookieImportViewForm {
+  max-width: 640px;
+  width: 100%;
+}
+
+.CookieImportViewTitle {
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 32px;
+  margin: 0 0 8px;
+}
+
+.CookieImportViewDescription {
+  color: var(--DescriptionForeground, color-mix(in srgb, var(--WorkbenchForeground) 76%, transparent));
+  line-height: 20px;
+  margin: 0;
+}
+
+.CookieImportViewForm {
+  background: var(--InputBoxBackground);
+  border: 1px solid var(--WidgetBorder, transparent);
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 24px;
+}
+
+.CookieImportViewField {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.CookieImportViewLabel {
+  font-weight: 600;
+}
+
+.CookieImportView .InputBox,
+.CookieImportView .SelectBox {
+  box-sizing: border-box;
+  min-height: 28px;
+  width: 100%;
+}
+
+.CookieImportView .SelectBox {
+  background: var(--InputBoxBackground);
+  border: 1px solid var(--InputBoxBorder, transparent);
+  color: var(--InputBoxForeground);
+  padding: 3px 8px;
+}
+
+.CookieImportViewActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: flex-end;
+}

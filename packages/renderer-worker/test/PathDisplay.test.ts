@@ -18,6 +18,14 @@ test('getFileIcon - running extensions', () => {
   expect(PathDisplay.getFileIcon('running-extensions://')).toBe('MaskIconExtensions')
 })
 
+test('getLabel - cookie import view', () => {
+  expect(PathDisplay.getLabel('cookie-import-view:///')).toBe('Cookie Import')
+})
+
+test('getFileIcon - cookie import view', () => {
+  expect(PathDisplay.getFileIcon('cookie-import-view:///')).toBe('MaskIconRecordKey')
+})
+
 test('getLabel - diff editor', () => {
   expect(PathDisplay.getLabel('diff://data://const value = 1<->/workspace/src/example.ts')).toBe('example.ts')
 })

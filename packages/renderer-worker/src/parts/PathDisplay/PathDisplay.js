@@ -38,6 +38,9 @@ export const getLabel = (uri) => {
   if (uri.startsWith('settings://')) {
     return 'Settings'
   }
+  if (uri.startsWith('cookie-import-view:///')) {
+    return 'Cookie Import'
+  }
   if (uri.startsWith('simple-browser://')) {
     return 'Simple Browser'
   }
@@ -64,6 +67,9 @@ export const getFileIcon = (uri) => {
   }
   if (uri.startsWith('extension-detail://')) {
     return `MaskIcon${Icon.Extensions}`
+  }
+  if (uri.startsWith('cookie-import-view:///')) {
+    return `MaskIcon${Icon.RecordKey}`
   }
   if (uri.startsWith('process-explorer://')) {
     return `MaskIcon${Icon.DebugAlt2}`

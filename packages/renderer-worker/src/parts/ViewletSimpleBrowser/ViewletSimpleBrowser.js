@@ -462,7 +462,18 @@ export const selectPreviousSuggestion = (state) => {
   }
 }
 
+const openCookieImportView = (value) => {
+  if (!value.startsWith('cookie-import-view:///')) {
+    return false
+  }
+  void Command.execute('Main.openUri', value)
+  return true
+}
+
 const navigate = (state, value) => {
+  if (openCookieImportView(value)) {
+    return state
+  }
   const iframeSrc = IframeSrc.toIframeSrc(value, state.shortcuts)
   void ElectronWebContentsViewFunctions.setIframeSrc(state.browserViewId, iframeSrc)
   void ElectronWebContentsViewFunctions.focus(state.browserViewId)
@@ -485,6 +496,9 @@ export const acceptSuggestion = async (state, value) => {
 export const setUrl = async (state, value) => {
   const newState1 = await handleInput(state, value)
   const { inputValue, browserViewId, shortcuts } = newState1
+  if (openCookieImportView(inputValue)) {
+    return newState1
+  }
   const iframeSrc = IframeSrc.toIframeSrc(inputValue, shortcuts)
   void ElectronWebContentsViewFunctions.setIframeSrc(browserViewId, iframeSrc)
 
