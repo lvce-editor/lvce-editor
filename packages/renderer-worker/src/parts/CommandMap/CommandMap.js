@@ -101,6 +101,7 @@ export const commandMap = {
   'ElectronBrowserView.handlePageFaviconUpdated': lazy('ElectronBrowserView.handlePageFaviconUpdated'),
   'ElectronBrowserView.handleTitleUpdated': lazy('ElectronBrowserView.handleTitleUpdated'),
   'ElectronBrowserView.handleWillNavigate': lazy('ElectronBrowserView.handleWillNavigate'),
+  'ElectronBrowserView.handleWindowOpen': lazy('ElectronBrowserView.handleWindowOpen'),
   'ElectronClipBoard.writeText': lazy('ElectronClipBoard.writeText'),
   'ElectronContentTracing.startRecording': lazy('ElectronContentTracing.startRecording'),
   'ElectronContentTracing.stopRecording': lazy('ElectronContentTracing.stopRecording'),
