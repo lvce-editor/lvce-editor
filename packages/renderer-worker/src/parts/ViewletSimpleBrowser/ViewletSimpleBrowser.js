@@ -18,8 +18,15 @@ import * as SimpleBrowserPreferences from '../SimpleBrowserPreferences/SimpleBro
 
 const navigationHeaderHeight = 30
 const tabsHeaderHeight = 35
+const closeTabKeyBinding = KeyModifier.CtrlCmd | KeyCode.KeyW
+const createNewTabKeyBinding = KeyModifier.CtrlCmd | KeyCode.KeyT
 const focusNextTabKeyBinding = KeyModifier.CtrlCmd | KeyCode.Tab
 const focusPreviousTabKeyBinding = KeyModifier.CtrlCmd | KeyModifier.Shift | KeyCode.Tab
+const browserTabKeyBindings = [closeTabKeyBinding, createNewTabKeyBinding, focusNextTabKeyBinding, focusPreviousTabKeyBinding]
+
+const getFallThroughKeyBindings = (keyBindings) => {
+  return [...new Set([...GetFallThroughKeyBindings.getFallThroughKeyBindings(keyBindings), ...browserTabKeyBindings])]
+}
 
 const getHeaderHeight = (tabsEnabled) => navigationHeaderHeight + (tabsEnabled ? tabsHeaderHeight : 0)
 
@@ -150,7 +157,7 @@ export const backgroundLoadContent = async (state, savedState) => {
   // TODO since browser view is not visible at this point
   // it is not necessary to load keybindings for it
   const keyBindings = await KeyBindingsInitial.getKeyBindings()
-  const fallThroughKeyBindings = GetFallThroughKeyBindings.getFallThroughKeyBindings(keyBindings)
+  const fallThroughKeyBindings = getFallThroughKeyBindings(keyBindings)
   const browserViewId = await ElectronWebContentsView.createWebContentsView(0)
   await ElectronWebContentsViewFunctions.setFallthroughKeyBindings(browserViewId, fallThroughKeyBindings)
   Assert.number(browserViewId)
@@ -196,7 +203,7 @@ export const loadContent = async (state, savedState) => {
   const browserViewWidth = width
   const browserViewHeight = height - headerHeight
   const shortcuts = SimpleBrowserPreferences.getShortCuts()
-  const fallThroughKeyBindings = GetFallThroughKeyBindings.getFallThroughKeyBindings(keyBindings)
+  const fallThroughKeyBindings = getFallThroughKeyBindings(keyBindings)
 
   if (id) {
     const actualId = await ElectronWebContentsView.createWebContentsView(id, uid)
@@ -694,6 +701,12 @@ export const handleWillNavigate = (state, browserViewId, value) => {
 export const handleKeyBinding = async (state, browserViewId, keyBinding) => {
   if (Number(browserViewId) !== state.browserViewId) {
     return state
+  }
+  if (keyBinding === closeTabKeyBinding) {
+    return closeCurrentTab(state)
+  }
+  if (keyBinding === createNewTabKeyBinding) {
+    return createNewTab(state)
   }
   if (keyBinding === focusNextTabKeyBinding && state.tabs.length > 0) {
     return selectTab(state, (state.selectedTabIndex + 1) % state.tabs.length)
