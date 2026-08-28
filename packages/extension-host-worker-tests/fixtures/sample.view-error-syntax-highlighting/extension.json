@@ -1,0 +1,17 @@
+{
+  "id": "sample.view-error-syntax-highlighting",
+  "name": "Error Syntax Highlighting",
+  "description": "Throws while creating a virtual DOM view",
+  "version": "1.0.0",
+  "browser": "main.js",
+  "isolated": true,
+  "activation": ["onView:sample.view-error-syntax-highlighting"],
+  "views": [
+    {
+      "id": "sample.view-error-syntax-highlighting",
+      "title": "Error Syntax Highlighting",
+      "icon": "symbol-keyword",
+      "kind": "virtualDom"
+    }
+  ]
+}

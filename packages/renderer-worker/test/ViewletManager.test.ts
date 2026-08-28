@@ -994,6 +994,11 @@ test('load - renders a syntax highlighted generic error', async () => {
       42,
       [
         {
+          childCount: 3,
+          className: 'Viewlet Error',
+          type: VirtualDomElements.Div,
+        },
+        {
           childCount: 1,
           className: 'ViewletErrorMessage',
           type: VirtualDomElements.Div,
