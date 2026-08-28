@@ -6,13 +6,20 @@ test('renders a snapshot below the browser header', () => {
   const dom = GetSimpleBrowserVirtualDom.getSimpleBrowserVirtualDom(true, true, false, 'https://example.com', 'data:image/png;base64,c25hcHNob3Q=')
 
   expect(dom[0].childCount).toBe(3)
-  expect(dom.at(-1)).toEqual({
-    type: VirtualDomElements.Img,
-    className: 'SimpleBrowserSnapshot',
-    src: 'data:image/png;base64,c25hcHNob3Q=',
-    draggable: false,
-    childCount: 0,
-  })
+  expect(dom.slice(-2)).toEqual([
+    {
+      type: VirtualDomElements.Div,
+      className: 'SimpleBrowserSnapshotWrapper',
+      childCount: 1,
+    },
+    {
+      type: VirtualDomElements.Img,
+      className: 'SimpleBrowserSnapshot',
+      src: 'data:image/png;base64,c25hcHNob3Q=',
+      draggable: false,
+      childCount: 0,
+    },
+  ])
 })
 
 test('names the address input so focus can be restored after rendering', () => {

@@ -164,13 +164,20 @@ export const getSimpleBrowserVirtualDom = (
     },
   )
   if (snapshot) {
-    dom.push({
-      type: VirtualDomElements.Img,
-      className: suggestions.length > 0 ? 'SimpleBrowserSnapshot SimpleBrowserSnapshotSearchSuggestions' : 'SimpleBrowserSnapshot',
-      src: snapshot,
-      draggable: false,
-      childCount: 0,
-    })
+    dom.push(
+      {
+        type: VirtualDomElements.Div,
+        className: 'SimpleBrowserSnapshotWrapper',
+        childCount: 1,
+      },
+      {
+        type: VirtualDomElements.Img,
+        className: suggestions.length > 0 ? 'SimpleBrowserSnapshot SimpleBrowserSnapshotSearchSuggestions' : 'SimpleBrowserSnapshot',
+        src: snapshot,
+        draggable: false,
+        childCount: 0,
+      },
+    )
   }
   if (suggestions.length > 0) {
     dom.push({

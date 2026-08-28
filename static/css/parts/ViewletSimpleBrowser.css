@@ -104,11 +104,17 @@
   contain: strict;
 }
 
-.SimpleBrowserSnapshot {
+.SimpleBrowserSnapshotWrapper {
   contain: strict;
   flex: 1;
-  filter: brightness(0.8);
   min-height: 0;
+  width: 100%;
+}
+
+.SimpleBrowserSnapshot {
+  display: block;
+  filter: brightness(0.8);
+  height: 100%;
   object-fit: fill;
   pointer-events: none;
   width: 100%;
