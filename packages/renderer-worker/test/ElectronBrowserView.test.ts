@@ -2,6 +2,7 @@ import { beforeEach, expect, jest, test } from '@jest/globals'
 
 beforeEach(() => {
   jest.resetAllMocks()
+  GlobalEventBus.state.listenerMap = Object.create(null)
 })
 
 jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
@@ -14,6 +15,16 @@ jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
 
 const SharedProcess = await import('../src/parts/SharedProcess/SharedProcess.js')
 const ElectronBrowserView = await import('../src/parts/ElectronBrowserView/ElectronBrowserView.js')
+const GlobalEventBus = await import('../src/parts/GlobalEventBus/GlobalEventBus.js')
+
+test('forwards web contents keybindings through the global event bus', async () => {
+  const listener = jest.fn()
+  GlobalEventBus.addListener('browser-view-key-binding', listener)
+
+  await ElectronBrowserView.handleKeyBinding(12, 2050)
+
+  expect(listener).toHaveBeenCalledWith(12, 2050)
+})
 
 test.skip('createBrowserView - error', async () => {
   // @ts-ignore
