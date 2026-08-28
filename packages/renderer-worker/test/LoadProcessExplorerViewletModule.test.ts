@@ -1,4 +1,11 @@
+/* eslint-disable jest/no-restricted-jest-methods -- Module boundary tests require ESM dependency mocks. */
 import { beforeEach, expect, jest, test } from '@jest/globals'
+
+const getPlatform = jest.fn<() => number>(() => 3)
+
+jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => ({
+  getPlatform,
+}))
 
 jest.unstable_mockModule('../src/parts/WorkspaceConnection/WorkspaceConnection.js', () => ({
   isActive: jest.fn(() => false),
@@ -9,6 +16,7 @@ const PlatformType = await import('../src/parts/PlatformType/PlatformType.js')
 const WorkspaceConnection = await import('../src/parts/WorkspaceConnection/WorkspaceConnection.js')
 
 beforeEach(() => {
+  getPlatform.mockReturnValue(PlatformType.Remote)
   jest.mocked(WorkspaceConnection.isActive).mockReturnValue(false)
 })
 
@@ -30,9 +38,21 @@ test('loads worker-backed viewlet on web with an active workspace connection', a
   const module = await LoadProcessExplorerViewletModule.loadProcessExplorerViewletModule(PlatformType.Web)
 
   const state = module.create(7, 'process-explorer://', 1, 2, 3, 4)
-  expect(state.platform).toBe(PlatformType.Remote)
+  const { platform } = state
+  expect(platform).toBe(PlatformType.Remote)
   expect(typeof module.getCommands).toBe('function')
   expect(typeof module.getKeyBindings).toBe('function')
+})
+
+test('keeps electron platform with an active workspace connection', async () => {
+  getPlatform.mockReturnValue(PlatformType.Electron)
+  jest.mocked(WorkspaceConnection.isActive).mockReturnValue(true)
+
+  const module = await LoadProcessExplorerViewletModule.loadProcessExplorerViewletModule(PlatformType.Electron)
+
+  const state = module.create(7, 'process-explorer://', 1, 2, 3, 4)
+  const { platform } = state
+  expect(platform).toBe(PlatformType.Electron)
 })
 
 test.each([PlatformType.Electron, PlatformType.Remote])('loads worker-backed viewlet on platform %s', async (platform) => {

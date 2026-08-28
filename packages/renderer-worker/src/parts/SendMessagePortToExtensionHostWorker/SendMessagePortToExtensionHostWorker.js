@@ -92,9 +92,6 @@ export const sendMessagePortToSharedProcess = async (port, initialCommand, rpcId
 
 export const sendMessagePortToProcessExplorer = async (port) => {
   Assert.object(port)
-  if (await WorkspaceConnection.connectMessagePort('process-explorer', port)) {
-    return
-  }
   await SharedProcess.invokeAndTransfer('HandleMessagePortForProcessExplorer.handleMessagePortForProcessExplorer', port)
 }
 
