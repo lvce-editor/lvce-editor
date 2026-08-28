@@ -107,7 +107,8 @@
     "@lvce-editor/text-search-view": "^1.13.0",
     "@lvce-editor/text-search-worker": "^7.16.0",
     "@lvce-editor/title-bar-worker": "^4.20.3",
-    "@lvce-editor/update-worker": "^2.14.0"
+    "@lvce-editor/update-worker": "^2.14.0",
+    "@lvce-editor/virtual-dom-worker": "^11.16.2"
   },
   "devDependencies": {
     "@jest/globals": "^30.4.1",
