@@ -70,6 +70,7 @@ test('sendMessagePortToProcessExplorer', async () => {
 
   expect(SharedProcess.invokeAndTransfer).toHaveBeenCalledTimes(1)
   expect(SharedProcess.invokeAndTransfer).toHaveBeenCalledWith('HandleMessagePortForProcessExplorer.handleMessagePortForProcessExplorer', port)
+  expect(WorkspaceConnection.connectMessagePort).not.toHaveBeenCalled()
 })
 
 test('sendMessagePortToFileWatcherExplorer', async () => {
