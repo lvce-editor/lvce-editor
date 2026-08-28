@@ -25,6 +25,7 @@ const createTab = ({
   favicon = '',
   iframeSrc = '',
   inputValue = '',
+  isAudioPlaying = false,
   isLoading = false,
   title = 'New Tab',
 }) => ({
@@ -34,6 +35,7 @@ const createTab = ({
   favicon,
   iframeSrc,
   inputValue,
+  isAudioPlaying,
   isLoading,
   title: title || 'New Tab',
 })
@@ -63,6 +65,7 @@ const activateTab = (state, tabs, selectedTabIndex) => {
     canGoForward: tab.canGoForward,
     iframeSrc: tab.iframeSrc,
     inputValue: tab.inputValue,
+    isAudioPlaying: tab.isAudioPlaying,
     isLoading: tab.isLoading,
     selectedTabIndex,
     tabs,
@@ -95,6 +98,7 @@ export const create = (id, uri, x, y, width, height) => {
     canGoForward: true,
     canGoBack: true,
     isLoading: false,
+    isAudioPlaying: false,
     hasSuggestionsOverlay: false,
     selectedSuggestionIndex: -1,
     suggestions: [],
@@ -538,6 +542,7 @@ export const handleWillNavigate = (state, browserViewId, value) => {
   return updateTab(state, actualBrowserViewId, {
     favicon: '',
     iframeSrc: url,
+    isAudioPlaying: false,
     isLoading: true,
   })
 }
@@ -576,6 +581,11 @@ export const handlePageFaviconUpdated = (state, browserViewId, favicons) => {
   const [actualBrowserViewId, actualFavicons] = parseWebContentsEvent(state, browserViewId, favicons)
   const favicon = Array.isArray(actualFavicons) ? actualFavicons[0] || '' : ''
   return updateTab(state, actualBrowserViewId, { favicon })
+}
+
+export const handleAudioStateChanged = (state, browserViewId, audible) => {
+  const [actualBrowserViewId, isAudioPlaying] = parseWebContentsEvent(state, browserViewId, audible)
+  return updateTab(state, actualBrowserViewId, { isAudioPlaying: Boolean(isAudioPlaying) })
 }
 
 export const dispose = async (state) => {
