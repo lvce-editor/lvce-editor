@@ -521,7 +521,7 @@ export const showOverlay = async (state, overlayId) => {
     }
   }
   try {
-    const snapshot = await ElectronWebContentsViewFunctions.capturePage(state.browserViewId)
+    const snapshot = state.iframeSrc ? await ElectronWebContentsViewFunctions.capturePage(state.browserViewId) : ''
     await ElectronWebContentsViewFunctions.hide(state.browserViewId)
     return {
       ...state,

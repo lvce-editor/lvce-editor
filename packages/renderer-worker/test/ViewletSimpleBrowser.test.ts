@@ -735,7 +735,7 @@ test('showOverlay captures and hides the WebContentsView', async () => {
   ElectronWebContentsViewFunctions.capturePage.mockResolvedValue('data:image/png;base64,c25hcHNob3Q=')
   // @ts-ignore
   ElectronWebContentsViewFunctions.hide.mockResolvedValue(undefined)
-  const state = { ...ViewletSimpleBrowser.create(), browserViewId: 12 }
+  const state = { ...ViewletSimpleBrowser.create(), browserViewId: 12, iframeSrc: 'https://example.com' }
 
   const newState = await ViewletSimpleBrowser.showOverlay(state, 'quick-pick')
 
@@ -754,7 +754,7 @@ test('overlays share one snapshot and restore after the last overlay closes', as
   ElectronWebContentsViewFunctions.hide.mockResolvedValue(undefined)
   // @ts-ignore
   ElectronWebContentsViewFunctions.show.mockResolvedValue(undefined)
-  const state = { ...ViewletSimpleBrowser.create(), browserViewId: 12 }
+  const state = { ...ViewletSimpleBrowser.create(), browserViewId: 12, iframeSrc: 'https://example.com' }
 
   const withQuickPick = await ViewletSimpleBrowser.showOverlay(state, 'quick-pick')
   const withBoth = await ViewletSimpleBrowser.showOverlay(withQuickPick, 'menu')
@@ -824,6 +824,7 @@ test('applySuggestions captures the page and shows provider results', async () =
   const state = {
     ...ViewletSimpleBrowser.create(7),
     browserViewId: 12,
+    iframeSrc: 'https://example.com',
     inputValue: 'what is',
     suggestionsEnabled: true,
   }
@@ -837,6 +838,29 @@ test('applySuggestions captures the page and shows provider results', async () =
     snapshot: 'data:image/png;base64,c25hcHNob3Q=',
     suggestions: ['what is', 'what is my ip', 'what is love'],
   })
+})
+
+test('applySuggestions does not capture a page for an empty new tab', async () => {
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.hide.mockResolvedValue(undefined)
+  const state = {
+    ...ViewletSimpleBrowser.create(7),
+    browserViewId: 12,
+    inputValue: 'what is',
+    suggestionsEnabled: true,
+  }
+
+  const newState = await ViewletSimpleBrowser.applySuggestions(state, 7, 'what is', ['what is my ip'])
+
+  expect(newState).toMatchObject({
+    hasSuggestionsOverlay: true,
+    overlayIds: ['search-suggestions'],
+    selectedSuggestionIndex: 0,
+    snapshot: '',
+    suggestions: ['what is', 'what is my ip'],
+  })
+  expect(ElectronWebContentsViewFunctions.capturePage).not.toHaveBeenCalled()
+  expect(ElectronWebContentsViewFunctions.hide).toHaveBeenCalledWith(12)
 })
 
 test('applySuggestions closes an existing popup after a provider failure', async () => {
