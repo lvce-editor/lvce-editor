@@ -33,6 +33,19 @@ test('rerenders when suggestions change', () => {
   expect(ViewletSimpleBrowserRender.render[0].isEqual(state, newState)).toBe(false)
 })
 
+test('rerenders when the audio indicator setting changes', () => {
+  const oldState = {
+    ...state,
+    audioIndicatorEnabled: true,
+  }
+  const newState = {
+    ...state,
+    audioIndicatorEnabled: false,
+  }
+
+  expect(ViewletSimpleBrowserRender.render[0].isEqual(oldState, newState)).toBe(false)
+})
+
 test('renders suggestions incrementally and restores address input focus', () => {
   const newState = {
     ...state,

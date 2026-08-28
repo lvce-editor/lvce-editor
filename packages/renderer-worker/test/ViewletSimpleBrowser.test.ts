@@ -93,6 +93,13 @@ const KeyCode = await import('../src/parts/KeyCode/KeyCode.js')
 const KeyModifier = await import('../src/parts/KeyModifier/KeyModifier.js')
 const Preferences = await import('../src/parts/Preferences/Preferences.js')
 
+const browserTabKeyBindings = [
+  KeyModifier.CtrlCmd | KeyCode.KeyW,
+  KeyModifier.CtrlCmd | KeyCode.KeyT,
+  KeyModifier.CtrlCmd | KeyCode.Tab,
+  KeyModifier.CtrlCmd | KeyModifier.Shift | KeyCode.Tab,
+]
+
 const createTabsState = (selectedTabIndex = 0) => {
   const tabs = [
     {
@@ -183,10 +190,25 @@ test('loadContent', async () => {
   ElectronWebContentsViewFunctions.setIframeSrc.mockImplementation(() => {})
   const state = ViewletSimpleBrowser.create(0, 'simple-browser://', 0, 0, 0, 0)
   expect(await ViewletSimpleBrowser.loadContent(state)).toMatchObject({
+    audioIndicatorEnabled: true,
     headerHeight: 65,
     iframeSrc: 'https://example.com',
     tabsEnabled: true,
   })
+})
+
+test('loadContent disables the audio indicator through simpleBrowser.audioIndicator.enabled', async () => {
+  Preferences.state['simpleBrowser.audioIndicator.enabled'] = false
+  // @ts-ignore
+  ElectronWebContentsView.createWebContentsView.mockResolvedValue(1)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.setIframeSrc.mockResolvedValue(undefined)
+  const state = ViewletSimpleBrowser.create(0, 'simple-browser://', 0, 0, 300, 200)
+
+  const newState = await ViewletSimpleBrowser.loadContent(state)
+
+  expect(newState).toMatchObject({ audioIndicatorEnabled: false })
+  delete Preferences.state['simpleBrowser.audioIndicator.enabled']
 })
 
 test('loadContent disables the tab strip through simpleBrowser.tabs.enabled', async () => {
@@ -218,7 +240,7 @@ test('loadContent - restore id - same browser view', async () => {
   expect(ElectronWebContentsView.createWebContentsView).toHaveBeenCalledTimes(1)
   expect(ElectronWebContentsView.createWebContentsView).toHaveBeenCalledWith(1, 0)
   expect(ElectronWebContentsViewFunctions.setFallthroughKeyBindings).toHaveBeenCalledTimes(1)
-  expect(ElectronWebContentsViewFunctions.setFallthroughKeyBindings).toHaveBeenCalledWith(1, [])
+  expect(ElectronWebContentsViewFunctions.setFallthroughKeyBindings).toHaveBeenCalledWith(1, browserTabKeyBindings)
   expect(ElectronWebContentsViewFunctions.setIframeSrc).not.toHaveBeenCalled()
 })
 
@@ -236,7 +258,7 @@ test('loadContent - restore id - browser view does not exist yet', async () => {
   expect(ElectronWebContentsView.createWebContentsView).toHaveBeenCalledTimes(1)
   expect(ElectronWebContentsView.createWebContentsView).toHaveBeenCalledWith(1, 0)
   expect(ElectronWebContentsViewFunctions.setFallthroughKeyBindings).toHaveBeenCalledTimes(1)
-  expect(ElectronWebContentsViewFunctions.setFallthroughKeyBindings).toHaveBeenCalledWith(2, [])
+  expect(ElectronWebContentsViewFunctions.setFallthroughKeyBindings).toHaveBeenCalledWith(2, browserTabKeyBindings)
   expect(ElectronWebContentsViewFunctions.setIframeSrc).toHaveBeenCalledTimes(1)
   expect(ElectronWebContentsViewFunctions.setIframeSrc).toHaveBeenCalledWith(2, 'https://example.com')
 })
@@ -460,6 +482,43 @@ test('Ctrl+Shift+Tab from the focused web contents wraps to the previous browser
 
   expect(newState).toMatchObject({ browserViewId: 13, selectedTabIndex: 1, title: 'Two' })
   expect(ElectronWebContentsViewFunctions.focus).toHaveBeenCalledWith(13)
+})
+
+test('Ctrl+W from the focused web contents closes the current browser tab', async () => {
+  // @ts-ignore
+  ElectronWebContentsView.disposeWebContentsView.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.show.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.focus.mockResolvedValue(undefined)
+  const state = createTwoTabState()
+
+  const newState = await ViewletSimpleBrowser.handleKeyBinding(state, 12, KeyModifier.CtrlCmd | KeyCode.KeyW)
+
+  expect(newState).toMatchObject({ browserViewId: 13, selectedTabIndex: 0, title: 'Two' })
+  expect(newState.tabs).toHaveLength(1)
+  expect(ElectronWebContentsView.disposeWebContentsView).toHaveBeenCalledWith(12)
+  expect(ElectronWebContentsViewFunctions.focus).toHaveBeenCalledWith(13)
+})
+
+test('Ctrl+T from the focused web contents creates a new browser tab', async () => {
+  // @ts-ignore
+  ElectronWebContentsView.createWebContentsView.mockResolvedValue(14)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.hide.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.resizeWebContentsView.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.show.mockResolvedValue(undefined)
+  const state = createTwoTabState()
+
+  const newState = await ViewletSimpleBrowser.handleKeyBinding(state, 12, KeyModifier.CtrlCmd | KeyCode.KeyT)
+
+  expect(newState).toMatchObject({ browserViewId: 14, focusAddressVersion: 1, selectedTabIndex: 2, title: 'New Tab' })
+  expect(newState.tabs).toHaveLength(3)
+  expect(ElectronWebContentsViewFunctions.hide).toHaveBeenCalledWith(12)
+  expect(ElectronWebContentsViewFunctions.show).toHaveBeenCalledWith(14)
+  expect(ElectronWindow.focus).toHaveBeenCalledTimes(1)
 })
 
 test('ignores keybindings from another simple browser instance', async () => {
@@ -745,7 +804,7 @@ test('showOverlay captures and hides the WebContentsView', async () => {
   ElectronWebContentsViewFunctions.capturePage.mockResolvedValue('data:image/png;base64,c25hcHNob3Q=')
   // @ts-ignore
   ElectronWebContentsViewFunctions.hide.mockResolvedValue(undefined)
-  const state = { ...ViewletSimpleBrowser.create(), browserViewId: 12 }
+  const state = { ...ViewletSimpleBrowser.create(), browserViewId: 12, iframeSrc: 'https://example.com' }
 
   const newState = await ViewletSimpleBrowser.showOverlay(state, 'quick-pick')
 
@@ -764,7 +823,7 @@ test('overlays share one snapshot and restore after the last overlay closes', as
   ElectronWebContentsViewFunctions.hide.mockResolvedValue(undefined)
   // @ts-ignore
   ElectronWebContentsViewFunctions.show.mockResolvedValue(undefined)
-  const state = { ...ViewletSimpleBrowser.create(), browserViewId: 12 }
+  const state = { ...ViewletSimpleBrowser.create(), browserViewId: 12, iframeSrc: 'https://example.com' }
 
   const withQuickPick = await ViewletSimpleBrowser.showOverlay(state, 'quick-pick')
   const withBoth = await ViewletSimpleBrowser.showOverlay(withQuickPick, 'menu')
@@ -834,6 +893,7 @@ test('applySuggestions captures the page and shows provider results', async () =
   const state = {
     ...ViewletSimpleBrowser.create(7),
     browserViewId: 12,
+    iframeSrc: 'https://example.com',
     inputValue: 'what is',
     suggestionsEnabled: true,
   }
@@ -847,6 +907,29 @@ test('applySuggestions captures the page and shows provider results', async () =
     snapshot: 'data:image/png;base64,c25hcHNob3Q=',
     suggestions: ['what is', 'what is my ip', 'what is love'],
   })
+})
+
+test('applySuggestions does not capture a page for an empty new tab', async () => {
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.hide.mockResolvedValue(undefined)
+  const state = {
+    ...ViewletSimpleBrowser.create(7),
+    browserViewId: 12,
+    inputValue: 'what is',
+    suggestionsEnabled: true,
+  }
+
+  const newState = await ViewletSimpleBrowser.applySuggestions(state, 7, 'what is', ['what is my ip'])
+
+  expect(newState).toMatchObject({
+    hasSuggestionsOverlay: true,
+    overlayIds: ['search-suggestions'],
+    selectedSuggestionIndex: 0,
+    snapshot: '',
+    suggestions: ['what is', 'what is my ip'],
+  })
+  expect(ElectronWebContentsViewFunctions.capturePage).not.toHaveBeenCalled()
+  expect(ElectronWebContentsViewFunctions.hide).toHaveBeenCalledWith(12)
 })
 
 test('applySuggestions closes an existing popup after a provider failure', async () => {

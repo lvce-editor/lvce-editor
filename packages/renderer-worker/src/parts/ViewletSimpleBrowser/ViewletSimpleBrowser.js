@@ -18,8 +18,15 @@ import * as SimpleBrowserPreferences from '../SimpleBrowserPreferences/SimpleBro
 
 const navigationHeaderHeight = 30
 const tabsHeaderHeight = 35
+const closeTabKeyBinding = KeyModifier.CtrlCmd | KeyCode.KeyW
+const createNewTabKeyBinding = KeyModifier.CtrlCmd | KeyCode.KeyT
 const focusNextTabKeyBinding = KeyModifier.CtrlCmd | KeyCode.Tab
 const focusPreviousTabKeyBinding = KeyModifier.CtrlCmd | KeyModifier.Shift | KeyCode.Tab
+const browserTabKeyBindings = [closeTabKeyBinding, createNewTabKeyBinding, focusNextTabKeyBinding, focusPreviousTabKeyBinding]
+
+const getFallThroughKeyBindings = (keyBindings) => {
+  return [...new Set([...GetFallThroughKeyBindings.getFallThroughKeyBindings(keyBindings), ...browserTabKeyBindings])]
+}
 
 const getHeaderHeight = (tabsEnabled) => navigationHeaderHeight + (tabsEnabled ? tabsHeaderHeight : 0)
 
@@ -119,6 +126,7 @@ export const create = (id, uri, x, y, width, height) => {
     suggestionsEnabled: false,
     shortcuts: [],
     tabs: [],
+    audioIndicatorEnabled: true,
     tabsEnabled: true,
     selectedTabIndex: 0,
     zoomLevel: 0,
@@ -144,13 +152,14 @@ export const backgroundLoadContent = async (state, savedState) => {
   const { x, y, width, height } = state
   const iframeSrc = getUrlFromSavedState(savedState)
   const shortcuts = SimpleBrowserPreferences.getShortCuts()
+  const audioIndicatorEnabled = Preferences.get('simpleBrowser.audioIndicator.enabled') !== false
   const suggestionsEnabled = Preferences.get('simpleBrowser.suggestions')
   const tabsEnabled = Preferences.get('simpleBrowser.tabs.enabled') !== false
   const headerHeight = getHeaderHeight(tabsEnabled)
   // TODO since browser view is not visible at this point
   // it is not necessary to load keybindings for it
   const keyBindings = await KeyBindingsInitial.getKeyBindings()
-  const fallThroughKeyBindings = GetFallThroughKeyBindings.getFallThroughKeyBindings(keyBindings)
+  const fallThroughKeyBindings = getFallThroughKeyBindings(keyBindings)
   const browserViewId = await ElectronWebContentsView.createWebContentsView(0)
   await ElectronWebContentsViewFunctions.setFallthroughKeyBindings(browserViewId, fallThroughKeyBindings)
   Assert.number(browserViewId)
@@ -160,6 +169,7 @@ export const backgroundLoadContent = async (state, savedState) => {
   const tabs = [createTab({ browserViewId, iframeSrc, inputValue: iframeSrc, title })]
   return {
     browserViewId,
+    audioIndicatorEnabled,
     headerHeight,
     selectedTabIndex: 0,
     tabs,
@@ -188,6 +198,7 @@ export const loadContent = async (state, savedState) => {
   const iframeSrc = getUrlFromSavedState(savedState)
   // TODO load keybindings in parallel with creating browserview
   const keyBindings = await KeyBindingsInitial.getKeyBindings()
+  const audioIndicatorEnabled = Preferences.get('simpleBrowser.audioIndicator.enabled') !== false
   const suggestionsEnabled = Preferences.get('simpleBrowser.suggestions')
   const tabsEnabled = Preferences.get('simpleBrowser.tabs.enabled') !== false
   const headerHeight = getHeaderHeight(tabsEnabled)
@@ -196,7 +207,7 @@ export const loadContent = async (state, savedState) => {
   const browserViewWidth = width
   const browserViewHeight = height - headerHeight
   const shortcuts = SimpleBrowserPreferences.getShortCuts()
-  const fallThroughKeyBindings = GetFallThroughKeyBindings.getFallThroughKeyBindings(keyBindings)
+  const fallThroughKeyBindings = getFallThroughKeyBindings(keyBindings)
 
   if (id) {
     const actualId = await ElectronWebContentsView.createWebContentsView(id, uid)
@@ -218,6 +229,7 @@ export const loadContent = async (state, savedState) => {
     })
     return {
       ...state,
+      audioIndicatorEnabled,
       browserViewId: actualId,
       iframeSrc,
       inputValue: iframeSrc,
@@ -242,6 +254,7 @@ export const loadContent = async (state, savedState) => {
   const { title, canGoBack, canGoForward, isAudioMuted } = await ElectronWebContentsViewFunctions.getStats(browserViewId)
   return {
     ...state,
+    audioIndicatorEnabled,
     iframeSrc,
     inputValue: iframeSrc,
     title,
@@ -521,7 +534,7 @@ export const showOverlay = async (state, overlayId) => {
     }
   }
   try {
-    const snapshot = await ElectronWebContentsViewFunctions.capturePage(state.browserViewId)
+    const snapshot = state.iframeSrc ? await ElectronWebContentsViewFunctions.capturePage(state.browserViewId) : ''
     await ElectronWebContentsViewFunctions.hide(state.browserViewId)
     return {
       ...state,
@@ -708,6 +721,12 @@ export const handleWillNavigate = (state, browserViewId, value) => {
 export const handleKeyBinding = async (state, browserViewId, keyBinding) => {
   if (Number(browserViewId) !== state.browserViewId) {
     return state
+  }
+  if (keyBinding === closeTabKeyBinding) {
+    return closeCurrentTab(state)
+  }
+  if (keyBinding === createNewTabKeyBinding) {
+    return createNewTab(state)
   }
   if (keyBinding === focusNextTabKeyBinding && state.tabs.length > 0) {
     return selectTab(state, (state.selectedTabIndex + 1) % state.tabs.length)

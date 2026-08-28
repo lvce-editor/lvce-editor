@@ -95,6 +95,24 @@ test('omits the audio icon for a silent tab', () => {
   expect(dom).not.toContainEqual(expect.objectContaining({ className: 'SimpleBrowserTabAudio' }))
 })
 
+test('omits the audio icon when the audio indicator is disabled', () => {
+  const dom = GetSimpleBrowserVirtualDom.getSimpleBrowserVirtualDom(
+    false,
+    false,
+    false,
+    '',
+    '',
+    [],
+    -1,
+    [{ favicon: '', isAudioPlaying: true, title: 'Example' }],
+    0,
+    true,
+    false,
+  )
+
+  expect(dom).not.toContainEqual(expect.objectContaining({ className: 'SimpleBrowserTabAudio' }))
+})
+
 test('omits the tab strip when tabs are disabled', () => {
   const dom = GetSimpleBrowserVirtualDom.getSimpleBrowserVirtualDom(false, false, false, '', '', [], -1, [], 0, false)
 

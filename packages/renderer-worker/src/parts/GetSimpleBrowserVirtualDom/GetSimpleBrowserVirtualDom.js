@@ -17,6 +17,7 @@ export const getSimpleBrowserVirtualDom = (
   tabs = [],
   selectedTabIndex = 0,
   tabsEnabled = true,
+  audioIndicatorEnabled = true,
 ) => {
   /** @type {any[]} */
   const dom = [
@@ -47,7 +48,7 @@ export const getSimpleBrowserVirtualDom = (
         onClick: DomEventListenerFunctions.HandleClickSimpleBrowserTab,
         onContextMenu: DomEventListenerFunctions.HandleContextMenuSimpleBrowserTab,
         title: tab.title || 'New Tab',
-        childCount: 2 + (tab.favicon ? 1 : 0) + (tab.isAudioPlaying ? 1 : 0),
+        childCount: 2 + (tab.favicon ? 1 : 0) + (audioIndicatorEnabled && tab.isAudioPlaying ? 1 : 0),
       })
       if (tab.favicon) {
         dom.push({
@@ -67,7 +68,7 @@ export const getSimpleBrowserVirtualDom = (
         },
         text(tab.title || 'New Tab'),
       )
-      if (tab.isAudioPlaying) {
+      if (audioIndicatorEnabled && tab.isAudioPlaying) {
         dom.push(
           {
             type: VirtualDomElements.Span,
