@@ -418,9 +418,24 @@ test('updates the matching background tab from web contents events', async () =>
 
   const withTitle = await ViewletSimpleBrowser.handleTitleUpdated(state, 13, 'Updated Two')
   const withFavicon = ViewletSimpleBrowser.handlePageFaviconUpdated(withTitle, 13, ['https://two.example/favicon.png'])
+  const withAudio = ViewletSimpleBrowser.handleAudioStateChanged(withFavicon, 13, true)
 
-  expect(withFavicon.title).toBe('')
-  expect(withFavicon.tabs[1]).toMatchObject({ favicon: 'https://two.example/favicon.png', title: 'Updated Two' })
+  expect(withAudio.title).toBe('')
+  expect(withAudio.tabs[1]).toMatchObject({ favicon: 'https://two.example/favicon.png', isAudioPlaying: true, title: 'Updated Two' })
+})
+
+test('updates audio state for the selected tab', () => {
+  const state = {
+    ...ViewletSimpleBrowser.create(),
+    browserViewId: 12,
+    tabs: [{ browserViewId: 12, isAudioPlaying: false }],
+  }
+
+  const playing = ViewletSimpleBrowser.handleAudioStateChanged(state, 12, true)
+  const paused = ViewletSimpleBrowser.handleAudioStateChanged(playing, 12, false)
+
+  expect(playing).toMatchObject({ isAudioPlaying: true, tabs: [{ browserViewId: 12, isAudioPlaying: true }] })
+  expect(paused).toMatchObject({ isAudioPlaying: false, tabs: [{ browserViewId: 12, isAudioPlaying: false }] })
 })
 
 test('closing a tab disposes only its web contents view', async () => {

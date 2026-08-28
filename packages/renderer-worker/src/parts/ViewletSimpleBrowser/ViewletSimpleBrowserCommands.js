@@ -12,6 +12,7 @@ export const Commands = {
   createNewTab: SimpleBrowser.createNewTab,
   getDomTree: ViewletSimpleBrowserGetDomTree.getDomTree,
   go: SimpleBrowser.go,
+  handleAudioStateChanged: SimpleBrowser.handleAudioStateChanged,
   handleDidNavigate: SimpleBrowser.handleDidNavigate,
   handleDidNavigationCancel: SimpleBrowser.handleDidNavigationCancel,
   handleInput: SimpleBrowser.handleInput,
@@ -44,6 +45,7 @@ export const LazyCommands = {
 }
 
 export const Events = {
+  'browser-view-audio-state-changed': SimpleBrowser.handleAudioStateChanged,
   'browser-view-context-menu': ViewletSimpleBrowserHandleContextMenu.handleContextMenu,
   'browser-view-did-navigate': SimpleBrowser.handleDidNavigate,
   'browser-view-key-binding': SimpleBrowser.handleKeyBinding,

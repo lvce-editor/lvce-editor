@@ -46,6 +46,11 @@
   mask-image: url(/icons/play.svg);
 }
 
+.MaskIconUnmute,
+.IconUnmute {
+  mask-image: url(/icons/unmute.svg);
+}
+
 .NotificationBellIcon {
   mask-image: url(/icons/bell.svg);
 }

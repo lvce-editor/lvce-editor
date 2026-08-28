@@ -424,6 +424,7 @@ export const commandMap = {
   'SimpleBrowser.closeSuggestions': lazy('SimpleBrowser.closeSuggestions'),
   'SimpleBrowser.getDomTree': lazy('SimpleBrowser.getDomTree'),
   'SimpleBrowser.go': lazy('SimpleBrowser.go'),
+  'SimpleBrowser.handleAudioStateChanged': lazy('SimpleBrowser.handleAudioStateChanged'),
   'SimpleBrowser.handleDidNavigate': lazy('SimpleBrowser.handleDidNavigate'),
   'SimpleBrowser.handleDidNavigationCancel': lazy('SimpleBrowser.handleDidNavigationCancel'),
   'SimpleBrowser.handleInput': lazy('SimpleBrowser.handleInput'),
