@@ -15,7 +15,21 @@ jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
 
 const SharedProcess = await import('../src/parts/SharedProcess/SharedProcess.js')
 const ElectronBrowserView = await import('../src/parts/ElectronBrowserView/ElectronBrowserView.js')
+const ElectronBrowserViewIpc = await import('../src/parts/ElectronBrowserView/ElectronBrowserView.ipc.js')
 const GlobalEventBus = await import('../src/parts/GlobalEventBus/GlobalEventBus.js')
+
+test('registers the audio state handler with the IPC module', () => {
+  expect(ElectronBrowserViewIpc.Commands.handleAudioStateChanged).toBe(ElectronBrowserView.handleAudioStateChanged)
+})
+
+test('forwards web contents audio state changes through the global event bus', () => {
+  const listener = jest.fn()
+  GlobalEventBus.addListener('browser-view-audio-state-changed', listener)
+
+  ElectronBrowserView.handleAudioStateChanged(12, true)
+
+  expect(listener).toHaveBeenCalledWith(12, true)
+})
 
 test('forwards web contents keybindings through the global event bus', async () => {
   const listener = jest.fn()
