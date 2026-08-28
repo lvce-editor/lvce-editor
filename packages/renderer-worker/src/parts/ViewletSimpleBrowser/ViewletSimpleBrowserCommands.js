@@ -44,6 +44,7 @@ export const LazyCommands = {
 
 export const Events = {
   'browser-view-did-navigate': SimpleBrowser.handleDidNavigate,
+  'browser-view-key-binding': SimpleBrowser.handleKeyBinding,
   'browser-view-page-favicon-updated': SimpleBrowser.handlePageFaviconUpdated,
   'browser-view-title-updated': SimpleBrowser.handleTitleUpdated,
   'browser-view-will-navigate': SimpleBrowser.handleWillNavigate,
