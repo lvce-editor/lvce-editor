@@ -4,6 +4,7 @@ export const name = 'ElectronBrowserView'
 
 export const Commands = {
   handleDidNavigate: ElectronBrowserView.handleDidNavigate,
+  handleKeyBinding: ElectronBrowserView.handleKeyBinding,
   handlePageFaviconUpdated: ElectronBrowserView.handlePageFaviconUpdated,
   handleTitleUpdated: ElectronBrowserView.handleTitleUpdated,
   handleWillNavigate: ElectronBrowserView.handleWillNavigate,

@@ -46,7 +46,7 @@ export const getSimpleBrowserVirtualDom = (
         'data-index': index,
         onClick: DomEventListenerFunctions.HandleClickSimpleBrowserTab,
         title: tab.title || 'New Tab',
-        childCount: tab.favicon ? 3 : 2,
+        childCount: 2 + (tab.favicon ? 1 : 0) + (tab.isAudioPlaying ? 1 : 0),
       })
       if (tab.favicon) {
         dom.push({
@@ -65,6 +65,25 @@ export const getSimpleBrowserVirtualDom = (
           childCount: 1,
         },
         text(tab.title || 'New Tab'),
+      )
+      if (tab.isAudioPlaying) {
+        dom.push(
+          {
+            type: VirtualDomElements.Span,
+            className: 'SimpleBrowserTabAudio',
+            ariaLabel: 'This tab is playing audio',
+            role: AriaRoles.Image,
+            title: 'This tab is playing audio',
+            childCount: 1,
+          },
+          {
+            type: VirtualDomElements.Div,
+            className: 'MaskIcon MaskIconUnmute',
+            childCount: 0,
+          },
+        )
+      }
+      dom.push(
         {
           type: VirtualDomElements.Button,
           className: 'SimpleBrowserTabClose',

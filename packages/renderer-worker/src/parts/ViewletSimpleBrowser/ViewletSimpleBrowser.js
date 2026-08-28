@@ -8,13 +8,17 @@ import * as ElectronWebContentsViewFunctions from '../ElectronWebContentsViewFun
 import * as GetFallThroughKeyBindings from '../GetFallThroughKeyBindings/GetFallThroughKeyBindings.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as IframeSrc from '../IframeSrc/IframeSrc.js'
+import * as KeyCode from '../KeyCode/KeyCode.js'
 import * as KeyBindings from '../KeyBindings/KeyBindings.js'
 import * as KeyBindingsInitial from '../KeyBindingsInitial/KeyBindingsInitial.js'
+import * as KeyModifier from '../KeyModifier/KeyModifier.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as SimpleBrowserPreferences from '../SimpleBrowserPreferences/SimpleBrowserPreferences.js'
 
 const navigationHeaderHeight = 30
 const tabsHeaderHeight = 35
+const focusNextTabKeyBinding = KeyModifier.CtrlCmd | KeyCode.Tab
+const focusPreviousTabKeyBinding = KeyModifier.CtrlCmd | KeyModifier.Shift | KeyCode.Tab
 
 const getHeaderHeight = (tabsEnabled) => navigationHeaderHeight + (tabsEnabled ? tabsHeaderHeight : 0)
 
@@ -25,6 +29,7 @@ const createTab = ({
   favicon = '',
   iframeSrc = '',
   inputValue = '',
+  isAudioPlaying = false,
   isLoading = false,
   title = 'New Tab',
   zoomLevel = 0,
@@ -35,6 +40,7 @@ const createTab = ({
   favicon,
   iframeSrc,
   inputValue,
+  isAudioPlaying,
   isLoading,
   title: title || 'New Tab',
   zoomLevel,
@@ -65,6 +71,7 @@ const activateTab = (state, tabs, selectedTabIndex) => {
     canGoForward: tab.canGoForward,
     iframeSrc: tab.iframeSrc,
     inputValue: tab.inputValue,
+    isAudioPlaying: tab.isAudioPlaying,
     isLoading: tab.isLoading,
     selectedTabIndex,
     tabs,
@@ -98,6 +105,7 @@ export const create = (id, uri, x, y, width, height) => {
     canGoForward: true,
     canGoBack: true,
     isLoading: false,
+    isAudioPlaying: false,
     hasSuggestionsOverlay: false,
     selectedSuggestionIndex: -1,
     suggestions: [],
@@ -139,7 +147,7 @@ export const backgroundLoadContent = async (state, savedState) => {
   const keyBindings = await KeyBindingsInitial.getKeyBindings()
   const fallThroughKeyBindings = GetFallThroughKeyBindings.getFallThroughKeyBindings(keyBindings)
   const browserViewId = await ElectronWebContentsView.createWebContentsView(0)
-  await ElectronWebContentsViewFunctions.setFallthroughKeyBindings(fallThroughKeyBindings)
+  await ElectronWebContentsViewFunctions.setFallthroughKeyBindings(browserViewId, fallThroughKeyBindings)
   Assert.number(browserViewId)
   await ElectronWebContentsViewFunctions.resizeWebContentsView(browserViewId, x, y + headerHeight, width, height - headerHeight)
   const { newTitle } = await ElectronWebContentsViewFunctions.setIframeSrc(browserViewId, iframeSrc)
@@ -183,10 +191,11 @@ export const loadContent = async (state, savedState) => {
   const browserViewWidth = width
   const browserViewHeight = height - headerHeight
   const shortcuts = SimpleBrowserPreferences.getShortCuts()
+  const fallThroughKeyBindings = GetFallThroughKeyBindings.getFallThroughKeyBindings(keyBindings)
 
   if (id) {
     const actualId = await ElectronWebContentsView.createWebContentsView(id, uid)
-    await ElectronWebContentsViewFunctions.setFallthroughKeyBindings(keyBindings)
+    await ElectronWebContentsViewFunctions.setFallthroughKeyBindings(actualId, fallThroughKeyBindings)
     await ElectronWebContentsViewFunctions.resizeWebContentsView(actualId, browserViewX, browserViewY, browserViewWidth, browserViewHeight)
     if (id !== actualId) {
       await ElectronWebContentsViewFunctions.setIframeSrc(actualId, iframeSrc)
@@ -218,9 +227,8 @@ export const loadContent = async (state, savedState) => {
     }
   }
 
-  const fallThroughKeyBindings = GetFallThroughKeyBindings.getFallThroughKeyBindings(keyBindings)
   const browserViewId = await ElectronWebContentsView.createWebContentsView(/* restoreId */ 0, uid)
-  await ElectronWebContentsViewFunctions.setFallthroughKeyBindings(fallThroughKeyBindings)
+  await ElectronWebContentsViewFunctions.setFallthroughKeyBindings(browserViewId, fallThroughKeyBindings)
   await ElectronWebContentsViewFunctions.resizeWebContentsView(browserViewId, browserViewX, browserViewY, browserViewWidth, browserViewHeight)
   Assert.number(browserViewId)
   await ElectronWebContentsViewFunctions.setIframeSrc(browserViewId, iframeSrc)
@@ -547,11 +555,21 @@ export const handleWillNavigate = (state, browserViewId, value) => {
   return updateTab(state, actualBrowserViewId, {
     favicon: '',
     iframeSrc: url,
+    isAudioPlaying: false,
     isLoading: true,
   })
 }
 
-export const handleKeyBinding = async (state, keyBinding) => {
+export const handleKeyBinding = async (state, browserViewId, keyBinding) => {
+  if (Number(browserViewId) !== state.browserViewId) {
+    return state
+  }
+  if (keyBinding === focusNextTabKeyBinding && state.tabs.length > 0) {
+    return selectTab(state, (state.selectedTabIndex + 1) % state.tabs.length)
+  }
+  if (keyBinding === focusPreviousTabKeyBinding && state.tabs.length > 0) {
+    return selectTab(state, (state.selectedTabIndex - 1 + state.tabs.length) % state.tabs.length)
+  }
   await KeyBindings.handleKeyBinding(keyBinding)
   return state
 }
@@ -585,6 +603,11 @@ export const handlePageFaviconUpdated = (state, browserViewId, favicons) => {
   const [actualBrowserViewId, actualFavicons] = parseWebContentsEvent(state, browserViewId, favicons)
   const favicon = Array.isArray(actualFavicons) ? actualFavicons[0] || '' : ''
   return updateTab(state, actualBrowserViewId, { favicon })
+}
+
+export const handleAudioStateChanged = (state, browserViewId, audible) => {
+  const [actualBrowserViewId, isAudioPlaying] = parseWebContentsEvent(state, browserViewId, audible)
+  return updateTab(state, actualBrowserViewId, { isAudioPlaying: Boolean(isAudioPlaying) })
 }
 
 export const dispose = async (state) => {
