@@ -60,6 +60,7 @@
 .SimpleBrowserTabFavicon {
   flex: 0 0 16px;
   height: 16px;
+  margin-inline-end: 2px;
   object-fit: contain;
   width: 16px;
 }
