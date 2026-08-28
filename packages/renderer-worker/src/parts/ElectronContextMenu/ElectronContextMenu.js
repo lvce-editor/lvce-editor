@@ -11,6 +11,11 @@ const convertMenuItem = (menuItem) => {
       return {
         type: ElectronMenuItemFlags.Separator,
       }
+    case MenuItemFlags.Disabled:
+      return {
+        enabled: false,
+        label,
+      }
     default:
       return {
         label,

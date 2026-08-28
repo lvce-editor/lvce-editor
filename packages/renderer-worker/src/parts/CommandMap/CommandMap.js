@@ -97,6 +97,7 @@ export const commandMap = {
   'Download.downloadToDownloadsFolder': lazy('Download.downloadToDownloadsFolder'),
   'EditorDiagnostics.hydrate': lazy('EditorDiagnostics.hydrate'),
   'EditorError.3900': lazy('EditorError.3900'),
+  'ElectronBrowserView.handleContextMenu': lazy('ElectronBrowserView.handleContextMenu'),
   'ElectronBrowserView.handleDidNavigate': lazy('ElectronBrowserView.handleDidNavigate'),
   'ElectronBrowserView.handlePageFaviconUpdated': lazy('ElectronBrowserView.handlePageFaviconUpdated'),
   'ElectronBrowserView.handleTitleUpdated': lazy('ElectronBrowserView.handleTitleUpdated'),

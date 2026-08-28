@@ -7,6 +7,8 @@ const dispatch =
   }
 export const handleDidNavigate = dispatch('browser-view-did-navigate')
 
+export const handleContextMenu = dispatch('browser-view-context-menu')
+
 export const handleKeyBinding = dispatch('browser-view-key-binding')
 
 export const handlePageFaviconUpdated = dispatch('browser-view-page-favicon-updated')

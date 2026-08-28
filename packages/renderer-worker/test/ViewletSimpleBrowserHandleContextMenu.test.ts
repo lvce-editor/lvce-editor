@@ -16,7 +16,12 @@ jest.unstable_mockModule('../src/parts/ElectronContextMenu/ElectronContextMenu.j
 const ViewletSimpleBrowser = await import('../src/parts/ViewletSimpleBrowser/ViewletSimpleBrowser.js')
 
 const ElectronContextMenu = await import('../src/parts/ElectronContextMenu/ElectronContextMenu.js')
+const ViewletSimpleBrowserCommands = await import('../src/parts/ViewletSimpleBrowser/ViewletSimpleBrowserCommands.js')
 const ViewletSimpleBrowserHandleContextMenu = await import('../src/parts/ViewletSimpleBrowser/ViewletSimpleBrowserHandleContextMenu.js')
+
+test('registers the browser view context menu event', () => {
+  expect(ViewletSimpleBrowserCommands.Events['browser-view-context-menu']).toBe(ViewletSimpleBrowserHandleContextMenu.handleContextMenu)
+})
 
 test('openContextMenu', async () => {
   // @ts-ignore
@@ -29,5 +34,10 @@ test('openContextMenu', async () => {
     y: 20,
   })
   expect(ElectronContextMenu.openContextMenu).toHaveBeenCalledTimes(1)
-  expect(ElectronContextMenu.openContextMenu).toHaveBeenCalledWith(30, 95, MenuEntryId.SimpleBrowser, 30, 95, { x: 20, y: 20 })
+  expect(ElectronContextMenu.openContextMenu).toHaveBeenCalledWith(30, 95, MenuEntryId.SimpleBrowser, 30, 95, {
+    canGoBack: true,
+    canGoForward: true,
+    x: 20,
+    y: 20,
+  })
 })

@@ -282,17 +282,8 @@ export const createNewTab = async (state) => {
   return { ...newState, focusAddressVersion: newState.focusAddressVersion + 1 }
 }
 
-export const handleWindowOpen = async (state, browserViewId, url, disposition) => {
-  const { hasSuggestionsOverlay, tabs: oldTabs, tabsEnabled } = state
-  const ownsWebContentsView = oldTabs.some((tab) => tab.browserViewId === Number(browserViewId))
-  const openExternalLinks = Preferences.get('simpleBrowser.openExternalLinks') === 'externalBrowser'
-  if (!ownsWebContentsView) {
-    return state
-  }
-  if (openExternalLinks || !tabsEnabled) {
-    await Command.execute('Open.openExternal', url)
-    return state
-  }
+export const openTab = async (state, url, disposition) => {
+  const { hasSuggestionsOverlay } = state
   const currentState = hasSuggestionsOverlay ? await closeSuggestions(state) : state
   const emptyTab = await createEmptyTab(currentState)
   const tab = {
@@ -312,6 +303,20 @@ export const handleWindowOpen = async (state, browserViewId, url, disposition) =
   await ElectronWebContentsViewFunctions.show(tab.browserViewId)
   await ElectronWebContentsViewFunctions.focus(tab.browserViewId)
   return activateTab(currentState, tabs, currentState.tabs.length)
+}
+
+export const handleWindowOpen = async (state, browserViewId, url, disposition) => {
+  const { tabs: oldTabs, tabsEnabled } = state
+  const ownsWebContentsView = oldTabs.some((tab) => tab.browserViewId === Number(browserViewId))
+  const openExternalLinks = Preferences.get('simpleBrowser.openExternalLinks') === 'externalBrowser'
+  if (!ownsWebContentsView) {
+    return state
+  }
+  if (openExternalLinks || !tabsEnabled) {
+    await Command.execute('Open.openExternal', url)
+    return state
+  }
+  return openTab(state, url, disposition)
 }
 
 export const selectTab = async (state, index) => {
