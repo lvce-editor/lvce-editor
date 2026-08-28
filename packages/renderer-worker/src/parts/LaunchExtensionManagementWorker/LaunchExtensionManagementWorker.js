@@ -5,11 +5,20 @@ import * as IpcParent from '../IpcParent/IpcParent.js'
 import * as IpcParentType from '../IpcParentType/IpcParentType.js'
 import * as JsonRpc from '../JsonRpc/JsonRpc.js'
 import * as Platform from '../Platform/Platform.js'
+import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
+
+const getExtensionDevelopmentConfig = (platform) => {
+  if (platform === PlatformType.Web) {
+    return undefined
+  }
+  return SharedProcess.invoke('ExtensionManagement.getLinkedExtensionDevelopmentConfig')
+}
 
 export const launchExtensionManagementWorker = async () => {
   const name = 'Extension Management Worker'
-  const developmentConfig = await SharedProcess.invoke('ExtensionManagement.getLinkedExtensionDevelopmentConfig')
+  const platform = Platform.getPlatform()
+  const developmentConfig = await getExtensionDevelopmentConfig(platform)
   const ipc = await IpcParent.create({
     method: IpcParentType.ModuleWorkerAndWorkaroundForChromeDevtoolsBug,
     name,
@@ -19,6 +28,6 @@ export const launchExtensionManagementWorker = async () => {
     ),
   })
   HandleIpc.handleIpc(ipc)
-  await JsonRpc.invoke(ipc, 'Extensions.initialize', Platform.getPlatform(), developmentConfig)
+  await JsonRpc.invoke(ipc, 'Extensions.initialize', platform, developmentConfig)
   return ipc
 }
