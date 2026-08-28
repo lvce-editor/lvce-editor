@@ -9,6 +9,7 @@ export const test: Test = async ({ Command, expect, Locator }) => {
 
   const root = Locator('.CookieImportView')
   await expect(root).toBeVisible()
+  await expect(root).toHaveCSS('flex-grow', '1')
   await expect(root.locator('h1')).toHaveText('Import Firefox Cookies')
   await expect(root.locator('#CookieImportBrowser')).toHaveValue('Firefox')
   await expect(root.locator('#CookieImportProfile')).toHaveValue('Default profile')
