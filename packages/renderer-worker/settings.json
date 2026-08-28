@@ -141,6 +141,14 @@
   },
   {
     "category": "features",
+    "description": "Controls whether tabs playing audio show an audio indicator in the simple browser",
+    "heading": "Simple Browser Audio Indicator",
+    "id": "simpleBrowser.audioIndicator.enabled",
+    "type": 3,
+    "value": true
+  },
+  {
+    "category": "features",
     "description": "Shows search suggestions in the simple browser",
     "heading": "Simple Browser Suggestions",
     "id": "simpleBrowser.suggestions",

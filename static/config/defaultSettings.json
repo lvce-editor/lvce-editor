@@ -51,6 +51,7 @@
 
   "sessionReplay.enabled": false,
 
+  "simpleBrowser.audioIndicator.enabled": true,
   "simpleBrowser.suggestions": false,
   "simpleBrowser.shortcuts": [],
   "simpleBrowser.tabs.enabled": true,

@@ -64,6 +64,7 @@ const getDom = (state) => {
     state.tabs,
     state.selectedTabIndex,
     state.tabsEnabled,
+    state.audioIndicatorEnabled,
   )
 }
 
@@ -79,6 +80,7 @@ const renderDom = {
       oldState.selectedSuggestionIndex === newState.selectedSuggestionIndex &&
       oldState.selectedTabIndex === newState.selectedTabIndex &&
       oldState.tabsEnabled === newState.tabsEnabled &&
+      oldState.audioIndicatorEnabled === newState.audioIndicatorEnabled &&
       areTabsEqual(oldState.tabs, newState.tabs)
     )
   },
