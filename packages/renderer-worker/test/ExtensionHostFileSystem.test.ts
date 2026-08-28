@@ -41,6 +41,12 @@ test('readFile', async () => {
   expect(await ExtensionHostFileSystem.readFile('memfs:///test.txt')).toBe('test content')
 })
 
+test('readFile converts binary provider content to text', async () => {
+  invoke.mockResolvedValue({ found: true, result: new Blob(['test content']) })
+
+  await expect(ExtensionHostFileSystem.readFile('remote-ssh:///workspace/test.txt')).resolves.toBe('test content')
+})
+
 test('readFile - wrapped extension host uri', async () => {
   // @ts-ignore
   ExtensionHostShared.executeProvider.mockImplementation(async () => {
