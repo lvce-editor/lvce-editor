@@ -10,6 +10,14 @@ const disposeFileSystemWorker = jest.fn<() => Promise<void>>(async () => {})
 const isTest = jest.fn<() => boolean>(() => false)
 const getPlatform = jest.fn(() => PlatformType.Test)
 const setWorkspaceUri = jest.fn(async (_uri: string) => {})
+const startRemoteCli = jest.fn<
+  (
+    connectionKey: string,
+    remoteCliUrl: string,
+    handleOpenRequest: (request: unknown) => Promise<void>,
+  ) => Promise<void>
+>(async () => {})
+const stopRemoteCli = jest.fn()
 
 jest.unstable_mockModule('../src/parts/FileSystem/FileSystem.js', () => ({
   exists,
@@ -52,6 +60,12 @@ jest.unstable_mockModule('../src/parts/Location/Location.js', () => ({
   setWorkspaceUri,
 }))
 
+jest.unstable_mockModule('../src/parts/RemoteCli/RemoteCli.js', () => ({
+  resolveOpenRequest: jest.fn(),
+  start: startRemoteCli,
+  stop: stopRemoteCli,
+}))
+
 const GlobalEventBus = await import('../src/parts/GlobalEventBus/GlobalEventBus.js')
 const Workspace = await import('../src/parts/Workspace/Workspace.js')
 
@@ -68,6 +82,8 @@ beforeEach(() => {
   getPlatform.mockClear()
   getPlatform.mockReturnValue(PlatformType.Test)
   setWorkspaceUri.mockClear()
+  startRemoteCli.mockClear()
+  stopRemoteCli.mockClear()
   GlobalEventBus.state.listenerMap = Object.create(null)
   Workspace.state.pathSeparator = '/'
   Workspace.state.workspacePath = ''
@@ -165,6 +181,7 @@ test('setUri uses a provided provider path separator', async () => {
 test('setUri uses the workspace connection path', async () => {
   await Workspace.setUri('workspace-provider://host/work', '/', {
     command: 'workspace-provider.getWebSocketUrl',
+    remoteCliUrl: 'wss://workspace.example.com/websocket/shared-process',
     workspacePath: '/work',
   })
 
@@ -172,6 +189,11 @@ test('setUri uses the workspace connection path', async () => {
   expect(Workspace.getWorkspaceUri()).toBe('workspace-provider://host/work')
   expect(Workspace.state.pathSeparator).toBe('/')
   expect(getPathSeparator).not.toHaveBeenCalled()
+  expect(startRemoteCli).toHaveBeenCalledWith(
+    'wss://workspace.example.com/websocket/shared-process',
+    'wss://workspace.example.com/websocket/shared-process',
+    expect.any(Function),
+  )
 })
 
 test('setUri persists the workspace uri in an Electron window', async () => {
@@ -179,6 +201,7 @@ test('setUri persists the workspace uri in an Electron window', async () => {
 
   await Workspace.setUri('workspace-provider://host/work', '/', {
     command: 'workspace-provider.getWebSocketUrl',
+    remoteCliUrl: 'wss://workspace.example.com/websocket/shared-process',
     workspacePath: '/work',
   })
 

@@ -1,14 +1,26 @@
 const createContext = (webSocket, createWebSocket) => {
   const listeners = new Map()
+  let closed = false
+  let reconnectTimer
 
   const scheduleReconnect = () => {
-    setTimeout(() => void reconnect(), 2000)
+    if (!closed) {
+      reconnectTimer = setTimeout(() => void reconnect(), 2000)
+    }
   }
 
   const reconnect = async () => {
+    if (closed) {
+      return
+    }
     try {
       const originalOnMessage = context.webSocket.onmessage
-      context.webSocket = await createWebSocket()
+      const nextWebSocket = await createWebSocket()
+      if (closed) {
+        nextWebSocket.close()
+        return
+      }
+      context.webSocket = nextWebSocket
       context.webSocket.onmessage = originalOnMessage
       context.webSocket.onclose = handleClose
       for (const [type, typeListeners] of listeners) {
@@ -35,6 +47,12 @@ const createContext = (webSocket, createWebSocket) => {
     },
     send(message) {
       this.webSocket.send(message)
+    },
+    close() {
+      closed = true
+      clearTimeout(reconnectTimer)
+      this.webSocket.onclose = null
+      this.webSocket.close()
     },
     addEventListener(type, listener) {
       let typeListeners = listeners.get(type)
