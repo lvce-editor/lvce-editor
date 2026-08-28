@@ -42,7 +42,7 @@ const executeProvider = async ({ isolatedMethod, isolatedParams, legacyMethod, l
   })
 }
 
-export const readFile = (uri) => {
+const readProviderFile = (uri) => {
   const { protocol, path, uri: providerUri } = getProviderProtocolPathAndUri(uri)
   return executeProvider({
     isolatedMethod: 'Extensions.executeFileSystemProviderReadFile',
@@ -53,8 +53,13 @@ export const readFile = (uri) => {
   })
 }
 
+export const readFile = async (uri) => {
+  const content = await readProviderFile(uri)
+  return content instanceof Blob ? content.text() : content
+}
+
 export const getBlob = async (uri, type = '') => {
-  const content = await readFile(uri)
+  const content = await readProviderFile(uri)
   if (content instanceof Blob) {
     return content
   }
