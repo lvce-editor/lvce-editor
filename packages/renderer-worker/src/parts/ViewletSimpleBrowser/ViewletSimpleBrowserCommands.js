@@ -7,6 +7,7 @@ export const Commands = {
   acceptSuggestion: SimpleBrowser.acceptSuggestion,
   applySuggestions: SimpleBrowser.applySuggestions,
   closeSuggestions: SimpleBrowser.closeSuggestions,
+  closeCurrentTab: SimpleBrowser.closeCurrentTab,
   closeOtherTabs: SimpleBrowser.closeOtherTabs,
   closeTab: SimpleBrowser.closeTab,
   closeTabsToTheLeft: SimpleBrowser.closeTabsToTheLeft,
@@ -37,6 +38,7 @@ export const Commands = {
 
 export const LazyCommands = {
   openExternal: () => import('./ViewletSimpleBrowserOpenExternal.js'),
+  openDownloads: () => import('./ViewletSimpleBrowserOpenDownloads.js'),
   openBackgroundTab: () => import('./ViewletSimpleBrowserOpenBackgroundTab.js'),
   handleContextMenu: () => import('./ViewletSimpleBrowserHandleContextMenu.js'),
   handleTabContextMenu: () => import('./ViewletSimpleBrowserHandleTabContextMenu.js'),
@@ -47,6 +49,11 @@ export const LazyCommands = {
   importFirefoxCookies: () => import('./ViewletSimpleBrowserImportFirefoxCookies.js'),
   openDevtools: () => import('./ViewletSimpleBrowserOpenDevtools.js'),
   reload: () => import('./ViewletSimpleBrowserReload.js'),
+  showMenu: () => import('./ViewletSimpleBrowserShowMenu.js'),
+  toggleDevTools: () => import('./ViewletSimpleBrowserToggleDevTools.js'),
+  resetZoom: () => import('./ViewletSimpleBrowserZoom.js'),
+  zoomIn: () => import('./ViewletSimpleBrowserZoom.js'),
+  zoomOut: () => import('./ViewletSimpleBrowserZoom.js'),
   cancelNavigation: () => import('./ViewletSimpleBrowserCancelNavigation.js'),
 }
 

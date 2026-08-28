@@ -33,6 +33,7 @@ const createTab = ({
   isLoading = false,
   muted = false,
   title = 'New Tab',
+  zoomLevel = 0,
 }) => ({
   browserViewId,
   canGoBack,
@@ -44,6 +45,7 @@ const createTab = ({
   isLoading,
   muted,
   title: title || 'New Tab',
+  zoomLevel,
 })
 
 const updateTab = (state, browserViewId, updates) => {
@@ -77,6 +79,7 @@ const activateTab = (state, tabs, selectedTabIndex) => {
     selectedTabIndex,
     tabs,
     title: tab.title,
+    zoomLevel: tab.zoomLevel,
   }
 }
 
@@ -117,6 +120,7 @@ export const create = (id, uri, x, y, width, height) => {
     tabs: [],
     tabsEnabled: true,
     selectedTabIndex: 0,
+    zoomLevel: 0,
   }
 }
 
@@ -160,6 +164,7 @@ export const backgroundLoadContent = async (state, savedState) => {
     tabs,
     tabsEnabled,
     title,
+    zoomLevel: 0,
     uri: `simple-browser://${browserViewId}`,
     iframeSrc,
     inputValue: iframeSrc,
@@ -430,6 +435,10 @@ export const closeTab = async (state, index) => {
   await ElectronWebContentsViewFunctions.show(selectedTab.browserViewId)
   await ElectronWebContentsViewFunctions.focus(selectedTab.browserViewId)
   return activateTab(currentState, tabs, selectedTabIndex)
+}
+
+export const closeCurrentTab = (state) => {
+  return closeTab(state, state.selectedTabIndex)
 }
 
 const closeTabsByIndex = async (state, indexes, preferredTabIndex) => {

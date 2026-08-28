@@ -77,6 +77,13 @@ test('focuses the address input for a new empty tab', () => {
   expect(ViewletSimpleBrowserRender.render[2].apply(oldState, newState)).toEqual(['Viewlet.focusElementByName', 42, 'simple-browser-address'])
 })
 
+test('routes the browser menu button click with pointer coordinates', () => {
+  expect(ViewletSimpleBrowserRender.renderEventListeners()).toContainEqual({
+    name: 'handleClickSimpleBrowserMenu',
+    params: ['showMenu', 'event.clientX', 'event.clientY'],
+  })
+})
+
 test('routes tab context-menu events with the tab index and pointer coordinates', () => {
   const listener = ViewletSimpleBrowserRender.renderEventListeners().find(
     (candidate) => candidate.name === DomEventListenerFunctions.HandleContextMenuSimpleBrowserTab,

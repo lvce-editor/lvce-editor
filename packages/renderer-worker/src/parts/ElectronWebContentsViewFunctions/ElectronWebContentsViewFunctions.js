@@ -26,6 +26,14 @@ export const openDevtools = (id) => {
   return EmbedsWorker.invoke('ElectronWebContentsView.openDevtools', id)
 }
 
+export const toggleDevTools = (id) => {
+  return EmbedsWorker.invoke('ElectronWebContentsView.toggleDevTools', id)
+}
+
+export const setZoomLevel = (id, zoomLevel) => {
+  return EmbedsWorker.invoke('ElectronWebContentsView.setZoomLevel', id, zoomLevel)
+}
+
 export const reload = (id) => {
   return EmbedsWorker.invoke('ElectronWebContentsView.reload', id)
 }
