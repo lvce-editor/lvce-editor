@@ -12,6 +12,11 @@ const UiStrings = {
   CopyLinkAddress: 'Copy Link Address',
   SaveImageAs: 'Save Image',
   CopyImage: 'Copy Image',
+  CopyImageAddress: 'Copy Image Address',
+  OpenImageInNewTab: 'Open Image in New Tab',
+  Back: 'Back',
+  Forward: 'Forward',
+  Reload: 'Reload',
   MuteTab: 'Mute Tab',
   UnmuteTab: 'Unmute Tab',
   DuplicateTab: 'Duplicate Tab',
@@ -52,6 +57,26 @@ export const saveImageAs = () => {
 
 export const copyImage = () => {
   return I18nString.i18nString(UiStrings.CopyImage)
+}
+
+export const copyImageAddress = () => {
+  return I18nString.i18nString(UiStrings.CopyImageAddress)
+}
+
+export const openImageInNewTab = () => {
+  return I18nString.i18nString(UiStrings.OpenImageInNewTab)
+}
+
+export const back = () => {
+  return I18nString.i18nString(UiStrings.Back)
+}
+
+export const forward = () => {
+  return I18nString.i18nString(UiStrings.Forward)
+}
+
+export const reload = () => {
+  return I18nString.i18nString(UiStrings.Reload)
 }
 
 export const muteTab = () => {

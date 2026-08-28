@@ -23,6 +23,17 @@ const ElectronContextMenu = await import('../src/parts/ElectronContextMenu/Elect
 const MenuEntries = await import('../src/parts/MenuEntries/MenuEntries.js')
 const SharedProcess = await import('../src/parts/SharedProcess/SharedProcess.js')
 
+test('converts disabled browser actions to disabled native menu items', async () => {
+  jest
+    .mocked(MenuEntries.getMenuEntries)
+    .mockResolvedValue([{ command: 'SimpleBrowser.backward', flags: MenuItemFlags.Disabled, id: 'back', label: 'Back' }])
+  jest.mocked(SharedProcess.invoke).mockResolvedValue({ type: 'close' })
+
+  await ElectronContextMenu.openContextMenu(10, 20, 1)
+
+  expect(SharedProcess.invoke).toHaveBeenCalledWith('ElectronContextMenu.openContextMenu', [{ enabled: false, label: 'Back' }], 10, 20)
+})
+
 test('passes disabled entries to the native context menu and does not execute them', async () => {
   // @ts-ignore
   MenuEntries.getMenuEntries2.mockResolvedValue([

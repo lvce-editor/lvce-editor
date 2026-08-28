@@ -26,6 +26,16 @@ test('forwards web contents keybindings through the global event bus', async () 
   expect(listener).toHaveBeenCalledWith(12, 2050)
 })
 
+test('forwards web contents context menus through the global event bus', async () => {
+  const listener = jest.fn()
+  const params = { linkURL: 'https://example.com', x: 10, y: 20 }
+  GlobalEventBus.addListener('browser-view-context-menu', listener)
+
+  await ElectronBrowserView.handleContextMenu(params)
+
+  expect(listener).toHaveBeenCalledWith(params)
+})
+
 test.skip('createBrowserView - error', async () => {
   // @ts-ignore
   SharedProcess.invoke.mockImplementation(async () => {

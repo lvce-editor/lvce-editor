@@ -82,6 +82,7 @@ jest.unstable_mockModule('../src/parts/Command/Command.js', () => ({
 }))
 
 const ViewletSimpleBrowser = await import('../src/parts/ViewletSimpleBrowser/ViewletSimpleBrowser.js')
+const ViewletSimpleBrowserOpenBackgroundTab = await import('../src/parts/ViewletSimpleBrowser/ViewletSimpleBrowserOpenBackgroundTab.js')
 const ViewletSimpleBrowserResize = await import('../src/parts/ViewletSimpleBrowser/ViewletSimpleBrowserResize.js')
 const BrowserSearchSuggestions = await import('../src/parts/BrowserSearchSuggestions/BrowserSearchSuggestions.js')
 const Command = await import('../src/parts/Command/Command.js')
@@ -327,6 +328,28 @@ test('keeps a target blank background tab hidden', async () => {
 
   expect(newState).toMatchObject({ browserViewId: 12, selectedTabIndex: 0 })
   expect(newState.tabs).toHaveLength(2)
+  expect(ElectronWebContentsViewFunctions.show).not.toHaveBeenCalled()
+})
+
+test('opens a context menu link in a new background web contents view', async () => {
+  // @ts-ignore
+  ElectronWebContentsView.createWebContentsView.mockResolvedValue(13)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.hide.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.setIframeSrc.mockResolvedValue(undefined)
+  const state = {
+    ...ViewletSimpleBrowser.create(7, '', 10, 20, 300, 200),
+    browserViewId: 12,
+    tabs: [{ browserViewId: 12, iframeSrc: 'https://example.com', inputValue: 'https://example.com', title: 'Example' }],
+  }
+
+  const newState = await ViewletSimpleBrowserOpenBackgroundTab.openBackgroundTab(state, 'https://example.com/docs')
+
+  expect(newState).toMatchObject({ browserViewId: 12, selectedTabIndex: 0 })
+  expect(newState.tabs).toHaveLength(2)
+  expect(newState.tabs[1]).toMatchObject({ browserViewId: 13, iframeSrc: 'https://example.com/docs' })
+  expect(ElectronWebContentsViewFunctions.setIframeSrc).toHaveBeenCalledWith(13, 'https://example.com/docs')
   expect(ElectronWebContentsViewFunctions.show).not.toHaveBeenCalled()
 })
 

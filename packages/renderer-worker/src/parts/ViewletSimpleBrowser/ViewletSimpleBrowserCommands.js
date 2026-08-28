@@ -1,5 +1,6 @@
 import * as SimpleBrowser from './ViewletSimpleBrowser.js'
 import * as ViewletSimpleBrowserGetDomTree from './ViewletSimpleBrowserGetDomTree.js'
+import * as ViewletSimpleBrowserHandleContextMenu from './ViewletSimpleBrowserHandleContextMenu.js'
 import * as ViewletSimpleBrowserInsertCss from './ViewletSimpleBrowserInsertCss.js'
 import * as ViewletSimpleBrowserInsertJavaScript from './ViewletSimpleBrowserInsertJavaScript.js'
 
@@ -59,6 +60,7 @@ export const LazyCommands = {
 
 export const Events = {
   'browser-view-audio-state-changed': SimpleBrowser.handleAudioStateChanged,
+  'browser-view-context-menu': ViewletSimpleBrowserHandleContextMenu.handleContextMenu,
   'browser-view-did-navigate': SimpleBrowser.handleDidNavigate,
   'browser-view-key-binding': SimpleBrowser.handleKeyBinding,
   'browser-view-page-favicon-updated': SimpleBrowser.handlePageFaviconUpdated,
