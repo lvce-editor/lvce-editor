@@ -14,6 +14,10 @@ export const setIframeSrc = async (id, iframeSrc) => {
   return EmbedsWorker.invoke('ElectronWebContentsView.setIframeSrc', id, iframeSrc)
 }
 
+export const setAudioMuted = (id, muted) => {
+  return EmbedsWorker.invoke('ElectronWebContentsView.setAudioMuted', id, muted)
+}
+
 export const focus = (id) => {
   return EmbedsWorker.invoke('ElectronWebContentsView.focus', id)
 }

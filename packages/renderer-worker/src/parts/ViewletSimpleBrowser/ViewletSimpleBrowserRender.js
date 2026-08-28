@@ -20,6 +20,10 @@ export const renderEventListeners = () => {
       stopPropagation: true,
     },
     {
+      name: DomEventListenerFunctions.HandleContextMenuSimpleBrowserTab,
+      params: ['handleTabContextMenu', 'event.currentTarget.dataset.index', 'event.clientX', 'event.clientY'],
+    },
+    {
       name: DomEventListenerFunctions.HandleClickSimpleBrowserNewTab,
       params: ['createNewTab'],
     },
