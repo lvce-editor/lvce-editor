@@ -51,6 +51,11 @@
   mask-image: url(/icons/unmute.svg);
 }
 
+.MaskIconMute,
+.IconMute {
+  mask-image: url(/icons/mute.svg);
+}
+
 .NotificationBellIcon {
   mask-image: url(/icons/bell.svg);
 }

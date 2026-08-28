@@ -613,6 +613,19 @@ test('mutes a background tab without changing the active tab state', async () =>
   expect(newState.tabs[1].muted).toBe(true)
 })
 
+test('unmutes a muted tab', async () => {
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.setAudioMuted.mockResolvedValue(undefined)
+  const state = createTabsState()
+  state.tabs[1].muted = true
+
+  const newState = await ViewletSimpleBrowser.muteTab(state, 1)
+
+  expect(ElectronWebContentsViewFunctions.setAudioMuted).toHaveBeenCalledWith(13, false)
+  expect(newState.muted).toBe(false)
+  expect(newState.tabs[1].muted).toBe(false)
+})
+
 test('duplicates a tab directly to its right and selects the duplicate', async () => {
   // @ts-ignore
   ElectronWebContentsView.createWebContentsView.mockResolvedValue(16)

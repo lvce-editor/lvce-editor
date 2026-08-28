@@ -20,6 +20,11 @@ export const renderEventListeners = () => {
       stopPropagation: true,
     },
     {
+      name: DomEventListenerFunctions.HandleClickSimpleBrowserTabAudio,
+      params: ['muteTab', 'event.currentTarget.dataset.index'],
+      stopPropagation: true,
+    },
+    {
       name: DomEventListenerFunctions.HandleContextMenuSimpleBrowserTab,
       params: ['handleTabContextMenu', 'event.currentTarget.dataset.index', 'event.clientX', 'event.clientY'],
     },
@@ -47,6 +52,7 @@ const areTabsEqual = (oldTabs, newTabs) => {
       oldTab.browserViewId === newTab.browserViewId &&
       oldTab.favicon === newTab.favicon &&
       oldTab.isAudioPlaying === newTab.isAudioPlaying &&
+      oldTab.muted === newTab.muted &&
       oldTab.title === newTab.title
     )
   })
