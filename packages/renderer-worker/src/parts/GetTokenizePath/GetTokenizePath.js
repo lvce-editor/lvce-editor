@@ -1,6 +1,6 @@
-import * as Languages from '../Languages/Languages.js'
+import * as LanguagesState from '../LanguagesState/LanguagesState.js'
 
 export const getTokenizePath = (languageId) => {
-  const tokenizePath = Languages.getTokenizeFunctionPath(languageId)
+  const tokenizePath = LanguagesState.getTokenizeFunctionPath(languageId)
   return tokenizePath
 }
