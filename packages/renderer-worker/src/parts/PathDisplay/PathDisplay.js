@@ -39,7 +39,7 @@ export const getLabel = (uri) => {
     return 'Settings'
   }
   if (uri.startsWith('cookie-import-view:///')) {
-    return 'Cookie Import'
+    return 'Import Firefox Cookies'
   }
   if (uri.startsWith('simple-browser://')) {
     return 'Simple Browser'

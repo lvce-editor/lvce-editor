@@ -27,7 +27,7 @@ test('getFileIcon - running extensions', () => {
 })
 
 test('getLabel - cookie import view', () => {
-  expect(PathDisplay.getLabel('cookie-import-view:///')).toBe('Cookie Import')
+  expect(PathDisplay.getLabel('cookie-import-view:///')).toBe('Import Firefox Cookies')
 })
 
 test('getFileIcon - cookie import view', () => {

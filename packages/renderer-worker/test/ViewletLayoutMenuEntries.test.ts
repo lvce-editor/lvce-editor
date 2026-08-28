@@ -103,8 +103,10 @@ test('getQuickPickMenuEntries includes Firefox cookie import command', () => {
   const entries = ViewletLayoutMenuEntries.getQuickPickMenuEntries()
 
   expect(entries).toContainEqual({
-    id: 'SimpleBrowser.importFirefoxCookies',
+    id: 'Main.openUri',
     label: 'Simple Browser: Import Cookies from Firefox',
+    args: ['cookie-import-view:///'],
+    aliases: ['Open Cookie Importer'],
   })
 })
 
