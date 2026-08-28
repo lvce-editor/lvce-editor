@@ -74,6 +74,14 @@
   },
   {
     "category": "text-editor",
+    "description": "Controls whether changes to files in the workspace are watched",
+    "heading": "Workspace File Watching",
+    "id": "files.workspaceWatcher.enabled",
+    "type": 3,
+    "value": false
+  },
+  {
+    "category": "text-editor",
     "description": "Treats JavaScript files as JSX files",
     "heading": "JavaScript Files As JSX",
     "id": "languages.jsFilesAsJsx",
@@ -112,6 +120,24 @@
     "id": "sessionReplay.enabled",
     "type": 3,
     "value": false
+  },
+  {
+    "category": "features",
+    "description": "Controls whether links that request a new window open in a simple browser tab or the system browser",
+    "heading": "Simple Browser External Links",
+    "id": "simpleBrowser.openExternalLinks",
+    "options": [
+      {
+        "id": "newTab",
+        "label": "New Tab"
+      },
+      {
+        "id": "externalBrowser",
+        "label": "External Browser"
+      }
+    ],
+    "type": 1,
+    "value": "newTab"
   },
   {
     "category": "features",

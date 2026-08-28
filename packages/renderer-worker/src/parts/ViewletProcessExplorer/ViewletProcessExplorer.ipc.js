@@ -3,7 +3,13 @@ import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as WorkspaceConnection from '../WorkspaceConnection/WorkspaceConnection.js'
 
-const getPlatform = () => (WorkspaceConnection.isActive() ? PlatformType.Remote : Platform.getPlatform())
+const getPlatform = () => {
+  const platform = Platform.getPlatform()
+  if (platform === PlatformType.Electron) {
+    return platform
+  }
+  return WorkspaceConnection.isActive() ? PlatformType.Remote : platform
+}
 
 export const {
   Commands,

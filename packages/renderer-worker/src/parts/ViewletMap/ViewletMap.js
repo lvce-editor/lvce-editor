@@ -50,8 +50,14 @@ export const getModuleId = async (uri, opener) => {
   if (uri.startsWith('process-explorer://')) {
     return ViewletModuleId.ProcessExplorer
   }
+  if (uri.startsWith('file-watcher-explorer://')) {
+    return ViewletModuleId.FileWatcherExplorer
+  }
   if (uri.startsWith('running-extensions://')) {
     return ViewletModuleId.RunningExtensions
+  }
+  if (uri.startsWith('secrets://')) {
+    return ViewletModuleId.Secrets
   }
   if (uri.startsWith('search-editor://')) {
     return ViewletModuleId.Search

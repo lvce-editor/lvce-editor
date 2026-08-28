@@ -73,10 +73,6 @@ export const getModuleId = (commandId: any): any => {
     case 'ElectronProcess.writeStderr':
     case 'ElectronProcess.writeStdout':
       return ModuleId.ElectronProcess
-    case 'ElectronSafeStorage.decryptString':
-    case 'ElectronSafeStorage.encryptString':
-    case 'ElectronSafeStorage.isEncryptionAvailable':
-      return ModuleId.ElectronSafeStorage
     case 'ElectronWindow.close':
     case 'ElectronWindow.focus':
     case 'ElectronWindow.getZoom':
@@ -152,6 +148,8 @@ export const getModuleId = (commandId: any): any => {
     case 'FileWatcher.watch':
     case 'FileWatcher.watchFile2':
       return ModuleId.FileWatcher
+    case 'FileWatcherExplorer.decreaseRefCount':
+      return ModuleId.FileWatcherExplorer
     case 'FirefoxCookieImport.getInfo':
     case 'FirefoxCookieImport.importCookies':
       return ModuleId.FirefoxCookieImport
@@ -186,6 +184,8 @@ export const getModuleId = (commandId: any): any => {
       return ModuleId.HandleMessagePortForExtensionNodeProcess
     case 'HandleMessagePortForFileSystemProcess.handleMessagePortForFileSystemProcess':
       return ModuleId.HandleMessagePortForFileSystemProcess
+    case 'HandleMessagePortForFileWatcherExplorer.handleMessagePortForFileWatcherExplorer':
+      return ModuleId.HandleMessagePortForFileWatcherExplorer
     case 'HandleMessagePortForProcessExplorer.handleMessagePortForProcessExplorer':
       return ModuleId.HandleMessagePortForProcessExplorer
     case 'HandleMessagePortForSearchProcess.handleMessagePortForSearchProcess':
@@ -283,14 +283,13 @@ export const getModuleId = (commandId: any): any => {
       return ModuleId.RebuildNodePty
     case 'RecentlyOpened.addPath':
       return ModuleId.RecentlyOpened
+    case 'RemoteCli.open':
+    case 'RemoteCli.waitForOpenRequest':
+      return ModuleId.RemoteCli
     case 'Screen.getBounds':
     case 'Screen.getHeight':
     case 'Screen.getWidth':
       return ModuleId.Screen
-    case 'SecretStorage.delete':
-    case 'SecretStorage.get':
-    case 'SecretStorage.store':
-      return ModuleId.SecretStorage
     case 'SendMessagePortToMainProcess.sendMessagePortToMainProcess':
       return ModuleId.SendMessagePortToMainProcess
     case 'TemporaryMessagePort.getPortTuple2':

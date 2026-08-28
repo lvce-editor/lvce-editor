@@ -1,5 +1,6 @@
 import * as SimpleBrowser from './ViewletSimpleBrowser.js'
 import * as ViewletSimpleBrowserGetDomTree from './ViewletSimpleBrowserGetDomTree.js'
+import * as ViewletSimpleBrowserHandleContextMenu from './ViewletSimpleBrowserHandleContextMenu.js'
 import * as ViewletSimpleBrowserInsertCss from './ViewletSimpleBrowserInsertCss.js'
 import * as ViewletSimpleBrowserInsertJavaScript from './ViewletSimpleBrowserInsertJavaScript.js'
 
@@ -7,10 +8,16 @@ export const Commands = {
   acceptSuggestion: SimpleBrowser.acceptSuggestion,
   applySuggestions: SimpleBrowser.applySuggestions,
   closeSuggestions: SimpleBrowser.closeSuggestions,
+  closeCurrentTab: SimpleBrowser.closeCurrentTab,
+  closeOtherTabs: SimpleBrowser.closeOtherTabs,
   closeTab: SimpleBrowser.closeTab,
+  closeTabsToTheLeft: SimpleBrowser.closeTabsToTheLeft,
+  closeTabsToTheRight: SimpleBrowser.closeTabsToTheRight,
   createNewTab: SimpleBrowser.createNewTab,
+  duplicateTab: SimpleBrowser.duplicateTab,
   getDomTree: ViewletSimpleBrowserGetDomTree.getDomTree,
   go: SimpleBrowser.go,
+  handleAudioStateChanged: SimpleBrowser.handleAudioStateChanged,
   handleDidNavigate: SimpleBrowser.handleDidNavigate,
   handleDidNavigationCancel: SimpleBrowser.handleDidNavigationCancel,
   handleInput: SimpleBrowser.handleInput,
@@ -19,6 +26,8 @@ export const Commands = {
   handleTitleUpdated: SimpleBrowser.handleTitleUpdated,
   handleWillNavigate: SimpleBrowser.handleWillNavigate,
   hideOverlay: SimpleBrowser.hideOverlay,
+  muteTab: SimpleBrowser.muteTab,
+  reloadTab: SimpleBrowser.reloadTab,
   insertCss: ViewletSimpleBrowserInsertCss.insertCss,
   insertJavaScript: ViewletSimpleBrowserInsertJavaScript.insertJavaScript,
   setUrl: SimpleBrowser.setUrl,
@@ -30,8 +39,10 @@ export const Commands = {
 
 export const LazyCommands = {
   openExternal: () => import('./ViewletSimpleBrowserOpenExternal.js'),
+  openDownloads: () => import('./ViewletSimpleBrowserOpenDownloads.js'),
   openBackgroundTab: () => import('./ViewletSimpleBrowserOpenBackgroundTab.js'),
   handleContextMenu: () => import('./ViewletSimpleBrowserHandleContextMenu.js'),
+  handleTabContextMenu: () => import('./ViewletSimpleBrowserHandleTabContextMenu.js'),
   inspectElement: () => import('./ViewletSimpleBrowserInspectElement.js'),
   copyImage: () => import('./ViewletSimpleBrowserCopyImage.js'),
   backward: () => import('./ViewletSimpleBrowserBackward.js'),
@@ -39,12 +50,21 @@ export const LazyCommands = {
   importFirefoxCookies: () => import('./ViewletSimpleBrowserImportFirefoxCookies.js'),
   openDevtools: () => import('./ViewletSimpleBrowserOpenDevtools.js'),
   reload: () => import('./ViewletSimpleBrowserReload.js'),
+  showMenu: () => import('./ViewletSimpleBrowserShowMenu.js'),
+  toggleDevTools: () => import('./ViewletSimpleBrowserToggleDevTools.js'),
+  resetZoom: () => import('./ViewletSimpleBrowserZoom.js'),
+  zoomIn: () => import('./ViewletSimpleBrowserZoom.js'),
+  zoomOut: () => import('./ViewletSimpleBrowserZoom.js'),
   cancelNavigation: () => import('./ViewletSimpleBrowserCancelNavigation.js'),
 }
 
 export const Events = {
+  'browser-view-audio-state-changed': SimpleBrowser.handleAudioStateChanged,
+  'browser-view-context-menu': ViewletSimpleBrowserHandleContextMenu.handleContextMenu,
   'browser-view-did-navigate': SimpleBrowser.handleDidNavigate,
+  'browser-view-key-binding': SimpleBrowser.handleKeyBinding,
   'browser-view-page-favicon-updated': SimpleBrowser.handlePageFaviconUpdated,
   'browser-view-title-updated': SimpleBrowser.handleTitleUpdated,
   'browser-view-will-navigate': SimpleBrowser.handleWillNavigate,
+  'browser-view-window-open': SimpleBrowser.handleWindowOpen,
 }

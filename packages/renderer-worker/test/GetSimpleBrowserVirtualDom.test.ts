@@ -6,13 +6,20 @@ test('renders a snapshot below the browser header', () => {
   const dom = GetSimpleBrowserVirtualDom.getSimpleBrowserVirtualDom(true, true, false, 'https://example.com', 'data:image/png;base64,c25hcHNob3Q=')
 
   expect(dom[0].childCount).toBe(3)
-  expect(dom.at(-1)).toEqual({
-    type: VirtualDomElements.Img,
-    className: 'SimpleBrowserSnapshot',
-    src: 'data:image/png;base64,c25hcHNob3Q=',
-    draggable: false,
-    childCount: 0,
-  })
+  expect(dom.slice(-2)).toEqual([
+    {
+      type: VirtualDomElements.Div,
+      className: 'SimpleBrowserSnapshotWrapper',
+      childCount: 1,
+    },
+    {
+      type: VirtualDomElements.Img,
+      className: 'SimpleBrowserSnapshot',
+      src: 'data:image/png;base64,c25hcHNob3Q=',
+      draggable: false,
+      childCount: 0,
+    },
+  ])
 })
 
 test('names the address input so focus can be restored after rendering', () => {
@@ -58,17 +65,34 @@ test('renders accessible search suggestions above an undimmed snapshot', () => {
 
 test('renders selectable tabs with favicon, title, close, and new tab controls', () => {
   const dom = GetSimpleBrowserVirtualDom.getSimpleBrowserVirtualDom(false, false, false, '', '', [], -1, [
-    { favicon: 'https://example.com/favicon.png', title: 'Example' },
+    { favicon: 'https://example.com/favicon.png', isAudioPlaying: true, title: 'Example' },
   ])
 
   expect(dom).toContainEqual(
-    expect.objectContaining({ className: 'SimpleBrowserTab SimpleBrowserTabSelected', onClick: 'handleClickSimpleBrowserTab', role: 'tab' }),
+    expect.objectContaining({
+      className: 'SimpleBrowserTab SimpleBrowserTabSelected',
+      onClick: 'handleClickSimpleBrowserTab',
+      onContextMenu: 'handleContextMenuSimpleBrowserTab',
+      role: 'tab',
+    }),
   )
   expect(dom).toContainEqual(
     expect.objectContaining({ className: 'SimpleBrowserTabFavicon', crossOrigin: 'anonymous', src: 'https://example.com/favicon.png' }),
   )
+  expect(dom).toContainEqual(
+    expect.objectContaining({ className: 'SimpleBrowserTabAudio', ariaLabel: 'This tab is playing audio', title: 'This tab is playing audio' }),
+  )
+  expect(dom).toContainEqual(expect.objectContaining({ className: 'MaskIcon MaskIconUnmute' }))
   expect(dom).toContainEqual(expect.objectContaining({ className: 'SimpleBrowserTabClose', onClick: 'handleClickSimpleBrowserTabClose' }))
   expect(dom).toContainEqual(expect.objectContaining({ className: 'SimpleBrowserNewTab', onClick: 'handleClickSimpleBrowserNewTab' }))
+})
+
+test('omits the audio icon for a silent tab', () => {
+  const dom = GetSimpleBrowserVirtualDom.getSimpleBrowserVirtualDom(false, false, false, '', '', [], -1, [
+    { favicon: '', isAudioPlaying: false, title: 'Example' },
+  ])
+
+  expect(dom).not.toContainEqual(expect.objectContaining({ className: 'SimpleBrowserTabAudio' }))
 })
 
 test('omits the tab strip when tabs are disabled', () => {
@@ -76,4 +100,17 @@ test('omits the tab strip when tabs are disabled', () => {
 
   expect(dom[0].childCount).toBe(1)
   expect(dom).not.toContainEqual(expect.objectContaining({ className: 'SimpleBrowserTabs' }))
+})
+
+test('renders an accessible browser menu button', () => {
+  const dom = GetSimpleBrowserVirtualDom.getSimpleBrowserVirtualDom(false, false, false, 'https://example.com')
+
+  expect(dom).toContainEqual(
+    expect.objectContaining({
+      ariaLabel: 'Customize and control Simple Browser',
+      className: 'IconButton SimpleBrowserMenuButton',
+      onClick: 'handleClickSimpleBrowserMenu',
+      title: 'Customize and control Simple Browser',
+    }),
+  )
 })

@@ -41,6 +41,12 @@ jest.unstable_mockModule('../src/parts/SettingsWorker/SettingsWorker.js', () => 
   }
 })
 
+jest.unstable_mockModule('../src/parts/SecretsViewWorker/SecretsViewWorker.ts', () => {
+  return {
+    invokeAndTransfer: jest.fn(),
+  }
+})
+
 jest.unstable_mockModule('../src/parts/WorkspaceConnection/WorkspaceConnection.js', () => {
   return {
     connectMessagePort: jest.fn(async () => false),
@@ -51,6 +57,7 @@ const DialogWorker = await import('../src/parts/DialogWorker/DialogWorker.js')
 const ExtensionManagementWorker = await import('../src/parts/ExtensionManagementWorker/ExtensionManagementWorker.js')
 const ExplorerViewWorker = await import('../src/parts/ExplorerViewWorker/ExplorerViewWorker.js')
 const MainAreaWorker = await import('../src/parts/MainAreaWorker/MainAreaWorker.js')
+const SecretsViewWorker = await import('../src/parts/SecretsViewWorker/SecretsViewWorker.ts')
 const SettingsWorker = await import('../src/parts/SettingsWorker/SettingsWorker.js')
 const SharedProcess = await import('../src/parts/SharedProcess/SharedProcess.js')
 const WorkspaceConnection = await import('../src/parts/WorkspaceConnection/WorkspaceConnection.js')
@@ -63,6 +70,19 @@ test('sendMessagePortToProcessExplorer', async () => {
 
   expect(SharedProcess.invokeAndTransfer).toHaveBeenCalledTimes(1)
   expect(SharedProcess.invokeAndTransfer).toHaveBeenCalledWith('HandleMessagePortForProcessExplorer.handleMessagePortForProcessExplorer', port)
+  expect(WorkspaceConnection.connectMessagePort).not.toHaveBeenCalled()
+})
+
+test('sendMessagePortToFileWatcherExplorer', async () => {
+  const port = {}
+
+  await SendMessagePortToExtensionHostWorker.sendMessagePortToFileWatcherExplorer(port)
+
+  expect(WorkspaceConnection.connectMessagePort).toHaveBeenCalledWith('file-watcher-explorer', port)
+  expect(SharedProcess.invokeAndTransfer).toHaveBeenCalledWith(
+    'HandleMessagePortForFileWatcherExplorer.handleMessagePortForFileWatcherExplorer',
+    port,
+  )
 })
 
 test('sendMessagePortToTerminalProcess uses the workspace connection', async () => {
@@ -119,6 +139,14 @@ test('sendMessagePortToViewWorker forwards to the selected direct view worker', 
   await SendMessagePortToExtensionHostWorker.sendMessagePortToViewWorker(port, 'Explorer')
 
   expect(ExplorerViewWorker.invokeAndTransfer).toHaveBeenCalledWith('Explorer.handleMessagePort', port, false)
+})
+
+test('sendMessagePortToViewWorker forwards to the secrets view worker', async () => {
+  const port = {}
+
+  await SendMessagePortToExtensionHostWorker.sendMessagePortToViewWorker(port, 'SecretsView')
+
+  expect(SecretsViewWorker.invokeAndTransfer).toHaveBeenCalledWith('SecretsView.handleMessagePort', port, false)
 })
 
 test('sendMessagePortToViewWorker rejects unknown workers', async () => {

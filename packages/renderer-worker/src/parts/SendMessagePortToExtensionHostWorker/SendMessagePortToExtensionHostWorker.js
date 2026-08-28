@@ -35,9 +35,11 @@ import * as PanelWorker from '../PanelWorker/PanelWorker.js'
 import * as PreviewSandBoxWorker from '../PreviewSandBoxWorker/PreviewSandBoxWorker.js'
 import * as ProblemsWorker from '../ProblemsWorker/ProblemsWorker.ts'
 import * as ProcessExplorerWorker from '../ProcessExplorerWorker/ProcessExplorerWorker.js'
+import * as FileWatcherViewWorker from '../FileWatcherViewWorker/FileWatcherViewWorker.js'
 import * as QuickPickWorker from '../QuickPickWorker/QuickPickWorker.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as RunningExtensionsViewWorker from '../RunningExtensionsViewWorker/RunningExtensionsViewWorker.ts'
+import * as SecretsViewWorker from '../SecretsViewWorker/SecretsViewWorker.ts'
 import * as SettingsWorker from '../SettingsWorker/SettingsWorker.js'
 import * as SettingsViewWorker from '../SettingsViewWorker/SettingsViewWorker.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
@@ -64,9 +66,11 @@ const directViewWorkers = {
   Panel: [PanelWorker, 'Panel.handleMessagePort'],
   Problems: [ProblemsWorker, 'Problems.handleMessagePort'],
   ProcessExplorer: [ProcessExplorerWorker, 'ProcessExplorer.handleMessagePort'],
+  FileWatcherExplorer: [FileWatcherViewWorker, 'FileWatcherExplorer.handleMessagePort'],
   QuickPick: [QuickPickWorker, 'QuickPick.handleRendererProcessMessagePort'],
   RunningExtensions: [RunningExtensionsViewWorker, 'RunningExtensions.handleMessagePort'],
   SearchExtensions: [ExtensionSearchViewWorker, 'SearchExtensions.handleMessagePort'],
+  SecretsView: [SecretsViewWorker, 'SecretsView.handleMessagePort'],
   Settings: [SettingsViewWorker, 'Settings.handleMessagePort'],
   SourceControl: [SourceControlWorker, 'SourceControl.handleRendererProcessMessagePort'],
   StatusBar: [StatusBarWorker, 'StatusBar.handleMessagePort'],
@@ -88,10 +92,15 @@ export const sendMessagePortToSharedProcess = async (port, initialCommand, rpcId
 
 export const sendMessagePortToProcessExplorer = async (port) => {
   Assert.object(port)
-  if (await WorkspaceConnection.connectMessagePort('process-explorer', port)) {
+  await SharedProcess.invokeAndTransfer('HandleMessagePortForProcessExplorer.handleMessagePortForProcessExplorer', port)
+}
+
+export const sendMessagePortToFileWatcherExplorer = async (port) => {
+  Assert.object(port)
+  if (await WorkspaceConnection.connectMessagePort('file-watcher-explorer', port)) {
     return
   }
-  await SharedProcess.invokeAndTransfer('HandleMessagePortForProcessExplorer.handleMessagePortForProcessExplorer', port)
+  await SharedProcess.invokeAndTransfer('HandleMessagePortForFileWatcherExplorer.handleMessagePortForFileWatcherExplorer', port)
 }
 
 export const sendMessagePortToTerminalProcess = async (port, initialCommand, rpcId) => {

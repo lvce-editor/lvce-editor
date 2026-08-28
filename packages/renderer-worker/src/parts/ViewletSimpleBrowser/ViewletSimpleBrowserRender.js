@@ -1,3 +1,4 @@
+import { diffTree } from '@lvce-editor/virtual-dom-worker'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.js'
 import * as GetSimpleBrowserVirtualDom from '../GetSimpleBrowserVirtualDom/GetSimpleBrowserVirtualDom.js'
 import * as InputName from '../InputName/InputName.js'
@@ -19,8 +20,16 @@ export const renderEventListeners = () => {
       stopPropagation: true,
     },
     {
+      name: DomEventListenerFunctions.HandleContextMenuSimpleBrowserTab,
+      params: ['handleTabContextMenu', 'event.currentTarget.dataset.index', 'event.clientX', 'event.clientY'],
+    },
+    {
       name: DomEventListenerFunctions.HandleClickSimpleBrowserNewTab,
       params: ['createNewTab'],
+    },
+    {
+      name: DomEventListenerFunctions.HandleClickSimpleBrowserMenu,
+      params: ['showMenu', 'event.clientX', 'event.clientY'],
     },
   ]
 }
@@ -34,8 +43,28 @@ const areTabsEqual = (oldTabs, newTabs) => {
   }
   return oldTabs.every((oldTab, index) => {
     const newTab = newTabs[index]
-    return oldTab.browserViewId === newTab.browserViewId && oldTab.favicon === newTab.favicon && oldTab.title === newTab.title
+    return (
+      oldTab.browserViewId === newTab.browserViewId &&
+      oldTab.favicon === newTab.favicon &&
+      oldTab.isAudioPlaying === newTab.isAudioPlaying &&
+      oldTab.title === newTab.title
+    )
   })
+}
+
+const getDom = (state) => {
+  return GetSimpleBrowserVirtualDom.getSimpleBrowserVirtualDom(
+    state.canGoBack,
+    state.canGoForward,
+    state.isLoading,
+    state.inputValue,
+    state.snapshot,
+    state.suggestions,
+    state.selectedSuggestionIndex,
+    state.tabs,
+    state.selectedTabIndex,
+    state.tabsEnabled,
+  )
 }
 
 const renderDom = {
@@ -54,19 +83,11 @@ const renderDom = {
     )
   },
   apply(oldState, newState) {
-    const dom = GetSimpleBrowserVirtualDom.getSimpleBrowserVirtualDom(
-      newState.canGoBack,
-      newState.canGoForward,
-      newState.isLoading,
-      newState.inputValue,
-      newState.snapshot,
-      newState.suggestions,
-      newState.selectedSuggestionIndex,
-      newState.tabs,
-      newState.selectedTabIndex,
-      newState.tabsEnabled,
-    )
-    const commands = [['Viewlet.setDom2', newState.uid, dom]]
+    const newDom = getDom(newState)
+    const commands =
+      oldState.browserViewId === 0
+        ? [['Viewlet.setDom2', newState.uid, newDom]]
+        : [['Viewlet.setPatches', newState.uid, diffTree(getDom(oldState), newDom)]]
     if (newState.suggestions.length > 0) {
       commands.push(['Viewlet.focusElementByName', newState.uid, InputName.SimpleBrowserAddress])
     }
@@ -85,13 +106,24 @@ const renderTitle = {
   },
 }
 
+const renderAddressValue = {
+  isEqual(oldState, newState) {
+    return oldState.browserViewId === newState.browserViewId
+  },
+  apply(oldState, newState) {
+    return [['Viewlet.setValueByName', newState.uid, InputName.SimpleBrowserAddress, newState.inputValue]]
+  },
+  multiple: true,
+}
+
 const renderFocusAddress = {
   isEqual(oldState, newState) {
     return oldState.focusAddressVersion === newState.focusAddressVersion
   },
   apply(oldState, newState) {
-    return ['Viewlet.focusElementByName', newState.uid, InputName.SimpleBrowserAddress]
+    return [['Viewlet.focusElementByName', newState.uid, InputName.SimpleBrowserAddress]]
   },
+  multiple: true,
 }
 
-export const render = [renderDom, renderTitle, renderFocusAddress]
+export const render = [renderDom, renderTitle, renderAddressValue, renderFocusAddress]

@@ -1,7 +1,9 @@
 import { expect, test } from '@jest/globals'
+import * as DomEventListenerFunctions from '../src/parts/DomEventListenerFunctions/DomEventListenerFunctions.js'
 import * as ViewletSimpleBrowserRender from '../src/parts/ViewletSimpleBrowser/ViewletSimpleBrowserRender.js'
 
 const state = {
+  browserViewId: 12,
   canGoBack: false,
   canGoForward: false,
   iframeSrc: 'https://example.com',
@@ -31,7 +33,7 @@ test('rerenders when suggestions change', () => {
   expect(ViewletSimpleBrowserRender.render[0].isEqual(state, newState)).toBe(false)
 })
 
-test('restores address input focus while suggestions are visible', () => {
+test('renders suggestions incrementally and restores address input focus', () => {
   const newState = {
     ...state,
     suggestions: ['what is'],
@@ -39,8 +41,21 @@ test('restores address input focus while suggestions are visible', () => {
 
   const commands = ViewletSimpleBrowserRender.render[0].apply(state, newState)
 
-  expect(commands[0].slice(0, 2)).toEqual(['Viewlet.setDom2', 42])
+  expect(commands[0].slice(0, 2)).toEqual(['Viewlet.setPatches', 42])
+  expect(commands[0][2]).not.toHaveLength(0)
   expect(commands.at(-1)).toEqual(['Viewlet.focusElementByName', 42, 'simple-browser-address'])
+})
+
+test('renders the initial dom in full', () => {
+  const oldState = {
+    ...state,
+    browserViewId: 0,
+  }
+
+  const commands = ViewletSimpleBrowserRender.render[0].apply(oldState, state)
+
+  expect(commands).toHaveLength(1)
+  expect(commands[0].slice(0, 2)).toEqual(['Viewlet.setDom2', 42])
 })
 
 test('does not focus the address input after suggestions close', () => {
@@ -54,10 +69,42 @@ test('does not focus the address input after suggestions close', () => {
   expect(commands).toHaveLength(1)
 })
 
+test('synchronizes the native address value when selecting another tab', () => {
+  const oldState = { ...state, browserViewId: 12, inputValue: 'https://example.com' }
+  const newState = { ...state, browserViewId: 13, inputValue: '' }
+
+  expect(ViewletSimpleBrowserRender.render[2].isEqual(oldState, newState)).toBe(false)
+  expect(ViewletSimpleBrowserRender.render[2].multiple).toBe(true)
+  expect(ViewletSimpleBrowserRender.render[2].apply(oldState, newState)).toEqual([
+    ['Viewlet.setValueByName', 42, 'simple-browser-address', ''],
+  ])
+})
+
 test('focuses the address input for a new empty tab', () => {
   const oldState = { ...state, focusAddressVersion: 0 }
   const newState = { ...state, focusAddressVersion: 1 }
 
-  expect(ViewletSimpleBrowserRender.render[2].isEqual(oldState, newState)).toBe(false)
-  expect(ViewletSimpleBrowserRender.render[2].apply(oldState, newState)).toEqual(['Viewlet.focusElementByName', 42, 'simple-browser-address'])
+  expect(ViewletSimpleBrowserRender.render[3].isEqual(oldState, newState)).toBe(false)
+  expect(ViewletSimpleBrowserRender.render[3].multiple).toBe(true)
+  expect(ViewletSimpleBrowserRender.render[3].apply(oldState, newState)).toEqual([
+    ['Viewlet.focusElementByName', 42, 'simple-browser-address'],
+  ])
+})
+
+test('routes the browser menu button click with pointer coordinates', () => {
+  expect(ViewletSimpleBrowserRender.renderEventListeners()).toContainEqual({
+    name: 'handleClickSimpleBrowserMenu',
+    params: ['showMenu', 'event.clientX', 'event.clientY'],
+  })
+})
+
+test('routes tab context-menu events with the tab index and pointer coordinates', () => {
+  const listener = ViewletSimpleBrowserRender.renderEventListeners().find(
+    (candidate) => candidate.name === DomEventListenerFunctions.HandleContextMenuSimpleBrowserTab,
+  )
+
+  expect(listener).toEqual({
+    name: DomEventListenerFunctions.HandleContextMenuSimpleBrowserTab,
+    params: ['handleTabContextMenu', 'event.currentTarget.dataset.index', 'event.clientX', 'event.clientY'],
+  })
 })

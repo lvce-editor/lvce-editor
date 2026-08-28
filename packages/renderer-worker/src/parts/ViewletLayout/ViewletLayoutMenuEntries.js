@@ -381,6 +381,12 @@ export const getQuickPickMenuEntries = () => {
       args: ['running-extensions://'],
     },
     {
+      id: 'Main.openUri',
+      label: 'Preferences: Open Secrets',
+      args: ['secrets://'],
+      aliases: ['Manage Secrets'],
+    },
+    {
       id: 'Developer.showGpuInfo',
       label: 'Developer: Show GPU Info',
     },

@@ -420,6 +420,27 @@ export const processExplorerPath = Path.join(
 export const processExplorerPath = ResolveBin.resolveBin('@lvce-editor/process-explorer')
 `,
     })
+    await Replace.replace({
+      path: `${cachePath}/src/parts/FileWatcherExplorerPath/FileWatcherExplorerPath.js`,
+      occurrence: `import * as Path from '../Path/Path.js'
+import * as Root from '../Root/Root.js'
+
+export const fileWatcherExplorerPath = Path.join(
+  Root.root,
+  'packages',
+  'shared-process',
+  'node_modules',
+  '@lvce-editor',
+  'file-watcher-explorer',
+  'dist',
+  'index.js',
+)
+`,
+      replacement: `import * as ResolveBin from '../ResolveBin/ResolveBin.js'
+
+export const fileWatcherExplorerPath = ResolveBin.resolveBin('@lvce-editor/file-watcher-explorer')
+`,
+    })
     await Copy.copyFile({
       from: 'LICENSE',
       to: `${cachePath}/LICENSE`,

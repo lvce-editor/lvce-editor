@@ -14,10 +14,6 @@ test('getModuleId - SendMessagePortToMainProcess.sendMessagePortToMainProcess', 
   expect(ModuleMap.getModuleId('SendMessagePortToMainProcess.sendMessagePortToMainProcess')).toBe(ModuleId.SendMessagePortToMainProcess)
 })
 
-test('getModuleId - SecretStorage.get', () => {
-  expect(ModuleMap.getModuleId('SecretStorage.get')).toBe(ModuleId.SecretStorage)
-})
-
 test('getModuleId - FirefoxCookieImport.importCookies', () => {
   expect(ModuleMap.getModuleId('FirefoxCookieImport.importCookies')).toBe(ModuleId.FirefoxCookieImport)
 })
@@ -38,6 +34,16 @@ test('getModuleId - HandleMessagePortForExtensionNodeProcess.handleMessagePortFo
   expect(ModuleMap.getModuleId('HandleMessagePortForExtensionNodeProcess.handleMessagePortForExtensionNodeProcess')).toBe(
     ModuleId.HandleMessagePortForExtensionNodeProcess,
   )
+})
+
+test('getModuleId - HandleMessagePortForFileWatcherExplorer.handleMessagePortForFileWatcherExplorer', () => {
+  expect(ModuleMap.getModuleId('HandleMessagePortForFileWatcherExplorer.handleMessagePortForFileWatcherExplorer')).toBe(
+    ModuleId.HandleMessagePortForFileWatcherExplorer,
+  )
+})
+
+test('getModuleId - FileWatcherExplorer.decreaseRefCount', () => {
+  expect(ModuleMap.getModuleId('FileWatcherExplorer.decreaseRefCount')).toBe(ModuleId.FileWatcherExplorer)
 })
 
 test('getModuleId - ExtensionManagement.getLinkedExtensionDevelopmentConfig', () => {

@@ -14,4 +14,5 @@ export const ExtensionHostWorker = RpcId.ExtensionHostWorker
 export const FileSystemProcess = RpcId.FileSystemProcess
 export const FileWatcherProcess = 220
 export const TypescriptCompileProcess = 221
+export const FileWatcherExplorer = 223
 export const ClipBoardProcess = RpcId.ClipBoardProcess

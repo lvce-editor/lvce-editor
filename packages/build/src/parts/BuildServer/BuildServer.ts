@@ -164,6 +164,11 @@ export const setVersionsAndDependencies = async ({ version, files = serverPackag
         json.dependencies['@lvce-editor/process-explorer'] = processExplorerVersion
         delete json.optionalDependencies['@lvce-editor/process-explorer']
       }
+      const fileWatcherExplorerVersion = json.optionalDependencies?.['@lvce-editor/file-watcher-explorer']
+      if (fileWatcherExplorerVersion) {
+        json.dependencies['@lvce-editor/file-watcher-explorer'] = fileWatcherExplorerVersion
+        delete json.optionalDependencies['@lvce-editor/file-watcher-explorer']
+      }
       json.optionalDependencies ||= {}
     }
     if (json.dependencies && json.dependencies['@lvce-editor/shared-process']) {

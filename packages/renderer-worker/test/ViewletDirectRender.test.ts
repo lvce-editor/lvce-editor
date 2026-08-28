@@ -12,12 +12,14 @@ import * as ViewletOutput from '../src/parts/ViewletOutput/ViewletOutput.ipc.ts'
 import * as ViewletPanel from '../src/parts/ViewletPanel/ViewletPanel.ipc.ts'
 import * as ViewletProblems from '../src/parts/ViewletProblems/ViewletProblems.ipc.js'
 import * as ViewletProcessExplorer from '../src/parts/ViewletProcessExplorer/ViewletProcessExplorer.ipc.js'
+import * as ViewletFileWatcherExplorer from '../src/parts/ViewletFileWatcherExplorer/ViewletFileWatcherExplorer.ipc.js'
 import * as ViewletQuickPick from '../src/parts/ViewletQuickPick/ViewletQuickPick.ipc.js'
 import * as ViewletSourceControl from '../src/parts/ViewletSourceControl/ViewletSourceControl.ipc.js'
 import * as ViewletStatusBar from '../src/parts/ViewletStatusBar/ViewletStatusBar.ipc.js'
 import * as ViewletMain from '../src/parts/ViewletMain/ViewletMain.ipc.js'
 import * as ViewletSearch from '../src/parts/ViewletSearch/ViewletSearch.ipc.ts'
 import * as ViewletRunningExtensions from '../src/parts/ViewletRunningExtensions/ViewletRunningExtensions.ipc.ts'
+import * as ViewletSecrets from '../src/parts/ViewletSecrets/ViewletSecrets.ipc.ts'
 import * as ViewletSettings from '../src/parts/ViewletSettings/ViewletSettings.ipc.js'
 import * as ViewletTitleBar from '../src/parts/ViewletTitleBar/ViewletTitleBar.ipc.js'
 
@@ -35,10 +37,12 @@ test.each([
   ['panel', ViewletPanel],
   ['problems', ViewletProblems],
   ['process explorer', ViewletProcessExplorer],
+  ['file watcher explorer', ViewletFileWatcherExplorer],
   ['main area', ViewletMain],
   ['quick pick', ViewletQuickPick],
   ['source control', ViewletSourceControl],
   ['running extensions', ViewletRunningExtensions],
+  ['secrets', ViewletSecrets],
   ['settings', ViewletSettings],
   ['status bar', ViewletStatusBar],
   ['text search', ViewletSearch],

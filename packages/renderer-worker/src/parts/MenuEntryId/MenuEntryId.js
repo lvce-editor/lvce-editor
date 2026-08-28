@@ -59,3 +59,7 @@ export const ProcessExplorer = 29
 export const ExtensionView = 30
 
 export const StatusBar = 31
+
+export const SimpleBrowserTab = 32
+
+export const SimpleBrowserToolbar = 33

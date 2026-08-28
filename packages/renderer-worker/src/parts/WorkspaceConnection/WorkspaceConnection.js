@@ -5,27 +5,73 @@ import * as WorkspaceState from '../WorkspaceState/WorkspaceState.js'
 
 const state = {
   command: '',
+  remoteCliUrl: '',
+  webSocketUrl: '',
   workspaceUri: '',
 }
 
-export const set = (workspaceUri, command) => {
+const validateWebSocketUrl = (value, name) => {
+  if (typeof value !== 'string') {
+    throw new TypeError(`Invalid ${name}`)
+  }
+  if (value) {
+    const url = new URL(value)
+    if (url.protocol !== 'ws:' && url.protocol !== 'wss:') {
+      throw new TypeError(`${name} must use WebSocket`)
+    }
+  }
+}
+
+export const set = (workspaceUri, command, remoteCliUrl = '', webSocketUrl = '') => {
   if (typeof workspaceUri !== 'string' || typeof command !== 'string' || !command) {
     throw new TypeError('Invalid workspace connection')
   }
+  validateWebSocketUrl(remoteCliUrl, 'Remote CLI URL')
+  validateWebSocketUrl(webSocketUrl, 'Workspace WebSocket URL')
   state.workspaceUri = workspaceUri
   state.command = command
+  state.remoteCliUrl = remoteCliUrl
+  state.webSocketUrl = webSocketUrl
 }
 
 export const reset = () => {
   state.workspaceUri = ''
   state.command = ''
+  state.remoteCliUrl = ''
+  state.webSocketUrl = ''
 }
 
 export const isActive = () => Boolean(state.command && WorkspaceState.state.workspaceUri === state.workspaceUri)
 
+export const getCommand = () => {
+  if (!isActive()) {
+    return ''
+  }
+  return state.command
+}
+
+export const getRemoteCliUrl = () => {
+  if (!isActive()) {
+    return ''
+  }
+  return state.remoteCliUrl
+}
+
+export const getWebSocketUrlTemplate = () => {
+  if (!isActive()) {
+    return ''
+  }
+  return state.webSocketUrl
+}
+
 export const getWebSocketUrl = async (type) => {
   if (!isActive()) {
     return ''
+  }
+  if (state.webSocketUrl) {
+    const url = new URL(state.webSocketUrl)
+    url.pathname = `/websocket/${encodeURIComponent(type)}`
+    return url.href
   }
   const value = await ExtensionHostCommands.executeCommand(state.command, type)
   if (typeof value !== 'string') {

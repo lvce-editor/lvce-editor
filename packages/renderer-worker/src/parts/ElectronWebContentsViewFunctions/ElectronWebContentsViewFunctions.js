@@ -14,12 +14,24 @@ export const setIframeSrc = async (id, iframeSrc) => {
   return EmbedsWorker.invoke('ElectronWebContentsView.setIframeSrc', id, iframeSrc)
 }
 
+export const setAudioMuted = (id, muted) => {
+  return EmbedsWorker.invoke('ElectronWebContentsView.setAudioMuted', id, muted)
+}
+
 export const focus = (id) => {
   return EmbedsWorker.invoke('ElectronWebContentsView.focus', id)
 }
 
 export const openDevtools = (id) => {
   return EmbedsWorker.invoke('ElectronWebContentsView.openDevtools', id)
+}
+
+export const toggleDevTools = (id) => {
+  return EmbedsWorker.invoke('ElectronWebContentsView.toggleDevTools', id)
+}
+
+export const setZoomLevel = (id, zoomLevel) => {
+  return EmbedsWorker.invoke('ElectronWebContentsView.setZoomLevel', id, zoomLevel)
 }
 
 export const reload = (id) => {
@@ -58,8 +70,8 @@ export const copyImageAt = (id, x, y) => {
   return EmbedsWorker.invoke('ElectronWebContentsView.copyImageAt', id, x, y)
 }
 
-export const setFallthroughKeyBindings = (fallthroughKeyBindings) => {
-  return EmbedsWorker.invoke('ElectronWebContentsView.setFallthroughKeyBindings', fallthroughKeyBindings)
+export const setFallthroughKeyBindings = (id, fallthroughKeyBindings) => {
+  return EmbedsWorker.invoke('ElectronWebContentsView.setFallthroughKeyBindings', id, fallthroughKeyBindings)
 }
 
 export const getStats = (id) => {

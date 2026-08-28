@@ -44,8 +44,6 @@ export const load = (moduleId: any): any => {
       return import('../ElectronPowerSaveBlocker/ElectronPowerSaveBlocker.ipc.ts')
     case ModuleId.ElectronProcess:
       return import('../ElectronProcess/ElectronProcess.ipc.ts')
-    case ModuleId.ElectronSafeStorage:
-      return import('../ElectronSafeStorage/ElectronSafeStorage.ipc.ts')
     case ModuleId.ElectronWindowAbout:
       return import('../ElectronWindowAbout/ElectronWindowAbout.ipc.ts')
     case ModuleId.ElectronWindowProcessExplorer:
@@ -62,6 +60,8 @@ export const load = (moduleId: any): any => {
       return import('../FileSystemDisk/FileSystemDisk.ipc.ts')
     case ModuleId.FileWatcher:
       return import('../FileWatcher/FileWatcher.ipc.ts')
+    case ModuleId.FileWatcherExplorer:
+      return import('../FileWatcherExplorer/FileWatcherExplorer.ipc.ts')
     case ModuleId.FirefoxCookieImport:
       return import('../FirefoxCookieImport/FirefoxCookieImport.ipc.ts')
     case ModuleId.GetElectronFileResponse:
@@ -90,6 +90,8 @@ export const load = (moduleId: any): any => {
       return import('../HandleMessagePortForExtensionNodeProcess/HandleMessagePortForExtensionNodeProcess.ipc.ts')
     case ModuleId.HandleMessagePortForFileSystemProcess:
       return import('../HandleMessagePortForFileSystemProcess/HandleMessagePortForFileSystemProcess.ipc.ts')
+    case ModuleId.HandleMessagePortForFileWatcherExplorer:
+      return import('../HandleMessagePortForFileWatcherExplorer/HandleMessagePortForFileWatcherExplorer.ipc.ts')
     case ModuleId.HandleMessagePortForProcessExplorer:
       return import('../HandleMessagePortForProcessExplorer/HandleMessagePortForProcessExplorer.ipc.ts')
     case ModuleId.HandleMessagePortForSearchProcess:
@@ -138,10 +140,10 @@ export const load = (moduleId: any): any => {
       return import('../RebuildNodePty/RebuildNodePty.ipc.ts')
     case ModuleId.RecentlyOpened:
       return import('../RecentlyOpened/RecentlyOpened.ipc.ts')
+    case ModuleId.RemoteCli:
+      return import('../RemoteCli/RemoteCli.ipc.ts')
     case ModuleId.Screen:
       return import('../Screen/Screen.ipc.ts')
-    case ModuleId.SecretStorage:
-      return import('../SecretStorage/SecretStorage.ipc.ts')
     case ModuleId.SendMessagePortToMainProcess:
       return import('../SendMessagePortToMainProcess/SendMessagePortToMainProcess.ipc.ts')
     case ModuleId.TemporaryMessagePort:

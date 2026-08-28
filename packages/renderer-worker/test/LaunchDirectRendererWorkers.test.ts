@@ -50,6 +50,7 @@ const LaunchOutputViewWorker = await import('../src/parts/LaunchOutputViewWorker
 const LaunchPanelWorker = await import('../src/parts/LaunchPanelWorker/LaunchPanelWorker.ts')
 const LaunchProblemsWorker = await import('../src/parts/LaunchProblemsWorker/LaunchProblemsWorker.ts')
 const LaunchProcessExplorerWorker = await import('../src/parts/LaunchProcessExplorerWorker/LaunchProcessExplorerWorker.js')
+const LaunchFileWatcherViewWorker = await import('../src/parts/LaunchFileWatcherViewWorker/LaunchFileWatcherViewWorker.js')
 const LaunchQuickPickWorker = await import('../src/parts/LaunchQuickPickWorker/LaunchQuickPickWorker.js')
 const LaunchRunningExtensionsViewWorker = await import('../src/parts/LaunchRunningExtensionsViewWorker/LaunchRunningExtensionsViewWorker.ts')
 const LaunchSettingsViewWorker = await import('../src/parts/LaunchSettingsViewWorker/LaunchSettingsViewWorker.js')
@@ -76,6 +77,7 @@ test.each([
   ['panel', LaunchPanelWorker.launchPanelWorker, 'Panel.handleMessagePort', 'Panel'],
   ['problems', LaunchProblemsWorker.launchProblemsWorker, 'Problems.handleMessagePort', 'Problems'],
   ['process explorer', LaunchProcessExplorerWorker.launchProcessExplorerWorker, 'ProcessExplorer.handleMessagePort', 'ProcessExplorer'],
+  ['file watcher explorer', LaunchFileWatcherViewWorker.launchFileWatcherViewWorker, 'FileWatcherExplorer.handleMessagePort', 'FileWatcherExplorer'],
   ['quick pick', LaunchQuickPickWorker.launchQuickPickWorker, 'QuickPick.handleRendererProcessMessagePort', 'QuickPick'],
   ['source control', LaunchSourceControlWorker.launchSourceControlWorker, 'SourceControl.handleRendererProcessMessagePort', 'SourceControl'],
   [

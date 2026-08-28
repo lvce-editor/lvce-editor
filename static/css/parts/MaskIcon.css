@@ -46,6 +46,11 @@
   mask-image: url(/icons/play.svg);
 }
 
+.MaskIconUnmute,
+.IconUnmute {
+  mask-image: url(/icons/unmute.svg);
+}
+
 .NotificationBellIcon {
   mask-image: url(/icons/bell.svg);
 }
@@ -242,6 +247,21 @@
 .MaskIconTrash,
 .IconTrash {
   mask-image: url(/icons/trash.svg);
+}
+
+.MaskIconCopy,
+.IconCopy {
+  mask-image: url(/icons/copy.svg);
+}
+
+.MaskIconEye,
+.IconEye {
+  mask-image: url(/icons/eye.svg);
+}
+
+.MaskIconEyeClosed,
+.IconEyeClosed {
+  mask-image: url(/icons/eye-closed.svg);
 }
 
 .MaskIconSplitHorizontal,

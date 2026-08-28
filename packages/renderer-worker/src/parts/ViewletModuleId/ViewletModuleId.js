@@ -74,6 +74,8 @@ export const Problems = 'Problems'
 
 export const ProcessExplorer = 'ProcessExplorer'
 
+export const FileWatcherExplorer = 'FileWatcherExplorer'
+
 export const QuickPick = 'QuickPick'
 
 export const References = 'References'
@@ -123,6 +125,8 @@ export const MarkDownPreview = 'MarkDownPreview'
 export const LanguageModels = 'LanguageModels'
 
 export const RunningExtensions = 'RunningExtensions'
+
+export const Secrets = 'Secrets'
 
 export const Confirm = 'Confirm'
 

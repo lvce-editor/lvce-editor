@@ -6,10 +6,10 @@ export const handleContextMenu = async (state, params) => {
   Assert.object(state)
   Assert.object(params)
   const { x: paramsX, y: paramsY } = params
-  const { x, y, headerHeight } = state
+  const { canGoBack, canGoForward, headerHeight, x, y } = state
   const actualX = x + paramsX
   const actualY = y + headerHeight + paramsY
-  const args = [actualX, actualY, params]
+  const args = [actualX, actualY, { ...params, canGoBack, canGoForward }]
   await ElectronContextMenu.openContextMenu(actualX, actualY, MenuEntryId.SimpleBrowser, ...args)
   return state
 }

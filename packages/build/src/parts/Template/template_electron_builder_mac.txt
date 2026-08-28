@@ -14,7 +14,7 @@
       "target": "dmg",
       "category": "public.app-category.developer-tools",
       "hardenedRuntime": true,
-      "notarize": true,
+      "notarize": false,
       "entitlements": "build/entitlements.mac.plist",
       "entitlementsInherit": "build/entitlements.mac.inherit.plist"
     },

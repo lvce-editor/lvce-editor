@@ -45,8 +45,9 @@ export const getSimpleBrowserVirtualDom = (
         tabIndex: isSelected ? 0 : -1,
         'data-index': index,
         onClick: DomEventListenerFunctions.HandleClickSimpleBrowserTab,
+        onContextMenu: DomEventListenerFunctions.HandleContextMenuSimpleBrowserTab,
         title: tab.title || 'New Tab',
-        childCount: tab.favicon ? 3 : 2,
+        childCount: 2 + (tab.favicon ? 1 : 0) + (tab.isAudioPlaying ? 1 : 0),
       })
       if (tab.favicon) {
         dom.push({
@@ -65,6 +66,25 @@ export const getSimpleBrowserVirtualDom = (
           childCount: 1,
         },
         text(tab.title || 'New Tab'),
+      )
+      if (tab.isAudioPlaying) {
+        dom.push(
+          {
+            type: VirtualDomElements.Span,
+            className: 'SimpleBrowserTabAudio',
+            ariaLabel: 'This tab is playing audio',
+            role: AriaRoles.Image,
+            title: 'This tab is playing audio',
+            childCount: 1,
+          },
+          {
+            type: VirtualDomElements.Div,
+            className: 'MaskIcon MaskIconUnmute',
+            childCount: 0,
+          },
+        )
+      }
+      dom.push(
         {
           type: VirtualDomElements.Button,
           className: 'SimpleBrowserTabClose',
@@ -101,7 +121,7 @@ export const getSimpleBrowserVirtualDom = (
     {
       type: VirtualDomElements.Div,
       className: ClassNames.SimpleBrowserHeader,
-      childCount: 5,
+      childCount: 6,
     },
     {
       type: VirtualDomElements.Button,
@@ -162,15 +182,35 @@ export const getSimpleBrowserVirtualDom = (
       childCount: 0,
       onClick: DomEventListenerFunctions.HandleClickOpenExternal,
     },
+    {
+      type: VirtualDomElements.Button,
+      className: `${ClassNames.IconButton} SimpleBrowserMenuButton`,
+      ariaLabel: 'Customize and control Simple Browser',
+      title: 'Customize and control Simple Browser',
+      childCount: 1,
+      onClick: DomEventListenerFunctions.HandleClickSimpleBrowserMenu,
+    },
+    {
+      type: VirtualDomElements.Div,
+      className: 'MaskIcon MaskIconEllipsis',
+      childCount: 0,
+    },
   )
   if (snapshot) {
-    dom.push({
-      type: VirtualDomElements.Img,
-      className: suggestions.length > 0 ? 'SimpleBrowserSnapshot SimpleBrowserSnapshotSearchSuggestions' : 'SimpleBrowserSnapshot',
-      src: snapshot,
-      draggable: false,
-      childCount: 0,
-    })
+    dom.push(
+      {
+        type: VirtualDomElements.Div,
+        className: 'SimpleBrowserSnapshotWrapper',
+        childCount: 1,
+      },
+      {
+        type: VirtualDomElements.Img,
+        className: suggestions.length > 0 ? 'SimpleBrowserSnapshot SimpleBrowserSnapshotSearchSuggestions' : 'SimpleBrowserSnapshot',
+        src: snapshot,
+        draggable: false,
+        childCount: 0,
+      },
+    )
   }
   if (suggestions.length > 0) {
     dom.push({

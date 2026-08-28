@@ -10,6 +10,14 @@ test('getFileIcon - process explorer', () => {
   expect(PathDisplay.getFileIcon('process-explorer://')).toBe('MaskIconDebugAlt2')
 })
 
+test('getLabel - file watcher explorer', () => {
+  expect(PathDisplay.getLabel('file-watcher-explorer:///')).toBe('File Watcher Explorer')
+})
+
+test('getFileIcon - file watcher explorer', () => {
+  expect(PathDisplay.getFileIcon('file-watcher-explorer:///')).toBe('MaskIconDebugAlt2')
+})
+
 test('getLabel - running extensions', () => {
   expect(PathDisplay.getLabel('running-extensions://')).toBe('Running Extensions')
 })
@@ -24,6 +32,14 @@ test('getLabel - cookie import view', () => {
 
 test('getFileIcon - cookie import view', () => {
   expect(PathDisplay.getFileIcon('cookie-import-view:///')).toBe('MaskIconRecordKey')
+})
+
+test('getLabel - secrets', () => {
+  expect(PathDisplay.getLabel('secrets://')).toBe('Secrets')
+})
+
+test('getFileIcon - secrets', () => {
+  expect(PathDisplay.getFileIcon('secrets://')).toBe('MaskIconRecordKey')
 })
 
 test('getLabel - diff editor', () => {
