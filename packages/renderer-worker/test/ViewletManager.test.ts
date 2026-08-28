@@ -1,5 +1,6 @@
 import { beforeEach, expect, jest, test } from '@jest/globals'
 import { CancelationError } from '../src/parts/Errors/CancelationError.js'
+import * as VirtualDomElements from '../src/parts/VirtualDomElements/VirtualDomElements.js'
 import * as ViewletStates from '../src/parts/ViewletStates/ViewletStates.js'
 
 beforeEach(() => {
@@ -35,6 +36,7 @@ jest.unstable_mockModule('../src/parts/PrettyError/PrettyError.js', () => {
       codeFrame: error.codeFrame || '',
       message: error.message,
       stack: '    at treeToArray (editorWorkerMain.js:10:8)',
+      syntaxHighlightedCodeFrame: error.syntaxHighlightedCodeFrame,
       type: error.name,
     }),
     getMessage: (error: any) => `${error.type}: ${error.message}`,
@@ -941,6 +943,79 @@ test('load - custom error renderer preserves the original error and does not app
     ['Viewlet.create', 'Error', 42],
     ['Viewlet.create', 'EditorTextError', 42],
     ['Viewlet.setDom2', 42, errorDom],
+  ])
+})
+
+test('load - renders a syntax highlighted generic error', async () => {
+  // @ts-ignore
+  RendererProcess.invoke.mockResolvedValue(undefined)
+  const syntaxHighlightedCodeFrame = [
+    {
+      childCount: 1,
+      className: 'SyntaxHighlightedCodeFrame',
+      type: VirtualDomElements.Pre,
+    },
+    {
+      childCount: 0,
+      text: 'throw error',
+      type: VirtualDomElements.Text,
+    },
+  ]
+  const error = new TypeError('Oops')
+  // @ts-ignore
+  error.syntaxHighlightedCodeFrame = syntaxHighlightedCodeFrame
+  const getModule = async () => ({
+    create() {
+      return { uid: 42 }
+    },
+    loadContent() {
+      throw error
+    },
+  })
+  const viewlet = {
+    append: false,
+    disposed: false,
+    getModule,
+    id: 'VideoPreview',
+    parentUid: -1,
+    setBounds: false,
+    show: false,
+    type: 0,
+    uid: 42,
+    uri: 'test://video.mp4',
+  }
+
+  const commands = await ViewletManager.load(viewlet)
+
+  expect(commands).toEqual([
+    ['Viewlet.create', 'Error', 42],
+    [
+      'Viewlet.setDom2',
+      42,
+      [
+        {
+          childCount: 1,
+          className: 'ViewletErrorMessage',
+          type: VirtualDomElements.Div,
+        },
+        {
+          childCount: 0,
+          text: 'TypeError: Oops',
+          type: VirtualDomElements.Text,
+        },
+        ...syntaxHighlightedCodeFrame,
+        {
+          childCount: 1,
+          className: 'ViewletErrorStack',
+          type: VirtualDomElements.Pre,
+        },
+        {
+          childCount: 0,
+          text: '    at treeToArray (editorWorkerMain.js:10:8)',
+          type: VirtualDomElements.Text,
+        },
+      ],
+    ],
   ])
 })
 
