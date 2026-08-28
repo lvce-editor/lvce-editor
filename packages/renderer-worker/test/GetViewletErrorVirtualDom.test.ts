@@ -25,6 +25,11 @@ test('getViewletErrorVirtualDom', () => {
     }),
   ).toEqual([
     {
+      childCount: 3,
+      className: 'Viewlet Error',
+      type: VirtualDomElements.Div,
+    },
+    {
       childCount: 1,
       className: 'ViewletErrorMessage',
       type: VirtualDomElements.Div,

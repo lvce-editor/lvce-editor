@@ -1,4 +1,5 @@
 import * as GetViewletErrorMessage from '../GetViewletErrorMessage/GetViewletErrorMessage.js'
+import * as MergeClassNames from '../MergeClassNames/MergeClassNames.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
@@ -20,5 +21,13 @@ export const getViewletErrorVirtualDom = (error) => {
   const messageDom = getTextSectionDom(GetViewletErrorMessage.getViewletErrorTitle(error), 'ViewletErrorMessage')
   const codeFrameDom = Array.isArray(error?.syntaxHighlightedCodeFrame) ? error.syntaxHighlightedCodeFrame : []
   const stackDom = getTextSectionDom(error?.stack, 'ViewletErrorStack', VirtualDomElements.Pre)
-  return [...messageDom, ...codeFrameDom, ...stackDom]
+  const sections = [messageDom, codeFrameDom, stackDom].filter((section) => section.length > 0)
+  return [
+    {
+      childCount: sections.length,
+      className: MergeClassNames.mergeClassNames('Viewlet', 'Error'),
+      type: VirtualDomElements.Div,
+    },
+    ...sections.flat(),
+  ]
 }
