@@ -35,7 +35,12 @@ const areTabsEqual = (oldTabs, newTabs) => {
   }
   return oldTabs.every((oldTab, index) => {
     const newTab = newTabs[index]
-    return oldTab.browserViewId === newTab.browserViewId && oldTab.favicon === newTab.favicon && oldTab.title === newTab.title
+    return (
+      oldTab.browserViewId === newTab.browserViewId &&
+      oldTab.favicon === newTab.favicon &&
+      oldTab.isAudioPlaying === newTab.isAudioPlaying &&
+      oldTab.title === newTab.title
+    )
   })
 }
 
