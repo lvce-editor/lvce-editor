@@ -4,7 +4,7 @@ const isNonEmptyString = (value) => {
   return typeof value === 'string' && value.length > 0
 }
 
-const getMessage = (error) => {
+export const getViewletErrorTitle = (error) => {
   if (error?.type && error?.message) {
     const prefix = `${error.type}: `
     return error.message.startsWith(prefix) ? error.message : `${prefix}${error.message}`
@@ -13,6 +13,6 @@ const getMessage = (error) => {
 }
 
 export const getViewletErrorMessage = (error) => {
-  const message = getMessage(error)
+  const message = getViewletErrorTitle(error)
   return [message, error?.codeFrame, error?.stack].filter(isNonEmptyString).join('\n\n')
 }

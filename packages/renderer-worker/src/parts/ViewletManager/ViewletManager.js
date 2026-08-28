@@ -5,6 +5,7 @@ import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
 import { CancelationError } from '../Errors/CancelationError.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as GetViewletErrorMessage from '../GetViewletErrorMessage/GetViewletErrorMessage.js'
+import * as GetViewletErrorVirtualDom from '../GetViewletErrorVirtualDom/GetViewletErrorVirtualDom.js'
 import * as Id from '../Id/Id.js'
 import * as KeyBindingsState from '../KeyBindingsState/KeyBindingsState.js'
 import * as LayoutWidgets from '../LayoutWidgets/LayoutWidgets.ts'
@@ -845,7 +846,12 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
         // TODO
         // const errorCommands=
       } else {
-        commands.push(['Viewlet.send', /* id */ viewletUid, 'setMessage', message])
+        if (Array.isArray(prettyError?.syntaxHighlightedCodeFrame) && prettyError.syntaxHighlightedCodeFrame.length > 0) {
+          const dom = GetViewletErrorVirtualDom.getViewletErrorVirtualDom(prettyError)
+          commands.push(['Viewlet.setDom2', viewletUid, dom])
+        } else {
+          commands.push(['Viewlet.send', /* id */ viewletUid, 'setMessage', message])
+        }
         // @ts-ignore
         if (viewlet.append) {
           commands.push([kAppend, parentUid, viewletUid])
