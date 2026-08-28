@@ -62,6 +62,28 @@ test('bundleCss lets the simple browser fill the preview area height', async () 
   }
 }, 30_000)
 
+test('bundleCss strictly contains the simple browser snapshot wrapper', async () => {
+  const dir = await mkdtemp(join(tmpdir(), 'lvce-bundle-css-'))
+
+  try {
+    await bundleCss({
+      outDir: dir,
+      assetDir: '',
+    })
+
+    const css = await readFile(join(dir, 'parts', 'ViewletSimpleBrowser.css'), 'utf8')
+
+    expect(css).toContain(`.SimpleBrowserSnapshotWrapper {
+  contain: strict;
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+}`)
+  } finally {
+    await rm(dir, { recursive: true, force: true })
+  }
+}, 30_000)
+
 test('bundleCss keeps the preview sash transparent', async () => {
   const dir = await mkdtemp(join(tmpdir(), 'lvce-bundle-css-'))
 
