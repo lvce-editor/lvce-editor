@@ -65,7 +65,7 @@ test('renders accessible search suggestions above an undimmed snapshot', () => {
 
 test('renders selectable tabs with favicon, title, close, and new tab controls', () => {
   const dom = GetSimpleBrowserVirtualDom.getSimpleBrowserVirtualDom(false, false, false, '', '', [], -1, [
-    { favicon: 'https://example.com/favicon.png', title: 'Example' },
+    { favicon: 'https://example.com/favicon.png', isAudioPlaying: true, title: 'Example' },
   ])
 
   expect(dom).toContainEqual(
@@ -79,8 +79,20 @@ test('renders selectable tabs with favicon, title, close, and new tab controls',
   expect(dom).toContainEqual(
     expect.objectContaining({ className: 'SimpleBrowserTabFavicon', crossOrigin: 'anonymous', src: 'https://example.com/favicon.png' }),
   )
+  expect(dom).toContainEqual(
+    expect.objectContaining({ className: 'SimpleBrowserTabAudio', ariaLabel: 'This tab is playing audio', title: 'This tab is playing audio' }),
+  )
+  expect(dom).toContainEqual(expect.objectContaining({ className: 'MaskIcon MaskIconUnmute' }))
   expect(dom).toContainEqual(expect.objectContaining({ className: 'SimpleBrowserTabClose', onClick: 'handleClickSimpleBrowserTabClose' }))
   expect(dom).toContainEqual(expect.objectContaining({ className: 'SimpleBrowserNewTab', onClick: 'handleClickSimpleBrowserNewTab' }))
+})
+
+test('omits the audio icon for a silent tab', () => {
+  const dom = GetSimpleBrowserVirtualDom.getSimpleBrowserVirtualDom(false, false, false, '', '', [], -1, [
+    { favicon: '', isAudioPlaying: false, title: 'Example' },
+  ])
+
+  expect(dom).not.toContainEqual(expect.objectContaining({ className: 'SimpleBrowserTabAudio' }))
 })
 
 test('omits the tab strip when tabs are disabled', () => {

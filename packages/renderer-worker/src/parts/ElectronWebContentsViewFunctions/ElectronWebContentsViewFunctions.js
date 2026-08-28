@@ -62,8 +62,8 @@ export const copyImageAt = (id, x, y) => {
   return EmbedsWorker.invoke('ElectronWebContentsView.copyImageAt', id, x, y)
 }
 
-export const setFallthroughKeyBindings = (fallthroughKeyBindings) => {
-  return EmbedsWorker.invoke('ElectronWebContentsView.setFallthroughKeyBindings', fallthroughKeyBindings)
+export const setFallthroughKeyBindings = (id, fallthroughKeyBindings) => {
+  return EmbedsWorker.invoke('ElectronWebContentsView.setFallthroughKeyBindings', id, fallthroughKeyBindings)
 }
 
 export const getStats = (id) => {

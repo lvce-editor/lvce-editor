@@ -65,6 +65,12 @@
   width: 16px;
 }
 
+.SimpleBrowserTabAudio {
+  flex: 0 0 16px;
+  height: 16px;
+  width: 16px;
+}
+
 .SimpleBrowserTabTitle {
   flex: 1;
   min-width: 0;
