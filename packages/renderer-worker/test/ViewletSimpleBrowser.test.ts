@@ -93,6 +93,13 @@ const KeyCode = await import('../src/parts/KeyCode/KeyCode.js')
 const KeyModifier = await import('../src/parts/KeyModifier/KeyModifier.js')
 const Preferences = await import('../src/parts/Preferences/Preferences.js')
 
+const browserTabKeyBindings = [
+  KeyModifier.CtrlCmd | KeyCode.KeyW,
+  KeyModifier.CtrlCmd | KeyCode.KeyT,
+  KeyModifier.CtrlCmd | KeyCode.Tab,
+  KeyModifier.CtrlCmd | KeyModifier.Shift | KeyCode.Tab,
+]
+
 const createTabsState = (selectedTabIndex = 0) => {
   const tabs = [
     {
@@ -218,7 +225,7 @@ test('loadContent - restore id - same browser view', async () => {
   expect(ElectronWebContentsView.createWebContentsView).toHaveBeenCalledTimes(1)
   expect(ElectronWebContentsView.createWebContentsView).toHaveBeenCalledWith(1, 0)
   expect(ElectronWebContentsViewFunctions.setFallthroughKeyBindings).toHaveBeenCalledTimes(1)
-  expect(ElectronWebContentsViewFunctions.setFallthroughKeyBindings).toHaveBeenCalledWith(1, [])
+  expect(ElectronWebContentsViewFunctions.setFallthroughKeyBindings).toHaveBeenCalledWith(1, browserTabKeyBindings)
   expect(ElectronWebContentsViewFunctions.setIframeSrc).not.toHaveBeenCalled()
 })
 
@@ -236,7 +243,7 @@ test('loadContent - restore id - browser view does not exist yet', async () => {
   expect(ElectronWebContentsView.createWebContentsView).toHaveBeenCalledTimes(1)
   expect(ElectronWebContentsView.createWebContentsView).toHaveBeenCalledWith(1, 0)
   expect(ElectronWebContentsViewFunctions.setFallthroughKeyBindings).toHaveBeenCalledTimes(1)
-  expect(ElectronWebContentsViewFunctions.setFallthroughKeyBindings).toHaveBeenCalledWith(2, [])
+  expect(ElectronWebContentsViewFunctions.setFallthroughKeyBindings).toHaveBeenCalledWith(2, browserTabKeyBindings)
   expect(ElectronWebContentsViewFunctions.setIframeSrc).toHaveBeenCalledTimes(1)
   expect(ElectronWebContentsViewFunctions.setIframeSrc).toHaveBeenCalledWith(2, 'https://example.com')
 })
@@ -460,6 +467,43 @@ test('Ctrl+Shift+Tab from the focused web contents wraps to the previous browser
 
   expect(newState).toMatchObject({ browserViewId: 13, selectedTabIndex: 1, title: 'Two' })
   expect(ElectronWebContentsViewFunctions.focus).toHaveBeenCalledWith(13)
+})
+
+test('Ctrl+W from the focused web contents closes the current browser tab', async () => {
+  // @ts-ignore
+  ElectronWebContentsView.disposeWebContentsView.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.show.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.focus.mockResolvedValue(undefined)
+  const state = createTwoTabState()
+
+  const newState = await ViewletSimpleBrowser.handleKeyBinding(state, 12, KeyModifier.CtrlCmd | KeyCode.KeyW)
+
+  expect(newState).toMatchObject({ browserViewId: 13, selectedTabIndex: 0, title: 'Two' })
+  expect(newState.tabs).toHaveLength(1)
+  expect(ElectronWebContentsView.disposeWebContentsView).toHaveBeenCalledWith(12)
+  expect(ElectronWebContentsViewFunctions.focus).toHaveBeenCalledWith(13)
+})
+
+test('Ctrl+T from the focused web contents creates a new browser tab', async () => {
+  // @ts-ignore
+  ElectronWebContentsView.createWebContentsView.mockResolvedValue(14)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.hide.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.resizeWebContentsView.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.show.mockResolvedValue(undefined)
+  const state = createTwoTabState()
+
+  const newState = await ViewletSimpleBrowser.handleKeyBinding(state, 12, KeyModifier.CtrlCmd | KeyCode.KeyT)
+
+  expect(newState).toMatchObject({ browserViewId: 14, focusAddressVersion: 1, selectedTabIndex: 2, title: 'New Tab' })
+  expect(newState.tabs).toHaveLength(3)
+  expect(ElectronWebContentsViewFunctions.hide).toHaveBeenCalledWith(12)
+  expect(ElectronWebContentsViewFunctions.show).toHaveBeenCalledWith(14)
+  expect(ElectronWindow.focus).toHaveBeenCalledTimes(1)
 })
 
 test('ignores keybindings from another simple browser instance', async () => {
