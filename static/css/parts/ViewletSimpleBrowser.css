@@ -73,9 +73,9 @@
 
 .SimpleBrowserTabTitle {
   flex: 1;
+  mask-image: linear-gradient(to right, black calc(100% - 12px), transparent);
   min-width: 0;
   overflow: hidden;
-  text-overflow: ellipsis;
   white-space: nowrap;
 }
 

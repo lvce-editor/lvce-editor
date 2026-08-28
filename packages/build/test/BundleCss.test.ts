@@ -107,6 +107,29 @@ test('bundleCss keeps extra space between the simple browser favicon and tab tit
   }
 }, 30_000)
 
+test('bundleCss fades overflowing simple browser tab titles', async () => {
+  const dir = await mkdtemp(join(tmpdir(), 'lvce-bundle-css-'))
+
+  try {
+    await bundleCss({
+      outDir: dir,
+      assetDir: '',
+    })
+
+    const css = await readFile(join(dir, 'parts', 'ViewletSimpleBrowser.css'), 'utf8')
+
+    expect(css).toContain(`.SimpleBrowserTabTitle {
+  flex: 1;
+  mask-image: linear-gradient(to right, black calc(100% - 12px), transparent);
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+}`)
+  } finally {
+    await rm(dir, { recursive: true, force: true })
+  }
+}, 30_000)
+
 test('bundleCss keeps the preview sash transparent', async () => {
   const dir = await mkdtemp(join(tmpdir(), 'lvce-bundle-css-'))
 
