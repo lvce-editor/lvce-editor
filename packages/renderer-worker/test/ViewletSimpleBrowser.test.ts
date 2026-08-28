@@ -294,6 +294,7 @@ test('switches tabs by hiding only the previous active view', async () => {
         inputValue: 'https://one.example',
         isLoading: false,
         title: 'One',
+        zoomLevel: 0,
       },
       {
         browserViewId: 13,
@@ -304,13 +305,21 @@ test('switches tabs by hiding only the previous active view', async () => {
         inputValue: 'https://two.example',
         isLoading: false,
         title: 'Two',
+        zoomLevel: 1,
       },
     ],
   }
 
   const newState = await ViewletSimpleBrowser.selectTab(state, '1')
 
-  expect(newState).toMatchObject({ browserViewId: 13, canGoBack: true, inputValue: 'https://two.example', selectedTabIndex: 1, title: 'Two' })
+  expect(newState).toMatchObject({
+    browserViewId: 13,
+    canGoBack: true,
+    inputValue: 'https://two.example',
+    selectedTabIndex: 1,
+    title: 'Two',
+    zoomLevel: 1,
+  })
   expect(ElectronWebContentsViewFunctions.hide).toHaveBeenCalledWith(12)
   expect(ElectronWebContentsViewFunctions.show).toHaveBeenCalledWith(13)
 })
@@ -345,6 +354,26 @@ test('closing a tab disposes only its web contents view', async () => {
   }
 
   const newState = await ViewletSimpleBrowser.closeTab(state, 1)
+
+  expect(newState.tabs).toHaveLength(1)
+  expect(newState.browserViewId).toBe(12)
+  expect(ElectronWebContentsView.disposeWebContentsView).toHaveBeenCalledWith(13)
+})
+
+test('closes the selected tab from the browser menu', async () => {
+  // @ts-ignore
+  ElectronWebContentsView.disposeWebContentsView.mockResolvedValue(undefined)
+  const state = {
+    ...ViewletSimpleBrowser.create(),
+    browserViewId: 13,
+    selectedTabIndex: 1,
+    tabs: [
+      { browserViewId: 12, favicon: '', iframeSrc: 'https://one.example', inputValue: 'https://one.example', title: 'One', zoomLevel: 0 },
+      { browserViewId: 13, favicon: '', iframeSrc: 'https://two.example', inputValue: 'https://two.example', title: 'Two', zoomLevel: 0 },
+    ],
+  }
+
+  const newState = await ViewletSimpleBrowser.closeCurrentTab(state)
 
   expect(newState.tabs).toHaveLength(1)
   expect(newState.browserViewId).toBe(12)

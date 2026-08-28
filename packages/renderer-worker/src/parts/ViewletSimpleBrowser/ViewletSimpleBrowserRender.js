@@ -23,6 +23,10 @@ export const renderEventListeners = () => {
       name: DomEventListenerFunctions.HandleClickSimpleBrowserNewTab,
       params: ['createNewTab'],
     },
+    {
+      name: DomEventListenerFunctions.HandleClickSimpleBrowserMenu,
+      params: ['showMenu', 'event.clientX', 'event.clientY'],
+    },
   ]
 }
 

@@ -13,7 +13,6 @@
   width: 100%;
   contain: strict;
   display: flex;
-  padding-right: 30px;
 }
 
 .SimpleBrowserHeader .InputBox {

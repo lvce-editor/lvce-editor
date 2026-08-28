@@ -84,3 +84,16 @@ test('omits the tab strip when tabs are disabled', () => {
   expect(dom[0].childCount).toBe(1)
   expect(dom).not.toContainEqual(expect.objectContaining({ className: 'SimpleBrowserTabs' }))
 })
+
+test('renders an accessible browser menu button', () => {
+  const dom = GetSimpleBrowserVirtualDom.getSimpleBrowserVirtualDom(false, false, false, 'https://example.com')
+
+  expect(dom).toContainEqual(
+    expect.objectContaining({
+      ariaLabel: 'Customize and control Simple Browser',
+      className: 'IconButton SimpleBrowserMenuButton',
+      onClick: 'handleClickSimpleBrowserMenu',
+      title: 'Customize and control Simple Browser',
+    }),
+  )
+})

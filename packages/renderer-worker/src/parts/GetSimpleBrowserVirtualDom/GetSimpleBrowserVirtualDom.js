@@ -101,7 +101,7 @@ export const getSimpleBrowserVirtualDom = (
     {
       type: VirtualDomElements.Div,
       className: ClassNames.SimpleBrowserHeader,
-      childCount: 5,
+      childCount: 6,
     },
     {
       type: VirtualDomElements.Button,
@@ -161,6 +161,19 @@ export const getSimpleBrowserVirtualDom = (
       className: 'MaskIcon MaskIconLinkExternal',
       childCount: 0,
       onClick: DomEventListenerFunctions.HandleClickOpenExternal,
+    },
+    {
+      type: VirtualDomElements.Button,
+      className: `${ClassNames.IconButton} SimpleBrowserMenuButton`,
+      ariaLabel: 'Customize and control Simple Browser',
+      title: 'Customize and control Simple Browser',
+      childCount: 1,
+      onClick: DomEventListenerFunctions.HandleClickSimpleBrowserMenu,
+    },
+    {
+      type: VirtualDomElements.Div,
+      className: 'MaskIcon MaskIconEllipsis',
+      childCount: 0,
     },
   )
   if (snapshot) {
