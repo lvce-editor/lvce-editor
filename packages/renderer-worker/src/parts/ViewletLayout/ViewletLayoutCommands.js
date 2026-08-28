@@ -25,6 +25,7 @@ export const Commands = {
 
 export const CommandsWithSideEffects = {
   attachViewlet: ViewletLayout.attachViewlet,
+  clearProblemsSummary: ViewletLayout.clearProblemsSummary,
   handleActiveEditorChange: ViewletLayout.handleActiveEditorChange,
   handleBadgeCountChange: ViewletLayout.handleBadgeCountChange,
   handleColorThemeChanged: ViewletLayout.handleColorThemeChanged,
