@@ -2,6 +2,7 @@ import { expect, test } from '@jest/globals'
 import * as ViewletSimpleBrowserRender from '../src/parts/ViewletSimpleBrowser/ViewletSimpleBrowserRender.js'
 
 const state = {
+  browserViewId: 12,
   canGoBack: false,
   canGoForward: false,
   iframeSrc: 'https://example.com',
@@ -31,7 +32,7 @@ test('rerenders when suggestions change', () => {
   expect(ViewletSimpleBrowserRender.render[0].isEqual(state, newState)).toBe(false)
 })
 
-test('restores address input focus while suggestions are visible', () => {
+test('renders suggestions incrementally and restores address input focus', () => {
   const newState = {
     ...state,
     suggestions: ['what is'],
@@ -39,8 +40,21 @@ test('restores address input focus while suggestions are visible', () => {
 
   const commands = ViewletSimpleBrowserRender.render[0].apply(state, newState)
 
-  expect(commands[0].slice(0, 2)).toEqual(['Viewlet.setDom2', 42])
+  expect(commands[0].slice(0, 2)).toEqual(['Viewlet.setPatches', 42])
+  expect(commands[0][2]).not.toHaveLength(0)
   expect(commands.at(-1)).toEqual(['Viewlet.focusElementByName', 42, 'simple-browser-address'])
+})
+
+test('renders the initial dom in full', () => {
+  const oldState = {
+    ...state,
+    browserViewId: 0,
+  }
+
+  const commands = ViewletSimpleBrowserRender.render[0].apply(oldState, state)
+
+  expect(commands).toHaveLength(1)
+  expect(commands[0].slice(0, 2)).toEqual(['Viewlet.setDom2', 42])
 })
 
 test('does not focus the address input after suggestions close', () => {
