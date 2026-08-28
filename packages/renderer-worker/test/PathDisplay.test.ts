@@ -26,6 +26,14 @@ test('getFileIcon - running extensions', () => {
   expect(PathDisplay.getFileIcon('running-extensions://')).toBe('MaskIconExtensions')
 })
 
+test('getLabel - cookie import view', () => {
+  expect(PathDisplay.getLabel('cookie-import-view:///')).toBe('Import Firefox Cookies')
+})
+
+test('getFileIcon - cookie import view', () => {
+  expect(PathDisplay.getFileIcon('cookie-import-view:///')).toBe('MaskIconRecordKey')
+})
+
 test('getLabel - secrets', () => {
   expect(PathDisplay.getLabel('secrets://')).toBe('Secrets')
 })

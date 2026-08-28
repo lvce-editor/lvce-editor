@@ -38,6 +38,9 @@ export const getModuleId = async (uri, opener) => {
   if (uri.startsWith('chat-debug://')) {
     return ViewletModuleId.ChatDebug
   }
+  if (uri.startsWith('cookie-import-view:///')) {
+    return ViewletModuleId.CookieImport
+  }
   if (uri.startsWith('language-models://')) {
     return ViewletModuleId.LanguageModels
   }

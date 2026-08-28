@@ -2,6 +2,7 @@ import * as AboutViewWorker from '../AboutViewWorker/AboutViewWorker.js'
 import * as ActivityBarWorker from '../ActivityBarWorker/ActivityBarWorker.js'
 import * as ChatDebugViewWorker from '../ChatDebugViewWorker/ChatDebugViewWorker.js'
 import * as ChatViewWorker from '../ChatViewWorker/ChatViewWorker.js'
+import * as CookieImportViewWorker from '../CookieImportViewWorker/CookieImportViewWorker.ts'
 import * as DialogWorker from '../DialogWorker/DialogWorker.js'
 import * as DiffViewWorker from '../DiffViewWorker/DiffViewWorker.js'
 import * as ExplorerViewWorker from '../ExplorerViewWorker/ExplorerViewWorker.js'
@@ -31,6 +32,7 @@ const workerInvokers = {
   activityBar: ActivityBarWorker,
   chatDebug: ChatDebugViewWorker,
   chatView: ChatViewWorker,
+  cookieImportView: CookieImportViewWorker,
   dialogWorker: DialogWorker,
   diffView: DiffViewWorker,
   explorer: ExplorerViewWorker,

@@ -130,6 +130,8 @@ export const Secrets = 'Secrets'
 
 export const Confirm = 'Confirm'
 
+export const CookieImport = 'CookieImport'
+
 export const E2eTests = 'E2eTests'
 
 export const E2eTest = 'E2eTest'
