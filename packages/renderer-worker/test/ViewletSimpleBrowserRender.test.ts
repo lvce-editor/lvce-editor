@@ -69,12 +69,26 @@ test('does not focus the address input after suggestions close', () => {
   expect(commands).toHaveLength(1)
 })
 
+test('synchronizes the native address value when selecting another tab', () => {
+  const oldState = { ...state, browserViewId: 12, inputValue: 'https://example.com' }
+  const newState = { ...state, browserViewId: 13, inputValue: '' }
+
+  expect(ViewletSimpleBrowserRender.render[2].isEqual(oldState, newState)).toBe(false)
+  expect(ViewletSimpleBrowserRender.render[2].multiple).toBe(true)
+  expect(ViewletSimpleBrowserRender.render[2].apply(oldState, newState)).toEqual([
+    ['Viewlet.setValueByName', 42, 'simple-browser-address', ''],
+  ])
+})
+
 test('focuses the address input for a new empty tab', () => {
   const oldState = { ...state, focusAddressVersion: 0 }
   const newState = { ...state, focusAddressVersion: 1 }
 
-  expect(ViewletSimpleBrowserRender.render[2].isEqual(oldState, newState)).toBe(false)
-  expect(ViewletSimpleBrowserRender.render[2].apply(oldState, newState)).toEqual(['Viewlet.focusElementByName', 42, 'simple-browser-address'])
+  expect(ViewletSimpleBrowserRender.render[3].isEqual(oldState, newState)).toBe(false)
+  expect(ViewletSimpleBrowserRender.render[3].multiple).toBe(true)
+  expect(ViewletSimpleBrowserRender.render[3].apply(oldState, newState)).toEqual([
+    ['Viewlet.focusElementByName', 42, 'simple-browser-address'],
+  ])
 })
 
 test('routes tab context-menu events with the tab index and pointer coordinates', () => {

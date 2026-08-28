@@ -61,6 +61,10 @@ jest.unstable_mockModule('../src/parts/ElectronWebContentsView/ElectronWebConten
   }
 })
 
+jest.unstable_mockModule('../src/parts/ElectronWindow/ElectronWindow.js', () => ({
+  focus: jest.fn(),
+}))
+
 jest.unstable_mockModule('../src/parts/KeyBindingsInitial/KeyBindingsInitial.js', () => {
   return {
     getKeyBindings() {
@@ -83,6 +87,7 @@ const BrowserSearchSuggestions = await import('../src/parts/BrowserSearchSuggest
 const Command = await import('../src/parts/Command/Command.js')
 const ElectronWebContentsViewFunctions = await import('../src/parts/ElectronWebContentsViewFunctions/ElectronWebContentsViewFunctions.js')
 const ElectronWebContentsView = await import('../src/parts/ElectronWebContentsView/ElectronWebContentsView.js')
+const ElectronWindow = await import('../src/parts/ElectronWindow/ElectronWindow.js')
 const KeyCode = await import('../src/parts/KeyCode/KeyCode.js')
 const KeyModifier = await import('../src/parts/KeyModifier/KeyModifier.js')
 const Preferences = await import('../src/parts/Preferences/Preferences.js')
@@ -275,6 +280,7 @@ test('creates and selects an empty tab while keeping the original view alive', a
   expect(ElectronWebContentsView.disposeWebContentsView).not.toHaveBeenCalled()
   expect(ElectronWebContentsViewFunctions.hide).toHaveBeenCalledWith(12)
   expect(ElectronWebContentsViewFunctions.show).toHaveBeenCalledWith(13)
+  expect(ElectronWindow.focus).toHaveBeenCalledTimes(1)
 })
 
 test('opens a target blank link in a new selected tab by default', async () => {

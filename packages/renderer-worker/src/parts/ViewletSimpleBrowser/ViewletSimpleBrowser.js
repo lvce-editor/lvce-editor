@@ -5,6 +5,7 @@ import * as BrowserSearchSuggestions from '../BrowserSearchSuggestions/BrowserSe
 import * as Command from '../Command/Command.js'
 import * as ElectronWebContentsView from '../ElectronWebContentsView/ElectronWebContentsView.js'
 import * as ElectronWebContentsViewFunctions from '../ElectronWebContentsViewFunctions/ElectronWebContentsViewFunctions.js'
+import * as ElectronWindow from '../ElectronWindow/ElectronWindow.js'
 import * as GetFallThroughKeyBindings from '../GetFallThroughKeyBindings/GetFallThroughKeyBindings.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as IframeSrc from '../IframeSrc/IframeSrc.js'
@@ -290,6 +291,7 @@ export const createNewTab = async (state) => {
     await ElectronWebContentsViewFunctions.hide(currentState.browserViewId)
   }
   await ElectronWebContentsViewFunctions.show(tab.browserViewId)
+  await ElectronWindow.focus()
   const newState = activateTab(currentState, [...currentState.tabs, tab], currentState.tabs.length)
   return { ...newState, focusAddressVersion: newState.focusAddressVersion + 1 }
 }

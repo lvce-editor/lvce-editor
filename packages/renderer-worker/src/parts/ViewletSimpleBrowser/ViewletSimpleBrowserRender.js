@@ -102,13 +102,24 @@ const renderTitle = {
   },
 }
 
+const renderAddressValue = {
+  isEqual(oldState, newState) {
+    return oldState.browserViewId === newState.browserViewId
+  },
+  apply(oldState, newState) {
+    return [['Viewlet.setValueByName', newState.uid, InputName.SimpleBrowserAddress, newState.inputValue]]
+  },
+  multiple: true,
+}
+
 const renderFocusAddress = {
   isEqual(oldState, newState) {
     return oldState.focusAddressVersion === newState.focusAddressVersion
   },
   apply(oldState, newState) {
-    return ['Viewlet.focusElementByName', newState.uid, InputName.SimpleBrowserAddress]
+    return [['Viewlet.focusElementByName', newState.uid, InputName.SimpleBrowserAddress]]
   },
+  multiple: true,
 }
 
-export const render = [renderDom, renderTitle, renderFocusAddress]
+export const render = [renderDom, renderTitle, renderAddressValue, renderFocusAddress]
