@@ -1,4 +1,5 @@
 import { expect, test } from '@jest/globals'
+import * as DomEventListenerFunctions from '../src/parts/DomEventListenerFunctions/DomEventListenerFunctions.js'
 import * as ViewletSimpleBrowserRender from '../src/parts/ViewletSimpleBrowser/ViewletSimpleBrowserRender.js'
 
 const state = {
@@ -74,4 +75,15 @@ test('focuses the address input for a new empty tab', () => {
 
   expect(ViewletSimpleBrowserRender.render[2].isEqual(oldState, newState)).toBe(false)
   expect(ViewletSimpleBrowserRender.render[2].apply(oldState, newState)).toEqual(['Viewlet.focusElementByName', 42, 'simple-browser-address'])
+})
+
+test('routes tab context-menu events with the tab index and pointer coordinates', () => {
+  const listener = ViewletSimpleBrowserRender.renderEventListeners().find(
+    (candidate) => candidate.name === DomEventListenerFunctions.HandleContextMenuSimpleBrowserTab,
+  )
+
+  expect(listener).toEqual({
+    name: DomEventListenerFunctions.HandleContextMenuSimpleBrowserTab,
+    params: ['handleTabContextMenu', 'event.currentTarget.dataset.index', 'event.clientX', 'event.clientY'],
+  })
 })
