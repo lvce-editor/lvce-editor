@@ -39,6 +39,24 @@ test('gets a process WebSocket URL through the extension command', async () => {
   expect(WorkspaceConnection.getRemoteCliUrl()).toBe('wss://workspace.example.com/remote-cli')
 })
 
+test('derives a process WebSocket URL from the workspace connection', async () => {
+  workspaceState.workspaceUri = 'workspace-provider://host/work'
+  WorkspaceConnection.set(
+    'workspace-provider://host/work',
+    'workspace-provider.getWebSocketUrl',
+    'wss://workspace.example.com/websocket/shared-process?token=secret',
+    'wss://workspace.example.com/websocket/file-system-process?token=secret',
+  )
+
+  await expect(WorkspaceConnection.getWebSocketUrl('terminal-process')).resolves.toBe(
+    'wss://workspace.example.com/websocket/terminal-process?token=secret',
+  )
+  expect(executeCommand).not.toHaveBeenCalled()
+  expect(WorkspaceConnection.getWebSocketUrlTemplate()).toBe(
+    'wss://workspace.example.com/websocket/file-system-process?token=secret',
+  )
+})
+
 test('does not invoke the extension command for a different workspace', async () => {
   workspaceState.workspaceUri = 'file:///tmp/work'
   WorkspaceConnection.set('workspace-provider://host/work', 'workspace-provider.getWebSocketUrl')
@@ -48,6 +66,7 @@ test('does not invoke the extension command for a different workspace', async ()
   expect(WorkspaceConnection.isActive()).toBe(false)
   expect(WorkspaceConnection.getCommand()).toBe('')
   expect(WorkspaceConnection.getRemoteCliUrl()).toBe('')
+  expect(WorkspaceConnection.getWebSocketUrlTemplate()).toBe('')
 })
 
 test('rejects a non-WebSocket URL returned by the extension command', async () => {
@@ -66,6 +85,17 @@ test('rejects a non-WebSocket remote CLI URL', () => {
       'https://workspace.example.com/remote-cli',
     ),
   ).toThrow('Remote CLI URL must use WebSocket')
+})
+
+test('rejects a non-WebSocket workspace URL', () => {
+  expect(() =>
+    WorkspaceConnection.set(
+      'workspace-provider://host/work',
+      'workspace-provider.getWebSocketUrl',
+      '',
+      'https://workspace.example.com/process',
+    ),
+  ).toThrow('Workspace WebSocket URL must use WebSocket')
 })
 
 test('bridges a message port to the workspace connection', async () => {
