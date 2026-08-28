@@ -72,3 +72,27 @@ test('preserves state when neither body nor actions changed', async () => {
 
   expect(result).toBe(state)
 })
+
+test('clears the problems summary when the workspace changes', async () => {
+  const actionsDom = [{ title: 'View as Table' }]
+  const state = { actionsDom, uid: 7 }
+  const clearProblemsSummary = jest.fn(async () => {})
+  const invoke = jest.fn(async (command: string, ..._args: readonly unknown[]): Promise<unknown> => {
+    if (command === 'Problems.diff2') {
+      return []
+    }
+    if (command === 'Problems.renderActions') {
+      return actionsDom
+    }
+    return undefined
+  })
+  const command = wrapProblemsCommandWithDependencies('handleWorkspaceChange', {
+    clearProblemsSummary,
+    getState: () => state,
+    invoke,
+  })
+
+  await command(state, '/new-workspace')
+
+  expect(clearProblemsSummary).toHaveBeenCalledTimes(1)
+})

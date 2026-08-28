@@ -2656,7 +2656,7 @@ export const refreshProblemsSummary = async (state: LayoutState): Promise<Layout
   }
 }
 
-const clearProblemsSummary = (state: LayoutState): Promise<LayoutStateResult> => {
+export const clearProblemsSummary = (state: LayoutState): Promise<LayoutStateResult> => {
   return callGlobalEvent(state, 'handleProblemsSummaryChange', {
     errorCount: 0,
     hasEditor: false,
