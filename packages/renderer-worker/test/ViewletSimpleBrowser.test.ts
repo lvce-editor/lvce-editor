@@ -15,6 +15,9 @@ jest.unstable_mockModule('../src/parts/ElectronWebContentsViewFunctions/Electron
     reload: jest.fn(() => {
       throw new Error('not implemented')
     }),
+    setAudioMuted: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
     toggleDevtools: jest.fn(() => {
       throw new Error('not implemented')
     }),
@@ -85,10 +88,8 @@ const KeyCode = await import('../src/parts/KeyCode/KeyCode.js')
 const KeyModifier = await import('../src/parts/KeyModifier/KeyModifier.js')
 const Preferences = await import('../src/parts/Preferences/Preferences.js')
 
-const createTwoTabState = () => ({
-  ...ViewletSimpleBrowser.create(),
-  browserViewId: 12,
-  tabs: [
+const createTabsState = (selectedTabIndex = 0) => {
+  const tabs = [
     {
       browserViewId: 12,
       canGoBack: false,
@@ -96,7 +97,9 @@ const createTwoTabState = () => ({
       favicon: '',
       iframeSrc: 'https://one.example',
       inputValue: 'https://one.example',
+      isAudioPlaying: false,
       isLoading: false,
+      muted: false,
       title: 'One',
     },
     {
@@ -106,11 +109,58 @@ const createTwoTabState = () => ({
       favicon: '',
       iframeSrc: 'https://two.example',
       inputValue: 'https://two.example',
+      isAudioPlaying: false,
       isLoading: false,
+      muted: false,
       title: 'Two',
     },
-  ],
-})
+    {
+      browserViewId: 14,
+      canGoBack: false,
+      canGoForward: false,
+      favicon: '',
+      iframeSrc: 'https://three.example',
+      inputValue: 'https://three.example',
+      isAudioPlaying: false,
+      isLoading: false,
+      muted: false,
+      title: 'Three',
+    },
+    {
+      browserViewId: 15,
+      canGoBack: false,
+      canGoForward: false,
+      favicon: '',
+      iframeSrc: 'https://four.example',
+      inputValue: 'https://four.example',
+      isAudioPlaying: false,
+      isLoading: false,
+      muted: false,
+      title: 'Four',
+    },
+  ]
+  const selectedTab = tabs[selectedTabIndex]
+  return {
+    ...ViewletSimpleBrowser.create(),
+    browserViewId: selectedTab.browserViewId,
+    iframeSrc: selectedTab.iframeSrc,
+    inputValue: selectedTab.inputValue,
+    isAudioPlaying: selectedTab.isAudioPlaying,
+    isLoading: selectedTab.isLoading,
+    muted: selectedTab.muted,
+    selectedTabIndex,
+    tabs,
+    title: selectedTab.title,
+  }
+}
+
+const createTwoTabState = () => {
+  const state = createTabsState()
+  return {
+    ...state,
+    tabs: state.tabs.slice(0, 2),
+  }
+}
 
 test('create', () => {
   const state = ViewletSimpleBrowser.create()
@@ -455,6 +505,105 @@ test('closing a tab disposes only its web contents view', async () => {
   expect(newState.tabs).toHaveLength(1)
   expect(newState.browserViewId).toBe(12)
   expect(ElectronWebContentsView.disposeWebContentsView).toHaveBeenCalledWith(13)
+})
+
+test('mutes a background tab without changing the active tab state', async () => {
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.setAudioMuted.mockResolvedValue(undefined)
+  const state = createTabsState()
+
+  const newState = await ViewletSimpleBrowser.muteTab(state, 1)
+
+  expect(ElectronWebContentsViewFunctions.setAudioMuted).toHaveBeenCalledWith(13, true)
+  expect(newState.muted).toBe(false)
+  expect(newState.tabs[1].muted).toBe(true)
+})
+
+test('duplicates a tab directly to its right and selects the duplicate', async () => {
+  // @ts-ignore
+  ElectronWebContentsView.createWebContentsView.mockResolvedValue(16)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.hide.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.show.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.focus.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.setIframeSrc.mockResolvedValue(undefined)
+  const state = createTabsState()
+
+  const newState = await ViewletSimpleBrowser.duplicateTab(state, 1)
+
+  expect(newState.tabs.map((tab) => tab.browserViewId)).toEqual([12, 13, 16, 14, 15])
+  expect(newState).toMatchObject({ browserViewId: 16, iframeSrc: 'https://two.example', selectedTabIndex: 2, title: 'Two' })
+  expect(ElectronWebContentsViewFunctions.setIframeSrc).toHaveBeenCalledWith(16, 'https://two.example')
+  expect(ElectronWebContentsViewFunctions.hide).toHaveBeenCalledWith(12)
+  expect(ElectronWebContentsViewFunctions.show).toHaveBeenCalledWith(16)
+})
+
+test('reloads only the requested tab', async () => {
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.reload.mockResolvedValue(undefined)
+  const state = createTabsState()
+
+  const newState = await ViewletSimpleBrowser.reloadTab(state, 2)
+
+  expect(ElectronWebContentsViewFunctions.reload).toHaveBeenCalledWith(14)
+  expect(newState.isLoading).toBe(false)
+  expect(newState.tabs[2].isLoading).toBe(true)
+})
+
+test('closes tabs to the left and activates the context-menu tab when necessary', async () => {
+  // @ts-ignore
+  ElectronWebContentsView.disposeWebContentsView.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.show.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.focus.mockResolvedValue(undefined)
+  const state = createTabsState()
+
+  const newState = await ViewletSimpleBrowser.closeTabsToTheLeft(state, 2)
+
+  expect(newState.tabs.map((tab) => tab.browserViewId)).toEqual([14, 15])
+  expect(newState).toMatchObject({ browserViewId: 14, selectedTabIndex: 0, title: 'Three' })
+  expect(ElectronWebContentsView.disposeWebContentsView).toHaveBeenCalledTimes(2)
+  expect(ElectronWebContentsView.disposeWebContentsView).toHaveBeenCalledWith(12)
+  expect(ElectronWebContentsView.disposeWebContentsView).toHaveBeenCalledWith(13)
+})
+
+test('closes tabs to the right and activates the context-menu tab when necessary', async () => {
+  // @ts-ignore
+  ElectronWebContentsView.disposeWebContentsView.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.show.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.focus.mockResolvedValue(undefined)
+  const state = createTabsState(3)
+
+  const newState = await ViewletSimpleBrowser.closeTabsToTheRight(state, 1)
+
+  expect(newState.tabs.map((tab) => tab.browserViewId)).toEqual([12, 13])
+  expect(newState).toMatchObject({ browserViewId: 13, selectedTabIndex: 1, title: 'Two' })
+  expect(ElectronWebContentsView.disposeWebContentsView).toHaveBeenCalledTimes(2)
+  expect(ElectronWebContentsView.disposeWebContentsView).toHaveBeenCalledWith(14)
+  expect(ElectronWebContentsView.disposeWebContentsView).toHaveBeenCalledWith(15)
+})
+
+test('closes every other tab and selects the context-menu tab', async () => {
+  // @ts-ignore
+  ElectronWebContentsView.disposeWebContentsView.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.show.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.focus.mockResolvedValue(undefined)
+  const state = createTabsState()
+
+  const newState = await ViewletSimpleBrowser.closeOtherTabs(state, 1)
+
+  expect(newState.tabs.map((tab) => tab.browserViewId)).toEqual([13])
+  expect(newState).toMatchObject({ browserViewId: 13, selectedTabIndex: 0, title: 'Two' })
+  expect(ElectronWebContentsView.disposeWebContentsView).toHaveBeenCalledTimes(3)
+  expect(ElectronWebContentsView.disposeWebContentsView).not.toHaveBeenCalledWith(13)
 })
 
 test('hides every retained web contents view when the Simple Browser is hidden', async () => {

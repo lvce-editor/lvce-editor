@@ -47,7 +47,7 @@ export const openContextMenu = async (x, y, id, ...args) => {
     return
   }
   const item = getItem(entries, event.data)
-  if (!item) {
+  if (!item || item.flags === MenuItemFlags.Disabled) {
     return
   }
   const commandArgs = item.args || []
@@ -62,7 +62,7 @@ export const openContextMenu2 = async (x, y, uid, menuId, ...args) => {
     return
   }
   const item = getItem(entries, event.data)
-  if (!item) {
+  if (!item || item.flags === MenuItemFlags.Disabled) {
     return
   }
   const commandArgs = item.args || []

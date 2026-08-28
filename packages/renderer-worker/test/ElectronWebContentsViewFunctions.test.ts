@@ -14,3 +14,9 @@ test('capturePage forwards to the embeds worker', async () => {
   await expect(ElectronWebContentsViewFunctions.capturePage(12)).resolves.toBe('data:image/png;base64,c25hcHNob3Q=')
   expect(EmbedsWorker.invoke).toHaveBeenCalledWith('ElectronWebContentsView.capturePage', 12)
 })
+
+test('setAudioMuted forwards to the embeds worker', async () => {
+  await ElectronWebContentsViewFunctions.setAudioMuted(12, true)
+
+  expect(EmbedsWorker.invoke).toHaveBeenCalledWith('ElectronWebContentsView.setAudioMuted', 12, true)
+})

@@ -17,6 +17,14 @@ const UiStrings = {
   Back: 'Back',
   Forward: 'Forward',
   Reload: 'Reload',
+  MuteTab: 'Mute Tab',
+  UnmuteTab: 'Unmute Tab',
+  DuplicateTab: 'Duplicate Tab',
+  ReloadTab: 'Reload Tab',
+  CloseTab: 'Close Tab',
+  CloseTabsToTheLeft: 'Close Tabs to the Left',
+  CloseTabsToTheRight: 'Close Tabs to the Right',
+  CloseOtherTabs: 'Close Other Tabs',
 }
 
 export const inspectElement = () => {
@@ -69,4 +77,36 @@ export const forward = () => {
 
 export const reload = () => {
   return I18nString.i18nString(UiStrings.Reload)
+}
+
+export const muteTab = () => {
+  return I18nString.i18nString(UiStrings.MuteTab)
+}
+
+export const unmuteTab = () => {
+  return I18nString.i18nString(UiStrings.UnmuteTab)
+}
+
+export const duplicateTab = () => {
+  return I18nString.i18nString(UiStrings.DuplicateTab)
+}
+
+export const reloadTab = () => {
+  return I18nString.i18nString(UiStrings.ReloadTab)
+}
+
+export const closeTab = () => {
+  return I18nString.i18nString(UiStrings.CloseTab)
+}
+
+export const closeTabsToTheLeft = () => {
+  return I18nString.i18nString(UiStrings.CloseTabsToTheLeft)
+}
+
+export const closeTabsToTheRight = () => {
+  return I18nString.i18nString(UiStrings.CloseTabsToTheRight)
+}
+
+export const closeOtherTabs = () => {
+  return I18nString.i18nString(UiStrings.CloseOtherTabs)
 }

@@ -45,6 +45,7 @@ export const getSimpleBrowserVirtualDom = (
         tabIndex: isSelected ? 0 : -1,
         'data-index': index,
         onClick: DomEventListenerFunctions.HandleClickSimpleBrowserTab,
+        onContextMenu: DomEventListenerFunctions.HandleContextMenuSimpleBrowserTab,
         title: tab.title || 'New Tab',
         childCount: 2 + (tab.favicon ? 1 : 0) + (tab.isAudioPlaying ? 1 : 0),
       })
