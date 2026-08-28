@@ -31,6 +31,7 @@ const createTab = ({
   inputValue = '',
   isAudioPlaying = false,
   isLoading = false,
+  muted = false,
   title = 'New Tab',
   zoomLevel = 0,
 }) => ({
@@ -42,6 +43,7 @@ const createTab = ({
   inputValue,
   isAudioPlaying,
   isLoading,
+  muted,
   title: title || 'New Tab',
   zoomLevel,
 })
@@ -73,6 +75,7 @@ const activateTab = (state, tabs, selectedTabIndex) => {
     inputValue: tab.inputValue,
     isAudioPlaying: tab.isAudioPlaying,
     isLoading: tab.isLoading,
+    muted: tab.muted,
     selectedTabIndex,
     tabs,
     title: tab.title,
@@ -104,8 +107,9 @@ export const create = (id, uri, x, y, width, height) => {
     browserViewId: 0,
     canGoForward: true,
     canGoBack: true,
-    isLoading: false,
     isAudioPlaying: false,
+    isLoading: false,
+    muted: false,
     hasSuggestionsOverlay: false,
     selectedSuggestionIndex: -1,
     suggestions: [],
@@ -208,6 +212,7 @@ export const loadContent = async (state, savedState) => {
       canGoForward: stats.canGoForward,
       iframeSrc,
       inputValue: iframeSrc,
+      muted: Boolean(stats.isAudioMuted),
       title,
     })
     return {
@@ -224,6 +229,7 @@ export const loadContent = async (state, savedState) => {
       tabs: [tab],
       tabsEnabled,
       title,
+      muted: Boolean(stats.isAudioMuted),
     }
   }
 
@@ -232,7 +238,7 @@ export const loadContent = async (state, savedState) => {
   await ElectronWebContentsViewFunctions.resizeWebContentsView(browserViewId, browserViewX, browserViewY, browserViewWidth, browserViewHeight)
   Assert.number(browserViewId)
   await ElectronWebContentsViewFunctions.setIframeSrc(browserViewId, iframeSrc)
-  const { title, canGoBack, canGoForward } = await ElectronWebContentsViewFunctions.getStats(browserViewId)
+  const { title, canGoBack, canGoForward, isAudioMuted } = await ElectronWebContentsViewFunctions.getStats(browserViewId)
   return {
     ...state,
     iframeSrc,
@@ -241,6 +247,7 @@ export const loadContent = async (state, savedState) => {
     browserViewId,
     canGoBack,
     canGoForward,
+    muted: Boolean(isAudioMuted),
     uri: `simple-browser://${browserViewId}`,
     headerHeight,
     selectedTabIndex: 0,
@@ -253,6 +260,7 @@ export const loadContent = async (state, savedState) => {
         canGoForward,
         iframeSrc,
         inputValue: iframeSrc,
+        muted: Boolean(isAudioMuted),
         title,
       }),
     ],
@@ -289,6 +297,61 @@ export const createNewTab = async (state) => {
   await ElectronWebContentsViewFunctions.show(tab.browserViewId)
   const newState = activateTab(currentState, [...currentState.tabs, tab], currentState.tabs.length)
   return { ...newState, focusAddressVersion: newState.focusAddressVersion + 1 }
+}
+
+export const duplicateTab = async (state, index) => {
+  const { browserViewId, hasSuggestionsOverlay, tabs: oldTabs, tabsEnabled } = state
+  if (!tabsEnabled) {
+    return state
+  }
+  const tabIndex = Number(index)
+  if (tabIndex < 0 || tabIndex >= oldTabs.length) {
+    return state
+  }
+  const currentState = hasSuggestionsOverlay ? await closeSuggestions(state) : state
+  const sourceTab = currentState.tabs[tabIndex]
+  const emptyTab = await createEmptyTab(currentState)
+  const tab = {
+    ...emptyTab,
+    iframeSrc: sourceTab.iframeSrc,
+    inputValue: sourceTab.inputValue,
+    isLoading: Boolean(sourceTab.iframeSrc),
+    title: sourceTab.title,
+  }
+  if (tab.iframeSrc) {
+    void ElectronWebContentsViewFunctions.setIframeSrc(tab.browserViewId, tab.iframeSrc)
+  }
+  if (browserViewId) {
+    await ElectronWebContentsViewFunctions.hide(browserViewId)
+  }
+  await ElectronWebContentsViewFunctions.show(tab.browserViewId)
+  await ElectronWebContentsViewFunctions.focus(tab.browserViewId)
+  const tabs = currentState.tabs.toSpliced(tabIndex + 1, 0, tab)
+  const newState = activateTab(currentState, tabs, tabIndex + 1)
+  return tab.iframeSrc ? newState : { ...newState, focusAddressVersion: newState.focusAddressVersion + 1 }
+}
+
+export const muteTab = async (state, index) => {
+  const { tabs } = state
+  const tabIndex = Number(index)
+  if (tabIndex < 0 || tabIndex >= tabs.length) {
+    return state
+  }
+  const tab = tabs[tabIndex]
+  const muted = !tab.muted
+  await ElectronWebContentsViewFunctions.setAudioMuted(tab.browserViewId, muted)
+  return updateTab(state, tab.browserViewId, { muted })
+}
+
+export const reloadTab = async (state, index) => {
+  const { tabs } = state
+  const tabIndex = Number(index)
+  if (tabIndex < 0 || tabIndex >= tabs.length) {
+    return state
+  }
+  const tab = tabs[tabIndex]
+  await ElectronWebContentsViewFunctions.reload(tab.browserViewId)
+  return updateTab(state, tab.browserViewId, { isLoading: true })
 }
 
 export const handleWindowOpen = async (state, browserViewId, url, disposition) => {
@@ -376,6 +439,67 @@ export const closeTab = async (state, index) => {
 
 export const closeCurrentTab = (state) => {
   return closeTab(state, state.selectedTabIndex)
+}
+
+const closeTabsByIndex = async (state, indexes, preferredTabIndex) => {
+  const { hasSuggestionsOverlay, selectedTabIndex: oldSelectedTabIndex, tabsEnabled } = state
+  if (!tabsEnabled || indexes.length === 0) {
+    return state
+  }
+  const indexesToClose = new Set(indexes)
+  const selectedTabWillClose = indexesToClose.has(oldSelectedTabIndex)
+  const currentState = selectedTabWillClose && hasSuggestionsOverlay ? await closeSuggestions(state) : state
+  const { browserViewId, tabs: currentTabs } = currentState
+  const preferredBrowserViewId = currentTabs[preferredTabIndex]?.browserViewId
+  const tabsToClose = currentTabs.filter((tab, index) => indexesToClose.has(index))
+  const remainingTabs = currentTabs.filter((tab, index) => !indexesToClose.has(index))
+  await Promise.all(tabsToClose.map((tab) => ElectronWebContentsView.disposeWebContentsView(tab.browserViewId)))
+  const retainedSelectedTabIndex = remainingTabs.findIndex((tab) => tab.browserViewId === browserViewId)
+  if (retainedSelectedTabIndex !== -1) {
+    return {
+      ...currentState,
+      selectedTabIndex: retainedSelectedTabIndex,
+      tabs: remainingTabs,
+    }
+  }
+  const selectedTabIndex = Math.max(
+    0,
+    remainingTabs.findIndex((tab) => tab.browserViewId === preferredBrowserViewId),
+  )
+  const selectedTab = remainingTabs[selectedTabIndex]
+  await ElectronWebContentsViewFunctions.show(selectedTab.browserViewId)
+  await ElectronWebContentsViewFunctions.focus(selectedTab.browserViewId)
+  return activateTab(currentState, remainingTabs, selectedTabIndex)
+}
+
+export const closeTabsToTheLeft = async (state, index) => {
+  const { tabs } = state
+  const tabIndex = Number(index)
+  if (tabIndex <= 0 || tabIndex >= tabs.length) {
+    return state
+  }
+  const indexes = Array.from({ length: tabIndex }, (_, index) => index)
+  return closeTabsByIndex(state, indexes, tabIndex)
+}
+
+export const closeTabsToTheRight = async (state, index) => {
+  const { tabs } = state
+  const tabIndex = Number(index)
+  if (tabIndex < 0 || tabIndex >= tabs.length - 1) {
+    return state
+  }
+  const indexes = Array.from({ length: tabs.length - tabIndex - 1 }, (_, index) => tabIndex + index + 1)
+  return closeTabsByIndex(state, indexes, tabIndex)
+}
+
+export const closeOtherTabs = async (state, index) => {
+  const { tabs } = state
+  const tabIndex = Number(index)
+  if (tabIndex < 0 || tabIndex >= tabs.length || tabs.length === 1) {
+    return state
+  }
+  const indexes = tabs.map((_, index) => index).filter((index) => index !== tabIndex)
+  return closeTabsByIndex(state, indexes, tabIndex)
 }
 
 export const showOverlay = async (state, overlayId) => {

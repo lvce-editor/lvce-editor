@@ -1,4 +1,5 @@
 import { expect, test } from '@jest/globals'
+import * as DomEventListenerFunctions from '../src/parts/DomEventListenerFunctions/DomEventListenerFunctions.js'
 import * as ViewletSimpleBrowserRender from '../src/parts/ViewletSimpleBrowser/ViewletSimpleBrowserRender.js'
 
 const state = {
@@ -80,5 +81,16 @@ test('routes the browser menu button click with pointer coordinates', () => {
   expect(ViewletSimpleBrowserRender.renderEventListeners()).toContainEqual({
     name: 'handleClickSimpleBrowserMenu',
     params: ['showMenu', 'event.clientX', 'event.clientY'],
+  })
+})
+
+test('routes tab context-menu events with the tab index and pointer coordinates', () => {
+  const listener = ViewletSimpleBrowserRender.renderEventListeners().find(
+    (candidate) => candidate.name === DomEventListenerFunctions.HandleContextMenuSimpleBrowserTab,
+  )
+
+  expect(listener).toEqual({
+    name: DomEventListenerFunctions.HandleContextMenuSimpleBrowserTab,
+    params: ['handleTabContextMenu', 'event.currentTarget.dataset.index', 'event.clientX', 'event.clientY'],
   })
 })
