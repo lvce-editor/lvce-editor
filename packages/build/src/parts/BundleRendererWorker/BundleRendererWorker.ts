@@ -270,6 +270,7 @@ export const bundleRendererWorker = async ({ cachePath, platform, commitHash, as
     await BundleJs.bundleJs({
       cwd: cachePath,
       from: `./src/rendererWorkerMain.ts`,
+      modulePaths: [Path.absolute('packages/renderer-worker/node_modules')],
       platform: 'webworker',
       sourceMap: false,
     })
