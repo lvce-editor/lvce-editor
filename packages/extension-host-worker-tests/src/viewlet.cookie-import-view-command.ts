@@ -8,5 +8,7 @@ export const test: Test = async ({ expect, Locator, QuickPick }) => {
   await QuickPick.selectItem('Simple Browser: Import Cookies from Firefox')
 
   await expect(Locator('.CookieImportView')).toBeVisible()
-  await expect(Locator('.MainTab[title="Import Firefox Cookies"]')).toBeVisible()
+  const tab = Locator('.MainTab[title="cookie-import-view:///"]')
+  await expect(tab).toBeVisible()
+  await expect(tab.locator('.TabTitle')).toHaveText('Import Firefox Cookies')
 }
