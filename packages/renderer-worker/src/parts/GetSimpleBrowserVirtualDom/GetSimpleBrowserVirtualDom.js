@@ -38,6 +38,8 @@ export const getSimpleBrowserVirtualDom = (
     for (let index = 0; index < tabs.length; index++) {
       const tab = tabs[index]
       const isSelected = index === selectedTabIndex
+      const isMuted = Boolean(tab.muted)
+      const showAudioIndicator = audioIndicatorEnabled && (tab.isAudioPlaying || isMuted)
       dom.push({
         type: VirtualDomElements.Div,
         className: isSelected ? 'SimpleBrowserTab SimpleBrowserTabSelected' : 'SimpleBrowserTab',
@@ -48,7 +50,7 @@ export const getSimpleBrowserVirtualDom = (
         onClick: DomEventListenerFunctions.HandleClickSimpleBrowserTab,
         onContextMenu: DomEventListenerFunctions.HandleContextMenuSimpleBrowserTab,
         title: tab.title || 'New Tab',
-        childCount: 2 + (tab.favicon ? 1 : 0) + (audioIndicatorEnabled && tab.isAudioPlaying ? 1 : 0),
+        childCount: 2 + (tab.favicon ? 1 : 0) + (showAudioIndicator ? 1 : 0),
       })
       if (tab.favicon) {
         dom.push({
@@ -68,19 +70,22 @@ export const getSimpleBrowserVirtualDom = (
         },
         text(tab.title || 'New Tab'),
       )
-      if (audioIndicatorEnabled && tab.isAudioPlaying) {
+      if (showAudioIndicator) {
+        const audioLabel = isMuted ? 'Unmute tab' : 'Mute tab'
         dom.push(
           {
-            type: VirtualDomElements.Span,
+            type: VirtualDomElements.Button,
             className: 'SimpleBrowserTabAudio',
-            ariaLabel: 'This tab is playing audio',
-            role: AriaRoles.Image,
-            title: 'This tab is playing audio',
+            ariaLabel: audioLabel,
+            ariaPressed: isMuted,
+            'data-index': index,
+            onClick: DomEventListenerFunctions.HandleClickSimpleBrowserTabAudio,
+            title: audioLabel,
             childCount: 1,
           },
           {
             type: VirtualDomElements.Div,
-            className: 'MaskIcon MaskIconUnmute',
+            className: isMuted ? 'MaskIcon MaskIconMute' : 'MaskIcon MaskIconUnmute',
             childCount: 0,
           },
         )

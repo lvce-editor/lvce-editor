@@ -80,7 +80,15 @@ test('renders selectable tabs with favicon, title, close, and new tab controls',
     expect.objectContaining({ className: 'SimpleBrowserTabFavicon', crossOrigin: 'anonymous', src: 'https://example.com/favicon.png' }),
   )
   expect(dom).toContainEqual(
-    expect.objectContaining({ className: 'SimpleBrowserTabAudio', ariaLabel: 'This tab is playing audio', title: 'This tab is playing audio' }),
+    expect.objectContaining({
+      ariaLabel: 'Mute tab',
+      ariaPressed: false,
+      className: 'SimpleBrowserTabAudio',
+      'data-index': 0,
+      onClick: 'handleClickSimpleBrowserTabAudio',
+      title: 'Mute tab',
+      type: VirtualDomElements.Button,
+    }),
   )
   expect(dom).toContainEqual(expect.objectContaining({ className: 'MaskIcon MaskIconUnmute' }))
   expect(dom).toContainEqual(expect.objectContaining({ className: 'SimpleBrowserTabClose', onClick: 'handleClickSimpleBrowserTabClose' }))
@@ -95,6 +103,25 @@ test('omits the audio icon for a silent tab', () => {
   expect(dom).not.toContainEqual(expect.objectContaining({ className: 'SimpleBrowserTabAudio' }))
 })
 
+test('renders a muted audio button for a muted tab', () => {
+  const dom = GetSimpleBrowserVirtualDom.getSimpleBrowserVirtualDom(false, false, false, '', '', [], -1, [
+    { favicon: '', isAudioPlaying: false, muted: true, title: 'Example' },
+  ])
+
+  expect(dom).toContainEqual(
+    expect.objectContaining({
+      ariaLabel: 'Unmute tab',
+      ariaPressed: true,
+      className: 'SimpleBrowserTabAudio',
+      'data-index': 0,
+      onClick: 'handleClickSimpleBrowserTabAudio',
+      title: 'Unmute tab',
+      type: VirtualDomElements.Button,
+    }),
+  )
+  expect(dom).toContainEqual(expect.objectContaining({ className: 'MaskIcon MaskIconMute' }))
+})
+
 test('omits the audio icon when the audio indicator is disabled', () => {
   const dom = GetSimpleBrowserVirtualDom.getSimpleBrowserVirtualDom(
     false,
@@ -105,6 +132,24 @@ test('omits the audio icon when the audio indicator is disabled', () => {
     [],
     -1,
     [{ favicon: '', isAudioPlaying: true, title: 'Example' }],
+    0,
+    true,
+    false,
+  )
+
+  expect(dom).not.toContainEqual(expect.objectContaining({ className: 'SimpleBrowserTabAudio' }))
+})
+
+test('omits the muted audio icon when the audio indicator is disabled', () => {
+  const dom = GetSimpleBrowserVirtualDom.getSimpleBrowserVirtualDom(
+    false,
+    false,
+    false,
+    '',
+    '',
+    [],
+    -1,
+    [{ favicon: '', isAudioPlaying: false, muted: true, title: 'Example' }],
     0,
     true,
     false,

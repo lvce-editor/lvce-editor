@@ -46,6 +46,19 @@ test('rerenders when the audio indicator setting changes', () => {
   expect(ViewletSimpleBrowserRender.render[0].isEqual(oldState, newState)).toBe(false)
 })
 
+test('rerenders when a tab is muted', () => {
+  const oldState = {
+    ...state,
+    tabs: [{ browserViewId: 12, favicon: '', isAudioPlaying: true, muted: false, title: 'Example' }],
+  }
+  const newState = {
+    ...state,
+    tabs: [{ browserViewId: 12, favicon: '', isAudioPlaying: true, muted: true, title: 'Example' }],
+  }
+
+  expect(ViewletSimpleBrowserRender.render[0].isEqual(oldState, newState)).toBe(false)
+})
+
 test('renders suggestions incrementally and restores address input focus', () => {
   const newState = {
     ...state,
@@ -119,5 +132,13 @@ test('routes tab context-menu events with the tab index and pointer coordinates'
   expect(listener).toEqual({
     name: DomEventListenerFunctions.HandleContextMenuSimpleBrowserTab,
     params: ['handleTabContextMenu', 'event.currentTarget.dataset.index', 'event.clientX', 'event.clientY'],
+  })
+})
+
+test('routes audio button clicks to mute the tab without selecting it', () => {
+  expect(ViewletSimpleBrowserRender.renderEventListeners()).toContainEqual({
+    name: DomEventListenerFunctions.HandleClickSimpleBrowserTabAudio,
+    params: ['muteTab', 'event.currentTarget.dataset.index'],
+    stopPropagation: true,
   })
 })
