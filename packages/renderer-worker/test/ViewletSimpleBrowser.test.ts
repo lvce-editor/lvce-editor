@@ -190,10 +190,25 @@ test('loadContent', async () => {
   ElectronWebContentsViewFunctions.setIframeSrc.mockImplementation(() => {})
   const state = ViewletSimpleBrowser.create(0, 'simple-browser://', 0, 0, 0, 0)
   expect(await ViewletSimpleBrowser.loadContent(state)).toMatchObject({
+    audioIndicatorEnabled: true,
     headerHeight: 65,
     iframeSrc: 'https://example.com',
     tabsEnabled: true,
   })
+})
+
+test('loadContent disables the audio indicator through simpleBrowser.audioIndicator.enabled', async () => {
+  Preferences.state['simpleBrowser.audioIndicator.enabled'] = false
+  // @ts-ignore
+  ElectronWebContentsView.createWebContentsView.mockResolvedValue(1)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.setIframeSrc.mockResolvedValue(undefined)
+  const state = ViewletSimpleBrowser.create(0, 'simple-browser://', 0, 0, 300, 200)
+
+  const newState = await ViewletSimpleBrowser.loadContent(state)
+
+  expect(newState).toMatchObject({ audioIndicatorEnabled: false })
+  delete Preferences.state['simpleBrowser.audioIndicator.enabled']
 })
 
 test('loadContent disables the tab strip through simpleBrowser.tabs.enabled', async () => {
