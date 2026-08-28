@@ -1,6 +1,7 @@
 import { beforeEach, expect, jest, test } from '@jest/globals'
 
 const commandExecute = jest.fn()
+const focusSetFocus = jest.fn()
 const rendererProcessInvoke = jest.fn()
 const viewletDisposeFunctional = jest.fn((uid) => [['Viewlet.dispose', uid]])
 const viewletExecuteViewletCommand = jest.fn()
@@ -34,6 +35,12 @@ jest.unstable_mockModule('../src/parts/Id/Id.js', () => {
     create() {
       return nextId++
     },
+  }
+})
+
+jest.unstable_mockModule('../src/parts/Focus/Focus.js', () => {
+  return {
+    setFocus: focusSetFocus,
   }
 })
 
@@ -81,6 +88,7 @@ const ViewletModuleId = await import('../src/parts/ViewletModuleId/ViewletModule
 const ViewletTerminals = await import('../src/parts/ViewletTerminals/ViewletTerminals.js')
 const ViewletTerminalsRender = await import('../src/parts/ViewletTerminals/ViewletTerminalsRender.js')
 const ViewletTerminalsRenderActions = await import('../src/parts/ViewletTerminals/ViewletTerminalsRenderActions.js')
+const WhenExpression = await import('../src/parts/WhenExpression/WhenExpression.js')
 
 const createLoadedState = () => {
   return {
@@ -356,6 +364,7 @@ test('handleMouseDown selects and focuses the terminal the user pressed', () => 
     childUid: 41,
     focusVersion: 1,
   })
+  expect(focusSetFocus).toHaveBeenCalledWith(WhenExpression.FocusTerminal)
   expect(ViewletTerminalsRender.renderFocus.apply(state, newState)).toEqual([['Viewlet.focus', 41]])
 })
 
@@ -369,6 +378,7 @@ test('handleMouseDown focuses an already active terminal', () => {
     childUid: 41,
     focusVersion: 1,
   })
+  expect(focusSetFocus).toHaveBeenCalledWith(WhenExpression.FocusTerminal)
   expect(ViewletTerminalsRender.renderFocus.apply(state, newState)).toEqual([['Viewlet.focus', 41]])
 })
 
@@ -621,6 +631,7 @@ test('focus eventually focuses the active xterm child', () => {
   const newState = ViewletTerminals.focus(state)
 
   expect(newState.focusVersion).toBe(1)
+  expect(focusSetFocus).toHaveBeenCalledWith(WhenExpression.FocusTerminal)
   expect(ViewletTerminalsRender.renderFocus.isEqual(state, newState)).toBe(false)
   expect(ViewletTerminalsRender.renderFocus.apply(state, newState)).toEqual([['Viewlet.focus', 41]])
 })
@@ -629,4 +640,5 @@ test('focus does nothing when there are no terminal instances', () => {
   const state = ViewletTerminals.create(1, '', 10, 20, 800, 400)
 
   expect(ViewletTerminals.focus(state)).toBe(state)
+  expect(focusSetFocus).not.toHaveBeenCalled()
 })

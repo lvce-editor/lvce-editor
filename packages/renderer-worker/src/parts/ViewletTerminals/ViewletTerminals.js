@@ -1,5 +1,6 @@
 import * as Assert from '../Assert/Assert.ts'
 import * as Command from '../Command/Command.js'
+import * as Focus from '../Focus/Focus.js'
 import * as GetTerminalSpawnOptions from '../GetTerminalSpawnOptions/GetTerminalSpawnOptions.js'
 import * as Id from '../Id/Id.js'
 import * as Preferences from '../Preferences/Preferences.js'
@@ -7,6 +8,7 @@ import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
+import * as WhenExpression from '../WhenExpression/WhenExpression.js'
 
 export const create = (id, uri, x, y, width, height) => {
   Assert.number(id)
@@ -225,6 +227,7 @@ export const handleMouseDown = (state, childUid) => {
   if (!childUids.includes(childUid)) {
     return state
   }
+  Focus.setFocus(WhenExpression.FocusTerminal)
   return {
     ...state,
     activeTerminalUids: activeTerminalUids.with(selectedIndex, childUid),
@@ -376,6 +379,7 @@ export const focus = (state) => {
   if (childUid === -1) {
     return state
   }
+  Focus.setFocus(WhenExpression.FocusTerminal)
   return {
     ...state,
     focusVersion: focusVersion + 1,
