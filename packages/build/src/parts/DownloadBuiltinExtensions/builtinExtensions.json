@@ -425,8 +425,8 @@
   {
     "name": "builtin.language-basics-typescript",
     "repository": "github.com/lvce-editor/language-basics-typescript",
-    "version": "3.11.12",
-    "sha256": "082ca22d52501fbb1e0ef69bd509659b85681aa170d3cd2e34fe858419ea4c3a",
+    "version": "3.11.13",
+    "sha256": "45ec3c35ade8a0248ff1425d01b23cb410bd6a531b77d4ac154db58e32fc3e31",
     "created": "2022-06-26"
   },
   {
