@@ -33,6 +33,12 @@ test('names the address input so focus can be restored after rendering', () => {
   )
 })
 
+test('tracks focus anywhere in the simple browser chrome', () => {
+  const dom = GetSimpleBrowserVirtualDom.getSimpleBrowserVirtualDom(false, false, false, '')
+
+  expect(dom[0]).toMatchObject({ onFocusIn: 'handleFocusInSimpleBrowser' })
+})
+
 test('renders accessible search suggestions above an undimmed snapshot', () => {
   const dom = GetSimpleBrowserVirtualDom.getSimpleBrowserVirtualDom(
     true,

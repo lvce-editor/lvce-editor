@@ -24,6 +24,7 @@ export const getSimpleBrowserVirtualDom = (
     {
       type: VirtualDomElements.Div,
       className: tabsEnabled ? 'Viewlet SimpleBrowser SimpleBrowserTabsEnabled' : 'Viewlet SimpleBrowser',
+      onFocusIn: DomEventListenerFunctions.HandleFocusInSimpleBrowser,
       childCount: 1 + (tabsEnabled ? 1 : 0) + (snapshot ? 1 : 0) + (suggestions.length > 0 ? 1 : 0),
     },
   ]

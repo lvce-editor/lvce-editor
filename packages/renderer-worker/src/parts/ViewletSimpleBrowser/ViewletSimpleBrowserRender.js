@@ -11,6 +11,10 @@ export const hasFunctionalRootRender = true
 export const renderEventListeners = () => {
   return [
     {
+      name: DomEventListenerFunctions.HandleFocusInSimpleBrowser,
+      params: ['handleFocusIn', 'event.target.name'],
+    },
+    {
       name: DomEventListenerFunctions.HandleClickSimpleBrowserTab,
       params: ['selectTab', 'event.currentTarget.dataset.index'],
     },
