@@ -352,6 +352,7 @@ export const commandMap = {
   'RecentlyOpened.getRecentlyOpened': lazy('RecentlyOpened.getRecentlyOpened'),
   'RecentlyOpened.hydrate': lazy('RecentlyOpened.hydrate'),
   'Reload.reload': lazy('Reload.reload'),
+  'RevealInExplorer.reveal': lazy('RevealInExplorer.reveal'),
   'SaveFileAs.saveFileAs': lazy('SaveFileAs.saveFileAs'),
   'SaveState.handleVisibilityChange': lazy('SaveState.handleVisibilityChange'),
   'SaveState.hydrate': lazy('SaveState.hydrate'),

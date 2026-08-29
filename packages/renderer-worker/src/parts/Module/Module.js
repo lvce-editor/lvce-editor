@@ -229,6 +229,8 @@ export const load = (moduleId) => {
       return import('../WebSocketCapability/WebSocketCapability.ipc.js')
     case ModuleId.ExtensionHotReload:
       return import('../ExtensionHotReload/ExtensionHotReload.ipc.js')
+    case ModuleId.RevealInExplorer:
+      return import('../RevealInExplorer/RevealInExplorer.ipc.ts')
     default:
       throw new Error(`module ${moduleId} not found`)
   }

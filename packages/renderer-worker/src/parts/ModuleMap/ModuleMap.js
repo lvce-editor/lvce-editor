@@ -150,6 +150,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.RebuildNodePty
     case 'RecentlyOpened':
       return ModuleId.RecentlyOpened
+    case 'RevealInExplorer':
+      return ModuleId.RevealInExplorer
     case 'Reload':
       return ModuleId.Reload
     case 'SaveFileAs':
