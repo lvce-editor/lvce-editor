@@ -135,6 +135,7 @@ export const getSimpleBrowserVirtualDom = (
       className: ClassNames.IconButton,
       childCount: 1,
       title: 'Back',
+      disabled: !canGoBack,
       onClick: DomEventListenerFunctions.HandleClickBackward,
     },
     {
@@ -147,6 +148,7 @@ export const getSimpleBrowserVirtualDom = (
       className: ClassNames.IconButton,
       childCount: 1,
       title: 'Forward',
+      disabled: !canGoForward,
       onClick: DomEventListenerFunctions.HandleClickForward,
     },
     {
