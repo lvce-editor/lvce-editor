@@ -163,6 +163,16 @@ test('renderEventListeners registers side bar sash double click handler', () => 
   })
 })
 
+test('renderEventListeners registers preview sash double click handler', () => {
+  const listeners = ViewletLayoutRender2.renderEventListeners()
+  const doubleClickListener = listeners.find((listener) => listener.name === 'handleSashPreviewDoubleClick')
+
+  expect(doubleClickListener).toEqual({
+    name: 'handleSashPreviewDoubleClick',
+    params: ['handleSashDoubleClick', 'Preview'],
+  })
+})
+
 test('renderEventListeners registers preview close handler', () => {
   const listeners = ViewletLayoutRender2.renderEventListeners()
   const closeListener = listeners.find((listener) => listener.name === 'handleClickClose')

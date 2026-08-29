@@ -61,6 +61,7 @@ test('getLayoutVirtualDom renders sashes with tabIndex -1', () => {
       }),
       expect.objectContaining({
         className: 'Viewlet Sash SashVertical SashPreview',
+        onDblClick: DomEventListenerFunctions.HandleSashPreviewDoubleClick,
         tabIndex: -1,
         onContextMenu: DomEventListenerFunctions.HandleContextMenu,
       }),

@@ -79,6 +79,7 @@ const getSashPreviewDom = () => {
     className: 'Viewlet Sash SashVertical SashPreview',
     tabIndex: -1,
     role: 'none',
+    onDblClick: DomEventListenerFunctions.HandleSashPreviewDoubleClick,
     onPointerDown: DomEventListenerFunctions.HandleSashPreviewPointerDown,
     onContextMenu: DomEventListenerFunctions.HandleContextMenu,
   }
