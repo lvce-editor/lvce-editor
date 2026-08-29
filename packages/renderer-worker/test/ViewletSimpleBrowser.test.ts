@@ -210,6 +210,21 @@ test('create', () => {
   expect(state).toBeDefined()
 })
 
+test('saveState preserves all browser tabs and the selected tab', () => {
+  const state = createTabsState(1)
+
+  expect(ViewletSimpleBrowser.saveState(state)).toEqual({
+    iframeSrc: 'https://two.example',
+    selectedTabIndex: 1,
+    tabs: [
+      { favicon: '', iframeSrc: 'https://one.example', inputValue: 'https://one.example', title: 'One' },
+      { favicon: '', iframeSrc: 'https://two.example', inputValue: 'https://two.example', title: 'Two' },
+      { favicon: '', iframeSrc: 'https://three.example', inputValue: 'https://three.example', title: 'Three' },
+      { favicon: '', iframeSrc: 'https://four.example', inputValue: 'https://four.example', title: 'Four' },
+    ],
+  })
+})
+
 test('uses the URL input focus context for the address field', () => {
   const state = ViewletSimpleBrowser.create(42)
 
@@ -310,6 +325,44 @@ test('loadContent - restore id - browser view does not exist yet', async () => {
   expect(ElectronWebContentsViewFunctions.setFallthroughKeyBindings).toHaveBeenCalledWith(2, browserTabKeyBindings)
   expect(ElectronWebContentsViewFunctions.setIframeSrc).toHaveBeenCalledTimes(1)
   expect(ElectronWebContentsViewFunctions.setIframeSrc).toHaveBeenCalledWith(2, 'https://example.com')
+})
+
+test('loadContent restores every tab but creates a web contents view only for the selected tab', async () => {
+  // @ts-ignore
+  ElectronWebContentsView.createWebContentsView.mockResolvedValue(17)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.setIframeSrc.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.getStats.mockResolvedValue({ canGoBack: false, canGoForward: false, title: '' })
+  const state = ViewletSimpleBrowser.create(7, 'simple-browser://12', 10, 20, 300, 200)
+  const savedState = {
+    iframeSrc: 'https://two.example',
+    selectedTabIndex: 1,
+    tabs: [
+      { favicon: 'https://one.example/favicon.ico', iframeSrc: 'https://one.example', inputValue: 'one.example', title: 'One' },
+      { favicon: 'https://two.example/favicon.ico', iframeSrc: 'https://two.example', inputValue: 'two.example', title: 'Two' },
+      { favicon: '', iframeSrc: 'https://three.example', inputValue: 'three.example', title: 'Three' },
+    ],
+  }
+
+  const newState = await ViewletSimpleBrowser.loadContent(state, savedState)
+
+  expect(newState).toMatchObject({
+    browserViewId: 17,
+    iframeSrc: 'https://two.example',
+    inputValue: 'two.example',
+    selectedTabIndex: 1,
+    title: 'Two',
+  })
+  expect(newState.tabs).toMatchObject([
+    { browserViewId: 0, iframeSrc: 'https://one.example', title: 'One' },
+    { browserViewId: 17, iframeSrc: 'https://two.example', title: 'Two' },
+    { browserViewId: 0, iframeSrc: 'https://three.example', title: 'Three' },
+  ])
+  expect(ElectronWebContentsView.createWebContentsView).toHaveBeenCalledTimes(1)
+  expect(ElectronWebContentsView.createWebContentsView).toHaveBeenCalledWith(12, 7)
+  expect(ElectronWebContentsViewFunctions.setIframeSrc).toHaveBeenCalledTimes(1)
+  expect(ElectronWebContentsViewFunctions.setIframeSrc).toHaveBeenCalledWith(17, 'https://two.example')
 })
 
 test('handleTitleUpdated', async () => {
@@ -506,6 +559,49 @@ test('switches tabs by showing the selected view before hiding the previous acti
   // @ts-ignore
   const hideCallOrder = ElectronWebContentsViewFunctions.hide.mock.invocationCallOrder[0]
   expect(showCallOrder).toBeLessThan(hideCallOrder)
+})
+
+test('creates a restored background tab web contents view when the tab is selected', async () => {
+  // @ts-ignore
+  ElectronWebContentsView.createWebContentsView.mockResolvedValue(18)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.hide.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.resizeWebContentsView.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.setIframeSrc.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.show.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.focus.mockResolvedValue(undefined)
+  const state = {
+    ...ViewletSimpleBrowser.create(7, 'simple-browser://17', 10, 20, 300, 200),
+    browserViewId: 17,
+    headerHeight: 65,
+    selectedTabIndex: 1,
+    tabs: [
+      { browserViewId: 0, iframeSrc: 'https://one.example', inputValue: 'one.example', title: 'One' },
+      { browserViewId: 17, iframeSrc: 'https://two.example', inputValue: 'two.example', title: 'Two' },
+    ],
+  }
+
+  const newState = await ViewletSimpleBrowser.selectTab(state, 0)
+
+  expect(newState).toMatchObject({
+    browserViewId: 18,
+    iframeSrc: 'https://one.example',
+    inputValue: 'one.example',
+    selectedTabIndex: 0,
+    title: 'One',
+  })
+  expect(newState.tabs[0]).toMatchObject({ browserViewId: 18, iframeSrc: 'https://one.example', isLoading: true })
+  expect(ElectronWebContentsView.createWebContentsView).toHaveBeenCalledTimes(1)
+  expect(ElectronWebContentsView.createWebContentsView).toHaveBeenCalledWith(0, 7)
+  expect(ElectronWebContentsViewFunctions.resizeWebContentsView).toHaveBeenCalledWith(18, 10, 85, 300, 135)
+  expect(ElectronWebContentsViewFunctions.setIframeSrc).toHaveBeenCalledWith(18, 'https://one.example')
+  expect(ElectronWebContentsViewFunctions.show).toHaveBeenCalledWith(18)
+  expect(ElectronWebContentsViewFunctions.hide).toHaveBeenCalledWith(17)
+  expect(ElectronWebContentsViewFunctions.focus).toHaveBeenCalledWith(18)
 })
 
 test('Ctrl+Tab from the focused web contents selects the next browser tab', async () => {
@@ -788,7 +884,7 @@ test('hides every retained web contents view when the Simple Browser is hidden',
   ElectronWebContentsViewFunctions.hide.mockResolvedValue(undefined)
   const state = {
     ...ViewletSimpleBrowser.create(),
-    tabs: [{ browserViewId: 12 }, { browserViewId: 13 }],
+    tabs: [{ browserViewId: 12 }, { browserViewId: 0 }, { browserViewId: 13 }],
   }
 
   await ViewletSimpleBrowser.hide(state)
@@ -803,7 +899,7 @@ test('resizes active and hidden web contents views', async () => {
   ElectronWebContentsViewFunctions.resizeWebContentsView.mockResolvedValue(undefined)
   const state = {
     ...ViewletSimpleBrowser.create(7, '', 10, 20, 300, 200),
-    tabs: [{ browserViewId: 12 }, { browserViewId: 13 }],
+    tabs: [{ browserViewId: 12 }, { browserViewId: 0 }, { browserViewId: 13 }],
   }
 
   await ViewletSimpleBrowserResize.resizeEffect(state)
@@ -818,7 +914,7 @@ test('disposes every retained web contents view with the Simple Browser', async 
   const state = {
     ...ViewletSimpleBrowser.create(),
     snapshot: 'blob:https://example.com/snapshot',
-    tabs: [{ browserViewId: 12 }, { browserViewId: 13 }],
+    tabs: [{ browserViewId: 12 }, { browserViewId: 0 }, { browserViewId: 13 }],
   }
 
   await ViewletSimpleBrowser.dispose(state)
