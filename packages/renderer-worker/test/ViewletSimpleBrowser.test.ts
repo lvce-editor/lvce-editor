@@ -85,6 +85,11 @@ jest.unstable_mockModule('../src/parts/Command/Command.js', () => ({
   execute: jest.fn(),
 }))
 
+jest.unstable_mockModule('../src/parts/SimpleBrowserSnapshot/SimpleBrowserSnapshot.js', () => ({
+  create: jest.fn(),
+  dispose: jest.fn(),
+}))
+
 const ViewletSimpleBrowser = await import('../src/parts/ViewletSimpleBrowser/ViewletSimpleBrowser.js')
 const ViewletSimpleBrowserOpenBackgroundTab = await import('../src/parts/ViewletSimpleBrowser/ViewletSimpleBrowserOpenBackgroundTab.js')
 const ViewletSimpleBrowserResize = await import('../src/parts/ViewletSimpleBrowser/ViewletSimpleBrowserResize.js')
@@ -98,6 +103,7 @@ const InputName = await import('../src/parts/InputName/InputName.js')
 const KeyCode = await import('../src/parts/KeyCode/KeyCode.js')
 const KeyModifier = await import('../src/parts/KeyModifier/KeyModifier.js')
 const Preferences = await import('../src/parts/Preferences/Preferences.js')
+const SimpleBrowserSnapshot = await import('../src/parts/SimpleBrowserSnapshot/SimpleBrowserSnapshot.js')
 const ViewletModuleId = await import('../src/parts/ViewletModuleId/ViewletModuleId.js')
 const WhenExpression = await import('../src/parts/WhenExpression/WhenExpression.js')
 
@@ -777,6 +783,7 @@ test('disposes every retained web contents view with the Simple Browser', async 
   ElectronWebContentsView.disposeWebContentsView.mockResolvedValue(undefined)
   const state = {
     ...ViewletSimpleBrowser.create(),
+    snapshot: 'blob:https://example.com/snapshot',
     tabs: [{ browserViewId: 12 }, { browserViewId: 13 }],
   }
 
@@ -785,6 +792,7 @@ test('disposes every retained web contents view with the Simple Browser', async 
   expect(ElectronWebContentsView.disposeWebContentsView).toHaveBeenCalledTimes(2)
   expect(ElectronWebContentsView.disposeWebContentsView).toHaveBeenNthCalledWith(1, 12)
   expect(ElectronWebContentsView.disposeWebContentsView).toHaveBeenNthCalledWith(2, 13)
+  expect(SimpleBrowserSnapshot.dispose).toHaveBeenCalledWith('blob:https://example.com/snapshot')
 })
 
 test('handleWillNavigate', () => {
@@ -844,29 +852,35 @@ test('handleDidNavigate', () => {
 })
 
 test('showOverlay captures and hides the WebContentsView', async () => {
+  const png = new Uint8Array([137, 80, 78, 71])
   // @ts-ignore
-  ElectronWebContentsViewFunctions.capturePage.mockResolvedValue('data:image/png;base64,c25hcHNob3Q=')
+  ElectronWebContentsViewFunctions.capturePage.mockResolvedValue(png)
   // @ts-ignore
   ElectronWebContentsViewFunctions.hide.mockResolvedValue(undefined)
+  // @ts-ignore
+  SimpleBrowserSnapshot.create.mockReturnValue('blob:https://example.com/snapshot')
   const state = { ...ViewletSimpleBrowser.create(), browserViewId: 12, iframeSrc: 'https://example.com' }
 
   const newState = await ViewletSimpleBrowser.showOverlay(state, 'quick-pick')
 
   expect(newState).toMatchObject({
     overlayIds: ['quick-pick'],
-    snapshot: 'data:image/png;base64,c25hcHNob3Q=',
+    snapshot: 'blob:https://example.com/snapshot',
   })
   expect(ElectronWebContentsViewFunctions.capturePage).toHaveBeenCalledWith(12)
+  expect(SimpleBrowserSnapshot.create).toHaveBeenCalledWith(png)
   expect(ElectronWebContentsViewFunctions.hide).toHaveBeenCalledWith(12)
 })
 
 test('overlays share one snapshot and restore after the last overlay closes', async () => {
   // @ts-ignore
-  ElectronWebContentsViewFunctions.capturePage.mockResolvedValue('data:image/png;base64,c25hcHNob3Q=')
+  ElectronWebContentsViewFunctions.capturePage.mockResolvedValue(new Uint8Array([137, 80, 78, 71]))
   // @ts-ignore
   ElectronWebContentsViewFunctions.hide.mockResolvedValue(undefined)
   // @ts-ignore
   ElectronWebContentsViewFunctions.show.mockResolvedValue(undefined)
+  // @ts-ignore
+  SimpleBrowserSnapshot.create.mockReturnValue('blob:https://example.com/snapshot')
   const state = { ...ViewletSimpleBrowser.create(), browserViewId: 12, iframeSrc: 'https://example.com' }
 
   const withQuickPick = await ViewletSimpleBrowser.showOverlay(state, 'quick-pick')
@@ -875,12 +889,56 @@ test('overlays share one snapshot and restore after the last overlay closes', as
   const restored = await ViewletSimpleBrowser.hideOverlay(withMenu, 'menu')
 
   expect(ElectronWebContentsViewFunctions.capturePage).toHaveBeenCalledTimes(1)
+  expect(SimpleBrowserSnapshot.create).toHaveBeenCalledTimes(1)
   expect(ElectronWebContentsViewFunctions.hide).toHaveBeenCalledTimes(1)
   expect(ElectronWebContentsViewFunctions.show).toHaveBeenCalledTimes(1)
+  expect(SimpleBrowserSnapshot.dispose).toHaveBeenCalledTimes(1)
+  expect(SimpleBrowserSnapshot.dispose).toHaveBeenCalledWith('blob:https://example.com/snapshot')
   expect(restored).toMatchObject({
     overlayIds: [],
     snapshot: '',
   })
+})
+
+test('showOverlay revokes a new snapshot when hiding the WebContentsView fails', async () => {
+  const consoleError = jest.spyOn(console, 'error').mockImplementation(() => {})
+  try {
+    // @ts-ignore
+    ElectronWebContentsViewFunctions.capturePage.mockResolvedValue(new Uint8Array([137, 80, 78, 71]))
+    // @ts-ignore
+    ElectronWebContentsViewFunctions.hide.mockRejectedValue(new Error('Failed to hide'))
+    // @ts-ignore
+    SimpleBrowserSnapshot.create.mockReturnValue('blob:https://example.com/snapshot')
+    const state = { ...ViewletSimpleBrowser.create(), browserViewId: 12, iframeSrc: 'https://example.com' }
+
+    const newState = await ViewletSimpleBrowser.showOverlay(state, 'quick-pick')
+
+    expect(newState).toBe(state)
+    expect(SimpleBrowserSnapshot.dispose).toHaveBeenCalledWith('blob:https://example.com/snapshot')
+  } finally {
+    consoleError.mockRestore()
+  }
+})
+
+test('hideOverlay revokes the snapshot when restoring the WebContentsView fails', async () => {
+  const consoleError = jest.spyOn(console, 'error').mockImplementation(() => {})
+  try {
+    // @ts-ignore
+    ElectronWebContentsViewFunctions.show.mockRejectedValue(new Error('Failed to show'))
+    const state = {
+      ...ViewletSimpleBrowser.create(),
+      browserViewId: 12,
+      overlayIds: ['quick-pick'],
+      snapshot: 'blob:https://example.com/snapshot',
+    }
+
+    const newState = await ViewletSimpleBrowser.hideOverlay(state, 'quick-pick')
+
+    expect(newState).toMatchObject({ overlayIds: [], snapshot: '' })
+    expect(SimpleBrowserSnapshot.dispose).toHaveBeenCalledWith('blob:https://example.com/snapshot')
+  } finally {
+    consoleError.mockRestore()
+  }
 })
 
 test('handleInput does not request suggestions when disabled', async () => {
@@ -931,9 +989,11 @@ test('applySuggestions ignores stale results', async () => {
 
 test('applySuggestions captures the page and shows provider results', async () => {
   // @ts-ignore
-  ElectronWebContentsViewFunctions.capturePage.mockResolvedValue('data:image/png;base64,c25hcHNob3Q=')
+  ElectronWebContentsViewFunctions.capturePage.mockResolvedValue(new Uint8Array([137, 80, 78, 71]))
   // @ts-ignore
   ElectronWebContentsViewFunctions.hide.mockResolvedValue(undefined)
+  // @ts-ignore
+  SimpleBrowserSnapshot.create.mockReturnValue('blob:https://example.com/snapshot')
   const state = {
     ...ViewletSimpleBrowser.create(7),
     browserViewId: 12,
@@ -948,7 +1008,7 @@ test('applySuggestions captures the page and shows provider results', async () =
     hasSuggestionsOverlay: true,
     overlayIds: ['search-suggestions'],
     selectedSuggestionIndex: 0,
-    snapshot: 'data:image/png;base64,c25hcHNob3Q=',
+    snapshot: 'blob:https://example.com/snapshot',
     suggestions: ['what is', 'what is my ip', 'what is love'],
   })
 })
@@ -986,7 +1046,7 @@ test('applySuggestions closes an existing popup after a provider failure', async
     inputValue: 'what is',
     overlayIds: ['search-suggestions'],
     selectedSuggestionIndex: 0,
-    snapshot: 'data:image/png;base64,c25hcHNob3Q=',
+    snapshot: 'blob:https://example.com/snapshot',
     suggestions: ['what is'],
     suggestionsEnabled: true,
   }
@@ -1001,6 +1061,7 @@ test('applySuggestions closes an existing popup after a provider failure', async
     suggestions: [],
   })
   expect(ElectronWebContentsViewFunctions.show).toHaveBeenCalledWith(12)
+  expect(SimpleBrowserSnapshot.dispose).toHaveBeenCalledWith('blob:https://example.com/snapshot')
 })
 
 test('suggestion selection stays within the available results', () => {
@@ -1029,7 +1090,7 @@ test('acceptSuggestion restores the page and navigates', async () => {
     hasSuggestionsOverlay: true,
     overlayIds: ['search-suggestions'],
     selectedSuggestionIndex: 1,
-    snapshot: 'data:image/png;base64,c25hcHNob3Q=',
+    snapshot: 'blob:https://example.com/snapshot',
     suggestions: ['what is', 'what is my ip'],
     suggestionsEnabled: true,
   }
@@ -1045,5 +1106,6 @@ test('acceptSuggestion restores the page and navigates', async () => {
     suggestions: [],
   })
   expect(ElectronWebContentsViewFunctions.show).toHaveBeenCalledWith(12)
+  expect(SimpleBrowserSnapshot.dispose).toHaveBeenCalledWith('blob:https://example.com/snapshot')
   expect(ElectronWebContentsViewFunctions.setIframeSrc).toHaveBeenCalledWith(12, 'https://www.google.com/search?q=what+is+my+ip')
 })

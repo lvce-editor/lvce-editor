@@ -17,6 +17,7 @@ import * as KeyBindingsInitial from '../KeyBindingsInitial/KeyBindingsInitial.js
 import * as KeyModifier from '../KeyModifier/KeyModifier.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as SimpleBrowserPreferences from '../SimpleBrowserPreferences/SimpleBrowserPreferences.js'
+import * as SimpleBrowserSnapshot from '../SimpleBrowserSnapshot/SimpleBrowserSnapshot.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as WhenExpression from '../WhenExpression/WhenExpression.js'
 
@@ -548,8 +549,12 @@ export const showOverlay = async (state, overlayId) => {
       overlayIds,
     }
   }
+  let snapshot = ''
   try {
-    const snapshot = state.iframeSrc ? await ElectronWebContentsViewFunctions.capturePage(state.browserViewId) : ''
+    if (state.iframeSrc) {
+      const bytes = await ElectronWebContentsViewFunctions.capturePage(state.browserViewId)
+      snapshot = SimpleBrowserSnapshot.create(bytes)
+    }
     await ElectronWebContentsViewFunctions.hide(state.browserViewId)
     return {
       ...state,
@@ -557,6 +562,7 @@ export const showOverlay = async (state, overlayId) => {
       snapshot,
     }
   } catch (error) {
+    SimpleBrowserSnapshot.dispose(snapshot)
     console.error('[renderer-worker] Failed to capture Simple Browser page', error)
     return state
   }
@@ -577,6 +583,8 @@ export const hideOverlay = async (state, overlayId) => {
     await ElectronWebContentsViewFunctions.show(state.browserViewId)
   } catch (error) {
     console.error('[renderer-worker] Failed to restore Simple Browser page', error)
+  } finally {
+    SimpleBrowserSnapshot.dispose(state.snapshot)
   }
   return {
     ...state,
@@ -796,5 +804,8 @@ export const handleAudioStateChanged = (state, browserViewId, audible) => {
 }
 
 export const dispose = async (state) => {
-  await Promise.all(state.tabs.map((tab) => ElectronWebContentsView.disposeWebContentsView(tab.browserViewId)))
+  await Promise.all([
+    ...state.tabs.map((tab) => ElectronWebContentsView.disposeWebContentsView(tab.browserViewId)),
+    SimpleBrowserSnapshot.dispose(state.snapshot),
+  ])
 }

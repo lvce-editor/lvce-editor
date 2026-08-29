@@ -3,7 +3,13 @@ import * as GetSimpleBrowserVirtualDom from '../src/parts/GetSimpleBrowserVirtua
 import * as VirtualDomElements from '../src/parts/VirtualDomElements/VirtualDomElements.js'
 
 test('renders a snapshot below the browser header', () => {
-  const dom = GetSimpleBrowserVirtualDom.getSimpleBrowserVirtualDom(true, true, false, 'https://example.com', 'data:image/png;base64,c25hcHNob3Q=')
+  const dom = GetSimpleBrowserVirtualDom.getSimpleBrowserVirtualDom(
+    true,
+    true,
+    false,
+    'https://example.com',
+    'blob:https://example.com/snapshot',
+  )
 
   expect(dom[0].childCount).toBe(3)
   expect(dom.slice(-2)).toEqual([
@@ -15,7 +21,7 @@ test('renders a snapshot below the browser header', () => {
     {
       type: VirtualDomElements.Img,
       className: 'SimpleBrowserSnapshot',
-      src: 'data:image/png;base64,c25hcHNob3Q=',
+      src: 'blob:https://example.com/snapshot',
       draggable: false,
       childCount: 0,
     },
@@ -45,7 +51,7 @@ test('renders accessible search suggestions above an undimmed snapshot', () => {
     true,
     false,
     'what is',
-    'data:image/png;base64,c25hcHNob3Q=',
+    'blob:https://example.com/snapshot',
     ['what is', 'what is my ip'],
     1,
   )
@@ -54,7 +60,7 @@ test('renders accessible search suggestions above an undimmed snapshot', () => {
   expect(dom).toContainEqual({
     type: VirtualDomElements.Img,
     className: 'SimpleBrowserSnapshot SimpleBrowserSnapshotSearchSuggestions',
-    src: 'data:image/png;base64,c25hcHNob3Q=',
+    src: 'blob:https://example.com/snapshot',
     draggable: false,
     childCount: 0,
   })
