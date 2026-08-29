@@ -303,16 +303,20 @@ const createEmptyTab = async (state) => {
   return createTab({ browserViewId })
 }
 
+const switchWebContentsView = async (oldBrowserViewId, newBrowserViewId) => {
+  await ElectronWebContentsViewFunctions.show(newBrowserViewId)
+  if (oldBrowserViewId) {
+    await ElectronWebContentsViewFunctions.hide(oldBrowserViewId)
+  }
+}
+
 export const createNewTab = async (state) => {
   if (!state.tabsEnabled) {
     return state
   }
   const currentState = state.hasSuggestionsOverlay ? await closeSuggestions(state) : state
   const tab = await createEmptyTab(currentState)
-  if (currentState.browserViewId) {
-    await ElectronWebContentsViewFunctions.hide(currentState.browserViewId)
-  }
-  await ElectronWebContentsViewFunctions.show(tab.browserViewId)
+  await switchWebContentsView(currentState.browserViewId, tab.browserViewId)
   await ElectronWindow.focus()
   const newState = activateTab(currentState, [...currentState.tabs, tab], currentState.tabs.length)
   return { ...newState, focusAddressVersion: newState.focusAddressVersion + 1 }
@@ -340,10 +344,7 @@ export const duplicateTab = async (state, index) => {
   if (tab.iframeSrc) {
     void ElectronWebContentsViewFunctions.setIframeSrc(tab.browserViewId, tab.iframeSrc)
   }
-  if (browserViewId) {
-    await ElectronWebContentsViewFunctions.hide(browserViewId)
-  }
-  await ElectronWebContentsViewFunctions.show(tab.browserViewId)
+  await switchWebContentsView(browserViewId, tab.browserViewId)
   await ElectronWebContentsViewFunctions.focus(tab.browserViewId)
   const tabs = currentState.tabs.toSpliced(tabIndex + 1, 0, tab)
   const newState = activateTab(currentState, tabs, tabIndex + 1)
@@ -388,10 +389,7 @@ export const openTab = async (state, url, disposition) => {
   if (disposition === 'background-tab') {
     return { ...currentState, tabs }
   }
-  if (currentState.browserViewId) {
-    await ElectronWebContentsViewFunctions.hide(currentState.browserViewId)
-  }
-  await ElectronWebContentsViewFunctions.show(tab.browserViewId)
+  await switchWebContentsView(currentState.browserViewId, tab.browserViewId)
   await ElectronWebContentsViewFunctions.focus(tab.browserViewId)
   return activateTab(currentState, tabs, currentState.tabs.length)
 }
@@ -420,8 +418,7 @@ export const selectTab = async (state, index) => {
     newState = await closeSuggestions(state)
   }
   const tab = newState.tabs[selectedTabIndex]
-  await ElectronWebContentsViewFunctions.hide(newState.browserViewId)
-  await ElectronWebContentsViewFunctions.show(tab.browserViewId)
+  await switchWebContentsView(newState.browserViewId, tab.browserViewId)
   await ElectronWebContentsViewFunctions.focus(tab.browserViewId)
   return activateTab(newState, newState.tabs, selectedTabIndex)
 }

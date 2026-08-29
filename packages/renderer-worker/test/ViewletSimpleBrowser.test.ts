@@ -430,7 +430,7 @@ test('ignores a target blank event from another simple browser instance', async 
   expect(Command.execute).not.toHaveBeenCalled()
 })
 
-test('switches tabs by hiding only the previous active view', async () => {
+test('switches tabs by showing the selected view before hiding the previous active view', async () => {
   // @ts-ignore
   ElectronWebContentsViewFunctions.hide.mockResolvedValue(undefined)
   // @ts-ignore
@@ -478,6 +478,10 @@ test('switches tabs by hiding only the previous active view', async () => {
   })
   expect(ElectronWebContentsViewFunctions.hide).toHaveBeenCalledWith(12)
   expect(ElectronWebContentsViewFunctions.show).toHaveBeenCalledWith(13)
+  // @ts-ignore
+  expect(ElectronWebContentsViewFunctions.show.mock.invocationCallOrder[0]).toBeLessThan(
+    ElectronWebContentsViewFunctions.hide.mock.invocationCallOrder[0],
+  )
 })
 
 test('Ctrl+Tab from the focused web contents selects the next browser tab', async () => {
