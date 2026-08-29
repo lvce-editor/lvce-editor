@@ -479,9 +479,10 @@ test('switches tabs by showing the selected view before hiding the previous acti
   expect(ElectronWebContentsViewFunctions.hide).toHaveBeenCalledWith(12)
   expect(ElectronWebContentsViewFunctions.show).toHaveBeenCalledWith(13)
   // @ts-ignore
-  expect(ElectronWebContentsViewFunctions.show.mock.invocationCallOrder[0]).toBeLessThan(
-    ElectronWebContentsViewFunctions.hide.mock.invocationCallOrder[0],
-  )
+  const showCallOrder = ElectronWebContentsViewFunctions.show.mock.invocationCallOrder[0]
+  // @ts-ignore
+  const hideCallOrder = ElectronWebContentsViewFunctions.hide.mock.invocationCallOrder[0]
+  expect(showCallOrder).toBeLessThan(hideCallOrder)
 })
 
 test('Ctrl+Tab from the focused web contents selects the next browser tab', async () => {
