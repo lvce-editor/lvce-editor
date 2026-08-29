@@ -94,6 +94,8 @@ export const SecondaryPreview = 'SecondaryPreview'
 
 export const SimpleBrowser = 'SimpleBrowser'
 
+export const SimpleBrowserHistory = 'SimpleBrowserHistory'
+
 export const SourceControl = 'Source Control'
 
 export const StatusBar = 'StatusBar'

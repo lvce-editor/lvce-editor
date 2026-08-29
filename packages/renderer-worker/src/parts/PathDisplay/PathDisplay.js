@@ -44,6 +44,9 @@ export const getLabel = (uri) => {
   if (uri.startsWith('simple-browser://')) {
     return 'Simple Browser'
   }
+  if (uri.startsWith('simple-browser-history://')) {
+    return 'History'
+  }
   if (uri.startsWith('language-models://')) {
     return 'Language Models'
   }

@@ -38,6 +38,10 @@ test('getLabel - secrets', () => {
   expect(PathDisplay.getLabel('secrets://')).toBe('Secrets')
 })
 
+test('getLabel - simple browser history', () => {
+  expect(PathDisplay.getLabel('simple-browser-history://')).toBe('History')
+})
+
 test('getFileIcon - secrets', () => {
   expect(PathDisplay.getFileIcon('secrets://')).toBe('MaskIconRecordKey')
 })

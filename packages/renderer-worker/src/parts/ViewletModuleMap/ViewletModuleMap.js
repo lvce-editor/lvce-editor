@@ -54,6 +54,7 @@ export const map = {
   [ViewletModuleId.SideBar]: () => import('../ViewletSideBar/ViewletSideBar.ipc.js'),
   [ViewletModuleId.SecondarySideBar]: () => import('../ViewletSecondarySideBar/ViewletSecondarySideBar.ipc.js'),
   [ViewletModuleId.SimpleBrowser]: () => import('../ViewletSimpleBrowser/ViewletSimpleBrowser.ipc.js'),
+  [ViewletModuleId.SimpleBrowserHistory]: () => import('../ViewletSimpleBrowserHistory/ViewletSimpleBrowserHistory.ipc.js'),
   [ViewletModuleId.SourceControl]: () => import('../ViewletSourceControl/ViewletSourceControl.ipc.js'),
   [ViewletModuleId.StatusBar]: () => import('../ViewletStatusBar/ViewletStatusBar.ipc.js'),
   [ViewletModuleId.Storage]: () => import('../ViewletStorage/ViewletStorage.ipc.js'),

@@ -469,6 +469,12 @@ export const getQuickPickMenuEntries = () => {
       args: ['simple-browser://'],
     },
     {
+      id: 'Main.openUri',
+      label: 'Simple Browser: Open History',
+      args: ['simple-browser-history://'],
+      aliases: ['Open Browser History'],
+    },
+    {
       id: 'SimpleBrowser.openDevtools',
       label: 'Simple Browser: Open Dev Devtools',
     },

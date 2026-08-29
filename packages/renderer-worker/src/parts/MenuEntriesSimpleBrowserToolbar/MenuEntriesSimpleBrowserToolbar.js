@@ -17,6 +17,7 @@ export const getMenuEntries = () => {
     entry('reload', 'Reload', 'SimpleBrowser.reload'),
     entry('open-external', 'Open in Default Browser', 'SimpleBrowser.openExternal'),
     MenuEntrySeparator.menuEntrySeparator,
+    entry('history', 'History', 'SimpleBrowser.openHistory'),
     entry('downloads', 'Downloads', 'SimpleBrowser.openDownloads'),
     MenuEntrySeparator.menuEntrySeparator,
     entry('zoom-in', 'Zoom In', 'SimpleBrowser.zoomIn'),

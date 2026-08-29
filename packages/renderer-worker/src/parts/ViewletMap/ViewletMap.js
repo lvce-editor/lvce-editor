@@ -65,6 +65,9 @@ export const getModuleId = async (uri, opener) => {
   if (uri.startsWith('simple-browser://')) {
     return ViewletModuleId.SimpleBrowser
   }
+  if (uri.startsWith('simple-browser-history://')) {
+    return ViewletModuleId.SimpleBrowserHistory
+  }
   if (uri.startsWith('storage-overview://')) {
     return ViewletModuleId.Storage
   }

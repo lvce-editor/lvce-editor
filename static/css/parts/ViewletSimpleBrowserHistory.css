@@ -1,0 +1,25 @@
+.SimpleBrowserHistory {
+  overflow: auto;
+}
+
+.SimpleBrowserHistoryContent {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 32px;
+}
+
+.SimpleBrowserHistoryHeading {
+  margin: 0 0 24px;
+  font-size: 26px;
+  font-weight: 400;
+}
+
+.SimpleBrowserHistoryControls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.SimpleBrowserHistorySearchInput {
+  min-width: 160px;
+}
