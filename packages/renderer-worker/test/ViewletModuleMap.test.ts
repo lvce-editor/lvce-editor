@@ -39,6 +39,17 @@ test('running extensions uses worker-backed module', async () => {
   expect(typeof module.getCommands).toBe('function')
 })
 
+test('simple browser history exposes the placeholder view', async () => {
+  const module = await ViewletModuleMap.map[ViewletModuleId.SimpleBrowserHistory]()
+
+  expect(module.hasFunctionalRender).toBe(true)
+  expect(module.hasFunctionalRootRender).toBe(true)
+  expect(typeof module.create).toBe('function')
+  expect(typeof module.loadContent).toBe('function')
+  expect(typeof module.Commands.handleInput).toBe('function')
+  expect(typeof module.Commands.clearHistory).toBe('function')
+})
+
 const genericWorkerViewlets = [
   ViewletModuleId.About,
   ViewletModuleId.ActivityBar,

@@ -56,6 +56,10 @@ test('search editor', async () => {
   expect(await ViewletMap.getModuleId('search-editor://1/Search')).toBe(ViewletModuleId.Search)
 })
 
+test('simple browser history', async () => {
+  expect(await ViewletMap.getModuleId('simple-browser-history://')).toBe(ViewletModuleId.SimpleBrowserHistory)
+})
+
 test('inline diff uses the external diff editor', async () => {
   expect(await ViewletMap.getModuleId('inline-diff://data://before<->/test/file.ts')).toBe(ViewletModuleId.DiffEditor)
 })

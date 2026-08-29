@@ -42,6 +42,7 @@ export const Commands = {
 
 export const LazyCommands = {
   openExternal: () => import('./ViewletSimpleBrowserOpenExternal.js'),
+  openHistory: () => import('./ViewletSimpleBrowserOpenHistory.js'),
   openDownloads: () => import('./ViewletSimpleBrowserOpenDownloads.js'),
   openBackgroundTab: () => import('./ViewletSimpleBrowserOpenBackgroundTab.js'),
   handleContextMenu: () => import('./ViewletSimpleBrowserHandleContextMenu.js'),
