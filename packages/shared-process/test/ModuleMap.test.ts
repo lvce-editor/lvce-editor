@@ -14,8 +14,10 @@ test('getModuleId - SendMessagePortToMainProcess.sendMessagePortToMainProcess', 
   expect(ModuleMap.getModuleId('SendMessagePortToMainProcess.sendMessagePortToMainProcess')).toBe(ModuleId.SendMessagePortToMainProcess)
 })
 
-test('getModuleId - FirefoxCookieImport.importCookies', () => {
-  expect(ModuleMap.getModuleId('FirefoxCookieImport.importCookies')).toBe(ModuleId.FirefoxCookieImport)
+test('getModuleId - HandleMessagePortForCookieImportProcess.handleMessagePortForCookieImportProcess', () => {
+  expect(ModuleMap.getModuleId('HandleMessagePortForCookieImportProcess.handleMessagePortForCookieImportProcess')).toBe(
+    ModuleId.HandleMessagePortForCookieImportProcess,
+  )
 })
 
 test('getModuleId - GetElectronFileResponse.resolveElectronFileUri', () => {

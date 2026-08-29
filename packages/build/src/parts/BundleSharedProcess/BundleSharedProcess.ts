@@ -262,6 +262,27 @@ export const getBuiltinExtensionsPath = () => {
       replacement: `const isElectron = false`,
     })
     await Replace.replace({
+      path: `${cachePath}/src/parts/CookieImportProcessPath/CookieImportProcessPath.js`,
+      occurrence: `import * as Path from '../Path/Path.js'
+import * as Root from '../Root/Root.js'
+
+export const cookieImportProcessPath = Path.join(
+  Root.root,
+  'packages',
+  'shared-process',
+  'node_modules',
+  '@lvce-editor',
+  'cookie-import-view',
+  'dist',
+  'cookieImportProcessMain.js',
+)
+`,
+      replacement: `import * as ResolveBin from '../ResolveBin/ResolveBin.js'
+
+export const cookieImportProcessPath = ResolveBin.resolveBin('@lvce-editor/cookie-import-view')
+`,
+    })
+    await Replace.replace({
       path: `${cachePath}/src/parts/SearchProcessPath/SearchProcessPath.js`,
       occurrence: `import * as Path from '../Path/Path.js'
 import * as Root from '../Root/Root.js'
