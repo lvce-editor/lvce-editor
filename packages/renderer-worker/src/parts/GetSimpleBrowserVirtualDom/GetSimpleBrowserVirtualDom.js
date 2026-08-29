@@ -231,6 +231,8 @@ export const getSimpleBrowserVirtualDom = (
     })
     for (let index = 0; index < suggestions.length; index++) {
       const suggestion = suggestions[index]
+      const favicon = typeof suggestion === 'string' ? '' : suggestion.favicon
+      const value = typeof suggestion === 'string' ? suggestion : suggestion.value
       const selected = index === selectedSuggestionIndex
       dom.push(
         {
@@ -238,16 +240,25 @@ export const getSimpleBrowserVirtualDom = (
           className: selected ? 'SimpleBrowserSuggestion SimpleBrowserSuggestionSelected' : 'SimpleBrowserSuggestion',
           role: AriaRoles.Option,
           ariaSelected: selected,
-          'data-value': suggestion,
+          'data-value': value,
           onClick: DomEventListenerFunctions.HandleClickSuggestion,
           childCount: 2,
         },
-        {
-          type: VirtualDomElements.Div,
-          className: 'MaskIcon MaskIconSearch SimpleBrowserSuggestionIcon',
-          childCount: 0,
-        },
-        text(suggestion),
+        favicon
+          ? {
+              type: VirtualDomElements.Img,
+              className: 'SimpleBrowserSuggestionFavicon',
+              crossOrigin: 'anonymous',
+              src: favicon,
+              draggable: false,
+              childCount: 0,
+            }
+          : {
+              type: VirtualDomElements.Div,
+              className: 'MaskIcon MaskIconSearch SimpleBrowserSuggestionIcon',
+              childCount: 0,
+            },
+        text(value),
       )
     }
   }

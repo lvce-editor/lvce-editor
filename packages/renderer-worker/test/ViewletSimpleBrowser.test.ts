@@ -74,6 +74,13 @@ jest.unstable_mockModule('../src/parts/BrowserSearchSuggestions/BrowserSearchSug
   get: jest.fn(),
 }))
 
+jest.unstable_mockModule('../src/parts/BrowserVisitedSites/BrowserVisitedSites.js', () => ({
+  add: jest.fn(),
+  getSuggestions: jest.fn(),
+  load: jest.fn(),
+  save: jest.fn(),
+}))
+
 jest.unstable_mockModule('../src/parts/Command/Command.js', () => ({
   execute: jest.fn(),
 }))
@@ -87,6 +94,7 @@ const ViewletSimpleBrowser = await import('../src/parts/ViewletSimpleBrowser/Vie
 const ViewletSimpleBrowserOpenBackgroundTab = await import('../src/parts/ViewletSimpleBrowser/ViewletSimpleBrowserOpenBackgroundTab.js')
 const ViewletSimpleBrowserResize = await import('../src/parts/ViewletSimpleBrowser/ViewletSimpleBrowserResize.js')
 const BrowserSearchSuggestions = await import('../src/parts/BrowserSearchSuggestions/BrowserSearchSuggestions.js')
+const BrowserVisitedSites = await import('../src/parts/BrowserVisitedSites/BrowserVisitedSites.js')
 const Command = await import('../src/parts/Command/Command.js')
 const ElectronWebContentsViewFunctions = await import('../src/parts/ElectronWebContentsViewFunctions/ElectronWebContentsViewFunctions.js')
 const ElectronWebContentsView = await import('../src/parts/ElectronWebContentsView/ElectronWebContentsView.js')
@@ -101,6 +109,12 @@ const ViewletModuleId = await import('../src/parts/ViewletModuleId/ViewletModule
 const WhenExpression = await import('../src/parts/WhenExpression/WhenExpression.js')
 
 beforeEach(() => {
+  // @ts-ignore
+  BrowserVisitedSites.add.mockImplementation((sites) => sites)
+  // @ts-ignore
+  BrowserVisitedSites.getSuggestions.mockReturnValue([])
+  // @ts-ignore
+  BrowserVisitedSites.load.mockResolvedValue([])
   // @ts-ignore
   ElectronWebContentsViewFunctions.getStats.mockResolvedValue({
     title: 'test',
@@ -588,6 +602,23 @@ test('updates the matching background tab from web contents events', async () =>
   expect(withAudio.tabs[1]).toMatchObject({ favicon: 'https://two.example/favicon.png', isAudioPlaying: true, title: 'Updated Two' })
 })
 
+test('remembers the origin when a page favicon is received', () => {
+  const visitedSites = [{ favicon: 'https://soundcloud.com/favicon.ico', origin: 'https://soundcloud.com' }]
+  // @ts-ignore
+  BrowserVisitedSites.add.mockReturnValue(visitedSites)
+  const state = {
+    ...ViewletSimpleBrowser.create(),
+    browserViewId: 12,
+    tabs: [{ browserViewId: 12, favicon: '', iframeSrc: 'https://soundcloud.com/discover', title: 'SoundCloud' }],
+  }
+
+  const newState = ViewletSimpleBrowser.handlePageFaviconUpdated(state, 12, ['https://soundcloud.com/favicon.ico'])
+
+  expect(BrowserVisitedSites.add).toHaveBeenCalledWith([], 'https://soundcloud.com/discover', 'https://soundcloud.com/favicon.ico')
+  expect(BrowserVisitedSites.save).toHaveBeenCalledWith(visitedSites)
+  expect(newState).toMatchObject({ favicon: 'https://soundcloud.com/favicon.ico', visitedSites })
+})
+
 test('updates audio state for the selected tab', () => {
   const state = {
     ...ViewletSimpleBrowser.create(),
@@ -970,11 +1001,15 @@ test('handleInput requests suggestions when enabled', async () => {
 })
 
 test('handleInput does not disclose URL-like values to the suggestions provider', async () => {
+  // @ts-ignore
+  Command.execute.mockResolvedValue(undefined)
   const state = { ...ViewletSimpleBrowser.create(7), suggestionsEnabled: true }
 
-  await ViewletSimpleBrowser.handleInput(state, 'https://example.com/private')
+  await ViewletSimpleBrowser.handleInput(state, 'soundcloud.com')
+  await new Promise((resolve) => setTimeout(resolve, 0))
 
   expect(BrowserSearchSuggestions.get).not.toHaveBeenCalled()
+  expect(Command.execute).toHaveBeenCalledWith('SimpleBrowser.applySuggestions', 7, 'soundcloud.com', [])
 })
 
 test('applySuggestions ignores stale results', async () => {
@@ -1013,7 +1048,11 @@ test('applySuggestions captures the page and shows provider results', async () =
     overlayIds: ['search-suggestions'],
     selectedSuggestionIndex: 0,
     snapshot: 'blob:https://example.com/snapshot',
-    suggestions: ['what is', 'what is my ip', 'what is love'],
+    suggestions: [
+      { favicon: '', type: 'search', value: 'what is' },
+      { favicon: '', type: 'search', value: 'what is my ip' },
+      { favicon: '', type: 'search', value: 'what is love' },
+    ],
   })
 })
 
@@ -1034,7 +1073,10 @@ test('applySuggestions does not capture a page for an empty new tab', async () =
     overlayIds: ['search-suggestions'],
     selectedSuggestionIndex: 0,
     snapshot: '',
-    suggestions: ['what is', 'what is my ip'],
+    suggestions: [
+      { favicon: '', type: 'search', value: 'what is' },
+      { favicon: '', type: 'search', value: 'what is my ip' },
+    ],
   })
   expect(ElectronWebContentsViewFunctions.capturePage).not.toHaveBeenCalled()
   expect(ElectronWebContentsViewFunctions.hide).toHaveBeenCalledWith(12)
@@ -1085,6 +1127,32 @@ test('suggestion selection stays within the available results', () => {
   expect(first.selectedSuggestionIndex).toBe(0)
 })
 
+test('applySuggestions places matching visited sites before provider results', async () => {
+  const localSuggestion = {
+    favicon: 'https://soundcloud.com/favicon.ico',
+    type: 'url',
+    value: 'https://soundcloud.com',
+  }
+  // @ts-ignore
+  BrowserVisitedSites.getSuggestions.mockReturnValue([localSuggestion])
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.hide.mockResolvedValue(undefined)
+  const state = {
+    ...ViewletSimpleBrowser.create(7),
+    browserViewId: 12,
+    inputValue: 'soundcloud',
+    suggestionsEnabled: true,
+  }
+
+  const newState = await ViewletSimpleBrowser.applySuggestions(state, 7, 'soundcloud', ['soundcloud music'])
+
+  expect(newState.suggestions).toEqual([
+    localSuggestion,
+    { favicon: '', type: 'search', value: 'soundcloud' },
+    { favicon: '', type: 'search', value: 'soundcloud music' },
+  ])
+})
+
 test('acceptSuggestion restores the page and navigates', async () => {
   // @ts-ignore
   ElectronWebContentsViewFunctions.show.mockResolvedValue(undefined)
@@ -1095,7 +1163,10 @@ test('acceptSuggestion restores the page and navigates', async () => {
     overlayIds: ['search-suggestions'],
     selectedSuggestionIndex: 1,
     snapshot: 'blob:https://example.com/snapshot',
-    suggestions: ['what is', 'what is my ip'],
+    suggestions: [
+      { favicon: '', type: 'search', value: 'what is' },
+      { favicon: '', type: 'search', value: 'what is my ip' },
+    ],
     suggestionsEnabled: true,
   }
 
@@ -1112,4 +1183,29 @@ test('acceptSuggestion restores the page and navigates', async () => {
   expect(ElectronWebContentsViewFunctions.show).toHaveBeenCalledWith(12)
   expect(SimpleBrowserSnapshot.dispose).toHaveBeenCalledWith('blob:https://example.com/snapshot')
   expect(ElectronWebContentsViewFunctions.setIframeSrc).toHaveBeenCalledWith(12, 'https://www.google.com/search?q=what+is+my+ip')
+})
+
+test('acceptSuggestion navigates directly to a visited URL suggestion', async () => {
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.show.mockResolvedValue(undefined)
+  const state = {
+    ...ViewletSimpleBrowser.create(7),
+    browserViewId: 12,
+    hasSuggestionsOverlay: true,
+    overlayIds: ['search-suggestions'],
+    selectedSuggestionIndex: 0,
+    suggestions: [
+      {
+        favicon: 'https://soundcloud.com/favicon.ico',
+        type: 'url',
+        value: 'https://soundcloud.com',
+      },
+    ],
+    suggestionsEnabled: true,
+  }
+
+  const newState = await ViewletSimpleBrowser.acceptSuggestion(state)
+
+  expect(newState).toMatchObject({ iframeSrc: 'https://soundcloud.com', inputValue: 'https://soundcloud.com', isLoading: true })
+  expect(ElectronWebContentsViewFunctions.setIframeSrc).toHaveBeenCalledWith(12, 'https://soundcloud.com')
 })
