@@ -241,6 +241,10 @@ export const renderEventListeners = () => {
       params: ['handleSashDoubleClick', SashType.SideBar],
     },
     {
+      name: DomEventListenersFunctions.HandleSashPreviewDoubleClick,
+      params: ['handleSashDoubleClick', SashType.Preview],
+    },
+    {
       name: DomEventListenersFunctions.HandleSashSideBarPointerDown,
       params: ['handleSashSideBarPointerDown'],
       trackPointerEvents: [DomEventListenersFunctions.HandleSashSideBarPointerMove, DomEventListenersFunctions.HandleSashSideBarPointerUp],

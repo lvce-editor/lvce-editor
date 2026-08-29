@@ -2398,6 +2398,24 @@ const handleSashDoubleClickSideBar = async (state: LayoutState) => {
   }
 }
 
+const handleSashDoubleClickPreview = async (state: LayoutState) => {
+  if (state.previewVisible) {
+    const newState = getPoints({
+      ...state,
+      previewWidth: state.windowWidth / 2,
+    })
+    const commands = await getResizeCommands(state, newState)
+    return {
+      newState,
+      commands,
+    }
+  }
+  return {
+    newState: state,
+    commands: [],
+  }
+}
+
 const handleSashDoubleClickActivityBar = async (state: LayoutState) => {
   if (state.previewVisible[LayoutKeys.PreviewVisible]) {
     const newState = getPoints({ ...state, previewWidth: 600 })
@@ -2466,6 +2484,8 @@ export const handleSashDoubleClick = (state: LayoutState, sashId: string) => {
       return handleSashDoubleClickPanel(state)
     case SashType.SideBar:
       return handleSashDoubleClickSideBar(state)
+    case SashType.Preview:
+      return handleSashDoubleClickPreview(state)
     case SashType.ActivityBar:
       return handleSashDoubleClickActivityBar(state)
     default:

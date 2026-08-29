@@ -803,6 +803,29 @@ test('resizing the primary preview preserves the secondary preview width', async
   })
 })
 
+test('double clicking the preview sash resets the preview to half the window width', async () => {
+  const state = LayoutPoints.getPoints({
+    ...ViewletLayout.create(1),
+    activityBarVisible: true,
+    activityBarWidth: 48,
+    previewMinWidth: 100,
+    previewVisible: true,
+    previewWidth: 400,
+    sideBarMinWidth: 170,
+    sideBarVisible: true,
+    sideBarWidth: 240,
+    windowHeight: 800,
+    windowWidth: 1200,
+  })
+
+  const result = await ViewletLayout.handleSashDoubleClick(state, 'Preview')
+
+  expect(result.newState).toMatchObject({
+    previewLeft: 600,
+    previewWidth: 600,
+  })
+})
+
 test.each([
   ['left', SideBarLocationType.Left],
   ['right', SideBarLocationType.Right],
