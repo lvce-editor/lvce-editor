@@ -45,7 +45,7 @@ export const getMenuEntries = () => {
       id: 'revealInExplorer',
       label: ViewletMainStrings.revealInExplorer(),
       flags: MenuItemFlags.None,
-      command: 'Explorer.revealItem',
+      command: 'RevealInExplorer.reveal',
       args: [uri],
     },
     MenuEntrySeparator.menuEntrySeparator,

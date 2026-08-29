@@ -116,3 +116,4 @@ export const SendMessagePortToMainProcess = 151
 export const FileSystemMemory = 152
 export const WebSocketCapability = 153
 export const ExtensionHotReload = 154
+export const RevealInExplorer = 155
