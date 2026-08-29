@@ -11,6 +11,18 @@ export const hasFunctionalRootRender = true
 export const renderEventListeners = () => {
   return [
     {
+      name: DomEventListenerFunctions.HandleClickBackward,
+      params: ['backward'],
+    },
+    {
+      name: DomEventListenerFunctions.HandleClickForward,
+      params: ['forward'],
+    },
+    {
+      name: DomEventListenerFunctions.HandleClickReload,
+      params: ['reload'],
+    },
+    {
       name: DomEventListenerFunctions.HandleFocusInSimpleBrowser,
       params: ['handleFocusIn', 'event.target.name'],
     },

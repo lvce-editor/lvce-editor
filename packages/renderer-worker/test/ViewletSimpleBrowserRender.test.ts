@@ -124,6 +124,17 @@ test('routes the browser menu button click with pointer coordinates', () => {
   })
 })
 
+test.each([
+  [DomEventListenerFunctions.HandleClickBackward, 'backward'],
+  [DomEventListenerFunctions.HandleClickForward, 'forward'],
+  [DomEventListenerFunctions.HandleClickReload, 'reload'],
+])('routes %s to the %s command', (name, command) => {
+  expect(ViewletSimpleBrowserRender.renderEventListeners()).toContainEqual({
+    name,
+    params: [command],
+  })
+})
+
 test('routes browser chrome focus with the focused element name', () => {
   expect(ViewletSimpleBrowserRender.renderEventListeners()).toContainEqual({
     name: DomEventListenerFunctions.HandleFocusInSimpleBrowser,

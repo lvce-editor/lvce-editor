@@ -39,6 +39,13 @@ test('names the address input so focus can be restored after rendering', () => {
   )
 })
 
+test('disables unavailable navigation buttons', () => {
+  const dom = GetSimpleBrowserVirtualDom.getSimpleBrowserVirtualDom(false, true, false, 'https://example.com')
+
+  expect(dom.find((node) => node.title === 'Back')).toMatchObject({ disabled: true })
+  expect(dom.find((node) => node.title === 'Forward')).toMatchObject({ disabled: false })
+})
+
 test('tracks focus anywhere in the simple browser chrome', () => {
   const dom = GetSimpleBrowserVirtualDom.getSimpleBrowserVirtualDom(false, false, false, '')
 
