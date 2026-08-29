@@ -2,6 +2,7 @@
 
 import * as Assert from '../Assert/Assert.ts'
 import * as BrowserSearchSuggestions from '../BrowserSearchSuggestions/BrowserSearchSuggestions.js'
+import * as BrowserVisitedSites from '../BrowserVisitedSites/BrowserVisitedSites.js'
 import * as Command from '../Command/Command.js'
 import * as ElectronWebContentsView from '../ElectronWebContentsView/ElectronWebContentsView.js'
 import * as ElectronWebContentsViewFunctions from '../ElectronWebContentsViewFunctions/ElectronWebContentsViewFunctions.js'
@@ -135,6 +136,7 @@ export const create = (id, uri, x, y, width, height) => {
     tabsEnabled: true,
     selectedTabIndex: 0,
     zoomLevel: 0,
+    visitedSites: [],
   }
 }
 
@@ -163,7 +165,7 @@ export const backgroundLoadContent = async (state, savedState) => {
   const headerHeight = getHeaderHeight(tabsEnabled)
   // TODO since browser view is not visible at this point
   // it is not necessary to load keybindings for it
-  const keyBindings = await KeyBindingsInitial.getKeyBindings()
+  const [keyBindings, visitedSites] = await Promise.all([KeyBindingsInitial.getKeyBindings(), BrowserVisitedSites.load()])
   const fallThroughKeyBindings = getFallThroughKeyBindings(keyBindings)
   const browserViewId = await ElectronWebContentsView.createWebContentsView(0)
   await ElectronWebContentsViewFunctions.setFallthroughKeyBindings(browserViewId, fallThroughKeyBindings)
@@ -181,6 +183,7 @@ export const backgroundLoadContent = async (state, savedState) => {
     tabsEnabled,
     title,
     zoomLevel: 0,
+    visitedSites,
     uri: `simple-browser://${browserViewId}`,
     iframeSrc,
     inputValue: iframeSrc,
@@ -202,7 +205,7 @@ export const loadContent = async (state, savedState) => {
   const id = getId(idPart)
   const iframeSrc = getUrlFromSavedState(savedState)
   // TODO load keybindings in parallel with creating browserview
-  const keyBindings = await KeyBindingsInitial.getKeyBindings()
+  const [keyBindings, visitedSites] = await Promise.all([KeyBindingsInitial.getKeyBindings(), BrowserVisitedSites.load()])
   const audioIndicatorEnabled = Preferences.get('simpleBrowser.audioIndicator.enabled') !== false
   const suggestionsEnabled = Preferences.get('simpleBrowser.suggestions')
   const tabsEnabled = Preferences.get('simpleBrowser.tabs.enabled') !== false
@@ -248,6 +251,7 @@ export const loadContent = async (state, savedState) => {
       tabsEnabled,
       title,
       muted: Boolean(stats.isAudioMuted),
+      visitedSites,
     }
   }
 
@@ -284,6 +288,7 @@ export const loadContent = async (state, savedState) => {
       }),
     ],
     tabsEnabled,
+    visitedSites,
   }
 }
 
@@ -598,13 +603,13 @@ export const handleInput = async (state, value) => {
     ...updateTab(state, state.browserViewId, { inputValue: value }),
     selectedSuggestionIndex: -1,
   }
-  if (!state.suggestionsEnabled || !shouldRequestSuggestions(value)) {
+  if (!state.suggestionsEnabled || value.trim().length < 2) {
     if (state.hasSuggestionsOverlay) {
       void Command.execute('SimpleBrowser.closeSuggestions')
     }
     return newState
   }
-  void requestSuggestions(state.uid, value)
+  void requestSuggestions(state.uid, value, shouldRequestSuggestions(value))
   return newState
 }
 
@@ -615,27 +620,48 @@ const shouldRequestSuggestions = (value) => {
   if (query.length < 2) {
     return false
   }
-  return !/^(?:[a-z][a-z\d+.-]*:\/\/|localhost(?::\d+)?(?:\/|$)|\d{1,3}(?:\.\d{1,3}){3}(?::\d+)?(?:\/|$))/i.test(query)
+  return !/^(?:[a-z][a-z\d+.-]*:\/\/|localhost(?::\d+)?(?:\/|$)|\d{1,3}(?:\.\d{1,3}){3}(?::\d+)?(?:\/|$)|(?:[\w-]+\.)+[a-z]{2,}(?::\d+)?(?:\/|$))/i.test(
+    query,
+  )
 }
 
-const requestSuggestions = async (uid, query) => {
+const requestSuggestions = async (uid, query, requestProviderSuggestions) => {
   let suggestions = []
-  try {
-    suggestions = await BrowserSearchSuggestions.get(query)
-  } catch {
-    // Provider failures should leave normal address-bar navigation available.
+  if (requestProviderSuggestions) {
+    try {
+      suggestions = await BrowserSearchSuggestions.get(query)
+    } catch {
+      // Provider failures should leave normal address-bar navigation available.
+    }
   }
   await Command.execute('SimpleBrowser.applySuggestions', uid, query, suggestions)
+}
+
+const createSearchSuggestion = (value) => {
+  return { favicon: '', type: 'search', value }
+}
+
+const getSuggestionValue = (suggestion) => {
+  return typeof suggestion === 'string' ? suggestion : suggestion?.value
 }
 
 export const applySuggestions = async (state, uid, query, suggestions) => {
   if (state.uid !== uid || state.inputValue !== query || !state.suggestionsEnabled) {
     return state
   }
-  if (!Array.isArray(suggestions) || suggestions.length === 0) {
+  const visitedSiteSuggestions = BrowserVisitedSites.getSuggestions(state.visitedSites, query)
+  const providerSuggestions = Array.isArray(suggestions) ? suggestions : []
+  const allSuggestions = [
+    ...visitedSiteSuggestions,
+    ...(providerSuggestions.length > 0 ? [createSearchSuggestion(query)] : []),
+    ...providerSuggestions.map(createSearchSuggestion),
+  ]
+  const uniqueSuggestions = allSuggestions
+    .filter((suggestion, index) => allSuggestions.findIndex((other) => other.value === suggestion.value) === index)
+    .slice(0, 8)
+  if (uniqueSuggestions.length === 0) {
     return closeSuggestions(state)
   }
-  const uniqueSuggestions = [query, ...suggestions.filter((suggestion) => suggestion !== query)].slice(0, 8)
   const overlayState = await showOverlay(state, suggestionsOverlayId)
   if (!overlayState.overlayIds.includes(suggestionsOverlayId)) {
     return state
@@ -701,7 +727,7 @@ const navigate = (state, value) => {
 }
 
 export const acceptSuggestion = async (state, value) => {
-  const suggestion = typeof value === 'string' ? value : state.suggestions[state.selectedSuggestionIndex]
+  const suggestion = typeof value === 'string' ? value : getSuggestionValue(state.suggestions[state.selectedSuggestionIndex])
   if (typeof suggestion !== 'string') {
     return state
   }
@@ -798,7 +824,20 @@ export const handleTitleUpdated = async (state, browserViewId, value) => {
 export const handlePageFaviconUpdated = (state, browserViewId, favicons) => {
   const [actualBrowserViewId, actualFavicons] = parseWebContentsEvent(state, browserViewId, favicons)
   const favicon = Array.isArray(actualFavicons) ? actualFavicons[0] || '' : ''
-  return updateTab(state, actualBrowserViewId, { favicon })
+  const tab = state.tabs.find((tab) => tab.browserViewId === actualBrowserViewId)
+  const newState = updateTab(state, actualBrowserViewId, { favicon })
+  if (!tab) {
+    return newState
+  }
+  const visitedSites = BrowserVisitedSites.add(state.visitedSites, tab.iframeSrc, favicon)
+  if (visitedSites === state.visitedSites) {
+    return newState
+  }
+  void BrowserVisitedSites.save(visitedSites)
+  return {
+    ...newState,
+    visitedSites,
+  }
 }
 
 export const handleAudioStateChanged = (state, browserViewId, audible) => {

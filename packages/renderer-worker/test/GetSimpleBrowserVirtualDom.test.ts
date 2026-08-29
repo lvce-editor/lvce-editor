@@ -82,6 +82,26 @@ test('renders accessible search suggestions above an undimmed snapshot', () => {
   )
 })
 
+test('renders the stored favicon for a URL suggestion', () => {
+  const dom = GetSimpleBrowserVirtualDom.getSimpleBrowserVirtualDom(false, false, false, 'soundcloud', '', [
+    {
+      favicon: 'https://soundcloud.com/favicon.ico',
+      type: 'url',
+      value: 'https://soundcloud.com',
+    },
+  ])
+
+  expect(dom).toContainEqual(
+    expect.objectContaining({
+      className: 'SimpleBrowserSuggestionFavicon',
+      crossOrigin: 'anonymous',
+      src: 'https://soundcloud.com/favicon.ico',
+      type: VirtualDomElements.Img,
+    }),
+  )
+  expect(dom).toContainEqual(expect.objectContaining({ 'data-value': 'https://soundcloud.com' }))
+})
+
 test('renders selectable tabs with favicon, title, close, and new tab controls', () => {
   const dom = GetSimpleBrowserVirtualDom.getSimpleBrowserVirtualDom(false, false, false, '', '', [], -1, [
     { favicon: 'https://example.com/favicon.png', isAudioPlaying: true, title: 'Example' },
