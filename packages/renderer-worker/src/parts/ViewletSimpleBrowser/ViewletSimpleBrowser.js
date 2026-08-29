@@ -767,9 +767,12 @@ export const handleKeyBinding = async (state, browserViewId, keyBinding) => {
   return state
 }
 
-export const handleDidNavigate = (state, browserViewId, value) => {
+export const handleDidNavigate = async (state, browserViewId, value) => {
   const [actualBrowserViewId, url] = parseWebContentsEvent(state, browserViewId, value)
+  const { canGoBack, canGoForward } = await ElectronWebContentsViewFunctions.getStats(actualBrowserViewId)
   return updateTab(state, actualBrowserViewId, {
+    canGoBack,
+    canGoForward,
     iframeSrc: url,
     inputValue: url,
     isLoading: false,

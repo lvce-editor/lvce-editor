@@ -42,14 +42,7 @@ jest.unstable_mockModule('../src/parts/ElectronWebContentsViewFunctions/Electron
     show: jest.fn(() => {
       throw new Error('not implemented')
     }),
-    getStats() {
-      return {
-        title: 'test',
-        url: '',
-        canGoBack: true,
-        canGoForward: true,
-      }
-    },
+    getStats: jest.fn(),
   }
 })
 jest.unstable_mockModule('../src/parts/ElectronWebContentsView/ElectronWebContentsView.js', () => {
@@ -106,6 +99,16 @@ const Preferences = await import('../src/parts/Preferences/Preferences.js')
 const SimpleBrowserSnapshot = await import('../src/parts/SimpleBrowserSnapshot/SimpleBrowserSnapshot.js')
 const ViewletModuleId = await import('../src/parts/ViewletModuleId/ViewletModuleId.js')
 const WhenExpression = await import('../src/parts/WhenExpression/WhenExpression.js')
+
+beforeEach(() => {
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.getStats.mockResolvedValue({
+    title: 'test',
+    url: '',
+    canGoBack: true,
+    canGoForward: true,
+  })
+})
 
 const browserTabKeyBindings = [
   KeyModifier.CtrlCmd | KeyCode.KeyW,
@@ -820,7 +823,7 @@ test('setUrl applies the loading state before navigation completes', async () =>
     inputValue: 'https://example.com',
     isLoading: true,
   })
-  expect(ViewletSimpleBrowser.handleDidNavigate(loadingState, 'https://example.com')).toMatchObject({
+  await expect(ViewletSimpleBrowser.handleDidNavigate(loadingState, 'https://example.com')).resolves.toMatchObject({
     isLoading: false,
   })
 })
@@ -835,19 +838,20 @@ test('setUrl opens cookie import urls as a main-area view', async () => {
   expect(newState).toMatchObject({ inputValue: 'cookie-import-view:///firefox/default' })
 })
 
-test('handleDidNavigate', () => {
-  const state = { ...ViewletSimpleBrowser.create(), isLoading: true }
+test('handleDidNavigate refreshes navigation state', async () => {
+  const state = { ...ViewletSimpleBrowser.create(), browserViewId: 12, isLoading: true }
   // @ts-ignore
-  const newState = ViewletSimpleBrowser.handleDidNavigate(state, 'https://example.com/one', false, false)
+  ElectronWebContentsViewFunctions.getStats.mockResolvedValueOnce({ canGoBack: true, canGoForward: false })
+
+  const newState = await ViewletSimpleBrowser.handleDidNavigate(state, 12, 'https://example.com/one')
+
+  expect(ElectronWebContentsViewFunctions.getStats).toHaveBeenCalledWith(12)
   expect(newState).toMatchObject({
+    canGoBack: true,
+    canGoForward: false,
     iframeSrc: 'https://example.com/one',
     inputValue: 'https://example.com/one',
     isLoading: false,
-  })
-  // @ts-ignore
-  expect(ViewletSimpleBrowser.handleDidNavigate(newState, 'https://example.com/two', false, false)).toMatchObject({
-    iframeSrc: 'https://example.com/two',
-    inputValue: 'https://example.com/two',
   })
 })
 
