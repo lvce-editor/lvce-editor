@@ -124,6 +124,13 @@ test('routes the browser menu button click with pointer coordinates', () => {
   })
 })
 
+test('routes browser chrome focus with the focused element name', () => {
+  expect(ViewletSimpleBrowserRender.renderEventListeners()).toContainEqual({
+    name: DomEventListenerFunctions.HandleFocusInSimpleBrowser,
+    params: ['handleFocusIn', 'event.target.name'],
+  })
+})
+
 test('routes tab context-menu events with the tab index and pointer coordinates', () => {
   const listener = ViewletSimpleBrowserRender.renderEventListeners().find(
     (candidate) => candidate.name === DomEventListenerFunctions.HandleContextMenuSimpleBrowserTab,

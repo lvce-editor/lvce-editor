@@ -65,6 +65,10 @@ jest.unstable_mockModule('../src/parts/ElectronWindow/ElectronWindow.js', () => 
   focus: jest.fn(),
 }))
 
+jest.unstable_mockModule('../src/parts/Focus/Focus.js', () => ({
+  setFocus: jest.fn(),
+}))
+
 jest.unstable_mockModule('../src/parts/KeyBindingsInitial/KeyBindingsInitial.js', () => {
   return {
     getKeyBindings() {
@@ -89,9 +93,13 @@ const Command = await import('../src/parts/Command/Command.js')
 const ElectronWebContentsViewFunctions = await import('../src/parts/ElectronWebContentsViewFunctions/ElectronWebContentsViewFunctions.js')
 const ElectronWebContentsView = await import('../src/parts/ElectronWebContentsView/ElectronWebContentsView.js')
 const ElectronWindow = await import('../src/parts/ElectronWindow/ElectronWindow.js')
+const Focus = await import('../src/parts/Focus/Focus.js')
+const InputName = await import('../src/parts/InputName/InputName.js')
 const KeyCode = await import('../src/parts/KeyCode/KeyCode.js')
 const KeyModifier = await import('../src/parts/KeyModifier/KeyModifier.js')
 const Preferences = await import('../src/parts/Preferences/Preferences.js')
+const ViewletModuleId = await import('../src/parts/ViewletModuleId/ViewletModuleId.js')
+const WhenExpression = await import('../src/parts/WhenExpression/WhenExpression.js')
 
 const browserTabKeyBindings = [
   KeyModifier.CtrlCmd | KeyCode.KeyW,
@@ -177,6 +185,24 @@ const createTwoTabState = () => {
 test('create', () => {
   const state = ViewletSimpleBrowser.create()
   expect(state).toBeDefined()
+})
+
+test('uses the URL input focus context for the address field', () => {
+  const state = ViewletSimpleBrowser.create(42)
+
+  const newState = ViewletSimpleBrowser.handleFocusIn(state, InputName.SimpleBrowserAddress)
+
+  expect(newState).toBe(state)
+  expect(Focus.setFocus).toHaveBeenCalledWith(WhenExpression.FocusSimpleBrowserInput, undefined, 42, ViewletModuleId.SimpleBrowser)
+})
+
+test('uses the browser focus context for tabs and toolbar controls', () => {
+  const state = ViewletSimpleBrowser.create(42)
+
+  const newState = ViewletSimpleBrowser.handleFocusIn(state, '')
+
+  expect(newState).toBe(state)
+  expect(Focus.setFocus).toHaveBeenCalledWith(WhenExpression.FocusSimpleBrowser, undefined, 42, ViewletModuleId.SimpleBrowser)
 })
 
 test('loadContent', async () => {

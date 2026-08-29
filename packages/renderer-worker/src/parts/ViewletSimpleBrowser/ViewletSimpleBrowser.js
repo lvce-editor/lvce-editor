@@ -6,15 +6,19 @@ import * as Command from '../Command/Command.js'
 import * as ElectronWebContentsView from '../ElectronWebContentsView/ElectronWebContentsView.js'
 import * as ElectronWebContentsViewFunctions from '../ElectronWebContentsViewFunctions/ElectronWebContentsViewFunctions.js'
 import * as ElectronWindow from '../ElectronWindow/ElectronWindow.js'
+import * as Focus from '../Focus/Focus.js'
 import * as GetFallThroughKeyBindings from '../GetFallThroughKeyBindings/GetFallThroughKeyBindings.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as IframeSrc from '../IframeSrc/IframeSrc.js'
+import * as InputName from '../InputName/InputName.js'
 import * as KeyCode from '../KeyCode/KeyCode.js'
 import * as KeyBindings from '../KeyBindings/KeyBindings.js'
 import * as KeyBindingsInitial from '../KeyBindingsInitial/KeyBindingsInitial.js'
 import * as KeyModifier from '../KeyModifier/KeyModifier.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as SimpleBrowserPreferences from '../SimpleBrowserPreferences/SimpleBrowserPreferences.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+import * as WhenExpression from '../WhenExpression/WhenExpression.js'
 
 const navigationHeaderHeight = 30
 const tabsHeaderHeight = 35
@@ -422,6 +426,20 @@ export const selectTab = async (state, index) => {
   return activateTab(newState, newState.tabs, selectedTabIndex)
 }
 
+export const focusNextTab = (state) => {
+  if (state.tabs.length === 0) {
+    return state
+  }
+  return selectTab(state, (state.selectedTabIndex + 1) % state.tabs.length)
+}
+
+export const focusPreviousTab = (state) => {
+  if (state.tabs.length === 0) {
+    return state
+  }
+  return selectTab(state, (state.selectedTabIndex - 1 + state.tabs.length) % state.tabs.length)
+}
+
 export const closeTab = async (state, index) => {
   if (!state.tabsEnabled) {
     return state
@@ -718,6 +736,12 @@ export const handleWillNavigate = (state, browserViewId, value) => {
   })
 }
 
+export const handleFocusIn = (state, name) => {
+  const focusKey = name === InputName.SimpleBrowserAddress ? WhenExpression.FocusSimpleBrowserInput : WhenExpression.FocusSimpleBrowser
+  Focus.setFocus(focusKey, undefined, state.uid, ViewletModuleId.SimpleBrowser)
+  return state
+}
+
 export const handleKeyBinding = async (state, browserViewId, keyBinding) => {
   if (Number(browserViewId) !== state.browserViewId) {
     return state
@@ -728,11 +752,11 @@ export const handleKeyBinding = async (state, browserViewId, keyBinding) => {
   if (keyBinding === createNewTabKeyBinding) {
     return createNewTab(state)
   }
-  if (keyBinding === focusNextTabKeyBinding && state.tabs.length > 0) {
-    return selectTab(state, (state.selectedTabIndex + 1) % state.tabs.length)
+  if (keyBinding === focusNextTabKeyBinding) {
+    return focusNextTab(state)
   }
-  if (keyBinding === focusPreviousTabKeyBinding && state.tabs.length > 0) {
-    return selectTab(state, (state.selectedTabIndex - 1 + state.tabs.length) % state.tabs.length)
+  if (keyBinding === focusPreviousTabKeyBinding) {
+    return focusPreviousTab(state)
   }
   await KeyBindings.handleKeyBinding(keyBinding)
   return state
