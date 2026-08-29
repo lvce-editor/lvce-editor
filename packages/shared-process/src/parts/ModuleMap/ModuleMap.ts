@@ -150,9 +150,6 @@ export const getModuleId = (commandId: any): any => {
       return ModuleId.FileWatcher
     case 'FileWatcherExplorer.decreaseRefCount':
       return ModuleId.FileWatcherExplorer
-    case 'FirefoxCookieImport.getInfo':
-    case 'FirefoxCookieImport.importCookies':
-      return ModuleId.FirefoxCookieImport
     case 'GetElectronFileResponse.getElectronFileResponse':
     case 'GetElectronFileResponse.resolveElectronFileUri':
       return ModuleId.GetElectronFileResponse
@@ -177,6 +174,8 @@ export const getModuleId = (commandId: any): any => {
       return ModuleId.HandleMessagePortForAuthProcess
     case 'HandleMessagePortForClipBoardProcess.handleMessagePortForClipBoardProcess':
       return ModuleId.HandleMessagePortForClipBoardProcess
+    case 'HandleMessagePortForCookieImportProcess.handleMessagePortForCookieImportProcess':
+      return ModuleId.HandleMessagePortForCookieImportProcess
     case 'HandleMessagePortForEmbedsProcess.handleEmbedsProcessIpcClosed':
     case 'HandleMessagePortForEmbedsProcess.handleMessagePortForEmbedsProcess':
       return ModuleId.HandleMessagePortForEmbedsProcess
