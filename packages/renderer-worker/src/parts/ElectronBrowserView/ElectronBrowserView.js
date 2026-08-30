@@ -1,9 +1,13 @@
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 
+let pendingEvent = Promise.resolve()
+
 const dispatch =
   (key) =>
   (...args) => {
-    GlobalEventBus.emitEvent(key, ...args)
+    const event = pendingEvent.then(() => GlobalEventBus.emitEvent(key, ...args))
+    pendingEvent = event.catch(() => {})
+    return event
   }
 export const handleDidNavigate = dispatch('browser-view-did-navigate')
 

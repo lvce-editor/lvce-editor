@@ -22,11 +22,11 @@ test('registers the audio state handler with the IPC module', () => {
   expect(ElectronBrowserViewIpc.Commands.handleAudioStateChanged).toBe(ElectronBrowserView.handleAudioStateChanged)
 })
 
-test('forwards web contents audio state changes through the global event bus', () => {
+test('forwards web contents audio state changes through the global event bus', async () => {
   const listener = jest.fn()
   GlobalEventBus.addListener('browser-view-audio-state-changed', listener)
 
-  ElectronBrowserView.handleAudioStateChanged(12, true)
+  await ElectronBrowserView.handleAudioStateChanged(12, true)
 
   expect(listener).toHaveBeenCalledWith(12, true)
 })
@@ -48,6 +48,31 @@ test('forwards web contents context menus through the global event bus', async (
   await ElectronBrowserView.handleContextMenu(params)
 
   expect(listener).toHaveBeenCalledWith(params)
+})
+
+test('serializes web contents events in arrival order', async () => {
+  const calls: string[] = []
+  let finishNavigation = () => {}
+  const navigationFinished = new Promise<void>((resolve) => {
+    finishNavigation = resolve
+  })
+  GlobalEventBus.addListener('browser-view-did-navigate', async () => {
+    calls.push('navigation-start')
+    await navigationFinished
+    calls.push('navigation-end')
+  })
+  GlobalEventBus.addListener('browser-view-page-favicon-updated', () => {
+    calls.push('favicon')
+  })
+
+  const navigation = ElectronBrowserView.handleDidNavigate(12, 'https://example.com')
+  const favicon = ElectronBrowserView.handlePageFaviconUpdated(12, ['data:image/x-icon;base64,AAEC'])
+  await Promise.resolve()
+
+  expect(calls).toEqual(['navigation-start'])
+  finishNavigation()
+  await Promise.all([navigation, favicon])
+  expect(calls).toEqual(['navigation-start', 'navigation-end', 'favicon'])
 })
 
 test.skip('createBrowserView - error', async () => {
