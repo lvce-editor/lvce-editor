@@ -1560,6 +1560,15 @@
     "contentSecurityPolicy": ["default-src 'none'", "connect-src 'self'"]
   },
   {
+    "id": "simpleBrowser",
+    "fileName": "simpleBrowserViewWorkerMain.js",
+    "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/simple-browser-view/dist/simpleBrowserViewWorkerMain.js",
+    "productionPath": "/packages/simple-browser-view/dist/simpleBrowserViewWorkerMain.js",
+    "settingName": "develop.simpleBrowserWorkerPath",
+    "hotReloadCommand": "",
+    "contentSecurityPolicy": ["default-src 'none'"]
+  },
+  {
     "id": "sourceActionWorker",
     "fileName": "sourceActionWorkerMain.js",
     "contentSecurityPolicy": ["default-src 'none'"],
