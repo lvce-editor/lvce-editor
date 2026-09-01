@@ -43,10 +43,6 @@ export const getBlobUrl = (path) => {
   throw new Error('not implemented')
 }
 
-export const getPathSeparator = () => {
-  throw new Error('not implemented')
-}
-
 export const isReadonly = () => {
   return true
 }

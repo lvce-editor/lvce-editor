@@ -109,12 +109,6 @@ export const copy = async (sourceUri, targetUri) => {
   return fileSystem.copy(sourceUri, targetUri)
 }
 
-export const getPathSeparator = async (uri) => {
-  const protocol = GetProtocol.getProtocol(uri)
-  const fileSystem = await GetFileSystem.getFileSystem(protocol)
-  return fileSystem.getPathSeparator(uri)
-}
-
 export const isReadonly = async (uri) => {
   const protocol = GetProtocol.getProtocol(uri)
   const fileSystem = await GetFileSystem.getFileSystem(protocol)

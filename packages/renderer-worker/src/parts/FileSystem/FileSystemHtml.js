@@ -183,10 +183,6 @@ export const mkdir = async (uri) => {
   }
 }
 
-export const getPathSeparator = () => {
-  return pathSeparator
-}
-
 export const isReadonly = () => {
   return false
 }

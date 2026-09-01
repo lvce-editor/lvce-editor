@@ -8,7 +8,3 @@ test('isWindows', () => {
 test('isMacOs', () => {
   expect(Platform.isMacOs).toEqual(expect.any(Boolean))
 })
-
-test('getPathSeparator', () => {
-  expect(Platform.getPathSeparator()).toEqual(expect.any(String))
-})

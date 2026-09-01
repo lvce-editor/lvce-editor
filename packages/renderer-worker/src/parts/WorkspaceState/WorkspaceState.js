@@ -1,7 +1,7 @@
 export const state = {
   workspacePath: '',
   homeDir: '',
-  pathSeparator: '',
+  pathSeparator: '/',
   workspaceUri: '',
   source: '',
   href: '',

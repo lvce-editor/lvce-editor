@@ -308,9 +308,6 @@ test('isolated provider dispatch uses full provider uris', async () => {
     'Extensions.executeFileSystemProviderRename',
   )
   await expect(ExtensionHostFileSystem.remove('remote-ssh:///test-folder/renamed.txt')).resolves.toBe('Extensions.executeFileSystemProviderRemove')
-  await expect(ExtensionHostFileSystem.getPathSeparator('remote-ssh:///test-folder')).resolves.toBe(
-    'Extensions.executeFileSystemProviderGetPathSeparator',
-  )
   await expect(ExtensionHostFileSystem.isReadonly('remote-ssh:///test-folder')).resolves.toBe('Extensions.executeFileSystemProviderIsReadonly')
 
   expect(invoke.mock.calls).toEqual([
@@ -320,7 +317,6 @@ test('isolated provider dispatch uses full provider uris', async () => {
     ['Extensions.executeFileSystemProviderWriteFile', 'remote-ssh', 'remote-ssh:///test-folder/new.txt', 'content'],
     ['Extensions.executeFileSystemProviderRename', 'remote-ssh', 'remote-ssh:///test-folder/new.txt', 'remote-ssh:///test-folder/renamed.txt'],
     ['Extensions.executeFileSystemProviderRemove', 'remote-ssh', 'remote-ssh:///test-folder/renamed.txt'],
-    ['Extensions.executeFileSystemProviderGetPathSeparator', 'remote-ssh'],
     ['Extensions.executeFileSystemProviderIsReadonly', 'remote-ssh'],
   ])
   expect(ExtensionHostShared.executeProvider).not.toHaveBeenCalled()

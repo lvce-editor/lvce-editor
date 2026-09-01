@@ -10,7 +10,6 @@ import { FileNotFoundError } from '../FileNotFoundError/FileNotFoundError.ts'
 import * as GetDirentType from '../GetDirentType/GetDirentType.ts'
 import * as IsEnoentError from '../IsEnoentError/IsEnoentError.ts'
 import * as Path from '../Path/Path.ts'
-import * as Platform from '../Platform/Platform.ts'
 import * as Trash from '../Trash/Trash.ts'
 import { VError } from '../VError/VError.ts'
 
@@ -244,10 +243,6 @@ export const rename = async (oldPath: any, newPath: any): Promise<any> => {
     }
     throw new VError(error, `Failed to rename "${oldPath}" to "${newPath}"`)
   }
-}
-
-export const getPathSeparator = (): any => {
-  return Platform.getPathSeparator()
 }
 
 export const getRealPath = async (path: any): Promise<any> => {

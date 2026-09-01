@@ -23,7 +23,6 @@ jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () =
 jest.unstable_mockModule('../src/parts/FileSystem/FileSystem.js', () => ({
   canBeRestored: jest.fn(() => true),
   exists: jest.fn(async () => true),
-  getPathSeparator: jest.fn(async () => '/'),
 }))
 
 jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
@@ -66,7 +65,7 @@ test('hydrate', async () => {
         return {
           path: '/tmp/some-folder',
           homeDir: '~',
-          pathSeparator: '/',
+          pathSeparator: '\\',
           source: 'shared-process',
           uri: 'file:///tmp/some-folder',
         }
@@ -80,6 +79,7 @@ test('hydrate', async () => {
   await Workspace.hydrate({ href: 'http://localhost:3000' })
   expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
   expect(SharedProcess.invoke).toHaveBeenCalledWith('Workspace.resolveRoot', 'http://localhost:3000')
+  expect(Workspace.state.pathSeparator).toBe('/')
   const windowTitleCalls = jest.mocked(RendererProcess.invoke).mock.calls.filter(([method]) => method === 'WindowTitle.set')
   expect(windowTitleCalls).toEqual([['WindowTitle.set', 'some-folder']])
 })

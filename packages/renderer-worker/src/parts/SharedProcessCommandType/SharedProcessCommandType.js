@@ -4,7 +4,6 @@ export const ExtensionHostGetIconThemeJson = 'ExtensionHost.getIconThemeJson'
 
 export const FileSystemChmod = 'FileSystemDisk.chmod'
 export const FileSystemCopy = 'FileSystemDisk.copy'
-export const FileSystemGetPathSeparator = 'FileSystemDisk.getPathSeparator'
 export const FileSystemGetRealPath = 'FileSystemDisk.getRealPath'
 export const FileSystemMkdir = 'FileSystemDisk.mkdir'
 export const FileSystemReadDirWithFileTypes = 'FileSystemDisk.readDirWithFileTypes'

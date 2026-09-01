@@ -313,10 +313,6 @@ export const onDidSave = (listener) => {
   throw new Error('not implemented')
 }
 
-export const getPathSeparator = () => {
-  return PathSeparatorType.Slash
-}
-
 export const isReadonly = () => {
   return false
 }
