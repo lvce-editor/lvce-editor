@@ -32,17 +32,20 @@ export const create = (id, cwd = '') => {
 }
 
 export const loadContent = async (state, _savedState?: any, configuredSpawnOptions?: any) => {
-  const { cwd, uid } = state
   const { command, args } = configuredSpawnOptions || (await GetTerminalSpawnOptions.getTerminalSpawnOptions())
-  await TerminalWorker.invoke('Terminal.create', uid, cwd || Workspace.state.workspacePath, command, args, {
-    backend: getBackend(),
-  })
   return {
     ...state,
     command,
     args,
     xtermMounted: true,
   }
+}
+
+export const loadContentLater = async (state) => {
+  const { args, command, cwd, uid } = state
+  await TerminalWorker.invoke('Terminal.create', uid, cwd || Workspace.state.workspacePath, command, args, {
+    backend: getBackend(),
+  })
 }
 
 export const handleInput = async (state, data) => {
