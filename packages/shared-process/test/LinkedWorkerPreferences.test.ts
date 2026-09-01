@@ -29,6 +29,18 @@ test('getLinkedWorkerPreferences - resolves a linked worker package', async () =
   })
 })
 
+test('getLinkedWorkerPreferences - resolves the simple browser worker package', async () => {
+  const root = await createPackage({
+    main: 'dist/simpleBrowserViewWorkerMain.js',
+    name: '@lvce-editor/simple-browser-view',
+  })
+  process.argv = [...originalArgv, '--link', root]
+
+  await expect(LinkedWorkerPreferences.getLinkedWorkerPreferences()).resolves.toEqual({
+    'develop.simpleBrowserWorkerPath': join(root, 'dist', 'simpleBrowserViewWorkerMain.js'),
+  })
+})
+
 test('getLinkedWorkerPreferences - ignores extension and unknown packages', async () => {
   const extensionRoot = await mkdtemp(join(tmpdir(), 'linked-extension-'))
   const unknownRoot = await createPackage({
