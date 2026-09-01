@@ -120,7 +120,6 @@ export const getModuleId = (commandId: any): any => {
     case 'FileSystem.createFile':
     case 'FileSystem.createFolder':
     case 'FileSystem.ensureFile':
-    case 'FileSystem.getPathSeparator':
     case 'FileSystem.getRealUri':
     case 'FileSystem.mkdir':
     case 'FileSystem.readDirWithFileTypes':
@@ -134,7 +133,6 @@ export const getModuleId = (commandId: any): any => {
     case 'FileSystemDisk.chmod':
     case 'FileSystemDisk.copy':
     case 'FileSystemDisk.getFolderSize':
-    case 'FileSystemDisk.getPathSeparator':
     case 'FileSystemDisk.mkdir':
     case 'FileSystemDisk.readDirWithFileTypes':
     case 'FileSystemDisk.readFile':

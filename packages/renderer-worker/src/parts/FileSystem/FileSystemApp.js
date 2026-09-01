@@ -1,5 +1,3 @@
-import * as PathSeparatorType from '../PathSeparatorType/PathSeparatorType.js'
-
 export const name = 'App'
 
 const appPrefix = 'app://'
@@ -60,10 +58,6 @@ export const remove = async (path) => {
 
 export const mkdir = async (path) => {
   throw new Error('not allowed')
-}
-
-export const getPathSeparator = () => {
-  return PathSeparatorType.Slash
 }
 
 export const isReadonly = () => {

@@ -33,9 +33,6 @@ jest.unstable_mockModule('../src/parts/FileSystem/FileSystem.js', () => {
     mkdir: jest.fn(() => {
       throw new Error('not implemented')
     }),
-    getPathSeparator: jest.fn(() => {
-      throw new Error('not implemented')
-    }),
   }
 })
 
@@ -113,10 +110,6 @@ test('readFile - settings - error - file does not exist', async () => {
   })
   // @ts-ignore
   FileSystem.mkdir.mockImplementation(() => {})
-  // @ts-ignore
-  FileSystem.getPathSeparator.mockImplementation(() => {
-    return '/'
-  })
   let i = 0
   // @ts-ignore
   FileSystem.readFile.mockImplementation((uri) => {
@@ -158,10 +151,6 @@ test('writeFile - settings - error parent folder does not exist', async () => {
   })
   // @ts-ignore
   FileSystem.mkdir.mockImplementation(() => {})
-  // @ts-ignore
-  FileSystem.getPathSeparator.mockImplementation(() => {
-    return '/'
-  })
   let i = 0
   // @ts-ignore
   FileSystem.writeFile.mockImplementation((uri) => {

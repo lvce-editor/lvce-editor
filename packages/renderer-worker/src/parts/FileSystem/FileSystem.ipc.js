@@ -8,7 +8,6 @@ export const Commands = {
   exists: FileSystem.exists,
   getBlob: FileSystem.getBlob,
   getFolderSize: FileSystem.getFolderSize,
-  getPathSeparator: FileSystem.getPathSeparator,
   getRealPath: FileSystem.getRealPath,
   isReadonly: FileSystem.isReadonly,
   mkdir: FileSystem.mkdir,

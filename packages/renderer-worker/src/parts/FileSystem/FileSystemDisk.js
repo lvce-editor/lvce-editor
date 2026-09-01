@@ -1,8 +1,5 @@
 import * as FileSystemWorker from '../FileSystemWorker/FileSystemWorker.js'
 import * as GetRemoteSrc from '../GetRemoteSrc/GetRemoteSrc.js'
-import * as PathSeparatorType from '../PathSeparatorType/PathSeparatorType.js'
-import * as Platform from '../Platform/Platform.js'
-import * as PlatformType from '../PlatformType/PlatformType.js'
 
 export const name = 'Disk'
 
@@ -78,13 +75,6 @@ export const getBlob = async (path, type) => {
     type,
   })
   return blob
-}
-
-export const getPathSeparator = () => {
-  if (Platform.getPlatform() === PlatformType.Web) {
-    return PathSeparatorType.Slash
-  }
-  return FileSystemWorker.invoke('FileSystem.getPathSeparator')
 }
 
 export const isReadonly = (path) => {

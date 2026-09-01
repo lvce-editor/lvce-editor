@@ -29,6 +29,7 @@ test('resolveRoot - resolves dot from packaged app arguments', async () => {
 
   expect(resolvedRoot).toMatchObject({
     path: process.cwd(),
+    pathSeparator: '/',
     source: 'shared-process-cli-arg',
     uri: pathToFileURL(process.cwd()).toString(),
   })
@@ -57,6 +58,7 @@ test('resolveRoot - resolves the workspace for a second window', async () => {
 
   expect(resolvedRoot).toMatchObject({
     path: workspacePath,
+    pathSeparator: '/',
     source: 'shared-process-cli-arg',
     uri: workspaceUri,
   })

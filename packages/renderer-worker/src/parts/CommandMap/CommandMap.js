@@ -195,7 +195,6 @@ export const commandMap = {
   'FileSystem.exists': lazy('FileSystem.exists'),
   'FileSystem.getBlob': lazy('FileSystem.getBlob'),
   'FileSystem.getFolderSize': lazy('FileSystem.getFolderSize'),
-  'FileSystem.getPathSeparator': lazy('FileSystem.getPathSeparator'),
   'FileSystem.getRealPath': lazy('FileSystem.getRealPath'),
   'FileSystem.mkdir': lazy('FileSystem.mkdir'),
   'FileSystem.readDirWithFileTypes': lazy('FileSystem.readDirWithFileTypes'),

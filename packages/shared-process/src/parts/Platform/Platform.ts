@@ -1,5 +1,4 @@
 import { tmpdir } from 'node:os'
-import { sep } from 'node:path'
 import { xdgState } from 'xdg-basedir'
 import * as Process from '../Process/Process.ts'
 
@@ -22,10 +21,6 @@ export const isArchLinux = false
 export const isAppImage = false
 
 export const scheme = 'lvce-oss'
-
-export const getPathSeparator = (): any => {
-  return sep
-}
 
 export const getStateDir = (): any => {
   return xdgState

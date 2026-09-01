@@ -50,8 +50,6 @@ export const mkdir = (uri) => {
   files[path] = { content: '', type: DirentType.Directory }
 }
 
-export const getPathSeparator = () => PathSeparatorType.Slash
-
 export const isReadonly = () => false
 
 export const remove = (uri) => {

@@ -6,7 +6,6 @@ export const Commands = {
   chmod: FileSystemDisk.chmod,
   copy: FileSystemDisk.copy,
   getFolderSize: FileSystemDisk.getFolderSize,
-  getPathSeparator: FileSystemDisk.getPathSeparator,
   mkdir: FileSystemDisk.mkdir,
   readDirWithFileTypes: FileSystemDisk.readDirWithFileTypes,
   readFile: FileSystemDisk.readFile,
