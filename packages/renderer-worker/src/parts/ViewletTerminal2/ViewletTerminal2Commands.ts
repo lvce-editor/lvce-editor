@@ -7,5 +7,6 @@ export const Commands = {
   handleInput: ViewletTerminal.handleInput,
   handleKeyDown: ViewletTerminal.handleKeyDown,
   handleMouseDown: ViewletTerminal.handleMouseDown,
+  loadContentLater: ViewletTerminal.loadContentLater,
   resize: ViewletTerminal.resize,
 }

@@ -67,6 +67,7 @@ jest.unstable_mockModule('../src/parts/Workspace/Workspace.js', () => {
 })
 
 const ViewletTerminal2 = await import('../src/parts/ViewletTerminal2/ViewletTerminal2.ts')
+const ViewletTerminal2Commands = await import('../src/parts/ViewletTerminal2/ViewletTerminal2Commands.ts')
 
 test('create initializes xterm dimensions', () => {
   expect(ViewletTerminal2.create(1)).toMatchObject({
@@ -78,13 +79,11 @@ test('create initializes xterm dimensions', () => {
   })
 })
 
-test('loadContent starts the terminal transport', async () => {
+test('loadContent mounts xterm before starting the terminal transport', async () => {
   const state = ViewletTerminal2.create(2)
   const newState = await ViewletTerminal2.loadContent(state, undefined, undefined)
 
-  expect(terminalWorkerInvoke).toHaveBeenCalledWith('Terminal.create', 2, '/workspace', 'bash', ['-i'], {
-    backend: 'mock',
-  })
+  expect(terminalWorkerInvoke).not.toHaveBeenCalled()
   expect(newState).toMatchObject({
     args: ['-i'],
     command: 'bash',
@@ -101,19 +100,38 @@ test('loadContent uses spawn options supplied by the terminal tabs parent', asyn
 
   const newState = await ViewletTerminal2.loadContent(state, undefined, spawnOptions)
 
-  expect(terminalWorkerInvoke).toHaveBeenCalledWith('Terminal.create', 9, '/workspace', 'zsh', ['-l'], {
-    backend: 'mock',
-  })
+  expect(terminalWorkerInvoke).not.toHaveBeenCalled()
   expect(newState).toMatchObject(spawnOptions)
 })
 
-test('loadContent starts the terminal transport in the requested cwd', async () => {
-  const state = ViewletTerminal2.create(2, 'file:///workspace/folder')
-  await ViewletTerminal2.loadContent(state, undefined, undefined)
+test('loadContentLater starts the terminal transport in the requested cwd', async () => {
+  const state = {
+    ...ViewletTerminal2.create(2, 'file:///workspace/folder'),
+    args: ['-i'],
+    command: 'bash',
+  }
+  await ViewletTerminal2.loadContentLater(state)
 
   expect(terminalWorkerInvoke).toHaveBeenCalledWith('Terminal.create', 2, 'file:///workspace/folder', 'bash', ['-i'], {
     backend: 'mock',
   })
+})
+
+test('loadContentLater falls back to the workspace cwd', async () => {
+  const state = {
+    ...ViewletTerminal2.create(3),
+    args: ['-l'],
+    command: 'zsh',
+  }
+  await ViewletTerminal2.loadContentLater(state)
+
+  expect(terminalWorkerInvoke).toHaveBeenCalledWith('Terminal.create', 3, '/workspace', 'zsh', ['-l'], {
+    backend: 'mock',
+  })
+})
+
+test('commands expose deferred terminal startup', () => {
+  expect(ViewletTerminal2Commands.Commands.loadContentLater).toBe(ViewletTerminal2.loadContentLater)
 })
 
 test('handleInput forwards xterm input to the terminal worker', async () => {
