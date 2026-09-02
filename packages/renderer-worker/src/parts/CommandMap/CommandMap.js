@@ -610,6 +610,7 @@ export const commandMap = {
   'Layout.openOutput': lazy('Layout.openOutput'),
   'Layout.openProblems': lazy('Layout.openProblems'),
   'Layout.openSideBarViewlet': lazy('Layout.openSideBarViewlet'),
+  'Layout.openTextSearch': lazy('Layout.openTextSearch'),
   'Layout.openSecondarySideBarViewlet': lazy('Layout.openSecondarySideBarViewlet'),
   'Layout.setBadgeCount': lazy('Layout.setBadgeCount'),
   'Layout.setUpdateState': lazy('Layout.setUpdateState'),
