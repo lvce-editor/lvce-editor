@@ -19,7 +19,12 @@ jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => ({
 }))
 
 jest.unstable_mockModule('../src/parts/PlatformPaths/PlatformPaths.js', () => ({
+  getUserKeyBindingsPath: jest.fn(() => '/home/test/.config/lvce/keybindings.json'),
   getUserSettingsPath: jest.fn(() => '/home/test/.config/lvce/settings.json'),
+}))
+
+jest.unstable_mockModule('../src/parts/KeyBindings/KeyBindings.js', () => ({
+  reloadUserKeyBindings: jest.fn(),
 }))
 
 jest.unstable_mockModule('../src/parts/Preferences/Preferences.js', () => ({
@@ -27,6 +32,7 @@ jest.unstable_mockModule('../src/parts/Preferences/Preferences.js', () => ({
 }))
 
 const FileWatcher = await import('../src/parts/FileWatcher/FileWatcher.js')
+const KeyBindings = await import('../src/parts/KeyBindings/KeyBindings.js')
 const Platform = await import('../src/parts/Platform/Platform.js')
 const Preferences = await import('../src/parts/Preferences/Preferences.js')
 const PreferencesFileWatcher = await import('../src/parts/PreferencesFileWatcher/PreferencesFileWatcher.js')
@@ -104,7 +110,7 @@ test('settings file changes are debounced', async () => {
   expect(Preferences.reload).toHaveBeenCalledTimes(1)
 })
 
-test('changes to other files are ignored', async () => {
+test('keybindings file changes reload user keybindings after a debounce', async () => {
   await PreferencesFileWatcher.hydrate()
   const handleEvent = addEventListener.mock.calls[0][1] as (event: any) => void
 
@@ -114,8 +120,21 @@ test('changes to other files are ignored', async () => {
       uri: 'file:///home/test/.config/lvce/keybindings.json',
     },
   })
+  expect(KeyBindings.reloadUserKeyBindings).not.toHaveBeenCalled()
   await jest.runAllTimersAsync()
 
+  expect(KeyBindings.reloadUserKeyBindings).toHaveBeenCalledTimes(1)
+  expect(Preferences.reload).not.toHaveBeenCalled()
+})
+
+test('changes to other files are ignored', async () => {
+  await PreferencesFileWatcher.hydrate()
+  const handleEvent = addEventListener.mock.calls[0][1] as (event: any) => void
+
+  handleEvent({ detail: { eventName: 'change', uri: 'file:///home/test/.config/lvce/other.json' } })
+  await jest.runAllTimersAsync()
+
+  expect(KeyBindings.reloadUserKeyBindings).not.toHaveBeenCalled()
   expect(Preferences.reload).not.toHaveBeenCalled()
 })
 
@@ -129,5 +148,6 @@ test('dispose stops watching and cancels a pending reload', async () => {
 
   expect(removeEventListener).toHaveBeenCalledWith('watcher-event', expect.any(Function))
   expect(FileWatcher.dispose).toHaveBeenCalledWith(watcher)
+  expect(KeyBindings.reloadUserKeyBindings).not.toHaveBeenCalled()
   expect(Preferences.reload).not.toHaveBeenCalled()
 })
