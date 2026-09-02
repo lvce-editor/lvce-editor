@@ -155,11 +155,13 @@ export const bundleRendererWorker = async ({ cachePath, platform, commitHash, as
         replacement: `../../../static/`,
       })
     }
-    await Replace.replace({
-      path: `${cachePath}/src/parts/HandleSecretsViewMessagePort/HandleSecretsViewMessagePort.ts`,
-      occurrence: `../../../../../static/`,
-      replacement: `../../../static/`,
-    })
+    for (const file of ['HandleMockDialogWorkerMessagePort', 'HandleSecretsViewMessagePort']) {
+      await Replace.replace({
+        path: `${cachePath}/src/parts/${file}/${file}.ts`,
+        occurrence: `../../../../../static/`,
+        replacement: `../../../static/`,
+      })
+    }
     for (const file of ['IpcChildModule']) {
       await Replace.replace({
         path: `${cachePath}/src/parts/${file}/${file}.js`,

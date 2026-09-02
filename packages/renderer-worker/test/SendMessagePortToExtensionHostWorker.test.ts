@@ -17,6 +17,18 @@ jest.unstable_mockModule('../src/parts/DialogWorker/DialogWorker.js', () => {
   }
 })
 
+jest.unstable_mockModule('../src/parts/ConfirmPrompt/ConfirmPrompt.js', () => {
+  return {
+    isMocked: jest.fn(() => false),
+  }
+})
+
+jest.unstable_mockModule('../src/parts/HandleMockDialogWorkerMessagePort/HandleMockDialogWorkerMessagePort.ts', () => {
+  return {
+    handleMockDialogWorkerMessagePort: jest.fn(),
+  }
+})
+
 jest.unstable_mockModule('../src/parts/ExtensionManagementWorker/ExtensionManagementWorker.js', () => {
   return {
     invokeAndTransfer: jest.fn(),
@@ -53,9 +65,11 @@ jest.unstable_mockModule('../src/parts/WorkspaceConnection/WorkspaceConnection.j
   }
 })
 
+const ConfirmPrompt = await import('../src/parts/ConfirmPrompt/ConfirmPrompt.js')
 const DialogWorker = await import('../src/parts/DialogWorker/DialogWorker.js')
 const ExtensionManagementWorker = await import('../src/parts/ExtensionManagementWorker/ExtensionManagementWorker.js')
 const ExplorerViewWorker = await import('../src/parts/ExplorerViewWorker/ExplorerViewWorker.js')
+const HandleMockDialogWorkerMessagePort = await import('../src/parts/HandleMockDialogWorkerMessagePort/HandleMockDialogWorkerMessagePort.ts')
 const MainAreaWorker = await import('../src/parts/MainAreaWorker/MainAreaWorker.js')
 const SecretsViewWorker = await import('../src/parts/SecretsViewWorker/SecretsViewWorker.ts')
 const SettingsWorker = await import('../src/parts/SettingsWorker/SettingsWorker.js')
@@ -106,6 +120,18 @@ test('sendMessagePortToDialogWorker', async () => {
 
   expect(DialogWorker.invokeAndTransfer).toHaveBeenCalledTimes(1)
   expect(DialogWorker.invokeAndTransfer).toHaveBeenCalledWith('HandleMessagePort.handleMessagePort', port)
+})
+
+test('sendMessagePortToDialogWorker preserves confirm prompt mocks', async () => {
+  const { port1: port, port2 } = new MessageChannel()
+  jest.mocked(ConfirmPrompt.isMocked).mockReturnValue(true)
+
+  await SendMessagePortToExtensionHostWorker.sendMessagePortToDialogWorker(port, 'HandleMessagePort.handleMessagePort')
+
+  expect(HandleMockDialogWorkerMessagePort.handleMockDialogWorkerMessagePort).toHaveBeenCalledWith(port)
+  expect(DialogWorker.invokeAndTransfer).not.toHaveBeenCalled()
+  port.close()
+  port2.close()
 })
 
 test('sendMessagePortToExtensionHostWorker forwards to extension management worker', async () => {
