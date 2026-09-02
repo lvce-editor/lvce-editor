@@ -105,15 +105,6 @@
     "value": true
   },
   {
-    "category": "features",
-    "description": "Controls the number of worker threads used for search",
-    "heading": "Search Threads",
-    "id": "search.threads",
-    "minimum": 1,
-    "type": 5,
-    "value": 1
-  },
-  {
     "category": "workbench",
     "description": "Records the current session for replay",
     "heading": "Session Replay",
