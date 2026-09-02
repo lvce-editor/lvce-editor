@@ -159,7 +159,7 @@
     "description": "Controls whether hovering over a simple browser tab shows its full title and memory usage",
     "heading": "Simple Browser Tab Hover",
     "id": "simpleBrowser.tabHover.enabled",
-    "type": 3,
+    "type": "boolean",
     "value": false
   },
   {
