@@ -32,3 +32,13 @@ test('registers browser tab shortcuts for the URL input and browser chrome', () 
     }
   }
 })
+
+test('submits the URL input on Enter', () => {
+  const keyBindings = ViewletSimpleBrowserKeyBindings.getKeyBindings()
+
+  expect(keyBindings).toContainEqual({
+    key: KeyCode.Enter,
+    command: 'SimpleBrowser.go',
+    when: WhenExpression.FocusSimpleBrowserInput,
+  })
+})
