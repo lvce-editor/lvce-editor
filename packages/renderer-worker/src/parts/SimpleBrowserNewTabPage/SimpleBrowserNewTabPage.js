@@ -110,6 +110,7 @@ const html = `<!doctype html>
         color: inherit;
         font: inherit;
         font-size: 15px;
+        user-select: none;
       }
 
       input::placeholder {

@@ -13,6 +13,7 @@ test('provides a self-contained new tab page', () => {
   expect(getHtml()).toContain('action="https://www.google.com/search"')
   expect(getHtml()).toContain('name="q"')
   expect(getHtml()).toContain('aria-label="Search with Google"')
+  expect(getHtml()).toContain('user-select: none;')
 })
 
 test('hides the internal page URL from the address bar', () => {
