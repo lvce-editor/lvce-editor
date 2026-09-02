@@ -1319,3 +1319,37 @@ test('acceptSuggestion navigates directly to a visited URL suggestion', async ()
   expect(newState).toMatchObject({ iframeSrc: 'https://soundcloud.com', inputValue: 'https://soundcloud.com', isLoading: true })
   expect(ElectronWebContentsViewFunctions.setIframeSrc).toHaveBeenCalledWith(12, 'https://soundcloud.com')
 })
+
+test('go closes suggestions and submits the input value', async () => {
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.focus.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.setIframeSrc.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.show.mockResolvedValue(undefined)
+  const state = {
+    ...ViewletSimpleBrowser.create(7),
+    browserViewId: 12,
+    hasSuggestionsOverlay: true,
+    inputValue: 'example.com',
+    overlayIds: ['search-suggestions'],
+    selectedSuggestionIndex: -1,
+    snapshot: 'blob:https://example.com/snapshot',
+    suggestions: [{ favicon: '', type: 'search', value: 'example website' }],
+    suggestionsEnabled: true,
+  }
+
+  const newState = await ViewletSimpleBrowser.go(state)
+
+  expect(newState).toMatchObject({
+    hasSuggestionsOverlay: false,
+    iframeSrc: 'https://example.com',
+    inputValue: 'example.com',
+    isLoading: true,
+    snapshot: '',
+    suggestions: [],
+  })
+  expect(ElectronWebContentsViewFunctions.show).toHaveBeenCalledWith(12)
+  expect(SimpleBrowserSnapshot.dispose).toHaveBeenCalledWith('blob:https://example.com/snapshot')
+  expect(ElectronWebContentsViewFunctions.setIframeSrc).toHaveBeenCalledWith(12, 'https://example.com')
+})

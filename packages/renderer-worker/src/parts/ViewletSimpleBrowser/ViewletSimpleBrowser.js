@@ -793,7 +793,8 @@ export const go = async (state) => {
   if (state.hasSuggestionsOverlay && state.selectedSuggestionIndex >= 0) {
     return acceptSuggestion(state)
   }
-  return navigate(state, state.inputValue)
+  const newState = state.hasSuggestionsOverlay ? await closeSuggestions(state) : state
+  return navigate(newState, newState.inputValue)
 }
 
 export const handleWillNavigate = (state, browserViewId, value) => {
