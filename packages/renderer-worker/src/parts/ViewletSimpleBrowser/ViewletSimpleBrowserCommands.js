@@ -28,6 +28,7 @@ export const Commands = {
   handlePageFaviconUpdated: SimpleBrowser.handlePageFaviconUpdated,
   handleTitleUpdated: SimpleBrowser.handleTitleUpdated,
   handleWillNavigate: SimpleBrowser.handleWillNavigate,
+  hideTabHover: SimpleBrowser.hideTabHover,
   hideOverlay: SimpleBrowser.hideOverlay,
   muteTab: SimpleBrowser.muteTab,
   reloadTab: SimpleBrowser.reloadTab,
@@ -38,6 +39,7 @@ export const Commands = {
   selectPreviousSuggestion: SimpleBrowser.selectPreviousSuggestion,
   selectTab: SimpleBrowser.selectTab,
   showOverlay: SimpleBrowser.showOverlay,
+  showTabHover: SimpleBrowser.showTabHover,
 }
 
 export const LazyCommands = {

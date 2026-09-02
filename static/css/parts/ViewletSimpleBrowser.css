@@ -106,6 +106,34 @@
   width: 24px;
 }
 
+.SimpleBrowserTabHover {
+  background: var(--MenuBackground, var(--EditorBackground));
+  border: 1px solid var(--WidgetBorder, var(--PanelBorder, transparent));
+  border-radius: 8px;
+  box-shadow: rgb(0 0 0 / 36%) 0 6px 18px;
+  box-sizing: border-box;
+  color: var(--MenuForeground, var(--WorkbenchForeground));
+  max-width: calc(100% - 16px);
+  padding: 12px 14px;
+  pointer-events: none;
+  position: absolute;
+  top: 34px;
+  width: 320px;
+  z-index: 3;
+}
+
+.SimpleBrowserTabHoverTitle {
+  font-weight: 600;
+  line-height: 20px;
+  overflow-wrap: anywhere;
+}
+
+.SimpleBrowserTabHoverMemory {
+  color: var(--DescriptionForeground, currentColor);
+  line-height: 20px;
+  margin-top: 8px;
+}
+
 .SimpleBrowserTabClose:hover,
 .SimpleBrowserNewTab:hover {
   background: var(--ToolbarHoverBackground, rgb(90 93 94 / 31%));
