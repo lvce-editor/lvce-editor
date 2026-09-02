@@ -205,6 +205,7 @@ export const commandMap = {
   'FileSystem.stat': lazy('FileSystem.stat'),
   'FileSystem.writeBlob': lazy('FileSystem.writeBlob'),
   'FileSystem.writeFile': lazy('FileSystem.writeFile'),
+  'FileHandles.get': lazy('FileSystemHandle.getFileHandles'),
   'FileSystemHandle.addFileHandle': lazy('FileSystemHandle.addFileHandle'),
   'FileSystemHandle.getFileHandles': lazy('FileSystemHandle.getFileHandles'),
   'FileSystemHandle.getFilePathElectron': lazy('FileSystemHandle.getFilePathElectron'),
