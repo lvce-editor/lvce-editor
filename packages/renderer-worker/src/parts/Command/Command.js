@@ -10,9 +10,10 @@ export const state = {
   },
 }
 
-const initializeModule = (module) => {
+const initializeModule = async (module) => {
   if (module.Commands) {
-    for (const [key, value] of Object.entries(module.Commands)) {
+    const commands = module.getCommands && Object.keys(module.Commands).length === 0 ? await module.getCommands() : module.Commands
+    for (const [key, value] of Object.entries(commands)) {
       if (module.name) {
         const actualKey = key.includes('.') ? key : `${module.name}.${key}`
         register(actualKey, value)
@@ -28,7 +29,7 @@ const initializeModule = (module) => {
 const loadModule = async (moduleId) => {
   try {
     const module = await state.load(moduleId)
-    initializeModule(module)
+    await initializeModule(module)
   } catch (error) {
     throw new VError(error, `failed to load module ${moduleId}`)
   }
