@@ -6,7 +6,27 @@ import {
   bundleBuiltinSettings,
   deduplicateSettingsContributions,
   getSettingsContributionCandidates,
+  normalizeSettingContribution,
 } from '../src/parts/BundleBuiltinSettings/BundleBuiltinSettings.ts'
+
+test.each([
+  [0, 'none'],
+  [1, 'enum'],
+  [2, 'string'],
+  [3, 'boolean'],
+  [4, 'array'],
+  [5, 'number'],
+  [6, 'color'],
+  [7, 'url'],
+])('normalizes legacy setting type %s to %s', (type, expected) => {
+  expect(normalizeSettingContribution({ id: 'test.setting', type })).toEqual({ id: 'test.setting', type: expected })
+})
+
+test('preserves unknown and readable setting types', () => {
+  const readable = { id: 'test.setting', type: 'number' }
+  expect(normalizeSettingContribution(readable)).toBe(readable)
+  expect(normalizeSettingContribution({ id: 'test.setting', type: 99 })).toEqual({ id: 'test.setting', type: 99 })
+})
 
 test('gets one settings contribution candidate per worker package', () => {
   const workers = [
@@ -56,7 +76,7 @@ test('bundles schema-complete renderer settings contributions', async () => {
           description: 'Controls the location of the side bar',
           heading: 'Side Bar Location',
           id: 'workbench.sideBarLocation',
-          type: 2,
+          type: 'string',
           value: 'right',
         },
       ]),
@@ -95,9 +115,21 @@ test('deduplicates identical settings contributions', () => {
       { fileName: 'chat-view-model.json', settings: [settingA, settingB] },
     ]),
   ).toEqual([
-    { fileName: 'chat-view.json', settings: [settingA] },
-    { fileName: 'chat-view-model.json', settings: [settingB] },
+    { fileName: 'chat-view.json', settings: [{ ...settingA, type: 'boolean' }] },
+    { fileName: 'chat-view-model.json', settings: [{ ...settingB, type: 'boolean' }] },
   ])
+})
+
+test('deduplicates equivalent numeric and readable setting types', () => {
+  const legacySetting = { category: 'search', description: 'Threads', heading: 'Threads', id: 'search.threads', type: 5, value: 1 }
+  const readableSetting = { ...legacySetting, type: 'number' }
+
+  expect(
+    deduplicateSettingsContributions([
+      { fileName: 'renderer-worker.json', settings: [readableSetting] },
+      { fileName: 'text-search-view.json', settings: [legacySetting] },
+    ]),
+  ).toEqual([{ fileName: 'renderer-worker.json', settings: [readableSetting] }])
 })
 
 test('rejects conflicting settings contributions', () => {
