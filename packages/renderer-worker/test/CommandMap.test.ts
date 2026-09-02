@@ -42,6 +42,10 @@ test('registers the drop data command', () => {
   expect(commandMap['DropData.get']).toBeDefined()
 })
 
+test('registers the file handles command', () => {
+  expect(commandMap['FileHandles.get']).toBeDefined()
+})
+
 test('registers the active text document command', () => {
   expect(commandMap['GetActiveEditor.getTextDocument']).toBeDefined()
 })
