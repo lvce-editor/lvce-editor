@@ -40,6 +40,24 @@ test('getQuickPickMenuEntries includes reset view locations command', () => {
   })
 })
 
+test('getQuickPickMenuEntries includes executable keybindings commands', () => {
+  const entries = ViewletLayoutMenuEntries.getQuickPickMenuEntries()
+
+  expect(entries).toEqual(
+    expect.arrayContaining([
+      {
+        id: 'Preferences.openKeyBindingsJson',
+        label: 'Preferences: Open User Key Bindings',
+      },
+      {
+        id: 'Main.openKeyBindings',
+        label: 'Preferences: Open Default Key Bindings',
+        aliases: ['Set Key Bindings', 'Key Map', 'Key Mapping'],
+      },
+    ]),
+  )
+})
+
 test('getQuickPickMenuEntries includes preview orientation command', () => {
   const entries = ViewletLayoutMenuEntries.getQuickPickMenuEntries()
 
