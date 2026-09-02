@@ -117,10 +117,10 @@ test('focuses the address input for a new empty tab', () => {
   ])
 })
 
-test('routes the browser menu button click with pointer coordinates', () => {
+test('routes the browser menu button click with its bottom-edge coordinates', () => {
   expect(ViewletSimpleBrowserRender.renderEventListeners()).toContainEqual({
     name: 'handleClickSimpleBrowserMenu',
-    params: ['showMenu', 'event.clientX', 'event.clientY'],
+    params: ['showMenu', 'event.clientX', 'event.currentTarget.offsetTop', 'event.currentTarget.offsetHeight'],
   })
 })
 

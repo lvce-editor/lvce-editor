@@ -50,7 +50,7 @@ export const renderEventListeners = () => {
     },
     {
       name: DomEventListenerFunctions.HandleClickSimpleBrowserMenu,
-      params: ['showMenu', 'event.clientX', 'event.clientY'],
+      params: ['showMenu', 'event.clientX', 'event.currentTarget.offsetTop', 'event.currentTarget.offsetHeight'],
     },
   ]
 }
