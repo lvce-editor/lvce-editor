@@ -648,7 +648,10 @@ export const handleInput = async (state, value) => {
     }
     return newState
   }
-  void requestSuggestions(state.uid, value, shouldRequestSuggestions(value))
+  if (!shouldRequestSuggestions(value)) {
+    return applySuggestions(newState, state.uid, value, [])
+  }
+  void requestSuggestions(state.uid, value)
   return newState
 }
 
@@ -664,14 +667,12 @@ const shouldRequestSuggestions = (value) => {
   )
 }
 
-const requestSuggestions = async (uid, query, requestProviderSuggestions) => {
+const requestSuggestions = async (uid, query) => {
   let suggestions = []
-  if (requestProviderSuggestions) {
-    try {
-      suggestions = await BrowserSearchSuggestions.get(query)
-    } catch {
-      // Provider failures should leave normal address-bar navigation available.
-    }
+  try {
+    suggestions = await BrowserSearchSuggestions.get(query)
+  } catch {
+    // Provider failures should leave normal address-bar navigation available.
   }
   await Command.execute('SimpleBrowser.applySuggestions', uid, query, suggestions)
 }

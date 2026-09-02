@@ -1110,16 +1110,32 @@ test('handleInput requests suggestions when enabled', async () => {
   expect(Command.execute).toHaveBeenCalledWith('SimpleBrowser.applySuggestions', 7, 'what is', ['what is my ip'])
 })
 
-test('handleInput does not disclose URL-like values to the suggestions provider', async () => {
+test('handleInput replaces partial search suggestions when the input becomes a URL', async () => {
+  const localSuggestion = {
+    favicon: 'https://soundcloud.com/favicon.ico',
+    type: 'url',
+    value: 'https://soundcloud.com',
+  }
   // @ts-ignore
-  Command.execute.mockResolvedValue(undefined)
-  const state = { ...ViewletSimpleBrowser.create(7), suggestionsEnabled: true }
+  BrowserVisitedSites.getSuggestions.mockReturnValue([localSuggestion])
+  const state = {
+    ...ViewletSimpleBrowser.create(7),
+    hasSuggestionsOverlay: true,
+    inputValue: 'soundcloud.c',
+    overlayIds: ['search-suggestions'],
+    suggestions: [
+      { favicon: '', type: 'search', value: 'soundcloud.c' },
+      localSuggestion,
+    ],
+    suggestionsEnabled: true,
+  }
 
-  await ViewletSimpleBrowser.handleInput(state, 'soundcloud.com')
-  await new Promise((resolve) => setTimeout(resolve, 0))
+  const newState = await ViewletSimpleBrowser.handleInput(state, 'soundcloud.com')
 
   expect(BrowserSearchSuggestions.get).not.toHaveBeenCalled()
-  expect(Command.execute).toHaveBeenCalledWith('SimpleBrowser.applySuggestions', 7, 'soundcloud.com', [])
+  expect(BrowserVisitedSites.getSuggestions).toHaveBeenCalledWith([], 'soundcloud.com')
+  expect(Command.execute).not.toHaveBeenCalled()
+  expect(newState).toMatchObject({ inputValue: 'soundcloud.com', selectedSuggestionIndex: 0, suggestions: [localSuggestion] })
 })
 
 test('applySuggestions ignores stale results', async () => {
