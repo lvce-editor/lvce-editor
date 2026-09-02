@@ -13,7 +13,7 @@ test('execute - error - failed to load module', async () => {
 })
 
 test('execute - loads commands provided asynchronously', async () => {
-  const execute = jest.fn(() => 'done')
+  const execute = jest.fn((_argument: string) => 'done')
   Command.state.load = async () => {
     return {
       Commands: {},

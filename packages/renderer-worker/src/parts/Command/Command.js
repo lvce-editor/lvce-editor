@@ -5,6 +5,7 @@ import { VError } from '../VError/VError.js'
 export const state = {
   commands: Object.create(null),
   pendingModules: Object.create(null),
+  /** @type {(moduleId: any) => Promise<any>} */
   async load(moduleId) {
     throw new Error('not implemented')
   },
