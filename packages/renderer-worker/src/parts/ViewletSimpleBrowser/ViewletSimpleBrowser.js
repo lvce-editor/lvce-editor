@@ -17,6 +17,7 @@ import * as KeyBindings from '../KeyBindings/KeyBindings.js'
 import * as KeyBindingsInitial from '../KeyBindingsInitial/KeyBindingsInitial.js'
 import * as KeyModifier from '../KeyModifier/KeyModifier.js'
 import * as Preferences from '../Preferences/Preferences.js'
+import * as SimpleBrowserNewTabPage from '../SimpleBrowserNewTabPage/SimpleBrowserNewTabPage.js'
 import * as SimpleBrowserPreferences from '../SimpleBrowserPreferences/SimpleBrowserPreferences.js'
 import * as SimpleBrowserSnapshot from '../SimpleBrowserSnapshot/SimpleBrowserSnapshot.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
@@ -306,7 +307,7 @@ export const hide = async (state) => {
   await Promise.all(state.tabs.filter((tab) => tab.browserViewId).map((tab) => ElectronWebContentsViewFunctions.hide(tab.browserViewId)))
 }
 
-const createEmptyTab = async (state) => {
+const createUnloadedTab = async (state) => {
   const { headerHeight, height, uid, width, x, y } = state
   const browserViewId = await ElectronWebContentsView.createWebContentsView(0, uid)
   await ElectronWebContentsViewFunctions.hide(browserViewId)
@@ -314,8 +315,14 @@ const createEmptyTab = async (state) => {
   return createTab({ browserViewId })
 }
 
+const createEmptyTab = async (state) => {
+  const tab = await createUnloadedTab(state)
+  await ElectronWebContentsViewFunctions.setIframeSrc(tab.browserViewId, SimpleBrowserNewTabPage.url)
+  return tab
+}
+
 const materializeTab = async (state, tab) => {
-  const createdTab = await createEmptyTab(state)
+  const createdTab = tab.iframeSrc ? await createUnloadedTab(state) : await createEmptyTab(state)
   if (tab.iframeSrc) {
     void ElectronWebContentsViewFunctions.setIframeSrc(createdTab.browserViewId, tab.iframeSrc)
   }
@@ -356,7 +363,7 @@ export const duplicateTab = async (state, index) => {
   }
   const currentState = hasSuggestionsOverlay ? await closeSuggestions(state) : state
   const sourceTab = currentState.tabs[tabIndex]
-  const emptyTab = await createEmptyTab(currentState)
+  const emptyTab = sourceTab.iframeSrc ? await createUnloadedTab(currentState) : await createEmptyTab(currentState)
   const tab = {
     ...emptyTab,
     iframeSrc: sourceTab.iframeSrc,
@@ -400,7 +407,7 @@ export const reloadTab = async (state, index) => {
 export const openTab = async (state, url, disposition) => {
   const { hasSuggestionsOverlay } = state
   const currentState = hasSuggestionsOverlay ? await closeSuggestions(state) : state
-  const emptyTab = await createEmptyTab(currentState)
+  const emptyTab = await createUnloadedTab(currentState)
   const tab = {
     ...emptyTab,
     iframeSrc: url,
@@ -793,7 +800,7 @@ export const handleWillNavigate = (state, browserViewId, value) => {
   const [actualBrowserViewId, url] = parseWebContentsEvent(state, browserViewId, value)
   return updateTab(state, actualBrowserViewId, {
     favicon: '',
-    iframeSrc: url,
+    iframeSrc: SimpleBrowserNewTabPage.toDisplayUrl(url),
     isAudioPlaying: false,
     isLoading: true,
   })
@@ -827,12 +834,13 @@ export const handleKeyBinding = async (state, browserViewId, keyBinding) => {
 
 export const handleDidNavigate = async (state, browserViewId, value) => {
   const [actualBrowserViewId, url] = parseWebContentsEvent(state, browserViewId, value)
+  const displayUrl = SimpleBrowserNewTabPage.toDisplayUrl(url)
   const { canGoBack, canGoForward } = await ElectronWebContentsViewFunctions.getStats(actualBrowserViewId)
   return updateTab(state, actualBrowserViewId, {
     canGoBack,
     canGoForward,
-    iframeSrc: url,
-    inputValue: url,
+    iframeSrc: displayUrl,
+    inputValue: displayUrl,
     isLoading: false,
   })
 }
