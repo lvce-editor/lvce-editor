@@ -2,6 +2,7 @@ import { diffTree } from '@lvce-editor/virtual-dom-worker'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.js'
 import * as GetSimpleBrowserVirtualDom from '../GetSimpleBrowserVirtualDom/GetSimpleBrowserVirtualDom.js'
 import * as InputName from '../InputName/InputName.js'
+import * as SimpleBrowserPageSnapshot from '../SimpleBrowserPageSnapshot/SimpleBrowserPageSnapshot.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
 export const hasFunctionalRender = true
@@ -69,12 +70,14 @@ const areTabsEqual = (oldTabs, newTabs) => {
       oldTab.favicon === newTab.favicon &&
       oldTab.isAudioPlaying === newTab.isAudioPlaying &&
       oldTab.muted === newTab.muted &&
+      oldTab.pageSnapshot === newTab.pageSnapshot &&
       oldTab.title === newTab.title
     )
   })
 }
 
 const getDom = (state) => {
+  const pageSnapshot = state.tabs?.[state.selectedTabIndex]?.pageSnapshot
   return GetSimpleBrowserVirtualDom.getSimpleBrowserVirtualDom(
     state.canGoBack,
     state.canGoForward,
@@ -87,6 +90,7 @@ const getDom = (state) => {
     state.selectedTabIndex,
     state.tabsEnabled,
     state.audioIndicatorEnabled,
+    pageSnapshot?.dom,
   )
 }
 
@@ -150,4 +154,25 @@ const renderFocusAddress = {
   multiple: true,
 }
 
-export const render = [renderDom, renderTitle, renderAddressValue, renderFocusAddress]
+const getSelectedPageSnapshot = (state) => {
+  return state.tabs?.[state.selectedTabIndex]?.pageSnapshot
+}
+
+const renderPageSnapshotCss = {
+  isEqual(oldState, newState) {
+    const oldSnapshot = getSelectedPageSnapshot(oldState)
+    const newSnapshot = getSelectedPageSnapshot(newState)
+    return oldSnapshot?.css === newSnapshot?.css
+  },
+  apply(oldState, newState) {
+    const styleSheetId = SimpleBrowserPageSnapshot.getStyleSheetId(newState.uid)
+    const pageSnapshot = getSelectedPageSnapshot(newState)
+    if (!pageSnapshot) {
+      return [['Css.removeCssStyleSheet', styleSheetId]]
+    }
+    return [['Css.addCssStyleSheet', styleSheetId, SimpleBrowserPageSnapshot.getScopedCss(pageSnapshot.css)]]
+  },
+  multiple: true,
+}
+
+export const render = [renderDom, renderTitle, renderAddressValue, renderFocusAddress, renderPageSnapshotCss]
