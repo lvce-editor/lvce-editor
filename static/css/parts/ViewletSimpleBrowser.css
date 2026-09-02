@@ -142,6 +142,21 @@
   filter: none;
 }
 
+.SimpleBrowserPreview {
+  background: white;
+  contain: strict;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  pointer-events: none;
+  width: 100%;
+}
+
+.SimpleBrowserPreviewDocument,
+.SimpleBrowserPreviewBody {
+  min-height: 100%;
+}
+
 .SimpleBrowserSuggestions {
   background: var(--QuickPickBackground, var(--EditorBackground));
   box-shadow: rgb(0 0 0 / 25%) 0 4px 12px;

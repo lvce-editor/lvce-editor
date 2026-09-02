@@ -3,13 +3,7 @@ import * as GetSimpleBrowserVirtualDom from '../src/parts/GetSimpleBrowserVirtua
 import * as VirtualDomElements from '../src/parts/VirtualDomElements/VirtualDomElements.js'
 
 test('renders a snapshot below the browser header', () => {
-  const dom = GetSimpleBrowserVirtualDom.getSimpleBrowserVirtualDom(
-    true,
-    true,
-    false,
-    'https://example.com',
-    'blob:https://example.com/snapshot',
-  )
+  const dom = GetSimpleBrowserVirtualDom.getSimpleBrowserVirtualDom(true, true, false, 'https://example.com', 'blob:https://example.com/snapshot')
 
   expect(dom[0].childCount).toBe(3)
   expect(dom.slice(-2)).toEqual([
@@ -26,6 +20,44 @@ test('renders a snapshot below the browser header', () => {
       childCount: 0,
     },
   ])
+})
+
+test('renders a cached page snapshot through the virtual dom', () => {
+  const pageSnapshotDom = [
+    {
+      type: VirtualDomElements.Article,
+      className: 'article',
+      childCount: 1,
+    },
+    {
+      type: VirtualDomElements.Text,
+      text: 'Cached page',
+      childCount: 0,
+    },
+  ]
+  const dom = GetSimpleBrowserVirtualDom.getSimpleBrowserVirtualDom(
+    false,
+    false,
+    true,
+    'https://example.com',
+    '',
+    [],
+    -1,
+    [],
+    0,
+    true,
+    true,
+    pageSnapshotDom,
+  )
+
+  expect(dom).toContainEqual({
+    type: VirtualDomElements.Div,
+    className: 'SimpleBrowserPreview',
+    ariaHidden: true,
+    inert: true,
+    childCount: 1,
+  })
+  expect(dom.slice(-2)).toEqual(pageSnapshotDom)
 })
 
 test('names the address input so focus can be restored after rendering', () => {

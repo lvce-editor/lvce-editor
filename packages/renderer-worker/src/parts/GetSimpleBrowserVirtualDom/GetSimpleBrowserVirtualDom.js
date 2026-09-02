@@ -18,6 +18,7 @@ export const getSimpleBrowserVirtualDom = (
   selectedTabIndex = 0,
   tabsEnabled = true,
   audioIndicatorEnabled = true,
+  pageSnapshotDom = [],
 ) => {
   /** @type {any[]} */
   const dom = [
@@ -25,7 +26,7 @@ export const getSimpleBrowserVirtualDom = (
       type: VirtualDomElements.Div,
       className: tabsEnabled ? 'Viewlet SimpleBrowser SimpleBrowserTabsEnabled' : 'Viewlet SimpleBrowser',
       onFocusIn: DomEventListenerFunctions.HandleFocusInSimpleBrowser,
-      childCount: 1 + (tabsEnabled ? 1 : 0) + (snapshot ? 1 : 0) + (suggestions.length > 0 ? 1 : 0),
+      childCount: 1 + (tabsEnabled ? 1 : 0) + (snapshot ? 1 : 0) + (pageSnapshotDom.length > 0 ? 1 : 0) + (suggestions.length > 0 ? 1 : 0),
     },
   ]
   if (tabsEnabled) {
@@ -219,6 +220,18 @@ export const getSimpleBrowserVirtualDom = (
         draggable: false,
         childCount: 0,
       },
+    )
+  }
+  if (!snapshot && pageSnapshotDom.length > 0) {
+    dom.push(
+      {
+        type: VirtualDomElements.Div,
+        className: 'SimpleBrowserPreview',
+        ariaHidden: true,
+        inert: true,
+        childCount: 1,
+      },
+      ...pageSnapshotDom,
     )
   }
   if (suggestions.length > 0) {

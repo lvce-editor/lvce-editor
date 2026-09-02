@@ -55,6 +55,7 @@
   "simpleBrowser.suggestions": false,
   "simpleBrowser.shortcuts": [],
   "simpleBrowser.tabs.enabled": true,
+  "simpleBrowser.unloadTabs": false,
 
   "statusBar.itemsVisible": false,
 
