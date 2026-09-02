@@ -19,6 +19,7 @@ export const getSimpleBrowserVirtualDom = (
   tabsEnabled = true,
   audioIndicatorEnabled = true,
   pageSnapshotDom = [],
+  tabHover,
 ) => {
   /** @type {any[]} */
   const dom = [
@@ -26,7 +27,13 @@ export const getSimpleBrowserVirtualDom = (
       type: VirtualDomElements.Div,
       className: tabsEnabled ? 'Viewlet SimpleBrowser SimpleBrowserTabsEnabled' : 'Viewlet SimpleBrowser',
       onFocusIn: DomEventListenerFunctions.HandleFocusInSimpleBrowser,
-      childCount: 1 + (tabsEnabled ? 1 : 0) + (snapshot ? 1 : 0) + (pageSnapshotDom.length > 0 ? 1 : 0) + (suggestions.length > 0 ? 1 : 0),
+      childCount:
+        1 +
+        (tabsEnabled ? 1 : 0) +
+        (snapshot ? 1 : 0) +
+        (pageSnapshotDom.length > 0 ? 1 : 0) +
+        (suggestions.length > 0 ? 1 : 0) +
+        (tabHover ? 1 : 0),
     },
   ]
   if (tabsEnabled) {
@@ -51,7 +58,11 @@ export const getSimpleBrowserVirtualDom = (
         'data-index': index,
         onClick: DomEventListenerFunctions.HandleClickSimpleBrowserTab,
         onContextMenu: DomEventListenerFunctions.HandleContextMenuSimpleBrowserTab,
-        title: tab.title || 'New Tab',
+        onPointerDown: DomEventListenerFunctions.HandlePointerDownSimpleBrowserTab,
+        onPointerOut: DomEventListenerFunctions.HandlePointerOutSimpleBrowserTab,
+        onPointerOver: DomEventListenerFunctions.HandlePointerOverSimpleBrowserTab,
+        ariaDescribedBy: tabHover?.index === index ? 'SimpleBrowserTabHover' : undefined,
+        ariaLabel: tab.title || 'New Tab',
         childCount: 2 + (tab.favicon ? 1 : 0) + (showAudioIndicator ? 1 : 0),
       })
       if (tab.favicon) {
@@ -274,6 +285,30 @@ export const getSimpleBrowserVirtualDom = (
         text(value),
       )
     }
+  }
+  if (tabHover) {
+    dom.push(
+      {
+        type: VirtualDomElements.Div,
+        className: 'SimpleBrowserTabHover',
+        id: 'SimpleBrowserTabHover',
+        role: AriaRoles.Tooltip,
+        left: tabHover.left,
+        childCount: 2,
+      },
+      {
+        type: VirtualDomElements.Div,
+        className: 'SimpleBrowserTabHoverTitle',
+        childCount: 1,
+      },
+      text(tabHover.title),
+      {
+        type: VirtualDomElements.Div,
+        className: 'SimpleBrowserTabHoverMemory',
+        childCount: 1,
+      },
+      text(tabHover.memoryLabel),
+    )
   }
   return dom
 }
