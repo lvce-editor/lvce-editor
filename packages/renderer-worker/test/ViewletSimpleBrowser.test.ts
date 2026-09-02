@@ -104,6 +104,7 @@ const InputName = await import('../src/parts/InputName/InputName.js')
 const KeyCode = await import('../src/parts/KeyCode/KeyCode.js')
 const KeyModifier = await import('../src/parts/KeyModifier/KeyModifier.js')
 const Preferences = await import('../src/parts/Preferences/Preferences.js')
+const SimpleBrowserNewTabPage = await import('../src/parts/SimpleBrowserNewTabPage/SimpleBrowserNewTabPage.js')
 const SimpleBrowserSnapshot = await import('../src/parts/SimpleBrowserSnapshot/SimpleBrowserSnapshot.js')
 const ViewletModuleId = await import('../src/parts/ViewletModuleId/ViewletModuleId.js')
 const WhenExpression = await import('../src/parts/WhenExpression/WhenExpression.js')
@@ -405,6 +406,7 @@ test('creates and selects an empty tab while keeping the original view alive', a
   expect(ElectronWebContentsView.disposeWebContentsView).not.toHaveBeenCalled()
   expect(ElectronWebContentsViewFunctions.hide).toHaveBeenCalledWith(12)
   expect(ElectronWebContentsViewFunctions.show).toHaveBeenCalledWith(13)
+  expect(ElectronWebContentsViewFunctions.setIframeSrc).toHaveBeenCalledWith(13, SimpleBrowserNewTabPage.url)
   expect(ElectronWindow.focus).toHaveBeenCalledTimes(1)
 })
 
@@ -980,6 +982,18 @@ test('handleDidNavigate refreshes navigation state', async () => {
     inputValue: 'https://example.com/one',
     isLoading: false,
   })
+})
+
+test('keeps the internal new tab URL out of the address state', async () => {
+  const state = { ...ViewletSimpleBrowser.create(), browserViewId: 12 }
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.getStats.mockResolvedValueOnce({ canGoBack: false, canGoForward: false })
+
+  const loadingState = ViewletSimpleBrowser.handleWillNavigate(state, 12, SimpleBrowserNewTabPage.url)
+  const loadedState = await ViewletSimpleBrowser.handleDidNavigate(loadingState, 12, SimpleBrowserNewTabPage.url)
+
+  expect(loadingState).toMatchObject({ iframeSrc: '', isLoading: true })
+  expect(loadedState).toMatchObject({ iframeSrc: '', inputValue: '', isLoading: false })
 })
 
 test('showOverlay captures and hides the WebContentsView', async () => {
