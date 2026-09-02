@@ -14,12 +14,38 @@ interface SettingsFile {
 
 const rendererSettingsPath = 'packages/renderer-worker/settings.json'
 
+const settingTypeNames: ReadonlyMap<number, string> = new Map([
+  [0, 'none'],
+  [1, 'enum'],
+  [2, 'string'],
+  [3, 'boolean'],
+  [4, 'array'],
+  [5, 'number'],
+  [6, 'color'],
+  [7, 'url'],
+])
+
+export const normalizeSettingContribution = (setting: SettingsContribution): SettingsContribution => {
+  if (typeof setting.type !== 'number') {
+    return setting
+  }
+  const type = settingTypeNames.get(setting.type)
+  if (type === undefined) {
+    return setting
+  }
+  return {
+    ...setting,
+    type,
+  }
+}
+
 export const deduplicateSettingsContributions = (files: readonly SettingsFile[]): readonly SettingsFile[] => {
   const seenSettings = new Map<string, string>()
   const result: SettingsFile[] = []
   for (const file of files) {
     const uniqueSettings: SettingsContribution[] = []
-    for (const setting of file.settings) {
+    for (const rawSetting of file.settings) {
+      const setting = normalizeSettingContribution(rawSetting)
       const serialized = JSON.stringify(setting)
       const previous = seenSettings.get(setting.id)
       if (previous === serialized) {
