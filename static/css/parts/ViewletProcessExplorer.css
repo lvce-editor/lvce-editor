@@ -33,6 +33,10 @@
   font-weight: 600;
 }
 
+.ProcessExplorerNameHeaderCellWide {
+  width: 40%;
+}
+
 .ProcessExplorerRowFocused {
   background: var(--ListActiveSelectionBackground);
   color: var(--ListActiveSelectionForeground, white);
