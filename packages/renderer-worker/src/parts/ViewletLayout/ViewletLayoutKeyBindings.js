@@ -73,8 +73,7 @@ export const getKeyBindings = () => {
     },
     {
       key: KeyModifier.CtrlCmd | KeyModifier.Shift | KeyCode.KeyF,
-      command: 'Layout.openSideBarViewlet',
-      args: ['Search'],
+      command: 'Layout.openTextSearch',
     },
     {
       key: KeyModifier.CtrlCmd | KeyModifier.Shift | KeyCode.KeyY,

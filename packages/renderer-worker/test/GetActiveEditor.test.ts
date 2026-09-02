@@ -104,6 +104,93 @@ test('getSelections returns an empty array when there is no active editor', asyn
   expect(invoke).not.toHaveBeenCalled()
 })
 
+test('getSelectionText returns the primary selection text', async () => {
+  ViewletStates.set(1, {
+    factory: {},
+    moduleId: 'EditorText',
+    renderedState: {},
+    state: {
+      id: 42,
+      uri: 'file:///test.txt',
+    },
+  })
+  const invoke = jest.fn(async (command: string) => {
+    if (command === 'Editor.getText') {
+      return 'prefix abc suffix'
+    }
+    return new Uint32Array([0, 7, 0, 10])
+  })
+
+  await expect(GetActiveEditor.getSelectionTextWithInvoke(invoke)).resolves.toBe('abc')
+})
+
+test('getSelectionText normalizes a reversed selection', async () => {
+  ViewletStates.set(1, {
+    factory: {},
+    moduleId: 'EditorText',
+    renderedState: {},
+    state: {
+      id: 42,
+      uri: 'file:///test.txt',
+    },
+  })
+  const invoke = jest.fn(async (command: string) => {
+    if (command === 'Editor.getText') {
+      return 'prefix abc suffix'
+    }
+    return new Uint32Array([0, 10, 0, 7])
+  })
+
+  await expect(GetActiveEditor.getSelectionTextWithInvoke(invoke)).resolves.toBe('abc')
+})
+
+test('getSelectionText returns a multiline selection', async () => {
+  ViewletStates.set(1, {
+    factory: {},
+    moduleId: 'EditorText',
+    renderedState: {},
+    state: {
+      id: 42,
+      uri: 'file:///test.txt',
+    },
+  })
+  const invoke = jest.fn(async (command: string) => {
+    if (command === 'Editor.getText') {
+      return 'one two\nthree four'
+    }
+    return new Uint32Array([0, 4, 1, 5])
+  })
+
+  await expect(GetActiveEditor.getSelectionTextWithInvoke(invoke)).resolves.toBe('two\nthree')
+})
+
+test('getSelectionText returns an empty string without an active editor', async () => {
+  const invoke = jest.fn()
+
+  await expect(GetActiveEditor.getSelectionTextWithInvoke(invoke)).resolves.toBe('')
+  expect(invoke).not.toHaveBeenCalled()
+})
+
+test('getSelectionText returns an empty string without a complete selection', async () => {
+  ViewletStates.set(1, {
+    factory: {},
+    moduleId: 'EditorText',
+    renderedState: {},
+    state: {
+      id: 42,
+      uri: 'file:///test.txt',
+    },
+  })
+  const invoke = jest.fn(async (command: string) => {
+    if (command === 'Editor.getText') {
+      return 'text'
+    }
+    return new Uint32Array()
+  })
+
+  await expect(GetActiveEditor.getSelectionTextWithInvoke(invoke)).resolves.toBe('')
+})
+
 test('setSelections updates selections for the active editor', async () => {
   ViewletStates.set(1, {
     factory: {},
