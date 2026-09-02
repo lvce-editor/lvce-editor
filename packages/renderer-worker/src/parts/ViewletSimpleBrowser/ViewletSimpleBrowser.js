@@ -17,6 +17,7 @@ import * as KeyBindings from '../KeyBindings/KeyBindings.js'
 import * as KeyBindingsInitial from '../KeyBindingsInitial/KeyBindingsInitial.js'
 import * as KeyModifier from '../KeyModifier/KeyModifier.js'
 import * as Preferences from '../Preferences/Preferences.js'
+import * as PrettyBytes from '../PrettyBytes/PrettyBytes.js'
 import * as SimpleBrowserNewTabPage from '../SimpleBrowserNewTabPage/SimpleBrowserNewTabPage.js'
 import * as SimpleBrowserPreferences from '../SimpleBrowserPreferences/SimpleBrowserPreferences.js'
 import * as SimpleBrowserSnapshot from '../SimpleBrowserSnapshot/SimpleBrowserSnapshot.js'
@@ -136,6 +137,8 @@ export const create = (id, uri, x, y, width, height) => {
     audioIndicatorEnabled: true,
     tabsEnabled: true,
     selectedTabIndex: 0,
+    tabHover: undefined,
+    tabHoverEnabled: false,
     zoomLevel: 0,
     visitedSites: [],
   }
@@ -195,6 +198,7 @@ export const backgroundLoadContent = async (state, savedState) => {
   const audioIndicatorEnabled = Preferences.get('simpleBrowser.audioIndicator.enabled') !== false
   const suggestionsEnabled = Preferences.get('simpleBrowser.suggestions')
   const tabsEnabled = Preferences.get('simpleBrowser.tabs.enabled') !== false
+  const tabHoverEnabled = Preferences.get('simpleBrowser.tabHover.enabled') === true
   const headerHeight = getHeaderHeight(tabsEnabled)
   // TODO since browser view is not visible at this point
   // it is not necessary to load keybindings for it
@@ -214,6 +218,7 @@ export const backgroundLoadContent = async (state, savedState) => {
     selectedTabIndex: 0,
     tabs,
     tabsEnabled,
+    tabHoverEnabled,
     title,
     zoomLevel: 0,
     visitedSites,
@@ -245,6 +250,7 @@ export const loadContent = async (state, savedState) => {
   const audioIndicatorEnabled = Preferences.get('simpleBrowser.audioIndicator.enabled') !== false
   const suggestionsEnabled = Preferences.get('simpleBrowser.suggestions')
   const tabsEnabled = Preferences.get('simpleBrowser.tabs.enabled') !== false
+  const tabHoverEnabled = Preferences.get('simpleBrowser.tabHover.enabled') === true
   const headerHeight = getHeaderHeight(tabsEnabled)
   const browserViewX = x
   const browserViewY = y + headerHeight
@@ -294,6 +300,7 @@ export const loadContent = async (state, savedState) => {
     shortcuts,
     tabs,
     tabsEnabled,
+    tabHoverEnabled,
     visitedSites,
   }
 }
@@ -635,6 +642,72 @@ export const hideOverlay = async (state, overlayId) => {
     overlayIds,
     snapshot: '',
   }
+}
+
+const tabHoverOverlayId = 'tab-hover'
+const tabHoverWidth = 320
+
+export const showTabHover = async (state, index, tabOffsetLeft, tabWidth, tabsScrollLeft) => {
+  const { tabHover, tabHoverEnabled, tabs, width } = state
+  if (!tabHoverEnabled) {
+    return state
+  }
+  const tabIndex = Number(index)
+  const tab = tabs[tabIndex]
+  if (!tab || tabHover?.index === tabIndex) {
+    return state
+  }
+  const overlayState = await showOverlay(state, tabHoverOverlayId)
+  if (!overlayState.overlayIds.includes(tabHoverOverlayId)) {
+    return state
+  }
+  let memoryLabel = 'Memory usage unavailable'
+  let title = tab.title || 'New Tab'
+  try {
+    const stats = await ElectronWebContentsViewFunctions.getStats(tab.browserViewId, true)
+    title = stats.title || title
+    if (Number.isFinite(stats.memory)) {
+      memoryLabel = `Memory usage: ${PrettyBytes.formatBytes(stats.memory)}`
+    }
+  } catch (error) {
+    console.error('[renderer-worker] Failed to get Simple Browser tab memory usage', error)
+  }
+  const tabLeft = Number(tabOffsetLeft) - Number(tabsScrollLeft)
+  const maximumLeft = Math.max(8, width - tabHoverWidth - 8)
+  const left = Math.max(8, Math.min(tabLeft, maximumLeft))
+  return {
+    ...overlayState,
+    tabHover: {
+      index: tabIndex,
+      left,
+      memoryLabel,
+      tabLeft: Number(tabLeft),
+      tabWidth: Number(tabWidth),
+      title,
+    },
+  }
+}
+
+export const hideTabHover = async (state, index, clientX, clientY) => {
+  const { tabHover, x, y } = state
+  if (!tabHover) {
+    return state
+  }
+  const tabIndex = Number(index)
+  if (Number.isFinite(tabIndex) && tabIndex !== tabHover.index) {
+    return state
+  }
+  const pointerInsideTab =
+    Number.isFinite(clientX) &&
+    Number.isFinite(clientY) &&
+    clientX >= x + tabHover.tabLeft &&
+    clientX < x + tabHover.tabLeft + tabHover.tabWidth &&
+    clientY >= y &&
+    clientY < y + tabsHeaderHeight
+  if (pointerInsideTab) {
+    return state
+  }
+  return hideOverlay({ ...state, tabHover: undefined }, tabHoverOverlayId)
 }
 
 export const handleInput = async (state, value) => {

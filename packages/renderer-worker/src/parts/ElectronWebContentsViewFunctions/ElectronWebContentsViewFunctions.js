@@ -74,8 +74,8 @@ export const setFallthroughKeyBindings = (id, fallthroughKeyBindings) => {
   return EmbedsWorker.invoke('ElectronWebContentsView.setFallthroughKeyBindings', id, fallthroughKeyBindings)
 }
 
-export const getStats = (id) => {
-  return EmbedsWorker.invoke('ElectronWebContentsView.getStats', id)
+export const getStats = (id, includeMemory = false) => {
+  return EmbedsWorker.invoke('ElectronWebContentsView.getStats', id, includeMemory)
 }
 
 export const getDomTree = (id) => {

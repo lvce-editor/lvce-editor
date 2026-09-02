@@ -21,3 +21,9 @@ test('setAudioMuted forwards to the embeds worker', async () => {
 
   expect(EmbedsWorker.invoke).toHaveBeenCalledWith('ElectronWebContentsView.setAudioMuted', 12, true)
 })
+
+test('getStats requests memory from the embeds worker when needed', async () => {
+  await ElectronWebContentsViewFunctions.getStats(12, true)
+
+  expect(EmbedsWorker.invoke).toHaveBeenCalledWith('ElectronWebContentsView.getStats', 12, true)
+})

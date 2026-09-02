@@ -54,6 +54,7 @@
   "simpleBrowser.audioIndicator.enabled": true,
   "simpleBrowser.suggestions": false,
   "simpleBrowser.shortcuts": [],
+  "simpleBrowser.tabHover.enabled": false,
   "simpleBrowser.tabs.enabled": true,
 
   "statusBar.itemsVisible": false,

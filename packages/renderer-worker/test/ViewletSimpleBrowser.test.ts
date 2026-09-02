@@ -258,8 +258,23 @@ test('loadContent', async () => {
     audioIndicatorEnabled: true,
     headerHeight: 65,
     iframeSrc: 'https://example.com',
+    tabHoverEnabled: false,
     tabsEnabled: true,
   })
+})
+
+test('loadContent enables tab hovers through simpleBrowser.tabHover.enabled', async () => {
+  Preferences.state['simpleBrowser.tabHover.enabled'] = true
+  // @ts-ignore
+  ElectronWebContentsView.createWebContentsView.mockResolvedValue(1)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.setIframeSrc.mockResolvedValue(undefined)
+  const state = ViewletSimpleBrowser.create(0, 'simple-browser://', 0, 0, 300, 200)
+
+  const newState = await ViewletSimpleBrowser.loadContent(state)
+
+  expect(newState).toMatchObject({ tabHoverEnabled: true })
+  delete Preferences.state['simpleBrowser.tabHover.enabled']
 })
 
 test('loadContent disables the audio indicator through simpleBrowser.audioIndicator.enabled', async () => {
@@ -1084,6 +1099,84 @@ test('hideOverlay revokes the snapshot when restoring the WebContentsView fails'
   } finally {
     consoleError.mockRestore()
   }
+})
+
+test('showTabHover captures the page and shows the full title and memory usage', async () => {
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.capturePage.mockResolvedValue(new Uint8Array([137, 80, 78, 71]))
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.hide.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.getStats.mockResolvedValue({ memory: 42_000_000, title: 'A complete page title' })
+  // @ts-ignore
+  SimpleBrowserSnapshot.create.mockReturnValue('blob:https://example.com/snapshot')
+  const state = {
+    ...ViewletSimpleBrowser.create(7, 'simple-browser://12', 10, 20, 500, 300),
+    browserViewId: 12,
+    iframeSrc: 'https://example.com',
+    tabHoverEnabled: true,
+    tabs: [{ browserViewId: 12, title: 'Example' }],
+  }
+
+  const newState = await ViewletSimpleBrowser.showTabHover(state, 0, 25, 180, 0)
+
+  expect(ElectronWebContentsViewFunctions.getStats).toHaveBeenCalledWith(12, true)
+  expect(newState).toMatchObject({
+    overlayIds: ['tab-hover'],
+    snapshot: 'blob:https://example.com/snapshot',
+    tabHover: {
+      index: 0,
+      left: 25,
+      memoryLabel: 'Memory usage: 42 MB',
+      tabLeft: 25,
+      tabWidth: 180,
+      title: 'A complete page title',
+    },
+  })
+})
+
+test('showTabHover does nothing when tab hovers are disabled', async () => {
+  const state = {
+    ...ViewletSimpleBrowser.create(7, 'simple-browser://12', 0, 0, 500, 300),
+    browserViewId: 12,
+    tabs: [{ browserViewId: 12, title: 'Example' }],
+  }
+
+  await expect(ViewletSimpleBrowser.showTabHover(state, 0, 0, 180, 0)).resolves.toBe(state)
+  expect(ElectronWebContentsViewFunctions.capturePage).not.toHaveBeenCalled()
+  expect(ElectronWebContentsViewFunctions.getStats).not.toHaveBeenCalled()
+})
+
+test('hideTabHover ignores pointer transitions inside the hovered tab', async () => {
+  const state = {
+    ...ViewletSimpleBrowser.create(7, 'simple-browser://12', 10, 20, 500, 300),
+    browserViewId: 12,
+    overlayIds: ['tab-hover'],
+    snapshot: 'blob:https://example.com/snapshot',
+    tabHover: { index: 0, left: 25, memoryLabel: 'Memory usage: 42 MB', tabLeft: 25, tabWidth: 180, title: 'Example' },
+  }
+
+  await expect(ViewletSimpleBrowser.hideTabHover(state, 0, 50, 30)).resolves.toBe(state)
+  expect(ElectronWebContentsViewFunctions.show).not.toHaveBeenCalled()
+})
+
+test('hideTabHover restores the page after the pointer leaves the tab', async () => {
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.show.mockResolvedValue(undefined)
+  const state = {
+    ...ViewletSimpleBrowser.create(7, 'simple-browser://12', 10, 20, 500, 300),
+    browserViewId: 12,
+    overlayIds: ['tab-hover'],
+    snapshot: 'blob:https://example.com/snapshot',
+    tabHover: { index: 0, left: 25, memoryLabel: 'Memory usage: 42 MB', tabLeft: 25, tabWidth: 180, title: 'Example' },
+  }
+
+  const newState = await ViewletSimpleBrowser.hideTabHover(state, 0, 50, 80)
+
+  expect(ElectronWebContentsViewFunctions.show).toHaveBeenCalledWith(12)
+  expect(SimpleBrowserSnapshot.dispose).toHaveBeenCalledWith('blob:https://example.com/snapshot')
+  expect(newState).toMatchObject({ overlayIds: [], snapshot: '' })
+  expect(newState.tabHover).toBeUndefined()
 })
 
 test('handleInput does not request suggestions when disabled', async () => {

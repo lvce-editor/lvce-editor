@@ -45,6 +45,24 @@ export const renderEventListeners = () => {
       params: ['handleTabContextMenu', 'event.currentTarget.dataset.index', 'event.clientX', 'event.clientY'],
     },
     {
+      name: DomEventListenerFunctions.HandlePointerOverSimpleBrowserTab,
+      params: [
+        'showTabHover',
+        'event.currentTarget.dataset.index',
+        'event.currentTarget.offsetLeft',
+        'event.currentTarget.offsetWidth',
+        'event.currentTarget.parentElement.scrollLeft',
+      ],
+    },
+    {
+      name: DomEventListenerFunctions.HandlePointerOutSimpleBrowserTab,
+      params: ['hideTabHover', 'event.currentTarget.dataset.index', 'event.clientX', 'event.clientY'],
+    },
+    {
+      name: DomEventListenerFunctions.HandlePointerDownSimpleBrowserTab,
+      params: ['hideTabHover'],
+    },
+    {
       name: DomEventListenerFunctions.HandleClickSimpleBrowserNewTab,
       params: ['createNewTab'],
     },
@@ -87,6 +105,7 @@ const getDom = (state) => {
     state.selectedTabIndex,
     state.tabsEnabled,
     state.audioIndicatorEnabled,
+    state.tabHover,
   )
 }
 
@@ -103,6 +122,7 @@ const renderDom = {
       oldState.selectedTabIndex === newState.selectedTabIndex &&
       oldState.tabsEnabled === newState.tabsEnabled &&
       oldState.audioIndicatorEnabled === newState.audioIndicatorEnabled &&
+      oldState.tabHover === newState.tabHover &&
       areTabsEqual(oldState.tabs, newState.tabs)
     )
   },

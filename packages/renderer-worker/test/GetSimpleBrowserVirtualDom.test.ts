@@ -204,6 +204,49 @@ test('omits the tab strip when tabs are disabled', () => {
   expect(dom).not.toContainEqual(expect.objectContaining({ className: 'SimpleBrowserTabs' }))
 })
 
+test('renders the rich tab hover with the full title and memory usage', () => {
+  const tabHover = {
+    index: 0,
+    left: 24,
+    memoryLabel: 'Memory usage: 42 MB',
+    title: 'A complete page title',
+  }
+  const dom = GetSimpleBrowserVirtualDom.getSimpleBrowserVirtualDom(
+    false,
+    false,
+    false,
+    '',
+    'blob:https://example.com/snapshot',
+    [],
+    -1,
+    [{ favicon: '', title: 'Example' }],
+    0,
+    true,
+    true,
+    tabHover,
+  )
+
+  expect(dom).toContainEqual(
+    expect.objectContaining({
+      ariaDescribedBy: 'SimpleBrowserTabHover',
+      ariaLabel: 'Example',
+      className: 'SimpleBrowserTab SimpleBrowserTabSelected',
+      onPointerOut: 'handlePointerOutSimpleBrowserTab',
+      onPointerOver: 'handlePointerOverSimpleBrowserTab',
+    }),
+  )
+  expect(dom).toContainEqual(
+    expect.objectContaining({
+      className: 'SimpleBrowserTabHover',
+      id: 'SimpleBrowserTabHover',
+      left: 24,
+      role: 'tooltip',
+    }),
+  )
+  expect(dom).toContainEqual(expect.objectContaining({ text: 'A complete page title' }))
+  expect(dom).toContainEqual(expect.objectContaining({ text: 'Memory usage: 42 MB' }))
+})
+
 test('renders an accessible browser menu button', () => {
   const dom = GetSimpleBrowserVirtualDom.getSimpleBrowserVirtualDom(false, false, false, 'https://example.com')
 

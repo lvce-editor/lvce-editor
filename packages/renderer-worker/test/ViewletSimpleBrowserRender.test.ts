@@ -149,6 +149,31 @@ test('routes tab context-menu events with the tab index and pointer coordinates'
   })
 })
 
+test('routes tab pointer events to show and hide the rich hover', () => {
+  expect(ViewletSimpleBrowserRender.renderEventListeners()).toEqual(
+    expect.arrayContaining([
+      {
+        name: DomEventListenerFunctions.HandlePointerOverSimpleBrowserTab,
+        params: [
+          'showTabHover',
+          'event.currentTarget.dataset.index',
+          'event.currentTarget.offsetLeft',
+          'event.currentTarget.offsetWidth',
+          'event.currentTarget.parentElement.scrollLeft',
+        ],
+      },
+      {
+        name: DomEventListenerFunctions.HandlePointerOutSimpleBrowserTab,
+        params: ['hideTabHover', 'event.currentTarget.dataset.index', 'event.clientX', 'event.clientY'],
+      },
+      {
+        name: DomEventListenerFunctions.HandlePointerDownSimpleBrowserTab,
+        params: ['hideTabHover'],
+      },
+    ]),
+  )
+})
+
 test('routes audio button clicks to mute the tab without selecting it', () => {
   expect(ViewletSimpleBrowserRender.renderEventListeners()).toContainEqual({
     name: DomEventListenerFunctions.HandleClickSimpleBrowserTabAudio,

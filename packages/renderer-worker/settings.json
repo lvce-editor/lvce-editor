@@ -165,6 +165,14 @@
   },
   {
     "category": "features",
+    "description": "Controls whether hovering over a simple browser tab shows its full title and memory usage",
+    "heading": "Simple Browser Tab Hover",
+    "id": "simpleBrowser.tabHover.enabled",
+    "type": 3,
+    "value": false
+  },
+  {
+    "category": "features",
     "description": "Controls whether the simple browser uses tabs",
     "heading": "Simple Browser Tabs",
     "id": "simpleBrowser.tabs.enabled",
