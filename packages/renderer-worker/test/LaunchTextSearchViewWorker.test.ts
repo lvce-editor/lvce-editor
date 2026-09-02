@@ -34,17 +34,13 @@ jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () =
   invokeAndTransfer: jest.fn(),
 }))
 
-jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => ({
-  getPlatform: jest.fn(() => 3),
-}))
-
 const GetConfiguredWorkerUrl = await import('../src/parts/GetConfiguredWorkerUrl/GetConfiguredWorkerUrl.ts')
 const GetPortTuple = await import('../src/parts/GetPortTuple/GetPortTuple.js')
 const HandleIpc = await import('../src/parts/HandleIpc/HandleIpc.js')
 const IpcParent = await import('../src/parts/IpcParent/IpcParent.js')
 const JsonRpc = await import('../src/parts/JsonRpc/JsonRpc.js')
 const LaunchTextSearchViewWorker = await import('../src/parts/LaunchTextSearchViewWorker/LaunchTextSearchViewWorker.js')
-const Platform = await import('../src/parts/Platform/Platform.js')
+const RendererProcess = await import('../src/parts/RendererProcess/RendererProcess.js')
 
 test('launchTextSearchViewWorker', async () => {
   const ipc = { send() {} }
@@ -54,8 +50,6 @@ test('launchTextSearchViewWorker', async () => {
   GetPortTuple.getPortTuple.mockReturnValue({ port1: 'worker-port', port2: 'renderer-process-port' })
   // @ts-ignore
   IpcParent.create.mockResolvedValue(ipc)
-  // @ts-ignore
-  Platform.getPlatform.mockReturnValue(3)
 
   await expect(LaunchTextSearchViewWorker.launchTextSearchViewWorker()).resolves.toBe(ipc)
 
@@ -69,5 +63,7 @@ test('launchTextSearchViewWorker', async () => {
     url: 'file:///text-search-view-worker.js',
   })
   expect(HandleIpc.handleIpc).toHaveBeenCalledWith(ipc)
-  expect(JsonRpc.invoke).toHaveBeenCalledWith(ipc, 'TextSearch.initialize', 3)
+  expect(JsonRpc.invoke).not.toHaveBeenCalled()
+  expect(JsonRpc.invokeAndTransfer).toHaveBeenCalledWith(ipc, 'TextSearch.handleMessagePort', 'worker-port')
+  expect(RendererProcess.invokeAndTransfer).toHaveBeenCalledWith('HandleMessagePort.handleMessagePort', 'renderer-process-port', 'TextSearch')
 })
