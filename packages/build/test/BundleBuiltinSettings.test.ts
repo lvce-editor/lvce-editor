@@ -56,7 +56,7 @@ test('bundles schema-complete renderer settings contributions', async () => {
           description: 'Controls the location of the side bar',
           heading: 'Side Bar Location',
           id: 'workbench.sideBarLocation',
-          type: 2,
+          type: 'string',
           value: 'right',
         },
       ]),
