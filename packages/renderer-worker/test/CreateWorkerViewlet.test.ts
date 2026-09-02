@@ -266,6 +266,33 @@ test('forwards preview bounds changes to the preview worker', async () => {
   expect(result).toMatchObject(dimensions)
 })
 
+test('forwards search bounds changes to the text search worker', async () => {
+  const invoke = jest.fn(async (method: string, ..._args: readonly unknown[]) => {
+    if (method === 'TextSearch.diff2' || method === 'TextSearch.render2') {
+      return []
+    }
+    return undefined
+  })
+  const viewlet = createWorkerViewletWithDependencies({
+    adapter: getWorkerViewletAdapter('textSearchView'),
+    config: getWorkerViewletConfig('textSearchView'),
+    context: { assetDir: 'test://assets', platform: 2, workspacePath: '/test' },
+    worker: { invoke, restart: jest.fn() },
+  })
+  const state = viewlet.create(7, 'test://search', 182, 64, 170, 698)
+  const dimensions = { height: 698, width: 252, x: 100, y: 64 }
+
+  const result = await viewlet.resize!(state, dimensions)
+
+  expect(invoke.mock.calls).toEqual([
+    ['TextSearch.handleResize', 7, 100, 64, 252, 698],
+    ['TextSearch.diff2', 7],
+    ['TextSearch.render2', 7, []],
+    ['TextSearch.renderActions', 7],
+  ])
+  expect(result).toMatchObject(dimensions)
+})
+
 test('preserves command short-circuit and phase-specific diff parameters', async () => {
   const config: any = createConfig({ commandSkipRenderWhenDiffEmpty: true })
   config.methods.commandDiff = {
