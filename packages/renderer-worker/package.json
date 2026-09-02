@@ -77,7 +77,7 @@
     "@lvce-editor/icon-theme-worker": "^2.18.1",
     "@lvce-editor/iframe-inspector": "^2.4.0",
     "@lvce-editor/iframe-worker": "^6.18.0",
-    "@lvce-editor/keybindings-view": "^8.17.0",
+    "@lvce-editor/keybindings-view": "^8.17.1",
     "@lvce-editor/language-models-view": "^1.27.0",
     "@lvce-editor/main-area-worker": "^9.54.3",
     "@lvce-editor/markdown-worker": "^4.13.2",
