@@ -37,6 +37,11 @@ export const getKeyBindings = () => {
       when: WhenExpression.FocusSimpleBrowserInput,
     },
     {
+      key: KeyCode.Enter,
+      command: 'SimpleBrowser.go',
+      when: WhenExpression.FocusSimpleBrowserInput,
+    },
+    {
       key: KeyCode.UpArrow,
       command: 'SimpleBrowser.selectPreviousSuggestion',
       when: WhenExpression.FocusSimpleBrowserInput,
