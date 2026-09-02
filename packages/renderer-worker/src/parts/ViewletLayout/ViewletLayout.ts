@@ -7,6 +7,7 @@ import * as ChatViewWorker from '../ChatViewWorker/ChatViewWorker.js'
 import * as Command from '../Command/Command.js'
 import * as Commit from '../Commit/Commit.js'
 import * as ExtensionManagementWorker from '../ExtensionManagementWorker/ExtensionManagementWorker.js'
+import * as GetActiveEditor from '../GetActiveEditor/GetActiveEditor.js'
 import * as GetActionsVirtualDom from '../GetActionsVirtualDom/GetActionsVirtualDom.js'
 import * as GetAutoUpdateType from '../GetAutoUpdateType/GetAutoUpdateType.js'
 import * as GetDefaultTitleBarHeight from '../GetDefaultTitleBarHeight/GetDefaultTitleBarHeight.js'
@@ -17,6 +18,7 @@ import * as LayoutModules from '../LayoutModules/LayoutModules.ts'
 import * as MenuEntriesState from '../MenuEntriesState/MenuEntriesState.js'
 import * as Location from '../Location/Location.js'
 import * as PanelWorker from '../PanelWorker/PanelWorker.js'
+import * as OpenTextSearch from '../OpenTextSearch/OpenTextSearch.ts'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as Preferences from '../Preferences/Preferences.js'
@@ -2825,6 +2827,15 @@ export const openSideBarView = async (state: LayoutState, moduleId, focus = fals
   await ViewletManager.waitForLoadContentLater(moduleId)
   await Viewlet.focus(moduleId)
   return result
+}
+
+export const openTextSearch = async (state: LayoutState): Promise<LayoutStateResult> => {
+  return OpenTextSearch.openTextSearch(state, {
+    executeViewletCommand: Viewlet.executeViewletCommand,
+    getInstance: ViewletStates.getInstance,
+    getSelectionText: GetActiveEditor.getSelectionText,
+    openSideBarView: (currentState, moduleId) => openSideBarView(currentState, moduleId, false, undefined),
+  })
 }
 
 export const openSecondarySideBarView = async (state: LayoutState, moduleId, focus = false, args): Promise<LayoutStateResult> => {
