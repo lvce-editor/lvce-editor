@@ -18,14 +18,23 @@ jest.unstable_mockModule('../src/parts/ExtensionKeyBindings/ExtensionKeyBindings
   }
 })
 
+jest.unstable_mockModule('../src/parts/UserKeyBindings/UserKeyBindings.js', () => {
+  return {
+    getKeyBindings: jest.fn(() => []),
+  }
+})
+
 const ExtensionKeyBindings = await import('../src/parts/ExtensionKeyBindings/ExtensionKeyBindings.js')
 const KeyBindings = await import('../src/parts/KeyBindings/KeyBindings.js')
 const KeyBindingsState = await import('../src/parts/KeyBindingsState/KeyBindingsState.js')
 const Logger = await import('../src/parts/Logger/Logger.js')
 const RendererProcess = await import('../src/parts/RendererProcess/RendererProcess.js')
+const UserKeyBindings = await import('../src/parts/UserKeyBindings/UserKeyBindings.js')
 
 beforeEach(() => {
   jest.resetAllMocks()
+  jest.mocked(ExtensionKeyBindings.getKeyBindings).mockResolvedValue([])
+  jest.mocked(UserKeyBindings.getKeyBindings).mockResolvedValue([])
   KeyBindingsState.state.keyBindings = []
   KeyBindingsState.state.keyBindingSets = Object.create(null)
   KeyBindingsState.state.keyBindingSetCounts = Object.create(null)
@@ -156,4 +165,40 @@ test('hydrate registers extension keybindings', async () => {
   await KeyBindings.hydrate()
 
   expect(KeyBindingsState.state.keyBindingSets.extensions).toBe(keyBindings)
+})
+
+test('hydrate registers user keybindings', async () => {
+  const keyBindings = [
+    {
+      command: 'Explorer.focusNext',
+      key: 29,
+      when: 13,
+      source: 'User',
+    },
+  ]
+  jest.mocked(UserKeyBindings.getKeyBindings).mockResolvedValue(keyBindings)
+
+  await KeyBindings.hydrate()
+
+  expect(KeyBindingsState.state.keyBindingSets.user).toBe(keyBindings)
+})
+
+test('reloadUserKeyBindings replaces user keybindings', async () => {
+  const keyBindings = [{ command: 'Explorer.focusNext', key: 29, when: 13, source: 'User' }]
+  jest.mocked(UserKeyBindings.getKeyBindings).mockResolvedValue(keyBindings)
+
+  await KeyBindings.reloadUserKeyBindings()
+
+  expect(KeyBindingsState.state.keyBindingSets.user).toBe(keyBindings)
+  expect(ExtensionKeyBindings.getKeyBindings).not.toHaveBeenCalled()
+})
+
+test('user keybindings take precedence when a component loads afterwards', () => {
+  const userKeyBinding = { command: 'test.user', key: 29, source: 'User' }
+  const componentKeyBinding = { command: 'test.component', key: 29 }
+
+  KeyBindingsState.setKeyBindings('user', [userKeyBinding])
+  KeyBindingsState.setKeyBindings('Editor', [componentKeyBinding])
+
+  expect(KeyBindingsState.getKeyBinding(29)).toBe(userKeyBinding)
 })
