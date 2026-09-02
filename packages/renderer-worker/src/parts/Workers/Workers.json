@@ -184,6 +184,16 @@
           "name": "TextSearch.render2",
           "parameters": [{ "source": "state", "name": "uid" }, { "source": "result", "name": "diff" }]
         },
+        "resize": {
+          "name": "TextSearch.handleResize",
+          "parameters": [
+            { "source": "state", "name": "uid" },
+            { "source": "argument", "name": "dimensions", "index": "x" },
+            { "source": "argument", "name": "dimensions", "index": "y" },
+            { "source": "argument", "name": "dimensions", "index": "width" },
+            { "source": "argument", "name": "dimensions", "index": "height" }
+          ]
+        },
         "saveState": { "name": "TextSearch.saveState", "parameters": [{ "source": "state", "name": "uid" }] },
         "terminate": { "name": "TextSearch.terminate", "parameters": [] },
         "getCommandIds": { "name": "TextSearch.getCommandIds", "parameters": [] },
