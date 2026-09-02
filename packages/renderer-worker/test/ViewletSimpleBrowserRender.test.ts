@@ -101,9 +101,7 @@ test('synchronizes the native address value when selecting another tab', () => {
 
   expect(ViewletSimpleBrowserRender.render[2].isEqual(oldState, newState)).toBe(false)
   expect(ViewletSimpleBrowserRender.render[2].multiple).toBe(true)
-  expect(ViewletSimpleBrowserRender.render[2].apply(oldState, newState)).toEqual([
-    ['Viewlet.setValueByName', 42, 'simple-browser-address', ''],
-  ])
+  expect(ViewletSimpleBrowserRender.render[2].apply(oldState, newState)).toEqual([['Viewlet.setValueByName', 42, 'simple-browser-address', '']])
 })
 
 test('focuses the address input for a new empty tab', () => {
@@ -112,15 +110,13 @@ test('focuses the address input for a new empty tab', () => {
 
   expect(ViewletSimpleBrowserRender.render[3].isEqual(oldState, newState)).toBe(false)
   expect(ViewletSimpleBrowserRender.render[3].multiple).toBe(true)
-  expect(ViewletSimpleBrowserRender.render[3].apply(oldState, newState)).toEqual([
-    ['Viewlet.focusElementByName', 42, 'simple-browser-address'],
-  ])
+  expect(ViewletSimpleBrowserRender.render[3].apply(oldState, newState)).toEqual([['Viewlet.focusElementByName', 42, 'simple-browser-address']])
 })
 
-test('routes the browser menu button click with pointer coordinates', () => {
+test('routes the browser menu button click with its bottom-edge coordinates', () => {
   expect(ViewletSimpleBrowserRender.renderEventListeners()).toContainEqual({
     name: 'handleClickSimpleBrowserMenu',
-    params: ['showMenu', 'event.clientX', 'event.clientY'],
+    params: ['showMenu', 'event.clientX', 'event.currentTarget.offsetTop', 'event.currentTarget.offsetHeight'],
   })
 })
 
