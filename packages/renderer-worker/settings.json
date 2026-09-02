@@ -181,6 +181,14 @@
   },
   {
     "category": "features",
+    "description": "Unloads inactive simple browser tabs to reduce memory usage and shows a cached page preview while they reload",
+    "heading": "Simple Browser Unload Tabs",
+    "id": "simpleBrowser.unloadTabs",
+    "type": 3,
+    "value": false
+  },
+  {
+    "category": "features",
     "description": "Selects the terminal backend",
     "heading": "Terminal Backend",
     "id": "terminal.backend",
