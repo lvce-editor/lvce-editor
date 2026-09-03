@@ -184,6 +184,45 @@ test('text search command wrappers discard superseded render pipelines', async (
   expect(invoke.mock.calls.filter(([method]) => method === 'TextSearch.render2')).toHaveLength(1)
 })
 
+test('text search command wrappers preserve a render after it consumes the pending diff', async () => {
+  const { promise: firstRender, resolve: resolveFirstRender } = Promise.withResolvers<void>()
+  const { promise: firstRenderStarted, resolve: resolveFirstRenderStarted } = Promise.withResolvers<void>()
+  let diffCount = 0
+  const invoke = jest.fn(async (method: string, _uid?: number, _value?: string) => {
+    if (method === 'Example.getCommandIds') {
+      return ['update']
+    }
+    if (method === 'TextSearch.diff2') {
+      diffCount++
+      return diffCount === 1 ? ['message'] : []
+    }
+    if (method === 'TextSearch.render2') {
+      resolveFirstRenderStarted()
+      await firstRender
+      return [['setText', 'rendered']]
+    }
+    return undefined
+  })
+  const viewlet = createWorkerViewletWithDependencies({
+    adapter: getWorkerViewletAdapter('textSearchView'),
+    config: createConfig(),
+    context: { platform: 1 },
+    worker: { invoke, restart: jest.fn() },
+  })
+  const commands = await viewlet.getCommands!()
+  const state = viewlet.create(9, '', 0, 0, 0, 0)
+
+  const first = commands.update(state, 'first')
+  await firstRenderStarted
+  const secondResult = await commands.update(state, 'second')
+  resolveFirstRender()
+  const firstResult = await first
+
+  expect(firstResult.commands).toEqual([['setText', 'rendered']])
+  expect(secondResult).toBe(state)
+  expect(invoke.mock.calls.filter(([method]) => method === 'TextSearch.render2')).toHaveLength(1)
+})
+
 test('recomputes configured outputs after commands', async () => {
   const config: any = createConfig()
   config.outputs = [{ method: { name: 'Example.renderActions', parameters: [stateParameter('uid')] }, stateField: 'actionsDom' }]

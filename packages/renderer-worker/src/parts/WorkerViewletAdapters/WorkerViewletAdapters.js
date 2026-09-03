@@ -269,9 +269,6 @@ export const textSearch = {
           return state
         }
         const commands = await worker.invoke('TextSearch.render2', state.uid, diff)
-        if (!invocation.isLatest()) {
-          return state
-        }
         return { ...state, commands }
       } finally {
         invocation.finish()
