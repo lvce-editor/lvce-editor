@@ -40,6 +40,7 @@ export const map = {
   [ViewletModuleId.Noop]: () => import('../ViewletNoop/ViewletNoop.ipc.js'),
   [ViewletModuleId.Output]: () => import('../ViewletOutput/ViewletOutput.ipc.ts'),
   [ViewletModuleId.Panel]: () => import('../ViewletPanel/ViewletPanel.ipc.ts'),
+  [ViewletModuleId.Ports]: () => import('../ViewletPorts/ViewletPorts.ipc.ts'),
   [ViewletModuleId.Problems]: () => import('../ViewletProblems/ViewletProblems.ipc.js'),
   [ViewletModuleId.ProcessExplorer]: LoadProcessExplorerViewletModule.loadProcessExplorerViewletModule,
   [ViewletModuleId.FileWatcherExplorer]: LoadFileWatcherExplorerViewletModule.loadFileWatcherExplorerViewletModule,

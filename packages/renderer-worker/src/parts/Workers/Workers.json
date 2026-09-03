@@ -1243,6 +1243,45 @@
     "hotReloadCommand": ""
   },
   {
+    "id": "portsView",
+    "fileName": "portsViewWorkerMain.js",
+    "contentSecurityPolicy": ["default-src 'none'"],
+    "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/ports-view/dist/portsViewWorkerMain.js",
+    "productionPath": "/packages/ports-view/dist/portsViewWorkerMain.js",
+    "settingName": "develop.portsViewPath",
+    "hotReloadCommand": "",
+    "viewlet": {
+      "name": "Ports",
+      "state": {
+        "idKey": "uid",
+        "fields": ["parentUid", "uri", "x", "y", "width", "height"],
+        "contextFields": ["platform", "assetDir"]
+      },
+      "commandPrefix": "Ports",
+      "methods": {
+        "create": {
+          "name": "Ports.create",
+          "parameters": [
+            { "source": "state", "name": "uid" }, { "source": "state", "name": "uri" }, { "source": "state", "name": "x" },
+            { "source": "state", "name": "y" }, { "source": "state", "name": "width" }, { "source": "state", "name": "height" },
+            { "source": "state", "name": "platform" }, { "source": "state", "name": "assetDir" },
+            { "source": "state", "name": "parentUid" }
+          ]
+        },
+        "loadContent": { "name": "Ports.loadContent", "parameters": [{ "source": "state", "name": "uid" }] },
+        "diff": { "name": "Ports.diff2", "parameters": [{ "source": "state", "name": "uid" }] },
+        "render": { "name": "Ports.render2", "parameters": [{ "source": "state", "name": "uid" }, { "source": "result", "name": "diff" }] },
+        "dispose": { "name": "Ports.dispose", "parameters": [{ "source": "state", "name": "uid" }] },
+        "resize": { "name": "Ports.resize", "parameters": [{ "source": "state", "name": "uid" }, { "source": "argument", "name": "dimensions" }] },
+        "terminate": { "name": "Ports.terminate", "parameters": [] },
+        "getCommandIds": { "name": "Ports.getCommandIds", "parameters": [] },
+        "renderEventListeners": { "name": "Ports.renderEventListeners", "parameters": [] }
+      },
+      "renderComparison": "emptyCommands",
+      "capabilities": { "events": true, "render": true, "resize": true, "rootRender": true }
+    }
+  },
+  {
     "id": "problemsViewWorker",
     "fileName": "problemsViewWorkerMain.js",
     "contentSecurityPolicy": ["default-src 'none'"],
