@@ -119,6 +119,14 @@ test('mkdir - error', async () => {
   await expect(FileSystemApp.mkdir('my-folder')).rejects.toThrow(new Error('not allowed'))
 })
 
+test.each(['app://memory-usage', 'app://session.json', 'app://startup-performance'])('isReadonly - readonly app resource %s', async (uri) => {
+  expect(await FileSystemApp.isReadonly(uri)).toBe(true)
+})
+
+test.each(['app://keybindings.json', 'app://recently-opened.json', 'app://settings.json'])('isReadonly - writable app resource %s', async (uri) => {
+  expect(await FileSystemApp.isReadonly(uri)).toBe(false)
+})
+
 // TODO test writeFile and writeFile errors
 
 test('readFile - settings - error - file does not exist', async () => {

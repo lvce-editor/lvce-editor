@@ -1,6 +1,7 @@
 export const name = 'App'
 
 const appPrefix = 'app://'
+const readonlyPaths = new Set(['memory-usage', 'session.json', 'startup-performance'])
 
 const getPath = (uri) => {
   if (uri.startsWith(appPrefix)) {
@@ -60,8 +61,8 @@ export const mkdir = async (path) => {
   throw new Error('not allowed')
 }
 
-export const isReadonly = () => {
-  return false
+export const isReadonly = (uri) => {
+  return readonlyPaths.has(getPath(uri))
 }
 
 export const canBeRestored = true
