@@ -58,23 +58,24 @@ export const isSearchInput = (input, shortcuts = []) => {
 }
 
 export const toIframeSrc = (input, shortcuts = []) => {
+  const trimmedInput = input.trim()
   for (const shortcut of shortcuts) {
-    if (shortcut && shortcut.prefix === input && typeof shortcut.url === 'string') {
+    if (shortcut && shortcut.prefix === trimmedInput && typeof shortcut.url === 'string') {
       return shortcut.url
     }
   }
-  if (isValidHttpUrl(input) || isValidFileUrl(input)) {
-    return input
+  if (isValidHttpUrl(trimmedInput) || isValidFileUrl(trimmedInput)) {
+    return trimmedInput
   }
-  if (isLocalHostUrlWithOutHttp(input)) {
-    return `http://${input}`
+  if (isLocalHostUrlWithOutHttp(trimmedInput)) {
+    return `http://${trimmedInput}`
   }
-  if (isValidFilePath(input)) {
-    return 'file://' + input
+  if (isValidFilePath(trimmedInput)) {
+    return 'file://' + trimmedInput
   }
-  const dotIndex = input.indexOf(Character.Dot)
-  if (dotIndex !== -1 && dotIndex !== input.length - 1) {
-    return 'https://' + input
+  const dotIndex = trimmedInput.indexOf(Character.Dot)
+  if (dotIndex !== -1 && dotIndex !== trimmedInput.length - 1) {
+    return 'https://' + trimmedInput
   }
-  return createSearchUrl(input)
+  return createSearchUrl(trimmedInput)
 }

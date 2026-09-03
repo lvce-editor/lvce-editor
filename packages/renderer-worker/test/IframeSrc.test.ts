@@ -13,6 +13,10 @@ test('https url', () => {
   expect(IframeSrc.toIframeSrc('https://example.com')).toBe('https://example.com')
 })
 
+test('https url with surrounding whitespace', () => {
+  expect(IframeSrc.toIframeSrc('  https://example.com/?space=ok  ')).toBe('https://example.com/?space=ok')
+})
+
 test('url without protocol', () => {
   expect(IframeSrc.toIframeSrc('example.com')).toBe('https://example.com')
 })
