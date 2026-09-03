@@ -20,7 +20,7 @@ const getTextSectionDom = (value, className, type = VirtualDomElements.Div) => {
 export const getViewletErrorVirtualDom = (error) => {
   const messageDom = getTextSectionDom(GetViewletErrorMessage.getViewletErrorTitle(error), 'ViewletErrorMessage')
   const codeFrameDom = Array.isArray(error?.syntaxHighlightedCodeFrame) ? error.syntaxHighlightedCodeFrame : []
-  const stackDom = getTextSectionDom(error?.stack, 'ViewletErrorStack', VirtualDomElements.Pre)
+  const stackDom = getTextSectionDom(GetViewletErrorMessage.getViewletErrorStack(error), 'ViewletErrorStack', VirtualDomElements.Pre)
   const sections = [messageDom, codeFrameDom, stackDom].filter((section) => section.length > 0)
   return [
     {

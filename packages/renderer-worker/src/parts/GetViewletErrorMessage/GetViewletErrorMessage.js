@@ -12,7 +12,26 @@ export const getViewletErrorTitle = (error) => {
   return PrettyError.getMessage(error)
 }
 
+export const getViewletErrorStack = (error) => {
+  const stack = error?.stack
+  if (!isNonEmptyString(stack)) {
+    return stack
+  }
+  const message = getViewletErrorTitle(error)
+  if (stack === message) {
+    return ''
+  }
+  for (const separator of ['\r\n', '\n']) {
+    const duplicateMessage = `${message}${separator}`
+    if (stack.startsWith(duplicateMessage)) {
+      return stack.slice(duplicateMessage.length)
+    }
+  }
+  return stack
+}
+
 export const getViewletErrorMessage = (error) => {
   const message = getViewletErrorTitle(error)
-  return [message, error?.codeFrame, error?.stack].filter(isNonEmptyString).join('\n\n')
+  const stack = getViewletErrorStack(error)
+  return [message, error?.codeFrame, stack].filter(isNonEmptyString).join('\n\n')
 }
