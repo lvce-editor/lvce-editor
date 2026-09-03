@@ -107,14 +107,15 @@
 }
 
 .SimpleBrowserTabHover {
-  background: var(--MenuBackground, var(--EditorBackground));
-  border: 1px solid var(--WidgetBorder, var(--PanelBorder, transparent));
+  background: var(--QuickPickBackground, rgb(40 46 47));
+  border: 1px solid color-mix(in srgb, var(--WorkbenchForeground, rgb(156 162 160)) 18%, transparent);
   border-radius: 8px;
-  box-shadow: rgb(0 0 0 / 36%) 0 6px 18px;
+  box-shadow: rgb(0 0 0 / 28%) 0 6px 18px;
   box-sizing: border-box;
-  color: var(--MenuForeground, var(--WorkbenchForeground));
+  color: var(--WorkbenchForeground, rgb(156 162 160));
   max-width: calc(100% - 16px);
-  padding: 12px 14px;
+  overflow: hidden;
+  padding: 11px 13px 0;
   pointer-events: none;
   position: absolute;
   top: 34px;
@@ -128,10 +129,14 @@
   overflow-wrap: anywhere;
 }
 
-.SimpleBrowserTabHoverMemory {
-  color: var(--DescriptionForeground, currentColor);
-  line-height: 20px;
-  margin-top: 8px;
+.SimpleBrowserTabHoverStatus {
+  background: color-mix(in srgb, var(--WorkbenchForeground, rgb(156 162 160)) 4%, transparent);
+  border-top: 1px solid color-mix(in srgb, var(--WorkbenchForeground, rgb(156 162 160)) 10%, transparent);
+  color: var(--DescriptionForeground, color-mix(in srgb, var(--WorkbenchForeground, rgb(156 162 160)) 72%, transparent));
+  font-size: 12px;
+  line-height: 18px;
+  margin: 10px -13px 0;
+  padding: 8px 13px 9px;
 }
 
 .SimpleBrowserTabClose:hover,

@@ -1306,7 +1306,7 @@ test('showTabHover captures the page and shows the full title and memory usage',
     tabHover: {
       index: 0,
       left: 25,
-      memoryLabel: 'Memory usage: 42 MB',
+      statusLabel: 'Memory usage: 42 MB',
       tabLeft: 25,
       tabWidth: 180,
       title: 'A complete page title',
@@ -1350,7 +1350,7 @@ test('showTabHover shows the saved title for an unloaded tab without requesting 
   expect(ElectronWebContentsViewFunctions.getStats).not.toHaveBeenCalled()
   expect(newState.tabHover).toMatchObject({
     index: 1,
-    memoryLabel: 'Memory usage unavailable',
+    statusLabel: 'Tab is unloaded',
     title: 'Unloaded complete title',
   })
 })
@@ -1361,7 +1361,7 @@ test('hideTabHover ignores pointer transitions inside the hovered tab', async ()
     browserViewId: 12,
     overlayIds: ['tab-hover'],
     snapshot: 'blob:https://example.com/snapshot',
-    tabHover: { index: 0, left: 25, memoryLabel: 'Memory usage: 42 MB', tabLeft: 25, tabWidth: 180, title: 'Example' },
+    tabHover: { index: 0, left: 25, statusLabel: 'Memory usage: 42 MB', tabLeft: 25, tabWidth: 180, title: 'Example' },
   }
 
   await expect(ViewletSimpleBrowser.hideTabHover(state, 0, 50, 30)).resolves.toBe(state)
@@ -1376,7 +1376,7 @@ test('hideTabHover restores the page after the pointer leaves the tab', async ()
     browserViewId: 12,
     overlayIds: ['tab-hover'],
     snapshot: 'blob:https://example.com/snapshot',
-    tabHover: { index: 0, left: 25, memoryLabel: 'Memory usage: 42 MB', tabLeft: 25, tabWidth: 180, title: 'Example' },
+    tabHover: { index: 0, left: 25, statusLabel: 'Memory usage: 42 MB', tabLeft: 25, tabWidth: 180, title: 'Example' },
   }
 
   const newState = await ViewletSimpleBrowser.hideTabHover(state, 0, 50, 80)

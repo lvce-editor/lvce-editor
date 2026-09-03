@@ -715,14 +715,14 @@ export const showTabHover = async (state, index, tabOffsetLeft, tabWidth, tabsSc
   if (!overlayState.overlayIds.includes(tabHoverOverlayId)) {
     return state
   }
-  let memoryLabel = 'Memory usage unavailable'
+  let statusLabel = tab.browserViewId ? 'Memory usage unavailable' : 'Tab is unloaded'
   let title = tab.title || 'New Tab'
   if (tab.browserViewId) {
     try {
       const stats = await ElectronWebContentsViewFunctions.getStats(tab.browserViewId, true)
       title = stats.title || title
       if (Number.isFinite(stats.memory)) {
-        memoryLabel = `Memory usage: ${PrettyBytes.formatBytes(stats.memory)}`
+        statusLabel = `Memory usage: ${PrettyBytes.formatBytes(stats.memory)}`
       }
     } catch (error) {
       console.error('[renderer-worker] Failed to get Simple Browser tab memory usage', error)
@@ -736,7 +736,7 @@ export const showTabHover = async (state, index, tabOffsetLeft, tabWidth, tabsSc
     tabHover: {
       index: tabIndex,
       left,
-      memoryLabel,
+      statusLabel,
       tabLeft: Number(tabLeft),
       tabWidth: Number(tabWidth),
       title,
