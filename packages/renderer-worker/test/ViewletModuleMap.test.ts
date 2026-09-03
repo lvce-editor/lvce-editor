@@ -67,6 +67,7 @@ const genericWorkerViewlets = [
   ViewletModuleId.NotificationCenter,
   ViewletModuleId.Output,
   ViewletModuleId.Panel,
+  ViewletModuleId.Ports,
   ViewletModuleId.Preview,
   ViewletModuleId.Problems,
   ViewletModuleId.ProcessExplorer,

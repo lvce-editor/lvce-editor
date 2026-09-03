@@ -16,6 +16,7 @@ import * as NotificationCenterViewWorker from '../NotificationCenterViewWorker/N
 import * as OutputViewWorker from '../OutputViewWorker/OutputViewWorker.js'
 import * as PanelWorker from '../PanelWorker/PanelWorker.js'
 import * as PreviewWorker from '../PreviewWorker/PreviewWorker.js'
+import * as PortsViewWorker from '../PortsViewWorker/PortsViewWorker.ts'
 import * as ProblemsWorker from '../ProblemsWorker/ProblemsWorker.ts'
 import * as ProcessExplorerWorker from '../ProcessExplorerWorker/ProcessExplorerWorker.js'
 import * as FileWatcherViewWorker from '../FileWatcherViewWorker/FileWatcherViewWorker.js'
@@ -46,6 +47,7 @@ const workerInvokers = {
   output: OutputViewWorker,
   panel: PanelWorker,
   preview: PreviewWorker,
+  portsView: PortsViewWorker,
   problemsViewWorker: ProblemsWorker,
   processExplorer: ProcessExplorerWorker,
   fileWatcherView: FileWatcherViewWorker,
