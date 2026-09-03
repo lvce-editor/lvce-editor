@@ -536,6 +536,51 @@ test('functional getStatusBarVisible command returns its boolean value', async (
   await expect(Command.execute('StatusBarQueryTest.getStatusBarVisible')).resolves.toBe(false)
 })
 
+test('functional commands run afterRender after updating the renderer', async () => {
+  const callOrder: string[] = []
+  const oldState = { content: 'old', uid: 15 }
+  const newState = { content: 'new', uid: 15 }
+  const afterRender = jest.fn(async (_oldState: Readonly<typeof oldState>, _newState: Readonly<typeof newState>): Promise<void> => {
+    callOrder.push('afterRender')
+  })
+  const mockModule = {
+    Commands: {
+      update: jest.fn(async (): Promise<typeof newState> => newState),
+    },
+    afterRender,
+    create: jest.fn((): typeof oldState => oldState),
+    hasFunctionalRender: true,
+    hasFunctionalRootRender: true,
+    loadContent: jest.fn((state: Readonly<typeof oldState>): Readonly<typeof oldState> => state),
+    render: [
+      {
+        apply: jest.fn((): string[][] => [['Viewlet.setText', 'new']]),
+        isEqual: jest.fn((): boolean => false),
+        multiple: true,
+      },
+    ],
+  }
+  const viewlet = {
+    disposed: false,
+    focus: false,
+    getModule: async (): Promise<typeof mockModule> => mockModule,
+    id: 'AfterRenderTest',
+    show: false,
+    type: 0,
+    uid: 15,
+    uri: '',
+  }
+  await ViewletManager.load(viewlet)
+  jest.mocked(RendererProcess.invoke).mockImplementation(async (): Promise<void> => {
+    callOrder.push('render')
+  })
+
+  await Command.execute('AfterRenderTest.update')
+
+  expect(callOrder).toEqual(['render', 'afterRender'])
+  expect(afterRender).toHaveBeenCalledWith(oldState, newState)
+})
+
 test('extension view render sends a dynamic title to its parent', () => {
   const dom = []
   const oldState = {

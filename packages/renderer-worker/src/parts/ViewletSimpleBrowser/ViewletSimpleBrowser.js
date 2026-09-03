@@ -660,7 +660,6 @@ export const showOverlay = async (state, overlayId) => {
       const bytes = await ElectronWebContentsViewFunctions.capturePage(state.browserViewId)
       snapshot = SimpleBrowserSnapshot.create(bytes)
     }
-    await ElectronWebContentsViewFunctions.hide(state.browserViewId)
     return {
       ...state,
       overlayIds,
@@ -670,6 +669,21 @@ export const showOverlay = async (state, overlayId) => {
     SimpleBrowserSnapshot.dispose(snapshot)
     console.error('[renderer-worker] Failed to capture Simple Browser page', error)
     return state
+  }
+}
+
+export const afterRender = async (oldState, newState) => {
+  const { overlayIds: oldOverlayIds } = oldState
+  const { browserViewId, overlayIds, selectedTabIndex, tabs } = newState
+  const didShowFirstOverlay = oldOverlayIds.length === 0 && overlayIds.length > 0
+  const selectedTab = tabs[selectedTabIndex]
+  if (!didShowFirstOverlay || selectedTab?.pageSnapshot) {
+    return
+  }
+  try {
+    await ElectronWebContentsViewFunctions.hide(browserViewId)
+  } catch (error) {
+    console.error('[renderer-worker] Failed to hide Simple Browser page', error)
   }
 }
 

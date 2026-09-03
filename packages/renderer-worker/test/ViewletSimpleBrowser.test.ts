@@ -1167,7 +1167,7 @@ test('keeps the internal new tab URL out of the address state', async () => {
   expect(loadedState).toMatchObject({ iframeSrc: '', inputValue: '', isLoading: false })
 })
 
-test('showOverlay captures and hides the WebContentsView', async () => {
+test('showOverlay captures the WebContentsView without hiding it before the snapshot is rendered', async () => {
   const png = new Uint8Array([137, 80, 78, 71])
   // @ts-ignore
   ElectronWebContentsViewFunctions.capturePage.mockResolvedValue(png)
@@ -1185,6 +1185,21 @@ test('showOverlay captures and hides the WebContentsView', async () => {
   })
   expect(ElectronWebContentsViewFunctions.capturePage).toHaveBeenCalledWith(12)
   expect(SimpleBrowserSnapshot.create).toHaveBeenCalledWith(png)
+  expect(ElectronWebContentsViewFunctions.hide).not.toHaveBeenCalled()
+})
+
+test('afterRender hides the WebContentsView once the snapshot is rendered', async () => {
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.hide.mockResolvedValue(undefined)
+  const oldState = { ...ViewletSimpleBrowser.create(), browserViewId: 12, iframeSrc: 'https://example.com' }
+  const newState = {
+    ...oldState,
+    overlayIds: ['tab-hover'],
+    snapshot: 'blob:https://example.com/snapshot',
+  }
+
+  await ViewletSimpleBrowser.afterRender(oldState, newState)
+
   expect(ElectronWebContentsViewFunctions.hide).toHaveBeenCalledWith(12)
 })
 
@@ -1202,6 +1217,7 @@ test('overlays keep a cached page preview in place while its WebContentsView loa
   }
 
   const withOverlay = await ViewletSimpleBrowser.showOverlay(state, 'menu')
+  await ViewletSimpleBrowser.afterRender(state, withOverlay)
   const restored = await ViewletSimpleBrowser.hideOverlay(withOverlay, 'menu')
 
   expect(withOverlay).toMatchObject({ overlayIds: ['menu'], snapshot: '' })
@@ -1223,6 +1239,7 @@ test('overlays share one snapshot and restore after the last overlay closes', as
   const state = { ...ViewletSimpleBrowser.create(), browserViewId: 12, iframeSrc: 'https://example.com' }
 
   const withQuickPick = await ViewletSimpleBrowser.showOverlay(state, 'quick-pick')
+  await ViewletSimpleBrowser.afterRender(state, withQuickPick)
   const withBoth = await ViewletSimpleBrowser.showOverlay(withQuickPick, 'menu')
   const withMenu = await ViewletSimpleBrowser.hideOverlay(withBoth, 'quick-pick')
   const restored = await ViewletSimpleBrowser.hideOverlay(withMenu, 'menu')
@@ -1239,21 +1256,21 @@ test('overlays share one snapshot and restore after the last overlay closes', as
   })
 })
 
-test('showOverlay revokes a new snapshot when hiding the WebContentsView fails', async () => {
+test('afterRender logs when hiding the WebContentsView fails', async () => {
   const consoleError = jest.spyOn(console, 'error').mockImplementation(() => {})
   try {
     // @ts-ignore
-    ElectronWebContentsViewFunctions.capturePage.mockResolvedValue(new Uint8Array([137, 80, 78, 71]))
-    // @ts-ignore
     ElectronWebContentsViewFunctions.hide.mockRejectedValue(new Error('Failed to hide'))
-    // @ts-ignore
-    SimpleBrowserSnapshot.create.mockReturnValue('blob:https://example.com/snapshot')
-    const state = { ...ViewletSimpleBrowser.create(), browserViewId: 12, iframeSrc: 'https://example.com' }
+    const oldState = { ...ViewletSimpleBrowser.create(), browserViewId: 12, iframeSrc: 'https://example.com' }
+    const newState = {
+      ...oldState,
+      overlayIds: ['quick-pick'],
+      snapshot: 'blob:https://example.com/snapshot',
+    }
 
-    const newState = await ViewletSimpleBrowser.showOverlay(state, 'quick-pick')
+    await ViewletSimpleBrowser.afterRender(oldState, newState)
 
-    expect(newState).toBe(state)
-    expect(SimpleBrowserSnapshot.dispose).toHaveBeenCalledWith('blob:https://example.com/snapshot')
+    expect(consoleError).toHaveBeenCalledWith('[renderer-worker] Failed to hide Simple Browser page', new Error('Failed to hide'))
   } finally {
     consoleError.mockRestore()
   }
@@ -1503,6 +1520,10 @@ test('applySuggestions does not capture a page for an empty new tab', async () =
     ],
   })
   expect(ElectronWebContentsViewFunctions.capturePage).not.toHaveBeenCalled()
+  expect(ElectronWebContentsViewFunctions.hide).not.toHaveBeenCalled()
+
+  await ViewletSimpleBrowser.afterRender(state, newState)
+
   expect(ElectronWebContentsViewFunctions.hide).toHaveBeenCalledWith(12)
 })
 

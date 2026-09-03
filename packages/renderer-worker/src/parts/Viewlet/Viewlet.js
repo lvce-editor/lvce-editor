@@ -611,10 +611,12 @@ export const executeViewletCommand = async (uid, fnName, ...args) => {
   }
   UpdateDynamicFocusContext.updateDynamicFocusContext(commands)
   ViewletStates.setRenderedState(uid, actualNewState)
-  if (commands.length === 0) {
-    return
+  if (commands.length > 0) {
+    await RendererProcess.invoke(/* Viewlet.sendMultiple */ 'Viewlet.sendMultiple', /* commands */ commands)
   }
-  await RendererProcess.invoke(/* Viewlet.sendMultiple */ 'Viewlet.sendMultiple', /* commands */ commands)
+  if (ViewletStates.getInstance(uid) === instance && instance.factory.afterRender) {
+    await instance.factory.afterRender(oldState, actualNewState)
+  }
 }
 
 export const requestRender = (uid) => {
