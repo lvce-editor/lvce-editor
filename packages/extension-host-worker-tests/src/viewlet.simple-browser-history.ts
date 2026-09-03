@@ -1,5 +1,7 @@
 import type { Test } from '@lvce-editor/test-with-playwright'
 
+const nonZeroPixelWidthRegex = /^[1-9]\d*(?:\.\d+)?px$/
+
 export const name = 'viewlet.simple-browser-history'
 
 export const test: Test = async ({ Command, expect, Locator }) => {
@@ -11,6 +13,7 @@ export const test: Test = async ({ Command, expect, Locator }) => {
 
   const historyView = Locator('.SimpleBrowserHistory')
   await expect(historyView).toBeVisible()
+  await expect(historyView).toHaveCSS('width', nonZeroPixelWidthRegex as unknown as string)
   await expect(historyView.locator('h1')).toHaveText('History')
   await expect(historyView.locator('input')).toHaveAttribute('placeholder', 'Search history')
   const entries = historyView.locator('.SimpleBrowserHistoryEntry')
