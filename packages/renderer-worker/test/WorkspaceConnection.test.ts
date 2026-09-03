@@ -101,6 +101,7 @@ test('rejects a non-WebSocket workspace URL', () => {
 test('bridges a message port to the workspace connection', async () => {
   workspaceState.workspaceUri = 'workspace-provider://host/work'
   WorkspaceConnection.set('workspace-provider://host/work', 'workspace-provider.getWebSocketUrl')
+  executeCommand.mockResolvedValue('wss://workspace.example.com/process?token=secret')
   const webSocket: MockWebSocket = {
     send: jest.fn<(value: string) => void>(),
   }
@@ -112,11 +113,19 @@ test('bridges a message port to the workspace connection', async () => {
     start: jest.fn(),
   }
 
-  await expect(WorkspaceConnection.connectMessagePort('terminal-process', port)).resolves.toBe(true)
+  await expect(
+    WorkspaceConnection.connectMessagePort('extension-node-process', port, {
+      extensionId: 'builtin.codex',
+      rpcId: 'builtin.codex.app-server',
+    }),
+  ).resolves.toBe(true)
   expect(create).toHaveBeenCalledWith({
     getUrl: expect.any(Function),
-    type: 'terminal-process',
+    type: 'extension-node-process',
   })
+  const getUrl = create.mock.calls[0]?.[0].getUrl
+  await expect(getUrl()).resolves.toBe('wss://workspace.example.com/process?token=secret&extensionId=builtin.codex&rpcId=builtin.codex.app-server')
+  expect(executeCommand).toHaveBeenCalledWith('workspace-provider.getWebSocketUrl', 'extension-node-process')
   port.onmessage?.({ data: ['request'] })
   expect(webSocket.send).toHaveBeenCalledWith('["request"]')
   webSocket.onmessage?.({ data: '["response"]' })
