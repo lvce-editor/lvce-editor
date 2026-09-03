@@ -264,8 +264,8 @@
   {
     "name": "builtin.language-basics-json",
     "repository": "github.com/lvce-editor/language-basics-json",
-    "version": "2.11.0",
-    "sha256": "37e0e5ed52cdadd46738c788ba3e8f6bf3ef1de775b2bd5b18ae98ca9a9879c4",
+    "version": "2.11.1",
+    "sha256": "93f873e1fe183d4f4ec4ebbc487d49814d295d6bad80ff2bb45b03ad3152596a",
     "created": "2022-06-16"
   },
   {
