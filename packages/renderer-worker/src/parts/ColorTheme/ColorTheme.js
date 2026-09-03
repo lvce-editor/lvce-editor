@@ -16,6 +16,7 @@ import { VError } from '../VError/VError.js'
 // actual color theme can be computed after workbench has loaded (most times will be the same and doesn't need to be computed)
 
 export const state = {
+  colorThemeCss: '',
   watchedTheme: '',
 }
 
@@ -32,6 +33,7 @@ const applyColorTheme = async (colorThemeId) => {
     if (!colorThemeCss) {
       return new Error(`Color theme is empty`)
     }
+    state.colorThemeCss = colorThemeCss
     await Css.addCssStyleSheet('ContributedColorTheme', colorThemeCss)
     if (Platform.getPlatform() === PlatformType.Web) {
       const themeColor = GetMetaThemeColor.getMetaThemeColor(colorThemeId) || ''
@@ -44,6 +46,10 @@ const applyColorTheme = async (colorThemeId) => {
   } catch (error) {
     return new VError(error, `Failed to apply color theme "${colorThemeId}"`)
   }
+}
+
+export const getColorThemeCss = () => {
+  return state.colorThemeCss
 }
 
 export const setColorTheme = async (colorThemeId) => {

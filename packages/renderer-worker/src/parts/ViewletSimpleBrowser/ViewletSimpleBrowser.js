@@ -215,7 +215,7 @@ export const backgroundLoadContent = async (state, savedState) => {
   await ElectronWebContentsViewFunctions.setFallthroughKeyBindings(browserViewId, fallThroughKeyBindings)
   Assert.number(browserViewId)
   await ElectronWebContentsViewFunctions.resizeWebContentsView(browserViewId, x, y + headerHeight, width, height - headerHeight)
-  const { newTitle } = await ElectronWebContentsViewFunctions.setIframeSrc(browserViewId, iframeSrc)
+  const { newTitle } = await ElectronWebContentsViewFunctions.setIframeSrc(browserViewId, iframeSrc || SimpleBrowserNewTabPage.getUrl())
   const title = newTitle || 'Simple Browser'
   const tabs = [createTab({ browserViewId, iframeSrc, inputValue: iframeSrc, title })]
   return {
@@ -272,8 +272,8 @@ export const loadContent = async (state, savedState) => {
   await ElectronWebContentsViewFunctions.setFallthroughKeyBindings(browserViewId, fallThroughKeyBindings)
   await ElectronWebContentsViewFunctions.resizeWebContentsView(browserViewId, browserViewX, browserViewY, browserViewWidth, browserViewHeight)
   Assert.number(browserViewId)
-  if (iframeSrc && (!id || id !== browserViewId)) {
-    await ElectronWebContentsViewFunctions.setIframeSrc(browserViewId, iframeSrc)
+  if (!iframeSrc || !id || id !== browserViewId) {
+    await ElectronWebContentsViewFunctions.setIframeSrc(browserViewId, iframeSrc || SimpleBrowserNewTabPage.getUrl())
   }
   const { title, canGoBack, canGoForward, isAudioMuted } = await ElectronWebContentsViewFunctions.getStats(browserViewId)
   const restoredTabs =
@@ -339,8 +339,18 @@ const createUnloadedTab = async (state) => {
 
 const createEmptyTab = async (state) => {
   const tab = await createUnloadedTab(state)
-  await ElectronWebContentsViewFunctions.setIframeSrc(tab.browserViewId, SimpleBrowserNewTabPage.url)
+  await ElectronWebContentsViewFunctions.setIframeSrc(tab.browserViewId, SimpleBrowserNewTabPage.getUrl())
   return tab
+}
+
+export const handleColorThemeChanged = async (state) => {
+  const newTabUrl = SimpleBrowserNewTabPage.getUrl()
+  await Promise.all(
+    state.tabs
+      .filter((tab) => !tab.iframeSrc && tab.browserViewId)
+      .map((tab) => ElectronWebContentsViewFunctions.setIframeSrc(tab.browserViewId, newTabUrl)),
+  )
+  return state
 }
 
 const materializeTab = async (state, tab) => {

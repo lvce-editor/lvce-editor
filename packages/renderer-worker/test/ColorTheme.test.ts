@@ -6,6 +6,7 @@ beforeEach(() => {
   for (const key in Preferences.state) {
     delete Preferences.state[key]
   }
+  ColorTheme.state.colorThemeCss = ''
   ColorTheme.state.watchedTheme = ''
 })
 
@@ -49,6 +50,7 @@ test('reload applies slime when no color theme is selected', async () => {
   expect(GetColorThemeNames.getColorThemeNames).not.toHaveBeenCalled()
   expect(GetColorThemeCss.getColorThemeCss).toHaveBeenCalledWith('slime')
   expect(Css.addCssStyleSheet).toHaveBeenCalledWith('ContributedColorTheme', ':root { --theme-id: "slime"; }')
+  expect(ColorTheme.getColorThemeCss()).toBe(':root { --theme-id: "slime"; }')
 })
 
 test('reload switches to slime when the selected color theme is no longer contributed', async () => {

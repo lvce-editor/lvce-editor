@@ -20,6 +20,7 @@ export const Commands = {
   getDomTree: ViewletSimpleBrowserGetDomTree.getDomTree,
   go: SimpleBrowser.go,
   handleAudioStateChanged: SimpleBrowser.handleAudioStateChanged,
+  handleColorThemeChanged: SimpleBrowser.handleColorThemeChanged,
   handleDidNavigate: SimpleBrowser.handleDidNavigate,
   handleDidNavigationCancel: SimpleBrowser.handleDidNavigationCancel,
   handleFocusIn: SimpleBrowser.handleFocusIn,
