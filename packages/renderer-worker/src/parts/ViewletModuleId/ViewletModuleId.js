@@ -70,6 +70,8 @@ export const Output = 'Output'
 
 export const Panel = 'Panel'
 
+export const Ports = 'Ports'
+
 export const Problems = 'Problems'
 
 export const ProcessExplorer = 'ProcessExplorer'
