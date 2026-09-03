@@ -21,6 +21,13 @@ test('search term', () => {
   expect(IframeSrc.toIframeSrc('example')).toBe('https://www.google.com/search?q=example')
 })
 
+test('identifies search terms for history', () => {
+  expect(IframeSrc.isSearchInput('cheeseburger')).toBe(true)
+  expect(IframeSrc.isSearchInput('example.com')).toBe(false)
+  expect(IframeSrc.isSearchInput('https://example.com')).toBe(false)
+  expect(IframeSrc.isSearchInput('g', [{ prefix: 'g', url: 'https://google.com' }])).toBe(false)
+})
+
 test('not a url', () => {
   expect(IframeSrc.toIframeSrc('https://example')).toBe('https://example')
 })

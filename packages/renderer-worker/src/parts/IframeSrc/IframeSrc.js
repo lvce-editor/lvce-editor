@@ -41,6 +41,22 @@ const isLocalHostUrlWithOutHttp = (input) => {
   return input.startsWith('localhost:')
 }
 
+export const isSearchInput = (input, shortcuts = []) => {
+  if (typeof input !== 'string' || input.trim().length === 0) {
+    return false
+  }
+  for (const shortcut of shortcuts) {
+    if (shortcut && shortcut.prefix === input && typeof shortcut.url === 'string') {
+      return false
+    }
+  }
+  if (isValidHttpUrl(input) || isValidFileUrl(input) || isLocalHostUrlWithOutHttp(input) || isValidFilePath(input)) {
+    return false
+  }
+  const dotIndex = input.indexOf(Character.Dot)
+  return dotIndex === -1 || dotIndex === input.length - 1
+}
+
 export const toIframeSrc = (input, shortcuts = []) => {
   for (const shortcut of shortcuts) {
     if (shortcut && shortcut.prefix === input && typeof shortcut.url === 'string') {

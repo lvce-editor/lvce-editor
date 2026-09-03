@@ -18,9 +18,36 @@
   display: flex;
 }
 
-.SimpleBrowserHeader .InputBox {
-  color: var(--InputBoxForeground, var(--WorkbenchForeground));
+.SimpleBrowserAddressBar {
+  background: var(--InputBoxBackground, var(--MainBackground, var(--EditorBackground)));
   flex: 1;
+  height: 24px;
+  position: relative;
+}
+
+.SimpleBrowserHeader .InputBox {
+  background: transparent;
+  box-sizing: border-box;
+  color: var(--InputBoxForeground, var(--WorkbenchForeground));
+  position: relative;
+  z-index: 1;
+}
+
+.SimpleBrowserInlineSuggestion {
+  box-sizing: border-box;
+  color: var(--InputBoxPlaceholderForeground, rgb(255 255 255 / 40%));
+  font-size: 13px;
+  height: 24px;
+  inset: 0;
+  overflow: hidden;
+  padding: 5px 7px;
+  pointer-events: none;
+  position: absolute;
+  white-space: pre;
+}
+
+.SimpleBrowserInlineSuggestionPrefix {
+  visibility: hidden;
 }
 
 .SimpleBrowserTabs {

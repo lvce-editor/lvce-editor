@@ -114,6 +114,31 @@ test('renders accessible search suggestions above an undimmed snapshot', () => {
   )
 })
 
+test('renders the first matching suggestion inline without changing the input value', () => {
+  const dom = GetSimpleBrowserVirtualDom.getSimpleBrowserVirtualDom(false, false, false, 'cheese', '', [
+    { favicon: '', type: 'history', value: 'cheeseburger' },
+  ])
+
+  expect(dom).toContainEqual(
+    expect.objectContaining({
+      ariaHidden: true,
+      className: 'SimpleBrowserInlineSuggestion',
+      'data-value': 'cheeseburger',
+    }),
+  )
+  expect(dom).toContainEqual(expect.objectContaining({ className: 'SimpleBrowserInlineSuggestionSuffix' }))
+  expect(dom).toContainEqual(expect.objectContaining({ name: 'simple-browser-address', value: 'cheese' }))
+  expect(dom).toContainEqual(expect.objectContaining({ text: 'burger' }))
+})
+
+test('does not render an inline suggestion for an exact match', () => {
+  const dom = GetSimpleBrowserVirtualDom.getSimpleBrowserVirtualDom(false, false, false, 'cheese', '', [
+    { favicon: '', type: 'search', value: 'cheese' },
+  ])
+
+  expect(dom).not.toContainEqual(expect.objectContaining({ className: 'SimpleBrowserInlineSuggestion' }))
+})
+
 test('renders the stored favicon for a URL suggestion', () => {
   const dom = GetSimpleBrowserVirtualDom.getSimpleBrowserVirtualDom(false, false, false, 'soundcloud', '', [
     {
