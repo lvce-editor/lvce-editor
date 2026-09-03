@@ -19,7 +19,8 @@ test('getViewletErrorVirtualDom', () => {
   expect(
     getViewletErrorVirtualDom({
       message: 'Oops',
-      stack: '    at test.js:1:1',
+      stack: `TypeError: Oops
+    at test.js:1:1`,
       syntaxHighlightedCodeFrame,
       type: 'TypeError',
     }),
