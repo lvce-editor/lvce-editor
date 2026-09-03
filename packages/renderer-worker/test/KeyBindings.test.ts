@@ -69,6 +69,7 @@ test('update refreshes matching keybindings without sending equal identifiers', 
   expect(KeyBindingsState.state.keyBindingIdentifiers).toEqual(new Uint32Array([1]))
   expect(KeyBindingsState.state.matchingKeyBindings).toEqual([currentKeyBinding])
   expect(KeyBindingsState.getKeyBinding(1)).toBe(currentKeyBinding)
+  expect(KeyBindingsState.getKeyBindings()).toEqual([currentKeyBinding])
 })
 
 test.each([

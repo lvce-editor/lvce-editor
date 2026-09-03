@@ -99,5 +99,5 @@ export const removeKeyBindings = (id) => {
 }
 
 export const getKeyBindings = () => {
-  return state.keyBindings
+  return state.matchingKeyBindings
 }

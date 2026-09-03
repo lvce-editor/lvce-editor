@@ -67,9 +67,7 @@ jest.unstable_mockModule('../src/parts/Focus/Focus.js', () => ({
 
 jest.unstable_mockModule('../src/parts/KeyBindingsInitial/KeyBindingsInitial.js', () => {
   return {
-    getKeyBindings() {
-      return []
-    },
+    getKeyBindings: jest.fn(() => []),
   }
 })
 
@@ -109,6 +107,8 @@ const ElectronWindow = await import('../src/parts/ElectronWindow/ElectronWindow.
 const Focus = await import('../src/parts/Focus/Focus.js')
 const InputName = await import('../src/parts/InputName/InputName.js')
 const KeyCode = await import('../src/parts/KeyCode/KeyCode.js')
+const KeyBindingsInitial = await import('../src/parts/KeyBindingsInitial/KeyBindingsInitial.js')
+const KeyBindingsState = await import('../src/parts/KeyBindingsState/KeyBindingsState.js')
 const KeyModifier = await import('../src/parts/KeyModifier/KeyModifier.js')
 const Preferences = await import('../src/parts/Preferences/Preferences.js')
 const RendererProcess = await import('../src/parts/RendererProcess/RendererProcess.js')
@@ -124,6 +124,7 @@ beforeEach(() => {
   BrowserVisitedSites.getSuggestions.mockReturnValue([])
   // @ts-ignore
   BrowserVisitedSites.load.mockResolvedValue([])
+  KeyBindingsState.state.matchingKeyBindings = []
   // @ts-ignore
   ElectronWebContentsViewFunctions.getStats.mockResolvedValue({
     title: 'test',
@@ -270,6 +271,41 @@ test('loadContent', async () => {
     tabsEnabled: true,
     unloadTabs: false,
   })
+})
+
+test('loadContent uses registered keybindings without loading every viewlet', async () => {
+  const registeredKeyBinding = {
+    command: 'test.registered',
+    key: KeyModifier.CtrlCmd | KeyCode.KeyB,
+  }
+  KeyBindingsState.state.matchingKeyBindings = [registeredKeyBinding]
+  // @ts-ignore
+  ElectronWebContentsView.createWebContentsView.mockResolvedValue(1)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.resizeWebContentsView.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.setFallthroughKeyBindings.mockResolvedValue(undefined)
+  const state = ViewletSimpleBrowser.create(0, 'simple-browser://1', 0, 0, 300, 200)
+
+  await ViewletSimpleBrowser.loadContent(state)
+
+  expect(KeyBindingsInitial.getKeyBindings).not.toHaveBeenCalled()
+  expect(ElectronWebContentsViewFunctions.setFallthroughKeyBindings).toHaveBeenCalledWith(1, [registeredKeyBinding.key, ...browserTabKeyBindings])
+})
+
+test('backgroundLoadContent does not load or configure keybindings for an invisible browser view', async () => {
+  // @ts-ignore
+  ElectronWebContentsView.createWebContentsView.mockResolvedValue(1)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.resizeWebContentsView.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.setIframeSrc.mockResolvedValue({ newTitle: '' })
+  const state = ViewletSimpleBrowser.create(0, 'simple-browser://', 0, 0, 300, 200)
+
+  await ViewletSimpleBrowser.backgroundLoadContent(state)
+
+  expect(KeyBindingsInitial.getKeyBindings).not.toHaveBeenCalled()
+  expect(ElectronWebContentsViewFunctions.setFallthroughKeyBindings).not.toHaveBeenCalled()
 })
 
 test('loadContent enables tab hovers through simpleBrowser.tabHover.enabled', async () => {
