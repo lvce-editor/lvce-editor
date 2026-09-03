@@ -15,6 +15,11 @@ const getBrowserTabKeyBindings = (when) => {
       when,
     },
     {
+      key: KeyModifier.CtrlCmd | KeyCode.KeyH,
+      command: 'SimpleBrowser.openHistory',
+      when,
+    },
+    {
       key: KeyModifier.CtrlCmd | KeyCode.Tab,
       command: 'SimpleBrowser.focusNextTab',
       when,
