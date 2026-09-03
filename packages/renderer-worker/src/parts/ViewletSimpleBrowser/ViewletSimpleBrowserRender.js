@@ -23,6 +23,10 @@ export const renderEventListeners = () => {
       params: ['reload'],
     },
     {
+      name: DomEventListenerFunctions.HandleInput,
+      params: ['handleInput', 'event.target.value'],
+    },
+    {
       name: DomEventListenerFunctions.HandleFocusInSimpleBrowser,
       params: ['handleFocusIn', 'event.target.name'],
     },
