@@ -36,7 +36,7 @@
   "optionalDependencies": {
     "@lvce-editor/auth-process": "^1.17.0",
     "@lvce-editor/cookie-import-view": "^0.3.2",
-    "@lvce-editor/embeds-process": "^4.21.2",
+    "@lvce-editor/embeds-process": "^4.21.3",
     "@lvce-editor/file-system-process": "^5.16.1",
     "@lvce-editor/file-watcher-explorer": "^0.1.1",
     "@lvce-editor/file-watcher-process": "^4.14.0",
