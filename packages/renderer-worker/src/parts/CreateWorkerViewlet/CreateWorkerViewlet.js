@@ -147,6 +147,7 @@ const createWorkerViewletInternal = ({ adapter, config, context, worker }) => {
   const { idKey } = state
   let nextRenderInvocationId = 0
   const activeRenderInvocations = new Map()
+  const renderQueues = new Map()
 
   const createRenderInvocation = (uid) => {
     const invocationId = ++nextRenderInvocationId
@@ -160,6 +161,27 @@ const createWorkerViewletInternal = ({ adapter, config, context, worker }) => {
       isLatest() {
         return activeRenderInvocations.get(uid) === invocationId
       },
+    }
+  }
+
+  const enqueueRender = async (uid, render) => {
+    const previous = renderQueues.get(uid) || Promise.resolve()
+    const run = async () => {
+      try {
+        await previous
+      } catch {
+        // The previous caller receives its error; later renders must still run.
+      }
+      return render()
+    }
+    const current = run()
+    renderQueues.set(uid, current)
+    try {
+      return await current
+    } finally {
+      if (renderQueues.get(uid) === current) {
+        renderQueues.delete(uid)
+      }
     }
   }
 
@@ -253,7 +275,7 @@ const createWorkerViewletInternal = ({ adapter, config, context, worker }) => {
   }
 
   const createCommandWrapper = (command) => {
-    return adapter.wrapCommand(command, wrapCommand, { context, createRenderInvocation, worker })
+    return adapter.wrapCommand(command, wrapCommand, { context, createRenderInvocation, enqueueRender, worker })
   }
 
   const wrapConfiguredCommand = (methodName) => {

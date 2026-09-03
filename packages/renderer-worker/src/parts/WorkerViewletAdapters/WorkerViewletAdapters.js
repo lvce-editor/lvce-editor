@@ -259,20 +259,22 @@ export const textSearch = {
       isSearchEditor: state.uri.startsWith('search-editor://'),
     }
   },
-  wrapCommand(command, _defaultWrapCommand, { createRenderInvocation, worker }) {
+  wrapCommand(command, _defaultWrapCommand, { createRenderInvocation, enqueueRender, worker }) {
     return async (state, ...args) => {
       await worker.invoke(`TextSearch.${command}`, state.uid, ...args)
       const invocation = createRenderInvocation(state.uid)
-      try {
-        const diff = await worker.invoke('TextSearch.diff2', state.uid, ...args)
-        if (diff.length === 0 || !invocation.isLatest()) {
-          return state
+      return enqueueRender(state.uid, async () => {
+        try {
+          const diff = await worker.invoke('TextSearch.diff2', state.uid, ...args)
+          if (diff.length === 0 || !invocation.isLatest()) {
+            return state
+          }
+          const commands = await worker.invoke('TextSearch.render2', state.uid, diff)
+          return { ...state, commands }
+        } finally {
+          invocation.finish()
         }
-        const commands = await worker.invoke('TextSearch.render2', state.uid, diff)
-        return { ...state, commands }
-      } finally {
-        invocation.finish()
-      }
+      })
     }
   },
 }
