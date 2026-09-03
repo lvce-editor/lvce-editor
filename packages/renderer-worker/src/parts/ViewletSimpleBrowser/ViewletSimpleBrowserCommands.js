@@ -67,6 +67,7 @@ export const LazyCommands = {
 
 export const Events = {
   'browser-view-audio-state-changed': SimpleBrowser.handleAudioStateChanged,
+  'browser-view-destroyed': SimpleBrowser.handleBrowserViewDestroyed,
   'browser-view-context-menu': ViewletSimpleBrowserHandleContextMenu.handleContextMenu,
   'browser-view-did-navigate': SimpleBrowser.handleDidNavigate,
   'browser-view-key-binding': SimpleBrowser.handleKeyBinding,

@@ -505,18 +505,30 @@ export const openTab = async (state, url, disposition) => {
   return switchToTab(currentState, tabs, currentState.tabs.length)
 }
 
-export const handleWindowOpen = async (state, browserViewId, url, disposition) => {
+export const handleWindowOpen = async (state, browserViewId, childBrowserViewId, url, disposition) => {
   const { tabs: oldTabs, tabsEnabled } = state
   const ownsWebContentsView = oldTabs.some((tab) => tab.browserViewId === Number(browserViewId))
   const openExternalLinks = Preferences.get('simpleBrowser.openExternalLinks') === 'externalBrowser'
   if (!ownsWebContentsView) {
     return state
   }
+  ElectronWebContentsView.adoptWebContentsView()
   if (openExternalLinks || !tabsEnabled) {
+    await ElectronWebContentsView.disposeWebContentsView(childBrowserViewId)
     await Command.execute('Open.openExternal', url)
     return state
   }
-  return openTab(state, url, disposition)
+  const currentState = state.hasSuggestionsOverlay ? await closeSuggestions(state) : state
+  const { headerHeight, height, width, x, y } = currentState
+  await ElectronWebContentsViewFunctions.setFallthroughKeyBindings(childBrowserViewId, getFallThroughKeyBindings())
+  await ElectronWebContentsViewFunctions.resizeWebContentsView(childBrowserViewId, x, y + headerHeight, width, height - headerHeight)
+  const tab = createTab({ browserViewId: Number(childBrowserViewId), iframeSrc: url, inputValue: url, isLoading: true })
+  const tabs = [...currentState.tabs, tab]
+  if (disposition === 'background-tab') {
+    await ElectronWebContentsViewFunctions.hide(childBrowserViewId)
+    return { ...currentState, tabs }
+  }
+  return switchToTab(currentState, tabs, currentState.tabs.length)
 }
 
 export const selectTab = async (state, index) => {
@@ -545,7 +557,7 @@ export const focusPreviousTab = (state) => {
   return selectTab(state, (state.selectedTabIndex - 1 + state.tabs.length) % state.tabs.length)
 }
 
-export const closeTab = async (state, index) => {
+const closeTabInternal = async (state, index, disposeWebContentsView) => {
   if (!state.tabsEnabled) {
     return state
   }
@@ -557,7 +569,9 @@ export const closeTab = async (state, index) => {
   const tab = currentState.tabs[tabIndex]
   if (currentState.tabs.length === 1) {
     const replacement = await createEmptyTab(currentState)
-    await ElectronWebContentsView.disposeWebContentsView(tab.browserViewId)
+    if (disposeWebContentsView) {
+      await ElectronWebContentsView.disposeWebContentsView(tab.browserViewId)
+    }
     await ElectronWebContentsViewFunctions.show(replacement.browserViewId)
     const newState = activateTab(currentState, [replacement], 0)
     return { ...newState, focusAddressVersion: newState.focusAddressVersion + 1 }
@@ -570,7 +584,7 @@ export const closeTab = async (state, index) => {
   } else if (tabIndex < selectedTabIndex) {
     selectedTabIndex--
   }
-  if (tab.browserViewId) {
+  if (disposeWebContentsView && tab.browserViewId) {
     await ElectronWebContentsView.disposeWebContentsView(tab.browserViewId)
   }
   if (!wasSelected) {
@@ -586,6 +600,20 @@ export const closeTab = async (state, index) => {
     await ElectronWebContentsViewFunctions.focus(selectedTab.browserViewId)
   }
   return activateTab(currentState, tabs, selectedTabIndex)
+}
+
+export const closeTab = (state, index) => {
+  return closeTabInternal(state, index, true)
+}
+
+export const handleBrowserViewDestroyed = async (state, browserViewId) => {
+  const tabIndex = state.tabs.findIndex((tab) => tab.browserViewId === Number(browserViewId))
+  if (tabIndex === -1) {
+    return state
+  }
+  const newState = await closeTabInternal(state, tabIndex, false)
+  await ElectronWebContentsView.releaseWebContentsView()
+  return newState
 }
 
 export const closeCurrentTab = (state) => {

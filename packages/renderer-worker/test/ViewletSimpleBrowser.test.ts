@@ -50,10 +50,12 @@ jest.unstable_mockModule('../src/parts/ElectronWebContentsViewFunctions/Electron
 })
 jest.unstable_mockModule('../src/parts/ElectronWebContentsView/ElectronWebContentsView.js', () => {
   return {
+    adoptWebContentsView: jest.fn(),
     createWebContentsView: jest.fn(() => {
       return 1
     }),
     disposeWebContentsView: jest.fn(),
+    releaseWebContentsView: jest.fn(),
   }
 })
 
@@ -526,26 +528,29 @@ test('updates open new tab pages when the color theme changes', async () => {
 
 test('opens a target blank link in a new selected tab by default', async () => {
   // @ts-ignore
-  ElectronWebContentsView.createWebContentsView.mockResolvedValue(13)
-  // @ts-ignore
   ElectronWebContentsViewFunctions.hide.mockResolvedValue(undefined)
   // @ts-ignore
   ElectronWebContentsViewFunctions.show.mockResolvedValue(undefined)
   // @ts-ignore
   ElectronWebContentsViewFunctions.focus.mockResolvedValue(undefined)
   // @ts-ignore
-  ElectronWebContentsViewFunctions.setIframeSrc.mockResolvedValue(undefined)
+  ElectronWebContentsViewFunctions.resizeWebContentsView.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.setFallthroughKeyBindings.mockResolvedValue(undefined)
   const state = {
     ...ViewletSimpleBrowser.create(7, '', 10, 20, 300, 200),
     browserViewId: 12,
     tabs: [{ browserViewId: 12, iframeSrc: 'https://example.com', inputValue: 'https://example.com', title: 'Example' }],
   }
 
-  const newState = await ViewletSimpleBrowser.handleWindowOpen(state, 12, 'https://example.com/docs', 'foreground-tab')
+  const newState = await ViewletSimpleBrowser.handleWindowOpen(state, 12, 13, 'https://example.com/docs', 'foreground-tab')
 
   expect(newState).toMatchObject({ browserViewId: 13, iframeSrc: 'https://example.com/docs', selectedTabIndex: 1 })
   expect(newState.tabs).toHaveLength(2)
-  expect(ElectronWebContentsViewFunctions.setIframeSrc).toHaveBeenCalledWith(13, 'https://example.com/docs')
+  expect(ElectronWebContentsView.adoptWebContentsView).toHaveBeenCalledTimes(1)
+  expect(ElectronWebContentsView.createWebContentsView).not.toHaveBeenCalled()
+  expect(ElectronWebContentsViewFunctions.setIframeSrc).not.toHaveBeenCalled()
+  expect(ElectronWebContentsViewFunctions.resizeWebContentsView).toHaveBeenCalledWith(13, 10, 85, 300, 135)
   expect(ElectronWebContentsViewFunctions.hide).toHaveBeenCalledWith(12)
   expect(ElectronWebContentsViewFunctions.show).toHaveBeenCalledWith(13)
   expect(ElectronWebContentsViewFunctions.focus).toHaveBeenCalledWith(13)
@@ -553,25 +558,32 @@ test('opens a target blank link in a new selected tab by default', async () => {
 
 test('keeps a target blank background tab hidden', async () => {
   // @ts-ignore
-  ElectronWebContentsView.createWebContentsView.mockResolvedValue(13)
-  // @ts-ignore
   ElectronWebContentsViewFunctions.hide.mockResolvedValue(undefined)
   // @ts-ignore
-  ElectronWebContentsViewFunctions.setIframeSrc.mockResolvedValue(undefined)
+  ElectronWebContentsViewFunctions.resizeWebContentsView.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.setFallthroughKeyBindings.mockResolvedValue(undefined)
   const state = {
     ...ViewletSimpleBrowser.create(7, '', 10, 20, 300, 200),
     browserViewId: 12,
     tabs: [{ browserViewId: 12, iframeSrc: 'https://example.com', inputValue: 'https://example.com', title: 'Example' }],
   }
 
-  const newState = await ViewletSimpleBrowser.handleWindowOpen(state, 12, 'https://example.com/docs', 'background-tab')
+  const newState = await ViewletSimpleBrowser.handleWindowOpen(state, 12, 13, 'https://example.com/docs', 'background-tab')
 
   expect(newState).toMatchObject({ browserViewId: 12, selectedTabIndex: 0 })
   expect(newState.tabs).toHaveLength(2)
+  expect(ElectronWebContentsViewFunctions.hide).toHaveBeenCalledWith(13)
   expect(ElectronWebContentsViewFunctions.show).not.toHaveBeenCalled()
 })
 
-test('keeps a new background tab unloaded when tab unloading is enabled', async () => {
+test('keeps a popup child loaded when tab unloading is enabled', async () => {
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.hide.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.resizeWebContentsView.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.setFallthroughKeyBindings.mockResolvedValue(undefined)
   const state = {
     ...ViewletSimpleBrowser.create(7, '', 10, 20, 300, 200),
     browserViewId: 12,
@@ -579,9 +591,10 @@ test('keeps a new background tab unloaded when tab unloading is enabled', async 
     unloadTabs: true,
   }
 
-  const newState = await ViewletSimpleBrowser.handleWindowOpen(state, 12, 'https://example.com/docs', 'background-tab')
+  const newState = await ViewletSimpleBrowser.handleWindowOpen(state, 12, 13, 'https://example.com/docs', 'background-tab')
 
-  expect(newState.tabs[1]).toMatchObject({ browserViewId: 0, iframeSrc: 'https://example.com/docs', isLoading: false })
+  expect(newState.tabs[1]).toMatchObject({ browserViewId: 13, iframeSrc: 'https://example.com/docs', isLoading: true })
+  expect(ElectronWebContentsView.adoptWebContentsView).toHaveBeenCalledTimes(1)
   expect(ElectronWebContentsView.createWebContentsView).not.toHaveBeenCalled()
   expect(ElectronWebContentsViewFunctions.setIframeSrc).not.toHaveBeenCalled()
 })
@@ -609,6 +622,8 @@ test('opens a context menu link in a new background web contents view', async ()
 })
 
 test('opens a target blank link in the system browser when configured', async () => {
+  // @ts-ignore
+  ElectronWebContentsView.disposeWebContentsView.mockResolvedValue(undefined)
   Preferences.state['simpleBrowser.openExternalLinks'] = 'externalBrowser'
   const state = {
     ...ViewletSimpleBrowser.create(),
@@ -616,9 +631,11 @@ test('opens a target blank link in the system browser when configured', async ()
     tabs: [{ browserViewId: 12 }],
   }
 
-  const newState = await ViewletSimpleBrowser.handleWindowOpen(state, 12, 'https://example.com/docs', 'foreground-tab')
+  const newState = await ViewletSimpleBrowser.handleWindowOpen(state, 12, 13, 'https://example.com/docs', 'foreground-tab')
 
   expect(newState).toBe(state)
+  expect(ElectronWebContentsView.adoptWebContentsView).toHaveBeenCalledTimes(1)
+  expect(ElectronWebContentsView.disposeWebContentsView).toHaveBeenCalledWith(13)
   expect(Command.execute).toHaveBeenCalledWith('Open.openExternal', 'https://example.com/docs')
   delete Preferences.state['simpleBrowser.openExternalLinks']
 })
@@ -630,9 +647,10 @@ test('ignores a target blank event from another simple browser instance', async 
     tabs: [{ browserViewId: 12 }],
   }
 
-  const newState = await ViewletSimpleBrowser.handleWindowOpen(state, 99, 'https://example.com/docs', 'foreground-tab')
+  const newState = await ViewletSimpleBrowser.handleWindowOpen(state, 99, 13, 'https://example.com/docs', 'foreground-tab')
 
   expect(newState).toBe(state)
+  expect(ElectronWebContentsView.adoptWebContentsView).not.toHaveBeenCalled()
   expect(ElectronWebContentsView.createWebContentsView).not.toHaveBeenCalled()
   expect(Command.execute).not.toHaveBeenCalled()
 })
@@ -1019,6 +1037,46 @@ test('closing a tab disposes only its web contents view', async () => {
   expect(newState.tabs).toHaveLength(1)
   expect(newState.browserViewId).toBe(12)
   expect(ElectronWebContentsView.disposeWebContentsView).toHaveBeenCalledWith(13)
+})
+
+test('closes an oauth tab when its child web contents closes itself', async () => {
+  // @ts-ignore
+  ElectronWebContentsView.releaseWebContentsView.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.show.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.focus.mockResolvedValue(undefined)
+  const state = {
+    ...ViewletSimpleBrowser.create(),
+    browserViewId: 13,
+    selectedTabIndex: 1,
+    tabs: [
+      { browserViewId: 12, favicon: '', iframeSrc: 'https://soundcloud.com', inputValue: 'https://soundcloud.com', title: 'SoundCloud' },
+      { browserViewId: 13, favicon: '', iframeSrc: 'https://accounts.google.com', inputValue: 'https://accounts.google.com', title: 'Sign in' },
+    ],
+  }
+
+  const newState = await ViewletSimpleBrowser.handleBrowserViewDestroyed(state, 13)
+
+  expect(newState).toMatchObject({ browserViewId: 12, selectedTabIndex: 0, title: 'SoundCloud' })
+  expect(newState.tabs).toHaveLength(1)
+  expect(ElectronWebContentsView.releaseWebContentsView).toHaveBeenCalledTimes(1)
+  expect(ElectronWebContentsView.disposeWebContentsView).not.toHaveBeenCalled()
+  expect(ElectronWebContentsViewFunctions.show).toHaveBeenCalledWith(12)
+  expect(ElectronWebContentsViewFunctions.focus).toHaveBeenCalledWith(12)
+})
+
+test('ignores a destroyed web contents event from another simple browser instance', async () => {
+  const state = {
+    ...ViewletSimpleBrowser.create(),
+    browserViewId: 12,
+    tabs: [{ browserViewId: 12 }],
+  }
+
+  const newState = await ViewletSimpleBrowser.handleBrowserViewDestroyed(state, 13)
+
+  expect(newState).toBe(state)
+  expect(ElectronWebContentsView.releaseWebContentsView).not.toHaveBeenCalled()
 })
 
 test('closes the selected tab from the browser menu', async () => {
