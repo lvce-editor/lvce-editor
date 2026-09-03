@@ -32,9 +32,59 @@
 }
 
 .SettingsItemCheckBox {
+  align-items: flex-start;
   display: flex;
-  gap: 5px;
+  gap: 9px;
   contain: content;
+}
+
+.CheckBox {
+  appearance: none;
+  background-color: var(--CheckboxBackground, var(--InputBoxBackground, #313131));
+  border: 1px solid var(--CheckboxBorder, var(--InputBoxBorder, transparent));
+  border-radius: 3px;
+  box-sizing: border-box;
+  color: var(--CheckboxForeground, var(--InputForeground, var(--WorkbenchForeground)));
+  cursor: pointer;
+  display: grid;
+  flex: 0 0 18px;
+  height: 18px;
+  margin: 0;
+  padding: 0;
+  place-content: center;
+  width: 18px;
+}
+
+.CheckBox::before {
+  border: solid currentColor;
+  border-width: 0 2px 2px 0;
+  content: '';
+  height: 8px;
+  opacity: 0;
+  transform: translateY(-1px) rotate(45deg);
+  width: 4px;
+}
+
+.CheckBox:checked::before {
+  opacity: 1;
+}
+
+.CheckBox:focus-visible {
+  outline: 1px solid var(--FocusOutline, var(--FocusBorder, #007fd4));
+  outline-offset: 2px;
+}
+
+.CheckBox:disabled {
+  cursor: default;
+  opacity: 0.4;
+}
+
+.CheckBox.InputBoxError {
+  border-color: var(--InputValidationErrorBorder, #be1100);
+}
+
+.SettingsItemCheckBox .Label {
+  cursor: pointer;
 }
 
 /* TODO avoid nesting */
