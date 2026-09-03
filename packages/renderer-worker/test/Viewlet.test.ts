@@ -100,6 +100,36 @@ test('executeViewletCommand warns when another command targets a missing viewlet
   expect(warn).toHaveBeenCalledWith('cannot execute handleInput instance not found 2')
 })
 
+test('executeViewletCommand runs afterRender after updating the renderer', async () => {
+  const oldState = { content: 'old', uid: 2 }
+  const newState = { content: 'new', uid: 2 }
+  const callOrder: string[] = []
+  const afterRender = jest.fn(async (_oldState: Readonly<typeof oldState>, _newState: Readonly<typeof newState>): Promise<void> => {
+    callOrder.push('afterRender')
+  })
+  ViewletStates.set(2, {
+    factory: {
+      afterRender,
+      Commands: {
+        update: jest.fn(async (): Promise<typeof newState> => newState),
+      },
+      name: 'Test',
+    },
+    moduleId: 'Test',
+    renderedState: oldState,
+    state: oldState,
+  })
+  jest.mocked(ViewletManager.render).mockReturnValue([['Viewlet.setText', 'new']])
+  jest.mocked(RendererProcess.invoke).mockImplementation(async (): Promise<void> => {
+    callOrder.push('render')
+  })
+
+  await Viewlet.executeViewletCommand(2, 'update')
+
+  expect(callOrder).toEqual(['render', 'afterRender'])
+  expect(afterRender).toHaveBeenCalledWith(oldState, newState)
+})
+
 test('requestRender renders pending worker state without executing the event again', async () => {
   const renderPending = jest.fn(async (state: { commands: unknown[]; uid: number }) => ({
     ...state,
