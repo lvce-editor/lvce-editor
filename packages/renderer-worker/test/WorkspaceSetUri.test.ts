@@ -91,14 +91,18 @@ test('setPath uses the product name for an empty workspace', async () => {
   await Workspace.setPath('')
 
   expect(setWindowTitle).toHaveBeenCalledWith('Lvce Editor')
-  expect(disposeTextSearchWorker).toHaveBeenCalledTimes(1)
-  expect(disposeFileSystemWorker).toHaveBeenCalledTimes(1)
+  expect(disposeTextSearchWorker).not.toHaveBeenCalled()
+  expect(disposeFileSystemWorker).not.toHaveBeenCalled()
+  expect(stopRemoteCli).not.toHaveBeenCalled()
 })
 
 test('setPath uses the folder name for a workspace', async () => {
   await Workspace.setPath('/home/test/project')
 
   expect(setWindowTitle).toHaveBeenCalledWith('project')
+  expect(disposeTextSearchWorker).not.toHaveBeenCalled()
+  expect(disposeFileSystemWorker).toHaveBeenCalledTimes(1)
+  expect(stopRemoteCli).toHaveBeenCalledTimes(1)
 })
 
 test('setPath skips folder validation during tests', async () => {
@@ -134,6 +138,8 @@ test('setUri preserves the uri and decodes the workspace path', async () => {
   expect(Workspace.state.pathSeparator).toBe('/')
   expect(exists).toHaveBeenCalledWith('/home/test/my folder/#project?')
   expect(setWindowTitle).toHaveBeenCalledWith('#project?')
+  expect(disposeTextSearchWorker).not.toHaveBeenCalled()
+  expect(disposeFileSystemWorker).toHaveBeenCalledTimes(1)
 })
 
 test('setUri preserves the current workspace when a local folder does not exist', async () => {
