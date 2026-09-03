@@ -14,7 +14,6 @@ import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as Product from '../Product/Product.js'
 import * as RemoteCli from '../RemoteCli/RemoteCli.js'
 import * as StatusBarWorker from '../StatusBarWorker/StatusBarWorker.js'
-import * as TextSearchWorker from '../TextSearchWorker/TextSearchWorker.js'
 import * as WindowTitle from '../WindowTitle/WindowTitle.js'
 import * as WorkspaceConnection from '../WorkspaceConnection/WorkspaceConnection.js'
 import { state } from '../WorkspaceState/WorkspaceState.js'
@@ -39,7 +38,8 @@ export const setPath = async (path) => {
   Assert.string(path)
   await validateLocalPath(path)
   await updateWindowTitle(path, pathSeparator)
-  if (path !== state.workspacePath) {
+  const workspaceChanged = path !== state.workspacePath
+  if (workspaceChanged) {
     await GlobalEventBus.emitEvent('workspace.beforeChange', state.workspacePath, path)
   }
   // @ts-ignore
@@ -47,10 +47,11 @@ export const setPath = async (path) => {
   // @ts-ignore
   state.workspaceUri = path
   state.pathSeparator = pathSeparator
-  WorkspaceConnection.reset()
-  RemoteCli.stop()
-  await FileSystemWorker.dispose()
-  await TextSearchWorker.dispose()
+  if (workspaceChanged) {
+    WorkspaceConnection.reset()
+    RemoteCli.stop()
+    await FileSystemWorker.dispose()
+  }
   await onWorkspaceChange()
 }
 
@@ -83,7 +84,6 @@ export const setUri = async (uri, connectionOrPathSeparator, legacyConnection) =
     RemoteCli.stop()
   }
   await FileSystemWorker.dispose()
-  await TextSearchWorker.dispose()
   await onWorkspaceChange()
 }
 
