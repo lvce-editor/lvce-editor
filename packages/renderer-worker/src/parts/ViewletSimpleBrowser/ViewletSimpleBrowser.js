@@ -2,6 +2,7 @@
 
 import * as Assert from '../Assert/Assert.ts'
 import * as BrowserSearchSuggestions from '../BrowserSearchSuggestions/BrowserSearchSuggestions.js'
+import * as BrowserHistory from '../BrowserHistory/BrowserHistory.js'
 import * as BrowserVisitedSites from '../BrowserVisitedSites/BrowserVisitedSites.js'
 import * as Command from '../Command/Command.js'
 import * as ElectronWebContentsView from '../ElectronWebContentsView/ElectronWebContentsView.js'
@@ -32,7 +33,8 @@ const closeTabKeyBinding = KeyModifier.CtrlCmd | KeyCode.KeyW
 const createNewTabKeyBinding = KeyModifier.CtrlCmd | KeyCode.KeyT
 const focusNextTabKeyBinding = KeyModifier.CtrlCmd | KeyCode.Tab
 const focusPreviousTabKeyBinding = KeyModifier.CtrlCmd | KeyModifier.Shift | KeyCode.Tab
-const browserTabKeyBindings = [closeTabKeyBinding, createNewTabKeyBinding, focusNextTabKeyBinding, focusPreviousTabKeyBinding]
+const openHistoryKeyBinding = KeyModifier.CtrlCmd | KeyCode.KeyH
+const browserTabKeyBindings = [closeTabKeyBinding, createNewTabKeyBinding, focusNextTabKeyBinding, focusPreviousTabKeyBinding, openHistoryKeyBinding]
 const visibleBrowserUids = new Set()
 
 const getFallThroughKeyBindings = (keyBindings) => {
@@ -959,6 +961,10 @@ export const handleKeyBinding = async (state, browserViewId, keyBinding) => {
   if (keyBinding === focusPreviousTabKeyBinding) {
     return focusPreviousTab(state)
   }
+  if (keyBinding === openHistoryKeyBinding) {
+    await Command.execute('Main.openUri', 'simple-browser-history://')
+    return state
+  }
   await KeyBindings.handleKeyBinding(keyBinding)
   return state
 }
@@ -972,7 +978,7 @@ export const handleDidNavigate = async (state, browserViewId, value) => {
     await ElectronWebContentsViewFunctions.show(actualBrowserViewId)
     await ElectronWebContentsViewFunctions.focus(actualBrowserViewId)
   }
-  return updateTab(state, actualBrowserViewId, {
+  const newState = updateTab(state, actualBrowserViewId, {
     canGoBack,
     canGoForward,
     iframeSrc: displayUrl,
@@ -980,6 +986,8 @@ export const handleDidNavigate = async (state, browserViewId, value) => {
     isLoading: false,
     pageSnapshot: undefined,
   })
+  await BrowserHistory.record(url)
+  return newState
 }
 
 export const handleDidNavigationCancel = async (state, browserViewId) => {
