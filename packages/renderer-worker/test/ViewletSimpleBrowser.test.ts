@@ -106,6 +106,7 @@ const BrowserHistory = await import('../src/parts/BrowserHistory/BrowserHistory.
 const BrowserSearchSuggestions = await import('../src/parts/BrowserSearchSuggestions/BrowserSearchSuggestions.js')
 const BrowserVisitedSites = await import('../src/parts/BrowserVisitedSites/BrowserVisitedSites.js')
 const Command = await import('../src/parts/Command/Command.js')
+const ColorTheme = await import('../src/parts/ColorTheme/ColorTheme.js')
 const ElectronWebContentsViewFunctions = await import('../src/parts/ElectronWebContentsViewFunctions/ElectronWebContentsViewFunctions.js')
 const ElectronWebContentsView = await import('../src/parts/ElectronWebContentsView/ElectronWebContentsView.js')
 const ElectronWindow = await import('../src/parts/ElectronWindow/ElectronWindow.js')
@@ -123,6 +124,7 @@ const ViewletModuleId = await import('../src/parts/ViewletModuleId/ViewletModule
 const WhenExpression = await import('../src/parts/WhenExpression/WhenExpression.js')
 
 beforeEach(() => {
+  ColorTheme.state.colorThemeCss = ''
   // @ts-ignore
   BrowserVisitedSites.add.mockImplementation((sites) => sites)
   // @ts-ignore
@@ -486,8 +488,23 @@ test('creates and selects an empty tab while keeping the original view alive', a
   expect(ElectronWebContentsView.disposeWebContentsView).not.toHaveBeenCalled()
   expect(ElectronWebContentsViewFunctions.hide).toHaveBeenCalledWith(12)
   expect(ElectronWebContentsViewFunctions.show).toHaveBeenCalledWith(13)
-  expect(ElectronWebContentsViewFunctions.setIframeSrc).toHaveBeenCalledWith(13, SimpleBrowserNewTabPage.url)
+  expect(ElectronWebContentsViewFunctions.setIframeSrc).toHaveBeenCalledWith(13, SimpleBrowserNewTabPage.getUrl())
   expect(ElectronWindow.focus).toHaveBeenCalledTimes(1)
+})
+
+test('updates open new tab pages when the color theme changes', async () => {
+  ColorTheme.state.colorThemeCss = ':root { --EditorBackground: #193549; --InputBoxBackground: #15232d; }'
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.setIframeSrc.mockResolvedValue(undefined)
+  const state = createTwoTabState()
+  const { tabs } = state
+  tabs[0].iframeSrc = ''
+
+  const newState = await ViewletSimpleBrowser.handleColorThemeChanged(state)
+
+  expect(newState).toBe(state)
+  expect(ElectronWebContentsViewFunctions.setIframeSrc).toHaveBeenCalledTimes(1)
+  expect(ElectronWebContentsViewFunctions.setIframeSrc).toHaveBeenCalledWith(12, SimpleBrowserNewTabPage.getUrl())
 })
 
 test('opens a target blank link in a new selected tab by default', async () => {

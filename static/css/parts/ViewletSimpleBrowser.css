@@ -1,4 +1,6 @@
 .SimpleBrowser {
+  background: var(--EditorBackground, var(--MainBackground));
+  color: var(--WorkbenchForeground);
   contain: strict;
   flex: 1;
   display: flex;
@@ -8,6 +10,7 @@
 }
 
 .SimpleBrowserHeader {
+  background: var(--MainBackground, var(--EditorBackground));
   box-sizing: border-box;
   height: 30px;
   width: 100%;
@@ -16,13 +19,13 @@
 }
 
 .SimpleBrowserHeader .InputBox {
-  color: white;
+  color: var(--InputBoxForeground, var(--WorkbenchForeground));
   flex: 1;
 }
 
 .SimpleBrowserTabs {
   align-items: stretch;
-  background: var(--TitleBarBackground, var(--EditorBackground));
+  background: var(--TabsBackground, var(--MainBackground, var(--EditorBackground)));
   border-bottom: 1px solid var(--PanelBorder, transparent);
   box-sizing: border-box;
   contain: strict;
@@ -150,6 +153,7 @@
 }
 
 .SimpleBrowserIframe {
+  background: var(--EditorBackground, var(--MainBackground));
   width: 100%;
   height: 100%;
   contain: strict;
@@ -176,7 +180,7 @@
 }
 
 .SimpleBrowserPreview {
-  background: white;
+  background: var(--EditorBackground, var(--MainBackground));
   contain: strict;
   flex: 1;
   min-height: 0;

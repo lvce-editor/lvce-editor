@@ -38,7 +38,7 @@ test('bundleCss does not add filename comment to App.css', async () => {
   }
 }, 30_000)
 
-test('bundleCss lets the simple browser fill the preview area height', async () => {
+test('bundleCss lets the simple browser fill the preview area height and use workbench theme colors', async () => {
   const dir = await mkdtemp(join(tmpdir(), 'lvce-bundle-css-'))
 
   try {
@@ -49,14 +49,11 @@ test('bundleCss lets the simple browser fill the preview area height', async () 
 
     const css = await readFile(join(dir, 'parts', 'ViewletSimpleBrowser.css'), 'utf8')
 
-    expect(css).toContain(`.SimpleBrowser {
-  contain: strict;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  min-height: 0;
-  position: relative;
-}`)
+    expect(css).toContain('background: var(--EditorBackground, var(--MainBackground));')
+    expect(css).toContain('color: var(--WorkbenchForeground);')
+    expect(css).toContain('flex: 1;')
+    expect(css).toContain('min-height: 0;')
+    expect(css).toContain('background: var(--TabsBackground, var(--MainBackground, var(--EditorBackground)));')
   } finally {
     await rm(dir, { recursive: true, force: true })
   }
