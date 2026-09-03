@@ -13,21 +13,22 @@ import * as IconThemeWorker from '../IconThemeWorker/IconThemeWorker.js'
 
 export const getLanguageId = (fileName) => {
   Assert.string(fileName)
+  const baseName = fileName.slice(fileName.lastIndexOf('/') + 1)
+  const baseNameLower = baseName.toLowerCase()
+  if (LanguagesState.hasLanguageByFileName(baseNameLower)) {
+    return LanguagesState.getLanguageByFileName(baseNameLower)
+  }
   // TODO this is inefficient for icon theme, as file extension is computed twice
-  const extensionIndex = GetFileExtension.getFileExtensionIndex(fileName)
-  const extension = fileName.slice(extensionIndex)
+  const extensionIndex = GetFileExtension.getFileExtensionIndex(baseName)
+  const extension = baseName.slice(extensionIndex)
   const extensionLower = extension.toLowerCase()
   if (LanguagesState.hasLanguageByExtension(extensionLower)) {
     return LanguagesState.getLanguageByExtension(extensionLower)
   }
-  const fileNameLower = fileName.toLowerCase()
-  const secondExtensionIndex = GetFileExtension.getNthFileExtension(fileName, extensionIndex - 1)
-  const secondExtension = fileName.slice(secondExtensionIndex)
+  const secondExtensionIndex = GetFileExtension.getNthFileExtension(baseName, extensionIndex - 1)
+  const secondExtension = baseName.slice(secondExtensionIndex).toLowerCase()
   if (secondExtensionIndex !== -1 && LanguagesState.hasLanguageByExtension(secondExtension)) {
     return LanguagesState.getLanguageByExtension(secondExtension)
-  }
-  if (LanguagesState.hasLanguageByFileName(fileNameLower)) {
-    return LanguagesState.getLanguageByFileName(fileNameLower)
   }
   return 'unknown'
 }
