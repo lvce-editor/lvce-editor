@@ -147,3 +147,5 @@ export const EditorTextError = 'EditorTextError'
 export const Settings = 'Settings'
 
 export const Preview = 'Preview'
+
+export const ComponentState = 'ComponentState'

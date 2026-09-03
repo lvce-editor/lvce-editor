@@ -1,0 +1,27 @@
+import { createWorkerViewlet } from '../CreateWorkerViewlet/CreateWorkerViewlet.js'
+
+export const {
+  Commands,
+  Css,
+  Events,
+  Variables,
+  create,
+  dispose,
+  getCommands,
+  getKeyBindings,
+  getMenus,
+  getTitle,
+  hasDirectRender,
+  hasFunctionalEvents,
+  hasFunctionalRender,
+  hasFunctionalResize,
+  hasFunctionalRootRender,
+  loadContent,
+  menus,
+  name,
+  render,
+  renderEventListeners,
+  renderTitle,
+  resize,
+  saveState,
+} = createWorkerViewlet({ workerId: 'componentState' })

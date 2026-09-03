@@ -31,6 +31,13 @@ test('file watcher explorer uses worker-backed module', async () => {
   expect(typeof module.getKeyBindings).toBe('function')
 })
 
+test('explorer exposes live component state access', async () => {
+  const module = await ViewletModuleMap.map[ViewletModuleId.Explorer]()
+
+  expect(typeof module.getComponentState).toBe('function')
+  expect(typeof module.setComponentState).toBe('function')
+})
+
 test('running extensions uses worker-backed module', async () => {
   const module = await ViewletModuleMap.map[ViewletModuleId.RunningExtensions]()
 
@@ -55,6 +62,7 @@ const genericWorkerViewlets = [
   ViewletModuleId.ActivityBar,
   ViewletModuleId.Chat,
   ViewletModuleId.ChatDebug,
+  ViewletModuleId.ComponentState,
   ViewletModuleId.Dialog,
   ViewletModuleId.DiffEditor,
   ViewletModuleId.Explorer,

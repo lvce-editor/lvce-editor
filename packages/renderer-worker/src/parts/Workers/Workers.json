@@ -1,5 +1,45 @@
 [
   {
+    "id": "componentState",
+    "fileName": "componentStateWorkerMain.js",
+    "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/component-state-worker/dist/componentStateWorkerMain.js",
+    "productionPath": "/packages/component-state-worker/dist/componentStateWorkerMain.js",
+    "settingName": "develop.componentStateWorkerPath",
+    "hotReloadCommand": "",
+    "contentSecurityPolicy": ["default-src 'none'", "sandbox allow-same-origin"],
+    "viewlet": {
+      "name": "ComponentState",
+      "css": ["/css/parts/ViewletComponentState.css"],
+      "state": { "idKey": "uid", "fields": ["x", "y", "width", "height"] },
+      "commandPrefix": "ComponentState",
+      "commandReturnStateWhenCommandsEmpty": true,
+      "methods": {
+        "create": {
+          "name": "ComponentState.create",
+          "parameters": [
+            { "source": "state", "name": "uid" }, { "source": "state", "name": "x" }, { "source": "state", "name": "y" },
+            { "source": "state", "name": "width" }, { "source": "state", "name": "height" }
+          ]
+        },
+        "loadContent": { "name": "ComponentState.loadContent", "parameters": [{ "source": "state", "name": "uid" }] },
+        "diff": { "name": "ComponentState.diff2", "parameters": [{ "source": "state", "name": "uid" }] },
+        "render": {
+          "name": "ComponentState.render2",
+          "parameters": [{ "source": "state", "name": "uid" }, { "source": "result", "name": "diff" }]
+        },
+        "resize": {
+          "name": "ComponentState.resize",
+          "parameters": [{ "source": "state", "name": "uid" }, { "source": "argument", "name": "dimensions" }]
+        },
+        "getCommandIds": { "name": "ComponentState.getCommandIds", "parameters": [] },
+        "renderEventListeners": { "name": "ComponentState.renderEventListeners", "parameters": [] }
+      },
+      "capabilities": { "events": true, "render": true, "resize": true, "rootRender": true },
+      "renderComparison": "always",
+      "title": "Component State"
+    }
+  },
+  {
     "id": "notificationCenterView",
     "fileName": "notificationCenterWorkerMain.js",
     "contentSecurityPolicy": ["default-src 'none'", "sandbox allow-same-origin"],
@@ -612,11 +652,19 @@
         "saveState": { "name": "Explorer.saveState", "parameters": [{ "source": "state", "name": "uid" }] },
         "terminate": { "name": "Explorer.terminate", "parameters": [] },
         "getCommandIds": { "name": "Explorer.getCommandIds", "parameters": [] },
+        "getComponentState": { "name": "Explorer.getComponentState", "parameters": [{ "source": "state", "name": "uid" }] },
         "getKeyBindings": { "name": "Explorer.getKeyBindings", "parameters": [] },
         "getMenuEntryIds": { "name": "Explorer.getMenuIds", "parameters": [] },
         "getMenuEntries": { "name": "Explorer.getMenuEntries", "parameters": [{ "source": "argument", "name": "args", "spread": true }] },
         "getTitle": { "name": "Explorer.getTitle", "parameters": [{ "source": "state", "name": "uid" }], "fallback": "Explorer" },
-        "renderEventListeners": { "name": "Explorer.renderEventListeners", "parameters": [] }
+        "renderEventListeners": { "name": "Explorer.renderEventListeners", "parameters": [] },
+        "setComponentState": {
+          "name": "Explorer.setComponentState",
+          "parameters": [
+            { "source": "state", "name": "uid" },
+            { "source": "argument", "name": "componentState" }
+          ]
+        }
       },
       "outputs": [
         { "stateField": "actionsDom", "hotReload": false, "method": { "name": "Explorer.renderActions2", "parameters": [{ "source": "state", "name": "uid" }] } },
