@@ -171,6 +171,13 @@ test.each([
   })
 })
 
+test('routes address input changes to the simple browser state', () => {
+  expect(ViewletSimpleBrowserRender.renderEventListeners()).toContainEqual({
+    name: DomEventListenerFunctions.HandleInput,
+    params: ['handleInput', 'event.target.value'],
+  })
+})
+
 test('routes browser chrome focus with the focused element name', () => {
   expect(ViewletSimpleBrowserRender.renderEventListeners()).toContainEqual({
     name: DomEventListenerFunctions.HandleFocusInSimpleBrowser,
