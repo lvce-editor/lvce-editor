@@ -12,9 +12,9 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-test('opens the toolbar menu at the menu button', async () => {
+test('opens the toolbar menu below the menu button in its nested toolbar', async () => {
   const state = { uid: 42, y: 95 }
 
-  await expect(ViewletSimpleBrowserShowMenu.showMenu(state, 700, 35, 30)).resolves.toBe(state)
+  await expect(ViewletSimpleBrowserShowMenu.showMenu(state, 700, 35, 0, 30)).resolves.toBe(state)
   expect(ContextMenu.show2Below).toHaveBeenCalledWith(42, MenuEntryId.SimpleBrowserToolbar, 700, 160)
 })

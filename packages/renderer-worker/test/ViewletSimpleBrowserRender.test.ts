@@ -141,7 +141,13 @@ test('removes cached page css when the real page becomes visible', () => {
 test('routes the browser menu button click with its bottom-edge coordinates', () => {
   expect(ViewletSimpleBrowserRender.renderEventListeners()).toContainEqual({
     name: 'handleClickSimpleBrowserMenu',
-    params: ['showMenu', 'event.clientX', 'event.currentTarget.offsetTop', 'event.currentTarget.offsetHeight'],
+    params: [
+      'showMenu',
+      'event.clientX',
+      'event.currentTarget.parentElement.offsetTop',
+      'event.currentTarget.offsetTop',
+      'event.currentTarget.offsetHeight',
+    ],
   })
 })
 
