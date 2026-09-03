@@ -344,11 +344,10 @@ const createEmptyTab = async (state) => {
 }
 
 export const handleColorThemeChanged = async (state) => {
+  const { tabs } = state
   const newTabUrl = SimpleBrowserNewTabPage.getUrl()
   await Promise.all(
-    state.tabs
-      .filter((tab) => !tab.iframeSrc && tab.browserViewId)
-      .map((tab) => ElectronWebContentsViewFunctions.setIframeSrc(tab.browserViewId, newTabUrl)),
+    tabs.filter((tab) => !tab.iframeSrc && tab.browserViewId).map((tab) => ElectronWebContentsViewFunctions.setIframeSrc(tab.browserViewId, newTabUrl)),
   )
   return state
 }

@@ -455,7 +455,8 @@ test('updates open new tab pages when the color theme changes', async () => {
   // @ts-ignore
   ElectronWebContentsViewFunctions.setIframeSrc.mockResolvedValue(undefined)
   const state = createTwoTabState()
-  state.tabs[0].iframeSrc = ''
+  const { tabs } = state
+  tabs[0].iframeSrc = ''
 
   const newState = await ViewletSimpleBrowser.handleColorThemeChanged(state)
 

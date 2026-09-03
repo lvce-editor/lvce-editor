@@ -49,7 +49,8 @@ const applyColorTheme = async (colorThemeId) => {
 }
 
 export const getColorThemeCss = () => {
-  return state.colorThemeCss
+  const { colorThemeCss } = state
+  return colorThemeCss
 }
 
 export const setColorTheme = async (colorThemeId) => {
