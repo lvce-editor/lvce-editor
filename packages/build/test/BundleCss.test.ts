@@ -38,6 +38,30 @@ test('bundleCss does not add filename comment to App.css', async () => {
   }
 }, 30_000)
 
+test('bundleCss styles settings checkboxes like compact editor controls', async () => {
+  const dir = await mkdtemp(join(tmpdir(), 'lvce-bundle-css-'))
+
+  try {
+    await bundleCss({
+      outDir: dir,
+      assetDir: '',
+    })
+
+    const css = await readFile(join(dir, 'parts', 'SettingsItems.css'), 'utf8')
+
+    expect(css).toContain(`.CheckBox {
+  appearance: none;
+  background-color: var(--CheckboxBackground, var(--InputBoxBackground, #313131));`)
+    expect(css).toContain('border-radius: 3px;')
+    expect(css).toContain('height: 18px;')
+    expect(css).toContain('width: 18px;')
+    expect(css).toContain('.CheckBox:checked::before {')
+    expect(css).toContain('.CheckBox:focus-visible {')
+  } finally {
+    await rm(dir, { recursive: true, force: true })
+  }
+}, 30_000)
+
 test('bundleCss lets the simple browser fill the preview area height and use workbench theme colors', async () => {
   const dir = await mkdtemp(join(tmpdir(), 'lvce-bundle-css-'))
 
