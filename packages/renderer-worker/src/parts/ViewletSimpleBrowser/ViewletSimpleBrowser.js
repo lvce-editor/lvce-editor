@@ -15,7 +15,7 @@ import * as IframeSrc from '../IframeSrc/IframeSrc.js'
 import * as InputName from '../InputName/InputName.js'
 import * as KeyCode from '../KeyCode/KeyCode.js'
 import * as KeyBindings from '../KeyBindings/KeyBindings.js'
-import * as KeyBindingsInitial from '../KeyBindingsInitial/KeyBindingsInitial.js'
+import * as KeyBindingsState from '../KeyBindingsState/KeyBindingsState.js'
 import * as KeyModifier from '../KeyModifier/KeyModifier.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as PrettyBytes from '../PrettyBytes/PrettyBytes.js'
@@ -37,7 +37,8 @@ const openHistoryKeyBinding = KeyModifier.CtrlCmd | KeyCode.KeyH
 const browserTabKeyBindings = [closeTabKeyBinding, createNewTabKeyBinding, focusNextTabKeyBinding, focusPreviousTabKeyBinding, openHistoryKeyBinding]
 const visibleBrowserUids = new Set()
 
-const getFallThroughKeyBindings = (keyBindings) => {
+const getFallThroughKeyBindings = () => {
+  const keyBindings = KeyBindingsState.getKeyBindings()
   return [...new Set([...GetFallThroughKeyBindings.getFallThroughKeyBindings(keyBindings), ...browserTabKeyBindings])]
 }
 
@@ -209,12 +210,8 @@ export const backgroundLoadContent = async (state, savedState) => {
   const tabHoverEnabled = Preferences.get('simpleBrowser.tabHover.enabled') === true
   const unloadTabs = Preferences.get('simpleBrowser.unloadTabs') === true
   const headerHeight = getHeaderHeight(tabsEnabled)
-  // TODO since browser view is not visible at this point
-  // it is not necessary to load keybindings for it
-  const [keyBindings, visitedSites] = await Promise.all([KeyBindingsInitial.getKeyBindings(), BrowserVisitedSites.load()])
-  const fallThroughKeyBindings = getFallThroughKeyBindings(keyBindings)
+  const visitedSites = await BrowserVisitedSites.load()
   const browserViewId = await ElectronWebContentsView.createWebContentsView(0)
-  await ElectronWebContentsViewFunctions.setFallthroughKeyBindings(browserViewId, fallThroughKeyBindings)
   Assert.number(browserViewId)
   await ElectronWebContentsViewFunctions.resizeWebContentsView(browserViewId, x, y + headerHeight, width, height - headerHeight)
   const { newTitle } = await ElectronWebContentsViewFunctions.setIframeSrc(browserViewId, iframeSrc)
@@ -255,8 +252,7 @@ export const loadContent = async (state, savedState) => {
   const savedSelectedTabIndex = getSavedSelectedTabIndex(savedState, savedTabs)
   const savedSelectedTab = savedTabs[savedSelectedTabIndex]
   const iframeSrc = savedSelectedTab ? savedSelectedTab.iframeSrc : getUrlFromSavedState(savedState)
-  // TODO load keybindings in parallel with creating browserview
-  const [keyBindings, visitedSites] = await Promise.all([KeyBindingsInitial.getKeyBindings(), BrowserVisitedSites.load()])
+  const visitedSites = await BrowserVisitedSites.load()
   const audioIndicatorEnabled = Preferences.get('simpleBrowser.audioIndicator.enabled') !== false
   const suggestionsEnabled = Preferences.get('simpleBrowser.suggestions')
   const tabsEnabled = Preferences.get('simpleBrowser.tabs.enabled') !== false
@@ -268,7 +264,7 @@ export const loadContent = async (state, savedState) => {
   const browserViewWidth = width
   const browserViewHeight = height - headerHeight
   const shortcuts = SimpleBrowserPreferences.getShortCuts()
-  const fallThroughKeyBindings = getFallThroughKeyBindings(keyBindings)
+  const fallThroughKeyBindings = getFallThroughKeyBindings()
 
   const browserViewId = await ElectronWebContentsView.createWebContentsView(id, uid)
   await ElectronWebContentsViewFunctions.setFallthroughKeyBindings(browserViewId, fallThroughKeyBindings)
