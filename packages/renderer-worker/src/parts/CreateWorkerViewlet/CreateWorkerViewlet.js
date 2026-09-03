@@ -145,6 +145,23 @@ const createWorkerViewletInternal = ({ adapter, config, context, worker }) => {
   const Commands = {}
   const Events = {}
   const { idKey } = state
+  let nextCommandInvocationId = 0
+  const activeCommandInvocations = new Map()
+
+  const createCommandInvocation = (uid) => {
+    const invocationId = ++nextCommandInvocationId
+    activeCommandInvocations.set(uid, invocationId)
+    return {
+      finish() {
+        if (activeCommandInvocations.get(uid) === invocationId) {
+          activeCommandInvocations.delete(uid)
+        }
+      },
+      isLatest() {
+        return activeCommandInvocations.get(uid) === invocationId
+      },
+    }
+  }
 
   if (capabilities.directRender) {
     Object.defineProperty(Commands, '__directEventRpcId', {
@@ -236,7 +253,7 @@ const createWorkerViewletInternal = ({ adapter, config, context, worker }) => {
   }
 
   const createCommandWrapper = (command) => {
-    return adapter.wrapCommand(command, wrapCommand, { context, worker })
+    return adapter.wrapCommand(command, wrapCommand, { context, createCommandInvocation, worker })
   }
 
   const wrapConfiguredCommand = (methodName) => {
