@@ -24,6 +24,15 @@ test('does not rerender the native address input while typing', () => {
   expect(ViewletSimpleBrowserRender.render[0].isEqual(state, newState)).toBe(true)
 })
 
+test('renders the title through the parent title contract', () => {
+  const oldState = { ...state, title: 'Simple Browser' }
+  const newState = { ...state, title: 'Lvce Editor · GitHub' }
+
+  expect(ViewletSimpleBrowserRender.renderTitle.isEqual(oldState, newState)).toBe(false)
+  expect(ViewletSimpleBrowserRender.renderTitle.apply(oldState, newState)).toBe('Lvce Editor · GitHub')
+  expect(ViewletSimpleBrowserRender.render).not.toContain(ViewletSimpleBrowserRender.renderTitle)
+})
+
 test('rerenders when suggestions change', () => {
   const newState = {
     ...state,
@@ -99,18 +108,18 @@ test('synchronizes the native address value when selecting another tab', () => {
   const oldState = { ...state, browserViewId: 12, inputValue: 'https://example.com' }
   const newState = { ...state, browserViewId: 13, inputValue: '' }
 
-  expect(ViewletSimpleBrowserRender.render[2].isEqual(oldState, newState)).toBe(false)
-  expect(ViewletSimpleBrowserRender.render[2].multiple).toBe(true)
-  expect(ViewletSimpleBrowserRender.render[2].apply(oldState, newState)).toEqual([['Viewlet.setValueByName', 42, 'simple-browser-address', '']])
+  expect(ViewletSimpleBrowserRender.render[1].isEqual(oldState, newState)).toBe(false)
+  expect(ViewletSimpleBrowserRender.render[1].multiple).toBe(true)
+  expect(ViewletSimpleBrowserRender.render[1].apply(oldState, newState)).toEqual([['Viewlet.setValueByName', 42, 'simple-browser-address', '']])
 })
 
 test('focuses the address input for a new empty tab', () => {
   const oldState = { ...state, focusAddressVersion: 0 }
   const newState = { ...state, focusAddressVersion: 1 }
 
-  expect(ViewletSimpleBrowserRender.render[3].isEqual(oldState, newState)).toBe(false)
-  expect(ViewletSimpleBrowserRender.render[3].multiple).toBe(true)
-  expect(ViewletSimpleBrowserRender.render[3].apply(oldState, newState)).toEqual([['Viewlet.focusElementByName', 42, 'simple-browser-address']])
+  expect(ViewletSimpleBrowserRender.render[2].isEqual(oldState, newState)).toBe(false)
+  expect(ViewletSimpleBrowserRender.render[2].multiple).toBe(true)
+  expect(ViewletSimpleBrowserRender.render[2].apply(oldState, newState)).toEqual([['Viewlet.focusElementByName', 42, 'simple-browser-address']])
 })
 
 test('adopts scoped css while a cached page preview is visible', () => {
@@ -121,8 +130,8 @@ test('adopts scoped css while a cached page preview is visible', () => {
   const oldState = { ...state, selectedTabIndex: 0, tabs: [{ browserViewId: 12 }] }
   const newState = { ...oldState, tabs: [{ browserViewId: 18, pageSnapshot }] }
 
-  expect(ViewletSimpleBrowserRender.render[4].isEqual(oldState, newState)).toBe(false)
-  expect(ViewletSimpleBrowserRender.render[4].apply(oldState, newState)).toEqual([
+  expect(ViewletSimpleBrowserRender.render[3].isEqual(oldState, newState)).toBe(false)
+  expect(ViewletSimpleBrowserRender.render[3].apply(oldState, newState)).toEqual([
     ['Css.addCssStyleSheet', 'simple-browser-preview-42', '.SimpleBrowserPreview {\n.card { color: red; }\n}'],
   ])
 })
@@ -135,7 +144,7 @@ test('removes cached page css when the real page becomes visible', () => {
   const oldState = { ...state, selectedTabIndex: 0, tabs: [{ browserViewId: 18, pageSnapshot }] }
   const newState = { ...oldState, tabs: [{ browserViewId: 18 }] }
 
-  expect(ViewletSimpleBrowserRender.render[4].apply(oldState, newState)).toEqual([['Css.removeCssStyleSheet', 'simple-browser-preview-42']])
+  expect(ViewletSimpleBrowserRender.render[3].apply(oldState, newState)).toEqual([['Css.removeCssStyleSheet', 'simple-browser-preview-42']])
 })
 
 test('routes the browser menu button click with its bottom-edge coordinates', () => {

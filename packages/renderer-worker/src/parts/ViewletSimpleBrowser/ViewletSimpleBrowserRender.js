@@ -3,7 +3,6 @@ import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEven
 import * as GetSimpleBrowserVirtualDom from '../GetSimpleBrowserVirtualDom/GetSimpleBrowserVirtualDom.js'
 import * as InputName from '../InputName/InputName.js'
 import * as SimpleBrowserPageSnapshot from '../SimpleBrowserPageSnapshot/SimpleBrowserPageSnapshot.js'
-import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
 export const hasFunctionalRender = true
 
@@ -150,13 +149,12 @@ const renderDom = {
   multiple: true,
 }
 
-// TODO this component shouldn't depend on Main
-const renderTitle = {
+export const renderTitle = {
   isEqual(oldState, newState) {
     return oldState.title === newState.title
   },
   apply(oldState, newState) {
-    return ['Viewlet.send', ViewletModuleId.Main, 'updateTab', 0, newState.title]
+    return newState.title
   },
 }
 
@@ -201,4 +199,4 @@ const renderPageSnapshotCss = {
   multiple: true,
 }
 
-export const render = [renderDom, renderTitle, renderAddressValue, renderFocusAddress, renderPageSnapshotCss]
+export const render = [renderDom, renderAddressValue, renderFocusAddress, renderPageSnapshotCss]
