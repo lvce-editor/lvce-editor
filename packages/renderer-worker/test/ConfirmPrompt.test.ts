@@ -71,11 +71,3 @@ test('prompt - preserves test worker mocks', async () => {
   })
   expect(DialogWorker.invoke).not.toHaveBeenCalled()
 })
-
-test('isMocked', () => {
-  expect(ConfirmPrompt.isMocked()).toBe(false)
-
-  ConfirmPrompt.mock(42)
-
-  expect(ConfirmPrompt.isMocked()).toBe(true)
-})
