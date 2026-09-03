@@ -174,9 +174,8 @@ test('text search command wrappers discard superseded render pipelines', async (
   const first = commands.update(state, 'first')
   await firstDiffStarted
   const second = commands.update(state, 'second')
-  const secondResult = await second
   resolveFirstDiff()
-  const firstResult = await first
+  const [firstResult, secondResult] = await Promise.all([first, second])
 
   expect(secondResult.commands).toEqual([['setText', 'latest']])
   expect(firstResult).toBe(state)
@@ -187,11 +186,15 @@ test('text search command wrappers discard superseded render pipelines', async (
 test('text search command wrappers preserve a render that has already started', async () => {
   const { promise: firstRender, resolve: resolveFirstRender } = Promise.withResolvers<void>()
   const { promise: firstRenderStarted, resolve: resolveFirstRenderStarted } = Promise.withResolvers<void>()
+  let secondDiffStarted = false
   const invoke = jest.fn(async (method: string, _uid?: number, value?: string) => {
     if (method === 'Example.getCommandIds') {
       return ['update']
     }
     if (method === 'TextSearch.diff2') {
+      if (value === 'second') {
+        secondDiffStarted = true
+      }
       return value === 'first' ? ['first'] : []
     }
     if (method === 'TextSearch.render2') {
@@ -212,12 +215,16 @@ test('text search command wrappers preserve a render that has already started', 
 
   const first = commands.update(state, 'first')
   await firstRenderStarted
-  const secondResult = await commands.update(state, 'second')
+  const second = commands.update(state, 'second')
+  await Promise.resolve()
+  await Promise.resolve()
+  expect(secondDiffStarted).toBe(false)
   resolveFirstRender()
-  const firstResult = await first
+  const [firstResult, secondResult] = await Promise.all([first, second])
 
   expect(firstResult.commands).toEqual([['setText', 'first']])
   expect(secondResult).toBe(state)
+  expect(secondDiffStarted).toBe(true)
 })
 
 test('recomputes configured outputs after commands', async () => {
