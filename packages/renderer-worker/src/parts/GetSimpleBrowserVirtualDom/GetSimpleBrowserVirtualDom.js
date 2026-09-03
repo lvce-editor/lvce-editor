@@ -304,10 +304,10 @@ export const getSimpleBrowserVirtualDom = (
       text(tabHover.title),
       {
         type: VirtualDomElements.Div,
-        className: 'SimpleBrowserTabHoverMemory',
+        className: 'SimpleBrowserTabHoverStatus',
         childCount: 1,
       },
-      text(tabHover.memoryLabel),
+      text(tabHover.statusLabel),
     )
   }
   return dom

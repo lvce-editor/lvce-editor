@@ -240,7 +240,7 @@ test('renders the rich tab hover with the full title and memory usage', () => {
   const tabHover = {
     index: 0,
     left: 24,
-    memoryLabel: 'Memory usage: 42 MB',
+    statusLabel: 'Memory usage: 42 MB',
     title: 'A complete page title',
   }
   const dom = GetSimpleBrowserVirtualDom.getSimpleBrowserVirtualDom(
@@ -277,6 +277,7 @@ test('renders the rich tab hover with the full title and memory usage', () => {
     }),
   )
   expect(dom).toContainEqual(expect.objectContaining({ text: 'A complete page title' }))
+  expect(dom).toContainEqual(expect.objectContaining({ className: 'SimpleBrowserTabHoverStatus' }))
   expect(dom).toContainEqual(expect.objectContaining({ text: 'Memory usage: 42 MB' }))
 })
 
