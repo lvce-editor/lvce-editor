@@ -339,6 +339,16 @@ const createWorkerViewletInternal = ({ adapter, config, context, worker }) => {
   const saveState = methods.saveState
     ? (currentState) => invokeConfiguredMethod(worker, methods.saveState, createInvocation(currentState, context))
     : undefined
+  const getComponentState = methods.getComponentState
+    ? (currentState) => invokeConfiguredMethod(worker, methods.getComponentState, createInvocation(currentState, context))
+    : undefined
+  const setComponentState = methods.setComponentState
+    ? async (currentState, componentState) => {
+        const invocation = createInvocation(currentState, context, { componentState })
+        await invokeConfiguredMethod(worker, methods.setComponentState, invocation)
+        return runCommandRenderPipeline(currentState, [])
+      }
+    : undefined
   const dispose = methods.dispose
     ? (currentState) => invokeConfiguredMethod(worker, methods.dispose, createInvocation(currentState, context))
     : undefined
@@ -400,6 +410,7 @@ const createWorkerViewletInternal = ({ adapter, config, context, worker }) => {
     create,
     dispose,
     getCommands,
+    getComponentState,
     getKeyBindings,
     getQuickPickMenuEntries,
     getMenus,
@@ -420,6 +431,7 @@ const createWorkerViewletInternal = ({ adapter, config, context, worker }) => {
     renderTitle,
     resize,
     saveState,
+    setComponentState,
     workspaceChangeEvent,
     workspaceChangeEventPrepend,
   }

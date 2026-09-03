@@ -242,6 +242,11 @@ export const getQuickPickMenuEntries = () => {
       label: 'Developer: Download Viewlets',
     },
     {
+      id: 'Developer.openComponentState',
+      label: 'Developer: Open Component State',
+      aliases: ['Edit Component State', 'Inspect Component State'],
+    },
+    {
       id: 'Developer.allocateMemoryInSharedProcess',
       label: 'Developer: Allocate Memory in Shared Process',
     },

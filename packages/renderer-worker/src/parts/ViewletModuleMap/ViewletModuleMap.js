@@ -13,6 +13,7 @@ export const map = {
   [ViewletModuleId.Clock]: () => import('../ViewletClock/ViewletClock.ipc.js'),
   [ViewletModuleId.Confirm]: () => import('../ViewletConfirm/ViewletConfirm.ipc.js'),
   [ViewletModuleId.CookieImport]: () => import('../ViewletCookieImport/ViewletCookieImport.ipc.ts'),
+  [ViewletModuleId.ComponentState]: () => import('../ViewletComponentState/ViewletComponentState.ipc.js'),
   [ViewletModuleId.DebugConsole]: () => import('../ViewletDebugConsole/ViewletDebugConsole.ipc.js'),
   [ViewletModuleId.DefineKeyBinding]: () => import('../ViewletDefineKeyBinding/ViewletDefineKeyBinding.ipc.js'),
   [ViewletModuleId.Dialog]: () => import('../ViewletDialog/ViewletDialog.ipc.js'),

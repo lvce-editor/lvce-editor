@@ -66,7 +66,7 @@ test('runs configured legacy lifecycle methods with positional parameters', asyn
 })
 
 test('passes test mode to the explorer worker', async () => {
-  const invoke = jest.fn(async (method: string) => {
+  const invoke = jest.fn(async (method: string, ..._args: readonly unknown[]) => {
     if (method === 'Explorer.diff2' || method === 'Explorer.render2') {
       return []
     }
@@ -260,6 +260,36 @@ test('returns preview runtime diagnostics without treating them as viewlet state
   expect(commands.getRuntimeDiagnostics.returnValue).toBe(true)
   await expect(commands.getRuntimeDiagnostics(state)).resolves.toBe(diagnostics)
   expect(invoke).toHaveBeenCalledWith('Preview.getRuntimeDiagnostics', 12)
+})
+
+test('gets and sets authoritative worker component state', async () => {
+  const config: any = createConfig()
+  config.methods.getComponentState = { name: 'Example.getComponentState', parameters: [stateParameter('uid')] }
+  config.methods.setComponentState = {
+    name: 'Example.setComponentState',
+    parameters: [stateParameter('uid'), { name: 'componentState', source: 'argument' }],
+  }
+  const componentState = { selectedIndex: 2, uid: 9 }
+  const invoke = jest.fn(async (method: string, ..._args: readonly unknown[]) => {
+    if (method === 'Example.getComponentState') {
+      return componentState
+    }
+    if (method === 'Example.diff3') {
+      return ['dom']
+    }
+    if (method === 'Example.render3') {
+      return [['setText', 'updated']]
+    }
+    return undefined
+  })
+  const viewlet = createWorkerViewletWithDependencies({ config, context: { platform: 1 }, worker: { invoke, restart: jest.fn() } })
+  const state = viewlet.create(9, '', 0, 0, 100, 100)
+
+  await expect(viewlet.getComponentState!(state)).resolves.toBe(componentState)
+  const result = await viewlet.setComponentState!(state, componentState)
+
+  expect(invoke).toHaveBeenCalledWith('Example.setComponentState', 9, componentState)
+  expect(result.commands).toEqual([['setText', 'updated']])
 })
 
 test('returns the main-area dirty-tab status without treating it as viewlet state', async () => {

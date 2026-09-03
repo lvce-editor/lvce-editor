@@ -12,4 +12,5 @@ export const map = {
   [FileSystemProtocol.Debug]: () => import('../FileSystem/FileSystemDebug.js'),
   [FileSystemProtocol.Http]: () => import('../FileSystem/FileSystemFetch.js'),
   [FileSystemProtocol.Https]: () => import('../FileSystem/FileSystemFetch.js'),
+  [FileSystemProtocol.LiveComponentState]: () => import('../FileSystem/FileSystemComponentState.js'),
 }
