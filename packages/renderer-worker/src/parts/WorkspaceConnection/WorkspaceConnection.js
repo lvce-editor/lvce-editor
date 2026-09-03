@@ -64,16 +64,25 @@ export const getWebSocketUrlTemplate = () => {
   return state.webSocketUrl
 }
 
-export const getWebSocketUrl = async (type) => {
+const addSearchParams = (value, searchParams) => {
+  const url = new URL(value)
+  for (const [key, parameterValue] of Object.entries(searchParams)) {
+    url.searchParams.set(key, parameterValue)
+  }
+  return url.href
+}
+
+export const getWebSocketUrl = async (type, searchParams = {}) => {
   if (!isActive()) {
     return ''
   }
-  if (state.webSocketUrl) {
-    const url = new URL(state.webSocketUrl)
+  const { command, webSocketUrl } = state
+  if (webSocketUrl) {
+    const url = new URL(webSocketUrl)
     url.pathname = `/websocket/${encodeURIComponent(type)}`
-    return url.href
+    return addSearchParams(url.href, searchParams)
   }
-  const value = await ExtensionHostCommands.executeCommand(state.command, type)
+  const value = await ExtensionHostCommands.executeCommand(command, type)
   if (typeof value !== 'string') {
     throw new TypeError('Workspace connection command returned an invalid WebSocket URL')
   }
@@ -81,15 +90,15 @@ export const getWebSocketUrl = async (type) => {
   if (url.protocol !== 'ws:' && url.protocol !== 'wss:') {
     throw new TypeError('Workspace connection command must return a WebSocket URL')
   }
-  return url.href
+  return addSearchParams(url.href, searchParams)
 }
 
-export const connectMessagePort = async (type, port) => {
+export const connectMessagePort = async (type, port, searchParams = {}) => {
   if (!isActive()) {
     return false
   }
   const webSocket = await IpcParentWithWebSocket.create({
-    getUrl: () => getWebSocketUrl(type),
+    getUrl: () => getWebSocketUrl(type, searchParams),
     type,
   })
   webSocket.onmessage = (event) => {
