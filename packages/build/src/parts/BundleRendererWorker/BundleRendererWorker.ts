@@ -155,7 +155,7 @@ export const bundleRendererWorker = async ({ cachePath, platform, commitHash, as
         replacement: `../../../static/`,
       })
     }
-    for (const file of ['HandleMockDialogWorkerMessagePort', 'HandleSecretsViewMessagePort']) {
+    for (const file of ['HandleDialogWorkerMessagePort', 'HandleSecretsViewMessagePort']) {
       await Replace.replace({
         path: `${cachePath}/src/parts/${file}/${file}.ts`,
         occurrence: `../../../../../static/`,

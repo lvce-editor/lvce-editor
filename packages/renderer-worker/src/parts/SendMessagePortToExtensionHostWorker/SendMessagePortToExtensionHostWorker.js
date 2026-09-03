@@ -12,8 +12,6 @@ import * as ChatToolWorker from '../ChatToolWorker/ChatToolWorker.js'
 import * as ChatViewModelWorker from '../ChatViewModelWorker/ChatViewModelWorker.js'
 import * as ChatViewWorker from '../ChatViewWorker/ChatViewWorker.js'
 import * as ClipBoardWorker from '../ClipBoardWorker/ClipBoardWorker.js'
-import * as ConfirmPrompt from '../ConfirmPrompt/ConfirmPrompt.js'
-import * as DialogWorker from '../DialogWorker/DialogWorker.js'
 import * as DiffViewWorker from '../DiffViewWorker/DiffViewWorker.js'
 import * as DiffWorker from '../DiffWorker/DiffWorker.js'
 import * as EditorWorker from '../EditorWorker/EditorWorker.ts'
@@ -24,7 +22,7 @@ import * as ExtensionManagementWorker from '../ExtensionManagementWorker/Extensi
 import * as ExtensionSearchViewWorker from '../ExtensionSearchViewWorker/ExtensionSearchViewWorker.js'
 import * as FileSearchWorker from '../FileSearchWorker/FileSearchWorker.js'
 import * as FileSystemWorker from '../FileSystemWorker/FileSystemWorker.js'
-import * as HandleMockDialogWorkerMessagePort from '../HandleMockDialogWorkerMessagePort/HandleMockDialogWorkerMessagePort.ts'
+import * as HandleDialogWorkerMessagePort from '../HandleDialogWorkerMessagePort/HandleDialogWorkerMessagePort.ts'
 import * as IconThemeWorker from '../IconThemeWorker/IconThemeWorker.js'
 import * as IframeWorker from '../IframeWorker/IframeWorker.js'
 import * as KeyBindingsViewWorker from '../KeyBindingsViewWorker/KeyBindingsViewWorker.js'
@@ -123,11 +121,7 @@ export const sendMessagePortToErrorWorker = async (port, initialCommand, rpcId) 
 export const sendMessagePortToDialogWorker = async (port, initialCommand) => {
   Assert.object(port)
   Assert.string(initialCommand)
-  if (ConfirmPrompt.isMocked()) {
-    await HandleMockDialogWorkerMessagePort.handleMockDialogWorkerMessagePort(port)
-    return
-  }
-  await DialogWorker.invokeAndTransfer(initialCommand, port)
+  await HandleDialogWorkerMessagePort.handleDialogWorkerMessagePort(port)
 }
 
 export const sendMessagePortToAuthWorker = async (port, initialCommand, rpcId) => {

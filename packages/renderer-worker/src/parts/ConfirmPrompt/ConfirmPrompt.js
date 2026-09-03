@@ -16,10 +16,6 @@ export const mock = (mockId) => {
   _mockId = mockId
 }
 
-export const isMocked = () => {
-  return Boolean(_mockId)
-}
-
 export const prompt = async (
   message,
   { platform = Platform.getPlatform(), confirmMessage = ConfirmPromptStrings.ok(), title = '', cancelMessage = ConfirmPromptStrings.cancel() } = {},
