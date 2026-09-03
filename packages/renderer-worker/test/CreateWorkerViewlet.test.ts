@@ -143,6 +143,44 @@ test('creates command wrappers through the same lifecycle seam', async () => {
   expect(result.commands).toEqual([['setText', 'selected']])
 })
 
+test('text search command wrappers discard rendering from superseded invocations', async () => {
+  const { promise: firstCommand, resolve: resolveFirstCommand } = Promise.withResolvers<void>()
+  const invoke = jest.fn(async (method: string, _uid?: number, value?: string) => {
+    if (method === 'Example.getCommandIds') {
+      return ['update']
+    }
+    if (method === 'TextSearch.update' && value === 'first') {
+      await firstCommand
+    }
+    if (method === 'TextSearch.diff2') {
+      return ['latest']
+    }
+    if (method === 'TextSearch.render2') {
+      return [['setText', 'latest']]
+    }
+    return undefined
+  })
+  const viewlet = createWorkerViewletWithDependencies({
+    adapter: getWorkerViewletAdapter('textSearchView'),
+    config: createConfig(),
+    context: { platform: 1 },
+    worker: { invoke, restart: jest.fn() },
+  })
+  const commands = await viewlet.getCommands!()
+  const state = viewlet.create(9, '', 0, 0, 0, 0)
+
+  const first = commands.update(state, 'first')
+  const second = commands.update(state, 'second')
+  const secondResult = await second
+  resolveFirstCommand()
+  const firstResult = await first
+
+  expect(secondResult.commands).toEqual([['setText', 'latest']])
+  expect(firstResult).toBe(state)
+  expect(invoke.mock.calls.filter(([method]) => method === 'TextSearch.diff2')).toHaveLength(1)
+  expect(invoke.mock.calls.filter(([method]) => method === 'TextSearch.render2')).toHaveLength(1)
+})
+
 test('recomputes configured outputs after commands', async () => {
   const config: any = createConfig()
   config.outputs = [{ method: { name: 'Example.renderActions', parameters: [stateParameter('uid')] }, stateField: 'actionsDom' }]
@@ -341,9 +379,7 @@ test('rejects invalid parameter sources with a descriptive error', () => {
   config.methods.create.parameters = [{ name: 'uid', source: 'unknown' }]
   expect(() =>
     createWorkerViewletWithDependencies({ config, worker: { invoke: jest.fn(async (..._args: readonly unknown[]) => undefined) } }),
-  ).toThrow(
-    'invalid test viewlet create parameter source: unknown',
-  )
+  ).toThrow('invalid test viewlet create parameter source: unknown')
 })
 
 test('creates independent state from configured defaults', () => {
