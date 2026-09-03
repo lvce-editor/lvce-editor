@@ -77,6 +77,10 @@ jest.unstable_mockModule('../src/parts/BrowserSearchSuggestions/BrowserSearchSug
   get: jest.fn(),
 }))
 
+jest.unstable_mockModule('../src/parts/BrowserHistory/BrowserHistory.js', () => ({
+  record: jest.fn(),
+}))
+
 jest.unstable_mockModule('../src/parts/BrowserVisitedSites/BrowserVisitedSites.js', () => ({
   add: jest.fn(),
   getSuggestions: jest.fn(),
@@ -100,6 +104,7 @@ jest.unstable_mockModule('../src/parts/SimpleBrowserSnapshot/SimpleBrowserSnapsh
 const ViewletSimpleBrowser = await import('../src/parts/ViewletSimpleBrowser/ViewletSimpleBrowser.js')
 const ViewletSimpleBrowserOpenBackgroundTab = await import('../src/parts/ViewletSimpleBrowser/ViewletSimpleBrowserOpenBackgroundTab.js')
 const ViewletSimpleBrowserResize = await import('../src/parts/ViewletSimpleBrowser/ViewletSimpleBrowserResize.js')
+const BrowserHistory = await import('../src/parts/BrowserHistory/BrowserHistory.js')
 const BrowserSearchSuggestions = await import('../src/parts/BrowserSearchSuggestions/BrowserSearchSuggestions.js')
 const BrowserVisitedSites = await import('../src/parts/BrowserVisitedSites/BrowserVisitedSites.js')
 const Command = await import('../src/parts/Command/Command.js')
@@ -138,6 +143,7 @@ const browserTabKeyBindings = [
   KeyModifier.CtrlCmd | KeyCode.KeyT,
   KeyModifier.CtrlCmd | KeyCode.Tab,
   KeyModifier.CtrlCmd | KeyModifier.Shift | KeyCode.Tab,
+  KeyModifier.CtrlCmd | KeyCode.KeyH,
 ]
 
 const createTabsState = (selectedTabIndex = 0) => {
@@ -843,6 +849,15 @@ test('Ctrl+T from the focused web contents creates a new browser tab', async () 
   expect(ElectronWindow.focus).toHaveBeenCalledTimes(1)
 })
 
+test('Ctrl+H from the focused web contents opens history', async () => {
+  const state = createTwoTabState()
+
+  const newState = await ViewletSimpleBrowser.handleKeyBinding(state, 12, KeyModifier.CtrlCmd | KeyCode.KeyH)
+
+  expect(newState).toBe(state)
+  expect(Command.execute).toHaveBeenCalledWith('Main.openUri', 'simple-browser-history://')
+})
+
 test('ignores keybindings from another simple browser instance', async () => {
   const state = createTwoTabState()
 
@@ -868,6 +883,22 @@ test('updates the matching background tab from web contents events', async () =>
 
   expect(withAudio.title).toBe('')
   expect(withAudio.tabs[1]).toMatchObject({ favicon: 'https://two.example/favicon.png', isAudioPlaying: true, title: 'Updated Two' })
+})
+
+test('records completed page navigation in history', async () => {
+  const historyEntries = [{ date: 200, url: 'https://example.com/docs' }]
+  // @ts-ignore
+  BrowserHistory.record.mockResolvedValue(historyEntries)
+  const state = {
+    ...ViewletSimpleBrowser.create(),
+    browserViewId: 12,
+    tabs: [{ browserViewId: 12, iframeSrc: '', inputValue: '', title: 'Example' }],
+  }
+
+  const newState = await ViewletSimpleBrowser.handleDidNavigate(state, 12, 'https://example.com/docs')
+
+  expect(BrowserHistory.record).toHaveBeenCalledWith('https://example.com/docs')
+  expect(newState).toMatchObject({ iframeSrc: 'https://example.com/docs', isLoading: false })
 })
 
 test('remembers the origin when a page favicon is received', () => {
@@ -1306,7 +1337,7 @@ test('showTabHover captures the page and shows the full title and memory usage',
     tabHover: {
       index: 0,
       left: 25,
-      memoryLabel: 'Memory usage: 42 MB',
+      statusLabel: 'Memory usage: 42 MB',
       tabLeft: 25,
       tabWidth: 180,
       title: 'A complete page title',
@@ -1350,7 +1381,7 @@ test('showTabHover shows the saved title for an unloaded tab without requesting 
   expect(ElectronWebContentsViewFunctions.getStats).not.toHaveBeenCalled()
   expect(newState.tabHover).toMatchObject({
     index: 1,
-    memoryLabel: 'Memory usage unavailable',
+    statusLabel: 'Tab is unloaded',
     title: 'Unloaded complete title',
   })
 })
@@ -1361,7 +1392,7 @@ test('hideTabHover ignores pointer transitions inside the hovered tab', async ()
     browserViewId: 12,
     overlayIds: ['tab-hover'],
     snapshot: 'blob:https://example.com/snapshot',
-    tabHover: { index: 0, left: 25, memoryLabel: 'Memory usage: 42 MB', tabLeft: 25, tabWidth: 180, title: 'Example' },
+    tabHover: { index: 0, left: 25, statusLabel: 'Memory usage: 42 MB', tabLeft: 25, tabWidth: 180, title: 'Example' },
   }
 
   await expect(ViewletSimpleBrowser.hideTabHover(state, 0, 50, 30)).resolves.toBe(state)
@@ -1376,7 +1407,7 @@ test('hideTabHover restores the page after the pointer leaves the tab', async ()
     browserViewId: 12,
     overlayIds: ['tab-hover'],
     snapshot: 'blob:https://example.com/snapshot',
-    tabHover: { index: 0, left: 25, memoryLabel: 'Memory usage: 42 MB', tabLeft: 25, tabWidth: 180, title: 'Example' },
+    tabHover: { index: 0, left: 25, statusLabel: 'Memory usage: 42 MB', tabLeft: 25, tabWidth: 180, title: 'Example' },
   }
 
   const newState = await ViewletSimpleBrowser.hideTabHover(state, 0, 50, 80)

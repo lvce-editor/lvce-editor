@@ -14,6 +14,10 @@ const expectedTabKeyBindings = [
     command: 'SimpleBrowser.createNewTab',
   },
   {
+    key: KeyModifier.CtrlCmd | KeyCode.KeyH,
+    command: 'SimpleBrowser.openHistory',
+  },
+  {
     key: KeyModifier.CtrlCmd | KeyCode.Tab,
     command: 'SimpleBrowser.focusNextTab',
   },
