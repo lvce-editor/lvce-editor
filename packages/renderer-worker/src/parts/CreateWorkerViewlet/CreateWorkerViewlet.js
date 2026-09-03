@@ -145,20 +145,20 @@ const createWorkerViewletInternal = ({ adapter, config, context, worker }) => {
   const Commands = {}
   const Events = {}
   const { idKey } = state
-  let nextCommandInvocationId = 0
-  const activeCommandInvocations = new Map()
+  let nextRenderInvocationId = 0
+  const activeRenderInvocations = new Map()
 
-  const createCommandInvocation = (uid) => {
-    const invocationId = ++nextCommandInvocationId
-    activeCommandInvocations.set(uid, invocationId)
+  const createRenderInvocation = (uid) => {
+    const invocationId = ++nextRenderInvocationId
+    activeRenderInvocations.set(uid, invocationId)
     return {
       finish() {
-        if (activeCommandInvocations.get(uid) === invocationId) {
-          activeCommandInvocations.delete(uid)
+        if (activeRenderInvocations.get(uid) === invocationId) {
+          activeRenderInvocations.delete(uid)
         }
       },
       isLatest() {
-        return activeCommandInvocations.get(uid) === invocationId
+        return activeRenderInvocations.get(uid) === invocationId
       },
     }
   }
@@ -253,7 +253,7 @@ const createWorkerViewletInternal = ({ adapter, config, context, worker }) => {
   }
 
   const createCommandWrapper = (command) => {
-    return adapter.wrapCommand(command, wrapCommand, { context, createCommandInvocation, worker })
+    return adapter.wrapCommand(command, wrapCommand, { context, createRenderInvocation, worker })
   }
 
   const wrapConfiguredCommand = (methodName) => {

@@ -259,14 +259,11 @@ export const textSearch = {
       isSearchEditor: state.uri.startsWith('search-editor://'),
     }
   },
-  wrapCommand(command, _defaultWrapCommand, { createCommandInvocation, worker }) {
+  wrapCommand(command, _defaultWrapCommand, { createRenderInvocation, worker }) {
     return async (state, ...args) => {
-      const invocation = createCommandInvocation(state.uid)
+      await worker.invoke(`TextSearch.${command}`, state.uid, ...args)
+      const invocation = createRenderInvocation(state.uid)
       try {
-        await worker.invoke(`TextSearch.${command}`, state.uid, ...args)
-        if (!invocation.isLatest()) {
-          return state
-        }
         const diff = await worker.invoke('TextSearch.diff2', state.uid, ...args)
         if (diff.length === 0 || !invocation.isLatest()) {
           return state

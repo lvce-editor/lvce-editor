@@ -143,16 +143,18 @@ test('creates command wrappers through the same lifecycle seam', async () => {
   expect(result.commands).toEqual([['setText', 'selected']])
 })
 
-test('text search command wrappers discard rendering from superseded invocations', async () => {
-  const { promise: firstCommand, resolve: resolveFirstCommand } = Promise.withResolvers<void>()
+test('text search command wrappers discard superseded render pipelines', async () => {
+  const { promise: firstDiff, resolve: resolveFirstDiff } = Promise.withResolvers<void>()
+  const { promise: firstDiffStarted, resolve: resolveFirstDiffStarted } = Promise.withResolvers<void>()
   const invoke = jest.fn(async (method: string, _uid?: number, value?: string) => {
     if (method === 'Example.getCommandIds') {
       return ['update']
     }
-    if (method === 'TextSearch.update' && value === 'first') {
-      await firstCommand
-    }
     if (method === 'TextSearch.diff2') {
+      if (value === 'first') {
+        resolveFirstDiffStarted()
+        await firstDiff
+      }
       return ['latest']
     }
     if (method === 'TextSearch.render2') {
@@ -170,14 +172,15 @@ test('text search command wrappers discard rendering from superseded invocations
   const state = viewlet.create(9, '', 0, 0, 0, 0)
 
   const first = commands.update(state, 'first')
+  await firstDiffStarted
   const second = commands.update(state, 'second')
   const secondResult = await second
-  resolveFirstCommand()
+  resolveFirstDiff()
   const firstResult = await first
 
   expect(secondResult.commands).toEqual([['setText', 'latest']])
   expect(firstResult).toBe(state)
-  expect(invoke.mock.calls.filter(([method]) => method === 'TextSearch.diff2')).toHaveLength(1)
+  expect(invoke.mock.calls.filter(([method]) => method === 'TextSearch.diff2')).toHaveLength(2)
   expect(invoke.mock.calls.filter(([method]) => method === 'TextSearch.render2')).toHaveLength(1)
 })
 
