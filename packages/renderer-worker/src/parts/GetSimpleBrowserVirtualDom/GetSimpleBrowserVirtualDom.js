@@ -6,6 +6,21 @@ import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEven
 import * as InputName from '../InputName/InputName.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
+const getSuggestionValue = (suggestion) => {
+  return typeof suggestion === 'string' ? suggestion : suggestion?.value
+}
+
+const getInlineSuggestion = (value, suggestions) => {
+  const normalizedValue = value.toLowerCase()
+  for (const suggestion of suggestions) {
+    const suggestionValue = getSuggestionValue(suggestion)
+    if (typeof suggestionValue === 'string' && suggestionValue.length > value.length && suggestionValue.toLowerCase().startsWith(normalizedValue)) {
+      return suggestionValue
+    }
+  }
+  return ''
+}
+
 export const getSimpleBrowserVirtualDom = (
   canGoBack,
   canGoForward,
@@ -21,6 +36,7 @@ export const getSimpleBrowserVirtualDom = (
   pageSnapshotDom = [],
   tabHover,
 ) => {
+  const inlineSuggestion = getInlineSuggestion(value, suggestions)
   /** @type {any[]} */
   const dom = [
     {
@@ -28,12 +44,7 @@ export const getSimpleBrowserVirtualDom = (
       className: tabsEnabled ? 'Viewlet SimpleBrowser SimpleBrowserTabsEnabled' : 'Viewlet SimpleBrowser',
       onFocusIn: DomEventListenerFunctions.HandleFocusInSimpleBrowser,
       childCount:
-        1 +
-        (tabsEnabled ? 1 : 0) +
-        (snapshot ? 1 : 0) +
-        (pageSnapshotDom.length > 0 ? 1 : 0) +
-        (suggestions.length > 0 ? 1 : 0) +
-        (tabHover ? 1 : 0),
+        1 + (tabsEnabled ? 1 : 0) + (snapshot ? 1 : 0) + (pageSnapshotDom.length > 0 ? 1 : 0) + (suggestions.length > 0 ? 1 : 0) + (tabHover ? 1 : 0),
     },
   ]
   if (tabsEnabled) {
@@ -180,6 +191,36 @@ export const getSimpleBrowserVirtualDom = (
       className: isLoading ? 'MaskIcon MaskIconClose' : 'MaskIcon MaskIconRefresh',
       childCount: 0,
     },
+    {
+      type: VirtualDomElements.Div,
+      className: 'SimpleBrowserAddressBar',
+      childCount: inlineSuggestion ? 2 : 1,
+    },
+  )
+  if (inlineSuggestion) {
+    dom.push(
+      {
+        type: VirtualDomElements.Div,
+        className: 'SimpleBrowserInlineSuggestion',
+        ariaHidden: true,
+        'data-value': inlineSuggestion,
+        childCount: 2,
+      },
+      {
+        type: VirtualDomElements.Span,
+        className: 'SimpleBrowserInlineSuggestionPrefix',
+        childCount: 1,
+      },
+      text(value),
+      {
+        type: VirtualDomElements.Span,
+        className: 'SimpleBrowserInlineSuggestionSuffix',
+        childCount: 1,
+      },
+      text(inlineSuggestion.slice(value.length)),
+    )
+  }
+  dom.push(
     {
       type: VirtualDomElements.Input,
       className: ClassNames.InputBox,

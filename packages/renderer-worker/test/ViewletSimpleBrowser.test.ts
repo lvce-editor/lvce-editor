@@ -79,6 +79,13 @@ jest.unstable_mockModule('../src/parts/BrowserHistory/BrowserHistory.js', () => 
   record: jest.fn(),
 }))
 
+jest.unstable_mockModule('../src/parts/BrowserSearchHistory/BrowserSearchHistory.js', () => ({
+  add: jest.fn(),
+  getSuggestions: jest.fn(),
+  load: jest.fn(),
+  save: jest.fn(),
+}))
+
 jest.unstable_mockModule('../src/parts/BrowserVisitedSites/BrowserVisitedSites.js', () => ({
   add: jest.fn(),
   getSuggestions: jest.fn(),
@@ -104,6 +111,7 @@ const ViewletSimpleBrowserOpenBackgroundTab = await import('../src/parts/Viewlet
 const ViewletSimpleBrowserResize = await import('../src/parts/ViewletSimpleBrowser/ViewletSimpleBrowserResize.js')
 const BrowserHistory = await import('../src/parts/BrowserHistory/BrowserHistory.js')
 const BrowserSearchSuggestions = await import('../src/parts/BrowserSearchSuggestions/BrowserSearchSuggestions.js')
+const BrowserSearchHistory = await import('../src/parts/BrowserSearchHistory/BrowserSearchHistory.js')
 const BrowserVisitedSites = await import('../src/parts/BrowserVisitedSites/BrowserVisitedSites.js')
 const Command = await import('../src/parts/Command/Command.js')
 const ColorTheme = await import('../src/parts/ColorTheme/ColorTheme.js')
@@ -125,6 +133,12 @@ const WhenExpression = await import('../src/parts/WhenExpression/WhenExpression.
 
 beforeEach(() => {
   ColorTheme.state.colorThemeCss = ''
+  // @ts-ignore
+  BrowserSearchHistory.add.mockImplementation((searches) => searches)
+  // @ts-ignore
+  BrowserSearchHistory.getSuggestions.mockReturnValue([])
+  // @ts-ignore
+  BrowserSearchHistory.load.mockResolvedValue([])
   // @ts-ignore
   BrowserVisitedSites.add.mockImplementation((sites) => sites)
   // @ts-ignore
@@ -263,6 +277,8 @@ test('uses the browser focus context for tabs and toolbar controls', () => {
 
 test('loadContent', async () => {
   // @ts-ignore
+  BrowserSearchHistory.load.mockResolvedValue(['cheeseburger'])
+  // @ts-ignore
   ElectronWebContentsView.createWebContentsView.mockImplementation(() => {
     return 1
   })
@@ -275,6 +291,7 @@ test('loadContent', async () => {
     audioIndicatorEnabled: true,
     headerHeight: 65,
     iframeSrc: 'https://example.com',
+    searchHistory: ['cheeseburger'],
     tabHoverEnabled: false,
     tabsEnabled: true,
     unloadTabs: false,
@@ -1680,6 +1697,94 @@ test('applySuggestions places matching visited sites before provider results', a
     { favicon: '', type: 'search', value: 'soundcloud' },
     { favicon: '', type: 'search', value: 'soundcloud music' },
   ])
+})
+
+test('applySuggestions places matching recent searches first', async () => {
+  const historySuggestion = { favicon: '', type: 'history', value: 'cheeseburger' }
+  const visitedSuggestion = { favicon: 'https://cheese.example/favicon.ico', type: 'url', value: 'https://cheese.example' }
+  // @ts-ignore
+  BrowserSearchHistory.getSuggestions.mockReturnValue([historySuggestion])
+  // @ts-ignore
+  BrowserVisitedSites.getSuggestions.mockReturnValue([visitedSuggestion])
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.hide.mockResolvedValue(undefined)
+  const state = {
+    ...ViewletSimpleBrowser.create(7),
+    browserViewId: 12,
+    inputValue: 'cheese',
+    searchHistory: ['cheeseburger'],
+    suggestionsEnabled: true,
+  }
+
+  const newState = await ViewletSimpleBrowser.applySuggestions(state, 7, 'cheese', ['cheese recipes'])
+
+  expect(newState.suggestions).toEqual([
+    historySuggestion,
+    visitedSuggestion,
+    { favicon: '', type: 'search', value: 'cheese' },
+    { favicon: '', type: 'search', value: 'cheese recipes' },
+  ])
+})
+
+test('handleInput shows matching search history before the provider responds', async () => {
+  const historySuggestion = { favicon: '', type: 'history', value: 'cheeseburger' }
+  // @ts-ignore
+  BrowserSearchHistory.getSuggestions.mockReturnValue([historySuggestion])
+  // @ts-ignore
+  BrowserSearchSuggestions.get.mockReturnValue(new Promise(() => {}))
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.hide.mockResolvedValue(undefined)
+  const state = {
+    ...ViewletSimpleBrowser.create(7),
+    browserViewId: 12,
+    inputValue: '',
+    searchHistory: ['cheeseburger'],
+    suggestionsEnabled: true,
+  }
+
+  const newState = await ViewletSimpleBrowser.handleInput(state, 'cheese')
+
+  expect(BrowserSearchHistory.getSuggestions).toHaveBeenCalledWith(['cheeseburger'], 'cheese')
+  expect(newState).toMatchObject({ hasSuggestionsOverlay: true, selectedSuggestionIndex: 0, suggestions: [historySuggestion] })
+})
+
+test('go saves a submitted search in recent history', async () => {
+  // @ts-ignore
+  BrowserSearchHistory.add.mockReturnValue(['cheeseburger'])
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.focus.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.setIframeSrc.mockResolvedValue(undefined)
+  const state = {
+    ...ViewletSimpleBrowser.create(7),
+    browserViewId: 12,
+    inputValue: 'cheeseburger',
+    searchHistory: [],
+  }
+
+  const newState = await ViewletSimpleBrowser.go(state)
+
+  expect(BrowserSearchHistory.add).toHaveBeenCalledWith([], 'cheeseburger')
+  expect(BrowserSearchHistory.save).toHaveBeenCalledWith(['cheeseburger'])
+  expect(newState.searchHistory).toEqual(['cheeseburger'])
+})
+
+test('go does not save a submitted URL in search history', async () => {
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.focus.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.setIframeSrc.mockResolvedValue(undefined)
+  const state = {
+    ...ViewletSimpleBrowser.create(7),
+    browserViewId: 12,
+    inputValue: 'example.com',
+    searchHistory: ['cheeseburger'],
+  }
+
+  await ViewletSimpleBrowser.go(state)
+
+  expect(BrowserSearchHistory.add).not.toHaveBeenCalled()
+  expect(BrowserSearchHistory.save).not.toHaveBeenCalled()
 })
 
 test('acceptSuggestion restores the page and navigates', async () => {

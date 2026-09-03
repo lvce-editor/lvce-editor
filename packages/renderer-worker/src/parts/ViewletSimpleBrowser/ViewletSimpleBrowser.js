@@ -1,6 +1,7 @@
 // based on vscode's simple browser by Microsoft (https://github.com/microsoft/vscode/blob/e8fe2d07d31f30698b9262dd5e1fcc59a85c6bb1/extensions/simple-browser/src/extension.ts, License MIT)
 
 import * as Assert from '../Assert/Assert.ts'
+import * as BrowserSearchHistory from '../BrowserSearchHistory/BrowserSearchHistory.js'
 import * as BrowserSearchSuggestions from '../BrowserSearchSuggestions/BrowserSearchSuggestions.js'
 import * as BrowserHistory from '../BrowserHistory/BrowserHistory.js'
 import * as BrowserVisitedSites from '../BrowserVisitedSites/BrowserVisitedSites.js'
@@ -140,6 +141,7 @@ export const create = (id, uri, x, y, width, height) => {
     overlayIds: [],
     snapshot: '',
     suggestionsEnabled: false,
+    searchHistory: [],
     shortcuts: [],
     tabs: [],
     audioIndicatorEnabled: true,
@@ -210,7 +212,10 @@ export const backgroundLoadContent = async (state, savedState) => {
   const tabHoverEnabled = Preferences.get('simpleBrowser.tabHover.enabled') === true
   const unloadTabs = Preferences.get('simpleBrowser.unloadTabs') === true
   const headerHeight = getHeaderHeight(tabsEnabled)
-  const visitedSites = await BrowserVisitedSites.load()
+  const [searchHistory, visitedSites] = await Promise.all([
+    BrowserSearchHistory.load(),
+    BrowserVisitedSites.load(),
+  ])
   const browserViewId = await ElectronWebContentsView.createWebContentsView(0)
   Assert.number(browserViewId)
   await ElectronWebContentsViewFunctions.resizeWebContentsView(browserViewId, x, y + headerHeight, width, height - headerHeight)
@@ -222,6 +227,7 @@ export const backgroundLoadContent = async (state, savedState) => {
     audioIndicatorEnabled,
     headerHeight,
     selectedTabIndex: 0,
+    searchHistory,
     tabs,
     tabsEnabled,
     tabHoverEnabled,
@@ -252,7 +258,10 @@ export const loadContent = async (state, savedState) => {
   const savedSelectedTabIndex = getSavedSelectedTabIndex(savedState, savedTabs)
   const savedSelectedTab = savedTabs[savedSelectedTabIndex]
   const iframeSrc = savedSelectedTab ? savedSelectedTab.iframeSrc : getUrlFromSavedState(savedState)
-  const visitedSites = await BrowserVisitedSites.load()
+  const [searchHistory, visitedSites] = await Promise.all([
+    BrowserSearchHistory.load(),
+    BrowserVisitedSites.load(),
+  ])
   const audioIndicatorEnabled = Preferences.get('simpleBrowser.audioIndicator.enabled') !== false
   const suggestionsEnabled = Preferences.get('simpleBrowser.suggestions')
   const tabsEnabled = Preferences.get('simpleBrowser.tabs.enabled') !== false
@@ -303,6 +312,7 @@ export const loadContent = async (state, savedState) => {
     uri: id ? uri : `simple-browser://${browserViewId}`,
     headerHeight,
     selectedTabIndex,
+    searchHistory,
     suggestionsEnabled,
     shortcuts,
     tabs,
@@ -801,8 +811,10 @@ export const handleInput = async (state, value) => {
   if (!shouldRequestSuggestions(value)) {
     return applySuggestions(newState, state.uid, value, [])
   }
+  const localSuggestions = getLocalSuggestions(newState, value)
+  const stateWithLocalSuggestions = localSuggestions.length > 0 ? await applySuggestions(newState, state.uid, value, [], localSuggestions) : newState
   void requestSuggestions(state.uid, value)
-  return newState
+  return stateWithLocalSuggestions
 }
 
 const suggestionsOverlayId = 'search-suggestions'
@@ -835,14 +847,18 @@ const getSuggestionValue = (suggestion) => {
   return typeof suggestion === 'string' ? suggestion : suggestion?.value
 }
 
-export const applySuggestions = async (state, uid, query, suggestions) => {
+const getLocalSuggestions = (state, query) => {
+  return [...BrowserSearchHistory.getSuggestions(state.searchHistory, query), ...BrowserVisitedSites.getSuggestions(state.visitedSites, query)]
+}
+
+export const applySuggestions = async (state, uid, query, suggestions, precomputedLocalSuggestions) => {
   if (state.uid !== uid || state.inputValue !== query || !state.suggestionsEnabled) {
     return state
   }
-  const visitedSiteSuggestions = BrowserVisitedSites.getSuggestions(state.visitedSites, query)
+  const localSuggestions = precomputedLocalSuggestions || getLocalSuggestions(state, query)
   const providerSuggestions = Array.isArray(suggestions) ? suggestions : []
   const allSuggestions = [
-    ...visitedSiteSuggestions,
+    ...localSuggestions,
     ...(providerSuggestions.length > 0 ? [createSearchSuggestion(query)] : []),
     ...providerSuggestions.map(createSearchSuggestion),
   ]
@@ -902,6 +918,21 @@ const openCookieImportView = (value) => {
   return true
 }
 
+const addToSearchHistory = (state, value) => {
+  if (!IframeSrc.isSearchInput(value, state.shortcuts)) {
+    return state
+  }
+  const searchHistory = BrowserSearchHistory.add(state.searchHistory, value)
+  if (searchHistory === state.searchHistory) {
+    return state
+  }
+  void BrowserSearchHistory.save(searchHistory)
+  return {
+    ...state,
+    searchHistory,
+  }
+}
+
 const navigate = (state, value) => {
   if (openCookieImportView(value)) {
     return state
@@ -909,7 +940,8 @@ const navigate = (state, value) => {
   const iframeSrc = IframeSrc.toIframeSrc(value, state.shortcuts)
   void ElectronWebContentsViewFunctions.setIframeSrc(state.browserViewId, iframeSrc)
   void ElectronWebContentsViewFunctions.focus(state.browserViewId)
-  return updateTab(state, state.browserViewId, {
+  const stateWithSearchHistory = addToSearchHistory(state, value)
+  return updateTab(stateWithSearchHistory, state.browserViewId, {
     iframeSrc,
     inputValue: value,
     isLoading: true,
@@ -933,8 +965,9 @@ export const setUrl = async (state, value) => {
   }
   const iframeSrc = IframeSrc.toIframeSrc(inputValue, shortcuts)
   void ElectronWebContentsViewFunctions.setIframeSrc(browserViewId, iframeSrc)
+  const stateWithSearchHistory = addToSearchHistory(newState1, inputValue)
 
-  return updateTab(newState1, browserViewId, {
+  return updateTab(stateWithSearchHistory, browserViewId, {
     iframeSrc,
     isLoading: true,
   })
