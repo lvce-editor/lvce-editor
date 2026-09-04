@@ -8,6 +8,7 @@ import * as Workspace from '../Workspace/Workspace.js'
 import * as Platform from '../Platform/Platform.js'
 import * as AssetDir from '../AssetDir/AssetDir.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+import * as WrapSourceControlCommand from '../WrapSourceControlCommand/WrapSourceControlCommand.ts'
 
 // TODO when accept input is invoked multiple times, it should not lead to errors
 
@@ -89,6 +90,17 @@ export const focus = (state) => {
     ...state,
     commands: [['Viewlet.focusSelector', '[name="SourceControlInput"]']],
   }
+}
+
+export const getComponentState = async (state) => {
+  const { uid } = state
+  return SourceControlWorker.invoke('SourceControl.getComponentState', uid)
+}
+
+export const setComponentState = async (state, componentState) => {
+  const { uid } = state
+  await SourceControlWorker.invoke('SourceControl.setComponentState', uid, componentState)
+  return WrapSourceControlCommand.renderPendingSourceControl(state)
 }
 
 const updateIcon = (displayItem) => {

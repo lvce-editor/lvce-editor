@@ -139,6 +139,66 @@ test('refreshes an open live component state editor when the component rerenders
   expect(Viewlet.reload).toHaveBeenCalledWith(9)
 })
 
+test('refreshes an open live component state editor with a decimal component uid', async () => {
+  const componentUid = 0.5
+  const componentState = { focusedIndex: 0, uid: componentUid }
+  const editorState = { uid: 9, uri: `live-component-state:///${componentUid}.json` }
+  ViewletStates.set(componentUid, { factory: {}, moduleId: 'ExtensionDetail', renderedState: componentState, state: componentState })
+  ViewletStates.set(9, { factory: {}, moduleId: 'EditorText', renderedState: editorState, state: editorState })
+
+  ViewletStates.setRenderedState(componentUid, { focusedIndex: 1, uid: componentUid })
+  await ComponentState.waitForRefreshes()
+
+  expect(Viewlet.reload).toHaveBeenCalledWith(9)
+})
+
+test('does not overwrite a dirty live component state editor when the component rerenders', async () => {
+  const componentState = { focusedIndex: 0, uid: 2 }
+  const editorState = { uid: 9, uri: 'live-component-state:///2.json' }
+  const mainRendererState = { commands: [], uid: 3 }
+  const mainComponentState = {
+    layout: {
+      groups: [{ tabs: [{ editorUid: 9, isDirty: true }] }],
+    },
+    uid: 3,
+  }
+  ViewletStates.set(2, { factory: {}, moduleId: 'Explorer', renderedState: componentState, state: componentState })
+  ViewletStates.set(3, {
+    factory: { getComponentState: jest.fn(async () => mainComponentState), hasFunctionalRender: true },
+    moduleId: 'Main',
+    renderedState: mainRendererState,
+    state: mainRendererState,
+  })
+  ViewletStates.set(9, { factory: {}, moduleId: 'EditorText', renderedState: editorState, state: editorState })
+
+  ViewletStates.setRenderedState(2, { focusedIndex: 1, uid: 2 })
+  await ComponentState.waitForRefreshes()
+
+  expect(Viewlet.reload).not.toHaveBeenCalled()
+})
+
+test('refreshes Main state once after opening, then preserves its active self-referential editor', async () => {
+  const mainRendererState = { commands: [], uid: 3 }
+  const editorState = { uid: 9, uri: 'live-component-state:///3.json' }
+  const mainComponentState = {
+    layout: {
+      groups: [{ activeTabId: 4, focused: true, tabs: [{ editorUid: 9, id: 4, isDirty: false }] }],
+    },
+    uid: 3,
+  }
+  const factory = { getComponentState: jest.fn(async () => mainComponentState), hasFunctionalRender: true }
+  ViewletStates.set(3, { factory, moduleId: 'Main', renderedState: mainRendererState, state: mainRendererState })
+  ViewletStates.set(9, { factory: {}, moduleId: 'EditorText', renderedState: editorState, state: editorState })
+
+  ViewletStates.setRenderedState(3, { commands: [], uid: 3 })
+  await ComponentState.waitForRefreshes()
+  ViewletStates.setRenderedState(3, { commands: [], uid: 3 })
+  await ComponentState.waitForRefreshes()
+
+  expect(Viewlet.reload).toHaveBeenCalledTimes(1)
+  expect(Viewlet.reload).toHaveBeenCalledWith(9)
+})
+
 test('coalesces rerenders while a live component state editor is refreshing', async () => {
   let finishReload
   jest.mocked(Viewlet.reload).mockImplementationOnce(
@@ -155,6 +215,7 @@ test('coalesces rerenders while a live component state editor is refreshing', as
   ViewletStates.setRenderedState(2, { focusedIndex: 1, uid: 2 })
   ViewletStates.setRenderedState(2, { focusedIndex: 2, uid: 2 })
   ViewletStates.setRenderedState(2, { focusedIndex: 3, uid: 2 })
+  await Promise.resolve()
   finishReload()
   await ComponentState.waitForRefreshes()
 

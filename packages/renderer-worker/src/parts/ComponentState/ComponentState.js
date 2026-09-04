@@ -3,9 +3,10 @@ import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
-const liveComponentStatePattern = /^live-component-state:\/\/\/(\d+)\.json$/
+const liveComponentStatePattern = /^live-component-state:\/\/\/(\d+(?:\.\d+)?)\.json$/
 const editorUidsByComponentUid = new Map()
 const componentUidByEditorUid = new Map()
+const mainEditorUidsAwaitingInitialRefresh = new Set()
 const refreshes = new Map()
 
 const getUid = (instance) => instance.state?.uid ?? instance.renderedState?.uid
@@ -27,6 +28,9 @@ const subscribe = (instance) => {
   }
   editorUidsByComponentUid.set(componentUid, editorUidsByComponentUid.get(componentUid)?.add(editorUid) || new Set([editorUid]))
   componentUidByEditorUid.set(editorUid, componentUid)
+  if (ViewletStates.getByUid(componentUid)?.moduleId === 'Main') {
+    mainEditorUidsAwaitingInitialRefresh.add(editorUid)
+  }
 }
 
 const unsubscribeEditor = (editorUid) => {
@@ -35,6 +39,7 @@ const unsubscribeEditor = (editorUid) => {
     return
   }
   componentUidByEditorUid.delete(editorUid)
+  mainEditorUidsAwaitingInitialRefresh.delete(editorUid)
   const editorUids = editorUidsByComponentUid.get(componentUid)
   editorUids?.delete(editorUid)
   if (editorUids?.size === 0) {
@@ -50,7 +55,32 @@ const unsubscribeComponent = (componentUid) => {
   editorUidsByComponentUid.delete(componentUid)
   for (const editorUid of editorUids) {
     componentUidByEditorUid.delete(editorUid)
+    mainEditorUidsAwaitingInitialRefresh.delete(editorUid)
   }
+}
+
+const getEditorTabStates = async () => {
+  const mainInstance = ViewletStates.getInstance('Main')
+  if (!mainInstance || typeof mainInstance.factory.getComponentState !== 'function') {
+    return new Map()
+  }
+  const mainState = await mainInstance.factory.getComponentState(mainInstance.state)
+  const groups = mainState?.layout?.groups
+  if (!Array.isArray(groups)) {
+    return new Map()
+  }
+  const editorTabStates = new Map()
+  for (const group of groups) {
+    for (const tab of group.tabs || []) {
+      if (typeof tab.editorUid === 'number') {
+        editorTabStates.set(tab.editorUid, {
+          active: Boolean(group.focused && group.activeTabId === tab.id),
+          dirty: Boolean(tab.isDirty),
+        })
+      }
+    }
+  }
+  return editorTabStates
 }
 
 const runRefreshes = async (componentUid, refresh) => {
@@ -58,7 +88,19 @@ const runRefreshes = async (componentUid, refresh) => {
     while (refresh.pending) {
       refresh.pending = false
       const editorUids = [...(editorUidsByComponentUid.get(componentUid) || [])]
-      await Promise.allSettled(editorUids.map((editorUid) => Viewlet.reload(editorUid)))
+      const editorTabStates = await getEditorTabStates()
+      const isMainComponent = ViewletStates.getByUid(componentUid)?.moduleId === 'Main'
+      const editorUidsToRefresh = editorUids.filter((editorUid) => {
+        if (mainEditorUidsAwaitingInitialRefresh.has(editorUid)) {
+          return true
+        }
+        const tabState = editorTabStates.get(editorUid)
+        return !tabState?.dirty && !(isMainComponent && tabState?.active)
+      })
+      await Promise.allSettled(editorUidsToRefresh.map((editorUid) => Viewlet.reload(editorUid)))
+      for (const editorUid of editorUidsToRefresh) {
+        mainEditorUidsAwaitingInitialRefresh.delete(editorUid)
+      }
     }
   } finally {
     refreshes.delete(componentUid)

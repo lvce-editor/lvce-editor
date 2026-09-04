@@ -97,3 +97,34 @@ test('registers the extension contribution refresh command', async () => {
 
   expect(commands.handleExtensionsChanged).toBe(ViewletSourceControl.handleExtensionsChanged)
 })
+
+test('gets and sets authoritative source control component state', async () => {
+  const rendererState = {
+    badgeCount: 0,
+    commands: [],
+    uid: 42,
+  }
+  const componentState = { id: 42, inputValue: 'message' }
+  sourceControlWorkerInvoke.mockImplementation((method): unknown => {
+    switch (method) {
+      case 'SourceControl.diff2':
+        return [1]
+      case 'SourceControl.getBadgeCount':
+        return 0
+      case 'SourceControl.getComponentState':
+        return componentState
+      case 'SourceControl.render2':
+        return [['Viewlet.setDom2', 42, ['div']]]
+      case 'SourceControl.setComponentState':
+        return undefined
+      default:
+        throw new Error(`unexpected method ${method}`)
+    }
+  })
+
+  await expect(ViewletSourceControl.getComponentState(rendererState)).resolves.toBe(componentState)
+  await expect(ViewletSourceControl.setComponentState(rendererState, componentState)).resolves.toEqual({
+    ...rendererState,
+    commands: [['Viewlet.setDom2', 42, ['div']]],
+  })
+})
