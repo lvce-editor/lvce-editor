@@ -9,6 +9,7 @@ const writeFile = jest.fn()
 const remove = jest.fn()
 const isReadonly = jest.fn()
 const getBlobUrl = jest.fn()
+const getFileSize = jest.fn()
 
 FileSystemState.registerAll({
   test() {
@@ -18,7 +19,11 @@ FileSystemState.registerAll({
       remove,
       isReadonly,
       getBlobUrl,
+      getFileSize,
     }
+  },
+  unsupported() {
+    return {}
   },
 })
 
@@ -57,6 +62,18 @@ test('getBlobUrl forwards the media type', async () => {
 
   await expect(FileSystem.getBlobUrl('test://some-file.svg', 'image/svg+xml')).resolves.toBe('blob:https://example.com/image-id')
   expect(getBlobUrl).toHaveBeenCalledWith('test://some-file.svg', 'image/svg+xml')
+})
+
+test('getFileSize returns the size without reading the file', async () => {
+  getFileSize.mockReturnValue(1024)
+
+  await expect(FileSystem.getFileSize('test://some-file.txt')).resolves.toBe(1024)
+  expect(getFileSize).toHaveBeenCalledWith('test://some-file.txt')
+  expect(readFile).not.toHaveBeenCalled()
+})
+
+test('getFileSize reports unsupported providers', async () => {
+  await expect(FileSystem.getFileSize('unsupported://some-file.txt')).rejects.toThrow('File size is not supported for unsupported files')
 })
 
 test.skip('removeFile - error', async () => {

@@ -7,6 +7,7 @@ export const Commands = {
   copy: FileSystem.copy,
   exists: FileSystem.exists,
   getBlob: FileSystem.getBlob,
+  getFileSize: FileSystem.getFileSize,
   getFolderSize: FileSystem.getFolderSize,
   getRealPath: FileSystem.getRealPath,
   isReadonly: FileSystem.isReadonly,

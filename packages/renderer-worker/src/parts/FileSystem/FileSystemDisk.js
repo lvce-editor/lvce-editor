@@ -86,6 +86,11 @@ export const getRealPath = (path) => {
   return FileSystemWorker.invoke('FileSystem.getRealPath', /* path */ path)
 }
 
+export const getFileSize = (path) => {
+  path = toUri(path)
+  return FileSystemWorker.invoke('FileSystem.getFileSize', /* path */ path)
+}
+
 export const stat = (path) => {
   path = toUri(path)
   return FileSystemWorker.invoke('FileSystem.stat', /* path */ path)

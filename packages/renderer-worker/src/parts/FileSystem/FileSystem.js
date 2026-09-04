@@ -139,6 +139,15 @@ export const getFolderSize = async (uri) => {
   return fileSystem.getFolderSize(uri)
 }
 
+export const getFileSize = async (uri) => {
+  const protocol = GetProtocol.getProtocol(uri)
+  const fileSystem = await GetFileSystem.getFileSystem(protocol)
+  if (!fileSystem.getFileSize) {
+    throw new Error(`File size is not supported for ${protocol} files`)
+  }
+  return fileSystem.getFileSize(uri)
+}
+
 export const chmod = async (uri, permissions) => {
   const protocol = GetProtocol.getProtocol(uri)
   const fileSystem = await GetFileSystem.getFileSystem(protocol)
