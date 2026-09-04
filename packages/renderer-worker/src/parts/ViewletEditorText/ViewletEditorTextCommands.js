@@ -3,6 +3,8 @@ import * as Command from '../Command/Command.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as WrapEditorCommands from '../WrapEditorCommands/WrapEditorCommands.js'
 import * as EditorWorker from '../EditorWorker/EditorWorker.ts'
+import * as GetTokenizePath from '../GetTokenizePath/GetTokenizePath.js'
+import * as Languages from '../Languages/Languages.js'
 
 const subWidgetCommandIds = [
   'ColorPicker.handleColorAreaPointerDown',
@@ -105,8 +107,14 @@ const hotReload = async (state, editor, ...args) => {
 const handleUriChange = async (editor, editorUidOrNewUri, maybeNewUri) => {
   const newUri = maybeNewUri ?? editorUidOrNewUri
   await EditorWorker.invoke('Editor.handleUriChange', editor.uid, newUri)
+  const languageId = Languages.getLanguageId(newUri)
+  if (languageId !== editor.languageId) {
+    const tokenizePath = GetTokenizePath.getTokenizePath(languageId)
+    await EditorWorker.invoke('Editor.setLanguageId', editor.uid, languageId, tokenizePath)
+  }
   return {
     ...editor,
+    languageId,
     uri: newUri,
   }
 }
