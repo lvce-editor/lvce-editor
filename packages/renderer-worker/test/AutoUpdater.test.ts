@@ -11,13 +11,13 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-test('reports when the current version is up to date', async () => {
+test('reports when no update is available', async () => {
   dependencies.getLatestVersion.mockResolvedValue(undefined)
 
   await AutoUpdater.checkForUpdatesWithDependencies(undefined, false, dependencies)
 
   expect(dependencies.notify).toHaveBeenNthCalledWith(1, 'info', 'Checking for updates...')
-  expect(dependencies.notify).toHaveBeenNthCalledWith(2, 'info', 'You are using the latest version.')
+  expect(dependencies.notify).toHaveBeenNthCalledWith(2, 'info', 'No Update available')
   expect(dependencies.startUpdate).not.toHaveBeenCalled()
 })
 
