@@ -2,7 +2,7 @@ import { describe, expect, test } from '@jest/globals'
 import { execFile, spawn } from 'node:child_process'
 import { chmod, mkdir, mkdtemp, readFile, realpath, rm, symlink, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
-import { join } from 'node:path'
+import { basename, dirname, join } from 'node:path'
 import { promisify } from 'node:util'
 
 const execFileAsync = promisify(execFile)
@@ -51,6 +51,12 @@ describe('linux cli templates', () => {
     expect(cli).toContain("new URL('../package.json', import.meta.url)")
   })
 
+  test('includes transient sessions in bash completions', async () => {
+    const completion = await readTemplate('bash_completion')
+
+    expect(completion).toContain('--transient')
+  })
+
   test('prints the packaged version without Electron', async () => {
     const root = await mkdtemp(join(tmpdir(), 'lvce-linux-cli-version-'))
     try {
@@ -73,6 +79,69 @@ describe('linux cli templates', () => {
 
     expect(cli).toContain('detached: true')
     expect(cli).toContain("stdio: foreground ? ['inherit', 'inherit', 'pipe'] : 'ignore'")
+  })
+
+  testPosix('launches transient sessions with isolated application state', async () => {
+    const root = await mkdtemp(join(tmpdir(), 'lvce-linux-cli-transient-'))
+    const binPath = join(root, 'bin')
+    const fakeElectronPath = join(root, 'fake-electron')
+    const resultPath = join(root, 'result.json')
+    let transientRoot = ''
+    try {
+      await mkdir(binPath)
+      await writeFile(
+        fakeElectronPath,
+        `#!/usr/bin/env node
+import { writeFileSync } from 'node:fs'
+writeFileSync(process.env.LVCE_TEST_RESULT, JSON.stringify({
+  args: process.argv.slice(2),
+  env: {
+    XDG_CACHE_HOME: process.env.XDG_CACHE_HOME,
+    XDG_CONFIG_HOME: process.env.XDG_CONFIG_HOME,
+    XDG_DATA_HOME: process.env.XDG_DATA_HOME,
+    XDG_STATE_HOME: process.env.XDG_STATE_HOME,
+  },
+}))
+`,
+      )
+      await chmod(fakeElectronPath, 0o755)
+      const cli = (await readTemplate('linux_cli_js'))
+        .replaceAll('@@APPLICATION_NAME@@', 'lvce')
+        .replace('spawn(process.execPath, args, {', `spawn(${JSON.stringify(fakeElectronPath)}, args, {`)
+      const cliPath = join(binPath, 'cli.js')
+      await writeFile(cliPath, cli)
+
+      const { stdout } = await execFileAsync(process.execPath, [cliPath, '--transient', '--wait'], {
+        env: {
+          ...process.env,
+          LVCE_TEST_RESULT: resultPath,
+          XDG_CACHE_HOME: '/existing/cache',
+          XDG_CONFIG_HOME: '/existing/config',
+          XDG_DATA_HOME: '/existing/data',
+          XDG_STATE_HOME: '/existing/state',
+        },
+      })
+      const result = JSON.parse(await readFile(resultPath, 'utf8'))
+      transientRoot = dirname(result.env.XDG_CONFIG_HOME)
+      const userDataDir = join(result.env.XDG_CONFIG_HOME, 'lvce', 'electron')
+
+      expect(basename(result.env.XDG_CACHE_HOME)).toBe('cache')
+      expect(basename(result.env.XDG_CONFIG_HOME)).toBe('config')
+      expect(basename(result.env.XDG_DATA_HOME)).toBe('data')
+      expect(basename(result.env.XDG_STATE_HOME)).toBe('state')
+      expect(dirname(result.env.XDG_CACHE_HOME)).toBe(transientRoot)
+      expect(dirname(result.env.XDG_DATA_HOME)).toBe(transientRoot)
+      expect(dirname(result.env.XDG_STATE_HOME)).toBe(transientRoot)
+      expect(result.args).toEqual(['--transient', '--wait', `--user-data-dir=${userDataDir}`])
+      expect(stdout).toBe(
+        `State is temporarily stored. Relaunch this state with: XDG_CONFIG_HOME='${result.env.XDG_CONFIG_HOME}' XDG_DATA_HOME='${result.env.XDG_DATA_HOME}' XDG_CACHE_HOME='${result.env.XDG_CACHE_HOME}' XDG_STATE_HOME='${result.env.XDG_STATE_HOME}' lvce --user-data-dir='${userDataDir}'\n`,
+      )
+    } finally {
+      if (transientRoot) {
+        await rm(transientRoot, { recursive: true })
+      }
+      await rm(root, { recursive: true })
+    }
   })
 
   testPosix('forwards SIGINT to the foreground Electron process', async () => {
