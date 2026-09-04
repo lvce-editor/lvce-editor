@@ -4,8 +4,13 @@ import * as EncodingType from '../EncodingType/EncodingType.js'
 import * as GetFileSystem from '../GetFileSystem/GetFileSystem.js'
 import * as GetProtocol from '../GetProtocol/GetProtocol.js'
 
-const notifyWorkspaceChanged = async (changes = {}) => {
-  await Promise.allSettled([Command.execute('Layout.handleWorkspaceRefresh', changes), Command.execute('Layout.refreshSourceControlBadgeCount')])
+const notifyFileSystemChanged = async (changes = {}, refreshWorkspaceViews = true) => {
+  const effects = []
+  if (refreshWorkspaceViews) {
+    effects.push(Command.execute('Layout.handleWorkspaceRefresh', changes))
+  }
+  effects.push(Command.execute('Layout.refreshSourceControlBadgeCount'))
+  await Promise.allSettled(effects)
 }
 
 export const readFile = async (uri, encoding = EncodingType.Utf8) => {
@@ -27,7 +32,7 @@ export const remove = async (uri) => {
   const protocol = GetProtocol.getProtocol(uri)
   const fileSystem = await GetFileSystem.getFileSystem(protocol)
   await fileSystem.remove(uri)
-  await notifyWorkspaceChanged({
+  await notifyFileSystemChanged({
     deleted: [uri],
   })
 }
@@ -36,7 +41,7 @@ export const rename = async (oldUri, newUri) => {
   const protocol = GetProtocol.getProtocol(oldUri)
   const fileSystem = await GetFileSystem.getFileSystem(protocol)
   await fileSystem.rename(oldUri, newUri)
-  await notifyWorkspaceChanged({
+  await notifyFileSystemChanged({
     renamed: [[oldUri, newUri]],
   })
 }
@@ -47,15 +52,16 @@ export const mkdir = async (uri) => {
   await fileSystem.mkdir(uri)
 }
 
-export const writeFile = async (uri, content, encoding = EncodingType.Utf8, notify = true) => {
+export const writeFile = async (uri, content, encoding = EncodingType.Utf8, refreshWorkspaceViews = true) => {
   const protocol = GetProtocol.getProtocol(uri)
   const fileSystem = await GetFileSystem.getFileSystem(protocol)
   await fileSystem.writeFile(uri, content, encoding)
-  if (notify) {
-    await notifyWorkspaceChanged({
+  await notifyFileSystemChanged(
+    {
       changed: [uri],
-    })
-  }
+    },
+    refreshWorkspaceViews,
+  )
 }
 
 export const writeBlob = async (uri, blob) => {
