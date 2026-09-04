@@ -45,6 +45,13 @@ export const test: Test = async ({ Command, Editor, expect, Explorer, FileSystem
   await waitForFocusedIndex(Editor, 1)
 
   const state = JSON.parse(await Editor.getText())
+  await Editor.setDeltaY(120)
+  const firstVisibleLine = Locator('.Editor .LineNumber').first()
+  await expect(firstVisibleLine).not.toHaveText('1')
+  await Command.execute('ComponentState.setState', explorer.uid, state)
+  await new Promise((resolve) => setTimeout(resolve, 250))
+  await expect(firstVisibleLine).not.toHaveText('1')
+
   await Editor.setText(`${JSON.stringify({ ...state, focusedIndex: 0 }, null, 2)}\n`)
   await Main.save()
 

@@ -1,6 +1,10 @@
 import { beforeEach, expect, jest, test } from '@jest/globals'
 import * as ViewletStates from '../src/parts/ViewletStates/ViewletStates.js'
 
+jest.unstable_mockModule('../src/parts/EditorWorker/EditorWorker.ts', () => ({
+  invoke: jest.fn(),
+}))
+
 jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () => ({
   invoke: jest.fn(),
 }))
@@ -13,6 +17,7 @@ jest.unstable_mockModule('../src/parts/Viewlet/Viewlet.js', () => ({
   reload: jest.fn(),
 }))
 
+const EditorWorker = await import('../src/parts/EditorWorker/EditorWorker.ts')
 const RendererProcess = await import('../src/parts/RendererProcess/RendererProcess.js')
 const Viewlet = await import('../src/parts/Viewlet/Viewlet.js')
 const ViewletManager = await import('../src/parts/ViewletManager/ViewletManager.js')
@@ -20,6 +25,7 @@ const ComponentState = await import('../src/parts/ComponentState/ComponentState.
 
 beforeEach(() => {
   jest.resetAllMocks()
+  jest.mocked(EditorWorker.invoke).mockResolvedValue('')
   ViewletStates.reset()
 })
 
@@ -159,6 +165,20 @@ test('refreshes an open live component state editor when the component rerenders
   expect(Viewlet.reload).toHaveBeenCalledWith(9)
 })
 
+test('does not refresh an open live component state editor when its content is unchanged', async () => {
+  const componentState = { focusedIndex: 0, uid: 2 }
+  const editorState = { uid: 9, uri: 'live-component-state:///2.json' }
+  ViewletStates.set(2, { factory: {}, moduleId: 'Explorer', renderedState: componentState, state: componentState })
+  ViewletStates.set(9, { factory: {}, moduleId: 'EditorText', renderedState: editorState, state: editorState })
+  jest.mocked(EditorWorker.invoke).mockResolvedValue(`${JSON.stringify(componentState, null, 2)}\n`)
+
+  ViewletStates.setRenderedState(2, { ...componentState })
+  await ComponentState.waitForRefreshes()
+
+  expect(EditorWorker.invoke).toHaveBeenCalledWith('Editor.getText', 9)
+  expect(Viewlet.reload).not.toHaveBeenCalled()
+})
+
 test('refreshes an open live component state editor with a decimal component uid', async () => {
   const componentUid = 0.5
   const componentState = { focusedIndex: 0, uid: componentUid }
@@ -235,7 +255,7 @@ test('coalesces rerenders while a live component state editor is refreshing', as
   ViewletStates.setRenderedState(2, { focusedIndex: 1, uid: 2 })
   ViewletStates.setRenderedState(2, { focusedIndex: 2, uid: 2 })
   ViewletStates.setRenderedState(2, { focusedIndex: 3, uid: 2 })
-  await Promise.resolve()
+  await new Promise((resolve) => setTimeout(resolve, 0))
   finishReload()
   await ComponentState.waitForRefreshes()
 
