@@ -6,7 +6,7 @@ import * as FileSystemHtml from '../FileSystem/FileSystemHtml.js'
 import * as FileSystemMemory from '../FileSystem/FileSystemMemory.js'
 
 const getCommandsFromExtension = (extension) => {
-  if (!extension || !extension.commands) {
+  if (!extension || extension.disabled || !extension.commands) {
     return []
   }
   return extension.commands.filter((command) => command.internal !== true)

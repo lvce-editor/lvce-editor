@@ -1,0 +1,11 @@
+{
+  "id": "sample.quick-pick-disabled-command",
+  "name": "Quick Pick Disabled Command",
+  "version": "0.0.0",
+  "commands": [
+    {
+      "id": "quickPickDisabledCommand.test",
+      "label": "Quick Pick Disabled Command: Test"
+    }
+  ]
+}
