@@ -1,4 +1,4 @@
-import { signAsync } from '@electron/osx-sign'
+import { sign } from '@electron/osx-sign'
 import { closeSync, openSync, readSync } from 'node:fs'
 
 const MachOMagic = new Set([
@@ -45,7 +45,7 @@ export const signMacApp = async ({ appPath, entitlementsPath, entitlementsInheri
   if (!keychain) {
     return false
   }
-  await signAsync({
+  await sign({
     app: appPath,
     ignore: shouldIgnoreMacCodeSignPath,
     keychain,
