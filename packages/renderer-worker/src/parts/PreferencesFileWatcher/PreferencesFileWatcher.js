@@ -1,5 +1,6 @@
 import * as FileWatcher from '../FileWatcher/FileWatcher.js'
 import * as GetPathDirName from '../GetPathDirName/GetPathDirName.js'
+import * as KeyBindings from '../KeyBindings/KeyBindings.js'
 import * as PathToFileUri from '../PathToFileUri/PathToFileUri.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformPaths from '../PlatformPaths/PlatformPaths.js'
@@ -9,6 +10,8 @@ import * as Preferences from '../Preferences/Preferences.js'
 const ReloadDelay = 100
 
 let reloadTimeout
+let keyBindingsReloadTimeout
+let keyBindingsUri = ''
 let settingsUri = ''
 let watcher
 
@@ -22,17 +25,32 @@ const scheduleReload = () => {
   }, ReloadDelay)
 }
 
-const handleEvent = (event) => {
-  if (event.detail.uri !== settingsUri) {
-    return
+const scheduleKeyBindingsReload = () => {
+  if (keyBindingsReloadTimeout !== undefined) {
+    clearTimeout(keyBindingsReloadTimeout)
   }
-  scheduleReload()
+  keyBindingsReloadTimeout = setTimeout(async () => {
+    keyBindingsReloadTimeout = undefined
+    await KeyBindings.reloadUserKeyBindings()
+  }, ReloadDelay)
+}
+
+const handleEvent = (event) => {
+  if (event.detail.uri === settingsUri) {
+    scheduleReload()
+  } else if (event.detail.uri === keyBindingsUri) {
+    scheduleKeyBindingsReload()
+  }
 }
 
 export const dispose = async () => {
   if (reloadTimeout !== undefined) {
     clearTimeout(reloadTimeout)
     reloadTimeout = undefined
+  }
+  if (keyBindingsReloadTimeout !== undefined) {
+    clearTimeout(keyBindingsReloadTimeout)
+    keyBindingsReloadTimeout = undefined
   }
   if (!watcher) {
     return
@@ -49,9 +67,13 @@ export const hydrate = async () => {
     return
   }
   try {
-    const settingsPath = await PlatformPaths.getUserSettingsPath()
+    const [settingsPath, keyBindingsPath] = await Promise.all([
+      PlatformPaths.getUserSettingsPath(),
+      PlatformPaths.getUserKeyBindingsPath(),
+    ])
     const settingsDirectory = GetPathDirName.getPathDirName(settingsPath)
     settingsUri = PathToFileUri.pathToFileUri(settingsPath)
+    keyBindingsUri = PathToFileUri.pathToFileUri(keyBindingsPath)
     watcher = await FileWatcher.watch({
       exclude: [],
       roots: [PathToFileUri.pathToFileUri(settingsDirectory)],

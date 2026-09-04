@@ -74,10 +74,14 @@ export const setFallthroughKeyBindings = (id, fallthroughKeyBindings) => {
   return EmbedsWorker.invoke('ElectronWebContentsView.setFallthroughKeyBindings', id, fallthroughKeyBindings)
 }
 
-export const getStats = (id) => {
-  return EmbedsWorker.invoke('ElectronWebContentsView.getStats', id)
+export const getStats = (id, includeMemory = false) => {
+  return EmbedsWorker.invoke('ElectronWebContentsView.getStats', id, includeMemory)
 }
 
 export const getDomTree = (id) => {
   return EmbedsWorker.invoke('ElectronWebContentsView.getDomTree', id)
+}
+
+export const insertJavaScript = (id, code, userGesture = false) => {
+  return EmbedsWorker.invoke('ElectronWebContentsView.insertJavaScript', id, code, userGesture)
 }

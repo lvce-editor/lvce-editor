@@ -11,9 +11,9 @@ jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
   }
 })
 
-jest.unstable_mockModule('../src/parts/DialogWorker/DialogWorker.js', () => {
+jest.unstable_mockModule('../src/parts/HandleDialogWorkerMessagePort/HandleDialogWorkerMessagePort.ts', () => {
   return {
-    invokeAndTransfer: jest.fn(),
+    handleDialogWorkerMessagePort: jest.fn(),
   }
 })
 
@@ -53,9 +53,9 @@ jest.unstable_mockModule('../src/parts/WorkspaceConnection/WorkspaceConnection.j
   }
 })
 
-const DialogWorker = await import('../src/parts/DialogWorker/DialogWorker.js')
 const ExtensionManagementWorker = await import('../src/parts/ExtensionManagementWorker/ExtensionManagementWorker.js')
 const ExplorerViewWorker = await import('../src/parts/ExplorerViewWorker/ExplorerViewWorker.js')
+const HandleDialogWorkerMessagePort = await import('../src/parts/HandleDialogWorkerMessagePort/HandleDialogWorkerMessagePort.ts')
 const MainAreaWorker = await import('../src/parts/MainAreaWorker/MainAreaWorker.js')
 const SecretsViewWorker = await import('../src/parts/SecretsViewWorker/SecretsViewWorker.ts')
 const SettingsWorker = await import('../src/parts/SettingsWorker/SettingsWorker.js')
@@ -99,13 +99,14 @@ test('sendMessagePortToTerminalProcess uses the workspace connection', async () 
   expect(SharedProcess.invokeAndTransfer).not.toHaveBeenCalled()
 })
 
-test('sendMessagePortToDialogWorker', async () => {
-  const port = {}
+test('sendMessagePortToDialogWorker routes prompts through the renderer worker', async () => {
+  const { port1: port, port2 } = new MessageChannel()
 
   await SendMessagePortToExtensionHostWorker.sendMessagePortToDialogWorker(port, 'HandleMessagePort.handleMessagePort')
 
-  expect(DialogWorker.invokeAndTransfer).toHaveBeenCalledTimes(1)
-  expect(DialogWorker.invokeAndTransfer).toHaveBeenCalledWith('HandleMessagePort.handleMessagePort', port)
+  expect(HandleDialogWorkerMessagePort.handleDialogWorkerMessagePort).toHaveBeenCalledWith(port)
+  port.close()
+  port2.close()
 })
 
 test('sendMessagePortToExtensionHostWorker forwards to extension management worker', async () => {

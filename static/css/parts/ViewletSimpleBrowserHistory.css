@@ -1,4 +1,5 @@
 .SimpleBrowserHistory {
+  flex: 1;
   overflow: auto;
 }
 
@@ -22,4 +23,48 @@
 
 .SimpleBrowserHistorySearchInput {
   min-width: 160px;
+}
+
+.SimpleBrowserHistoryList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 0;
+  margin: 24px 0 0;
+  list-style: none;
+}
+
+.SimpleBrowserHistoryEntry {
+  display: grid;
+  grid-template-columns: minmax(160px, auto) minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--PanelBorder, rgba(128, 128, 128, 0.35));
+}
+
+.SimpleBrowserHistoryDate {
+  color: var(--DescriptionForeground, currentColor);
+  white-space: nowrap;
+}
+
+.SimpleBrowserHistoryUrl {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.SimpleBrowserHistoryEmpty {
+  margin-top: 24px;
+  color: var(--DescriptionForeground, currentColor);
+}
+
+@media (max-width: 600px) {
+  .SimpleBrowserHistoryEntry {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .SimpleBrowserHistoryDate {
+    grid-column: 1 / -1;
+  }
 }

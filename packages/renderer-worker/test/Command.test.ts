@@ -1,4 +1,4 @@
-import { expect, test } from '@jest/globals'
+import { expect, jest, test } from '@jest/globals'
 import * as Command from '../src/parts/Command/Command.js'
 
 test('execute - error - failed to load module', async () => {
@@ -10,4 +10,18 @@ test('execute - error - failed to load module', async () => {
       'failed to load module 41: TypeError: Failed to fetch dynamically imported module: http://localhost:3000/packages/renderer-worker/src/parts/Test/Test.ipc.js',
     ),
   )
+})
+
+test('execute - loads commands provided asynchronously', async () => {
+  const execute = jest.fn((_argument: string) => 'done')
+  Command.state.load = async () => {
+    return {
+      Commands: {},
+      getCommands: async () => ({ execute }),
+      name: 'About',
+    }
+  }
+
+  await expect(Command.execute('About.execute', 'argument')).resolves.toBe('done')
+  expect(execute).toHaveBeenCalledWith('argument')
 })

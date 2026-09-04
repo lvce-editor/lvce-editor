@@ -1,6 +1,7 @@
 import * as Command from '../Command/Command.js'
 import * as GetE2eTestsSandbox from '../GetE2eTestsSandbox/GetE2eTestsSandbox.ts'
 import * as Id from '../Id/Id.js'
+import * as Location from '../Location/Location.js'
 import * as SashType from '../SashType/SashType.js'
 import * as Transferrable from '../Transferrable/Transferrable.js'
 import type { E2eTestState } from './ViewletE2eTestTypes.ts'
@@ -50,7 +51,7 @@ export const loadContent = async (state: E2eTestState): Promise<E2eTestState> =>
   // const content = await FileSystem.readFile(filePath)
   const fileName = 'viewlet.about.js'
   const htmlFileName = toHtmlFileName(fileName)
-  const iframeSrc = `http://localhost:3001/tests/${htmlFileName}`
+  const iframeSrc = `/tests/${htmlFileName}`
   // const previewTransform = getPreviewTransform(state.width, state.height)
   return {
     ...state,
@@ -75,7 +76,7 @@ export const handleLoad = async (state: E2eTestState): Promise<E2eTestState> => 
   port2.onmessage = (event) => {
     console.log({ event })
   }
-  const iframeOrigin = 'http://localhost:3001'
+  const iframeOrigin = Location.getOrigin()
   return {
     ...state,
     portId: messagePortId,

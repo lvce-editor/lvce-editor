@@ -28,3 +28,12 @@ export const show2 = async (uid, menuId, x, y, ...args) => {
   // @ts-ignore
   return module.show2(uid, menuId, x, y, ...args)
 }
+
+export const show2Below = async (uid, menuId, x, y, ...args) => {
+  Assert.number(uid)
+  Assert.number(menuId)
+  Assert.number(x)
+  Assert.number(y)
+  const module = await getModule()
+  return module.show2Below(uid, menuId, x, y, ...args)
+}

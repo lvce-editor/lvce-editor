@@ -21,6 +21,16 @@ export const show2 = async (uid, menuId, x, y, ...args) => {
   }
 }
 
+export const show2Below = async (uid, menuId, x, y, ...args) => {
+  await SimpleBrowserOverlay.show('menu')
+  try {
+    await MenuWorker.invoke('Menu.show2Below', uid, menuId, x, y, ...args)
+  } catch (error) {
+    await SimpleBrowserOverlay.hide('menu')
+    throw error
+  }
+}
+
 export const closeSubMenu = async () => {
   await MenuWorker.invoke('Menu.closeSubMenu')
 }

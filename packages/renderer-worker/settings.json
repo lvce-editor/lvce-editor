@@ -4,7 +4,7 @@
     "description": "Controls how application updates are installed",
     "heading": "Update Mode",
     "id": "application.updateMode",
-    "type": 2,
+    "type": "string",
     "value": "none"
   },
   {
@@ -12,7 +12,7 @@
     "description": "Stores the cached color theme",
     "heading": "Color Theme Cache",
     "id": "colorTheme.cache",
-    "type": 2,
+    "type": "string",
     "value": ""
   },
   {
@@ -21,7 +21,7 @@
     "heading": "Completions Loading Delay",
     "id": "completions.loadingDelay",
     "minimum": 0,
-    "type": 5,
+    "type": "number",
     "value": 1200
   },
   {
@@ -29,7 +29,7 @@
     "description": "Watches the active color theme for changes during development",
     "heading": "Watch Color Theme",
     "id": "development.watchColorTheme",
-    "type": 3,
+    "type": "boolean",
     "value": true
   },
   {
@@ -37,7 +37,7 @@
     "description": "Enables the development file watcher",
     "heading": "File Watcher",
     "id": "develop.fileWatcher",
-    "type": 3,
+    "type": "boolean",
     "value": false
   },
   {
@@ -45,7 +45,7 @@
     "description": "Caches editor state for faster restoration",
     "heading": "Editor Cache",
     "id": "editor.cache",
-    "type": 3,
+    "type": "boolean",
     "value": true
   },
   {
@@ -53,7 +53,7 @@
     "description": "Controls whether semantic tokens are shown in the editor",
     "heading": "Semantic Tokens",
     "id": "editor.semanticTokens",
-    "type": 3,
+    "type": "boolean",
     "value": false
   },
   {
@@ -61,7 +61,7 @@
     "description": "Controls whether extensions are updated automatically",
     "heading": "Auto Update",
     "id": "extensions.autoUpdate",
-    "type": 3,
+    "type": "boolean",
     "value": true
   },
   {
@@ -69,7 +69,7 @@
     "description": "Controls when files are saved automatically",
     "heading": "Auto Save",
     "id": "files.autoSave",
-    "type": 2,
+    "type": "string",
     "value": "off"
   },
   {
@@ -77,7 +77,7 @@
     "description": "Controls whether changes to files in the workspace are watched",
     "heading": "Workspace File Watching",
     "id": "files.workspaceWatcher.enabled",
-    "type": 3,
+    "type": "boolean",
     "value": false
   },
   {
@@ -85,7 +85,7 @@
     "description": "Treats JavaScript files as JSX files",
     "heading": "JavaScript Files As JSX",
     "id": "languages.jsFilesAsJsx",
-    "type": 3,
+    "type": "boolean",
     "value": false
   },
   {
@@ -93,7 +93,7 @@
     "description": "Overrides the backend URL used by the layout",
     "heading": "Layout Backend URL",
     "id": "layout.backendUrl",
-    "type": 7,
+    "type": "url",
     "value": ""
   },
   {
@@ -101,24 +101,15 @@
     "description": "Caches the active file icon theme",
     "heading": "Icon Theme Cache",
     "id": "icon-theme.cache",
-    "type": 3,
+    "type": "boolean",
     "value": true
-  },
-  {
-    "category": "features",
-    "description": "Controls the number of worker threads used for search",
-    "heading": "Search Threads",
-    "id": "search.threads",
-    "minimum": 1,
-    "type": 5,
-    "value": 1
   },
   {
     "category": "workbench",
     "description": "Records the current session for replay",
     "heading": "Session Replay",
     "id": "sessionReplay.enabled",
-    "type": 3,
+    "type": "boolean",
     "value": false
   },
   {
@@ -136,7 +127,7 @@
         "label": "External Browser"
       }
     ],
-    "type": 1,
+    "type": "enum",
     "value": "newTab"
   },
   {
@@ -144,7 +135,7 @@
     "description": "Controls whether tabs playing audio show an audio indicator in the simple browser",
     "heading": "Simple Browser Audio Indicator",
     "id": "simpleBrowser.audioIndicator.enabled",
-    "type": 3,
+    "type": "boolean",
     "value": true
   },
   {
@@ -152,7 +143,7 @@
     "description": "Shows search suggestions in the simple browser",
     "heading": "Simple Browser Suggestions",
     "id": "simpleBrowser.suggestions",
-    "type": 3,
+    "type": "boolean",
     "value": false
   },
   {
@@ -160,23 +151,39 @@
     "description": "Configures keyboard shortcuts handled by the simple browser",
     "heading": "Simple Browser Shortcuts",
     "id": "simpleBrowser.shortcuts",
-    "type": 4,
+    "type": "array",
     "value": []
+  },
+  {
+    "category": "features",
+    "description": "Controls whether hovering over a simple browser tab shows its full title and memory usage",
+    "heading": "Simple Browser Tab Hover",
+    "id": "simpleBrowser.tabHover.enabled",
+    "type": "boolean",
+    "value": false
   },
   {
     "category": "features",
     "description": "Controls whether the simple browser uses tabs",
     "heading": "Simple Browser Tabs",
     "id": "simpleBrowser.tabs.enabled",
-    "type": 3,
+    "type": "boolean",
     "value": true
+  },
+  {
+    "category": "features",
+    "description": "Unloads inactive simple browser tabs to reduce memory usage and shows a cached page preview while they reload",
+    "heading": "Simple Browser Unload Tabs",
+    "id": "simpleBrowser.unloadTabs",
+    "type": "boolean",
+    "value": false
   },
   {
     "category": "features",
     "description": "Selects the terminal backend",
     "heading": "Terminal Backend",
     "id": "terminal.backend",
-    "type": 2,
+    "type": "string",
     "value": "real"
   },
   {
@@ -184,7 +191,7 @@
     "description": "Uses a separate connection for terminal communication",
     "heading": "Separate Terminal Connection",
     "id": "terminal.separateConnection",
-    "type": 3,
+    "type": "boolean",
     "value": false
   },
   {
@@ -192,7 +199,7 @@
     "description": "Controls whether the terminal uses tabs",
     "heading": "Terminal Tabs",
     "id": "terminal.tabs.enabled",
-    "type": 3,
+    "type": "boolean",
     "value": true
   },
   {
@@ -200,7 +207,7 @@
     "description": "Controls the zoom level of the window",
     "heading": "Zoom Level",
     "id": "window.zoomLevel",
-    "type": 5,
+    "type": "number",
     "value": 0
   },
   {
@@ -208,7 +215,7 @@
     "description": "Cleans up worker resources after they finish loading",
     "heading": "Clean Up Workers After Load",
     "id": "Workers.cleanUpAfterLoad",
-    "type": 3,
+    "type": "boolean",
     "value": false
   },
   {
@@ -216,7 +223,7 @@
     "description": "Specifies the workbench color theme",
     "heading": "Color Theme",
     "id": "workbench.colorTheme",
-    "type": 2,
+    "type": "string",
     "value": "slime"
   },
   {
@@ -224,7 +231,7 @@
     "description": "Specifies the workbench file icon theme",
     "heading": "Icon Theme",
     "id": "workbench.iconTheme",
-    "type": 2,
+    "type": "string",
     "value": "vscode-icons"
   },
   {
@@ -232,7 +239,7 @@
     "description": "Controls whether the activity bar is visible",
     "heading": "Activity Bar Visibility",
     "id": "workbench.activityBar.visible",
-    "type": 3,
+    "type": "boolean",
     "value": true
   },
   {
@@ -240,7 +247,7 @@
     "description": "Shows editor tabs while their content is loading",
     "heading": "Show Tabs While Loading",
     "id": "workbench.editor.showTabsWhileLoading",
-    "type": 3,
+    "type": "boolean",
     "value": false
   },
   {
@@ -248,7 +255,7 @@
     "description": "Controls whether the side bar is visible",
     "heading": "Side Bar Visibility",
     "id": "workbench.sideBar.visible",
-    "type": 3,
+    "type": "boolean",
     "value": true
   },
   {
@@ -256,7 +263,7 @@
     "description": "Controls the location of the side bar",
     "heading": "Side Bar Location",
     "id": "workbench.sideBarLocation",
-    "type": 2,
+    "type": "string",
     "value": "right"
   },
   {
@@ -264,7 +271,7 @@
     "description": "Saves workbench state when the window visibility changes",
     "heading": "Save State On Visibility Change",
     "id": "workbench.saveStateOnVisibilityChange",
-    "type": 3,
+    "type": "boolean",
     "value": true
   },
   {
@@ -272,7 +279,7 @@
     "description": "Specifies the workspace opened when no other workspace is selected",
     "heading": "Default Workspace",
     "id": "workspace.defaultWorkspace",
-    "type": 7,
+    "type": "url",
     "value": "fetch:///playground"
   },
   {
@@ -280,7 +287,7 @@
     "description": "Configures keybindings that fall through to browser views",
     "heading": "Browser View Keybindings",
     "id": "keyBindings.fallTroughBrowserView",
-    "type": 4,
+    "type": "array",
     "value": ["ctrl+p", "ctrl+shift+p", "ctrl+b", "ctrl+m", "ctrl+Tab"]
   }
 ]

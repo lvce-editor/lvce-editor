@@ -62,8 +62,6 @@ export const load = (moduleId: any): any => {
       return import('../FileWatcher/FileWatcher.ipc.ts')
     case ModuleId.FileWatcherExplorer:
       return import('../FileWatcherExplorer/FileWatcherExplorer.ipc.ts')
-    case ModuleId.FirefoxCookieImport:
-      return import('../FirefoxCookieImport/FirefoxCookieImport.ipc.ts')
     case ModuleId.GetElectronFileResponse:
       return import('../GetElectronFileResponse/GetElectronFileResponse.ipc.ts')
     case ModuleId.GetExtensions:
@@ -84,6 +82,8 @@ export const load = (moduleId: any): any => {
       return import('../HandleMessagePortForAuthProcess/HandleMessagePortForAuthProcess.ipc.ts')
     case ModuleId.HandleMessagePortForClipBoardProcess:
       return import('../HandleMessagePortForClipBoardProcess/HandleMessagePortForClipBoardProcess.ipc.ts')
+    case ModuleId.HandleMessagePortForCookieImportProcess:
+      return import('../HandleMessagePortForCookieImportProcess/HandleMessagePortForCookieImportProcess.ipc.ts')
     case ModuleId.HandleMessagePortForEmbedsProcess:
       return import('../HandleMessagePortForEmbedsProcess/HandleMessagePortForEmbedsProcess.ipc.ts')
     case ModuleId.HandleMessagePortForExtensionNodeProcess:

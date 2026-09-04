@@ -70,6 +70,8 @@ export const Output = 'Output'
 
 export const Panel = 'Panel'
 
+export const Ports = 'Ports'
+
 export const Problems = 'Problems'
 
 export const ProcessExplorer = 'ProcessExplorer'
@@ -145,3 +147,5 @@ export const EditorTextError = 'EditorTextError'
 export const Settings = 'Settings'
 
 export const Preview = 'Preview'
+
+export const ComponentState = 'ComponentState'

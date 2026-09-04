@@ -118,6 +118,28 @@
   overflow-wrap: anywhere;
 }
 
+.SecurityDefinitionList {
+  align-items: baseline;
+  column-gap: 24px;
+  contain: content;
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  margin: 0;
+  max-width: 640px;
+  row-gap: 12px;
+}
+
+.SecurityDefinitionList > dt {
+  color: var(--DescriptionForeground, color-mix(in srgb, var(--WorkbenchForeground) 76%, transparent));
+  font-weight: 600;
+}
+
+.SecurityDefinitionList > dd {
+  margin: 0;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
 .Resource {
   display: flex;
   contain: content;

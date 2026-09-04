@@ -24,6 +24,7 @@ test('registers the simple browser suggestion event bridge commands', () => {
 
 test('registers the simple browser event bridge commands', () => {
   expect(commandMap['ElectronBrowserView.handleAudioStateChanged']).toBeDefined()
+  expect(commandMap['ElectronBrowserView.handleBrowserViewDestroyed']).toBeDefined()
   expect(commandMap['ElectronBrowserView.handleContextMenu']).toBeDefined()
   expect(commandMap['ElectronBrowserView.handlePageFaviconUpdated']).toBeDefined()
   expect(commandMap['ElectronBrowserView.handleWindowOpen']).toBeDefined()
@@ -40,6 +41,10 @@ test('registers the menu select-current command', () => {
 
 test('registers the drop data command', () => {
   expect(commandMap['DropData.get']).toBeDefined()
+})
+
+test('registers the file handles command', () => {
+  expect(commandMap['FileHandles.get']).toBeDefined()
 })
 
 test('registers the active text document command', () => {

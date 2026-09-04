@@ -14,10 +14,11 @@ import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as Product from '../Product/Product.js'
 import * as RemoteCli from '../RemoteCli/RemoteCli.js'
 import * as StatusBarWorker from '../StatusBarWorker/StatusBarWorker.js'
-import * as TextSearchWorker from '../TextSearchWorker/TextSearchWorker.js'
 import * as WindowTitle from '../WindowTitle/WindowTitle.js'
 import * as WorkspaceConnection from '../WorkspaceConnection/WorkspaceConnection.js'
 import { state } from '../WorkspaceState/WorkspaceState.js'
+
+const pathSeparator = '/'
 
 const validateLocalPath = async (path) => {
   if (IsTest.isTest()) {
@@ -36,10 +37,9 @@ const validateLocalPath = async (path) => {
 export const setPath = async (path) => {
   Assert.string(path)
   await validateLocalPath(path)
-  // TODO not in electron
-  const pathSeparator = await FileSystem.getPathSeparator(path)
   await updateWindowTitle(path, pathSeparator)
-  if (path !== state.workspacePath) {
+  const workspaceChanged = path !== state.workspacePath
+  if (workspaceChanged) {
     await GlobalEventBus.emitEvent('workspace.beforeChange', state.workspacePath, path)
   }
   // @ts-ignore
@@ -47,20 +47,21 @@ export const setPath = async (path) => {
   // @ts-ignore
   state.workspaceUri = path
   state.pathSeparator = pathSeparator
-  WorkspaceConnection.reset()
-  RemoteCli.stop()
-  await FileSystemWorker.dispose()
-  await TextSearchWorker.dispose()
+  if (workspaceChanged) {
+    WorkspaceConnection.reset()
+    RemoteCli.stop()
+    await FileSystemWorker.dispose()
+  }
   await onWorkspaceChange()
 }
 
-export const setUri = async (uri, providedPathSeparator, connection) => {
+export const setUri = async (uri, connectionOrPathSeparator, legacyConnection) => {
+  const connection = legacyConnection || (typeof connectionOrPathSeparator === 'object' ? connectionOrPathSeparator : undefined)
   const protocol = GetProtocol.getProtocol(uri)
   const path = connection?.workspacePath || (protocol === 'file' ? decodeURIComponent(uri.slice('file://'.length)) : uri)
   if (protocol === 'file' && !connection) {
     await validateLocalPath(path)
   }
-  const pathSeparator = providedPathSeparator ?? (await FileSystem.getPathSeparator(uri))
   await updateWindowTitle(path, pathSeparator)
   if (Platform.getPlatform() === PlatformType.Electron) {
     await Location.setWorkspaceUri(uri)
@@ -83,7 +84,6 @@ export const setUri = async (uri, providedPathSeparator, connection) => {
     RemoteCli.stop()
   }
   await FileSystemWorker.dispose()
-  await TextSearchWorker.dispose()
   await onWorkspaceChange()
 }
 
@@ -96,7 +96,7 @@ const handleRemoteCliOpenRequest = async (request) => {
     throw new Error('Remote workspace connection is not available')
   }
   const resolved = RemoteCli.resolveOpenRequest(currentUri, request)
-  await setUri(resolved.workspaceUri, state.pathSeparator || '/', {
+  await setUri(resolved.workspaceUri, {
     command,
     remoteCliUrl,
     webSocketUrl,
@@ -182,7 +182,7 @@ export const hydrate = async ({ href }) => {
   // TODO also need to check whether it is a folder or file
   state.workspacePath = resolvedRoot.path
   state.homeDir = resolvedRoot.homeDir
-  state.pathSeparator = resolvedRoot.pathSeparator
+  state.pathSeparator = pathSeparator
   state.workspaceUri = resolvedRoot.uri
   state.source = resolvedRoot.source
 
@@ -226,7 +226,6 @@ export const pathRelative = (path) => {
 
 // TODO this should be in FileSystem module
 export const pathDirName = (path) => {
-  const pathSeparator = state.pathSeparator || '/'
   const index = path.lastIndexOf(pathSeparator)
   if (index === -1) {
     return Character.EmptyString

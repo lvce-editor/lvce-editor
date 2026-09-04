@@ -13,12 +13,23 @@ test('https url', () => {
   expect(IframeSrc.toIframeSrc('https://example.com')).toBe('https://example.com')
 })
 
+test('https url with surrounding whitespace', () => {
+  expect(IframeSrc.toIframeSrc('  https://example.com/?space=ok  ')).toBe('https://example.com/?space=ok')
+})
+
 test('url without protocol', () => {
   expect(IframeSrc.toIframeSrc('example.com')).toBe('https://example.com')
 })
 
 test('search term', () => {
   expect(IframeSrc.toIframeSrc('example')).toBe('https://www.google.com/search?q=example')
+})
+
+test('identifies search terms for history', () => {
+  expect(IframeSrc.isSearchInput('cheeseburger')).toBe(true)
+  expect(IframeSrc.isSearchInput('example.com')).toBe(false)
+  expect(IframeSrc.isSearchInput('https://example.com')).toBe(false)
+  expect(IframeSrc.isSearchInput('g', [{ prefix: 'g', url: 'https://google.com' }])).toBe(false)
 })
 
 test('not a url', () => {

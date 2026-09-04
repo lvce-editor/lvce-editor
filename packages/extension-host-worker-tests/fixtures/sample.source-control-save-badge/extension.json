@@ -1,0 +1,18 @@
+{
+  "id": "sample.source-control-save-badge",
+  "name": "Source Control Save Badge",
+  "version": "0.0.0",
+  "browser": "main.js",
+  "isolated": true,
+  "activation": ["onSourceControl:memfs", "onCommand:sourceControlSaveBadge.clear"],
+  "commands": [
+    {
+      "id": "sourceControlSaveBadge.clear"
+    }
+  ],
+  "sourceControlProviders": [
+    {
+      "id": "source-control-save-badge"
+    }
+  ]
+}

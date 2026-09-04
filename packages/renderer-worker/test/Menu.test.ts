@@ -31,6 +31,13 @@ test('show2 hides the Simple Browser while a menu is open', async () => {
   expect(MenuWorker.invoke).toHaveBeenCalledWith('Menu.show2', 7, 'EditorContextMenu', 10, 20, 'arg')
 })
 
+test('show2Below hides the Simple Browser while a menu is open', async () => {
+  await Menu.show2Below(7, 'EditorContextMenu', 10, 20, 'arg')
+
+  expect(SimpleBrowserOverlay.show).toHaveBeenCalledWith('menu')
+  expect(MenuWorker.invoke).toHaveBeenCalledWith('Menu.show2Below', 7, 'EditorContextMenu', 10, 20, 'arg')
+})
+
 test('hide restores the Simple Browser even when hiding the menu fails', async () => {
   // @ts-ignore
   MenuWorker.invoke.mockRejectedValue(new Error('failed'))

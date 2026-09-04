@@ -1,4 +1,3 @@
-import * as Assert from '../Assert/Assert.ts'
 import * as Command from '../Command/Command.js'
 import * as ExtensionHostCommandType from '../ExtensionHostCommandType/ExtensionHostCommandType.js'
 import * as ExtensionManagementWorker from '../ExtensionManagementWorker/ExtensionManagementWorker.js'
@@ -168,19 +167,6 @@ export const readDirWithFileTypes = (uri) => {
     legacyParams: [path],
     protocol,
   })
-}
-
-export const getPathSeparator = async (uri) => {
-  const { protocol } = getProviderProtocolPathAndUri(uri)
-  const pathSeparator = await executeProvider({
-    isolatedMethod: 'Extensions.executeFileSystemProviderGetPathSeparator',
-    isolatedParams: [],
-    legacyMethod: ExtensionHostCommandType.FileSystemGetPathSeparator,
-    legacyParams: [],
-    protocol,
-  })
-  Assert.string(pathSeparator)
-  return pathSeparator
 }
 
 export const isReadonly = async (uri) => {

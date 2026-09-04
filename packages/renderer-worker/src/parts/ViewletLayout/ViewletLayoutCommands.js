@@ -83,6 +83,7 @@ export const CommandsWithSideEffects = {
   openOutput: ViewletLayout.openOutput,
   openProblems: ViewletLayout.openProblems,
   openSideBarViewlet: ViewletLayout.openSideBarView,
+  openTextSearch: ViewletLayout.openTextSearch,
   openSecondarySideBarViewlet: ViewletLayout.openSecondarySideBarView,
   openPanelViewlet: ViewletLayout.openPanelView,
   refreshAuthState: ViewletLayout.refreshAuthState,

@@ -245,6 +245,8 @@ export const settings = {
 }
 
 export const textSearch = {
+  serializeCommands: true,
+  serializeRenderPipelines: true,
   extendModule(_workerViewlet, { wrapCommand }) {
     return {
       dispose(state) {
@@ -259,15 +261,25 @@ export const textSearch = {
       isSearchEditor: state.uri.startsWith('search-editor://'),
     }
   },
-  wrapCommand(command, _defaultWrapCommand, { worker }) {
+  wrapCommand(command, _defaultWrapCommand, { createRenderInvocation, enqueueRender, worker }) {
     return async (state, ...args) => {
       await worker.invoke(`TextSearch.${command}`, state.uid, ...args)
-      const diff = await worker.invoke('TextSearch.diff2', state.uid, ...args)
-      if (diff.length === 0) {
-        return state
-      }
-      const commands = await worker.invoke('TextSearch.render2', state.uid, diff)
-      return { ...state, commands }
+      const invocation = createRenderInvocation(state.uid)
+      return enqueueRender(state.uid, async () => {
+        try {
+          if (!invocation.isLatest()) {
+            return state
+          }
+          const diff = await worker.invoke('TextSearch.diff2', state.uid, ...args)
+          if (diff.length === 0) {
+            return state
+          }
+          const commands = await worker.invoke('TextSearch.render2', state.uid, diff)
+          return { ...state, commands }
+        } finally {
+          invocation.finish()
+        }
+      })
     }
   },
 }

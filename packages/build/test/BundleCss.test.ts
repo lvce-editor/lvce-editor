@@ -38,7 +38,31 @@ test('bundleCss does not add filename comment to App.css', async () => {
   }
 }, 30_000)
 
-test('bundleCss lets the simple browser fill the preview area height', async () => {
+test('bundleCss styles settings checkboxes like compact editor controls', async () => {
+  const dir = await mkdtemp(join(tmpdir(), 'lvce-bundle-css-'))
+
+  try {
+    await bundleCss({
+      outDir: dir,
+      assetDir: '',
+    })
+
+    const css = await readFile(join(dir, 'parts', 'SettingsItems.css'), 'utf8')
+
+    expect(css).toContain(`.CheckBox {
+  appearance: none;
+  background-color: var(--CheckboxBackground, var(--InputBoxBackground, #313131));`)
+    expect(css).toContain('border-radius: 3px;')
+    expect(css).toContain('height: 18px;')
+    expect(css).toContain('width: 18px;')
+    expect(css).toContain('.CheckBox:checked::before {')
+    expect(css).toContain('.CheckBox:focus-visible {')
+  } finally {
+    await rm(dir, { recursive: true, force: true })
+  }
+}, 30_000)
+
+test('bundleCss lets the simple browser fill the preview area height and use workbench theme colors', async () => {
   const dir = await mkdtemp(join(tmpdir(), 'lvce-bundle-css-'))
 
   try {
@@ -49,14 +73,11 @@ test('bundleCss lets the simple browser fill the preview area height', async () 
 
     const css = await readFile(join(dir, 'parts', 'ViewletSimpleBrowser.css'), 'utf8')
 
-    expect(css).toContain(`.SimpleBrowser {
-  contain: strict;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  min-height: 0;
-  position: relative;
-}`)
+    expect(css).toContain('background: var(--EditorBackground, var(--MainBackground));')
+    expect(css).toContain('color: var(--WorkbenchForeground);')
+    expect(css).toContain('flex: 1;')
+    expect(css).toContain('min-height: 0;')
+    expect(css).toContain('background: var(--TabsBackground, var(--MainBackground, var(--EditorBackground)));')
   } finally {
     await rm(dir, { recursive: true, force: true })
   }
@@ -344,6 +365,41 @@ test('bundleCss preserves the extension runtime status layout', async () => {
   font-weight: 600;
 }`)
     expect(css).toContain(`.RuntimeStatusDefinitionList > dd {
+  margin: 0;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}`)
+  } finally {
+    await rm(dir, { recursive: true, force: true })
+  }
+}, 30_000)
+
+test('bundleCss preserves the extension security details layout', async () => {
+  const dir = await mkdtemp(join(tmpdir(), 'lvce-bundle-css-'))
+
+  try {
+    await bundleCss({
+      outDir: dir,
+      assetDir: '',
+    })
+
+    const css = await readFile(join(dir, 'parts', 'ViewletExtensionDetail.css'), 'utf8')
+
+    expect(css).toContain(`.SecurityDefinitionList {
+  align-items: baseline;
+  column-gap: 24px;
+  contain: content;
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  margin: 0;
+  max-width: 640px;
+  row-gap: 12px;
+}`)
+    expect(css).toContain(`.SecurityDefinitionList > dt {
+  color: var(--DescriptionForeground, color-mix(in srgb, var(--WorkbenchForeground) 76%, transparent));
+  font-weight: 600;
+}`)
+    expect(css).toContain(`.SecurityDefinitionList > dd {
   margin: 0;
   min-width: 0;
   overflow-wrap: anywhere;

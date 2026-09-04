@@ -145,6 +145,45 @@ const createWorkerViewletInternal = ({ adapter, config, context, worker }) => {
   const Commands = {}
   const Events = {}
   const { idKey } = state
+  let nextRenderInvocationId = 0
+  const activeRenderInvocations = new Map()
+  const renderQueues = new Map()
+
+  const createRenderInvocation = (uid) => {
+    const invocationId = ++nextRenderInvocationId
+    activeRenderInvocations.set(uid, invocationId)
+    return {
+      finish() {
+        if (activeRenderInvocations.get(uid) === invocationId) {
+          activeRenderInvocations.delete(uid)
+        }
+      },
+      isLatest() {
+        return activeRenderInvocations.get(uid) === invocationId
+      },
+    }
+  }
+
+  const enqueueRender = async (uid, render) => {
+    const previous = renderQueues.get(uid) || Promise.resolve()
+    const run = async () => {
+      try {
+        await previous
+      } catch {
+        // The previous caller receives its error; later renders must still run.
+      }
+      return render()
+    }
+    const current = run()
+    renderQueues.set(uid, current)
+    try {
+      return await current
+    } finally {
+      if (renderQueues.get(uid) === current) {
+        renderQueues.delete(uid)
+      }
+    }
+  }
 
   if (capabilities.directRender) {
     Object.defineProperty(Commands, '__directEventRpcId', {
@@ -170,7 +209,7 @@ const createWorkerViewletInternal = ({ adapter, config, context, worker }) => {
     return newState
   }
 
-  const runRenderPipeline = async (
+  const runRenderPipelineInternal = async (
     currentState,
     invocationArguments = {},
     diffMethod = methods.diff,
@@ -186,6 +225,14 @@ const createWorkerViewletInternal = ({ adapter, config, context, worker }) => {
     }
     const newState = await applyOutputs(renderedState, invocation, isHotReload)
     return adapter.transformRenderedState(newState)
+  }
+
+  const runRenderPipeline = (currentState, ...args) => {
+    const render = () => runRenderPipelineInternal(currentState, ...args)
+    if (adapter.serializeRenderPipelines) {
+      return enqueueRender(currentState[idKey], render)
+    }
+    return render()
   }
 
   const runLoadContent = async (currentState, savedState, args, createMethod, loadMethod, isHotReload) => {
@@ -204,7 +251,7 @@ const createWorkerViewletInternal = ({ adapter, config, context, worker }) => {
     return runLoadContent(currentState, savedState, args, methods.create, methods.loadContent, false)
   }
 
-  const runCommandRenderPipeline = async (currentState, args) => {
+  const runCommandRenderPipelineInternal = async (currentState, args) => {
     const invocation = createInvocation(currentState, context, { args })
     invocation.results.diff = await invokeConfiguredMethod(worker, methods.commandDiff || methods.diff, invocation)
     if (config.commandSkipRenderWhenDiffEmpty && invocation.results.diff.length === 0) {
@@ -222,6 +269,14 @@ const createWorkerViewletInternal = ({ adapter, config, context, worker }) => {
     return adapter.transformRenderedState(newState)
   }
 
+  const runCommandRenderPipeline = (currentState, args) => {
+    const render = () => runCommandRenderPipelineInternal(currentState, args)
+    if (adapter.serializeRenderPipelines) {
+      return enqueueRender(currentState[idKey], render)
+    }
+    return render()
+  }
+
   Object.defineProperty(Commands, '__renderPending', {
     value(currentState) {
       return runCommandRenderPipeline(currentState, [])
@@ -236,7 +291,7 @@ const createWorkerViewletInternal = ({ adapter, config, context, worker }) => {
   }
 
   const createCommandWrapper = (command) => {
-    return adapter.wrapCommand(command, wrapCommand, { context, worker })
+    return adapter.wrapCommand(command, wrapCommand, { context, createRenderInvocation, enqueueRender, worker })
   }
 
   const wrapConfiguredCommand = (methodName) => {
@@ -322,6 +377,16 @@ const createWorkerViewletInternal = ({ adapter, config, context, worker }) => {
   const saveState = methods.saveState
     ? (currentState) => invokeConfiguredMethod(worker, methods.saveState, createInvocation(currentState, context))
     : undefined
+  const getComponentState = methods.getComponentState
+    ? (currentState) => invokeConfiguredMethod(worker, methods.getComponentState, createInvocation(currentState, context))
+    : undefined
+  const setComponentState = methods.setComponentState
+    ? async (currentState, componentState) => {
+        const invocation = createInvocation(currentState, context, { componentState })
+        await invokeConfiguredMethod(worker, methods.setComponentState, invocation)
+        return runCommandRenderPipeline(currentState, [])
+      }
+    : undefined
   const dispose = methods.dispose
     ? (currentState) => invokeConfiguredMethod(worker, methods.dispose, createInvocation(currentState, context))
     : undefined
@@ -383,6 +448,7 @@ const createWorkerViewletInternal = ({ adapter, config, context, worker }) => {
     create,
     dispose,
     getCommands,
+    getComponentState,
     getKeyBindings,
     getQuickPickMenuEntries,
     getMenus,
@@ -403,6 +469,8 @@ const createWorkerViewletInternal = ({ adapter, config, context, worker }) => {
     renderTitle,
     resize,
     saveState,
+    serializeCommands: Boolean(adapter.serializeCommands),
+    setComponentState,
     workspaceChangeEvent,
     workspaceChangeEventPrepend,
   }

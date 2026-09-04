@@ -8,10 +8,11 @@ import * as IsElectron from '../IsElectron/IsElectron.ts'
 import * as IsProduction from '../IsProduction/IsProduction.ts'
 import * as IsPromptMode from '../IsPromptMode/IsPromptMode.ts'
 import * as ParentIpc from '../MainProcess/MainProcess.ts'
-import * as Platform from '../Platform/Platform.ts'
 import * as PlatformPaths from '../PlatformPaths/PlatformPaths.ts'
 import * as Root from '../Root/Root.ts'
 import * as WorkspaceSource from '../WorkspaceSource/WorkspaceSource.ts'
+
+const pathSeparator = '/'
 
 const getAbsolutePath = (path: any): any => {
   if (IsAbsolutePath.isAbsolutePath(path)) {
@@ -32,7 +33,6 @@ const toUri = (path: any): any => {
 
 interface WindowWorkspace {
   readonly path: string
-  readonly pathSeparator: string
   readonly uri: string
 }
 
@@ -48,13 +48,11 @@ const getWindowWorkspace = (href: string): WindowWorkspace | undefined => {
   if (url.protocol === 'file:') {
     return {
       path: fileURLToPath(url),
-      pathSeparator: Platform.getPathSeparator(),
       uri: url.href,
     }
   }
   return {
     path: url.href,
-    pathSeparator: '/',
     uri: url.href,
   }
 }
@@ -67,7 +65,7 @@ export const resolveRoot = async (href = ''): Promise<any> => {
         homeDir: PlatformPaths.getHomeDir(),
         homeDirUri: toUri(PlatformPaths.getHomeDir()),
         path: windowWorkspace.path,
-        pathSeparator: windowWorkspace.pathSeparator,
+        pathSeparator,
         source: WorkspaceSource.SharedProcessCliArg,
         uri: windowWorkspace.uri,
         workspaceId: GetWorkspaceId.getWorkspaceId(windowWorkspace.uri),
@@ -82,7 +80,7 @@ export const resolveRoot = async (href = ''): Promise<any> => {
         homeDir: PlatformPaths.getHomeDir(),
         homeDirUri: toUri(PlatformPaths.getHomeDir()),
         path: actual,
-        pathSeparator: Platform.getPathSeparator(),
+        pathSeparator,
         source: WorkspaceSource.SharedProcessCliArg,
         uri: toUri(actual),
         workspaceId: GetWorkspaceId.getWorkspaceId(actual),
@@ -93,7 +91,7 @@ export const resolveRoot = async (href = ''): Promise<any> => {
         homeDir: PlatformPaths.getHomeDir(),
         homeDirUri: toUri(PlatformPaths.getHomeDir()),
         path: last,
-        pathSeparator: Platform.getPathSeparator(),
+        pathSeparator,
         source: WorkspaceSource.SharedProcessCliArg,
         uri: toUri(last),
         workspaceId: GetWorkspaceId.getWorkspaceId(last),
@@ -109,7 +107,7 @@ export const resolveRoot = async (href = ''): Promise<any> => {
       homeDir: PlatformPaths.getHomeDir(),
       homeDirUri: toUri(PlatformPaths.getHomeDir()),
       path,
-      pathSeparator: Platform.getPathSeparator(),
+      pathSeparator,
       source: WorkspaceSource.SharedProcessEnv,
       uri: path ? toUri(path) : '',
       workspaceId: GetWorkspaceId.getWorkspaceId(path),
@@ -123,7 +121,7 @@ export const resolveRoot = async (href = ''): Promise<any> => {
     homeDir: PlatformPaths.getHomeDir(),
     homeDirUri: toUri(PlatformPaths.getHomeDir()),
     path: absolutePath,
-    pathSeparator: Platform.getPathSeparator(),
+    pathSeparator,
     source: WorkspaceSource.SharedProcessDefault,
     uri: toUri(absolutePath),
     workspaceId,

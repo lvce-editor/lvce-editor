@@ -12,9 +12,14 @@ jest.unstable_mockModule('../src/parts/WebSocketCapability/WebSocketCapability.j
   create: jest.fn(),
 }))
 
+jest.unstable_mockModule('../src/parts/WorkspaceConnection/WorkspaceConnection.js', () => ({
+  connectMessagePort: jest.fn(async () => false),
+}))
+
 const ExtensionNodeRpc = await import('../src/parts/ExtensionNodeRpc/ExtensionNodeRpc.js')
 const SharedProcess = await import('../src/parts/SharedProcess/SharedProcess.js')
 const WebSocketCapability = await import('../src/parts/WebSocketCapability/WebSocketCapability.js')
+const WorkspaceConnection = await import('../src/parts/WorkspaceConnection/WorkspaceConnection.js')
 
 test('createConnection returns an authenticated remote node process URL', async () => {
   // @ts-ignore
@@ -58,6 +63,21 @@ test('transfers an extension-bound message port to the shared process', async ()
     'builtin.git',
     'git-client',
   )
+  port1.close()
+  port2.close()
+})
+
+test('bridges an extension-bound message port to an active remote workspace', async () => {
+  const { port1, port2 } = new MessageChannel()
+  jest.mocked(WorkspaceConnection.connectMessagePort).mockResolvedValueOnce(true)
+
+  await ExtensionNodeRpc.createMessagePort(port1, 'builtin.git', 'git-client')
+
+  expect(WorkspaceConnection.connectMessagePort).toHaveBeenCalledWith('extension-node-process', port1, {
+    extensionId: 'builtin.git',
+    rpcId: 'git-client',
+  })
+  expect(SharedProcess.invokeAndTransfer).not.toHaveBeenCalled()
   port1.close()
   port2.close()
 })

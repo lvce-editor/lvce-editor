@@ -19,3 +19,5 @@ export const Debug = 'debug'
 export const Http = 'http'
 
 export const Https = 'https'
+
+export const LiveComponentState = 'live-component-state'

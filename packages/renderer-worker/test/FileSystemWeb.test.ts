@@ -23,10 +23,6 @@ test('rename', async () => {
   expect(FileSystemWeb.rename('/tmp/some-file.txt', '/tmp/renamed.txt')).rejects.toThrow(new Error('not implemented'))
 })
 
-test('getPathSeparator', () => {
-  expect(FileSystemWeb.getPathSeparator()).toBe('/')
-})
-
 test('writeFile', async () => {
   await FileSystemWeb.writeFile('/file.txt', 'test')
   expect(FileSystemWeb.state.files).toEqual({ '/file.txt': 'test' })

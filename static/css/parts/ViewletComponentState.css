@@ -1,0 +1,58 @@
+.ComponentStateView {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  height: 100%;
+  overflow: auto;
+  padding: 16px;
+}
+
+.ComponentStateHeading {
+  font-size: 16px;
+  margin: 0;
+}
+
+.ComponentStateDescription {
+  color: var(--SideBarForeground);
+  opacity: 0.75;
+}
+
+.ComponentStateGrid {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+}
+
+.ComponentStateCard {
+  background: var(--InputBackground);
+  border: 1px solid var(--InputBorder, transparent);
+  color: var(--SideBarForeground);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-height: 84px;
+  padding: 12px;
+  text-align: left;
+}
+
+.ComponentStateCard:hover:not(:disabled) {
+  background: var(--ListHoverBackground);
+}
+
+.ComponentStateCard:focus-visible {
+  outline: 1px solid var(--FocusBorder);
+  outline-offset: -1px;
+}
+
+.ComponentStateCard:disabled {
+  cursor: default;
+  opacity: 0.55;
+}
+
+.ComponentStateCardUid,
+.ComponentStateCardStatus {
+  font-size: 11px;
+  opacity: 0.75;
+}

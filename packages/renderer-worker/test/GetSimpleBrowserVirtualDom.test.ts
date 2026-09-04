@@ -3,13 +3,7 @@ import * as GetSimpleBrowserVirtualDom from '../src/parts/GetSimpleBrowserVirtua
 import * as VirtualDomElements from '../src/parts/VirtualDomElements/VirtualDomElements.js'
 
 test('renders a snapshot below the browser header', () => {
-  const dom = GetSimpleBrowserVirtualDom.getSimpleBrowserVirtualDom(
-    true,
-    true,
-    false,
-    'https://example.com',
-    'blob:https://example.com/snapshot',
-  )
+  const dom = GetSimpleBrowserVirtualDom.getSimpleBrowserVirtualDom(true, true, false, 'https://example.com', 'blob:https://example.com/snapshot')
 
   expect(dom[0].childCount).toBe(3)
   expect(dom.slice(-2)).toEqual([
@@ -26,6 +20,44 @@ test('renders a snapshot below the browser header', () => {
       childCount: 0,
     },
   ])
+})
+
+test('renders a cached page snapshot through the virtual dom', () => {
+  const pageSnapshotDom = [
+    {
+      type: VirtualDomElements.Article,
+      className: 'article',
+      childCount: 1,
+    },
+    {
+      type: VirtualDomElements.Text,
+      text: 'Cached page',
+      childCount: 0,
+    },
+  ]
+  const dom = GetSimpleBrowserVirtualDom.getSimpleBrowserVirtualDom(
+    false,
+    false,
+    true,
+    'https://example.com',
+    '',
+    [],
+    -1,
+    [],
+    0,
+    true,
+    true,
+    pageSnapshotDom,
+  )
+
+  expect(dom).toContainEqual({
+    type: VirtualDomElements.Div,
+    className: 'SimpleBrowserPreview',
+    ariaHidden: true,
+    inert: true,
+    childCount: 1,
+  })
+  expect(dom.slice(-2)).toEqual(pageSnapshotDom)
 })
 
 test('names the address input so focus can be restored after rendering', () => {
@@ -80,6 +112,51 @@ test('renders accessible search suggestions above an undimmed snapshot', () => {
       onClick: 'handleClickSuggestion',
     }),
   )
+})
+
+test('renders the first matching suggestion inline without changing the input value', () => {
+  const dom = GetSimpleBrowserVirtualDom.getSimpleBrowserVirtualDom(false, false, false, 'cheese', '', [
+    { favicon: '', type: 'history', value: 'cheeseburger' },
+  ])
+
+  expect(dom).toContainEqual(
+    expect.objectContaining({
+      ariaHidden: true,
+      className: 'SimpleBrowserInlineSuggestion',
+      'data-value': 'cheeseburger',
+    }),
+  )
+  expect(dom).toContainEqual(expect.objectContaining({ className: 'SimpleBrowserInlineSuggestionSuffix' }))
+  expect(dom).toContainEqual(expect.objectContaining({ name: 'simple-browser-address', value: 'cheese' }))
+  expect(dom).toContainEqual(expect.objectContaining({ text: 'burger' }))
+})
+
+test('does not render an inline suggestion for an exact match', () => {
+  const dom = GetSimpleBrowserVirtualDom.getSimpleBrowserVirtualDom(false, false, false, 'cheese', '', [
+    { favicon: '', type: 'search', value: 'cheese' },
+  ])
+
+  expect(dom).not.toContainEqual(expect.objectContaining({ className: 'SimpleBrowserInlineSuggestion' }))
+})
+
+test('renders the stored favicon for a URL suggestion', () => {
+  const dom = GetSimpleBrowserVirtualDom.getSimpleBrowserVirtualDom(false, false, false, 'soundcloud', '', [
+    {
+      favicon: 'https://soundcloud.com/favicon.ico',
+      type: 'url',
+      value: 'https://soundcloud.com',
+    },
+  ])
+
+  expect(dom).toContainEqual(
+    expect.objectContaining({
+      className: 'SimpleBrowserSuggestionFavicon',
+      crossOrigin: 'anonymous',
+      src: 'https://soundcloud.com/favicon.ico',
+      type: VirtualDomElements.Img,
+    }),
+  )
+  expect(dom).toContainEqual(expect.objectContaining({ 'data-value': 'https://soundcloud.com' }))
 })
 
 test('renders selectable tabs with favicon, title, close, and new tab controls', () => {
@@ -182,6 +259,51 @@ test('omits the tab strip when tabs are disabled', () => {
 
   expect(dom[0].childCount).toBe(1)
   expect(dom).not.toContainEqual(expect.objectContaining({ className: 'SimpleBrowserTabs' }))
+})
+
+test('renders the rich tab hover with the full title and memory usage', () => {
+  const tabHover = {
+    index: 0,
+    left: 24,
+    statusLabel: 'Memory usage: 42 MB',
+    title: 'A complete page title',
+  }
+  const dom = GetSimpleBrowserVirtualDom.getSimpleBrowserVirtualDom(
+    false,
+    false,
+    false,
+    '',
+    'blob:https://example.com/snapshot',
+    [],
+    -1,
+    [{ favicon: '', title: 'Example' }],
+    0,
+    true,
+    true,
+    [],
+    tabHover,
+  )
+
+  expect(dom).toContainEqual(
+    expect.objectContaining({
+      ariaDescribedBy: 'SimpleBrowserTabHover',
+      ariaLabel: 'Example',
+      className: 'SimpleBrowserTab SimpleBrowserTabSelected',
+      onPointerOut: 'handlePointerOutSimpleBrowserTab',
+      onPointerOver: 'handlePointerOverSimpleBrowserTab',
+    }),
+  )
+  expect(dom).toContainEqual(
+    expect.objectContaining({
+      className: 'SimpleBrowserTabHover',
+      id: 'SimpleBrowserTabHover',
+      left: 24,
+      role: 'tooltip',
+    }),
+  )
+  expect(dom).toContainEqual(expect.objectContaining({ text: 'A complete page title' }))
+  expect(dom).toContainEqual(expect.objectContaining({ className: 'SimpleBrowserTabHoverStatus' }))
+  expect(dom).toContainEqual(expect.objectContaining({ text: 'Memory usage: 42 MB' }))
 })
 
 test('renders an accessible browser menu button', () => {

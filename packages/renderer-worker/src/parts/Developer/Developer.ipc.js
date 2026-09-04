@@ -21,6 +21,7 @@ export const Commands = {
   getStartupPerformanceContent: Developer.getStartupPerformanceContent,
   measureExtensionManagementWorkerLatency: MeasureExtensionManagementWorkerLatency.measureExtensionManagementWorkerLatency,
   openBrowserViewOverview: Developer.openBrowserViewOverview,
+  openComponentState: Developer.openComponentState,
   openCacheFolder: OpenSpecialFolder.openCacheFolder,
   openConfigFolder: OpenSpecialFolder.openConfigFolder,
   openDataFolder: OpenSpecialFolder.openDataFolder,

@@ -95,10 +95,6 @@ const getError = async (promise) => {
   }
 }
 
-test('getPathSeparator', async () => {
-  expect(FileSystemHtml.getPathSeparator()).toBe('/')
-})
-
 test('exists - exists', async () => {
   // @ts-ignore
   PersistentFileHandle.getHandle.mockResolvedValue({})

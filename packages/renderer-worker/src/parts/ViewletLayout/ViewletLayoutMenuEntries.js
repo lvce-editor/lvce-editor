@@ -197,11 +197,11 @@ export const getQuickPickMenuEntries = () => {
       label: 'Focus: Extensions',
     },
     {
-      id: 'Preferences.openUserKeyBindings',
+      id: 'Preferences.openKeyBindingsJson',
       label: 'Preferences: Open User Key Bindings',
     },
     {
-      id: 'Preferences.openDefaultKeyBindings',
+      id: 'Main.openKeyBindings',
       label: 'Preferences: Open Default Key Bindings',
       aliases: ['Set Key Bindings', 'Key Map', 'Key Mapping'],
     },
@@ -240,6 +240,11 @@ export const getQuickPickMenuEntries = () => {
     {
       id: 'Developer.downloadViewletState',
       label: 'Developer: Download Viewlets',
+    },
+    {
+      id: 'Developer.openComponentState',
+      label: 'Developer: Open Component State',
+      aliases: ['Edit Component State', 'Inspect Component State'],
     },
     {
       id: 'Developer.allocateMemoryInSharedProcess',

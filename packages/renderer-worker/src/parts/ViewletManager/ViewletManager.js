@@ -128,6 +128,9 @@ const runFn = async (instance, id, key, fn, args) => {
     ViewletStates.setRenderedState(id, newState)
     await RendererProcess.invoke(/* Viewlet.sendMultiple */ kSendMultiple, /* commands */ commands)
     runLoadContentLaterForCreatedViewlets(commands)
+    if (ViewletStates.getInstance(id) === instance && instance.factory.afterRender) {
+      await instance.factory.afterRender(oldState, newState)
+    }
   } else {
     return fn(instance.state, ...args)
   }

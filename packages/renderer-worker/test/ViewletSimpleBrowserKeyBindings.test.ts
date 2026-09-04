@@ -14,6 +14,10 @@ const expectedTabKeyBindings = [
     command: 'SimpleBrowser.createNewTab',
   },
   {
+    key: KeyModifier.CtrlCmd | KeyCode.KeyH,
+    command: 'SimpleBrowser.openHistory',
+  },
+  {
     key: KeyModifier.CtrlCmd | KeyCode.Tab,
     command: 'SimpleBrowser.focusNextTab',
   },
@@ -31,4 +35,14 @@ test('registers browser tab shortcuts for the URL input and browser chrome', () 
       expect(keyBindings).toContainEqual({ ...keyBinding, when })
     }
   }
+})
+
+test('submits the URL input on Enter', () => {
+  const keyBindings = ViewletSimpleBrowserKeyBindings.getKeyBindings()
+
+  expect(keyBindings).toContainEqual({
+    key: KeyCode.Enter,
+    command: 'SimpleBrowser.go',
+    when: WhenExpression.FocusSimpleBrowserInput,
+  })
 })

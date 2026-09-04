@@ -3,6 +3,7 @@ import * as ActivityBarWorker from '../ActivityBarWorker/ActivityBarWorker.js'
 import * as ChatDebugViewWorker from '../ChatDebugViewWorker/ChatDebugViewWorker.js'
 import * as ChatViewWorker from '../ChatViewWorker/ChatViewWorker.js'
 import * as CookieImportViewWorker from '../CookieImportViewWorker/CookieImportViewWorker.ts'
+import * as ComponentStateWorker from '../ComponentStateWorker/ComponentStateWorker.js'
 import * as DialogWorker from '../DialogWorker/DialogWorker.js'
 import * as DiffViewWorker from '../DiffViewWorker/DiffViewWorker.js'
 import * as ExplorerViewWorker from '../ExplorerViewWorker/ExplorerViewWorker.js'
@@ -16,6 +17,7 @@ import * as NotificationCenterViewWorker from '../NotificationCenterViewWorker/N
 import * as OutputViewWorker from '../OutputViewWorker/OutputViewWorker.js'
 import * as PanelWorker from '../PanelWorker/PanelWorker.js'
 import * as PreviewWorker from '../PreviewWorker/PreviewWorker.js'
+import * as PortsViewWorker from '../PortsViewWorker/PortsViewWorker.ts'
 import * as ProblemsWorker from '../ProblemsWorker/ProblemsWorker.ts'
 import * as ProcessExplorerWorker from '../ProcessExplorerWorker/ProcessExplorerWorker.js'
 import * as FileWatcherViewWorker from '../FileWatcherViewWorker/FileWatcherViewWorker.js'
@@ -33,6 +35,7 @@ const workerInvokers = {
   chatDebug: ChatDebugViewWorker,
   chatView: ChatViewWorker,
   cookieImportView: CookieImportViewWorker,
+  componentState: ComponentStateWorker,
   dialogWorker: DialogWorker,
   diffView: DiffViewWorker,
   explorer: ExplorerViewWorker,
@@ -46,6 +49,7 @@ const workerInvokers = {
   output: OutputViewWorker,
   panel: PanelWorker,
   preview: PreviewWorker,
+  portsView: PortsViewWorker,
   problemsViewWorker: ProblemsWorker,
   processExplorer: ProcessExplorerWorker,
   fileWatcherView: FileWatcherViewWorker,

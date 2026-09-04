@@ -1,13 +1,19 @@
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 
+let pendingEvent = Promise.resolve()
+
 const dispatch =
   (key) =>
   (...args) => {
-    GlobalEventBus.emitEvent(key, ...args)
+    const event = pendingEvent.then(() => GlobalEventBus.emitEvent(key, ...args))
+    pendingEvent = event.catch(() => {})
+    return event
   }
 export const handleDidNavigate = dispatch('browser-view-did-navigate')
 
 export const handleAudioStateChanged = dispatch('browser-view-audio-state-changed')
+
+export const handleBrowserViewDestroyed = dispatch('browser-view-destroyed')
 
 export const handleContextMenu = dispatch('browser-view-context-menu')
 

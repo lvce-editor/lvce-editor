@@ -9,8 +9,8 @@
   {
     "name": "builtin.csv-viewer",
     "repository": "github.com/lvce-editor/csv-viewer",
-    "version": "2.14.0",
-    "sha256": "fcaca81e0c8636ec2de0e96abc17d70427f3172fa7b3748589a2775be86de065",
+    "version": "2.14.1",
+    "sha256": "136b3aafa2ceca51ac6789916640f982058145fc91a954ac7224ef86a9b194fb",
     "created": "2024-10-13"
   },
   {
@@ -88,8 +88,8 @@
   {
     "name": "builtin.remote-ssh",
     "repository": "github.com/lvce-editor/remote-ssh",
-    "version": "0.10.5",
-    "sha256": "7dadae20df9ddda7921b3d5e5494c07dfe2d2104a35381f7b6dfdf87e35230fd",
+    "version": "0.10.7",
+    "sha256": "aac7fff1f4073748fde565564becc853b663d64fd6e897a1310fded868072c8a",
     "created": "2026-08-03"
   },
   {
@@ -264,8 +264,8 @@
   {
     "name": "builtin.language-basics-json",
     "repository": "github.com/lvce-editor/language-basics-json",
-    "version": "2.10.0",
-    "sha256": "73656a310a5df7a212ad28981749cf001bc725aa0c180e74acd16517773d424e",
+    "version": "2.11.1",
+    "sha256": "93f873e1fe183d4f4ec4ebbc487d49814d295d6bad80ff2bb45b03ad3152596a",
     "created": "2022-06-16"
   },
   {
@@ -425,8 +425,8 @@
   {
     "name": "builtin.language-basics-typescript",
     "repository": "github.com/lvce-editor/language-basics-typescript",
-    "version": "3.11.13",
-    "sha256": "45ec3c35ade8a0248ff1425d01b23cb410bd6a531b77d4ac154db58e32fc3e31",
+    "version": "3.12.10",
+    "sha256": "efe88753b7b0d305a7440c17548d5c2c132b20b999e17c6887e70a65903c3196",
     "created": "2022-06-26"
   },
   {

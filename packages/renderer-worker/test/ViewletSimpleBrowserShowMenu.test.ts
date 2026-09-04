@@ -1,7 +1,7 @@
 import { beforeEach, expect, jest, test } from '@jest/globals'
 
 jest.unstable_mockModule('../src/parts/ContextMenu/ContextMenu.js', () => ({
-  show2: jest.fn(),
+  show2Below: jest.fn(),
 }))
 
 const ContextMenu = await import('../src/parts/ContextMenu/ContextMenu.js')
@@ -12,9 +12,9 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-test('opens the toolbar menu at the menu button', async () => {
-  const state = { uid: 42 }
+test('opens the toolbar menu below the menu button in its nested toolbar', async () => {
+  const state = { uid: 42, y: 95 }
 
-  await expect(ViewletSimpleBrowserShowMenu.showMenu(state, 700, 65)).resolves.toBe(state)
-  expect(ContextMenu.show2).toHaveBeenCalledWith(42, MenuEntryId.SimpleBrowserToolbar, 700, 65)
+  await expect(ViewletSimpleBrowserShowMenu.showMenu(state, 700, 35, 0, 30)).resolves.toBe(state)
+  expect(ContextMenu.show2Below).toHaveBeenCalledWith(42, MenuEntryId.SimpleBrowserToolbar, 700, 160)
 })

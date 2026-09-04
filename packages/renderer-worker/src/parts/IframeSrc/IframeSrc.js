@@ -41,24 +41,41 @@ const isLocalHostUrlWithOutHttp = (input) => {
   return input.startsWith('localhost:')
 }
 
-export const toIframeSrc = (input, shortcuts = []) => {
+export const isSearchInput = (input, shortcuts = []) => {
+  if (typeof input !== 'string' || input.trim().length === 0) {
+    return false
+  }
   for (const shortcut of shortcuts) {
     if (shortcut && shortcut.prefix === input && typeof shortcut.url === 'string') {
+      return false
+    }
+  }
+  if (isValidHttpUrl(input) || isValidFileUrl(input) || isLocalHostUrlWithOutHttp(input) || isValidFilePath(input)) {
+    return false
+  }
+  const dotIndex = input.indexOf(Character.Dot)
+  return dotIndex === -1 || dotIndex === input.length - 1
+}
+
+export const toIframeSrc = (input, shortcuts = []) => {
+  const trimmedInput = input.trim()
+  for (const shortcut of shortcuts) {
+    if (shortcut && shortcut.prefix === trimmedInput && typeof shortcut.url === 'string') {
       return shortcut.url
     }
   }
-  if (isValidHttpUrl(input) || isValidFileUrl(input)) {
-    return input
+  if (isValidHttpUrl(trimmedInput) || isValidFileUrl(trimmedInput)) {
+    return trimmedInput
   }
-  if (isLocalHostUrlWithOutHttp(input)) {
-    return `http://${input}`
+  if (isLocalHostUrlWithOutHttp(trimmedInput)) {
+    return `http://${trimmedInput}`
   }
-  if (isValidFilePath(input)) {
-    return 'file://' + input
+  if (isValidFilePath(trimmedInput)) {
+    return 'file://' + trimmedInput
   }
-  const dotIndex = input.indexOf(Character.Dot)
-  if (dotIndex !== -1 && dotIndex !== input.length - 1) {
-    return 'https://' + input
+  const dotIndex = trimmedInput.indexOf(Character.Dot)
+  if (dotIndex !== -1 && dotIndex !== trimmedInput.length - 1) {
+    return 'https://' + trimmedInput
   }
-  return createSearchUrl(input)
+  return createSearchUrl(trimmedInput)
 }

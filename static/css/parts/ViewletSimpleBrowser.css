@@ -1,4 +1,6 @@
 .SimpleBrowser {
+  background: var(--EditorBackground, var(--MainBackground));
+  color: var(--WorkbenchForeground);
   contain: strict;
   flex: 1;
   display: flex;
@@ -8,6 +10,7 @@
 }
 
 .SimpleBrowserHeader {
+  background: var(--MainBackground, var(--EditorBackground));
   box-sizing: border-box;
   height: 30px;
   width: 100%;
@@ -15,14 +18,41 @@
   display: flex;
 }
 
-.SimpleBrowserHeader .InputBox {
-  color: white;
+.SimpleBrowserAddressBar {
+  background: var(--InputBoxBackground, var(--MainBackground, var(--EditorBackground)));
   flex: 1;
+  height: 24px;
+  position: relative;
+}
+
+.SimpleBrowserHeader .InputBox {
+  background: transparent;
+  box-sizing: border-box;
+  color: var(--InputBoxForeground, var(--WorkbenchForeground));
+  position: relative;
+  z-index: 1;
+}
+
+.SimpleBrowserInlineSuggestion {
+  box-sizing: border-box;
+  color: var(--InputBoxPlaceholderForeground, rgb(255 255 255 / 40%));
+  font-size: 13px;
+  height: 24px;
+  inset: 0;
+  overflow: hidden;
+  padding: 5px 7px;
+  pointer-events: none;
+  position: absolute;
+  white-space: pre;
+}
+
+.SimpleBrowserInlineSuggestionPrefix {
+  visibility: hidden;
 }
 
 .SimpleBrowserTabs {
   align-items: stretch;
-  background: var(--TitleBarBackground, var(--EditorBackground));
+  background: var(--TabsBackground, var(--MainBackground, var(--EditorBackground)));
   border-bottom: 1px solid var(--PanelBorder, transparent);
   box-sizing: border-box;
   contain: strict;
@@ -106,6 +136,39 @@
   width: 24px;
 }
 
+.SimpleBrowserTabHover {
+  background: var(--QuickPickBackground, rgb(40 46 47));
+  border: 1px solid color-mix(in srgb, var(--WorkbenchForeground, rgb(156 162 160)) 18%, transparent);
+  border-radius: 8px;
+  box-shadow: rgb(0 0 0 / 28%) 0 6px 18px;
+  box-sizing: border-box;
+  color: var(--WorkbenchForeground, rgb(156 162 160));
+  max-width: calc(100% - 16px);
+  overflow: hidden;
+  padding: 11px 13px 0;
+  pointer-events: none;
+  position: absolute;
+  top: 34px;
+  width: 320px;
+  z-index: 3;
+}
+
+.SimpleBrowserTabHoverTitle {
+  font-weight: 600;
+  line-height: 20px;
+  overflow-wrap: anywhere;
+}
+
+.SimpleBrowserTabHoverStatus {
+  background: color-mix(in srgb, var(--WorkbenchForeground, rgb(156 162 160)) 4%, transparent);
+  border-top: 1px solid color-mix(in srgb, var(--WorkbenchForeground, rgb(156 162 160)) 10%, transparent);
+  color: var(--DescriptionForeground, color-mix(in srgb, var(--WorkbenchForeground, rgb(156 162 160)) 72%, transparent));
+  font-size: 12px;
+  line-height: 18px;
+  margin: 10px -13px 0;
+  padding: 8px 13px 9px;
+}
+
 .SimpleBrowserTabClose:hover,
 .SimpleBrowserNewTab:hover {
   background: var(--ToolbarHoverBackground, rgb(90 93 94 / 31%));
@@ -117,6 +180,7 @@
 }
 
 .SimpleBrowserIframe {
+  background: var(--EditorBackground, var(--MainBackground));
   width: 100%;
   height: 100%;
   contain: strict;
@@ -140,6 +204,21 @@
 
 .SimpleBrowserSnapshotSearchSuggestions {
   filter: none;
+}
+
+.SimpleBrowserPreview {
+  background: var(--EditorBackground, var(--MainBackground));
+  contain: strict;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  pointer-events: none;
+  width: 100%;
+}
+
+.SimpleBrowserPreviewDocument,
+.SimpleBrowserPreviewBody {
+  min-height: 100%;
 }
 
 .SimpleBrowserSuggestions {
@@ -192,6 +271,14 @@
 .SimpleBrowserSuggestionIcon {
   flex: 0 0 18px;
   height: 18px;
+  pointer-events: none;
+  width: 18px;
+}
+
+.SimpleBrowserSuggestionFavicon {
+  flex: 0 0 18px;
+  height: 18px;
+  object-fit: contain;
   pointer-events: none;
   width: 18px;
 }

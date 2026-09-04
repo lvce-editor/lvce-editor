@@ -21,3 +21,17 @@ test('setAudioMuted forwards to the embeds worker', async () => {
 
   expect(EmbedsWorker.invoke).toHaveBeenCalledWith('ElectronWebContentsView.setAudioMuted', 12, true)
 })
+
+test('getStats requests memory from the embeds worker when needed', async () => {
+  await ElectronWebContentsViewFunctions.getStats(12, true)
+
+  expect(EmbedsWorker.invoke).toHaveBeenCalledWith('ElectronWebContentsView.getStats', 12, true)
+})
+
+test('insertJavaScript forwards to the embeds worker without a user gesture', async () => {
+  // @ts-ignore
+  EmbedsWorker.invoke.mockResolvedValue({ value: 1 })
+
+  await expect(ElectronWebContentsViewFunctions.insertJavaScript(12, 'document.title')).resolves.toEqual({ value: 1 })
+  expect(EmbedsWorker.invoke).toHaveBeenCalledWith('ElectronWebContentsView.insertJavaScript', 12, 'document.title', false)
+})

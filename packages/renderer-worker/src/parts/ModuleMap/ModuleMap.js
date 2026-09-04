@@ -55,6 +55,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.ContentTracing
     case 'ContextMenu':
       return ModuleId.ContextMenu
+    case 'ComponentState':
+      return ModuleId.ComponentState
     case 'DebugSharedProcess':
       return ModuleId.DebugSharedProcess
     case 'Developer':

@@ -19,7 +19,7 @@ export const checkForUpdatesWithDependencies = async (updateSetting, silent, dep
   try {
     const latest = await dependencies.getLatestVersion()
     if (!latest) {
-      await dependencies.notify('info', 'You are using the latest version.')
+      await dependencies.notify('info', 'No Update available')
       return
     }
     await dependencies.notify('info', `Update ${latest.version} is available.`)

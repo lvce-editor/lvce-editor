@@ -6,6 +6,21 @@ import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEven
 import * as InputName from '../InputName/InputName.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
+const getSuggestionValue = (suggestion) => {
+  return typeof suggestion === 'string' ? suggestion : suggestion?.value
+}
+
+const getInlineSuggestion = (value, suggestions) => {
+  const normalizedValue = value.toLowerCase()
+  for (const suggestion of suggestions) {
+    const suggestionValue = getSuggestionValue(suggestion)
+    if (typeof suggestionValue === 'string' && suggestionValue.length > value.length && suggestionValue.toLowerCase().startsWith(normalizedValue)) {
+      return suggestionValue
+    }
+  }
+  return ''
+}
+
 export const getSimpleBrowserVirtualDom = (
   canGoBack,
   canGoForward,
@@ -18,14 +33,18 @@ export const getSimpleBrowserVirtualDom = (
   selectedTabIndex = 0,
   tabsEnabled = true,
   audioIndicatorEnabled = true,
+  pageSnapshotDom = [],
+  tabHover,
 ) => {
+  const inlineSuggestion = getInlineSuggestion(value, suggestions)
   /** @type {any[]} */
   const dom = [
     {
       type: VirtualDomElements.Div,
       className: tabsEnabled ? 'Viewlet SimpleBrowser SimpleBrowserTabsEnabled' : 'Viewlet SimpleBrowser',
       onFocusIn: DomEventListenerFunctions.HandleFocusInSimpleBrowser,
-      childCount: 1 + (tabsEnabled ? 1 : 0) + (snapshot ? 1 : 0) + (suggestions.length > 0 ? 1 : 0),
+      childCount:
+        1 + (tabsEnabled ? 1 : 0) + (snapshot ? 1 : 0) + (pageSnapshotDom.length > 0 ? 1 : 0) + (suggestions.length > 0 ? 1 : 0) + (tabHover ? 1 : 0),
     },
   ]
   if (tabsEnabled) {
@@ -50,7 +69,11 @@ export const getSimpleBrowserVirtualDom = (
         'data-index': index,
         onClick: DomEventListenerFunctions.HandleClickSimpleBrowserTab,
         onContextMenu: DomEventListenerFunctions.HandleContextMenuSimpleBrowserTab,
-        title: tab.title || 'New Tab',
+        onPointerDown: DomEventListenerFunctions.HandlePointerDownSimpleBrowserTab,
+        onPointerOut: DomEventListenerFunctions.HandlePointerOutSimpleBrowserTab,
+        onPointerOver: DomEventListenerFunctions.HandlePointerOverSimpleBrowserTab,
+        ariaDescribedBy: tabHover?.index === index ? 'SimpleBrowserTabHover' : undefined,
+        ariaLabel: tab.title || 'New Tab',
         childCount: 2 + (tab.favicon ? 1 : 0) + (showAudioIndicator ? 1 : 0),
       })
       if (tab.favicon) {
@@ -169,6 +192,36 @@ export const getSimpleBrowserVirtualDom = (
       childCount: 0,
     },
     {
+      type: VirtualDomElements.Div,
+      className: 'SimpleBrowserAddressBar',
+      childCount: inlineSuggestion ? 2 : 1,
+    },
+  )
+  if (inlineSuggestion) {
+    dom.push(
+      {
+        type: VirtualDomElements.Div,
+        className: 'SimpleBrowserInlineSuggestion',
+        ariaHidden: true,
+        'data-value': inlineSuggestion,
+        childCount: 2,
+      },
+      {
+        type: VirtualDomElements.Span,
+        className: 'SimpleBrowserInlineSuggestionPrefix',
+        childCount: 1,
+      },
+      text(value),
+      {
+        type: VirtualDomElements.Span,
+        className: 'SimpleBrowserInlineSuggestionSuffix',
+        childCount: 1,
+      },
+      text(inlineSuggestion.slice(value.length)),
+    )
+  }
+  dom.push(
+    {
       type: VirtualDomElements.Input,
       className: ClassNames.InputBox,
       inputType: HtmlInputType.Url,
@@ -221,6 +274,18 @@ export const getSimpleBrowserVirtualDom = (
       },
     )
   }
+  if (!snapshot && pageSnapshotDom.length > 0) {
+    dom.push(
+      {
+        type: VirtualDomElements.Div,
+        className: 'SimpleBrowserPreview',
+        ariaHidden: true,
+        inert: true,
+        childCount: 1,
+      },
+      ...pageSnapshotDom,
+    )
+  }
   if (suggestions.length > 0) {
     dom.push({
       type: VirtualDomElements.Div,
@@ -231,6 +296,8 @@ export const getSimpleBrowserVirtualDom = (
     })
     for (let index = 0; index < suggestions.length; index++) {
       const suggestion = suggestions[index]
+      const favicon = typeof suggestion === 'string' ? '' : suggestion.favicon
+      const value = typeof suggestion === 'string' ? suggestion : suggestion.value
       const selected = index === selectedSuggestionIndex
       dom.push(
         {
@@ -238,18 +305,51 @@ export const getSimpleBrowserVirtualDom = (
           className: selected ? 'SimpleBrowserSuggestion SimpleBrowserSuggestionSelected' : 'SimpleBrowserSuggestion',
           role: AriaRoles.Option,
           ariaSelected: selected,
-          'data-value': suggestion,
+          'data-value': value,
           onClick: DomEventListenerFunctions.HandleClickSuggestion,
           childCount: 2,
         },
-        {
-          type: VirtualDomElements.Div,
-          className: 'MaskIcon MaskIconSearch SimpleBrowserSuggestionIcon',
-          childCount: 0,
-        },
-        text(suggestion),
+        favicon
+          ? {
+              type: VirtualDomElements.Img,
+              className: 'SimpleBrowserSuggestionFavicon',
+              crossOrigin: 'anonymous',
+              src: favicon,
+              draggable: false,
+              childCount: 0,
+            }
+          : {
+              type: VirtualDomElements.Div,
+              className: 'MaskIcon MaskIconSearch SimpleBrowserSuggestionIcon',
+              childCount: 0,
+            },
+        text(value),
       )
     }
+  }
+  if (tabHover) {
+    dom.push(
+      {
+        type: VirtualDomElements.Div,
+        className: 'SimpleBrowserTabHover',
+        id: 'SimpleBrowserTabHover',
+        role: AriaRoles.Tooltip,
+        left: tabHover.left,
+        childCount: 2,
+      },
+      {
+        type: VirtualDomElements.Div,
+        className: 'SimpleBrowserTabHoverTitle',
+        childCount: 1,
+      },
+      text(tabHover.title),
+      {
+        type: VirtualDomElements.Div,
+        className: 'SimpleBrowserTabHoverStatus',
+        childCount: 1,
+      },
+      text(tabHover.statusLabel),
+    )
   }
   return dom
 }

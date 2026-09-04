@@ -22,7 +22,6 @@ export const Commands = {
   createFile: FileSystem.createFile,
   createFolder: FileSystem.createFolder,
   ensureFile: FileSystem.ensureFile,
-  getPathSeparator: FileSystem.getPathSeparator,
   getRealPath: FileSystem.getRealPath,
   getRealUri: FileSystem.getRealUri,
   mkdir: FileSystem.mkdir,

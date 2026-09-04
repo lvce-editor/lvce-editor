@@ -20,6 +20,7 @@ export const Commands = {
   getDomTree: ViewletSimpleBrowserGetDomTree.getDomTree,
   go: SimpleBrowser.go,
   handleAudioStateChanged: SimpleBrowser.handleAudioStateChanged,
+  handleColorThemeChanged: SimpleBrowser.handleColorThemeChanged,
   handleDidNavigate: SimpleBrowser.handleDidNavigate,
   handleDidNavigationCancel: SimpleBrowser.handleDidNavigationCancel,
   handleFocusIn: SimpleBrowser.handleFocusIn,
@@ -28,6 +29,7 @@ export const Commands = {
   handlePageFaviconUpdated: SimpleBrowser.handlePageFaviconUpdated,
   handleTitleUpdated: SimpleBrowser.handleTitleUpdated,
   handleWillNavigate: SimpleBrowser.handleWillNavigate,
+  hideTabHover: SimpleBrowser.hideTabHover,
   hideOverlay: SimpleBrowser.hideOverlay,
   muteTab: SimpleBrowser.muteTab,
   reloadTab: SimpleBrowser.reloadTab,
@@ -38,6 +40,7 @@ export const Commands = {
   selectPreviousSuggestion: SimpleBrowser.selectPreviousSuggestion,
   selectTab: SimpleBrowser.selectTab,
   showOverlay: SimpleBrowser.showOverlay,
+  showTabHover: SimpleBrowser.showTabHover,
 }
 
 export const LazyCommands = {
@@ -64,6 +67,7 @@ export const LazyCommands = {
 
 export const Events = {
   'browser-view-audio-state-changed': SimpleBrowser.handleAudioStateChanged,
+  'browser-view-destroyed': SimpleBrowser.handleBrowserViewDestroyed,
   'browser-view-context-menu': ViewletSimpleBrowserHandleContextMenu.handleContextMenu,
   'browser-view-did-navigate': SimpleBrowser.handleDidNavigate,
   'browser-view-key-binding': SimpleBrowser.handleKeyBinding,

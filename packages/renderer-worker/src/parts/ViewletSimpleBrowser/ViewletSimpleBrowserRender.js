@@ -2,7 +2,7 @@ import { diffTree } from '@lvce-editor/virtual-dom-worker'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.js'
 import * as GetSimpleBrowserVirtualDom from '../GetSimpleBrowserVirtualDom/GetSimpleBrowserVirtualDom.js'
 import * as InputName from '../InputName/InputName.js'
-import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+import * as SimpleBrowserPageSnapshot from '../SimpleBrowserPageSnapshot/SimpleBrowserPageSnapshot.js'
 
 export const hasFunctionalRender = true
 
@@ -21,6 +21,10 @@ export const renderEventListeners = () => {
     {
       name: DomEventListenerFunctions.HandleClickReload,
       params: ['reload'],
+    },
+    {
+      name: DomEventListenerFunctions.HandleInput,
+      params: ['handleInput', 'event.target.value'],
     },
     {
       name: DomEventListenerFunctions.HandleFocusInSimpleBrowser,
@@ -45,12 +49,36 @@ export const renderEventListeners = () => {
       params: ['handleTabContextMenu', 'event.currentTarget.dataset.index', 'event.clientX', 'event.clientY'],
     },
     {
+      name: DomEventListenerFunctions.HandlePointerOverSimpleBrowserTab,
+      params: [
+        'showTabHover',
+        'event.currentTarget.dataset.index',
+        'event.currentTarget.offsetLeft',
+        'event.currentTarget.offsetWidth',
+        'event.currentTarget.parentElement.scrollLeft',
+      ],
+    },
+    {
+      name: DomEventListenerFunctions.HandlePointerOutSimpleBrowserTab,
+      params: ['hideTabHover', 'event.currentTarget.dataset.index', 'event.clientX', 'event.clientY'],
+    },
+    {
+      name: DomEventListenerFunctions.HandlePointerDownSimpleBrowserTab,
+      params: ['hideTabHover'],
+    },
+    {
       name: DomEventListenerFunctions.HandleClickSimpleBrowserNewTab,
       params: ['createNewTab'],
     },
     {
       name: DomEventListenerFunctions.HandleClickSimpleBrowserMenu,
-      params: ['showMenu', 'event.clientX', 'event.clientY'],
+      params: [
+        'showMenu',
+        'event.clientX',
+        'event.currentTarget.parentElement.offsetTop',
+        'event.currentTarget.offsetTop',
+        'event.currentTarget.offsetHeight',
+      ],
     },
   ]
 }
@@ -69,12 +97,14 @@ const areTabsEqual = (oldTabs, newTabs) => {
       oldTab.favicon === newTab.favicon &&
       oldTab.isAudioPlaying === newTab.isAudioPlaying &&
       oldTab.muted === newTab.muted &&
+      oldTab.pageSnapshot === newTab.pageSnapshot &&
       oldTab.title === newTab.title
     )
   })
 }
 
 const getDom = (state) => {
+  const pageSnapshot = state.tabs?.[state.selectedTabIndex]?.pageSnapshot
   return GetSimpleBrowserVirtualDom.getSimpleBrowserVirtualDom(
     state.canGoBack,
     state.canGoForward,
@@ -87,6 +117,8 @@ const getDom = (state) => {
     state.selectedTabIndex,
     state.tabsEnabled,
     state.audioIndicatorEnabled,
+    pageSnapshot?.dom,
+    state.tabHover,
   )
 }
 
@@ -103,6 +135,7 @@ const renderDom = {
       oldState.selectedTabIndex === newState.selectedTabIndex &&
       oldState.tabsEnabled === newState.tabsEnabled &&
       oldState.audioIndicatorEnabled === newState.audioIndicatorEnabled &&
+      oldState.tabHover === newState.tabHover &&
       areTabsEqual(oldState.tabs, newState.tabs)
     )
   },
@@ -120,13 +153,12 @@ const renderDom = {
   multiple: true,
 }
 
-// TODO this component shouldn't depend on Main
-const renderTitle = {
+export const renderTitle = {
   isEqual(oldState, newState) {
     return oldState.title === newState.title
   },
   apply(oldState, newState) {
-    return ['Viewlet.send', ViewletModuleId.Main, 'updateTab', 0, newState.title]
+    return newState.title
   },
 }
 
@@ -150,4 +182,25 @@ const renderFocusAddress = {
   multiple: true,
 }
 
-export const render = [renderDom, renderTitle, renderAddressValue, renderFocusAddress]
+const getSelectedPageSnapshot = (state) => {
+  return state.tabs?.[state.selectedTabIndex]?.pageSnapshot
+}
+
+const renderPageSnapshotCss = {
+  isEqual(oldState, newState) {
+    const oldSnapshot = getSelectedPageSnapshot(oldState)
+    const newSnapshot = getSelectedPageSnapshot(newState)
+    return oldSnapshot?.css === newSnapshot?.css
+  },
+  apply(oldState, newState) {
+    const styleSheetId = SimpleBrowserPageSnapshot.getStyleSheetId(newState.uid)
+    const pageSnapshot = getSelectedPageSnapshot(newState)
+    if (!pageSnapshot) {
+      return [['Css.removeCssStyleSheet', styleSheetId]]
+    }
+    return [['Css.addCssStyleSheet', styleSheetId, SimpleBrowserPageSnapshot.getScopedCss(pageSnapshot.css)]]
+  },
+  multiple: true,
+}
+
+export const render = [renderDom, renderAddressValue, renderFocusAddress, renderPageSnapshotCss]

@@ -51,6 +51,41 @@ test('getLanguageConfiguration - error - languages must be loaded before request
   })
 })
 
+test('getLanguageConfiguration - uses file name language over extension language', async () => {
+  await Languages.addLanguages([
+    {
+      id: 'json',
+      extensions: ['.json'],
+    },
+    {
+      id: 'jsonc',
+      fileNames: ['settings.json'],
+    },
+  ])
+  LanguagesState.setLoaded(true)
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation((method, languageId) => {
+    if (method === 'ExtensionHost.getLanguageConfiguration' && languageId === 'jsonc') {
+      return {
+        comments: {
+          lineComment: '//',
+        },
+      }
+    }
+    throw new Error('unexpected message')
+  })
+  const editor = {
+    uri: 'app://settings.json',
+    languageId: 'json',
+  }
+  expect(await Languages.getLanguageConfiguration(editor)).toEqual({
+    comments: {
+      lineComment: '//',
+    },
+  })
+  expect(editor.languageId).toBe('jsonc')
+})
+
 test('getLanguageConfiguration - error - languages must be loaded before requesting language configuration', async () => {
   // @ts-ignore
   SharedProcess.invoke.mockImplementation((method, ...parameters) => {
@@ -128,6 +163,34 @@ test('getLanguageId - by file name', async () => {
     },
   ])
   expect(Languages.getLanguageId('Dockerfile')).toBe('dockerfile')
+})
+
+test('getLanguageId - file name has priority over extension', async () => {
+  await Languages.addLanguages([
+    {
+      id: 'json',
+      extensions: ['.json'],
+    },
+    {
+      id: 'jsonc',
+      fileNames: ['settings.json'],
+    },
+  ])
+  expect(Languages.getLanguageId('settings.json')).toBe('jsonc')
+})
+
+test('getLanguageId - by file name in uri', async () => {
+  await Languages.addLanguages([
+    {
+      id: 'json',
+      extensions: ['.json'],
+    },
+    {
+      id: 'jsonc',
+      fileNames: ['settings.json'],
+    },
+  ])
+  expect(Languages.getLanguageId('app://settings.json')).toBe('jsonc')
 })
 
 test("addLanguage - don't override tokenize path", async () => {

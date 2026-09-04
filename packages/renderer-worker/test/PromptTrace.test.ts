@@ -1,7 +1,6 @@
 import { beforeEach, expect, jest, test } from '@jest/globals'
 
 jest.unstable_mockModule('../src/parts/FileSystem/FileSystemDisk.js', () => ({
-  getPathSeparator: jest.fn(),
   mkdir: jest.fn(),
   writeFile: jest.fn(),
 }))
@@ -16,8 +15,6 @@ const Workspace = await import('../src/parts/Workspace/Workspace.js')
 
 beforeEach(() => {
   jest.resetAllMocks()
-  // @ts-ignore
-  FileSystemDisk.getPathSeparator.mockResolvedValue('/')
   // @ts-ignore
   Workspace.getPath.mockReturnValue('/workspace')
 })

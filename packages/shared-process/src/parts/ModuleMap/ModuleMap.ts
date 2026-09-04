@@ -120,7 +120,6 @@ export const getModuleId = (commandId: any): any => {
     case 'FileSystem.createFile':
     case 'FileSystem.createFolder':
     case 'FileSystem.ensureFile':
-    case 'FileSystem.getPathSeparator':
     case 'FileSystem.getRealUri':
     case 'FileSystem.mkdir':
     case 'FileSystem.readDirWithFileTypes':
@@ -134,7 +133,6 @@ export const getModuleId = (commandId: any): any => {
     case 'FileSystemDisk.chmod':
     case 'FileSystemDisk.copy':
     case 'FileSystemDisk.getFolderSize':
-    case 'FileSystemDisk.getPathSeparator':
     case 'FileSystemDisk.mkdir':
     case 'FileSystemDisk.readDirWithFileTypes':
     case 'FileSystemDisk.readFile':
@@ -150,9 +148,6 @@ export const getModuleId = (commandId: any): any => {
       return ModuleId.FileWatcher
     case 'FileWatcherExplorer.decreaseRefCount':
       return ModuleId.FileWatcherExplorer
-    case 'FirefoxCookieImport.getInfo':
-    case 'FirefoxCookieImport.importCookies':
-      return ModuleId.FirefoxCookieImport
     case 'GetElectronFileResponse.getElectronFileResponse':
     case 'GetElectronFileResponse.resolveElectronFileUri':
       return ModuleId.GetElectronFileResponse
@@ -177,6 +172,8 @@ export const getModuleId = (commandId: any): any => {
       return ModuleId.HandleMessagePortForAuthProcess
     case 'HandleMessagePortForClipBoardProcess.handleMessagePortForClipBoardProcess':
       return ModuleId.HandleMessagePortForClipBoardProcess
+    case 'HandleMessagePortForCookieImportProcess.handleMessagePortForCookieImportProcess':
+      return ModuleId.HandleMessagePortForCookieImportProcess
     case 'HandleMessagePortForEmbedsProcess.handleEmbedsProcessIpcClosed':
     case 'HandleMessagePortForEmbedsProcess.handleMessagePortForEmbedsProcess':
       return ModuleId.HandleMessagePortForEmbedsProcess
