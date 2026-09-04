@@ -199,6 +199,7 @@ export const commandMap = {
   'FileSystemMemory.writeFile': lazy('FileSystemMemory.writeFile'),
   'FileSystem.exists': lazy('FileSystem.exists'),
   'FileSystem.getBlob': lazy('FileSystem.getBlob'),
+  'FileSystem.getFileSize': lazy('FileSystem.getFileSize'),
   'FileSystem.getFolderSize': lazy('FileSystem.getFolderSize'),
   'FileSystem.getRealPath': lazy('FileSystem.getRealPath'),
   'FileSystem.mkdir': lazy('FileSystem.mkdir'),
