@@ -209,7 +209,7 @@ const createWorkerViewletInternal = ({ adapter, config, context, worker }) => {
     return newState
   }
 
-  const runRenderPipeline = async (
+  const runRenderPipelineInternal = async (
     currentState,
     invocationArguments = {},
     diffMethod = methods.diff,
@@ -225,6 +225,14 @@ const createWorkerViewletInternal = ({ adapter, config, context, worker }) => {
     }
     const newState = await applyOutputs(renderedState, invocation, isHotReload)
     return adapter.transformRenderedState(newState)
+  }
+
+  const runRenderPipeline = (currentState, ...args) => {
+    const render = () => runRenderPipelineInternal(currentState, ...args)
+    if (adapter.serializeRenderPipelines) {
+      return enqueueRender(currentState[idKey], render)
+    }
+    return render()
   }
 
   const runLoadContent = async (currentState, savedState, args, createMethod, loadMethod, isHotReload) => {
@@ -243,7 +251,7 @@ const createWorkerViewletInternal = ({ adapter, config, context, worker }) => {
     return runLoadContent(currentState, savedState, args, methods.create, methods.loadContent, false)
   }
 
-  const runCommandRenderPipeline = async (currentState, args) => {
+  const runCommandRenderPipelineInternal = async (currentState, args) => {
     const invocation = createInvocation(currentState, context, { args })
     invocation.results.diff = await invokeConfiguredMethod(worker, methods.commandDiff || methods.diff, invocation)
     if (config.commandSkipRenderWhenDiffEmpty && invocation.results.diff.length === 0) {
@@ -259,6 +267,14 @@ const createWorkerViewletInternal = ({ adapter, config, context, worker }) => {
     }
     const newState = await applyOutputs(renderedState, invocation)
     return adapter.transformRenderedState(newState)
+  }
+
+  const runCommandRenderPipeline = (currentState, args) => {
+    const render = () => runCommandRenderPipelineInternal(currentState, args)
+    if (adapter.serializeRenderPipelines) {
+      return enqueueRender(currentState[idKey], render)
+    }
+    return render()
   }
 
   Object.defineProperty(Commands, '__renderPending', {
