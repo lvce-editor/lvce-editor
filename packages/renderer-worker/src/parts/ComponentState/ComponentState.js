@@ -1,8 +1,114 @@
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
+import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
+const liveComponentStatePattern = /^live-component-state:\/\/\/(\d+)\.json$/
+const editorUidsByComponentUid = new Map()
+const componentUidByEditorUid = new Map()
+const refreshes = new Map()
+
 const getUid = (instance) => instance.state?.uid ?? instance.renderedState?.uid
+
+const getLiveComponentUid = (instance) => {
+  const uri = instance.state?.uri
+  if (typeof uri !== 'string') {
+    return undefined
+  }
+  const match = liveComponentStatePattern.exec(uri)
+  return match ? Number(match[1]) : undefined
+}
+
+const subscribe = (instance) => {
+  const componentUid = getLiveComponentUid(instance)
+  const editorUid = getUid(instance)
+  if (componentUid === undefined || typeof editorUid !== 'number') {
+    return
+  }
+  editorUidsByComponentUid.set(componentUid, editorUidsByComponentUid.get(componentUid)?.add(editorUid) || new Set([editorUid]))
+  componentUidByEditorUid.set(editorUid, componentUid)
+}
+
+const unsubscribeEditor = (editorUid) => {
+  const componentUid = componentUidByEditorUid.get(editorUid)
+  if (componentUid === undefined) {
+    return
+  }
+  componentUidByEditorUid.delete(editorUid)
+  const editorUids = editorUidsByComponentUid.get(componentUid)
+  editorUids?.delete(editorUid)
+  if (editorUids?.size === 0) {
+    editorUidsByComponentUid.delete(componentUid)
+  }
+}
+
+const unsubscribeComponent = (componentUid) => {
+  const editorUids = editorUidsByComponentUid.get(componentUid)
+  if (!editorUids) {
+    return
+  }
+  editorUidsByComponentUid.delete(componentUid)
+  for (const editorUid of editorUids) {
+    componentUidByEditorUid.delete(editorUid)
+  }
+}
+
+const runRefreshes = async (componentUid, refresh) => {
+  try {
+    while (refresh.pending) {
+      refresh.pending = false
+      const editorUids = [...(editorUidsByComponentUid.get(componentUid) || [])]
+      await Promise.allSettled(editorUids.map((editorUid) => Viewlet.reload(editorUid)))
+    }
+  } finally {
+    refreshes.delete(componentUid)
+  }
+}
+
+export const refreshOpenEditors = (componentUid) => {
+  const existingRefresh = refreshes.get(componentUid)
+  if (existingRefresh) {
+    existingRefresh.pending = true
+    return existingRefresh.promise
+  }
+  const refresh = {
+    pending: true,
+    promise: Promise.resolve(),
+  }
+  refreshes.set(componentUid, refresh)
+  refresh.promise = runRefreshes(componentUid, refresh)
+  return refresh.promise
+}
+
+export const waitForRefreshes = async () => {
+  while (refreshes.size > 0) {
+    await Promise.all([...refreshes.values()].map((refresh) => refresh.promise))
+  }
+}
+
+const handleViewletStateChange = (type, instance) => {
+  const uid = getUid(instance)
+  if (typeof uid !== 'number') {
+    return
+  }
+  if (type === 'add') {
+    subscribe(instance)
+    return
+  }
+  if (type === 'remove') {
+    unsubscribeEditor(uid)
+    unsubscribeComponent(uid)
+    return
+  }
+  if (type === 'render' && editorUidsByComponentUid.has(uid)) {
+    void refreshOpenEditors(uid)
+  }
+}
+
+ViewletStates.addListener(handleViewletStateChange)
+for (const instance of ViewletStates.getValues()) {
+  subscribe(instance)
+}
 
 const isWorkerBacked = (instance) => Boolean(instance.factory?.hasFunctionalRender)
 

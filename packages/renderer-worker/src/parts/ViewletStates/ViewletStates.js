@@ -18,6 +18,18 @@ export const state = {
   focusedInstanceByType: Object.create(null),
 }
 
+const listeners = new Set()
+
+const emit = (type, instance) => {
+  for (const listener of listeners) {
+    listener(type, instance)
+  }
+}
+
+export const addListener = (listener) => {
+  listeners.add(listener)
+}
+
 const normalizeModuleId = (key) => {
   if (key === 'Editor') {
     return 'EditorText'
@@ -46,6 +58,7 @@ export const set = (key, value) => {
   Assert.object(value.state)
   Assert.object(value.renderedState)
   state.instances[key] = value
+  emit('add', value)
 }
 
 export const getByUid = (uid) => {
@@ -93,10 +106,13 @@ export const hasInstance = (key) => {
 
 export const remove = (key) => {
   const instance = state.instances[key]
+  delete state.instances[key]
   if (instance) {
     clearFocusedInstanceByType(instance.renderedState?.uid, instance.moduleId)
+    if (!Object.values(state.instances).includes(instance)) {
+      emit('remove', instance)
+    }
   }
-  delete state.instances[key]
 }
 
 export const dispose = async (key) => {
@@ -104,6 +120,9 @@ export const dispose = async (key) => {
   delete state.instances[key]
   if (instance) {
     clearFocusedInstanceByType(instance.renderedState?.uid, instance.moduleId)
+    if (!Object.values(state.instances).includes(instance)) {
+      emit('remove', instance)
+    }
   }
   if (instance.factory.dispose) {
     await instance.factory.dispose(instance.state)
@@ -151,9 +170,13 @@ export const setRenderedState = (key, newState) => {
   }
   instance.renderedState = newState
   instance.state = newState
+  emit('render', instance)
 }
 
 export const reset = () => {
+  for (const instance of new Set(Object.values(state.instances))) {
+    emit('remove', instance)
+  }
   state.instances = Object.create(null)
   state.focusedInstanceByType = Object.create(null)
 }
