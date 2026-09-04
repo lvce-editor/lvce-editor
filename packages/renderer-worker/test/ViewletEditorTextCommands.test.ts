@@ -21,6 +21,7 @@ jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () =
 })
 
 const ViewletEditorTextCommands = await import('../src/parts/ViewletEditorText/ViewletEditorTextCommands.js')
+const Languages = await import('../src/parts/Languages/Languages.js')
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -244,6 +245,7 @@ test('worker command wrapper serializes command, diff, and render per editor', a
 
 test('handleUriChange skips the duplicated viewlet uid and updates the renderer editor uri', async () => {
   const editor = {
+    languageId: 'unknown',
     uid: 42,
     uri: '/test/original.txt',
   }
@@ -266,5 +268,41 @@ test('handleUriChange skips the duplicated viewlet uid and updates the renderer 
   expect(result).toEqual({
     ...editor,
     uri: '/test/renamed.txt',
+  })
+})
+
+test('handleUriChange updates the language from the saved file extension', async () => {
+  Languages.addLanguage({
+    extensions: ['.c'],
+    id: 'c',
+    tokenize: '/tokenize-c.js',
+  })
+  const editor = {
+    languageId: 'unknown',
+    uid: 42,
+    uri: 'untitled:///1',
+  }
+  editorWorkerInvoke.mockImplementation((method) => {
+    switch (method) {
+      case 'Editor.getCommandIds':
+        return ['handleUriChange']
+      case 'Editor.handleUriChange':
+      case 'Editor.setLanguageId':
+        return undefined
+      default:
+        throw new Error(`unexpected method ${method}`)
+    }
+  })
+
+  const commands = await ViewletEditorTextCommands.getCommands()
+  const result = await commands.handleUriChange(editor, 42, 'file:///tmp/file.c')
+
+  expect(editorWorkerInvoke).toHaveBeenNthCalledWith(1, 'Editor.getCommandIds')
+  expect(editorWorkerInvoke).toHaveBeenNthCalledWith(2, 'Editor.handleUriChange', 42, 'file:///tmp/file.c')
+  expect(editorWorkerInvoke).toHaveBeenNthCalledWith(3, 'Editor.setLanguageId', 42, 'c', '/tokenize-c.js')
+  expect(result).toEqual({
+    ...editor,
+    languageId: 'c',
+    uri: 'file:///tmp/file.c',
   })
 })
