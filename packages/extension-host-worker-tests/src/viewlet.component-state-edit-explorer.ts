@@ -8,7 +8,20 @@ interface ComponentInfo {
 
 export const name = 'viewlet.component-state-edit-explorer'
 
-export const test: Test = async ({ Command, Editor, expect, FileSystem, Locator, Main, Workspace }) => {
+const waitForFocusedIndex = async (Editor, focusedIndex: number): Promise<void> => {
+  for (let attempt = 0; attempt < 100; attempt++) {
+    const state = JSON.parse(await Editor.getText())
+    if (state.focusedIndex === focusedIndex) {
+      return
+    }
+    if (attempt === 99) {
+      throw new Error(`Expected live Explorer focusedIndex to be ${focusedIndex}, got ${state.focusedIndex}`)
+    }
+    await new Promise((resolve) => setTimeout(resolve, 50))
+  }
+}
+
+export const test: Test = async ({ Command, Editor, expect, Explorer, FileSystem, Locator, Main, Workspace }) => {
   const tmpDir = await FileSystem.getTmpDir()
   await FileSystem.writeFile(`${tmpDir}/file.txt`, 'content')
   await Workspace.setPath(tmpDir)
@@ -28,6 +41,9 @@ export const test: Test = async ({ Command, Editor, expect, FileSystem, Locator,
   await card.click()
 
   await expect(Locator('.MainTabSelected .TabTitle')).toHaveText(`${explorer.uid}.json`)
+  await Explorer.focusIndex(1)
+  await waitForFocusedIndex(Editor, 1)
+
   const state = JSON.parse(await Editor.getText())
   await Editor.setText(`${JSON.stringify({ ...state, focusedIndex: 0 }, null, 2)}\n`)
   await Main.save()
