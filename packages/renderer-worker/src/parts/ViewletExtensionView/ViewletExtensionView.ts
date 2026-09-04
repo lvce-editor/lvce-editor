@@ -22,6 +22,7 @@ interface CreateViewInstanceSuccess {
   readonly eventListeners?: readonly unknown[]
   readonly ok: true
   readonly result: ViewRenderResult
+  readonly stateful?: boolean
 }
 
 interface CreateViewInstanceError {
@@ -172,6 +173,7 @@ export const create = (
     kind: '',
     parentUid,
     patches: [],
+    stateful: false,
     title: '',
     uid: id,
     uri,
@@ -220,6 +222,7 @@ export const loadContent = async (state: ViewletExtensionViewState, savedState: 
       cssId,
       eventListeners,
       kind: view.kind,
+      stateful: createResult.ok === true && createResult.stateful === true,
     }
     return {
       ...newState,
@@ -296,6 +299,28 @@ export const rerender = async (state: ViewletExtensionViewState): Promise<Viewle
   }
   const result = await ExtensionManagementWorker.invoke('Extensions.renderViewInstance', state.viewId, state.uid, assetDir, getPlatform())
   const newState = renderVirtualDomResult(state, result as ViewRenderResult)
+  return {
+    ...newState,
+    actionsDom: await getActionsDom(newState),
+  }
+}
+
+export const isComponentStateAvailable = (state: ViewletExtensionViewState): boolean => state.kind === 'virtualDom' && state.stateful
+
+export const getComponentState = async (state: ViewletExtensionViewState): Promise<unknown> => {
+  return ExtensionManagementWorker.invoke('Extensions.getViewInstanceState', state.viewId, state.uid, assetDir, getPlatform())
+}
+
+export const setComponentState = async (state: ViewletExtensionViewState, componentState: unknown): Promise<ViewletExtensionViewState> => {
+  const result = await ExtensionManagementWorker.invoke(
+    'Extensions.setViewInstanceState',
+    state.viewId,
+    state.uid,
+    componentState,
+    assetDir,
+    getPlatform(),
+  )
+  const newState = renderVirtualDomResult(state, result as ViewRenderResult | undefined)
   return {
     ...newState,
     actionsDom: await getActionsDom(newState),

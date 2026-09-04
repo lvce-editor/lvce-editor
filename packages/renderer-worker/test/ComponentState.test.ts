@@ -58,6 +58,26 @@ test('lists native and supported worker-backed components once', () => {
   ])
 })
 
+test('uses a worker-backed component state availability check', () => {
+  const rendererState = { stateful: true, uid: 4 }
+  const isComponentStateAvailable = jest.fn((_state: typeof rendererState) => true)
+  ViewletStates.set(4, {
+    factory: {
+      getComponentState: jest.fn(),
+      hasFunctionalRender: true,
+      isComponentStateAvailable,
+      name: 'ExtensionView',
+      setComponentState: jest.fn(),
+    },
+    moduleId: 'ExtensionView',
+    renderedState: rendererState,
+    state: rendererState,
+  })
+
+  expect(ComponentState.getComponents()).toEqual([{ editable: true, moduleId: 'ExtensionView', uid: 4 }])
+  expect(isComponentStateAvailable).toHaveBeenCalledWith(rendererState)
+})
+
 test('gets renderer-native state', async () => {
   const state = { uid: 1, value: 'native' }
   ViewletStates.set(1, { factory: {}, moduleId: 'Layout', renderedState: state, state })
