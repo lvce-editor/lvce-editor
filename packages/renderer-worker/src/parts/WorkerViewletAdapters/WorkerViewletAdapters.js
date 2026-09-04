@@ -267,11 +267,8 @@ export const textSearch = {
       const invocation = createRenderInvocation(state.uid)
       return enqueueRender(state.uid, async () => {
         try {
-          if (!invocation.isLatest()) {
-            return state
-          }
           const diff = await worker.invoke('TextSearch.diff2', state.uid, ...args)
-          if (diff.length === 0) {
+          if (diff.length === 0 || !invocation.isLatest()) {
             return state
           }
           const commands = await worker.invoke('TextSearch.render2', state.uid, diff)

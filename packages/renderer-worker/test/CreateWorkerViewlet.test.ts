@@ -143,24 +143,19 @@ test('creates command wrappers through the same lifecycle seam', async () => {
   expect(result.commands).toEqual([['setText', 'selected']])
 })
 
-test('text search command wrappers preserve a diff that has already started', async () => {
+test('text search command wrappers discard superseded render pipelines', async () => {
   const { promise: firstDiff, resolve: resolveFirstDiff } = Promise.withResolvers<void>()
   const { promise: firstDiffStarted, resolve: resolveFirstDiffStarted } = Promise.withResolvers<void>()
-  let hasPendingDiff = true
   const invoke = jest.fn(async (method: string, _uid?: number, value?: string) => {
     if (method === 'Example.getCommandIds') {
       return ['update']
     }
     if (method === 'TextSearch.diff2') {
-      if (!hasPendingDiff) {
-        return []
-      }
-      hasPendingDiff = false
       if (value === 'first') {
         resolveFirstDiffStarted()
         await firstDiff
       }
-      return ['pending']
+      return ['latest']
     }
     if (method === 'TextSearch.render2') {
       return [['setText', 'latest']]
@@ -183,55 +178,10 @@ test('text search command wrappers preserve a diff that has already started', as
   resolveFirstDiff()
   const [firstResult, secondResult] = await Promise.all([first, second])
 
-  expect(firstResult.commands).toEqual([['setText', 'latest']])
-  expect(secondResult).toBe(state)
+  expect(secondResult.commands).toEqual([['setText', 'latest']])
+  expect(firstResult).toBe(state)
   expect(invoke.mock.calls.filter(([method]) => method === 'TextSearch.diff2')).toHaveLength(2)
   expect(invoke.mock.calls.filter(([method]) => method === 'TextSearch.render2')).toHaveLength(1)
-})
-
-test('text search command wrappers discard superseded pipelines before diff starts', async () => {
-  const { promise: pendingRender, resolve: resolvePendingRender } = Promise.withResolvers<void>()
-  const { promise: pendingRenderStarted, resolve: resolvePendingRenderStarted } = Promise.withResolvers<void>()
-  const invoke = jest.fn(async (method: string) => {
-    if (method === 'Example.getCommandIds') {
-      return ['update']
-    }
-    if (method === 'Example.diff3') {
-      return ['pending']
-    }
-    if (method === 'Example.render3') {
-      resolvePendingRenderStarted()
-      await pendingRender
-      return [['setText', 'pending']]
-    }
-    if (method === 'TextSearch.diff2') {
-      return ['latest']
-    }
-    if (method === 'TextSearch.render2') {
-      return [['setText', 'latest']]
-    }
-    return undefined
-  })
-  const viewlet = createWorkerViewletWithDependencies({
-    adapter: getWorkerViewletAdapter('textSearchView'),
-    config: createConfig(),
-    context: { platform: 1 },
-    worker: { invoke, restart: jest.fn() },
-  })
-  const commands = await viewlet.getCommands!()
-  const state = viewlet.create(9, '', 0, 0, 0, 0)
-
-  const requestedRender = commands.__renderPending(state)
-  await pendingRenderStarted
-  const first = commands.update(state, 'first')
-  const second = commands.update(state, 'second')
-  resolvePendingRender()
-  const [requestedResult, firstResult, secondResult] = await Promise.all([requestedRender, first, second])
-
-  expect(requestedResult.commands).toEqual([['setText', 'pending']])
-  expect(firstResult).toBe(state)
-  expect(secondResult.commands).toEqual([['setText', 'latest']])
-  expect(invoke.mock.calls.filter(([method]) => method === 'TextSearch.diff2')).toEqual([['TextSearch.diff2', 9, 'second']])
 })
 
 test('text search command wrappers preserve a render that has already started', async () => {
