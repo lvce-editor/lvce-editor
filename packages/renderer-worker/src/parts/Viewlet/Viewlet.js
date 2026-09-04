@@ -18,6 +18,29 @@ import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as ViewletElectron from './ViewletElectron.js'
 
+const commandQueues = new Map()
+
+const enqueueCommand = async (uid, command) => {
+  const previous = commandQueues.get(uid) || Promise.resolve()
+  const run = async () => {
+    try {
+      await previous
+    } catch {
+      // The previous caller receives its error; later commands must still run.
+    }
+    return command()
+  }
+  const current = run()
+  commandQueues.set(uid, current)
+  try {
+    return await current
+  } finally {
+    if (commandQueues.get(uid) === current) {
+      commandQueues.delete(uid)
+    }
+  }
+}
+
 const getKeyBindingSetId = (instance, fallback) => {
   return instance.moduleId || fallback
 }
@@ -587,7 +610,7 @@ export const getFocusCommands = async (id) => {
   return commands
 }
 
-export const executeViewletCommand = async (uid, fnName, ...args) => {
+const executeViewletCommandInternal = async (uid, fnName, ...args) => {
   const instance = ViewletStates.getInstance(uid)
   if (!instance) {
     if (fnName !== DomEventListenerFunctions.HandleBlur) {
@@ -617,6 +640,14 @@ export const executeViewletCommand = async (uid, fnName, ...args) => {
   if (ViewletStates.getInstance(uid) === instance && instance.factory.afterRender) {
     await instance.factory.afterRender(oldState, actualNewState)
   }
+}
+
+export const executeViewletCommand = (uid, fnName, ...args) => {
+  const instance = ViewletStates.getInstance(uid)
+  if (instance?.factory.serializeCommands) {
+    return enqueueCommand(uid, () => executeViewletCommandInternal(uid, fnName, ...args))
+  }
+  return executeViewletCommandInternal(uid, fnName, ...args)
 }
 
 export const requestRender = (uid) => {
