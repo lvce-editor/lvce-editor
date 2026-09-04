@@ -2,6 +2,7 @@ import * as Assert from '../Assert/Assert.ts'
 import * as Character from '../Character/Character.js'
 import * as Command from '../Command/Command.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
+import * as FileSystemProtocol from '../FileSystemProtocol/FileSystemProtocol.js'
 import * as FileSystemWorker from '../FileSystemWorker/FileSystemWorker.js'
 import * as GetResolvedRoot from '../GetResolvedRoot/GetResolvedRoot.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
@@ -9,6 +10,7 @@ import * as GetProtocol from '../GetProtocol/GetProtocol.js'
 import * as IsTest from '../IsTest/IsTest.js'
 import * as Location from '../Location/Location.js'
 import * as Notification from '../Notification/Notification.js'
+import * as PathToFileUri from '../PathToFileUri/PathToFileUri.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as Product from '../Product/Product.js'
@@ -19,6 +21,13 @@ import * as WorkspaceConnection from '../WorkspaceConnection/WorkspaceConnection
 import { state } from '../WorkspaceState/WorkspaceState.js'
 
 const pathSeparator = '/'
+
+const toWorkspaceUri = (path) => {
+  if (!path || path.startsWith('file://') || GetProtocol.getProtocol(path) !== FileSystemProtocol.Disk) {
+    return path
+  }
+  return PathToFileUri.pathToFileUri(path)
+}
 
 const validateLocalPath = async (path) => {
   if (IsTest.isTest()) {
@@ -45,7 +54,7 @@ export const setPath = async (path) => {
   // @ts-ignore
   state.workspacePath = path
   // @ts-ignore
-  state.workspaceUri = path
+  state.workspaceUri = toWorkspaceUri(path)
   state.pathSeparator = pathSeparator
   if (workspaceChanged) {
     WorkspaceConnection.reset()
