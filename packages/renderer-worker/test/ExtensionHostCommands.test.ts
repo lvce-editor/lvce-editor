@@ -7,6 +7,10 @@ const getExtensions = jest.fn(async () => [
       { id: 'sample.internal', internal: true },
     ],
   },
+  {
+    commands: [{ id: 'sample.disabled', label: 'Sample: Disabled' }],
+    disabled: true,
+  },
 ])
 
 jest.unstable_mockModule('../src/parts/ExtensionMeta/ExtensionMeta.js', () => ({
@@ -15,6 +19,6 @@ jest.unstable_mockModule('../src/parts/ExtensionMeta/ExtensionMeta.js', () => ({
 
 const ExtensionHostCommands = await import('../src/parts/ExtensionHost/ExtensionHostCommands.js')
 
-test('omits internal extension commands from the command palette', async () => {
+test('omits internal and disabled extension commands from the command palette', async () => {
   await expect(ExtensionHostCommands.getCommands('', 1)).resolves.toEqual([{ id: 'sample.visible', label: 'Sample: Visible' }])
 })
