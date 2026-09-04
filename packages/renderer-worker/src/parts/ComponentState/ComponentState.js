@@ -1,3 +1,4 @@
+import * as EditorWorker from '../EditorWorker/EditorWorker.ts'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
@@ -83,6 +84,18 @@ const getEditorTabStates = async () => {
   return editorTabStates
 }
 
+const reloadEditorIfContentChanged = async (editorUid, content) => {
+  try {
+    const currentContent = await EditorWorker.invoke('Editor.getText', editorUid)
+    if (currentContent === content) {
+      return
+    }
+  } catch {
+    // Fall back to reloading when the current editor content cannot be read.
+  }
+  await Viewlet.reload(editorUid)
+}
+
 const runRefreshes = async (componentUid, refresh) => {
   try {
     while (refresh.pending) {
@@ -97,7 +110,21 @@ const runRefreshes = async (componentUid, refresh) => {
         const tabState = editorTabStates.get(editorUid)
         return !tabState?.dirty && !(isMainComponent && tabState?.active)
       })
-      await Promise.allSettled(editorUidsToRefresh.map((editorUid) => Viewlet.reload(editorUid)))
+      if (editorUidsToRefresh.length === 0) {
+        continue
+      }
+      let content
+      try {
+        const componentState = await getState(componentUid)
+        content = `${JSON.stringify(componentState, null, 2)}\n`
+      } catch {
+        content = undefined
+      }
+      await Promise.allSettled(
+        editorUidsToRefresh.map((editorUid) =>
+          content === undefined ? Viewlet.reload(editorUid) : reloadEditorIfContentChanged(editorUid, content),
+        ),
+      )
       for (const editorUid of editorUidsToRefresh) {
         mainEditorUidsAwaitingInitialRefresh.delete(editorUid)
       }
