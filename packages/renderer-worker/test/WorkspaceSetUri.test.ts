@@ -91,6 +91,7 @@ test('setPath uses the product name for an empty workspace', async () => {
   await Workspace.setPath('')
 
   expect(setWindowTitle).toHaveBeenCalledWith('Lvce Editor')
+  expect(Workspace.getWorkspaceUri()).toBe('')
   expect(disposeTextSearchWorker).not.toHaveBeenCalled()
   expect(disposeFileSystemWorker).not.toHaveBeenCalled()
   expect(stopRemoteCli).not.toHaveBeenCalled()
@@ -100,9 +101,24 @@ test('setPath uses the folder name for a workspace', async () => {
   await Workspace.setPath('/home/test/project')
 
   expect(setWindowTitle).toHaveBeenCalledWith('project')
+  expect(Workspace.getWorkspaceUri()).toBe('file:///home/test/project')
   expect(disposeTextSearchWorker).not.toHaveBeenCalled()
   expect(disposeFileSystemWorker).toHaveBeenCalledTimes(1)
   expect(stopRemoteCli).toHaveBeenCalledTimes(1)
+})
+
+test('setPath encodes reserved characters in a local workspace uri', async () => {
+  await Workspace.setPath('/home/test/my folder/#project?')
+
+  expect(Workspace.getWorkspacePath()).toBe('/home/test/my folder/#project?')
+  expect(Workspace.getWorkspaceUri()).toBe('file:///home/test/my%20folder/%23project%3F')
+})
+
+test('setPath preserves a custom workspace uri', async () => {
+  await Workspace.setPath('html:///workspace')
+
+  expect(Workspace.getWorkspacePath()).toBe('html:///workspace')
+  expect(Workspace.getWorkspaceUri()).toBe('html:///workspace')
 })
 
 test('setPath skips folder validation during tests', async () => {
@@ -117,7 +133,7 @@ test('setPath skips folder validation during tests', async () => {
 
 test('setPath preserves the current workspace when the folder does not exist', async () => {
   Workspace.state.workspacePath = '/home/test/current'
-  Workspace.state.workspaceUri = '/home/test/current'
+  Workspace.state.workspaceUri = 'file:///home/test/current'
   exists.mockResolvedValue(false)
 
   await expect(Workspace.setPath('/home/test/missing')).rejects.toThrow(new Error("Workspace folder does not exist: '/home/test/missing'"))
@@ -127,7 +143,7 @@ test('setPath preserves the current workspace when the folder does not exist', a
   expect(setWindowTitle).not.toHaveBeenCalled()
   expect(disposeTextSearchWorker).not.toHaveBeenCalled()
   expect(Workspace.getWorkspacePath()).toBe('/home/test/current')
-  expect(Workspace.getWorkspaceUri()).toBe('/home/test/current')
+  expect(Workspace.getWorkspaceUri()).toBe('file:///home/test/current')
 })
 
 test('setUri preserves the uri and decodes the workspace path', async () => {
