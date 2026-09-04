@@ -245,6 +245,7 @@ export const settings = {
 }
 
 export const textSearch = {
+  serializeRenderPipelines: true,
   extendModule(_workerViewlet, { wrapCommand }) {
     return {
       dispose(state) {

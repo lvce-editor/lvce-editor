@@ -227,6 +227,50 @@ test('text search command wrappers preserve a render that has already started', 
   expect(secondDiffStarted).toBe(true)
 })
 
+test('text search command wrappers serialize requested renders with command renders', async () => {
+  const { promise: firstRender, resolve: resolveFirstRender } = Promise.withResolvers<void>()
+  const { promise: firstRenderStarted, resolve: resolveFirstRenderStarted } = Promise.withResolvers<void>()
+  let diffCount = 0
+  const invoke = jest.fn(async (method: string) => {
+    if (method === 'Example.getCommandIds') {
+      return ['update']
+    }
+    if (method === 'TextSearch.diff2' || method === 'Example.diff3') {
+      diffCount++
+      return ['diff']
+    }
+    if (method === 'TextSearch.render2' || method === 'Example.render3') {
+      if (diffCount === 1) {
+        resolveFirstRenderStarted()
+        await firstRender
+      }
+      return [['setText', `render-${diffCount}`]]
+    }
+    return undefined
+  })
+  const viewlet = createWorkerViewletWithDependencies({
+    adapter: getWorkerViewletAdapter('textSearchView'),
+    config: createConfig(),
+    context: { platform: 1 },
+    worker: { invoke, restart: jest.fn() },
+  })
+  const commands = await viewlet.getCommands!()
+  const state = viewlet.create(9, '', 0, 0, 0, 0)
+
+  const commandRender = commands.update(state)
+  await firstRenderStarted
+  const requestedRender = commands.__renderPending(state)
+  await Promise.resolve()
+  await Promise.resolve()
+  expect(diffCount).toBe(1)
+  resolveFirstRender()
+  const [commandResult, requestedResult] = await Promise.all([commandRender, requestedRender])
+
+  expect(commandResult.commands).toEqual([['setText', 'render-1']])
+  expect(requestedResult.commands).toEqual([['setText', 'render-2']])
+  expect(diffCount).toBe(2)
+})
+
 test('recomputes configured outputs after commands', async () => {
   const config: any = createConfig()
   config.outputs = [{ method: { name: 'Example.renderActions', parameters: [stateParameter('uid')] }, stateField: 'actionsDom' }]
