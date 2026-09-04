@@ -1,6 +1,6 @@
 import { expect, test } from '@jest/globals'
-import * as ViewletModuleMap from '../src/parts/ViewletModuleMap/ViewletModuleMap.js'
 import * as ViewletModuleId from '../src/parts/ViewletModuleId/ViewletModuleId.js'
+import * as ViewletModuleMap from '../src/parts/ViewletModuleMap/ViewletModuleMap.js'
 
 test('diff editor uses worker-backed module', async () => {
   const module = await ViewletModuleMap.map[ViewletModuleId.DiffEditor]()
@@ -31,8 +31,19 @@ test('file watcher explorer uses worker-backed module', async () => {
   expect(typeof module.getKeyBindings).toBe('function')
 })
 
-test('explorer exposes live component state access', async () => {
-  const module = await ViewletModuleMap.map[ViewletModuleId.Explorer]()
+const componentStateViewlets = [
+  ViewletModuleId.Explorer,
+  ViewletModuleId.ExtensionDetail,
+  ViewletModuleId.Extensions,
+  ViewletModuleId.Main,
+  ViewletModuleId.Search,
+  ViewletModuleId.SourceControl,
+  ViewletModuleId.StatusBar,
+  ViewletModuleId.TitleBar,
+]
+
+test.each(componentStateViewlets)('viewlet %s exposes live component state access', async (moduleId) => {
+  const module = await ViewletModuleMap.map[moduleId]()
 
   expect(typeof module.getComponentState).toBe('function')
   expect(typeof module.setComponentState).toBe('function')

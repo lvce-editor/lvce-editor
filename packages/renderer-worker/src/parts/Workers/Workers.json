@@ -237,13 +237,17 @@
         "saveState": { "name": "TextSearch.saveState", "parameters": [{ "source": "state", "name": "uid" }] },
         "terminate": { "name": "TextSearch.terminate", "parameters": [] },
         "getCommandIds": { "name": "TextSearch.getCommandIds", "parameters": [] },
+        "getComponentState": { "name": "TextSearch.getComponentState", "parameters": [{ "source": "state", "name": "uid" }] },
         "getKeyBindings": { "name": "TextSearch.getKeyBindings", "parameters": [] },
         "getMenuEntryIds": { "name": "TextSearch.getMenuEntryIds", "parameters": [] },
         "getMenuEntries": {
           "name": "TextSearch.getMenuEntries",
           "parameters": [{ "source": "argument", "name": "args", "spread": true }]
         },
-        "renderEventListeners": { "name": "TextSearch.renderEventListeners", "parameters": [] }
+        "renderEventListeners": { "name": "TextSearch.renderEventListeners", "parameters": [] },
+        "setComponentState": { "name": "TextSearch.setComponentState", "parameters": [
+          { "source": "state", "name": "uid" }, { "source": "argument", "name": "componentState" }
+        ] }
       },
       "outputs": [{ "stateField": "actionsDom", "hotReload": false, "method": { "name": "TextSearch.renderActions", "parameters": [{ "source": "state", "name": "uid" }] } }],
       "capabilities": { "directRender": true, "events": true, "render": true, "resize": true, "rootRender": true },
@@ -721,6 +725,7 @@
         "saveState": { "name": "ExtensionDetail.saveState", "parameters": [{ "source": "state", "name": "uid" }] },
         "terminate": { "name": "ExtensionDetail.terminate", "parameters": [] },
         "getCommandIds": { "name": "ExtensionDetail.getCommandIds", "parameters": [] },
+        "getComponentState": { "name": "ExtensionDetail.getComponentState", "parameters": [{ "source": "state", "name": "uid" }] },
         "getKeyBindings": { "name": "ExtensionDetail.getKeyBindings", "parameters": [] },
         "getMenuEntryIds": { "name": "ExtensionDetail.getMenuIds", "parameters": [] },
         "getMenuEntries": {
@@ -728,7 +733,10 @@
           "parameters": [{ "source": "argument", "name": "args", "spread": true }]
         },
         "getTitle": { "name": "ExtensionDetail.renderTitle", "parameters": [{ "source": "state", "name": "uid" }] },
-        "renderEventListeners": { "name": "ExtensionDetail.renderEventListeners", "parameters": [] }
+        "renderEventListeners": { "name": "ExtensionDetail.renderEventListeners", "parameters": [] },
+        "setComponentState": { "name": "ExtensionDetail.setComponentState", "parameters": [
+          { "source": "state", "name": "uid" }, { "source": "argument", "name": "componentState" }
+        ] }
       },
       "capabilities": { "directRender": true, "events": true, "render": true, "resize": true, "rootRender": true },
       "renderComparison": "always"
@@ -784,10 +792,14 @@
         "saveState": { "name": "SearchExtensions.saveState", "parameters": [{ "source": "state", "name": "id" }] },
         "terminate": { "name": "SearchExtensions.terminate", "parameters": [] },
         "getCommandIds": { "name": "SearchExtensions.getCommandIds", "parameters": [] },
+        "getComponentState": { "name": "SearchExtensions.getComponentState", "parameters": [{ "source": "state", "name": "id" }] },
         "getKeyBindings": { "name": "SearchExtensions.getKeyBindings", "parameters": [] },
         "getMenuEntryIds": { "name": "SearchExtensions.getMenuIds", "parameters": [] },
         "getMenuEntries": { "name": "SearchExtensions.getMenuEntries2", "parameters": [{ "source": "argument", "name": "args", "spread": true }] },
-        "renderEventListeners": { "name": "SearchExtensions.renderEventListeners", "parameters": [] }
+        "renderEventListeners": { "name": "SearchExtensions.renderEventListeners", "parameters": [] },
+        "setComponentState": { "name": "SearchExtensions.setComponentState", "parameters": [
+          { "source": "state", "name": "id" }, { "source": "argument", "name": "componentState" }
+        ] }
       },
       "extraCommands": [{ "name": "handleExtensionsChanged", "method": "handleExtensionsChanged" }],
       "title": "Extensions: Installed",
@@ -1078,12 +1090,16 @@
         },
         "saveState": { "name": "MainArea.saveState", "parameters": [{ "source": "state", "name": "uid" }] },
         "getCommandIds": { "name": "MainArea.getCommandIds", "parameters": [] },
+        "getComponentState": { "name": "MainArea.getComponentState", "parameters": [{ "source": "state", "name": "uid" }] },
         "getMenuEntryIds": { "name": "MainArea.getMenuIds", "parameters": [] },
         "getMenuEntries": {
           "name": "MainArea.getMenuEntries",
           "parameters": [{ "source": "argument", "name": "args", "spread": true }]
         },
-        "renderEventListeners": { "name": "MainArea.renderEventListeners", "parameters": [] }
+        "renderEventListeners": { "name": "MainArea.renderEventListeners", "parameters": [] },
+        "setComponentState": { "name": "MainArea.setComponentState", "parameters": [
+          { "source": "state", "name": "uid" }, { "source": "argument", "name": "componentState" }
+        ] }
       },
       "capabilities": { "directRender": true, "events": true, "render": true, "resize": true, "rootRender": true }
     }
@@ -1745,7 +1761,11 @@
         "saveState": { "name": "StatusBar.saveState", "parameters": [{ "source": "state", "name": "uid" }] },
         "terminate": { "name": "StatusBar.terminate", "parameters": [] },
         "getCommandIds": { "name": "StatusBar.getCommandIds", "parameters": [] },
-        "renderEventListeners": { "name": "StatusBar.renderEventListeners", "parameters": [] }
+        "getComponentState": { "name": "StatusBar.getComponentState", "parameters": [{ "source": "state", "name": "uid" }] },
+        "renderEventListeners": { "name": "StatusBar.renderEventListeners", "parameters": [] },
+        "setComponentState": { "name": "StatusBar.setComponentState", "parameters": [
+          { "source": "state", "name": "uid" }, { "source": "argument", "name": "componentState" }
+        ] }
       },
       "capabilities": { "directRender": true, "events": true, "render": true, "resize": true, "rootRender": true },
       "renderComparison": "commands"
@@ -1835,10 +1855,14 @@
         "resize": { "name": "TitleBar.resize", "parameters": [{ "source": "state", "name": "uid" }, { "source": "argument", "name": "dimensions" }] },
         "terminate": { "name": "TitleBar.terminate", "parameters": [] },
         "getCommandIds": { "name": "TitleBar.getCommandIds", "parameters": [] },
+        "getComponentState": { "name": "TitleBar.getComponentState", "parameters": [{ "source": "state", "name": "uid" }] },
         "getKeyBindings": { "name": "TitleBar.getKeyBindings", "parameters": [] },
         "getMenuEntryIds": { "name": "TitleBar.getMenuIds", "parameters": [] },
         "getMenuEntries": { "name": "TitleBar.getMenuEntries2", "parameters": [{ "source": "argument", "name": "args", "spread": true }] },
-        "renderEventListeners": { "name": "TitleBar.renderEventListeners", "parameters": [] }
+        "renderEventListeners": { "name": "TitleBar.renderEventListeners", "parameters": [] },
+        "setComponentState": { "name": "TitleBar.setComponentState", "parameters": [
+          { "source": "state", "name": "uid" }, { "source": "argument", "name": "componentState" }
+        ] }
       },
       "capabilities": { "directRender": true, "events": true, "render": true, "resize": true, "rootRender": true }
     }
