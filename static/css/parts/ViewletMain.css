@@ -25,3 +25,16 @@
   display: flex;
   flex-direction: column;
 }
+
+.EditorLargeFileWarningIcon {
+  color: var(--WarningForeground, #cca700);
+  flex-shrink: 0;
+  height: 48px;
+  width: 48px;
+  --MaskIconSize: 48px;
+}
+
+.EditorContentLargeFileActions {
+  display: flex;
+  gap: 8px;
+}
