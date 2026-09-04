@@ -18,10 +18,31 @@
   opacity: 0.75;
 }
 
-.ComponentStateGrid {
-  display: grid;
+.ComponentStateGrid,
+.ComponentStateRows {
+  display: flex;
   gap: 8px;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+}
+
+.ComponentStateGrid {
+  flex-wrap: wrap;
+}
+
+.ComponentStateRows {
+  flex-direction: column;
+}
+
+.ComponentStateRow {
+  display: flex;
+  gap: 8px;
+}
+
+.ComponentStateGrid > .ComponentStateCard {
+  flex: 1 1 180px;
+}
+
+.ComponentStateRow > .ComponentStateCard {
+  flex: 1 1 0;
 }
 
 .ComponentStateCard {
@@ -33,6 +54,7 @@
   flex-direction: column;
   gap: 4px;
   min-height: 84px;
+  min-width: 0;
   padding: 12px;
   text-align: left;
 }
