@@ -8,6 +8,17 @@
   padding: 16px;
 }
 
+.ComponentStateHeader {
+  align-items: center;
+  display: flex;
+  min-height: 22px;
+}
+
+.ComponentStateHeaderActions {
+  display: flex;
+  margin-left: auto;
+}
+
 .ComponentStateHeading {
   font-size: 16px;
   margin: 0;
