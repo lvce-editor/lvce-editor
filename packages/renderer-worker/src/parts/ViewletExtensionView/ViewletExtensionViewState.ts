@@ -14,6 +14,7 @@ export interface ViewletExtensionViewState {
   readonly kind: string
   readonly parentUid?: number
   readonly patches: readonly unknown[]
+  readonly stateful: boolean
   readonly title: string
   readonly uid: number
   readonly uri: string

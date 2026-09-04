@@ -158,6 +158,9 @@ const isEditable = (instance) => {
   if (!isWorkerBacked(instance)) {
     return true
   }
+  if (typeof instance.factory.isComponentStateAvailable === 'function') {
+    return instance.factory.isComponentStateAvailable(instance.state)
+  }
   return typeof instance.factory.getComponentState === 'function' && typeof instance.factory.setComponentState === 'function'
 }
 

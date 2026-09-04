@@ -31,6 +31,7 @@ const createState = () => {
     iframeSrc: '',
     kind: 'virtualDom',
     patches: [],
+    stateful: false,
     title: 'Testing',
     uid: 1,
     uri: 'sample.views.testing',
@@ -119,6 +120,36 @@ test('loadContent uses rendered title for virtual dom views', async () => {
   })
 })
 
+test('loadContent exposes managed extension view state', async () => {
+  const invoke = ExtensionManagementWorker.invoke as any
+  invoke.mockImplementation((method) => {
+    if (method === 'Extensions.getViews') {
+      return [{ id: 'sample.views.testing', kind: 'virtualDom', title: 'Testing' }]
+    }
+    if (method === 'Extensions.getAllExtensions') {
+      return []
+    }
+    if (method === 'Extensions.createViewInstance') {
+      return {
+        ok: true,
+        result: { dom: [], type: 'setDom' },
+        stateful: true,
+      }
+    }
+    if (method === 'Extensions.getViewActionsDom') {
+      return undefined
+    }
+    if (method === 'Extensions.getViewActions') {
+      return []
+    }
+    throw new Error(`unexpected method ${method}`)
+  })
+
+  const state = await ViewletExtensionView.loadContent(createState(), undefined)
+
+  expect(ViewletExtensionView.isComponentStateAvailable(state)).toBe(true)
+})
+
 test('sidebar dom uses custom view title instead of id', () => {
   const dom = GetSideBarDom.getSideBarDom({
     actionsUid: -1,
@@ -180,6 +211,45 @@ test('rerender requests virtual dom patches from extension management worker', a
   })
 
   expect(invoke).toHaveBeenCalledWith('Extensions.renderViewInstance', 'sample.views.testing', 1, expect.any(String), expect.any(Number))
+})
+
+test('gets managed extension view state', async () => {
+  const componentState = { count: 1 }
+  const invoke = ExtensionManagementWorker.invoke as any
+  invoke.mockResolvedValue(componentState)
+
+  await expect(ViewletExtensionView.getComponentState(createState())).resolves.toBe(componentState)
+
+  expect(invoke).toHaveBeenCalledWith('Extensions.getViewInstanceState', 'sample.views.testing', 1, expect.any(String), expect.any(Number))
+})
+
+test('sets managed extension view state and returns the renderer state', async () => {
+  const componentState = { count: 2 }
+  const patches = [['setText', 0, '2']]
+  const invoke = ExtensionManagementWorker.invoke as any
+  invoke.mockImplementation((method) => {
+    if (method === 'Extensions.setViewInstanceState') {
+      return { patches, type: 'setPatches' }
+    }
+    if (method === 'Extensions.getViewActionsDom') {
+      return undefined
+    }
+    if (method === 'Extensions.getViewActions') {
+      return []
+    }
+    throw new Error(`unexpected method ${method}`)
+  })
+
+  await expect(ViewletExtensionView.setComponentState(createState(), componentState)).resolves.toMatchObject({ patches })
+
+  expect(invoke).toHaveBeenCalledWith(
+    'Extensions.setViewInstanceState',
+    'sample.views.testing',
+    1,
+    componentState,
+    expect.any(String),
+    expect.any(Number),
+  )
 })
 
 test('rerender updates the title rendered by the parent sidebar', async () => {
