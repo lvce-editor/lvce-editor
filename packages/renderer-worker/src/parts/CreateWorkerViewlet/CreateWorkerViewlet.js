@@ -469,6 +469,7 @@ const createWorkerViewletInternal = ({ adapter, config, context, worker }) => {
     renderTitle,
     resize,
     saveState,
+    serializeCommands: Boolean(adapter.serializeCommands),
     setComponentState,
     workspaceChangeEvent,
     workspaceChangeEventPrepend,

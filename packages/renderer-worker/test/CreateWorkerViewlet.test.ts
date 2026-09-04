@@ -168,6 +168,7 @@ test('text search command wrappers discard superseded render pipelines', async (
     context: { platform: 1 },
     worker: { invoke, restart: jest.fn() },
   })
+  expect(viewlet.serializeCommands).toBe(true)
   const commands = await viewlet.getCommands!()
   const state = viewlet.create(9, '', 0, 0, 0, 0)
 

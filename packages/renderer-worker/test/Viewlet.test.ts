@@ -130,6 +130,47 @@ test('executeViewletCommand runs afterRender after updating the renderer', async
   expect(afterRender).toHaveBeenCalledWith(oldState, newState)
 })
 
+test('executeViewletCommand serializes commands for factories that require it', async () => {
+  const { promise: firstCommand, resolve: resolveFirstCommand } = Promise.withResolvers<void>()
+  const { promise: firstCommandStarted, resolve: resolveFirstCommandStarted } = Promise.withResolvers<void>()
+  const callOrder: string[] = []
+  const update = jest.fn(async (state: { uid: number; value: string }, value: string) => {
+    callOrder.push(`command-${value}`)
+    if (value === 'first') {
+      resolveFirstCommandStarted()
+      await firstCommand
+    }
+    return { ...state, value }
+  })
+  ViewletStates.set(2, {
+    factory: {
+      Commands: { update },
+      name: 'Test',
+      serializeCommands: true,
+    },
+    moduleId: 'Test',
+    renderedState: { uid: 2, value: 'initial' },
+    state: { uid: 2, value: 'initial' },
+  })
+  jest.mocked(ViewletManager.render).mockImplementation((_factory, _oldState, newState) => [['Viewlet.setText', newState.value]])
+  jest.mocked(RendererProcess.invoke).mockImplementation(async (_method, commands): Promise<void> => {
+    callOrder.push(`render-${commands[0][1]}`)
+  })
+
+  const first = Viewlet.executeViewletCommand(2, 'update', 'first')
+  await firstCommandStarted
+  const second = Viewlet.executeViewletCommand(2, 'update', 'second')
+  await Promise.resolve()
+  await Promise.resolve()
+
+  expect(update).toHaveBeenCalledTimes(1)
+  resolveFirstCommand()
+  await Promise.all([first, second])
+
+  expect(callOrder).toEqual(['command-first', 'render-first', 'command-second', 'render-second'])
+  expect(ViewletStates.getState(2)).toEqual({ uid: 2, value: 'second' })
+})
+
 test('requestRender renders pending worker state without executing the event again', async () => {
   const renderPending = jest.fn(async (state: { commands: unknown[]; uid: number }) => ({
     ...state,
