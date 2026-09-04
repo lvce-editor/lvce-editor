@@ -114,6 +114,40 @@ test('getLayoutVirtualDom does not render the preview close button when preview 
   expect(dom.some((node) => node.className?.includes('PreviewCloseButton'))).toBe(false)
 })
 
+test('getLayoutVirtualDom renders the panel sash when the panel is hidden', () => {
+  const state = {
+    activityBarVisible: false,
+    mainVisible: true,
+    mainId: 1,
+    panelSashVisible: true,
+    panelVisible: false,
+    panelId: -1,
+    previewSashVisible: false,
+    previewVisible: false,
+    previewId: -1,
+    secondarySideBarVisible: false,
+    secondarySideBarId: -1,
+    sideBarLocation: SideBarLocationType.Left,
+    sideBarSashVisible: false,
+    sideBarVisible: false,
+    sideBarId: -1,
+    statusBarVisible: true,
+    statusBarId: 2,
+    titleBarVisible: false,
+    titleBarId: -1,
+  }
+
+  // @ts-ignore
+  const dom = getLayoutVirtualDom(state)
+
+  expect(dom).toContainEqual(
+    expect.objectContaining({
+      className: 'Viewlet Sash SashHorizontal SashPanel',
+      onPointerDown: DomEventListenerFunctions.HandleSashPanelPointerDown,
+    }),
+  )
+})
+
 test.each([
   ['left', SideBarLocationType.Left],
   ['right', SideBarLocationType.Right],

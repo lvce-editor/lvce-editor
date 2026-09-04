@@ -496,7 +496,7 @@ const getWorkbenchBodyDom = (state: LayoutState) => {
 }
 
 export const getLayoutVirtualDom = (state: LayoutState) => {
-  const { titleBarVisible, titleBarId, panelSashVisible, panelVisible, widgetReferences = [], mountedViewletsBySource = {} } = state
+  const { titleBarVisible, titleBarId, panelSashVisible, widgetReferences = [], mountedViewletsBySource = {} } = state
   const dom: any[] = []
   let workbenchChildCount = 0
 
@@ -516,7 +516,7 @@ export const getLayoutVirtualDom = (state: LayoutState) => {
   workbenchChildCount++
   dom.push(...getWorkbenchBodyDom(state))
 
-  if (panelVisible && panelSashVisible) {
+  if (panelSashVisible) {
     workbenchChildCount++
     dom.push(getSashPanelDom())
   }
