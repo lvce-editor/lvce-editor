@@ -6,6 +6,9 @@ export const getHelpString = (): any => {
 Usage:
   ${Platform.applicationName} [path]
 
+General options:
+  --transient             Run with temporary data and extension directories.
+
 Extension development:
   --link <path>             Link an extension for this run. May be repeated.
   --start-dev-server        Run npm run dev in linked extension folders.

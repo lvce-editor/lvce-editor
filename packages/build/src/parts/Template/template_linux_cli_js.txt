@@ -1,6 +1,9 @@
 import { spawn } from 'node:child_process'
-import { readFile } from 'node:fs/promises'
+import { mkdtemp, readFile } from 'node:fs/promises'
+import { tmpdir } from 'node:os'
+import { join } from 'node:path'
 
+const applicationName = '@@APPLICATION_NAME@@'
 const foregroundCommands = new Set(['install', 'list'])
 const electronDiagnosticPattern = /^\[\d+:\d+\/\d+\.\d+:(?:ERROR|WARNING):/
 
@@ -11,6 +14,40 @@ const isForegroundRequest = (args) => {
     return true
   }
   return args.some((arg) => foregroundCommands.has(arg))
+}
+
+const shellQuote = (value) => `'${value.replaceAll("'", "'\\''")}'`
+
+const getTransientLaunchOptions = async (args) => {
+  if (!args.includes('--transient')) {
+    return { args, env: {} }
+  }
+
+  const root = await mkdtemp(join(tmpdir(), `${applicationName}-`))
+  const configHome = join(root, 'config')
+  const dataHome = join(root, 'data')
+  const cacheHome = join(root, 'cache')
+  const stateHome = join(root, 'state')
+  const userDataDir = join(configHome, applicationName, 'electron')
+  const env = {
+    XDG_CACHE_HOME: cacheHome,
+    XDG_CONFIG_HOME: configHome,
+    XDG_DATA_HOME: dataHome,
+    XDG_STATE_HOME: stateHome,
+  }
+  const relaunchArguments = [
+    `XDG_CONFIG_HOME=${shellQuote(configHome)}`,
+    `XDG_DATA_HOME=${shellQuote(dataHome)}`,
+    `XDG_CACHE_HOME=${shellQuote(cacheHome)}`,
+    `XDG_STATE_HOME=${shellQuote(stateHome)}`,
+    applicationName,
+    `--user-data-dir=${shellQuote(userDataDir)}`,
+  ]
+  console.log(`State is temporarily stored. Relaunch this state with: ${relaunchArguments.join(' ')}`)
+  return {
+    args: [...args, `--user-data-dir=${userDataDir}`],
+    env,
+  }
 }
 
 const forwardElectronStderr = (stream) => {
@@ -33,8 +70,8 @@ const forwardElectronStderr = (stream) => {
   })
 }
 
-const launchElectron = async (args) => {
-  const env = { ...process.env }
+const launchElectron = async (args, envOverrides) => {
+  const env = { ...process.env, ...envOverrides }
   delete env.ELECTRON_RUN_AS_NODE
 
   const foreground = isForegroundRequest(args)
@@ -82,7 +119,8 @@ const main = async () => {
     console.log(packageJson.version)
     return 0
   }
-  return launchElectron(args)
+  const launchOptions = await getTransientLaunchOptions(args)
+  return launchElectron(launchOptions.args, launchOptions.env)
 }
 
 try {
