@@ -1,10 +1,11 @@
 import * as BrowserKey from '../BrowserKey/BrowserKey.js'
 import * as Command from '../Command/Command.js'
-import * as RendererProcess from '../RendererProcess/RendererProcess.js'
-import * as WrapEditorCommands from '../WrapEditorCommands/WrapEditorCommands.js'
 import * as EditorWorker from '../EditorWorker/EditorWorker.ts'
+import * as FilterFocusCommands from '../FilterFocusCommands/FilterFocusCommands.js'
 import * as GetTokenizePath from '../GetTokenizePath/GetTokenizePath.js'
 import * as Languages from '../Languages/Languages.js'
+import * as RendererProcess from '../RendererProcess/RendererProcess.js'
+import * as WrapEditorCommands from '../WrapEditorCommands/WrapEditorCommands.js'
 
 const subWidgetCommandIds = [
   'ColorPicker.handleColorAreaPointerDown',
@@ -123,6 +124,19 @@ const loadContentLater = async (editor) => {
   await Command.execute('Viewlet.executeViewletCommand', editor.uid, 'updateDiagnostics')
 }
 
+const loadEditorContent = WrapEditorCommands.wrapEditorCommand('Editor.loadContent')
+
+const loadContent = async (editor, savedState, context) => {
+  const newState = await loadEditorContent(editor, savedState)
+  if (!context?.preserveFocus) {
+    return newState
+  }
+  return {
+    ...newState,
+    commands: FilterFocusCommands.filterFocusCommands(newState.commands),
+  }
+}
+
 const renderPending = WrapEditorCommands.renderPendingEditors
 
 const executeWidgetCommand = WrapEditorCommands.wrapEditorCommand('Editor.executeWidgetCommand')
@@ -141,6 +155,7 @@ export const getCommands = async () => {
   Object.assign(Commands, WrapEditorCommands.wrapEditorCommands(commandIds), WrapEditorCommands.wrapEditorCommands(subWidgetCommandIds), {
     __renderPending: renderPending,
     handleUriChange,
+    loadContent,
     loadContentLater,
     renderPending,
     showOverlayMessage,

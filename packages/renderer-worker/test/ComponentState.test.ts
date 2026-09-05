@@ -27,6 +27,7 @@ const ComponentState = await import('../src/parts/ComponentState/ComponentState.
 beforeEach(() => {
   jest.resetAllMocks()
   jest.mocked(EditorWorker.invoke).mockResolvedValue('')
+  jest.mocked(ViewletManager.render).mockReturnValue([])
   ViewletStates.reset()
 })
 
@@ -193,7 +194,7 @@ test('refreshes an open live component state editor when the component rerenders
   ViewletStates.setRenderedState(2, { focusedIndex: 1, uid: 2 })
   await ComponentState.waitForRefreshes()
 
-  expect(Viewlet.executeViewletCommand).toHaveBeenCalledWith(9, 'loadContent')
+  expect(Viewlet.executeViewletCommand).toHaveBeenCalledWith(9, 'loadContent', undefined, { preserveFocus: true })
   expect(Viewlet.reload).not.toHaveBeenCalled()
 })
 
@@ -222,7 +223,7 @@ test('refreshes an open live component state editor with a decimal component uid
   ViewletStates.setRenderedState(componentUid, { focusedIndex: 1, uid: componentUid })
   await ComponentState.waitForRefreshes()
 
-  expect(Viewlet.executeViewletCommand).toHaveBeenCalledWith(9, 'loadContent')
+  expect(Viewlet.executeViewletCommand).toHaveBeenCalledWith(9, 'loadContent', undefined, { preserveFocus: true })
 })
 
 test('does not overwrite a dirty live component state editor when the component rerenders', async () => {
@@ -270,7 +271,7 @@ test('refreshes Main state once after opening, then preserves its active self-re
   await ComponentState.waitForRefreshes()
 
   expect(Viewlet.executeViewletCommand).toHaveBeenCalledTimes(1)
-  expect(Viewlet.executeViewletCommand).toHaveBeenCalledWith(9, 'loadContent')
+  expect(Viewlet.executeViewletCommand).toHaveBeenCalledWith(9, 'loadContent', undefined, { preserveFocus: true })
 })
 
 test('coalesces rerenders while a live component state editor is refreshing', async () => {
@@ -354,4 +355,42 @@ test('exposes Simple Browser state and renders edits through its component state
   expect(ViewletManager.render).toHaveBeenCalledWith(factory, state, editedState, 10, undefined)
   expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.sendMultiple', domCommands)
   expect(domCommands).toEqual([['Viewlet.setDom2', 10, expect.arrayContaining([expect.objectContaining({ value: 'Live browser state' })])]])
+})
+
+test('does not refresh unchanged state with the schema and reordered properties from the live file', async () => {
+  const state = { uid: 2, value: { b: 2, a: 1 } }
+  const editor = { uid: 9, uri: 'live-component-state:///2.json' }
+  ViewletStates.set(2, { factory: {}, moduleId: 'Explorer', renderedState: state, state })
+  ViewletStates.set(9, { factory: {}, moduleId: 'EditorText', renderedState: editor, state: editor })
+  jest
+    .mocked(EditorWorker.invoke)
+    .mockResolvedValue(JSON.stringify({ $schema: 'live-component-state:///schemas/2.json', value: { a: 1, b: 2 }, uid: 2 }))
+  ViewletStates.setRenderedState(2, { ...state })
+  await ComponentState.waitForRefreshes()
+  expect(Viewlet.executeViewletCommand).not.toHaveBeenCalled()
+})
+
+test('does not apply or render unchanged serialized worker state', async () => {
+  const state = { uid: 2 }
+  const factory = {
+    hasFunctionalRender: true,
+    getComponentState: jest.fn(async () => ({ uid: 2, selections: new Uint32Array([1, 2]), missing: undefined })),
+    setComponentState: jest.fn(async () => state),
+  }
+  ViewletStates.set(2, { factory, moduleId: 'Explorer', renderedState: state, state })
+  await ComponentState.setState(2, { selections: { 0: 1, 1: 2 }, uid: 2 })
+  expect(factory.setComponentState).not.toHaveBeenCalled()
+  expect(ViewletManager.render).not.toHaveBeenCalled()
+})
+
+test('applying changed component state renders content without moving focus', async () => {
+  const state = { uid: 2, value: 'old' }
+  ViewletStates.set(2, { factory: {}, moduleId: 'Explorer', renderedState: state, state })
+  jest.mocked(ViewletManager.render).mockReturnValue([
+    ['Viewlet.setDom2', 2, []],
+    ['Viewlet.focusSelector', 2, '.Explorer'],
+    ['Viewlet.setFocusContext', 2, 1],
+  ])
+  await ComponentState.setState(2, { ...state, value: 'new' })
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.sendMultiple', [['Viewlet.setDom2', 2, []]])
 })
