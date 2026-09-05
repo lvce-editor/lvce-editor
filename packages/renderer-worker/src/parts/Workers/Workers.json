@@ -216,7 +216,7 @@
           "name": "TextSearch.create",
           "parameters": [
             { "source": "state", "name": "uid" }, { "source": "state", "name": "x" }, { "source": "state", "name": "y" },
-            { "source": "state", "name": "width" }, { "source": "state", "name": "height" }, { "source": "context", "name": "workspacePath" },
+            { "source": "state", "name": "width" }, { "source": "state", "name": "height" }, { "source": "context", "name": "workspaceUri" },
             { "source": "state", "name": "assetDir" }, { "source": "literal", "value": 22 }, { "source": "literal", "value": "" },
             { "source": "literal", "value": "" }, { "source": "state", "name": "platform" }, { "source": "state", "name": "isSearchEditor" }
           ]
