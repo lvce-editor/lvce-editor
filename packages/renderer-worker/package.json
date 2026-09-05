@@ -62,7 +62,7 @@
     "@lvce-editor/diff-view": "^3.37.0",
     "@lvce-editor/diff-worker": "^3.4.0",
     "@lvce-editor/drag-and-drop-worker": "^0.11.0",
-    "@lvce-editor/editor-worker": "^19.56.1",
+    "@lvce-editor/editor-worker": "^19.58.1",
     "@lvce-editor/embeds-worker": "^4.15.4",
     "@lvce-editor/error-worker": "^3.11.0",
     "@lvce-editor/explorer-view": "^7.37.0",
