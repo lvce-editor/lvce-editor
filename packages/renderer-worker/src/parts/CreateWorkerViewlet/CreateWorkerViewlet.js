@@ -392,6 +392,9 @@ const createWorkerViewletInternal = ({ adapter, config, context, worker }) => {
   const saveState = methods.saveState
     ? (currentState) => invokeConfiguredMethod(worker, methods.saveState, createInvocation(currentState, context))
     : undefined
+  const getComponentDom = methods.getComponentDom
+    ? (currentState) => invokeConfiguredMethod(worker, methods.getComponentDom, createInvocation(currentState, context))
+    : undefined
   const getComponentState = methods.getComponentState
     ? (currentState) => invokeConfiguredMethod(worker, methods.getComponentState, createInvocation(currentState, context))
     : undefined
@@ -463,6 +466,7 @@ const createWorkerViewletInternal = ({ adapter, config, context, worker }) => {
     create,
     dispose,
     getCommands,
+    getComponentDom,
     getComponentState,
     getKeyBindings,
     getQuickPickMenuEntries,

@@ -209,6 +209,7 @@ export const getComponents = () => {
     }
     seen.add(uid)
     components.push({
+      domAvailable: typeof instance.factory.getComponentDom === 'function',
       editable: isEditable(instance),
       moduleId: instance.moduleId || instance.factory?.name || 'Unknown',
       uid,
@@ -226,6 +227,14 @@ export const getState = async (uid) => {
     return instance.factory.getComponentState(instance.state)
   }
   return instance.state
+}
+
+export const getDom = async (uid) => {
+  const instance = getInstance(uid)
+  if (typeof instance.factory.getComponentDom !== 'function') {
+    throw new Error(`Component DOM API not available: ${instance.moduleId}`)
+  }
+  return instance.factory.getComponentDom(instance.state)
 }
 
 const validateState = (uid, oldState, newState) => {

@@ -59,9 +59,9 @@ test('lists native and supported worker-backed components once', () => {
   })
 
   expect(ComponentState.getComponents()).toEqual([
-    { editable: false, moduleId: 'Editor', uid: 3 },
-    { editable: true, moduleId: 'Explorer', uid: 2 },
-    { editable: true, moduleId: 'Layout', uid: 1 },
+    { domAvailable: false, editable: false, moduleId: 'Editor', uid: 3 },
+    { domAvailable: false, editable: true, moduleId: 'Explorer', uid: 2 },
+    { domAvailable: false, editable: true, moduleId: 'Layout', uid: 1 },
   ])
 })
 
@@ -81,7 +81,7 @@ test('uses a worker-backed component state availability check', () => {
     state: rendererState,
   })
 
-  expect(ComponentState.getComponents()).toEqual([{ editable: true, moduleId: 'ExtensionView', uid: 4 }])
+  expect(ComponentState.getComponents()).toEqual([{ domAvailable: false, editable: true, moduleId: 'ExtensionView', uid: 4 }])
   expect(isComponentStateAvailable).toHaveBeenCalledWith(rendererState)
 })
 
@@ -278,4 +278,29 @@ test('stops refreshing after the live component state editor is disposed', async
 
   expect(Viewlet.executeViewletCommand).not.toHaveBeenCalled()
   expect(Viewlet.reload).not.toHaveBeenCalled()
+})
+
+test('gets virtual DOM through the component API without rendering or changing state', async () => {
+  const state = { commands: [], uid: 0.25 }
+  const dom = [{ childCount: 0, className: 'TitleBar', type: 4 }]
+  const getComponentDom = jest.fn(async () => dom)
+  ViewletStates.set(0.25, {
+    factory: { getComponentDom, getComponentState: jest.fn(), hasFunctionalRender: true, setComponentState: jest.fn() },
+    moduleId: 'TitleBar',
+    renderedState: state,
+    state,
+  })
+  await expect(ComponentState.getDom(0.25)).resolves.toBe(dom)
+  expect(getComponentDom).toHaveBeenCalledWith(state)
+  expect(ViewletStates.getByUid(0.25).state).toBe(state)
+  expect(ViewletManager.render).not.toHaveBeenCalled()
+  expect(RendererProcess.invoke).not.toHaveBeenCalled()
+  expect(ComponentState.getComponents()).toEqual([{ domAvailable: true, editable: true, moduleId: 'TitleBar', uid: 0.25 }])
+})
+
+test('rejects missing components and components without a DOM API', async () => {
+  await expect(ComponentState.getDom(99)).rejects.toThrow('Component not found: 99')
+  const state = { uid: 1 }
+  ViewletStates.set(1, { factory: {}, moduleId: 'Layout', renderedState: state, state })
+  await expect(ComponentState.getDom(1)).rejects.toThrow('Component DOM API not available: Layout')
 })

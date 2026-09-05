@@ -625,3 +625,21 @@ test('disposes the component state worker view', async () => {
 
   expect(invoke).toHaveBeenCalledWith('ComponentState.dispose', 7)
 })
+
+test('gets component DOM without invoking the worker render pipeline', async () => {
+  const config: any = createConfig()
+  config.methods.getComponentDom = { name: 'Example.getComponentDom', parameters: [stateParameter('uid')] }
+  const dom = [{ childCount: 0, className: 'Example', type: 4 }]
+  const invoke = jest.fn(async () => dom)
+  const viewlet = createWorkerViewletWithDependencies({ config, context: { platform: 1 }, worker: { invoke, restart: jest.fn() } })
+  const state = viewlet.create(9, '', 0, 0, 100, 100)
+  await expect(viewlet.getComponentDom!(state)).resolves.toBe(dom)
+  expect(invoke).toHaveBeenCalledTimes(1)
+  expect(invoke).toHaveBeenCalledWith('Example.getComponentDom', 9)
+  expect(state.commands).toEqual([])
+})
+
+test('does not expose a DOM getter for workers without the API', () => {
+  const viewlet = createWorkerViewletWithDependencies({ config: createConfig(), worker: { invoke: jest.fn() } })
+  expect(viewlet.getComponentDom).toBeUndefined()
+})
