@@ -14,6 +14,7 @@ jest.unstable_mockModule('../src/parts/ViewletManager/ViewletManager.js', () => 
 }))
 
 jest.unstable_mockModule('../src/parts/Viewlet/Viewlet.js', () => ({
+  executeViewletCommand: jest.fn(),
   reload: jest.fn(),
 }))
 
@@ -162,7 +163,8 @@ test('refreshes an open live component state editor when the component rerenders
   ViewletStates.setRenderedState(2, { focusedIndex: 1, uid: 2 })
   await ComponentState.waitForRefreshes()
 
-  expect(Viewlet.reload).toHaveBeenCalledWith(9)
+  expect(Viewlet.executeViewletCommand).toHaveBeenCalledWith(9, 'loadContent')
+  expect(Viewlet.reload).not.toHaveBeenCalled()
 })
 
 test('does not refresh an open live component state editor when its content is unchanged', async () => {
@@ -176,6 +178,7 @@ test('does not refresh an open live component state editor when its content is u
   await ComponentState.waitForRefreshes()
 
   expect(EditorWorker.invoke).toHaveBeenCalledWith('Editor.getText', 9)
+  expect(Viewlet.executeViewletCommand).not.toHaveBeenCalled()
   expect(Viewlet.reload).not.toHaveBeenCalled()
 })
 
@@ -189,7 +192,7 @@ test('refreshes an open live component state editor with a decimal component uid
   ViewletStates.setRenderedState(componentUid, { focusedIndex: 1, uid: componentUid })
   await ComponentState.waitForRefreshes()
 
-  expect(Viewlet.reload).toHaveBeenCalledWith(9)
+  expect(Viewlet.executeViewletCommand).toHaveBeenCalledWith(9, 'loadContent')
 })
 
 test('does not overwrite a dirty live component state editor when the component rerenders', async () => {
@@ -214,6 +217,7 @@ test('does not overwrite a dirty live component state editor when the component 
   ViewletStates.setRenderedState(2, { focusedIndex: 1, uid: 2 })
   await ComponentState.waitForRefreshes()
 
+  expect(Viewlet.executeViewletCommand).not.toHaveBeenCalled()
   expect(Viewlet.reload).not.toHaveBeenCalled()
 })
 
@@ -235,13 +239,13 @@ test('refreshes Main state once after opening, then preserves its active self-re
   ViewletStates.setRenderedState(3, { commands: [], uid: 3 })
   await ComponentState.waitForRefreshes()
 
-  expect(Viewlet.reload).toHaveBeenCalledTimes(1)
-  expect(Viewlet.reload).toHaveBeenCalledWith(9)
+  expect(Viewlet.executeViewletCommand).toHaveBeenCalledTimes(1)
+  expect(Viewlet.executeViewletCommand).toHaveBeenCalledWith(9, 'loadContent')
 })
 
 test('coalesces rerenders while a live component state editor is refreshing', async () => {
   let finishReload
-  jest.mocked(Viewlet.reload).mockImplementationOnce(
+  jest.mocked(Viewlet.executeViewletCommand).mockImplementationOnce(
     () =>
       new Promise((resolve) => {
         finishReload = resolve
@@ -259,7 +263,7 @@ test('coalesces rerenders while a live component state editor is refreshing', as
   finishReload()
   await ComponentState.waitForRefreshes()
 
-  expect(Viewlet.reload).toHaveBeenCalledTimes(2)
+  expect(Viewlet.executeViewletCommand).toHaveBeenCalledTimes(2)
 })
 
 test('stops refreshing after the live component state editor is disposed', async () => {
@@ -272,5 +276,6 @@ test('stops refreshing after the live component state editor is disposed', async
   ViewletStates.setRenderedState(2, { focusedIndex: 1, uid: 2 })
   await ComponentState.waitForRefreshes()
 
+  expect(Viewlet.executeViewletCommand).not.toHaveBeenCalled()
   expect(Viewlet.reload).not.toHaveBeenCalled()
 })
