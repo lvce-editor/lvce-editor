@@ -618,7 +618,8 @@ export const getFocusCommands = async (id) => {
 const executeViewletCommandInternal = async (uid, fnName, ...args) => {
   const instance = ViewletStates.getInstance(uid)
   if (!instance) {
-    if (fnName !== DomEventListenerFunctions.HandleBlur) {
+    // Worker render notifications can arrive or leave the command queue after disposal.
+    if (fnName !== DomEventListenerFunctions.HandleBlur && fnName !== '__renderPending') {
       Logger.warn(`cannot execute ${fnName} instance not found ${uid}`)
     }
     return

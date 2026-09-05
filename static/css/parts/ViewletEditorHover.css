@@ -50,7 +50,6 @@
   letter-spacing: var(--EditorLetterSpacing);
   font-feature-settings: var(--EditorFontFeatureSettings);
   tab-size: var(--EditorTabSize);
-  font-display: block;
   padding: 4px 8px;
 }
 
