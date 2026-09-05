@@ -59,9 +59,9 @@ test('lists native and supported worker-backed components once', () => {
   })
 
   expect(ComponentState.getComponents()).toEqual([
-    { displayName: 'Editor', editable: false, moduleId: 'Editor', uid: 3 },
-    { displayName: 'Explorer', editable: true, moduleId: 'Explorer', uid: 2 },
-    { displayName: 'Layout', editable: true, moduleId: 'Layout', uid: 1 },
+    { displayName: 'Editor', domAvailable: false, editable: false, moduleId: 'Editor', uid: 3 },
+    { displayName: 'Explorer', domAvailable: false, editable: true, moduleId: 'Explorer', uid: 2 },
+    { displayName: 'Layout', domAvailable: false, editable: true, moduleId: 'Layout', uid: 1 },
   ])
 })
 
@@ -81,7 +81,9 @@ test('uses a worker-backed component state availability check', () => {
     state: rendererState,
   })
 
-  expect(ComponentState.getComponents()).toEqual([{ displayName: 'ExtensionView (extension)', editable: true, moduleId: 'ExtensionView', uid: 4 }])
+  expect(ComponentState.getComponents()).toEqual([
+    { displayName: 'ExtensionView (extension)', domAvailable: false, editable: true, moduleId: 'ExtensionView', uid: 4 },
+  ])
   expect(isComponentStateAvailable).toHaveBeenCalledWith(rendererState)
 })
 
@@ -97,14 +99,20 @@ test('labels extension views by title and sorts by display name then uid', () =>
   }
 
   expect(ComponentState.getComponents()).toEqual([
-    { displayName: 'Hetzner (extension)', editable: true, moduleId: 'ExtensionView', uid: 2 },
-    { displayName: 'Hetzner (extension)', editable: true, moduleId: 'ExtensionView', uid: 3 },
-    { displayName: 'Notes (extension)', editable: true, moduleId: 'ExtensionView', uid: 1 },
-    { displayName: 'sample.untitled (extension)', editable: true, moduleId: 'ExtensionView', uid: 4 },
+    { displayName: 'Hetzner (extension)', domAvailable: false, editable: true, moduleId: 'ExtensionView', uid: 2 },
+    { displayName: 'Hetzner (extension)', domAvailable: false, editable: true, moduleId: 'ExtensionView', uid: 3 },
+    { displayName: 'Notes (extension)', domAvailable: false, editable: true, moduleId: 'ExtensionView', uid: 1 },
+    { displayName: 'sample.untitled (extension)', domAvailable: false, editable: true, moduleId: 'ExtensionView', uid: 4 },
   ])
 
   ViewletStates.setRenderedState(1, { ...states[0], title: 'Bookmarks' })
-  expect(ComponentState.getComponents()[0]).toEqual({ displayName: 'Bookmarks (extension)', editable: true, moduleId: 'ExtensionView', uid: 1 })
+  expect(ComponentState.getComponents()[0]).toEqual({
+    displayName: 'Bookmarks (extension)',
+    domAvailable: false,
+    editable: true,
+    moduleId: 'ExtensionView',
+    uid: 1,
+  })
 })
 
 test('gets renderer-native state', async () => {
@@ -302,12 +310,39 @@ test('stops refreshing after the live component state editor is disposed', async
   expect(Viewlet.reload).not.toHaveBeenCalled()
 })
 
+test('gets virtual DOM through the component API without rendering or changing state', async () => {
+  const state = { commands: [], uid: 0.25 }
+  const dom = [{ childCount: 0, className: 'TitleBar', type: 4 }]
+  const getComponentDom = jest.fn(async (_state: unknown) => dom)
+  ViewletStates.set(0.25, {
+    factory: { getComponentDom, getComponentState: jest.fn(), hasFunctionalRender: true, setComponentState: jest.fn() },
+    moduleId: 'TitleBar',
+    renderedState: state,
+    state,
+  })
+  await expect(ComponentState.getDom(0.25)).resolves.toBe(dom)
+  expect(getComponentDom).toHaveBeenCalledWith(state)
+  expect(ViewletStates.getByUid(0.25).state).toBe(state)
+  expect(ViewletManager.render).not.toHaveBeenCalled()
+  expect(RendererProcess.invoke).not.toHaveBeenCalled()
+  expect(ComponentState.getComponents()).toEqual([{ displayName: 'TitleBar', domAvailable: true, editable: true, moduleId: 'TitleBar', uid: 0.25 }])
+})
+
+test('rejects missing components and components without a DOM API', async () => {
+  await expect(ComponentState.getDom(99)).rejects.toThrow('Component not found: 99')
+  const state = { uid: 1 }
+  ViewletStates.set(1, { factory: {}, moduleId: 'Layout', renderedState: state, state })
+  await expect(ComponentState.getDom(1)).rejects.toThrow('Component DOM API not available: Layout')
+})
+
 test('exposes Simple Browser state and renders edits through its component state hooks', async () => {
   const factory = await import('../src/parts/ViewletSimpleBrowser/ViewletSimpleBrowser.ipc.js')
   const state = factory.create(10, 'simple-browser://', 0, 0, 800, 600)
   ViewletStates.set(10, { factory, moduleId: 'SimpleBrowser', renderedState: state, state })
 
-  expect(ComponentState.getComponents()).toEqual([{ displayName: 'SimpleBrowser', editable: true, moduleId: 'SimpleBrowser', uid: 10 }])
+  expect(ComponentState.getComponents()).toEqual([
+    { displayName: 'SimpleBrowser', domAvailable: false, editable: true, moduleId: 'SimpleBrowser', uid: 10 },
+  ])
   await expect(ComponentState.getState(10)).resolves.toBe(state)
 
   const editedState = { ...state, inputValue: 'Live browser state' }

@@ -33,6 +33,11 @@
           "parameters": [{ "source": "state", "name": "uid" }, { "source": "argument", "name": "dimensions" }]
         },
         "getCommandIds": { "name": "ComponentState.getCommandIds", "parameters": [] },
+        "getMenuEntryIds": { "name": "ComponentState.getMenuEntryIds", "parameters": [] },
+        "getMenuEntries": {
+          "name": "ComponentState.getMenuEntries",
+          "parameters": [{ "source": "argument", "name": "args", "spread": true }]
+        },
         "renderEventListeners": { "name": "ComponentState.renderEventListeners", "parameters": [] }
       },
       "capabilities": { "events": true, "render": true, "resize": true, "rootRender": true },
@@ -238,6 +243,7 @@
         "saveState": { "name": "TextSearch.saveState", "parameters": [{ "source": "state", "name": "uid" }] },
         "terminate": { "name": "TextSearch.terminate", "parameters": [] },
         "getCommandIds": { "name": "TextSearch.getCommandIds", "parameters": [] },
+        "getComponentDom": { "name": "TextSearch.getComponentDom", "parameters": [{ "source": "state", "name": "uid" }] },
         "getComponentState": { "name": "TextSearch.getComponentState", "parameters": [{ "source": "state", "name": "uid" }] },
         "getKeyBindings": { "name": "TextSearch.getKeyBindings", "parameters": [] },
         "getMenuEntryIds": { "name": "TextSearch.getMenuEntryIds", "parameters": [] },
@@ -657,6 +663,7 @@
         "saveState": { "name": "Explorer.saveState", "parameters": [{ "source": "state", "name": "uid" }] },
         "terminate": { "name": "Explorer.terminate", "parameters": [] },
         "getCommandIds": { "name": "Explorer.getCommandIds", "parameters": [] },
+        "getComponentDom": { "name": "Explorer.getComponentDom", "parameters": [{ "source": "state", "name": "uid" }] },
         "getComponentState": { "name": "Explorer.getComponentState", "parameters": [{ "source": "state", "name": "uid" }] },
         "getKeyBindings": { "name": "Explorer.getKeyBindings", "parameters": [] },
         "getMenuEntryIds": { "name": "Explorer.getMenuIds", "parameters": [] },
@@ -726,6 +733,7 @@
         "saveState": { "name": "ExtensionDetail.saveState", "parameters": [{ "source": "state", "name": "uid" }] },
         "terminate": { "name": "ExtensionDetail.terminate", "parameters": [] },
         "getCommandIds": { "name": "ExtensionDetail.getCommandIds", "parameters": [] },
+        "getComponentDom": { "name": "ExtensionDetail.getComponentDom", "parameters": [{ "source": "state", "name": "uid" }] },
         "getComponentState": { "name": "ExtensionDetail.getComponentState", "parameters": [{ "source": "state", "name": "uid" }] },
         "getKeyBindings": { "name": "ExtensionDetail.getKeyBindings", "parameters": [] },
         "getMenuEntryIds": { "name": "ExtensionDetail.getMenuIds", "parameters": [] },
@@ -793,6 +801,7 @@
         "saveState": { "name": "SearchExtensions.saveState", "parameters": [{ "source": "state", "name": "id" }] },
         "terminate": { "name": "SearchExtensions.terminate", "parameters": [] },
         "getCommandIds": { "name": "SearchExtensions.getCommandIds", "parameters": [] },
+        "getComponentDom": { "name": "SearchExtensions.getComponentDom", "parameters": [{ "source": "state", "name": "id" }] },
         "getComponentState": { "name": "SearchExtensions.getComponentState", "parameters": [{ "source": "state", "name": "id" }] },
         "getKeyBindings": { "name": "SearchExtensions.getKeyBindings", "parameters": [] },
         "getMenuEntryIds": { "name": "SearchExtensions.getMenuIds", "parameters": [] },
@@ -1091,6 +1100,7 @@
         },
         "saveState": { "name": "MainArea.saveState", "parameters": [{ "source": "state", "name": "uid" }] },
         "getCommandIds": { "name": "MainArea.getCommandIds", "parameters": [] },
+        "getComponentDom": { "name": "MainArea.getComponentDom", "parameters": [{ "source": "state", "name": "uid" }] },
         "getComponentState": { "name": "MainArea.getComponentState", "parameters": [{ "source": "state", "name": "uid" }] },
         "getMenuEntryIds": { "name": "MainArea.getMenuIds", "parameters": [] },
         "getMenuEntries": {
@@ -1768,6 +1778,7 @@
         "saveState": { "name": "StatusBar.saveState", "parameters": [{ "source": "state", "name": "uid" }] },
         "terminate": { "name": "StatusBar.terminate", "parameters": [] },
         "getCommandIds": { "name": "StatusBar.getCommandIds", "parameters": [] },
+        "getComponentDom": { "name": "StatusBar.getComponentDom", "parameters": [{ "source": "state", "name": "uid" }] },
         "getComponentState": { "name": "StatusBar.getComponentState", "parameters": [{ "source": "state", "name": "uid" }] },
         "renderEventListeners": { "name": "StatusBar.renderEventListeners", "parameters": [] },
         "setComponentState": { "name": "StatusBar.setComponentState", "parameters": [
@@ -1862,6 +1873,7 @@
         "resize": { "name": "TitleBar.resize", "parameters": [{ "source": "state", "name": "uid" }, { "source": "argument", "name": "dimensions" }] },
         "terminate": { "name": "TitleBar.terminate", "parameters": [] },
         "getCommandIds": { "name": "TitleBar.getCommandIds", "parameters": [] },
+        "getComponentDom": { "name": "TitleBar.getComponentDom", "parameters": [{ "source": "state", "name": "uid" }] },
         "getComponentState": { "name": "TitleBar.getComponentState", "parameters": [{ "source": "state", "name": "uid" }] },
         "getKeyBindings": { "name": "TitleBar.getKeyBindings", "parameters": [] },
         "getMenuEntryIds": { "name": "TitleBar.getMenuIds", "parameters": [] },

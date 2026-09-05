@@ -16,7 +16,7 @@ export const stat = async (uri) => ({
   type: DirentType.File,
 })
 
-export const isReadonly = () => false
+export const isReadonly = (uri) => ComponentStateWorker.invoke('ComponentState.isReadonly', uri)
 
 export const canBeRestored = true
 

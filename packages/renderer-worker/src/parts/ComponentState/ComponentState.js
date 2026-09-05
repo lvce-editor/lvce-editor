@@ -212,6 +212,7 @@ export const getComponents = () => {
     const displayName = moduleId === 'ExtensionView' ? `${instance.state?.title || instance.state?.viewId || moduleId} (extension)` : moduleId
     components.push({
       displayName,
+      domAvailable: typeof instance.factory.getComponentDom === 'function',
       editable: isEditable(instance),
       moduleId,
       uid,
@@ -229,6 +230,14 @@ export const getState = async (uid) => {
     return instance.factory.getComponentState(instance.state)
   }
   return instance.state
+}
+
+export const getDom = async (uid) => {
+  const instance = getInstance(uid)
+  if (typeof instance.factory.getComponentDom !== 'function') {
+    throw new Error(`Component DOM API not available: ${instance.moduleId}`)
+  }
+  return instance.factory.getComponentDom(instance.state)
 }
 
 const validateState = (uid, oldState, newState) => {

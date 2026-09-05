@@ -9,6 +9,7 @@ export const {
   dispose,
   focus,
   getCommands,
+  getComponentDom,
   getComponentState,
   getKeyBindings,
   getMenus,
