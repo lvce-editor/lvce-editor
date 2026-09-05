@@ -19,6 +19,7 @@ jest.unstable_mockModule('../src/parts/TextSearchViewWorker/TextSearchViewWorker
 }))
 
 jest.unstable_mockModule('../src/parts/Workspace/Workspace.js', () => ({
+  getWorkspaceUri: jest.fn(() => 'file:///test-workspace'),
   state: {
     workspacePath: '/test-workspace',
   },
@@ -30,12 +31,12 @@ const Workspace = await import('../src/parts/Workspace/Workspace.js')
 
 beforeEach(() => {
   jest.clearAllMocks()
-  Workspace.state.workspacePath = '/test-workspace'
+  jest.mocked(Workspace.getWorkspaceUri).mockReturnValue('file:///test-workspace')
 })
 
-test('loadContent uses the current workspace path', async () => {
+test('loadContent uses the current workspace URI', async () => {
   const state = ViewletSearch.create(1, 'Search', 10, 20, 800, 600)
-  Workspace.state.workspacePath = '/new-workspace'
+  jest.mocked(Workspace.getWorkspaceUri).mockReturnValue('file:///new-workspace')
 
   await ViewletSearch.loadContent(state, {})
 
@@ -47,7 +48,7 @@ test('loadContent uses the current workspace path', async () => {
     20,
     800,
     600,
-    '/new-workspace',
+    'file:///new-workspace',
     '/test-assets',
     22,
     '',
@@ -86,7 +87,7 @@ test('loadContent passes search editor mode to the text search view', async () =
     20,
     800,
     600,
-    '/test-workspace',
+    'file:///test-workspace',
     '/test-assets',
     22,
     '',
