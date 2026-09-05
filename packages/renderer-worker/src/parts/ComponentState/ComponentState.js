@@ -84,16 +84,16 @@ const getEditorTabStates = async () => {
   return editorTabStates
 }
 
-const reloadEditorIfContentChanged = async (editorUid, content) => {
+const refreshEditorIfContentChanged = async (editorUid, content) => {
   try {
     const currentContent = await EditorWorker.invoke('Editor.getText', editorUid)
     if (currentContent === content) {
       return
     }
   } catch {
-    // Fall back to reloading when the current editor content cannot be read.
+    // Refresh in place when the current editor content cannot be read.
   }
-  await Viewlet.reload(editorUid)
+  await Viewlet.executeViewletCommand(editorUid, 'loadContent')
 }
 
 const runRefreshes = async (componentUid, refresh) => {
@@ -122,7 +122,7 @@ const runRefreshes = async (componentUid, refresh) => {
       }
       await Promise.allSettled(
         editorUidsToRefresh.map((editorUid) =>
-          content === undefined ? Viewlet.reload(editorUid) : reloadEditorIfContentChanged(editorUid, content),
+          content === undefined ? Viewlet.executeViewletCommand(editorUid, 'loadContent') : refreshEditorIfContentChanged(editorUid, content),
         ),
       )
       for (const editorUid of editorUidsToRefresh) {
