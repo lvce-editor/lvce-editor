@@ -8,6 +8,11 @@ const lazy =
   }
 
 export const commandMap = {
+  'Application.create': lazy('Application.create'),
+  'Application.dispose': lazy('Application.dispose'),
+  'Application.execute': lazy('Application.execute'),
+  'Application.executeForView': lazy('Application.executeForView'),
+  'Application.resize': lazy('Application.resize'),
   'About.showAbout': lazy('About.showAbout'),
   'Ajax.getBlob': lazy('Ajax.getBlob'),
   'Ajax.getJson': lazy('Ajax.getJson'),

@@ -1,4 +1,5 @@
 import * as Assert from '../Assert/Assert.ts'
+import * as ApplicationRegistry from '../ApplicationRegistry/ApplicationRegistry.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.js'
 import * as ElectronBrowserView from '../ElectronBrowserView/ElectronBrowserView.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
@@ -272,7 +273,11 @@ export const disposeFunctional = (id) => {
       const children = instance.factory.getChildren(instance.state)
       for (const child of children) {
         if (child.id) {
-          commands.push(...disposeFunctional(child.id))
+          const applicationId = ApplicationRegistry.getOwner(uid)
+          const childId = applicationId === undefined ? child.id : child.uid || ViewletStates.getInstance(child.id, applicationId)?.state.uid
+          if (childId) {
+            commands.push(...disposeFunctional(childId))
+          }
         }
       }
     }

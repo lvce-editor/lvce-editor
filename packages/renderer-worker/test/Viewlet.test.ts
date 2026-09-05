@@ -57,6 +57,23 @@ const Id = await import('../src/parts/Id/Id.js')
 const SaveState = await import('../src/parts/SaveState/SaveState.js')
 const SimpleBrowserOverlay = await import('../src/parts/SimpleBrowserOverlay/SimpleBrowserOverlay.js')
 const Viewlet = await import('../src/parts/Viewlet/Viewlet.js')
+const KeyBindingsState = await import('../src/parts/KeyBindingsState/KeyBindingsState.js')
+
+test('disposing sibling components releases one shared keybinding reference at a time', async () => {
+  jest.mocked(RendererProcess.invoke).mockResolvedValue(undefined as never)
+  const moduleId = 'ApplicationTestComponent'
+  const factory = { getKeyBindings: () => [] }
+  for (const uid of [10, 11]) {
+    const state = { uid }
+    ViewletStates.set(uid, { state, renderedState: state, moduleId, factory })
+    KeyBindingsState.addKeyBindings(moduleId, [])
+  }
+  await Viewlet.dispose(10)
+  expect(KeyBindingsState.state.keyBindingSetCounts[moduleId]).toBe(1)
+  expect(ViewletStates.getByUid(11)).toBeDefined()
+  await Viewlet.dispose(11)
+  expect(KeyBindingsState.state.keyBindingSets[moduleId]).toBeUndefined()
+})
 
 test.skip('focus', () => {
   // RendererProcess.state.send = jest.fn()

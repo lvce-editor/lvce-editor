@@ -70,3 +70,33 @@ test('a command finishing after its view is removed cannot render into another a
   expect(ViewletStates.getState(2).value).toBe('initial')
   expect(RendererProcess.invoke).not.toHaveBeenCalled()
 })
+
+test('concurrent loads cannot claim the same uid even inside one application', async () => {
+  ApplicationRegistry.create({ id: 'source', layoutUid: 1, workspacePath: '', workspaceUri: '', href: '' })
+  const gate = Promise.withResolvers<void>()
+  const entered = Promise.withResolvers<void>()
+  const dispose = jest.fn(async () => {})
+  const module = {
+    create: (uid: number) => ({ uid }),
+    loadContent: async (state) => {
+      entered.resolve()
+      await gate.promise
+      return state
+    },
+    dispose,
+    hasFunctionalRender: true,
+    render: [],
+  }
+  const viewlet = { applicationId: 'source', uid: 3, id: 'TestApplicationView', type: 0, show: false, getModule: async () => module }
+  const first = ViewletManager.load({ ...viewlet })
+  const result = Promise.allSettled([first])
+  await entered.promise
+  await expect(ViewletManager.load({ ...viewlet })).rejects.toThrow('already in use')
+  ApplicationRegistry.close('source')
+  gate.resolve()
+  await ApplicationRegistry.waitForOperations('source')
+  expect(await result).toEqual([{ status: 'rejected', reason: expect.objectContaining({ message: 'Application is closing: source' }) }])
+  expect(dispose).toHaveBeenCalledTimes(1)
+  expect(ViewletStates.getByUid(3)).toBeUndefined()
+  expect(ApplicationRegistry.getOwner(3)).toBeUndefined()
+})
