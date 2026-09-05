@@ -57,6 +57,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.ContextMenu
     case 'ComponentState':
       return ModuleId.ComponentState
+    case 'Application':
+      return ModuleId.Application
     case 'DebugSharedProcess':
       return ModuleId.DebugSharedProcess
     case 'Developer':

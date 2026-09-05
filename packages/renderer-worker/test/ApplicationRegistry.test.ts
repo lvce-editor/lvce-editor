@@ -61,3 +61,33 @@ test('view state is isolated even for identical storage keys and resets with the
   expect(ApplicationRegistry.getSavedState('preview', 'Explorer')).toBeUndefined()
   expect(ApplicationRegistry.getSavedState('source', 'Explorer')).toEqual({ selected: ['src/main.ts'] })
 })
+
+test('closing blocks new operations and claims but waits for previously accepted work', async () => {
+  ApplicationRegistry.create(source)
+  ApplicationRegistry.create(preview)
+  const gate = Promise.withResolvers<void>()
+  const running = ApplicationRegistry.track('source', () => gate.promise)
+  ApplicationRegistry.close('source')
+  expect(() => ApplicationRegistry.own('source', 3)).toThrow('Application is closing')
+  await expect(ApplicationRegistry.track('source', async () => {})).rejects.toThrow('Application is closing')
+  ApplicationRegistry.own('preview', 4)
+  const waiting = ApplicationRegistry.waitForOperations('source')
+  gate.resolve()
+  await running
+  await waiting
+  expect(ApplicationRegistry.getOwner(4)).toBe('preview')
+  ApplicationRegistry.remove('source')
+  ApplicationRegistry.create(source)
+  expect(ApplicationRegistry.assertOpen('source').id).toBe('source')
+})
+
+test('failed operations do not keep application teardown pending', async () => {
+  ApplicationRegistry.create(source)
+  await expect(
+    ApplicationRegistry.track('source', async () => {
+      throw new Error('failed')
+    }),
+  ).rejects.toThrow('failed')
+  ApplicationRegistry.close('source')
+  await ApplicationRegistry.waitForOperations('source')
+})
