@@ -21,6 +21,7 @@ export interface WidgetReference {
 }
 
 export interface LayoutState {
+  readonly applicationId?: string
   readonly activityBarHeight: number
   readonly activityBarId: number
   readonly activityBarLeft: number

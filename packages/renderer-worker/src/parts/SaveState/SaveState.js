@@ -1,4 +1,5 @@
 import * as GetViewletStorageKey from '../GetViewletStorageKey/GetViewletStorageKey.js'
+import * as ApplicationRegistry from '../ApplicationRegistry/ApplicationRegistry.ts'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as InstanceStorage from '../InstanceStorage/InstanceStorage.js'
 import * as Preferences from '../Preferences/Preferences.js'
@@ -14,11 +15,19 @@ const getStorageKey = (viewletId) => {
 
 const saveViewletStateAs = async (instanceId, storageId) => {
   const instance = ViewletStates.getInstance(instanceId)
+  const applicationId = ApplicationRegistry.getOwner(instance?.state.uid)
   const savedState = await SerializeViewlet.serializeInstance(instance)
   if (savedState === undefined) {
     return
   }
-  await InstanceStorage.setJson(getStorageKey(storageId), savedState)
+  if (applicationId !== undefined && ApplicationRegistry.getOwner(instance.state.uid) !== applicationId) {
+    return
+  }
+  if (applicationId === undefined) {
+    await InstanceStorage.setJson(getStorageKey(storageId), savedState)
+  } else {
+    ApplicationRegistry.setSavedState(applicationId, storageId, savedState)
+  }
   if (instance && instance.factory.saveChildState) {
     const childIds = instance.factory.saveChildState(instance.state)
     await Promise.all(childIds.map(saveViewletState))
@@ -45,7 +54,15 @@ export const hydrate = async () => {
   await RendererProcess.invoke('Window.onVisibilityChange')
 }
 
-export const getSavedViewletState = (viewletId) => {
+/**
+ * @param {string | number} viewletId
+ * @param {string=} applicationId
+ * @returns {Promise<any>}
+ */
+export const getSavedViewletState = async (viewletId, applicationId = undefined) => {
+  if (applicationId !== undefined) {
+    return ApplicationRegistry.getSavedState(applicationId, viewletId)
+  }
   return InstanceStorage.getJson(getStorageKey(viewletId))
 }
 

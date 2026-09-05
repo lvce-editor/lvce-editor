@@ -1,4 +1,5 @@
 import * as ActivityBarWorker from '../ActivityBarWorker/ActivityBarWorker.js'
+import * as ApplicationRegistry from '../ApplicationRegistry/ApplicationRegistry.ts'
 import * as Assert from '../Assert/Assert.ts'
 import { assetDir } from '../AssetDir/AssetDir.js'
 import * as AuthWorker from '../AuthWorker/AuthWorker.js'
@@ -962,11 +963,11 @@ export const openCommandPalette = async (state: LayoutState): Promise<LayoutStat
   }
 }
 
-const getPanelViewChangeCommands = async (moduleId: string, uri = '') => {
+const getPanelViewChangeCommands = async (state: LayoutState, moduleId: string, uri = '') => {
   if (!moduleId) {
     return []
   }
-  const instance = ViewletStates.getInstance(LayoutModules.Panel.moduleId)
+  const instance = ViewletStates.getInstance(LayoutModules.Panel.moduleId, state.applicationId)
   if (!instance) {
     return []
   }
@@ -981,7 +982,7 @@ const getPanelViewChangeCommands = async (moduleId: string, uri = '') => {
 
 export const showPanel = async (state: LayoutState, moduleId = state.panelView, uri = '') => {
   if (state.panelVisible) {
-    const commands = await getPanelViewChangeCommands(moduleId, uri)
+    const commands = await getPanelViewChangeCommands(state, moduleId, uri)
     return {
       newState: {
         ...state,
@@ -992,7 +993,7 @@ export const showPanel = async (state: LayoutState, moduleId = state.panelView, 
   }
   // @ts-ignore
   const { newState, commands } = await show(state, LayoutModules.Panel)
-  const panelViewCommands = await getPanelViewChangeCommands(moduleId, uri)
+  const panelViewCommands = await getPanelViewChangeCommands(state, moduleId, uri)
   return {
     newState: {
       ...newState,
@@ -1046,7 +1047,7 @@ export const hidePanel = (state: LayoutState) => {
 }
 
 const getCurrentPanelView = async (state: LayoutState): Promise<string> => {
-  const instance = ViewletStates.getInstance(LayoutModules.Panel.moduleId)
+  const instance = ViewletStates.getInstance(LayoutModules.Panel.moduleId, state.applicationId)
   if (!instance) {
     return state.panelView
   }
@@ -1590,6 +1591,7 @@ export const createViewlet = async (
       parentUid: -1,
       append: false,
       args,
+      applicationId: state.applicationId,
     },
     false,
     true,
@@ -1637,6 +1639,7 @@ export const createPanelViewlet = async (
       parentUid: -1,
       append: false,
       args: [],
+      applicationId: state.applicationId,
       shouldRenderEvents: false,
     },
     focus,
@@ -1727,6 +1730,8 @@ const loadIfVisible = async (
           width,
           height,
           uid: childUid,
+          parentUid: state.uid,
+          applicationId: state.applicationId,
           // render: false,
         },
         false,
@@ -1734,7 +1739,7 @@ const loadIfVisible = async (
         restoreState,
       )
     }
-    const latestState = ViewletStates.getState(ViewletModuleId.Layout)
+    const latestState = ViewletStates.getState(state.uid)
     if (visible && !isEqual(state, latestState, kTop, kLeft, kWidth, kHeight)) {
       const resizeCommands = await Viewlet.resize(childUid, {
         x: latestState[kLeft],
@@ -2151,7 +2156,7 @@ const getResizeCommands = async (oldState: LayoutState, newState: LayoutState) =
 }
 
 const getPanelLayoutChangeCommands = async (newState: LayoutState) => {
-  const instance = ViewletStates.getInstance(LayoutModules.Panel.moduleId)
+  const instance = ViewletStates.getInstance(LayoutModules.Panel.moduleId, newState.applicationId)
   if (!instance) {
     return []
   }
@@ -2511,6 +2516,9 @@ export const getAllQuickPickMenuEntries = async () => {
 
 const callGlobalEvent = async (state: LayoutState, eventName, ...args): Promise<LayoutStateResult> => {
   const instances = Object.entries(ViewletStates.getAllInstances()).filter(([, value]) => {
+    if (state.applicationId !== undefined && ApplicationRegistry.getOwner(value.state.uid) !== state.applicationId) {
+      return false
+    }
     // @ts-ignore
     return value.factory.Commands && value.factory.Commands[eventName]
   })
@@ -2718,7 +2726,7 @@ export const refreshSourceControlBadgeCount = async (state: LayoutState): Promis
   try {
     const badgeCount = await SourceControlWorker.invoke(
       'SourceControl.getWorkspaceBadgeCount',
-      Workspace.state.workspacePath,
+      state.applicationId === undefined ? Workspace.state.workspacePath : ApplicationRegistry.get(state.applicationId).workspacePath,
       assetDir,
       Platform.platform,
     )

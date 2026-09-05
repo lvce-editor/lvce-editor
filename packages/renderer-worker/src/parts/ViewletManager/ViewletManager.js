@@ -1,5 +1,6 @@
 // @ts-nocheck
 import * as Assert from '../Assert/Assert.ts'
+import * as ApplicationRegistry from '../ApplicationRegistry/ApplicationRegistry.ts'
 import * as Command from '../Command/Command.js'
 import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
 import { CancelationError } from '../Errors/CancelationError.js'
@@ -87,9 +88,13 @@ const runFn = async (instance, id, key, fn, args) => {
     console.info(`cannot execute viewlet command ${id}.${key}: no active instance for ${id}`)
     return
   }
+  id = instance.state.uid
   if (instance.factory && instance.factory.hasFunctionalRender) {
     const oldState = instance.state
     const newState = await fn(oldState, ...args)
+    if (ViewletStates.getByUid(id) !== instance) {
+      return
+    }
 
     if (
       key === 'getActiveSideBarView' ||
@@ -141,8 +146,12 @@ const runFnWithSideEffect = async (instance, id, key, fn, ...args) => {
     console.info(`cannot execute viewlet command ${id}.${key}: no active instance for ${id}`)
     return
   }
+  id = instance.state.uid
   const oldState = instance.state
   const result = await fn(oldState, ...args)
+  if (ViewletStates.getByUid(id) !== instance) {
+    return
+  }
   const { newState, commands } = result
   Assert.object(newState)
   const latestState = instance.state
@@ -245,6 +254,33 @@ const wrapViewletCommandWithSideEffectLazy = (id, key, importFn) => {
   }
   NameAnonymousFunction.nameAnonymousFunction(lazyCommand, `${id}/lazy/${key}`)
   return lazyCommand
+}
+
+export const executeForApplication = async (applicationId, command, ...args) => {
+  ApplicationRegistry.get(applicationId)
+  const separator = command.indexOf('.')
+  const moduleId = command.slice(0, separator)
+  const key = command.slice(separator + 1)
+  const instance = ViewletStates.getInstance(moduleId, applicationId)
+  if (!instance) {
+    throw new Error(`No ${moduleId} instance in application ${applicationId}`)
+  }
+  const module = instance.factory
+  const lazyImport = module.LazyCommands?.[key] || module.CommandsWithSideEffectsLazy?.[key]
+  const fn = module.Commands?.[key] || module.CommandsWithSideEffects?.[key] || (lazyImport && (await lazyImport())[key])
+  if (typeof fn !== 'function') {
+    throw new Error(`Viewlet command not found: ${command}`)
+  }
+  if (ViewletStates.getInstance(instance.state.uid, applicationId) !== instance) {
+    throw new CancelationError()
+  }
+  if (fn.returnValue) {
+    return fn(instance.state, ...args)
+  }
+  if (module.CommandsWithSideEffects?.[key] || module.CommandsWithSideEffectsLazy?.[key]) {
+    return runFnWithSideEffect(instance, instance.state.uid, key, fn, ...args)
+  }
+  return runFn(instance, instance.state.uid, key, fn, args)
 }
 /**
  *
@@ -581,6 +617,13 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
   let state = ViewletState.Default
   // @ts-ignore
   const viewletUid = viewlet.uid || Id.create()
+  const applicationId = viewlet.applicationId ?? ApplicationRegistry.getOwner(viewlet.parentUid)
+  if (applicationId !== undefined) {
+    if (ViewletStates.getByUid(viewletUid)) {
+      throw new Error(`Component uid is already in use: ${viewletUid}`)
+    }
+    ApplicationRegistry.own(applicationId, viewletUid)
+  }
   let module
   try {
     viewlet.type = 1
@@ -607,6 +650,9 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
     }
 
     const initialViewletState = module.create(viewletUid, viewlet.uri, x, y, width, height, viewlet.args, parentUid)
+    if (applicationId !== undefined) {
+      initialViewletState.applicationId = applicationId
+    }
 
     let viewletState = initialViewletState
     viewletState.uid ||= viewletUid
@@ -614,7 +660,10 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
     let instanceSavedState
     if (restore) {
       const storageKey = module.getStorageKey ? module.getStorageKey(viewletState) : viewlet.id
-      instanceSavedState = await SaveState.getSavedViewletState(storageKey)
+      instanceSavedState =
+        applicationId === undefined
+          ? await SaveState.getSavedViewletState(storageKey)
+          : await SaveState.getSavedViewletState(storageKey, applicationId)
     } else if (restoreState) {
       instanceSavedState = restoreState
     }
@@ -724,7 +773,7 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
       moduleId,
     }
     ViewletStates.set(viewletUid, instance)
-    if (viewlet.id === ViewletModuleId.Layout) {
+    if (viewlet.id === ViewletModuleId.Layout && applicationId === undefined) {
       ViewletStates.set(ViewletModuleId.Layout, instance)
     }
     ViewletStates.setFocusedInstanceByType(viewletUid, moduleId)
