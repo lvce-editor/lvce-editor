@@ -594,7 +594,33 @@ export const backgroundLoad = async ({ getModule, id, x, y, width, height, props
  * @param {{getModule:()=>any, type:number, id:string, disposed:boolean }} viewlet
  * @returns
  */
+const pendingLoads = new Set()
+
+/**
+ * @param {any} viewlet
+ * @param {boolean} focus
+ * @param {boolean} restore
+ * @param {any} restoreState
+ */
 export const load = async (viewlet, focus = false, restore = false, restoreState = undefined) => {
+  const applicationId = viewlet.applicationId ?? ApplicationRegistry.getOwner(viewlet.parentUid)
+  if (applicationId === undefined) {
+    return loadInternal(viewlet, focus, restore, restoreState)
+  }
+  const uid = viewlet.uid || Id.create()
+  if (pendingLoads.has(uid) || ViewletStates.getByUid(uid)) {
+    throw new Error(`Component uid is already in use: ${uid}`)
+  }
+  viewlet.uid = uid
+  pendingLoads.add(uid)
+  try {
+    return await ApplicationRegistry.track(applicationId, () => loadInternal(viewlet, focus, restore, restoreState))
+  } finally {
+    pendingLoads.delete(uid)
+  }
+}
+
+const loadInternal = async (viewlet, focus, restore, restoreState) => {
   // console.time(`load/${viewlet.id}`)
   // TODO
   if (
@@ -625,6 +651,7 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
     ApplicationRegistry.own(applicationId, viewletUid)
   }
   let module
+  let partialState
   try {
     viewlet.type = 1
     if (viewlet.disposed) {
@@ -650,6 +677,7 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
     }
 
     const initialViewletState = module.create(viewletUid, viewlet.uri, x, y, width, height, viewlet.args, parentUid)
+    partialState = initialViewletState
     if (applicationId !== undefined) {
       initialViewletState.applicationId = applicationId
     }
@@ -863,6 +891,18 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
 
     return commands
   } catch (error) {
+    if (applicationId !== undefined) {
+      if (!ViewletStates.getByUid(viewletUid)) {
+        try {
+          if (partialState && module?.dispose) {
+            await module.dispose(partialState)
+          }
+        } finally {
+          ApplicationRegistry.release(viewletUid)
+        }
+      }
+      throw error
+    }
     if (error && error instanceof CancelationError) {
       return
     }
