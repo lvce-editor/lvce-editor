@@ -645,7 +645,7 @@ test('does not expose a DOM getter for workers without the API', () => {
 })
 
 test('text search workspace changes forward the current remote URI', async () => {
-  const invoke = jest.fn(async (method: string) => {
+  const invoke = jest.fn(async (method: string, ..._args: readonly unknown[]) => {
     if (method === 'Example.getCommandIds') {
       return ['handleWorkspaceChange']
     }

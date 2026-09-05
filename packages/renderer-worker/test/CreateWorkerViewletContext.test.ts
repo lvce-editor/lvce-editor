@@ -1,6 +1,6 @@
 import { expect, jest, test } from '@jest/globals'
 
-const invoke = jest.fn(async (method: string) => {
+const invoke = jest.fn(async (method: string, ..._args: readonly unknown[]) => {
   if (method.endsWith('.diff2') || method.endsWith('.render2')) {
     return []
   }
