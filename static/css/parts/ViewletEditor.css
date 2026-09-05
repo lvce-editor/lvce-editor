@@ -16,7 +16,6 @@
   letter-spacing: var(--EditorLetterSpacing);
   font-feature-settings: var(--EditorFontFeatureSettings);
   tab-size: var(--EditorTabSize);
-  font-display: block;
   cursor: text;
   font-weight: var(--EditorFontWeight);
   display: flex;

@@ -1,6 +1,7 @@
 @font-face {
   font-family: 'Fira Code';
   src: url(/fonts/FiraCode-VariableFont.ttf) format('truetype');
+  font-display: block;
 }
 
 /* TODO check if contain strict also makes sense for html and body */
