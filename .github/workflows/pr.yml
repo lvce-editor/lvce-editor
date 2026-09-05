@@ -83,11 +83,23 @@ jobs:
       - name: Test built server
         if: matrix.os == 'ubuntu-24.04'
         run: npm run test:server
+      - name: Test Process Explorer live component state
+        if: matrix.os == 'ubuntu-24.04'
+        working-directory: ./packages/extension-host-worker-tests
+        run: node src/_all.js --headless --test-name-prefix=viewlet.component-state-edit-process-explorer
+        env:
+          PLAYWRIGHT_BROWSERS_PATH: 0
       - name: Test Static Export
         run: npm run test-static-export
       - name: Run extension host worker tests
         working-directory: ./packages/extension-host-worker-tests
         run: npm run e2e:headless:ci
+        env:
+          PLAYWRIGHT_BROWSERS_PATH: 0
+      - name: Test extension component state names
+        if: matrix.os == 'ubuntu-24.04'
+        working-directory: ./packages/extension-host-worker-tests
+        run: npm run e2e:headless -- --test-name-prefix=viewlet.component-state-extension-names
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0
       - name: Test live component state scrolling
@@ -102,10 +114,10 @@ jobs:
         run: node src/_all.js --headless --ci --test-name-prefix=viewlet.component-state-auto-update
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0
-      - name: Test Process Explorer live component state
+      - name: Test Problems live component state
         if: matrix.os == 'ubuntu-24.04'
         working-directory: ./packages/extension-host-worker-tests
-        run: node src/_all.js --headless --test-name-prefix=viewlet.component-state-edit-process-explorer
+        run: node src/_all.js --headless --ci --test-name-prefix=viewlet.component-state-edit-problems
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0
       - name: Build Electron App (deb)
