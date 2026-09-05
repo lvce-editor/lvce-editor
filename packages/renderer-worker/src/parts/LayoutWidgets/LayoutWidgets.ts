@@ -2,8 +2,19 @@ import * as ViewletLayoutRenderDom from '../ViewletLayout/ViewletLayoutRenderDom
 import type { LayoutState, WidgetReference } from '../ViewletLayout/LayoutState.ts'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
+import * as ApplicationRegistry from '../ApplicationRegistry/ApplicationRegistry.ts'
 
 const setWidgetsCommand = 'Viewlet.setWidgets'
+
+const getLayoutForUid = (uid: number): any => {
+  const applicationId = ApplicationRegistry.getOwner(uid)
+  if (applicationId !== undefined) {
+    return ViewletStates.getInstance(ApplicationRegistry.get(applicationId).layoutUid)
+  }
+  return ViewletStates.getValues().find(
+    (instance) => instance.moduleId === ViewletModuleId.Layout && ApplicationRegistry.getOwner(instance.state.uid) === undefined,
+  )
+}
 
 const getWidgets = (state: LayoutState, parentUid: number): readonly number[] => {
   return (state.widgetReferences || []).filter((widget) => widget.parentUid === parentUid).map((widget) => widget.uid)
@@ -117,13 +128,14 @@ const disposeWidgetInstance = (uid: number): void => {
   if (instance?.moduleId && ViewletStates.getInstance(instance.moduleId) === instance) {
     ViewletStates.remove(instance.moduleId)
   }
+  ApplicationRegistry.release(uid)
 }
 
 const updateLayout = (oldState: LayoutState, newState: LayoutState): any[] => {
   if (oldState === newState) {
     return []
   }
-  const layout = ViewletStates.getInstance(ViewletModuleId.Layout)
+  const layout = ViewletStates.getInstance(oldState.uid)
   layout.state = newState
   layout.renderedState = newState
   if (
@@ -135,15 +147,8 @@ const updateLayout = (oldState: LayoutState, newState: LayoutState): any[] => {
   return ViewletLayoutRenderDom.renderDom(oldState, newState)
 }
 
-export const reconcile = (commands: readonly (readonly any[])[]): any[] => {
-  const declarations = commands.filter((command) => command[0] === setWidgetsCommand)
-  if (declarations.length === 0) {
-    return [...commands]
-  }
-  const layout = ViewletStates.getInstance(ViewletModuleId.Layout)
-  if (!layout) {
-    return commands.filter((command) => command[0] !== setWidgetsCommand)
-  }
+const reconcileForLayout = (commands: readonly (readonly any[])[], declarations: readonly (readonly any[])[], layout: any): any[] => {
+  const declarationSet = new Set(declarations)
   const oldLayoutState: LayoutState = layout.state
   let newLayoutState = oldLayoutState
   const removedUids: number[] = []
@@ -156,6 +161,11 @@ export const reconcile = (commands: readonly (readonly any[])[]): any[] => {
     const [, parentUid, revision, widgetUids] = declaration
     const result = setWidgets(newLayoutState, parentUid, revision, widgetUids)
     if (result.accepted) {
+      if (newLayoutState.applicationId !== undefined) {
+        for (const uid of widgetUids) {
+          ApplicationRegistry.own(newLayoutState.applicationId, uid)
+        }
+      }
       newLayoutState = result.newState
       removedUids.push(...result.removedUids)
       for (const uid of widgetUids) {
@@ -188,7 +198,7 @@ export const reconcile = (commands: readonly (readonly any[])[]): any[] => {
   }
 
   const regularCommands = commands.filter((command) => {
-    if (command[0] === setWidgetsCommand) {
+    if (declarationSet.has(command)) {
       return false
     }
     const uid = getCommandUid(command)
@@ -206,8 +216,60 @@ export const reconcile = (commands: readonly (readonly any[])[]): any[] => {
   return [...contentCommands, ...layoutCommands, ...existingDisposeCommands, ...disposeCommands, ...focusCommands]
 }
 
+export const reconcile = (commands: readonly (readonly any[])[]): any[] => {
+  const declarationsByLayout = new Map<any, (readonly any[])[]>()
+  const declaredLayouts = new Map<number, number>()
+  const parents = new Map<number, number>()
+  for (const command of commands) {
+    if (command[0] === setWidgetsCommand) {
+      for (const uid of command[3]) {
+        parents.set(uid, command[1])
+      }
+    }
+  }
+  const resolveLayout = (uid: number): any => {
+    const visited = new Set<number>()
+    while (ApplicationRegistry.getOwner(uid) === undefined && parents.has(uid)) {
+      if (visited.has(uid)) {
+        throw new Error(`Cyclic widget ownership: ${uid}`)
+      }
+      visited.add(uid)
+      uid = parents.get(uid)!
+    }
+    return getLayoutForUid(uid)
+  }
+  for (const command of commands) {
+    if (command[0] !== setWidgetsCommand) {
+      continue
+    }
+    const layout = resolveLayout(command[1])
+    if (!layout) {
+      continue
+    }
+    for (const uid of command[3]) {
+      const owner = ApplicationRegistry.getOwner(uid)
+      if (owner !== undefined && owner !== layout.state.applicationId) {
+        throw new Error(`Component ${uid} already belongs to application ${owner}`)
+      }
+      const declaredLayout = declaredLayouts.get(uid)
+      if (declaredLayout !== undefined && declaredLayout !== layout.state.uid) {
+        throw new Error(`Component ${uid} is declared by multiple applications`)
+      }
+      declaredLayouts.set(uid, layout.state.uid)
+    }
+    const declarations = declarationsByLayout.get(layout) || []
+    declarations.push(command)
+    declarationsByLayout.set(layout, declarations)
+  }
+  let result = [...commands]
+  for (const [layout, declarations] of declarationsByLayout) {
+    result = reconcileForLayout(result, declarations, layout)
+  }
+  return result.filter((command) => command[0] !== setWidgetsCommand)
+}
+
 export const removeOwnedWidgets = (parentUid: number): any[] => {
-  const layout = ViewletStates.getInstance(ViewletModuleId.Layout)
+  const layout = getLayoutForUid(parentUid)
   if (!layout) {
     return []
   }
@@ -222,7 +284,7 @@ export const removeOwnedWidgets = (parentUid: number): any[] => {
 }
 
 export const removeWidget = (uid: number): any[] => {
-  const layout = ViewletStates.getInstance(ViewletModuleId.Layout)
+  const layout = getLayoutForUid(uid)
   if (!layout) {
     return [['Viewlet.dispose', uid]]
   }
@@ -244,7 +306,7 @@ export const removeWidget = (uid: number): any[] => {
 }
 
 export const declareWidget = (parentUid: number, uid: number, commands: readonly (readonly any[])[]): any[] => {
-  const layout = ViewletStates.getInstance(ViewletModuleId.Layout)
+  const layout = getLayoutForUid(parentUid)
   if (!layout) {
     return [...commands]
   }
