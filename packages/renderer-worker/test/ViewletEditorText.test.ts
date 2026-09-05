@@ -454,3 +454,33 @@ test('resize - increase height while scrolled clamps visible rows to bottom', as
     }),
   )
 })
+
+test('component state reads editor-worker internals and renders JSON edits', async () => {
+  const state = ViewletEditorText.create(7, '/test/file.txt', 0, 0, 800, 600)
+  const componentState = { uid: 7, lines: ['worker text'], selections: [0, 0, 0, 0] }
+  const editedState = { ...componentState, lines: ['edited text'] }
+  const commands = [['Viewlet.setPatches', 7, []]]
+  editorWorkerInvoke.mockImplementation((method) => {
+    switch (method) {
+      case 'Editor.getComponentState':
+        return componentState
+      case 'Editor.diff2':
+        return [1]
+      case 'Editor.render2':
+        return commands
+      default:
+        return undefined
+    }
+  })
+
+  expect(await ViewletEditorTextIpc.getComponentState(state)).toBe(componentState)
+  const updated = await ViewletEditorTextIpc.setComponentState(state, editedState)
+
+  expect(editorWorkerInvoke.mock.calls).toEqual([
+    ['Editor.getComponentState', 7],
+    ['Editor.setComponentState', 7, editedState],
+    ['Editor.diff2', 7],
+    ['Editor.render2', 7, [1]],
+  ])
+  expect(updated).toEqual({ ...state, commands })
+})

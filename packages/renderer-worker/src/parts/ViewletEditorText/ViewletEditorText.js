@@ -217,6 +217,13 @@ export const rerender = async (state) => {
   }
 }
 
+export const getComponentState = (state) => EditorWorker.invoke('Editor.getComponentState', state.id)
+
+export const setComponentState = async (state, componentState) => {
+  await EditorWorker.invoke('Editor.setComponentState', state.id, componentState)
+  return rerender(state)
+}
+
 export const contentLoaded = async (state) => {
   // const { languageId } = state
   // ExtensionHostLanguages.load(languageId)
