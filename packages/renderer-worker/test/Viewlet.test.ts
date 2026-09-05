@@ -214,6 +214,60 @@ test('requestRender renders pending worker state without executing the event aga
   expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.sendMultiple', [['Viewlet.setText', 'updated']])
 })
 
+test('requestRender ignores a notification arriving after disposal', async () => {
+  const warn = jest.spyOn(console, 'warn').mockImplementation(() => {})
+  const state = { uid: 2 }
+  const renderPending = jest.fn(async () => state)
+  ViewletStates.set(2, {
+    state,
+    renderedState: state,
+    moduleId: 'Test',
+    factory: { Commands: { __renderPending: renderPending } },
+  })
+  await ViewletStates.dispose(2)
+
+  await Viewlet.requestRender(2)
+
+  expect(warn).not.toHaveBeenCalled()
+  expect(renderPending).not.toHaveBeenCalled()
+  expect(RendererProcess.invoke).not.toHaveBeenCalled()
+})
+
+test('requestRender ignores a queued notification when disposal overtakes it', async () => {
+  const warn = jest.spyOn(console, 'warn').mockImplementation(() => {})
+  const { promise: updateFinished, resolve: finishUpdate } = Promise.withResolvers<void>()
+  const { promise: updateStarted, resolve: startUpdate } = Promise.withResolvers<void>()
+  const state = { uid: 2, value: 'old' }
+  const renderPending = jest.fn(async () => ({ ...state, value: 'pending' }))
+  ViewletStates.set(2, {
+    state,
+    renderedState: state,
+    moduleId: 'Test',
+    factory: {
+      serializeCommands: true,
+      Commands: {
+        __renderPending: renderPending,
+        update: async () => {
+          startUpdate()
+          await updateFinished
+          return { ...state, value: 'updated' }
+        },
+      },
+    },
+  })
+  const update = Viewlet.executeViewletCommand(2, 'update')
+  await updateStarted
+  const render = Viewlet.requestRender(2)
+  await ViewletStates.dispose(2)
+  finishUpdate()
+  await Promise.all([update, render])
+
+  expect(warn).not.toHaveBeenCalled()
+  expect(renderPending).not.toHaveBeenCalled()
+  expect(RendererProcess.invoke).not.toHaveBeenCalled()
+  expect(ViewletStates.getInstance(2)).toBeUndefined()
+})
+
 test('getTitle', async () => {
   const getTitle = jest.fn(async (_uid = 0) => 'Test Title')
   const state = { uid: 1 }
