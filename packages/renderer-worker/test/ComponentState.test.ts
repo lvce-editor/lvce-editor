@@ -58,9 +58,9 @@ test('lists native and supported worker-backed components once', () => {
   })
 
   expect(ComponentState.getComponents()).toEqual([
-    { editable: false, moduleId: 'Editor', uid: 3 },
-    { editable: true, moduleId: 'Explorer', uid: 2 },
-    { editable: true, moduleId: 'Layout', uid: 1 },
+    { displayName: 'Editor', editable: false, moduleId: 'Editor', uid: 3 },
+    { displayName: 'Explorer', editable: true, moduleId: 'Explorer', uid: 2 },
+    { displayName: 'Layout', editable: true, moduleId: 'Layout', uid: 1 },
   ])
 })
 
@@ -80,8 +80,30 @@ test('uses a worker-backed component state availability check', () => {
     state: rendererState,
   })
 
-  expect(ComponentState.getComponents()).toEqual([{ editable: true, moduleId: 'ExtensionView', uid: 4 }])
+  expect(ComponentState.getComponents()).toEqual([{ displayName: 'ExtensionView (extension)', editable: true, moduleId: 'ExtensionView', uid: 4 }])
   expect(isComponentStateAvailable).toHaveBeenCalledWith(rendererState)
+})
+
+test('labels extension views by title and sorts by display name then uid', () => {
+  const states = [
+    { title: 'Notes', uid: 1, viewId: 'sample.notes' },
+    { title: 'Hetzner', uid: 3, viewId: 'sample.hetzner' },
+    { title: 'Hetzner', uid: 2, viewId: 'sample.hetzner' },
+    { title: '', uid: 4, viewId: 'sample.untitled' },
+  ]
+  for (const state of states) {
+    ViewletStates.set(state.uid, { factory: {}, moduleId: 'ExtensionView', renderedState: state, state })
+  }
+
+  expect(ComponentState.getComponents()).toEqual([
+    { displayName: 'Hetzner (extension)', editable: true, moduleId: 'ExtensionView', uid: 2 },
+    { displayName: 'Hetzner (extension)', editable: true, moduleId: 'ExtensionView', uid: 3 },
+    { displayName: 'Notes (extension)', editable: true, moduleId: 'ExtensionView', uid: 1 },
+    { displayName: 'sample.untitled (extension)', editable: true, moduleId: 'ExtensionView', uid: 4 },
+  ])
+
+  ViewletStates.setRenderedState(1, { ...states[0], title: 'Bookmarks' })
+  expect(ComponentState.getComponents()[0]).toEqual({ displayName: 'Bookmarks (extension)', editable: true, moduleId: 'ExtensionView', uid: 1 })
 })
 
 test('gets renderer-native state', async () => {

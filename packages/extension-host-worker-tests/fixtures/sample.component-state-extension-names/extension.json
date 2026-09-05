@@ -1,0 +1,22 @@
+{
+  "id": "sample.component-state-extension-names",
+  "name": "Component State Extension Names",
+  "version": "1.0.0",
+  "browser": "main.js",
+  "isolated": true,
+  "activation": ["onView:sample.component-state-hetzner", "onView:sample.component-state-notes"],
+  "views": [
+    {
+      "id": "sample.component-state-hetzner",
+      "title": "Hetzner",
+      "icon": "symbol-keyword",
+      "kind": "virtualDom"
+    },
+    {
+      "id": "sample.component-state-notes",
+      "title": "Notes",
+      "icon": "symbol-keyword",
+      "kind": "virtualDom"
+    }
+  ]
+}
