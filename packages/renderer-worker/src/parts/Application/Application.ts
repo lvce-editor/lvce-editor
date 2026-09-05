@@ -129,6 +129,11 @@ const disposeApplication = async (applicationId: string): Promise<void> => {
     } catch (error) {
       errors.push(error)
       ViewletStates.remove(uid)
+      try {
+        await RendererProcess.invoke('Viewlet.dispose', uid)
+      } catch (rendererError) {
+        errors.push(rendererError)
+      }
     }
   }
   ApplicationRegistry.remove(applicationId)

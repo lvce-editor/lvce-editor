@@ -98,6 +98,7 @@ test('a failed component teardown still releases application registrations', asy
   await expect(Application.dispose('preview')).rejects.toThrow('Failed to dispose application')
   expect(ViewletStates.getByUid(uid)).toBeUndefined()
   expect(ApplicationRegistry.getOwner(uid)).toBeUndefined()
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.dispose', uid)
 })
 
 test('invalid dimensions never register an application', async () => {
