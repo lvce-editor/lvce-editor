@@ -283,7 +283,7 @@ test('stops refreshing after the live component state editor is disposed', async
 test('gets virtual DOM through the component API without rendering or changing state', async () => {
   const state = { commands: [], uid: 0.25 }
   const dom = [{ childCount: 0, className: 'TitleBar', type: 4 }]
-  const getComponentDom = jest.fn(async () => dom)
+  const getComponentDom = jest.fn(async (_state: unknown) => dom)
   ViewletStates.set(0.25, {
     factory: { getComponentDom, getComponentState: jest.fn(), hasFunctionalRender: true, setComponentState: jest.fn() },
     moduleId: 'TitleBar',

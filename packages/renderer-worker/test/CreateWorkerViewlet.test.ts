@@ -630,7 +630,7 @@ test('gets component DOM without invoking the worker render pipeline', async () 
   const config: any = createConfig()
   config.methods.getComponentDom = { name: 'Example.getComponentDom', parameters: [stateParameter('uid')] }
   const dom = [{ childCount: 0, className: 'Example', type: 4 }]
-  const invoke = jest.fn(async () => dom)
+  const invoke = jest.fn(async (_method: string, ..._args: readonly unknown[]) => dom)
   const viewlet = createWorkerViewletWithDependencies({ config, context: { platform: 1 }, worker: { invoke, restart: jest.fn() } })
   const state = viewlet.create(9, '', 0, 0, 100, 100)
   await expect(viewlet.getComponentDom!(state)).resolves.toBe(dom)
