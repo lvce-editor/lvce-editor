@@ -1,4 +1,5 @@
 import * as AdjustCommands from '../AdjustCommands/AdjustCommands.js'
+import * as ApplicationRegistry from '../ApplicationRegistry/ApplicationRegistry.ts'
 import * as AssetDir from '../AssetDir/AssetDir.js'
 import * as Platform from '../Platform/Platform.js'
 import * as WorkerInvokerMap from '../WorkerInvokerMap/WorkerInvokerMap.js'
@@ -77,9 +78,23 @@ const cloneStateValue = (value) => {
   return value
 }
 
+const getApplicationContext = (state, context) => {
+  const applicationId = state.applicationId ?? ApplicationRegistry.getOwner(state.uid ?? state.id)
+  if (applicationId === undefined) {
+    return context
+  }
+  const application = ApplicationRegistry.get(applicationId)
+  return {
+    ...context,
+    applicationId,
+    workspacePath: application.workspacePath,
+    workspaceUri: application.workspaceUri,
+  }
+}
+
 const createInvocation = (state, context, arguments_) => ({
   arguments: arguments_ || {},
-  context,
+  context: getApplicationContext(state, context),
   results: {},
   state,
 })
@@ -192,7 +207,7 @@ const createWorkerViewletInternal = ({ adapter, config, context, worker }) => {
   }
 
   const create = (id, uri, x, y, width, height, args, parentUid) => {
-    const initialState = getStateField(config, id, uri, x, y, width, height, args, parentUid, context)
+    const initialState = getStateField(config, id, uri, x, y, width, height, args, parentUid, getApplicationContext({ uid: id }, context))
     return adapter.transformState(initialState)
   }
 

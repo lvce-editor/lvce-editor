@@ -1,10 +1,12 @@
 import * as Assert from '../Assert/Assert.ts'
+import * as ApplicationRegistry from '../ApplicationRegistry/ApplicationRegistry.ts'
 
 // TODO instances should be keyed by numeric id
 // to allow having multiple instances of the same
 // type. for example multiple editors
 
 export const state = {
+  /** @type {Record<string, any>} */
   instances: Object.create(null),
   /**
    * @type {any}
@@ -30,6 +32,10 @@ export const addListener = (listener) => {
   listeners.add(listener)
 }
 
+export const removeListener = (listener) => {
+  listeners.delete(listener)
+}
+
 const normalizeModuleId = (key) => {
   if (key === 'Editor') {
     return 'EditorText'
@@ -43,12 +49,13 @@ const normalizeModuleId = (key) => {
   return key
 }
 
-const getFocusedInstanceForModuleId = (moduleId) => {
-  const focusedUid = getFocusedInstanceByType(moduleId)
+const getFocusedInstanceForModuleId = (moduleId, applicationId) => {
+  const focusedUid = getFocusedInstanceByType(moduleId, applicationId)
   if (typeof focusedUid !== 'number') {
     return undefined
   }
-  return getByUid(focusedUid)
+  const instance = getByUid(focusedUid)
+  return belongsToApplication(instance, applicationId) ? instance : undefined
 }
 
 export const set = (key, value) => {
@@ -57,6 +64,11 @@ export const set = (key, value) => {
   Assert.object(value.factory)
   Assert.object(value.state)
   Assert.object(value.renderedState)
+  const uid = value.renderedState.uid
+  const applicationId = value.state.applicationId ?? ApplicationRegistry.getOwner(uid)
+  if (applicationId !== undefined) {
+    ApplicationRegistry.own(applicationId, uid)
+  }
   state.instances[key] = value
   emit('add', value)
 }
@@ -70,30 +82,38 @@ export const getByUid = (uid) => {
   return undefined
 }
 
-export const getInstance = (key) => {
+const belongsToApplication = (instance, applicationId) => {
+  return instance && (applicationId === undefined || ApplicationRegistry.getOwner(instance.renderedState.uid) === applicationId)
+}
+
+/**
+ * @param {string | number} key
+ * @param {string=} applicationId
+ */
+export const getInstance = (key, applicationId = undefined) => {
   const fast = state.instances[key]
-  if (fast) {
+  if (belongsToApplication(fast, applicationId)) {
     return fast
   }
   if (typeof key === 'number') {
     const byUid = getByUid(key)
-    if (byUid) {
+    if (belongsToApplication(byUid, applicationId)) {
       return byUid
     }
   }
   const normalizedKey = normalizeModuleId(key)
   if (normalizedKey !== key) {
     const normalizedFast = state.instances[normalizedKey]
-    if (normalizedFast) {
+    if (belongsToApplication(normalizedFast, applicationId)) {
       return normalizedFast
     }
   }
-  const focusedInstance = getFocusedInstanceForModuleId(key) || getFocusedInstanceForModuleId(normalizedKey)
+  const focusedInstance = getFocusedInstanceForModuleId(key, applicationId) || getFocusedInstanceForModuleId(normalizedKey, applicationId)
   if (focusedInstance) {
     return focusedInstance
   }
   for (const value of Object.values(state.instances)) {
-    if (value.moduleId === key || value.moduleId === normalizedKey) {
+    if (belongsToApplication(value, applicationId) && (value.moduleId === key || value.moduleId === normalizedKey)) {
       return value
     }
   }
@@ -142,8 +162,12 @@ export const hasState = (key) => {
   return Boolean(instance)
 }
 
-export const getState = (key) => {
-  const instance = getInstance(key)
+/**
+ * @param {string | number} key
+ * @param {string=} applicationId
+ */
+export const getState = (key, applicationId = undefined) => {
+  const instance = getInstance(key, applicationId)
   if (!instance) {
     throw new Error(`instance not found ${key}`)
   }
@@ -198,15 +222,21 @@ export const setFocusedInstanceByType = (uid, moduleId) => {
     return
   }
   state.focusedInstanceByType[moduleId] = uid
+  const applicationId = ApplicationRegistry.getOwner(uid)
+  if (applicationId !== undefined) {
+    state.focusedInstanceByType[JSON.stringify([applicationId, moduleId])] = uid
+  }
 }
 
 /**
  * Get the focused instance UID for a given module type
  * @param {string} moduleId - The module ID/type
+ * @param {string=} applicationId
  * @returns {number|undefined} The UID of the focused instance, or undefined
  */
-export const getFocusedInstanceByType = (moduleId) => {
-  return state.focusedInstanceByType[moduleId]
+export const getFocusedInstanceByType = (moduleId, applicationId = undefined) => {
+  const key = applicationId === undefined ? moduleId : JSON.stringify([applicationId, moduleId])
+  return state.focusedInstanceByType[key]
 }
 
 /**
@@ -217,5 +247,10 @@ export const getFocusedInstanceByType = (moduleId) => {
 export const clearFocusedInstanceByType = (uid, moduleId) => {
   if (state.focusedInstanceByType[moduleId] === uid) {
     delete state.focusedInstanceByType[moduleId]
+  }
+  const applicationId = ApplicationRegistry.getOwner(uid)
+  const key = JSON.stringify([applicationId, moduleId])
+  if (state.focusedInstanceByType[key] === uid) {
+    delete state.focusedInstanceByType[key]
   }
 }
