@@ -2,7 +2,7 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'viewlet.component-state-quick-pick-focus'
 
-export const test: Test = async ({ Command, expect, FileSystem, Locator, Main, Workspace }) => {
+export const test: Test = async ({ Command, expect, FileSystem, KeyBoard, Locator, Main, Workspace }) => {
   const tmpDir = await FileSystem.getTmpDir()
   await FileSystem.writeFile(`${tmpDir}/file.txt`, 'content')
   await Workspace.setPath(tmpDir)
@@ -40,6 +40,7 @@ export const test: Test = async ({ Command, expect, FileSystem, Locator, Main, W
   // Let delayed editor notifications and autosave finish as well.
   await new Promise((resolve) => setTimeout(resolve, 1500))
   await expect(input).toBeFocused()
-  await input.fill('Developer')
-  await expect(input).toHaveValue('Developer')
+  await KeyBoard.press('End')
+  await KeyBoard.press('a')
+  await expect(input).toHaveValue('>a')
 }
