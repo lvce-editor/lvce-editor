@@ -19,6 +19,7 @@ export const {
   create,
   dispose,
   getCommands,
+  getComponentState,
   getKeyBindings,
   getMenus,
   getQuickPickMenuEntries,
@@ -39,4 +40,5 @@ export const {
   renderTitle,
   resize,
   saveState,
+  setComponentState,
 } = createWorkerViewlet({ workerId: 'processExplorer', getPlatform })

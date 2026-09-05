@@ -1445,6 +1445,8 @@
         "dispose": { "name": "ProcessExplorer.dispose", "parameters": [{ "source": "state", "name": "uid" }] },
         "terminate": { "name": "ProcessExplorer.terminate", "parameters": [] },
         "getCommandIds": { "name": "ProcessExplorer.getCommandIds", "parameters": [] },
+        "getComponentState": { "name": "ProcessExplorer.getComponentState", "parameters": [{ "source": "state", "name": "uid" }] },
+        "setComponentState": { "name": "ProcessExplorer.setComponentState", "parameters": [{ "source": "state", "name": "uid" }, { "source": "argument", "name": "componentState" }] },
         "getKeyBindings": { "name": "ProcessExplorer.getKeyBindings", "parameters": [] },
         "renderEventListeners": { "name": "ProcessExplorer.renderEventListeners", "parameters": [] }
       },
