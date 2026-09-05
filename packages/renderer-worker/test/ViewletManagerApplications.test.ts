@@ -6,6 +6,7 @@ jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () =
 
 const ViewletManager = await import('../src/parts/ViewletManager/ViewletManager.js')
 const RendererProcess = await import('../src/parts/RendererProcess/RendererProcess.js')
+const Command = await import('../src/parts/Command/Command.js')
 
 const addLayout = (applicationId: string, uid: number, commands: object): void => {
   ApplicationRegistry.create({ id: applicationId, layoutUid: uid, workspacePath: '', workspaceUri: '', href: '' })
@@ -69,6 +70,34 @@ test('a command finishing after its view is removed cannot render into another a
   expect(ViewletStates.getInstance(1)).toBeUndefined()
   expect(ViewletStates.getState(2).value).toBe('initial')
   expect(RendererProcess.invoke).not.toHaveBeenCalled()
+})
+
+test('an ordinary editor command cannot overwrite the newly focused editor after await', async () => {
+  const pending = Promise.withResolvers<void>()
+  const module = {
+    create: (uid: number) => ({ uid, value: 'initial' }),
+    loadContent: async (state) => state,
+    hasFunctionalRender: true,
+    render: [],
+    Commands: {
+      async update(state) {
+        await pending.promise
+        return { ...state, value: 'finished' }
+      },
+      selectAll: (state) => ({ ...state, value: 'selected' }),
+    },
+  }
+  for (const uid of [11, 12]) {
+    await ViewletManager.load({ uid, id: 'TestFocusedEditor', type: 0, show: false, getModule: async () => module })
+  }
+  const closingUpdate = Command.execute('TestFocusedEditor.update')
+  ViewletStates.setFocusedInstanceByType(11, 'TestFocusedEditor')
+  pending.resolve()
+  await closingUpdate
+  await Command.execute('TestFocusedEditor.selectAll')
+
+  expect(ViewletStates.getState(11)).toMatchObject({ uid: 11, value: 'selected' })
+  expect(ViewletStates.getState(12)).toMatchObject({ uid: 12, value: 'finished' })
 })
 
 test('concurrent loads cannot claim the same uid even inside one application', async () => {
