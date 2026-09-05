@@ -1,4 +1,7 @@
+import * as ComponentStateSubscription from '../ComponentStateSubscription/ComponentStateSubscription.ts'
 import { createWorkerViewlet } from '../CreateWorkerViewlet/CreateWorkerViewlet.js'
+
+const workerViewlet = createWorkerViewlet({ workerId: 'componentState' })
 
 export const {
   Commands,
@@ -6,7 +9,6 @@ export const {
   Events,
   Variables,
   create,
-  dispose,
   getCommands,
   getKeyBindings,
   getMenus,
@@ -24,4 +26,13 @@ export const {
   renderTitle,
   resize,
   saveState,
-} = createWorkerViewlet({ workerId: 'componentState' })
+} = workerViewlet
+
+export const serializeCommands = true
+
+Commands.loadContentLater = (state) => ComponentStateSubscription.subscribe(state.uid)
+
+export const dispose = (state) => {
+  ComponentStateSubscription.unsubscribe(state.uid)
+  return workerViewlet.dispose(state)
+}
