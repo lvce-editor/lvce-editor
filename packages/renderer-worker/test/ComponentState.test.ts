@@ -334,3 +334,24 @@ test('rejects missing components and components without a DOM API', async () => 
   ViewletStates.set(1, { factory: {}, moduleId: 'Layout', renderedState: state, state })
   await expect(ComponentState.getDom(1)).rejects.toThrow('Component DOM API not available: Layout')
 })
+
+test('exposes Simple Browser state and renders edits through its component state hooks', async () => {
+  const factory = await import('../src/parts/ViewletSimpleBrowser/ViewletSimpleBrowser.ipc.js')
+  const state = factory.create(10, 'simple-browser://', 0, 0, 800, 600)
+  ViewletStates.set(10, { factory, moduleId: 'SimpleBrowser', renderedState: state, state })
+
+  expect(ComponentState.getComponents()).toEqual([
+    { displayName: 'SimpleBrowser', domAvailable: false, editable: true, moduleId: 'SimpleBrowser', uid: 10 },
+  ])
+  await expect(ComponentState.getState(10)).resolves.toBe(state)
+
+  const editedState = { ...state, inputValue: 'Live browser state' }
+  const domCommands = factory.render[0].apply(state, editedState)
+  jest.mocked(ViewletManager.render).mockReturnValue(domCommands)
+  await ComponentState.setState(10, editedState)
+
+  await expect(ComponentState.getState(10)).resolves.toBe(editedState)
+  expect(ViewletManager.render).toHaveBeenCalledWith(factory, state, editedState, 10, undefined)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.sendMultiple', domCommands)
+  expect(domCommands).toEqual([['Viewlet.setDom2', 10, expect.arrayContaining([expect.objectContaining({ value: 'Live browser state' })])]])
+})
