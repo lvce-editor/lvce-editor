@@ -2,9 +2,10 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'viewlet.component-state-quick-pick-focus'
 
-export const test: Test = async ({ Command, expect, FileSystem, KeyBoard, Locator, Main, Workspace }) => {
+export const test: Test = async ({ Command, expect, FileSystem, Locator, Main, QuickPick, Workspace }) => {
   const tmpDir = await FileSystem.getTmpDir()
-  await FileSystem.writeFile(`${tmpDir}/file.txt`, 'content')
+  await FileSystem.writeFile(`${tmpDir}/a.txt`, 'first')
+  await FileSystem.writeFile(`${tmpDir}/b.txt`, 'second')
   await Workspace.setPath(tmpDir)
   await Command.execute('Layout.showSideBar', 'Explorer')
   await Command.execute('Developer.openComponentState')
@@ -33,14 +34,17 @@ export const test: Test = async ({ Command, expect, FileSystem, KeyBoard, Locato
       await new Promise((resolve) => setTimeout(resolve, 20))
     }
     if (!updated) {
-      throw new Error(`Live state editor did not refresh to focusedIndex ${focusedIndex}`)
+      const actual = await Command.execute('ComponentState.getState', explorer.uid)
+      const document = await Command.execute('GetActiveEditor.getTextDocument')
+      const editorIndex = document?.text ? JSON.parse(document.text).focusedIndex : undefined
+      throw new Error(`Live state editor did not refresh: expected ${focusedIndex}, component ${actual.focusedIndex}, editor ${editorIndex}`)
     }
     await expect(input).toBeFocused()
   }
   // Let delayed editor notifications and autosave finish as well.
   await new Promise((resolve) => setTimeout(resolve, 1500))
   await expect(input).toBeFocused()
-  await KeyBoard.press('End')
-  await KeyBoard.press('a')
-  await expect(input).toHaveValue('>a')
+  await QuickPick.setValue('>Developer')
+  await expect(input).toHaveValue('>Developer')
+  await expect(input).toBeFocused()
 }
