@@ -21,6 +21,7 @@
             { "source": "state", "name": "width" }, { "source": "state", "name": "height" }
           ]
         },
+        "dispose": { "name": "ComponentState.dispose", "parameters": [{ "source": "state", "name": "uid" }] },
         "loadContent": { "name": "ComponentState.loadContent", "parameters": [{ "source": "state", "name": "uid" }] },
         "diff": { "name": "ComponentState.diff2", "parameters": [{ "source": "state", "name": "uid" }] },
         "render": {
