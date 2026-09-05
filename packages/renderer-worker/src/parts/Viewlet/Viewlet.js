@@ -46,14 +46,6 @@ const getKeyBindingSetId = (instance, fallback) => {
   return instance.moduleId || fallback
 }
 
-const removeUnusedKeyBindings = (instance, fallback) => {
-  const key = getKeyBindingSetId(instance, fallback)
-  const inUse = ViewletStates.getAllInstances().some((other) => other !== instance && getKeyBindingSetId(other, other.state.uid) === key)
-  if (!inUse) {
-    KeyBindingsState.removeKeyBindings(key)
-  }
-}
-
 const getCssDisposeCommands = (instance) => {
   if (!instance.cssLoaded) {
     return []
@@ -235,7 +227,7 @@ export const dispose = async (id) => {
       await RendererProcess.invoke(/* Viewlet.dispose */ 'Viewlet.dispose', /* id */ instanceUid)
     }
     if (instance.factory.getKeyBindings) {
-      removeUnusedKeyBindings(instance, instanceUid)
+      KeyBindingsState.removeKeyBindings(getKeyBindingSetId(instance, instanceUid))
     }
   } catch (error) {
     console.error(error)
@@ -275,7 +267,7 @@ export const disposeFunctional = (id) => {
     ]
 
     if (instance.factory.getKeyBindings) {
-      removeUnusedKeyBindings(instance, id)
+      KeyBindingsState.removeKeyBindings(getKeyBindingSetId(instance, id))
     }
     if (instance.factory.getChildren) {
       const children = instance.factory.getChildren(instance.state)
