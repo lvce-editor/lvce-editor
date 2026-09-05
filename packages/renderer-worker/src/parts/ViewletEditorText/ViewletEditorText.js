@@ -5,6 +5,7 @@ import * as EditorPreferences from '../EditorPreferences/EditorPreferences.js'
 import * as EditorWorker from '../EditorWorker/EditorWorker.ts'
 import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
 import * as ExtensionHostSemanticTokens from '../ExtensionHost/ExtensionHostSemanticTokens.js'
+import * as FilterFocusCommands from '../FilterFocusCommands/FilterFocusCommands.js'
 import * as GetFontUrl from '../GetFontUrl/GetFontUrl.js'
 import * as GetTextEditorContent from '../GetTextEditorContent/GetTextEditorContent.js'
 import * as GetTokenizePath from '../GetTokenizePath/GetTokenizePath.js'
@@ -110,7 +111,7 @@ const getLanguageId = (state, content) => {
   return languageId
 }
 
-export const loadContent = async (state, savedState, context) => {
+const loadContentInternal = async (state, savedState, context) => {
   const { uri, id, x, y, width, height, platform, assetDir, useFunctionalRendering } = state
   const rowHeight = EditorPreferences.getRowHeight()
   const fontSize = EditorPreferences.getFontSize()
@@ -199,6 +200,17 @@ export const loadContent = async (state, savedState, context) => {
   // TODO send render commands directly from editor worker
   // to renderer process
   return rerender(newState2)
+}
+
+export const loadContent = async (state, savedState, context) => {
+  const newState = await loadContentInternal(state, savedState, context)
+  if (!context?.preserveFocus) {
+    return newState
+  }
+  return {
+    ...newState,
+    commands: FilterFocusCommands.filterFocusCommands(newState.commands),
+  }
 }
 
 export const rerender = async (state) => {

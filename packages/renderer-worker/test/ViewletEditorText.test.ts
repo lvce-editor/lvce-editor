@@ -454,3 +454,26 @@ test('resize - increase height while scrolled clamps visible rows to bottom', as
     }),
   )
 })
+
+test('background loadContent renders changed content without moving focus', async () => {
+  let renderCount = 0
+  editorWorkerInvoke.mockImplementation((method) => {
+    if (method === 'Editor.diff2') return []
+    if (method === 'Editor.render2') {
+      return renderCount++ === 0
+        ? [
+            ['Viewlet.setDom2', 1, []],
+            ['Viewlet.focusSelector', 1, '[name="editor"]'],
+            ['Viewlet.setFocusContext', 1, 1],
+          ]
+        : [['Viewlet.setPatches', 1, []]]
+    }
+    return undefined
+  })
+  const state = ViewletEditorText.create(1, 'live-component-state:///2.json', 0, 0, 800, 600)
+  const result = await ViewletEditorText.loadContent(state, undefined, { preserveFocus: true })
+  expect(result.commands).toEqual([
+    ['Viewlet.setDom2', 1, []],
+    ['Viewlet.setPatches', 1, []],
+  ])
+})

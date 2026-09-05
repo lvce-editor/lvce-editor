@@ -1,5 +1,7 @@
 import * as EditorWorker from '../EditorWorker/EditorWorker.ts'
+import * as FilterFocusCommands from '../FilterFocusCommands/FilterFocusCommands.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
+import * as SerializeComponentState from '../SerializeComponentState/SerializeComponentState.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
@@ -87,13 +89,13 @@ const getEditorTabStates = async () => {
 const refreshEditorIfContentChanged = async (editorUid, content) => {
   try {
     const currentContent = await EditorWorker.invoke('Editor.getText', editorUid)
-    if (currentContent === content) {
+    if (SerializeComponentState.serializeComponentState(JSON.parse(currentContent)) === content) {
       return
     }
   } catch {
     // Refresh in place when the current editor content cannot be read.
   }
-  await Viewlet.executeViewletCommand(editorUid, 'loadContent')
+  await Viewlet.executeViewletCommand(editorUid, 'loadContent', undefined, { preserveFocus: true })
 }
 
 const runRefreshes = async (componentUid, refresh) => {
@@ -116,13 +118,15 @@ const runRefreshes = async (componentUid, refresh) => {
       let content
       try {
         const componentState = await getState(componentUid)
-        content = `${JSON.stringify(componentState, null, 2)}\n`
+        content = SerializeComponentState.serializeComponentState(componentState)
       } catch {
         content = undefined
       }
       await Promise.allSettled(
         editorUidsToRefresh.map((editorUid) =>
-          content === undefined ? Viewlet.executeViewletCommand(editorUid, 'loadContent') : refreshEditorIfContentChanged(editorUid, content),
+          content === undefined
+            ? Viewlet.executeViewletCommand(editorUid, 'loadContent', undefined, { preserveFocus: true })
+            : refreshEditorIfContentChanged(editorUid, content),
         ),
       )
       for (const editorUid of editorUidsToRefresh) {
@@ -250,7 +254,9 @@ const validateState = (uid, oldState, newState) => {
 }
 
 const renderState = async (instance, uid, newState) => {
-  const commands = ViewletManager.render(instance.factory, instance.renderedState, newState, uid, newState.parentUid)
+  const commands = FilterFocusCommands.filterFocusCommands(
+    ViewletManager.render(instance.factory, instance.renderedState, newState, uid, newState.parentUid),
+  )
   ViewletStates.setRenderedState(uid, newState)
   if (commands.length > 0) {
     await RendererProcess.invoke('Viewlet.sendMultiple', commands)
@@ -261,6 +267,9 @@ export const setState = async (uid, newComponentState) => {
   const instance = getInstance(uid)
   const oldComponentState = await getState(uid)
   validateState(uid, oldComponentState, newComponentState)
+  if (SerializeComponentState.serializeComponentState(oldComponentState) === SerializeComponentState.serializeComponentState(newComponentState)) {
+    return
+  }
   if (isWorkerBacked(instance)) {
     if (typeof instance.factory.setComponentState !== 'function') {
       throw new Error(`Component state API not available: ${instance.moduleId}`)
