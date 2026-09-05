@@ -59,9 +59,9 @@ test('lists native and supported worker-backed components once', () => {
   })
 
   expect(ComponentState.getComponents()).toEqual([
-    { domAvailable: false, editable: false, moduleId: 'Editor', uid: 3 },
-    { domAvailable: false, editable: true, moduleId: 'Explorer', uid: 2 },
-    { domAvailable: false, editable: true, moduleId: 'Layout', uid: 1 },
+    { displayName: 'Editor', domAvailable: false, editable: false, moduleId: 'Editor', uid: 3 },
+    { displayName: 'Explorer', domAvailable: false, editable: true, moduleId: 'Explorer', uid: 2 },
+    { displayName: 'Layout', domAvailable: false, editable: true, moduleId: 'Layout', uid: 1 },
   ])
 })
 
@@ -81,8 +81,38 @@ test('uses a worker-backed component state availability check', () => {
     state: rendererState,
   })
 
-  expect(ComponentState.getComponents()).toEqual([{ domAvailable: false, editable: true, moduleId: 'ExtensionView', uid: 4 }])
+  expect(ComponentState.getComponents()).toEqual([
+    { displayName: 'ExtensionView (extension)', domAvailable: false, editable: true, moduleId: 'ExtensionView', uid: 4 },
+  ])
   expect(isComponentStateAvailable).toHaveBeenCalledWith(rendererState)
+})
+
+test('labels extension views by title and sorts by display name then uid', () => {
+  const states = [
+    { title: 'Notes', uid: 1, viewId: 'sample.notes' },
+    { title: 'Hetzner', uid: 3, viewId: 'sample.hetzner' },
+    { title: 'Hetzner', uid: 2, viewId: 'sample.hetzner' },
+    { title: '', uid: 4, viewId: 'sample.untitled' },
+  ]
+  for (const state of states) {
+    ViewletStates.set(state.uid, { factory: {}, moduleId: 'ExtensionView', renderedState: state, state })
+  }
+
+  expect(ComponentState.getComponents()).toEqual([
+    { displayName: 'Hetzner (extension)', domAvailable: false, editable: true, moduleId: 'ExtensionView', uid: 2 },
+    { displayName: 'Hetzner (extension)', domAvailable: false, editable: true, moduleId: 'ExtensionView', uid: 3 },
+    { displayName: 'Notes (extension)', domAvailable: false, editable: true, moduleId: 'ExtensionView', uid: 1 },
+    { displayName: 'sample.untitled (extension)', domAvailable: false, editable: true, moduleId: 'ExtensionView', uid: 4 },
+  ])
+
+  ViewletStates.setRenderedState(1, { ...states[0], title: 'Bookmarks' })
+  expect(ComponentState.getComponents()[0]).toEqual({
+    displayName: 'Bookmarks (extension)',
+    domAvailable: false,
+    editable: true,
+    moduleId: 'ExtensionView',
+    uid: 1,
+  })
 })
 
 test('gets renderer-native state', async () => {
@@ -295,7 +325,7 @@ test('gets virtual DOM through the component API without rendering or changing s
   expect(ViewletStates.getByUid(0.25).state).toBe(state)
   expect(ViewletManager.render).not.toHaveBeenCalled()
   expect(RendererProcess.invoke).not.toHaveBeenCalled()
-  expect(ComponentState.getComponents()).toEqual([{ domAvailable: true, editable: true, moduleId: 'TitleBar', uid: 0.25 }])
+  expect(ComponentState.getComponents()).toEqual([{ displayName: 'TitleBar', domAvailable: true, editable: true, moduleId: 'TitleBar', uid: 0.25 }])
 })
 
 test('rejects missing components and components without a DOM API', async () => {

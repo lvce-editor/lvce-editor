@@ -130,6 +130,7 @@ export const remove = (key) => {
   if (instance) {
     clearFocusedInstanceByType(instance.renderedState?.uid, instance.moduleId)
     if (!Object.values(state.instances).includes(instance)) {
+      ApplicationRegistry.release(instance.renderedState?.uid)
       emit('remove', instance)
     }
   }
@@ -141,6 +142,7 @@ export const dispose = async (key) => {
   if (instance) {
     clearFocusedInstanceByType(instance.renderedState?.uid, instance.moduleId)
     if (!Object.values(state.instances).includes(instance)) {
+      ApplicationRegistry.release(instance.renderedState?.uid)
       emit('remove', instance)
     }
   }

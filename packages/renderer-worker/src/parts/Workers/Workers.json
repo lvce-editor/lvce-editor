@@ -1385,9 +1385,13 @@
         "resize": { "name": "Problems.resize", "parameters": [{ "source": "state", "name": "uid" }, { "source": "argument", "name": "dimensions" }] },
         "saveState": { "name": "Problems.saveState", "parameters": [{ "source": "state", "name": "uid" }] },
         "getCommandIds": { "name": "Problems.getCommandIds", "parameters": [] },
+        "getComponentState": { "name": "Problems.getComponentState", "parameters": [{ "source": "state", "name": "uid" }] },
         "getMenuEntryIds": { "name": "Problems.getMenuIds", "parameters": [] },
         "getMenuEntries": { "name": "Problems.getMenuEntries2", "parameters": [{ "source": "argument", "name": "args", "spread": true }] },
-        "renderEventListeners": { "name": "Problems.renderEventListeners", "parameters": [] }
+        "renderEventListeners": { "name": "Problems.renderEventListeners", "parameters": [] },
+        "setComponentState": { "name": "Problems.setComponentState", "parameters": [
+          { "source": "state", "name": "uid" }, { "source": "argument", "name": "componentState" }
+        ] }
       },
       "outputs": [{ "stateField": "actionsDom", "method": { "name": "Problems.renderActions", "parameters": [{ "source": "state", "name": "uid" }] } }],
       "renderActionsComparison": "always",
@@ -1455,6 +1459,8 @@
         "dispose": { "name": "ProcessExplorer.dispose", "parameters": [{ "source": "state", "name": "uid" }] },
         "terminate": { "name": "ProcessExplorer.terminate", "parameters": [] },
         "getCommandIds": { "name": "ProcessExplorer.getCommandIds", "parameters": [] },
+        "getComponentState": { "name": "ProcessExplorer.getComponentState", "parameters": [{ "source": "state", "name": "uid" }] },
+        "setComponentState": { "name": "ProcessExplorer.setComponentState", "parameters": [{ "source": "state", "name": "uid" }, { "source": "argument", "name": "componentState" }] },
         "getKeyBindings": { "name": "ProcessExplorer.getKeyBindings", "parameters": [] },
         "renderEventListeners": { "name": "ProcessExplorer.renderEventListeners", "parameters": [] }
       },

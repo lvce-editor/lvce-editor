@@ -208,14 +208,17 @@ export const getComponents = () => {
       continue
     }
     seen.add(uid)
+    const moduleId = instance.moduleId || instance.factory?.name || 'Unknown'
+    const displayName = moduleId === 'ExtensionView' ? `${instance.state?.title || instance.state?.viewId || moduleId} (extension)` : moduleId
     components.push({
+      displayName,
       domAvailable: typeof instance.factory.getComponentDom === 'function',
       editable: isEditable(instance),
-      moduleId: instance.moduleId || instance.factory?.name || 'Unknown',
+      moduleId,
       uid,
     })
   }
-  return components.sort((a, b) => a.moduleId.localeCompare(b.moduleId) || a.uid - b.uid)
+  return components.sort((a, b) => a.displayName.localeCompare(b.displayName) || a.uid - b.uid)
 }
 
 export const getState = async (uid) => {
