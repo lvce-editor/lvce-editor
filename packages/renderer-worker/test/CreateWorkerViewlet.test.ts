@@ -643,3 +643,26 @@ test('does not expose a DOM getter for workers without the API', () => {
   const viewlet = createWorkerViewletWithDependencies({ config: createConfig(), worker: { invoke: jest.fn() } })
   expect(viewlet.getComponentDom).toBeUndefined()
 })
+
+test('text search workspace changes forward the current remote URI', async () => {
+  const invoke = jest.fn(async (method: string, ..._args: readonly unknown[]) => {
+    if (method === 'Example.getCommandIds') {
+      return ['handleWorkspaceChange']
+    }
+    return []
+  })
+  const context = { platform: 1, workspaceUri: 'file:///old-workspace' }
+  const viewlet = createWorkerViewletWithDependencies({
+    adapter: getWorkerViewletAdapter('textSearchView'),
+    config: createConfig(),
+    context,
+    worker: { invoke, restart: jest.fn() },
+  })
+  const commands = await viewlet.getCommands!()
+  const state = viewlet.create(9, '', 0, 0, 0, 0)
+  context.workspaceUri = 'vscode-remote://ssh-remote+host/home/project'
+
+  await commands.handleWorkspaceChange(state, '/home/project', {})
+
+  expect(invoke).toHaveBeenCalledWith('TextSearch.handleWorkspaceChange', 9, context.workspaceUri)
+})

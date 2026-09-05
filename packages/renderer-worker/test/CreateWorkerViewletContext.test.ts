@@ -1,7 +1,7 @@
 import { expect, jest, test } from '@jest/globals'
 
-const invoke = jest.fn(async (method: string) => {
-  if (method === 'Explorer.diff2' || method === 'Explorer.render2') {
+const invoke = jest.fn(async (method: string, ..._args: readonly unknown[]) => {
+  if (method.endsWith('.diff2') || method.endsWith('.render2')) {
     return []
   }
   return undefined
@@ -38,4 +38,13 @@ test('reads test mode when the worker viewlet is initialized', async () => {
   await viewlet.loadContent(state, undefined)
 
   expect(invoke.mock.calls[0]).toEqual(['Explorer.create', 7, 'test://explorer', 1, 2, 300, 200, null, 5, 2, 'test://assets', true])
+})
+
+test('creates text search with the workspace URI instead of the filesystem path', async () => {
+  const viewlet = createWorkerViewlet({ workerId: 'textSearchView' })
+  const state = viewlet.create(8, 'search://', 1, 2, 300, 200)
+
+  await viewlet.loadContent(state, undefined)
+
+  expect(invoke).toHaveBeenCalledWith('TextSearch.create', 8, 1, 2, 300, 200, 'file:///workspace', 'test://assets', 22, '', '', 2, false)
 })

@@ -261,9 +261,10 @@ export const textSearch = {
       isSearchEditor: state.uri.startsWith('search-editor://'),
     }
   },
-  wrapCommand(command, _defaultWrapCommand, { createRenderInvocation, enqueueRender, worker }) {
+  wrapCommand(command, _defaultWrapCommand, { context, createRenderInvocation, enqueueRender, worker }) {
     return async (state, ...args) => {
-      await worker.invoke(`TextSearch.${command}`, state.uid, ...args)
+      const commandArgs = command === 'handleWorkspaceChange' ? [context.workspaceUri] : args
+      await worker.invoke(`TextSearch.${command}`, state.uid, ...commandArgs)
       const invocation = createRenderInvocation(state.uid)
       return enqueueRender(state.uid, async () => {
         try {
