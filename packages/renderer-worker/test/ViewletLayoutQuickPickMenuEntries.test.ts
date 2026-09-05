@@ -13,7 +13,7 @@ const menuEntries = [
   },
 ]
 
-const mockGetAutoUpdateType = jest.fn(() => AutoUpdateType.None)
+const mockGetAutoUpdateType = jest.fn<(method: string) => string>(() => AutoUpdateType.None)
 const mockGetPlatform = jest.fn(() => PlatformType.Electron)
 
 beforeEach(() => {

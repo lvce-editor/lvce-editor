@@ -18,4 +18,4 @@ export const test: Test = async ({ Command, expect, Locator, QuickPick }) => {
   await expect(changeLanguageMode).toBeVisible()
 
   await Command.execute('Viewlet.closeWidget', 'QuickPick')
-})
+}
