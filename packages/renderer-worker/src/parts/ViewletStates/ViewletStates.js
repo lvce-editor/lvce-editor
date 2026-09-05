@@ -32,6 +32,10 @@ export const addListener = (listener) => {
   listeners.add(listener)
 }
 
+export const removeListener = (listener) => {
+  listeners.delete(listener)
+}
+
 const normalizeModuleId = (key) => {
   if (key === 'Editor') {
     return 'EditorText'

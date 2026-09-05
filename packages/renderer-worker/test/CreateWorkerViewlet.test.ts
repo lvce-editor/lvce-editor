@@ -613,3 +613,15 @@ test('reports unknown workers and workers without viewlet metadata', () => {
   expect(() => getWorkerViewletConfig('missing-worker')).toThrow('worker not found: missing-worker')
   expect(() => getWorkerViewletConfig('authWorker')).toThrow('viewlet configuration not found: authWorker')
 })
+
+test('disposes the component state worker view', async () => {
+  const invoke = jest.fn(async (..._args: readonly unknown[]) => undefined)
+  const viewlet = createWorkerViewletWithDependencies({
+    config: getWorkerViewletConfig('componentState'),
+    worker: { invoke, restart: jest.fn() },
+  })
+
+  await viewlet.dispose({ uid: 7 })
+
+  expect(invoke).toHaveBeenCalledWith('ComponentState.dispose', 7)
+})
