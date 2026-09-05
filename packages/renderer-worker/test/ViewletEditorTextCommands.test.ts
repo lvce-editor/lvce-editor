@@ -306,3 +306,33 @@ test('handleUriChange updates the language from the saved file extension', async
     uri: 'file:///tmp/file.c',
   })
 })
+
+test('background loadContent keeps content updates but suppresses focus commands', async () => {
+  editorWorkerInvoke.mockImplementation((method) => {
+    switch (method) {
+      case 'Editor.getCommandIds':
+        return ['loadContent']
+      case 'Editor.loadContent':
+        return undefined
+      case 'Editor.diff2':
+        return []
+      case 'Editor.render2':
+        return [
+          ['Viewlet.setDom2', 42, []],
+          ['Viewlet.focusSelector', 42, '[name="editor"]'],
+          ['Viewlet.setFocusContext', 42, 1],
+          ['Viewlet.setAdditionalFocus', 42, 2],
+          ['Viewlet.send', 42, 'setFocused', true],
+          ['Viewlet.setPatches', 42, []],
+        ]
+      default:
+        throw new Error(`unexpected method ${method}`)
+    }
+  })
+  const commands = await ViewletEditorTextCommands.getCommands()
+  const result = await commands.loadContent({ uid: 42 }, undefined, { preserveFocus: true })
+  expect(result.commands).toEqual([
+    ['Viewlet.setDom2', 42, []],
+    ['Viewlet.setPatches', 42, []],
+  ])
+})
