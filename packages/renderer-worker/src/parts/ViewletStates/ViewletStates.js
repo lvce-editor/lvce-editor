@@ -6,6 +6,7 @@ import * as ApplicationRegistry from '../ApplicationRegistry/ApplicationRegistry
 // type. for example multiple editors
 
 export const state = {
+  /** @type {Record<string, any>} */
   instances: Object.create(null),
   /**
    * @type {any}
@@ -81,6 +82,10 @@ const belongsToApplication = (instance, applicationId) => {
   return instance && (applicationId === undefined || ApplicationRegistry.getOwner(instance.renderedState.uid) === applicationId)
 }
 
+/**
+ * @param {string | number} key
+ * @param {string=} applicationId
+ */
 export const getInstance = (key, applicationId = undefined) => {
   const fast = state.instances[key]
   if (belongsToApplication(fast, applicationId)) {
@@ -153,6 +158,10 @@ export const hasState = (key) => {
   return Boolean(instance)
 }
 
+/**
+ * @param {string | number} key
+ * @param {string=} applicationId
+ */
 export const getState = (key, applicationId = undefined) => {
   const instance = getInstance(key, applicationId)
   if (!instance) {
@@ -218,6 +227,7 @@ export const setFocusedInstanceByType = (uid, moduleId) => {
 /**
  * Get the focused instance UID for a given module type
  * @param {string} moduleId - The module ID/type
+ * @param {string=} applicationId
  * @returns {number|undefined} The UID of the focused instance, or undefined
  */
 export const getFocusedInstanceByType = (moduleId, applicationId = undefined) => {

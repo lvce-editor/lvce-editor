@@ -15,11 +15,14 @@ const getStorageKey = (viewletId) => {
 
 const saveViewletStateAs = async (instanceId, storageId) => {
   const instance = ViewletStates.getInstance(instanceId)
+  const applicationId = ApplicationRegistry.getOwner(instance?.state.uid)
   const savedState = await SerializeViewlet.serializeInstance(instance)
   if (savedState === undefined) {
     return
   }
-  const applicationId = ApplicationRegistry.getOwner(instance.state.uid)
+  if (applicationId !== undefined && ApplicationRegistry.getOwner(instance.state.uid) !== applicationId) {
+    return
+  }
   if (applicationId === undefined) {
     await InstanceStorage.setJson(getStorageKey(storageId), savedState)
   } else {
@@ -51,7 +54,12 @@ export const hydrate = async () => {
   await RendererProcess.invoke('Window.onVisibilityChange')
 }
 
-export const getSavedViewletState = (viewletId, applicationId = undefined) => {
+/**
+ * @param {string | number} viewletId
+ * @param {string=} applicationId
+ * @returns {Promise<any>}
+ */
+export const getSavedViewletState = async (viewletId, applicationId = undefined) => {
   if (applicationId !== undefined) {
     return ApplicationRegistry.getSavedState(applicationId, viewletId)
   }
