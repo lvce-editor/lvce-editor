@@ -85,6 +85,9 @@ jobs:
         run: npm run test:server
       - name: Test Static Export
         run: npm run test-static-export
+      - name: Test static command picker
+        working-directory: ./packages/extension-host-worker-tests
+        run: node src/_all.js --ci --headless --test-name-prefix=viewlet.quick-pick-builtin-commands
       - name: Run extension host worker tests
         working-directory: ./packages/extension-host-worker-tests
         run: npm run e2e:headless:ci
