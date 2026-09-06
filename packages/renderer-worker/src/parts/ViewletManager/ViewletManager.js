@@ -811,7 +811,9 @@ const loadInternal = async (viewlet, focus, restore, restoreState) => {
     if (viewlet.id === ViewletModuleId.Layout && applicationId === undefined) {
       ViewletStates.set(ViewletModuleId.Layout, instance)
     }
-    ViewletStates.setFocusedInstanceByType(viewletUid, moduleId)
+    if (applicationId === undefined || focus) {
+      ViewletStates.setFocusedInstanceByType(viewletUid, moduleId)
+    }
     if (newState.badgeCount) {
       await Command.execute('Layout.handleBadgeCountChange')
     }

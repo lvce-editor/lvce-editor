@@ -2,7 +2,7 @@ import { afterEach, expect, jest, test } from '@jest/globals'
 import * as ApplicationRegistry from '../src/parts/ApplicationRegistry/ApplicationRegistry.ts'
 import * as ViewletStates from '../src/parts/ViewletStates/ViewletStates.js'
 
-const resize = jest.fn(async () => [])
+const resize = jest.fn<(uid: number, dimensions: object) => Promise<unknown[]>>(async () => [])
 jest.unstable_mockModule('../src/parts/Viewlet/Viewlet.js', () => ({ resize, disposeFunctional: jest.fn(() => []) }))
 const Layout = await import('../src/parts/ViewletLayout/ViewletLayout.ts')
 const SideBar = await import('../src/parts/ViewletSideBar/ViewletSideBar.js')

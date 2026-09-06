@@ -1,4 +1,5 @@
 import { beforeEach, expect, jest, test } from '@jest/globals'
+import * as ApplicationRegistry from '../src/parts/ApplicationRegistry/ApplicationRegistry.ts'
 import { CancelationError } from '../src/parts/Errors/CancelationError.js'
 import * as VirtualDomElements from '../src/parts/VirtualDomElements/VirtualDomElements.js'
 import * as ViewletStates from '../src/parts/ViewletStates/ViewletStates.js'
@@ -954,6 +955,21 @@ test('load should mark the loaded instance as focused for its module type', asyn
   await ViewletManager.load(state)
 
   expect(ViewletStates.getFocusedInstanceByType('ChatDebug')).toBe(1)
+})
+
+test('loading an unfocused preview does not redirect source editor keyboard commands', async () => {
+  jest.mocked(RendererProcess.invoke).mockResolvedValue(undefined)
+  ApplicationRegistry.create({ id: 'preview', layoutUid: 90, href: '/', workspacePath: '/', workspaceUri: 'memfs:///' })
+  ViewletStates.state.focusedInstanceByType.Editor = 42
+  const module = { create: jest.fn(() => ({})), loadContent: jest.fn(async (state) => state) }
+  const viewlet = { ...ViewletManager.create(async () => module, 'Editor', 0, 'test', 0, 0, 600, 800), applicationId: 'preview', moduleId: 'Editor' }
+  try {
+    await ViewletManager.load(viewlet, false, false)
+    expect(ViewletStates.state.focusedInstanceByType.Editor).toBe(42)
+  } finally {
+    ViewletStates.reset()
+    ApplicationRegistry.remove('preview')
+  }
 })
 
 test('load - custom error renderer preserves the original error and does not append a detached viewlet', async () => {
