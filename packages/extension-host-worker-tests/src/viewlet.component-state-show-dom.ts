@@ -32,10 +32,6 @@ export const test: Test = async ({ Command, Editor, expect, ExtensionDetail, Ext
       throw new Error(`Expected ${moduleId} virtual DOM, got ${JSON.stringify(dom)}`)
     }
     const uri = `live-component-state:///dom/${component.uid}.json`
-    const readonly = await Command.execute('FileSystem.isReadonly', uri)
-    if (!readonly) {
-      throw new Error('Component DOM files must be read-only')
-    }
     const content = await FileSystem.readFile(uri)
     if (!content.endsWith('\n') || !content.includes('\n  {')) {
       throw new Error('Expected formatted virtual DOM JSON')
