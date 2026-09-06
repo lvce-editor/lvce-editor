@@ -666,3 +666,17 @@ test('text search workspace changes forward the current remote URI', async () =>
 
   expect(invoke).toHaveBeenCalledWith('TextSearch.handleWorkspaceChange', 9, context.workspaceUri)
 })
+
+test('quick pick view commands preserve the renderer custom-input callback', async () => {
+  const invoke = jest.fn(async () => ['executeCallback', 'selectCurrentIndex', 'close'])
+  const viewlet = createWorkerViewletWithDependencies({
+    adapter: getWorkerViewletAdapter('quickPickWorker'),
+    config: createConfig({ commandPrefix: 'QuickPick', name: 'QuickPick' }),
+    context: {},
+    worker: { invoke, restart: jest.fn() },
+  })
+  const commands = await viewlet.getCommands()
+  expect(commands).not.toHaveProperty('executeCallback')
+  expect(commands.selectCurrentIndex).toEqual(expect.any(Function))
+  expect(commands.close).toEqual(expect.any(Function))
+})
