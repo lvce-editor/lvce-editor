@@ -94,6 +94,7 @@ export const hasFunctionalEvents = true
 const renderDom = {
   isEqual(oldState: LayoutState, newState: LayoutState) {
     return (
+      oldState.browserFullWidth === newState.browserFullWidth &&
       oldState.mainVisible === newState.mainVisible &&
       oldState.mainId === newState.mainId &&
       oldState.titleBarVisible === newState.titleBarVisible &&

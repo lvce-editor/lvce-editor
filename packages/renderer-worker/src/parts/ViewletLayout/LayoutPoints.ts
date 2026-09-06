@@ -19,6 +19,25 @@ const getPreviewHeights = (source: LayoutState, totalHeight: number): readonly [
 }
 
 export const getPoints = (source: LayoutState, sideBarLocation = source.sideBarLocation ?? SideBarLocationType.Right): LayoutState => {
+  if (source.browserFullWidth) {
+    return {
+      ...source,
+      activityBarVisible: false,
+      sideBarVisible: false,
+      secondarySideBarVisible: false,
+      mainVisible: false,
+      panelVisible: false,
+      statusBarVisible: false,
+      previewVisible: false,
+      secondaryPreviewVisible: false,
+      activityBarSashVisible: false,
+      sideBarSashVisible: false,
+      panelSashVisible: false,
+      previewSashVisible: false,
+      secondaryPreviewSashVisible: false,
+      titleBarWidth: source.windowWidth,
+    }
+  }
   const activityBarVisible = source[LayoutKeys.ActivityBarVisible]
   const panelVisible = source[LayoutKeys.PanelVisible]
   const sideBarVisible = source[LayoutKeys.SideBarVisible]

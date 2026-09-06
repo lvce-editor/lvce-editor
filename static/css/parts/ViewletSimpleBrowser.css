@@ -282,3 +282,77 @@
   pointer-events: none;
   width: 18px;
 }
+
+.SimpleBrowserLight {
+  --WorkbenchForeground: #24292f;
+  --MainBackground: #ffffff;
+  --InputBoxBackground: #f1f3f5;
+  --InputBoxForeground: #24292f;
+  --InputBoxPlaceholderForeground: #68717d;
+  --TabsBackground: #eef0f2;
+  --TabInactiveBackground: #eef0f2;
+  --TabInactiveForeground: #535c68;
+  --TabActiveBackground: #ffffff;
+  --TabActiveForeground: #20252b;
+  --TabHoverBackground: #e2e6ea;
+  --TabHoverForeground: #20252b;
+  --PanelBorder: #d7dce1;
+  --ListForeground: #24292f;
+  --ListHoverForeground: #24292f;
+  --ListHoverBackground: #e8edf2;
+  --ListActiveSelectionBackground: #dceafb;
+  --ListActiveSelectionForeground: #182c43;
+  --QuickPickBackground: #ffffff;
+  --DescriptionForeground: #586575;
+  --ToolbarHoverBackground: #dce2e8;
+  --FocusBorder: #1769ba;
+}
+
+.SimpleBrowserLight .SimpleBrowserHeader,
+.SimpleBrowserLight .SimpleBrowserTabSelected {
+  background: #ffffff;
+}
+
+.SimpleBrowserLight .SimpleBrowserTab {
+  text-align: left;
+}
+
+.SimpleBrowserLight :focus-visible {
+  outline: 2px solid var(--FocusBorder);
+  outline-offset: -2px;
+}
+
+.SimpleBrowserLight .IconButton {
+  color: #485360;
+  align-items: center;
+  justify-content: center;
+}
+
+.SimpleBrowserLight .IconButton:disabled {
+  color: #9aa3ad;
+}
+
+.SimpleBrowserLight .IconButton:enabled:hover {
+  background: #e2e7ed;
+}
+
+.SimpleBrowserLight .SimpleBrowserHeader {
+  align-items: center;
+  gap: 2px;
+  padding: 0 4px;
+}
+
+.SimpleBrowserLight .SimpleBrowserAddressBar,
+.SimpleBrowserLight .SimpleBrowserHeader .InputBox {
+  border-radius: 4px;
+}
+
+.SimpleBrowserLight .SimpleBrowserHeader .InputBox {
+  border-color: #d4dce4;
+}
+
+.SimpleBrowserTabFaviconFallback {
+  color: #77818e;
+  font-size: 14px;
+  text-align: center;
+}

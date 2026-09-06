@@ -513,6 +513,13 @@ export const getLayoutVirtualDom = (state: LayoutState) => {
     dom.push(getTitleBarDom(titleBarId))
   }
 
+  if (state.browserFullWidth) {
+    dom[0].className += ' BrowserFullWidth'
+    dom[0].childCount = workbenchChildCount + 1
+    dom.push({ type: VirtualDomElements.Reference, uid: state.browserFullWidth.browserUid })
+    return dom
+  }
+
   workbenchChildCount++
   dom.push(...getWorkbenchBodyDom(state))
 

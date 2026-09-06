@@ -1,3 +1,4 @@
+import * as BrowserFullWidth from '../BrowserFullWidth/BrowserFullWidth.js'
 import * as ActivityBarWorker from '../ActivityBarWorker/ActivityBarWorker.js'
 import * as ApplicationRegistry from '../ApplicationRegistry/ApplicationRegistry.ts'
 import * as Assert from '../Assert/Assert.ts'
@@ -260,7 +261,8 @@ export const setMountedViewlets = (state: LayoutState, sourceUid: number, viewle
 }
 
 export const saveState = (state: LayoutState) => {
-  const stateToSave = state.sideBarFocusModeLayout ? { ...state, ...state.sideBarFocusModeLayout } : state
+  const underlying = state.browserFullWidth ? { ...state, ...state.browserFullWidth.layout } : state
+  const stateToSave = underlying.sideBarFocusModeLayout ? { ...underlying, ...underlying.sideBarFocusModeLayout } : underlying
   const {
     activityBarVisible,
     panelHeight,
@@ -518,6 +520,11 @@ export const loadContent = (state: LayoutState, savedState: any): LayoutState =>
 }
 
 const show = async (state: LayoutState, module, currentViewletId, restore?: boolean) => {
+  if (state.browserFullWidth) {
+    const restored = await BrowserFullWidth.leave(state)
+    const result = await show(restored.newState, module, currentViewletId, restore)
+    return { newState: result.newState, commands: [...restored.commands, ...result.commands] }
+  }
   if (state.sideBarFocusMode && module !== LayoutModules.SideBar && module !== LayoutModules.StatusBar && module !== LayoutModules.TitleBar) {
     return {
       newState: state,
@@ -1307,6 +1314,11 @@ export const showPreview = async (
 }
 
 export const hidePreview = async (state: LayoutState) => {
+  if (state.browserFullWidth) {
+    const restored = await BrowserFullWidth.leave(state)
+    const result = await hidePreview(restored.newState)
+    return { newState: result.newState, commands: [...restored.commands, ...result.commands] }
+  }
   const result = await hide(state, LayoutModules.Preview)
   const newState = {
     ...result.newState,
@@ -1411,6 +1423,11 @@ export const showSecondaryPreview = async (initialState: LayoutState, uri: strin
 }
 
 export const hideSecondaryPreview = async (state: LayoutState): Promise<LayoutStateResult> => {
+  if (state.browserFullWidth) {
+    const restored = await BrowserFullWidth.leave(state)
+    const result = await hideSecondaryPreview(restored.newState)
+    return { newState: result.newState, commands: [...restored.commands, ...result.commands] }
+  }
   const result = await hide(state, LayoutModules.SecondaryPreview)
   const activityBarCommands = await renderPreviewActivityBarCommands(state, result.newState)
   return {
@@ -1803,6 +1820,7 @@ export const loadStatusBarIfVisible = (state: LayoutState) => {
 }
 
 export const loadTitleBarIfVisible = async (state: LayoutState) => {
+  await BrowserFullWidth.configureGesture()
   const updated = await loadIfVisible(state, LayoutModules.TitleBar)
   return {
     ...updated,
@@ -2106,7 +2124,10 @@ const isEqual = (oldState: LayoutState, newState: LayoutState, kTop: string, kLe
   )
 }
 
-const getResizeCommands = async (oldState: LayoutState, newState: LayoutState) => {
+export const getResizeCommands = async (oldState: LayoutState, newState: LayoutState) => {
+  if (newState.browserFullWidth) {
+    return BrowserFullWidth.resize(newState)
+  }
   const modules = [
     LayoutModules.Main,
     LayoutModules.ActivityBar,
@@ -2127,7 +2148,7 @@ const getResizeCommands = async (oldState: LayoutState, newState: LayoutState) =
         return []
       }
       const instanceUid = instance.state.uid
-      if (isEqual(oldState, newState, kTop, kLeft, kWidth, kHeight)) {
+      if (!oldState.browserFullWidth && isEqual(oldState, newState, kTop, kLeft, kWidth, kHeight)) {
         return []
       }
       const newTop = newState[kTop]
@@ -2712,7 +2733,9 @@ const callGlobalEventAndRefreshProblemsSummary = async (state: LayoutState, even
 }
 
 export const handleActiveEditorChange = async (state: LayoutState, activeUri: string) => {
-  const eventResult = await callGlobalEvent(state, 'handleActiveEditorChange', activeUri)
+  const restored = state.browserFullWidth ? await BrowserFullWidth.leave(state) : { newState: state, commands: [] }
+  const eventResult = await callGlobalEvent(restored.newState, 'handleActiveEditorChange', activeUri)
+  eventResult.commands.unshift(...restored.commands)
   const summaryResult = activeUri ? await refreshProblemsSummary(eventResult.newState) : await clearProblemsSummary(eventResult.newState)
   return {
     newState: summaryResult.newState,
@@ -2726,6 +2749,7 @@ export const handleDiagnosticsChange = async (state: LayoutState, uri: string) =
 
 export const handleSettingsChanged = async (state: LayoutState) => {
   await Preferences.hydrate()
+  await BrowserFullWidth.configureGesture()
   return callGlobalEvent(state, 'handleSettingsChanged')
 }
 
@@ -2881,3 +2905,5 @@ export const getModuleId = (state: LayoutState, uri: string, opener?: string) =>
 export const getHref = (state: LayoutState) => {
   return Location.getHref()
 }
+
+export const afterRender = BrowserFullWidth.afterRender

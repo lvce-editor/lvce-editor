@@ -168,6 +168,9 @@ const runFnWithSideEffect = async (instance, id, key, fn, ...args) => {
   updateDynamicFocusContext(commands)
   await RendererProcess.invoke(/* Viewlet.sendMultiple */ kSendMultiple, /* commands */ commands)
   runLoadContentLaterForCreatedViewlets(commands)
+  if (ViewletStates.getByUid(id) === instance && instance.factory.afterRender) {
+    await instance.factory.afterRender(oldState, rebasedState)
+  }
 }
 
 // TODO maybe wrapViewletCommand should accept module instead of id string

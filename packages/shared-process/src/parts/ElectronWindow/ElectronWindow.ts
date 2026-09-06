@@ -118,3 +118,11 @@ export const handleClose = (windowId: any): any => {
 export const getFocusedWindowId = (): any => {
   return ParentIpc.invoke('ElectronWindow.getFocusedWindowId')
 }
+
+export const setBrowserFullWidthGestureEnabled = (windowId: number, enabled: boolean): Promise<any> => {
+  return ParentIpc.invoke(
+    'ElectronWindow.executeWindowFunction',
+    windowId,
+    enabled ? 'enableBrowserFullWidthGesture' : 'disableBrowserFullWidthGesture',
+  )
+}

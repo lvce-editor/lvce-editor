@@ -3,6 +3,7 @@ import * as ElectronWindow from './ElectronWindow.ts'
 export const name = 'ElectronWindow'
 
 export const Commands = {
+  setBrowserFullWidthGestureEnabled: ElectronWindow.setBrowserFullWidthGestureEnabled,
   close: ElectronWindow.close,
   focus: ElectronWindow.focus,
   getZoom: ElectronWindow.getZoom,

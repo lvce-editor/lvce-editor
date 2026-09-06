@@ -7,6 +7,7 @@ import * as Id from '../Id/Id.js'
 import * as KeyBindingsState from '../KeyBindingsState/KeyBindingsState.js'
 import * as LayoutWidgets from '../LayoutWidgets/LayoutWidgets.ts'
 import * as Logger from '../Logger/Logger.js'
+import * as RebaseState from '../RebaseState/RebaseState.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SaveState from '../SaveState/SaveState.js'
 import * as SimpleBrowserOverlay from '../SimpleBrowserOverlay/SimpleBrowserOverlay.js'
@@ -401,7 +402,7 @@ export const resize = async (id, dimensions) => {
     }
     if (instance.factory.resizeEffect) {
       // TODO handle promise rejection gracefully
-      instance.factory.resizeEffect(newState)
+      await instance.factory.resizeEffect(newState)
     }
     commands = [...ViewletManager.render(instance.factory, instance.state, newState)]
   } else if (typeof instance.factory.resize === 'function') {
@@ -627,17 +628,15 @@ const executeViewletCommandInternal = async (uid, fnName, ...args) => {
   const fn = await getFn(instance.factory, fnName)
   const oldState = instance.state
   const newState = await fn(oldState, ...args)
-  const actualNewState = 'newState' in newState ? newState.newState : newState
+  const actualNewState = RebaseState.rebaseState(oldState, instance.state, 'newState' in newState ? newState.newState : newState)
   if (oldState === actualNewState) {
     return
   }
   if (!ViewletStates.getByUid(uid) && !ViewletStates.hasInstance(uid)) {
     return
   }
-  const commands = [...ViewletManager.render(instance.factory, instance.renderedState, actualNewState)]
-  if ('newState' in newState) {
-    commands.push(...newState.commands)
-  }
+  const commands = 'newState' in newState ? [...newState.commands] : []
+  commands.push(...ViewletManager.render(instance.factory, instance.renderedState, actualNewState))
   UpdateDynamicFocusContext.updateDynamicFocusContext(commands)
   ViewletStates.setRenderedState(uid, actualNewState)
   if (commands.length > 0) {

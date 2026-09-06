@@ -73,6 +73,7 @@ export const getModuleId = (commandId: any): any => {
     case 'ElectronProcess.writeStderr':
     case 'ElectronProcess.writeStdout':
       return ModuleId.ElectronProcess
+    case 'ElectronWindow.setBrowserFullWidthGestureEnabled':
     case 'ElectronWindow.close':
     case 'ElectronWindow.focus':
     case 'ElectronWindow.getZoom':

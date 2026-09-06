@@ -5,6 +5,11 @@ import * as ViewletSimpleBrowserInsertCss from './ViewletSimpleBrowserInsertCss.
 import * as ViewletSimpleBrowserInsertJavaScript from './ViewletSimpleBrowserInsertJavaScript.js'
 
 export const Commands = {
+  handleFaviconError: SimpleBrowser.handleFaviconError,
+  prepareFullWidth: SimpleBrowser.prepareFullWidth,
+  setFullWidth: SimpleBrowser.setFullWidth,
+  toggleFullWidth: SimpleBrowser.toggleFullWidth,
+  focusAddress: SimpleBrowser.focusAddress,
   acceptSuggestion: SimpleBrowser.acceptSuggestion,
   applySuggestions: SimpleBrowser.applySuggestions,
   closeSuggestions: SimpleBrowser.closeSuggestions,
@@ -21,6 +26,7 @@ export const Commands = {
   go: SimpleBrowser.go,
   handleAudioStateChanged: SimpleBrowser.handleAudioStateChanged,
   handleColorThemeChanged: SimpleBrowser.handleColorThemeChanged,
+  handleSettingsChanged: SimpleBrowser.handleSettingsChanged,
   handleDidNavigate: SimpleBrowser.handleDidNavigate,
   handleDidNavigationCancel: SimpleBrowser.handleDidNavigationCancel,
   handleFocusIn: SimpleBrowser.handleFocusIn,

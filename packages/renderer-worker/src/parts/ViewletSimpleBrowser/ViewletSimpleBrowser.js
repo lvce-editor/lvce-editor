@@ -125,6 +125,8 @@ export const create = (id, uri, x, y, width, height) => {
     width,
     height,
     focusAddressVersion: 0,
+    fullWidth: false,
+    chromeTheme: Preferences.get('simpleBrowser.chromeTheme') === 'inherit' ? 'inherit' : 'light',
     headerHeight: getHeaderHeight(true),
     iframeSrc: '',
     inputValue: '',
@@ -212,10 +214,7 @@ export const backgroundLoadContent = async (state, savedState) => {
   const tabHoverEnabled = Preferences.get('simpleBrowser.tabHover.enabled') === true
   const unloadTabs = Preferences.get('simpleBrowser.unloadTabs') === true
   const headerHeight = getHeaderHeight(tabsEnabled)
-  const [searchHistory, visitedSites] = await Promise.all([
-    BrowserSearchHistory.load(),
-    BrowserVisitedSites.load(),
-  ])
+  const [searchHistory, visitedSites] = await Promise.all([BrowserSearchHistory.load(), BrowserVisitedSites.load()])
   const browserViewId = await ElectronWebContentsView.createWebContentsView(0)
   Assert.number(browserViewId)
   await ElectronWebContentsViewFunctions.resizeWebContentsView(browserViewId, x, y + headerHeight, width, height - headerHeight)
@@ -258,10 +257,7 @@ export const loadContent = async (state, savedState) => {
   const savedSelectedTabIndex = getSavedSelectedTabIndex(savedState, savedTabs)
   const savedSelectedTab = savedTabs[savedSelectedTabIndex]
   const iframeSrc = savedSelectedTab ? savedSelectedTab.iframeSrc : getUrlFromSavedState(savedState)
-  const [searchHistory, visitedSites] = await Promise.all([
-    BrowserSearchHistory.load(),
-    BrowserVisitedSites.load(),
-  ])
+  const [searchHistory, visitedSites] = await Promise.all([BrowserSearchHistory.load(), BrowserVisitedSites.load()])
   const audioIndicatorEnabled = Preferences.get('simpleBrowser.audioIndicator.enabled') !== false
   const suggestionsEnabled = Preferences.get('simpleBrowser.suggestions')
   const tabsEnabled = Preferences.get('simpleBrowser.tabs.enabled') !== false
@@ -323,6 +319,8 @@ export const loadContent = async (state, savedState) => {
   }
 }
 
+export const isVisible = (state) => visibleBrowserUids.has(state.uid)
+
 export const show = async (state) => {
   const { browserViewId } = state
   visibleBrowserUids.add(state.uid)
@@ -355,7 +353,9 @@ export const handleColorThemeChanged = async (state) => {
   const { tabs } = state
   const newTabUrl = SimpleBrowserNewTabPage.getUrl()
   await Promise.all(
-    tabs.filter((tab) => !tab.iframeSrc && tab.browserViewId).map((tab) => ElectronWebContentsViewFunctions.setIframeSrc(tab.browserViewId, newTabUrl)),
+    tabs
+      .filter((tab) => !tab.iframeSrc && tab.browserViewId)
+      .map((tab) => ElectronWebContentsViewFunctions.setIframeSrc(tab.browserViewId, newTabUrl)),
   )
   return state
 }
@@ -726,6 +726,18 @@ export const showOverlay = async (state, overlayId) => {
 }
 
 export const afterRender = async (oldState, newState) => {
+  if (oldState.fullWidth !== newState.fullWidth && newState.fullWidth) {
+    await show(newState)
+    if (newState.fullWidthAddressSelection || !newState.iframeSrc) {
+      await ElectronWindow.focus()
+      await RendererProcess.invoke('Window.focusBrowserAddress', newState.uid, newState.fullWidthAddressSelection)
+    } else {
+      await ElectronWebContentsViewFunctions.focus(newState.browserViewId)
+    }
+  }
+  if (oldState.selectedTabIndex !== newState.selectedTabIndex || oldState.fullWidth !== newState.fullWidth) {
+    await RendererProcess.invoke('Window.revealBrowserTab', newState.uid)
+  }
   const { overlayIds: oldOverlayIds } = oldState
   const { browserViewId, overlayIds, selectedTabIndex, tabs } = newState
   const didShowFirstOverlay = oldOverlayIds.length === 0 && overlayIds.length > 0
@@ -1130,4 +1142,37 @@ export const dispose = async (state) => {
     RendererProcess.invoke('Viewlet.sendMultiple', [['Css.removeCssStyleSheet', SimpleBrowserPageSnapshot.getStyleSheetId(state.uid)]]),
     SimpleBrowserSnapshot.dispose(state.snapshot),
   ])
+}
+
+export const prepareFullWidth = async (state) => {
+  let next = state
+  for (const overlayId of state.overlayIds) next = await hideOverlay(next, overlayId)
+  return { ...next, hasSuggestionsOverlay: false, suggestions: [], selectedSuggestionIndex: -1, tabHover: undefined }
+}
+
+export const setFullWidth = async (state, fullWidth, addressSelection) => {
+  return { ...state, fullWidth, fullWidthAddressSelection: addressSelection }
+}
+
+export const toggleFullWidth = (state) => {
+  void Command.execute('Layout.toggleSimpleBrowserFullWidth', state.uid)
+  return state
+}
+
+export const focusAddress = async (state) => {
+  await ElectronWindow.focus()
+  await RendererProcess.invoke('Window.focusBrowserAddress', state.uid)
+  Focus.setFocus(WhenExpression.FocusSimpleBrowserInput, undefined, state.uid, ViewletModuleId.SimpleBrowser)
+  return state
+}
+
+export const handleSettingsChanged = (state) => ({
+  ...state,
+  chromeTheme: Preferences.get('simpleBrowser.chromeTheme') === 'inherit' ? 'inherit' : 'light',
+})
+
+export const handleFaviconError = (state, index, src) => {
+  const tab = state.tabs[Number(index)]
+  if (!tab || tab.favicon !== src) return state
+  return updateTab(state, tab.browserViewId, { favicon: '' })
 }

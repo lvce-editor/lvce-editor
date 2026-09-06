@@ -11,6 +11,11 @@ export const hasFunctionalRootRender = true
 export const renderEventListeners = () => {
   return [
     {
+      name: DomEventListenerFunctions.HandleErrorSimpleBrowserFavicon,
+      params: ['handleFaviconError', 'event.target.dataset.index', 'event.target.src'],
+    },
+    { name: DomEventListenerFunctions.HandleClickSimpleBrowserFullWidth, params: ['toggleFullWidth'] },
+    {
       name: DomEventListenerFunctions.HandleClickBackward,
       params: ['backward'],
     },
@@ -120,12 +125,16 @@ const getDom = (state) => {
     state.audioIndicatorEnabled,
     pageSnapshot?.dom,
     state.tabHover,
+    state.fullWidth,
+    state.chromeTheme,
   )
 }
 
 const renderDom = {
   isEqual(oldState, newState) {
     return (
+      oldState.fullWidth === newState.fullWidth &&
+      oldState.chromeTheme === newState.chromeTheme &&
       oldState.iframeSrc === newState.iframeSrc &&
       oldState.canGoBack === newState.canGoBack &&
       oldState.canGoForward === newState.canGoForward &&

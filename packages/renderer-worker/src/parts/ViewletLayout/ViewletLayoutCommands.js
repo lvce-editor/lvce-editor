@@ -1,8 +1,12 @@
+import * as BrowserFullWidth from '../BrowserFullWidth/BrowserFullWidth.js'
 import * as ViewletLayout from './ViewletLayout.ts'
 import * as ResetLayout from '../ResetLayout/ResetLayout.ts'
 
 // prettier-ignore
 export const Commands = {
+  loadContentLater: BrowserFullWidth.loadContentLater,
+  toggleSimpleBrowserFullWidth: BrowserFullWidth.toggle,
+  handleBrowserFullWidthGesture: BrowserFullWidth.handleGesture,
   getAllQuickPickMenuEntries: ViewletLayout.getAllQuickPickMenuEntries,
   getActiveSideBarView: ViewletLayout.getActiveSideBarView,
   getActiveSecondarySideBarView: ViewletLayout.getActiveSecondarySideBarView,
@@ -24,6 +28,8 @@ export const Commands = {
 }
 
 export const CommandsWithSideEffects = {
+  toggleSimpleBrowserFullWidthInternal: BrowserFullWidth.toggleInternal,
+  leaveSimpleBrowserFullWidth: BrowserFullWidth.leave,
   attachViewlet: ViewletLayout.attachViewlet,
   clearProblemsSummary: ViewletLayout.clearProblemsSummary,
   handleActiveEditorChange: ViewletLayout.handleActiveEditorChange,
