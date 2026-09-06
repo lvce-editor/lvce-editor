@@ -86,6 +86,18 @@ jobs:
         run: npm run e2e:notification-layout
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0
+      - name: Test terminal theme backgrounds
+        if: matrix.os == 'ubuntu-24.04'
+        working-directory: ./packages/extension-host-worker-tests
+        run: npm run e2e:terminal-background
+        env:
+          PLAYWRIGHT_BROWSERS_PATH: 0
+      - name: Test integrated terminal rendering
+        if: matrix.os == 'ubuntu-24.04'
+        working-directory: ./packages/extension-host-worker-tests
+        run: npm run e2e:headless -- --test-name-prefix=viewlet.terminal-xterm
+        env:
+          PLAYWRIGHT_BROWSERS_PATH: 0
       - name: Test error dialog and notification rendering
         if: matrix.os == 'ubuntu-24.04'
         working-directory: ./packages/extension-host-worker-tests
