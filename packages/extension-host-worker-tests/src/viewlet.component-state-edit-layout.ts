@@ -30,6 +30,6 @@ export const test: Test = async ({ Command, Editor, expect, Locator, Main }) => 
   if (updatedState.sideBarWidth !== 320 || updatedState.statusBarVisible !== false) {
     throw new Error('Expected Layout state edits to update sidebar width and status bar visibility')
   }
-  await expect(Locator('.SideBar')).toHaveCSS('width', '320px')
+  await expect(Locator('.Viewlet.SideBar')).toHaveCSS('width', '320px')
   await expect(Locator('.StatusBar')).toBeHidden()
 }
