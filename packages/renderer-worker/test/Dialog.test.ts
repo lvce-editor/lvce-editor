@@ -153,3 +153,17 @@ test.skip('close - web', async () => {
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(2)
   expect(RendererProcess.invoke).toHaveBeenCalledWith(7836)
 })
+
+test.each(['Error', 'TypeError', 'DockerNotInstalledError'])('showMessage maps prepared %s errors to dialog options', async (type) => {
+  jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => ({
+    assetDir: '',
+    getPlatform: () => PlatformType.Remote,
+  }))
+  jest.unstable_mockModule('../src/parts/Viewlet/Viewlet.js', () => ({ openWidget: jest.fn() }))
+  const Dialog = await import('../src/parts/Dialog/Dialog.js')
+  const Viewlet = await import('../src/parts/Viewlet/Viewlet.js')
+  const error = { message: 'DevContainerNode.cliUp failed with exit code 1', type }
+  await Dialog.showMessage(error)
+  expect(Viewlet.openWidget).toHaveBeenCalledWith('Dialog', { message: error.message, title: type, type: 'error' })
+  expect(error.type).toBe(type)
+})
