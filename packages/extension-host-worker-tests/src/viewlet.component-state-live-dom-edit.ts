@@ -26,7 +26,7 @@ export const test: Test = async ({ Command, Editor, expect, FileSystem, Locator,
   await Editor.setText(`${JSON.stringify(editedDom, null, 2)}\n`)
   await expect(Locator('.Explorer.LiveEditedDom')).toBeVisible()
   await expect(firstItem).toBeHidden()
-  await expect(Locator('.Editor')).toBeFocused()
+  await expect(Locator('[name="editor"]')).toBeFocused()
 
   await Editor.setText('[')
   await expect(Locator('.Explorer.LiveEditedDom')).toBeVisible()
