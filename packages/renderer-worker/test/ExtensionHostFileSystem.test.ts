@@ -1,4 +1,3 @@
-import { setImmediate } from 'node:timers/promises'
 import { beforeEach, expect, jest, test } from '@jest/globals'
 import * as DirentType from '../src/parts/DirentType/DirentType.js'
 
@@ -335,19 +334,19 @@ test('isolated provider dispatch unwraps extension host uris', async () => {
 })
 
 test.each([
-  ['writeFile', ['save-test:///note.txt', 'saved']],
-  ['createFile', ['save-test:///note.txt']],
-  ['remove', ['save-test:///note.txt']],
-  ['rename', ['save-test:///note.txt', 'save-test:///renamed.txt']],
-])('%s completes while a workspace refresh is waiting for the caller', async (method, args) => {
+  { name: 'writeFile', mutate: () => ExtensionHostFileSystem.writeFile('save-test:///note.txt', 'saved') },
+  { name: 'createFile', mutate: () => ExtensionHostFileSystem.createFile('save-test:///note.txt') },
+  { name: 'remove', mutate: () => ExtensionHostFileSystem.remove('save-test:///note.txt') },
+  { name: 'rename', mutate: () => ExtensionHostFileSystem.rename('save-test:///note.txt', 'save-test:///renamed.txt') },
+])('$name completes while a workspace refresh is waiting for the caller', async ({ mutate }) => {
   const refresh = Promise.withResolvers<void>()
   invoke.mockResolvedValue({ found: true, result: 'mutation completed' })
   execute.mockReturnValue(refresh.promise)
-  const mutation = ExtensionHostFileSystem[method as keyof typeof ExtensionHostFileSystem](...args)
+  const mutation = mutate()
   try {
     // Model a refresh waiting for the current editor/Explorer command to finish.
     // It must not prevent the filesystem response from reaching that command.
-    const result = await Promise.race([mutation, setImmediate('blocked by refresh')])
+    const result = await Promise.race([mutation, new Promise((resolve) => setTimeout(resolve, 0, 'blocked by refresh'))])
     expect(result).toBe('mutation completed')
     expect(execute).toHaveBeenCalledWith('Layout.refreshSourceControlBadgeCount')
   } finally {
