@@ -15,8 +15,7 @@ const createState = (): any => ({
   ],
 })
 
-const startDrag = async (state: any, index: number | string): Promise<any> =>
-  TabDrag.handleTabDragStart(await TabDrag.stageTabDrag(state, index, 0))
+const startDrag = async (state: any, index: number | string): Promise<any> => TabDrag.handleTabDragStart(await TabDrag.stageTabDrag(state, index, 0))
 
 test('reorders a background tab before the first tab and keeps the active page', async () => {
   const state = createState()
