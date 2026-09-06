@@ -2915,4 +2915,4 @@ export const getHref = (state: LayoutState) => {
   return Location.getHref()
 }
 
-export const afterRender = BrowserFullWidth.afterRender
+export const afterRender = (oldState: LayoutState, newState: LayoutState) => BrowserFullWidth.afterRender(oldState, newState)

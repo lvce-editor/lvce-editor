@@ -1,4 +1,9 @@
-import { beforeEach, expect, jest, test } from '@jest/globals'
+import { afterEach, beforeEach, expect, jest, test } from '@jest/globals'
+
+afterEach(() => {
+  BrowserSuggestionRequests.cancel(7)
+  jest.useRealTimers()
+})
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -78,6 +83,8 @@ jest.unstable_mockModule('../src/parts/BrowserSearchSuggestions/BrowserSearchSug
 }))
 
 jest.unstable_mockModule('../src/parts/BrowserHistory/BrowserHistory.js', () => ({
+  load: jest.fn(),
+  getSuggestions: jest.fn(),
   record: jest.fn(),
 }))
 
@@ -108,6 +115,9 @@ jest.unstable_mockModule('../src/parts/SimpleBrowserSnapshot/SimpleBrowserSnapsh
   dispose: jest.fn(),
 }))
 
+jest.unstable_mockModule('../src/parts/Viewlet/Viewlet.js', () => ({ executeViewletCommand: jest.fn() }))
+const Viewlet = await import('../src/parts/Viewlet/Viewlet.js')
+const BrowserSuggestionRequests = await import('../src/parts/BrowserSuggestionRequests/BrowserSuggestionRequests.js')
 const ViewletSimpleBrowser = await import('../src/parts/ViewletSimpleBrowser/ViewletSimpleBrowser.js')
 const ViewletSimpleBrowserOpenBackgroundTab = await import('../src/parts/ViewletSimpleBrowser/ViewletSimpleBrowserOpenBackgroundTab.js')
 const ViewletSimpleBrowserResize = await import('../src/parts/ViewletSimpleBrowser/ViewletSimpleBrowserResize.js')
@@ -131,9 +141,12 @@ const RendererProcess = await import('../src/parts/RendererProcess/RendererProce
 const SimpleBrowserNewTabPage = await import('../src/parts/SimpleBrowserNewTabPage/SimpleBrowserNewTabPage.js')
 const SimpleBrowserSnapshot = await import('../src/parts/SimpleBrowserSnapshot/SimpleBrowserSnapshot.js')
 const ViewletModuleId = await import('../src/parts/ViewletModuleId/ViewletModuleId.js')
+const FocusState = await import('../src/parts/FocusState/FocusState.js')
 const WhenExpression = await import('../src/parts/WhenExpression/WhenExpression.js')
 
 beforeEach(() => {
+  jest.mocked(BrowserHistory.load).mockResolvedValue([] as never)
+  jest.mocked(BrowserHistory.getSuggestions).mockReturnValue([] as never)
   ColorTheme.state.colorThemeCss = ''
   // @ts-ignore
   BrowserSearchHistory.add.mockImplementation((searches) => searches)
@@ -158,6 +171,7 @@ beforeEach(() => {
 })
 
 const browserTabKeyBindings = [
+  KeyModifier.CtrlCmd | KeyCode.KeyL,
   KeyModifier.CtrlCmd | KeyCode.KeyW,
   KeyModifier.CtrlCmd | KeyCode.KeyT,
   KeyModifier.CtrlCmd | KeyCode.Tab,
@@ -819,6 +833,7 @@ test('shows a cached virtual-dom preview while an unloaded tab reloads', async (
 
   // @ts-ignore
   ElectronWebContentsViewFunctions.getStats.mockResolvedValue({ canGoBack: false, canGoForward: false })
+  FocusState.set(WhenExpression.FocusSimpleBrowser)
   const loadedState = await ViewletSimpleBrowser.handleDidNavigate(loadingState, 18, 'https://one.example')
 
   expect(ElectronWebContentsViewFunctions.show).toHaveBeenCalledWith(18)
@@ -1573,6 +1588,7 @@ test('handleInput does not request suggestions when disabled', async () => {
 })
 
 test('handleInput requests suggestions when enabled', async () => {
+  jest.useFakeTimers()
   // @ts-ignore
   BrowserSearchSuggestions.get.mockResolvedValue(['what is my ip'])
   // @ts-ignore
@@ -1580,11 +1596,12 @@ test('handleInput requests suggestions when enabled', async () => {
   const state = { ...ViewletSimpleBrowser.create(7), suggestionsEnabled: true }
 
   const newState = await ViewletSimpleBrowser.handleInput(state, 'what is')
-  await new Promise((resolve) => setTimeout(resolve, 0))
+  expect(BrowserSearchSuggestions.get).not.toHaveBeenCalled()
+  await jest.advanceTimersByTimeAsync(150)
 
   expect(newState).toMatchObject({ inputValue: 'what is', selectedSuggestionIndex: -1 })
   expect(BrowserSearchSuggestions.get).toHaveBeenCalledWith('what is')
-  expect(Command.execute).toHaveBeenCalledWith('SimpleBrowser.applySuggestions', 7, 'what is', ['what is my ip'])
+  expect(Viewlet.executeViewletCommand).toHaveBeenCalledWith(7, 'applySuggestions', 7, 'what is', ['what is my ip'], undefined, expect.any(Number))
 })
 
 test('handleInput replaces partial search suggestions when the input becomes a URL', async () => {
@@ -1609,7 +1626,7 @@ test('handleInput replaces partial search suggestions when the input becomes a U
   expect(BrowserSearchSuggestions.get).not.toHaveBeenCalled()
   expect(BrowserVisitedSites.getSuggestions).toHaveBeenCalledWith([], 'soundcloud.com')
   expect(Command.execute).not.toHaveBeenCalled()
-  expect(newState).toMatchObject({ inputValue: 'soundcloud.com', selectedSuggestionIndex: 0, suggestions: [localSuggestion] })
+  expect(newState).toMatchObject({ inputValue: 'soundcloud.com', selectedSuggestionIndex: -1, suggestions: [localSuggestion] })
 })
 
 test('applySuggestions ignores stale results', async () => {
@@ -1646,7 +1663,7 @@ test('applySuggestions captures the page and shows provider results', async () =
   expect(newState).toMatchObject({
     hasSuggestionsOverlay: true,
     overlayIds: ['search-suggestions'],
-    selectedSuggestionIndex: 0,
+    selectedSuggestionIndex: -1,
     snapshot: 'blob:https://example.com/snapshot',
     suggestions: [
       { favicon: '', type: 'search', value: 'what is' },
@@ -1671,7 +1688,7 @@ test('applySuggestions does not capture a page for an empty new tab', async () =
   expect(newState).toMatchObject({
     hasSuggestionsOverlay: true,
     overlayIds: ['search-suggestions'],
-    selectedSuggestionIndex: 0,
+    selectedSuggestionIndex: -1,
     snapshot: '',
     suggestions: [
       { favicon: '', type: 'search', value: 'what is' },
@@ -1803,7 +1820,7 @@ test('handleInput shows matching search history before the provider responds', a
   const newState = await ViewletSimpleBrowser.handleInput(state, 'cheese')
 
   expect(BrowserSearchHistory.getSuggestions).toHaveBeenCalledWith(['cheeseburger'], 'cheese')
-  expect(newState).toMatchObject({ hasSuggestionsOverlay: true, selectedSuggestionIndex: 0, suggestions: [historySuggestion] })
+  expect(newState).toMatchObject({ hasSuggestionsOverlay: true, selectedSuggestionIndex: -1, suggestions: [historySuggestion] })
 })
 
 test('go saves a submitted search in recent history', async () => {
@@ -1979,4 +1996,34 @@ test('pointer down dismisses the hover even when the tab is already selected', a
   expect(newState.selectedTabIndex).toBe(0)
   expect(newState.tabHover).toBeUndefined()
   expect(newState.overlayIds).toEqual([])
+})
+
+test('provider arrivals preserve an explicitly selected local suggestion', async () => {
+  const local = { value: 'known site', favicon: '', type: 'search' }
+  jest.mocked(BrowserSearchHistory.getSuggestions).mockReturnValue([local] as never)
+  const state = {
+    ...ViewletSimpleBrowser.create(7),
+    inputValue: 'known',
+    suggestionsEnabled: true,
+    suggestions: [local],
+    selectedSuggestionIndex: 0,
+    hasSuggestionsOverlay: true,
+    overlayIds: ['search-suggestions'],
+  }
+  const next = await ViewletSimpleBrowser.applySuggestions(state, 7, 'known', ['known answer'])
+  expect(next.suggestions[next.selectedSuggestionIndex]).toEqual(local)
+})
+
+test('dismissed results cannot reopen suggestions even when the query matches', async () => {
+  const state = { ...ViewletSimpleBrowser.create(7), inputValue: 'known', suggestionsEnabled: true }
+  const id = BrowserSuggestionRequests.begin(7, state.browserViewId, 'known', undefined, undefined)
+  await ViewletSimpleBrowser.closeSuggestions(state)
+  expect(await ViewletSimpleBrowser.applySuggestions(state, 7, 'known', ['known answer'], undefined, id)).toBe(state)
+})
+
+test('Ctrl+L from the active embedded tab selects its address', async () => {
+  const state = { ...ViewletSimpleBrowser.create(7), browserViewId: 12 }
+  await ViewletSimpleBrowser.handleKeyBinding(state, 12, KeyModifier.CtrlCmd | KeyCode.KeyL)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Window.focusBrowserAddress', 7)
+  expect(ElectronWindow.focus).toHaveBeenCalled()
 })

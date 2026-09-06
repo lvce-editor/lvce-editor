@@ -15,6 +15,8 @@ const { build } = requireBuild('esbuild')
 const profile = await mkdtemp(join(tmpdir(), 'lvce-browser-workspace-'))
 const editorFile = join(profile, 'example.txt')
 await writeFile(editorFile, 'keep editor selection\nsecond line\n')
+await mkdir(join(profile, 'config/lvce-oss'), { recursive: true })
+await writeFile(join(profile, 'config/lvce-oss/settings.json'), JSON.stringify({ 'simpleBrowser.suggestions': true }))
 const rendererPath = join(root, 'packages/renderer-worker/node_modules/@lvce-editor/renderer-process/dist/rendererProcessMain.js')
 const rendererSource = await readFile(rendererPath, 'utf8')
 const bundleUrl = '/packages/renderer-worker/dist/browserWorkspaceTestMain.js'
@@ -48,6 +50,19 @@ try {
     env,
     timeout: 60000,
   })
+  await app.evaluate(({ session, net }) => {
+    globalThis.browserSuggestionQueries = []
+    globalThis.completedBrowserSuggestionQueries = []
+    session.defaultSession.protocol.handle('https', async (request) => {
+      if (!request.url.startsWith('https://suggestqueries.google.com/')) return net.fetch(request.url, { bypassCustomProtocolHandlers: true })
+      const query = new URL(request.url).searchParams.get('q')
+      globalThis.browserSuggestionQueries.push(query)
+      await new Promise((resolve) => setTimeout(resolve, ['slow', 'dismiss'].includes(query) ? 350 : 50))
+      globalThis.completedBrowserSuggestionQueries.push(query)
+      if (query === 'offline') return new Response('', { status: 503 })
+      return new Response(JSON.stringify([query, [query + ' result']]), { headers: { 'Content-Type': 'application/json' } })
+    })
+  })
   const page = await app.firstWindow()
   page.setDefaultTimeout(15000)
   await expect(page.locator('#Workbench')).toBeVisible()
@@ -62,6 +77,10 @@ try {
   await page.getByRole('treeitem', { name: 'example.txt', exact: true }).dblclick()
   await expect(page.locator('[name="editor"]')).toBeAttached()
   await page.locator('[name="editor"]').focus()
+  await page.evaluate(() => {
+    localStorage.setItem('simple-browser-search-history', JSON.stringify(['known first', 'known second', 'offline local']))
+    localStorage.setItem('simple-browser-history', JSON.stringify([{ date: Date.now(), url: 'https://known.example/article' }]))
+  })
   await runCommand('Simple Browser: Toggle Full Width')
   await expect(page.locator('.BrowserFullWidth')).toBeVisible()
   const address = page.locator('[name="simple-browser-address"]')
@@ -86,6 +105,45 @@ try {
       true,
     )
   }, url)
+  await app.evaluate(({ webContents }, prefix) => {
+    const guest = webContents.getAllWebContents().find((item) => item.getURL().startsWith(prefix))
+    guest.focus()
+    guest.sendInputEvent({ type: 'keyDown', keyCode: 'L', modifiers: ['control'] })
+    guest.sendInputEvent({ type: 'keyUp', keyCode: 'L', modifiers: ['control'] })
+  }, url)
+  await expect(address).toBeFocused()
+  await expect.poll(() => address.evaluate((input) => [input.selectionStart, input.selectionEnd])).toEqual([0, url.length])
+  await address.fill('known')
+  await expect(page.getByRole('option', { name: 'known first', exact: true })).toBeVisible()
+  await expect(page.locator('.SimpleBrowserSuggestionSelected')).toHaveCount(0)
+  await address.press('ArrowDown')
+  await expect(page.locator('.SimpleBrowserSuggestionSelected')).toHaveText('known first')
+  await expect(page.getByRole('option', { name: 'known result', exact: true })).toBeVisible()
+  await expect(page.locator('.SimpleBrowserSuggestionSelected')).toHaveText('known first')
+  await address.press('Escape')
+  await expect(page.locator('.SimpleBrowserSuggestions')).toHaveCount(0)
+  await expect(address).toHaveValue('known')
+  await address.fill('slow')
+  await expect.poll(() => app.evaluate(() => globalThis.browserSuggestionQueries.includes('slow'))).toBe(true)
+  await address.fill('fast')
+  await expect(page.getByRole('option', { name: 'fast result', exact: true })).toBeVisible()
+  await expect.poll(() => app.evaluate(() => globalThis.completedBrowserSuggestionQueries.includes('slow'))).toBe(true)
+  await expect(page.getByRole('option', { name: 'fast result', exact: true })).toBeVisible()
+  await expect(page.getByRole('option', { name: 'slow result', exact: true })).toHaveCount(0)
+  await address.fill('dismiss')
+  await expect.poll(() => app.evaluate(() => globalThis.browserSuggestionQueries.includes('dismiss'))).toBe(true)
+  await address.press('Escape')
+  await expect.poll(() => app.evaluate(() => globalThis.completedBrowserSuggestionQueries.includes('dismiss'))).toBe(true)
+  await expect(page.locator('.SimpleBrowserSuggestions')).toHaveCount(0)
+  await address.fill('offline')
+  await expect.poll(() => app.evaluate(() => globalThis.completedBrowserSuggestionQueries.includes('offline'))).toBe(true)
+  await expect(page.getByRole('option', { name: 'offline local', exact: true })).toBeVisible()
+  await address.press('Escape')
+  await address.fill('known.example')
+  await expect(page.getByRole('option', { name: 'https://known.example/article', exact: true })).toBeVisible()
+  await address.press('Escape')
+  await address.fill(url)
+  await address.press('Escape')
   const before = await guestSnapshot()
   const button = page.locator('.SimpleBrowserFullWidthButton')
   const timings = []
@@ -99,7 +157,7 @@ try {
   const dimensions = await page.locator('.SimpleBrowser').boundingBox()
   assert.equal(dimensions.x, 0)
   assert.equal(dimensions.width, await page.evaluate(() => innerWidth))
-  const doubleControl = async (guestFocused) =>
+  const doubleControl = async (guestFocused, targetUrl = url) =>
     app.evaluate(
       ({ BrowserWindow, webContents }, { guestFocused, url }) => {
         const window = BrowserWindow.getAllWindows()[0]
@@ -108,7 +166,7 @@ try {
         target.focus()
         for (const type of ['keyDown', 'keyUp', 'keyDown', 'keyUp']) target.sendInputEvent({ type, keyCode: 'Control' })
       },
-      { guestFocused, url },
+      { guestFocused, url: targetUrl },
     )
   await doubleControl(true)
   await expect(page.locator('.BrowserFullWidth')).toHaveCount(0)
@@ -142,7 +200,38 @@ try {
   await expect(page.locator('.BrowserFullWidth')).toHaveCount(1)
   await page.locator('.SimpleBrowserFullWidthButton').click()
   await expect(page.locator('.SimpleBrowser')).toHaveCount(2)
-  console.log(JSON.stringify({ switches: 50, preserved: before.data, maximumAutomationRoundTripMs: Math.max(...timings), profile }))
+  const mainUrl = `${url}?main`
+  const mainAddress = mainBrowser.locator('[name="simple-browser-address"]')
+  await mainAddress.fill(mainUrl)
+  await mainAddress.press('Enter')
+  await expect
+    .poll(() => app.evaluate(({ webContents }, targetUrl) => webContents.getAllWebContents().some((item) => item.getURL() === targetUrl), mainUrl))
+    .toBe(true)
+  const nativePages = () =>
+    app.evaluate(({ BrowserWindow }) => {
+      const window = BrowserWindow.getAllWindows()[0]
+      return window.contentView.children.flatMap((view) =>
+        'webContents' in view && view.webContents.getURL().startsWith('http://127.0.0.1:') ? [view.webContents.getURL()] : [],
+      )
+    })
+  await expect.poll(nativePages).toHaveLength(2)
+  const started = Date.now()
+  await doubleControl(true, mainUrl)
+  await expect(page.locator('.BrowserFullWidth')).toHaveCount(1)
+  await expect(page.locator('[name="simple-browser-address"]')).toHaveValue(mainUrl)
+  await expect.poll(nativePages).toEqual([mainUrl])
+  const nativeGestureRoundTripMs = Date.now() - started
+  await page.locator('.SimpleBrowserFullWidthButton').click()
+  await expect(page.locator('.SimpleBrowser')).toHaveCount(2)
+  await expect.poll(nativePages).toHaveLength(2)
+  await page.locator('.PreviewArea .SimpleBrowserFullWidthButton').click()
+  await expect(page.locator('.BrowserFullWidth')).toHaveCount(1)
+  await expect.poll(nativePages).toEqual([url])
+  await page.locator('.SimpleBrowserFullWidthButton').click()
+  await expect.poll(nativePages).toHaveLength(2)
+  console.log(
+    JSON.stringify({ switches: 50, preserved: before.data, nativeGestureRoundTripMs, maximumAutomationRoundTripMs: Math.max(...timings), profile }),
+  )
 } finally {
   await app?.close()
   await writeFile(rendererPath, rendererSource)

@@ -7,6 +7,8 @@ import * as ViewletSimpleBrowserInsertJavaScript from './ViewletSimpleBrowserIns
 import * as TabDrag from './ViewletSimpleBrowserTabDrag.js'
 
 export const Commands = {
+  handleAddressBlur: SimpleBrowser.handleAddressBlur,
+  handleSuggestionPointerDown: SimpleBrowser.handleSuggestionPointerDown,
   handleFaviconError: SimpleBrowser.handleFaviconError,
   prepareFullWidth: SimpleBrowser.prepareFullWidth,
   setFullWidth: SimpleBrowser.setFullWidth,

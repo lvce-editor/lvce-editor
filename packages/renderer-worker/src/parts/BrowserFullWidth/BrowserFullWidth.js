@@ -1,3 +1,4 @@
+import * as ElectronWebContentsViewFunctions from '../ElectronWebContentsViewFunctions/ElectronWebContentsViewFunctions.js'
 import * as ApplicationRegistry from '../ApplicationRegistry/ApplicationRegistry.ts'
 import * as BrowserWorkspaceFocus from '../BrowserWorkspaceFocus/BrowserWorkspaceFocus.js'
 import * as ElectronWindow from '../ElectronWindow/ElectronWindow.js'
@@ -94,9 +95,24 @@ export const toggleInternal = async (initialState, requestedUid) => {
   }
   let browsers = getBrowsers(state)
   const focusedUid = requestedUid ?? ViewletStates.getFocusedInstanceByType('SimpleBrowser', state.applicationId)
+  const focusInfo = await Promise.all(
+    browsers.map(async (item) => {
+      const native =
+        Platform.platform === PlatformType.Electron && item.state.browserViewId
+          ? await ElectronWebContentsViewFunctions.getStats(item.state.browserViewId).catch(() => ({}))
+          : {}
+      return {
+        item,
+        score: native.isFocused
+          ? Number.POSITIVE_INFINITY
+          : Math.max(native.lastFocusedAt || 0, BrowserWorkspaceFocus.getBrowserFocusTime(item.state.uid)),
+      }
+    }),
+  )
+  focusInfo.sort((a, b) => b.score - a.score)
   let browser =
-    browsers.find((item) => item.state.uid === focusedUid) ||
-    browsers.find((item) => item.state.uid === state.previewId || item.state.uid === state.secondaryPreviewId) ||
+    browsers.find((item) => item.state.uid === requestedUid) ||
+    (focusInfo[0]?.score > 0 ? focusInfo[0].item : browsers.find((item) => item.state.uid === focusedUid)) ||
     browsers[0]
   if (!browser) {
     const result = await ViewletLayout.showPreview({ ...state, previewWidth: state.windowWidth / 2 }, 'simple-browser://')
@@ -118,6 +134,7 @@ export const toggleInternal = async (initialState, requestedUid) => {
   const hiddenBrowserUids = browsers.filter((item) => item !== browser && item.factory.isVisible(item.state)).map((item) => item.state.uid)
   const snapshot = {
     browserUid,
+    browserWasVisible: browser.factory.isVisible(browser.state),
     browserBounds: { x, y, width, height },
     layout: Object.fromEntries(layoutKeys.map((key) => [key, state[key]])),
     ideFocusUid: BrowserWorkspaceFocus.get(state.applicationId),
@@ -154,7 +171,10 @@ export const afterRender = async (oldState, newState) => {
   if (current) {
     for (const uid of current.hiddenBrowserUids) {
       const browser = ViewletStates.getInstance(uid)
-      if (browser) await browser.factory.hide(browser.state)
+      if (browser) {
+        await Viewlet.executeViewletCommand(uid, 'prepareFullWidth')
+        await browser.factory.hide(browser.state)
+      }
     }
     await Viewlet.executeViewletCommand(current.browserUid, 'setFullWidth', true, current.addressSelection)
     return
@@ -162,6 +182,8 @@ export const afterRender = async (oldState, newState) => {
   if (!previous) return
   await RendererProcess.invoke('Window.restoreBrowserParent', previous.browserUid)
   if (ViewletStates.getInstance(previous.browserUid)) await Viewlet.executeViewletCommand(previous.browserUid, 'setFullWidth', false)
+  const previousBrowser = ViewletStates.getInstance(previous.browserUid)
+  if (previous.browserWasVisible === false && previousBrowser) await previousBrowser.factory.hide(previousBrowser.state)
   for (const uid of previous.hiddenBrowserUids) {
     const browser = ViewletStates.getInstance(uid)
     if (browser) await browser.factory.show(browser.state)
@@ -188,6 +210,7 @@ export const loadContentLater = async (state) => {
 }
 
 export const handleDispose = async (browserUid) => {
+  BrowserWorkspaceFocus.removeBrowser(browserUid)
   const layout = ViewletStates.getValues().find(
     (instance) => instance.moduleId === 'Layout' && instance.state.browserFullWidth?.browserUid === browserUid,
   )

@@ -224,6 +224,17 @@ export const getSimpleBrowserVirtualDom = (
       childCount: inlineSuggestion ? 2 : 1,
     },
   )
+  dom.push({
+    type: VirtualDomElements.Input,
+    className: ClassNames.InputBox,
+    inputType: HtmlInputType.Url,
+    enterKeyHint: 'Go',
+    onInput: DomEventListenerFunctions.HandleInput,
+    onFocus: DomEventListenerFunctions.HandleFocus,
+    name: InputName.SimpleBrowserAddress,
+    onBlur: DomEventListenerFunctions.HandleBlurSimpleBrowserAddress,
+    value,
+  })
   if (inlineSuggestion) {
     dom.push(
       {
@@ -248,17 +259,6 @@ export const getSimpleBrowserVirtualDom = (
     )
   }
   dom.push(
-    {
-      type: VirtualDomElements.Input,
-      className: ClassNames.InputBox,
-      inputType: HtmlInputType.Url,
-      enterKeyHint: 'Go',
-      onInput: DomEventListenerFunctions.HandleInput,
-      onFocus: DomEventListenerFunctions.HandleFocus,
-      onBlur: DomEventListenerFunctions.HandleBlur,
-      name: InputName.SimpleBrowserAddress,
-      value,
-    },
     {
       type: VirtualDomElements.Button,
       className: ClassNames.IconButton,
@@ -344,6 +344,7 @@ export const getSimpleBrowserVirtualDom = (
           ariaSelected: selected,
           'data-value': value,
           onClick: DomEventListenerFunctions.HandleClickSuggestion,
+          onPointerDown: DomEventListenerFunctions.HandlePointerDownSimpleBrowserSuggestion,
           childCount: 2,
         },
         favicon
