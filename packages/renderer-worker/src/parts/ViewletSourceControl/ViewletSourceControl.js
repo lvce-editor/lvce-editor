@@ -1,4 +1,5 @@
 import * as Assert from '../Assert/Assert.ts'
+import * as ApplicationRegistry from '../ApplicationRegistry/ApplicationRegistry.ts'
 import * as Command from '../Command/Command.js'
 import * as DirentType from '../DirentType/DirentType.js'
 import * as IconTheme from '../IconTheme/IconTheme.js'
@@ -48,9 +49,10 @@ export const loadContent = async (state, savedState) => {
     state.y,
     state.width,
     state.height,
-    Workspace.state.workspacePath, // TODO use workspace uri
+    state.applicationId === undefined ? Workspace.state.workspacePath : ApplicationRegistry.get(state.applicationId).workspaceUri,
     platform,
     assetDir,
+    state.applicationId,
   )
   const diffResult = await SourceControlWorker.invoke('SourceControl.diff2', state.uid)
   const commands = await SourceControlWorker.invoke('SourceControl.render2', state.uid, diffResult)
@@ -206,9 +208,10 @@ export const hotReload = async (state) => {
     state.y,
     state.width,
     state.height,
-    Workspace.state.workspacePath, // TODO use workspace uri
+    state.applicationId === undefined ? Workspace.state.workspacePath : ApplicationRegistry.get(state.applicationId).workspaceUri,
     state.platform,
     state.assetDir,
+    state.applicationId,
   )
   await SourceControlWorker.invoke('SourceControl.loadContent', state.uid, savedState)
   const diffResult = await SourceControlWorker.invoke('SourceControl.diff2', state.uid)

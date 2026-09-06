@@ -251,11 +251,12 @@ const createWorkerViewletInternal = ({ adapter, config, context, worker }) => {
   }
 
   const runLoadContent = async (currentState, savedState, args, createMethod, loadMethod, isHotReload) => {
-    const loadState = adapter.prepareLoadState(currentState, { context, isHotReload, savedState, worker })
+    const applicationContext = getApplicationContext(currentState, context)
+    const loadState = adapter.prepareLoadState(currentState, { context: applicationContext, isHotReload, savedState, worker })
     const invocation = createInvocation(loadState, context, { args, savedState })
     await invokeConfiguredMethod(worker, createMethod, invocation)
     await invokeConfiguredMethod(worker, loadMethod, invocation)
-    await adapter.afterLoadContent({ context, isHotReload, savedState, state: loadState, worker })
+    await adapter.afterLoadContent({ context: applicationContext, isHotReload, savedState, state: loadState, worker })
     const diffMethod = isHotReload ? methods.hotReloadDiff || methods.diff : methods.diff
     const renderMethod = isHotReload ? methods.hotReloadRender || methods.render : methods.render
     const renderedState = await runRenderPipeline(loadState, invocation.arguments, diffMethod, renderMethod, isHotReload)

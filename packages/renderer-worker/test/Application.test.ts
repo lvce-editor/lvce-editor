@@ -4,6 +4,7 @@ import * as Id from '../src/parts/Id/Id.js'
 import * as ViewletStates from '../src/parts/ViewletStates/ViewletStates.js'
 
 jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () => ({ invoke: jest.fn(async () => {}) }))
+jest.unstable_mockModule('../src/parts/ExtensionManagementWorker/ExtensionManagementWorker.js', () => ({ invoke: jest.fn(async () => {}) }))
 jest.unstable_mockModule('../src/parts/ViewletModule/ViewletModule.js', () => ({ load: jest.fn() }))
 jest.unstable_mockModule('../src/parts/Viewlet/Viewlet.js', () => ({ dispose: jest.fn(async (uid) => ViewletStates.remove(uid)) }))
 jest.unstable_mockModule('../src/parts/ViewletManager/ViewletManager.js', () => ({
