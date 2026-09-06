@@ -13,7 +13,10 @@
   right: 30px;
   bottom: 30px;
   width: 250px;
-  height: 75px;
+  max-width: calc(100vw - 60px);
+  max-height: calc(100vh - 60px);
+  display: flex;
+  flex-direction: column;
   padding: 10px 5px;
   background: rgb(40, 46, 47);
   box-shadow: rgb(0 0 0 / 36%) 0px 0px 8px 2px;
@@ -21,8 +24,9 @@
 
 .NotificationMessage {
   line-height: 22px;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  overflow-y: auto;
+  overflow-wrap: anywhere;
+  min-height: 0;
   flex: 1;
   user-select: text;
   margin: 0;

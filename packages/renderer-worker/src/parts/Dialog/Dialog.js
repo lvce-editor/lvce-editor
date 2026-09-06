@@ -98,7 +98,12 @@ export const showMessage = async (message, options) => {
     }
     await handleClick(index)
   } else {
-    await Viewlet.openWidget(ViewletModuleId.Dialog, message, options)
+    // Prepared errors use `type` for the error class, not the dialog severity.
+    await Viewlet.openWidget(ViewletModuleId.Dialog, {
+      message: message.message,
+      title: message.type || message.name || 'Error',
+      type: 'error',
+    })
   }
 }
 
