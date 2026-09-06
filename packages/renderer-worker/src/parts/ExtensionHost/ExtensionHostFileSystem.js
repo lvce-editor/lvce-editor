@@ -6,6 +6,8 @@ import * as GetProtocol from '../GetProtocol/GetProtocol.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as ExtensionHostShared from './ExtensionHostShared.js'
 
+// Refresh can call back into the editor or Explorer that is awaiting this mutation.
+// Do not make the completed filesystem operation wait for that refresh.
 const notifyWorkspaceChanged = async (changes) => {
   await Promise.allSettled([Command.execute('Layout.handleWorkspaceRefresh', changes), Command.execute('Layout.refreshSourceControlBadgeCount')])
 }
@@ -79,7 +81,7 @@ export const remove = async (uri) => {
     legacyParams: [path],
     protocol,
   })
-  await notifyWorkspaceChanged({
+  void notifyWorkspaceChanged({
     deleted: [uri],
   })
   return result
@@ -100,7 +102,7 @@ export const rename = async (oldUri, newUri) => {
     legacyParams: [oldPath, newPath],
     protocol,
   })
-  await notifyWorkspaceChanged({
+  void notifyWorkspaceChanged({
     renamed: [[oldUri, newUri]],
   })
   return result
@@ -126,7 +128,7 @@ export const createFile = async (uri) => {
     legacyParams: [path, ''],
     protocol,
   })
-  await notifyWorkspaceChanged({
+  void notifyWorkspaceChanged({
     changed: [uri],
   })
   return result
@@ -152,7 +154,7 @@ export const writeFile = async (uri, content) => {
     legacyParams: [path, content],
     protocol,
   })
-  await notifyWorkspaceChanged({
+  void notifyWorkspaceChanged({
     changed: [uri],
   })
   return result
