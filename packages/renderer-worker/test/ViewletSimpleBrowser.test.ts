@@ -1954,3 +1954,29 @@ test('opens each terminal URL in a new selected tab without replacing existing t
   expect(ElectronWebContentsViewFunctions.focus).toHaveBeenLastCalledWith(15)
   expect(ElectronWebContentsView.disposeWebContentsView).not.toHaveBeenCalled()
 })
+
+test('selects a tab on primary pointer down', async () => {
+  const state = createTwoTabState()
+
+  const newState = await ViewletSimpleBrowser.handleTabPointerDown(state, '1', 0)
+
+  expect(newState.selectedTabIndex).toBe(1)
+  expect(ElectronWebContentsViewFunctions.show).toHaveBeenCalledWith(13)
+})
+
+test.each([1, 2])('does not select a tab on pointer down with button %s', async (button) => {
+  const state = createTwoTabState()
+
+  await expect(ViewletSimpleBrowser.handleTabPointerDown(state, '1', button)).resolves.toBe(state)
+  expect(ElectronWebContentsViewFunctions.show).not.toHaveBeenCalled()
+})
+
+test('pointer down dismisses the hover even when the tab is already selected', async () => {
+  const state = { ...createTwoTabState(), tabHover: { index: 0 }, overlayIds: ['tab-hover'] }
+
+  const newState = await ViewletSimpleBrowser.handleTabPointerDown(state, '0', 0)
+
+  expect(newState.selectedTabIndex).toBe(0)
+  expect(newState.tabHover).toBeUndefined()
+  expect(newState.overlayIds).toEqual([])
+})

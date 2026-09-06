@@ -28,6 +28,7 @@ export const Commands = {
   handleKeyBinding: SimpleBrowser.handleKeyBinding,
   handlePageFaviconUpdated: SimpleBrowser.handlePageFaviconUpdated,
   handleTitleUpdated: SimpleBrowser.handleTitleUpdated,
+  handleTabPointerDown: SimpleBrowser.handleTabPointerDown,
   handleWillNavigate: SimpleBrowser.handleWillNavigate,
   hideTabHover: SimpleBrowser.hideTabHover,
   hideOverlay: SimpleBrowser.hideOverlay,
