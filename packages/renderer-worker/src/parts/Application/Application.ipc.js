@@ -8,4 +8,5 @@ export const Commands = {
   execute: Application.execute,
   executeForView: Application.executeForView,
   resize: Application.resize,
+  waitForHost: Application.waitForHost,
 }

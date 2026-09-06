@@ -1,4 +1,5 @@
 import * as Bounds from '../Bounds/Bounds.js'
+import * as Application from '../Application/Application.ts'
 import * as ColorTheme from '../ColorTheme/ColorTheme.js'
 import * as Command from '../Command/Command.js'
 import * as CleanAuthCallbackUrl from '../CleanAuthCallbackUrl/CleanAuthCallbackUrl.js'
@@ -177,7 +178,8 @@ export const startup = async (platform, assetDir) => {
   LifeCycle.mark(LifeCyclePhase.Twelve)
 
   Performance.mark(PerformanceMarkerType.WillOpenWorkspace)
-  await Workspace.hydrate(initData.Location)
+  const isApplicationHost = platform === PlatformType.Web && new URL(initData.Location.href).searchParams.has('applicationHost')
+  if (!isApplicationHost) await Workspace.hydrate(initData.Location)
   Performance.mark(PerformanceMarkerType.DidOpenWorkspace)
 
   if (promptOptions !== undefined) {
@@ -199,6 +201,14 @@ export const startup = async (platform, assetDir) => {
   Performance.mark(PerformanceMarkerType.DidLoadColorTheme)
 
   LifeCycle.mark(LifeCyclePhase.Four)
+
+  if (isApplicationHost) {
+    await Languages.hydrate(platform, assetDir)
+    await IconTheme.hydrate(platform, assetDir)
+    Application.markHostReady()
+    LifeCycle.mark(LifeCyclePhase.Fifteen)
+    return
+  }
 
   Performance.mark(PerformanceMarkerType.WillShowLayout)
   const layout = ViewletManager.create(ViewletModule.load, ViewletModuleId.Layout, 0, '', 0, 0, 0, 0)

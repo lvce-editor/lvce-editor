@@ -1,4 +1,5 @@
 import { beforeEach, expect, jest, test } from '@jest/globals'
+import * as ApplicationRegistry from '../src/parts/ApplicationRegistry/ApplicationRegistry.ts'
 import { CancelationError } from '../src/parts/Errors/CancelationError.js'
 import * as VirtualDomElements from '../src/parts/VirtualDomElements/VirtualDomElements.js'
 import * as ViewletStates from '../src/parts/ViewletStates/ViewletStates.js'
@@ -50,6 +51,29 @@ const Command = await import('../src/parts/Command/Command.js')
 const ViewletManager = await import('../src/parts/ViewletManager/ViewletManager.js')
 const ViewletExtensionViewRender = await import('../src/parts/ViewletExtensionView/ViewletExtensionViewRender.ts')
 const ViewletLayout = await import('../src/parts/ViewletLayout/ViewletLayout.ipc.js')
+
+test('UID-targeted async rendering ignores focus and never falls back after disposal', async () => {
+  const renderPending = Object.assign(
+    jest.fn((state) => state),
+    { targetUid: true },
+  )
+  const factory = {
+    Commands: { renderPending },
+    create: () => ({ uid: 91 }),
+    loadContent: (state) => state,
+    render: [],
+  }
+  await ViewletManager.load({ getModule: async () => factory, id: 'TargetedRender', uid: 91, type: 0 })
+  const other = { uid: 92 }
+  ViewletStates.set(92, { factory, moduleId: 'TargetedRender', renderedState: other, state: other })
+  ViewletStates.state.focusedInstanceByType.TargetedRender = 92
+  await Command.execute('TargetedRender.renderPending', 91)
+  expect(renderPending).toHaveBeenLastCalledWith(expect.objectContaining({ uid: 91 }))
+  ViewletStates.remove(91)
+  renderPending.mockClear()
+  await Command.execute('TargetedRender.renderPending', 91)
+  expect(renderPending).not.toHaveBeenCalled()
+})
 
 test('runLoadContentLater starts deferred loading once', async () => {
   const loadContentLater = jest.fn(async (_state: unknown) => {})
@@ -931,6 +955,30 @@ test('load should mark the loaded instance as focused for its module type', asyn
   await ViewletManager.load(state)
 
   expect(ViewletStates.getFocusedInstanceByType('ChatDebug')).toBe(1)
+})
+
+test('loading an unfocused preview does not redirect source editor keyboard commands', async () => {
+  jest.mocked(RendererProcess.invoke).mockResolvedValue(undefined)
+  ApplicationRegistry.create({ id: 'preview', layoutUid: 90, href: '/', workspacePath: '/', workspaceUri: 'memfs:///' })
+  ViewletStates.state.focusedInstanceByType.Editor = 42
+  const module = {
+    create: jest.fn(() => ({})),
+    loadContent: jest.fn(async (state) => state),
+    hasFunctionalRender: true,
+    render: () => [
+      ['Viewlet.setFocusContext', 1, 1],
+      ['Viewlet.focus', 1],
+    ],
+  }
+  const viewlet = { ...ViewletManager.create(async () => module, 'Editor', 0, 'test', 0, 0, 600, 800), applicationId: 'preview', moduleId: 'Editor' }
+  try {
+    const commands = await ViewletManager.load({ ...viewlet, show: false }, false, false)
+    expect(commands).not.toEqual(expect.arrayContaining([['Viewlet.focus', 1]]))
+    expect(ViewletStates.state.focusedInstanceByType.Editor).toBe(42)
+  } finally {
+    ViewletStates.reset()
+    ApplicationRegistry.remove('preview')
+  }
 })
 
 test('load - custom error renderer preserves the original error and does not append a detached viewlet', async () => {

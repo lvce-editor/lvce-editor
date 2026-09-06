@@ -2122,7 +2122,7 @@ const getResizeCommands = async (oldState: LayoutState, newState: LayoutState) =
     modules.map(async (module) => {
       const { kTop, kLeft, kWidth, kHeight, moduleId } = module
       const instanceId = isPreviewModule(module) ? getPreviewInstanceId(newState, module) : moduleId
-      const instance = ViewletStates.getInstance(instanceId)
+      const instance = ViewletStates.getInstance(instanceId, newState.applicationId)
       if (!instance) {
         return []
       }
@@ -2661,16 +2661,23 @@ export const setUpdateState = async (state, updateState) => {
   return callGlobalEvent(state, 'handleUpdateStateChange', updateState)
 }
 
-const handleExtensionFileChanges = async (refresh: WorkspaceRefresh): Promise<void> => {
+const handleExtensionFileChanges = async (refresh: WorkspaceRefresh, applicationId?: string): Promise<void> => {
   try {
-    await ExtensionManagementWorker.invoke('Extensions.handleFileChanges', refresh)
+    if (applicationId === undefined) {
+      await ExtensionManagementWorker.invoke('Extensions.handleFileChanges', refresh)
+    } else {
+      await ExtensionManagementWorker.invoke('Extensions.invokeForApplication', applicationId, 'Extensions.handleFileChanges', refresh)
+    }
   } catch {
     // Older extension management workers do not support file change listeners.
   }
 }
 
 export const handleWorkspaceRefresh = async (state: LayoutState, refresh: WorkspaceRefresh = {}) => {
-  const [result] = await Promise.all([callGlobalEvent(state, 'handleWorkspaceRefresh', refresh), handleExtensionFileChanges(refresh)])
+  const [result] = await Promise.all([
+    callGlobalEvent(state, 'handleWorkspaceRefresh', refresh),
+    handleExtensionFileChanges(refresh, state.applicationId),
+  ])
   return result
 }
 
@@ -2729,6 +2736,7 @@ export const refreshSourceControlBadgeCount = async (state: LayoutState): Promis
       state.applicationId === undefined ? Workspace.state.workspacePath : ApplicationRegistry.get(state.applicationId).workspacePath,
       assetDir,
       Platform.platform,
+      ...(state.applicationId === undefined ? [] : [state.applicationId]),
     )
     return setBadgeCount(state, ViewletModuleId.SourceControl, badgeCount)
   } catch {

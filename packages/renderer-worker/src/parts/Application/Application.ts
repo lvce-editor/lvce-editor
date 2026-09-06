@@ -1,6 +1,9 @@
 import * as ApplicationRegistry from '../ApplicationRegistry/ApplicationRegistry.ts'
+import * as ApplicationFileSystem from '../ApplicationFileSystem/ApplicationFileSystem.ts'
 import * as Command from '../Command/Command.js'
+import * as ExtensionManagementWorker from '../ExtensionManagementWorker/ExtensionManagementWorker.js'
 import * as Id from '../Id/Id.js'
+import * as Platform from '../Platform/Platform.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
@@ -16,11 +19,21 @@ export interface ApplicationOptions {
   readonly width: number
   readonly workspacePath: string
   readonly workspaceUri: string
+  readonly extensions?: readonly any[]
+  readonly files?: Readonly<Record<string, string>>
+  readonly textFileExtensions?: readonly string[]
 }
 
 const disposals = new Map<string, Promise<void>>()
+const hostReady = Promise.withResolvers<void>()
+export const markHostReady = (): void => hostReady.resolve()
+export const waitForHost = (): Promise<void> => hostReady.promise
 
 const initialize = async (options: ApplicationOptions, layoutUid: number): Promise<number> => {
+  await ExtensionManagementWorker.invoke('Extensions.createApplication', options.id, Platform.getPlatform(), options.extensions || [])
+  for (const [uri, content] of Object.entries(options.files || {})) {
+    await ApplicationFileSystem.execute(options.id, 'writeFile', uri, content)
+  }
   const commands = await ViewletManager.load(
     {
       applicationId: options.id,
@@ -61,6 +74,7 @@ export const create = async (options: ApplicationOptions): Promise<number> => {
     href: options.href,
     workspacePath: options.workspacePath,
     workspaceUri: options.workspaceUri,
+    textFileExtensions: options.textFileExtensions,
   })
   try {
     return await ApplicationRegistry.track(options.id, () => initialize(options, layoutUid))
@@ -68,7 +82,10 @@ export const create = async (options: ApplicationOptions): Promise<number> => {
     try {
       await dispose(options.id)
     } catch (cleanupError) {
-      throw new AggregateError([error, cleanupError], `Failed to create application ${options.id}`)
+      throw new AggregateError(
+        [error, cleanupError],
+        `Failed to create application ${options.id}: ${String(error)}; cleanup: ${String(cleanupError)}`,
+      )
     }
     throw error
   }
@@ -76,7 +93,66 @@ export const create = async (options: ApplicationOptions): Promise<number> => {
 
 export const execute = (applicationId: string, command: string, ...args: readonly any[]): Promise<any> => {
   const application = ApplicationRegistry.assertOpen(applicationId)
+  if (command === 'Main.openInput' && application.textFileExtensions?.length) {
+    const [options] = args
+    const uri = options.editorInput?.uri
+    if (typeof uri === 'string' && application.textFileExtensions.some((extension) => uri.endsWith(extension))) {
+      return ApplicationRegistry.track(applicationId, () =>
+        ViewletManager.executeForApplication(applicationId, command, {
+          ...options,
+          editorInput: { ...options.editorInput, type: 'editor', forceText: true },
+        }),
+      )
+    }
+  }
+  if (command === 'Main.openUri' && application.textFileExtensions?.length) {
+    const [input, focus = true] = args
+    const uri = typeof input === 'string' ? input : input.uri
+    if (application.textFileExtensions.some((extension) => uri.endsWith(extension))) {
+      return ApplicationRegistry.track(applicationId, () =>
+        ViewletManager.executeForApplication(applicationId, 'Main.openInput', {
+          editorInput: { type: 'editor', uri, forceText: true },
+          focus: typeof input === 'string' ? focus : input.focus,
+          preview: typeof input === 'string' ? false : input.preview,
+          reuseExisting: typeof input === 'string' ? true : input.reuseExisting,
+        }),
+      )
+    }
+  }
+  if (command.startsWith('FileSystem.')) {
+    return ApplicationRegistry.track(applicationId, async () => {
+      const method = command.slice('FileSystem.'.length)
+      const result = await ApplicationFileSystem.execute(applicationId, method, ...args)
+      if (
+        method === 'writeFile' ||
+        method === 'remove' ||
+        method === 'rename' ||
+        method === 'mkdir' ||
+        method === 'createFile' ||
+        method === 'copy'
+      ) {
+        const changes =
+          method === 'remove'
+            ? { deleted: [args[0]] }
+            : method === 'rename'
+              ? { renamed: [[args[0], args[1]]] }
+              : { changed: [method === 'copy' ? args[1] : args[0]] }
+        if (method !== 'writeFile' || args[3] !== false) {
+          await ViewletManager.executeForApplication(applicationId, 'Layout.handleWorkspaceRefresh', changes)
+        } else {
+          await ExtensionManagementWorker.invoke('Extensions.invokeForApplication', applicationId, 'Extensions.handleFileChanges', changes)
+        }
+        await RendererProcess.invoke('ApplicationHost.fileSaved', applicationId, method === 'copy' ? args[1] : args[0])
+      }
+      return result
+    })
+  }
   switch (command) {
+    case 'ExtensionHostSourceControl.getEnabledProviderIds':
+    case 'ExtensionHostSourceControl.getFileDecorations':
+      return ApplicationRegistry.track(applicationId, () =>
+        ExtensionManagementWorker.invoke('Extensions.invokeForApplication', applicationId, command, ...args),
+      )
     case 'Workspace.getUri':
     case 'Workspace.getWorkspaceUri':
       return Promise.resolve(application.workspaceUri)
@@ -137,6 +213,12 @@ const disposeApplication = async (applicationId: string): Promise<void> => {
     }
   }
   ApplicationRegistry.remove(applicationId)
+  ApplicationFileSystem.dispose(applicationId)
+  try {
+    await ExtensionManagementWorker.invoke('Extensions.disposeApplication', applicationId)
+  } catch (error) {
+    errors.push(error)
+  }
   if (errors.length > 0) {
     throw new AggregateError(errors, `Failed to dispose application ${applicationId}`)
   }

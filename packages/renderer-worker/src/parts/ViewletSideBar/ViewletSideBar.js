@@ -335,7 +335,7 @@ export const close = (state) => {
 export const resize = async (state, dimensions) => {
   const { titleAreaHeight } = state
   const childDimensions = getContentDimensions(dimensions, titleAreaHeight)
-  const currentViewletInstance = ViewletStates.getInstance(state.currentViewletId)
+  const currentViewletInstance = ViewletStates.getByUid(state.childUid)
   const newState = {
     ...state,
     ...dimensions,
@@ -356,11 +356,15 @@ export const resize = async (state, dimensions) => {
 
 export const focus = async (state) => {
   const { currentViewletId } = state
-  const currentViewlet = ViewletStates.getInstance(currentViewletId)
+  const currentViewlet = ViewletStates.getByUid(state.childUid)
   if (!currentViewlet) {
     return state
   }
-  await Command.execute(`${currentViewletId}.focus`)
+  if (state.applicationId === undefined) {
+    await Command.execute(`${currentViewletId}.focus`)
+  } else {
+    await ViewletManager.executeForApplication(state.applicationId, `${currentViewletId}.focus`)
+  }
   // if (!currentViewlet.factory.focus) {
   //   throw new Error(`missing focus function for ${currentViewletId}`)
   // }

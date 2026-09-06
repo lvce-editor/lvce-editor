@@ -4,6 +4,7 @@ export interface Application {
   readonly workspaceUri: string
   readonly workspacePath: string
   readonly href: string
+  readonly textFileExtensions?: readonly string[]
 }
 
 const applications = new Map<string, Application>()

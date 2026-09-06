@@ -1,4 +1,6 @@
 import * as Assert from '../Assert/Assert.ts'
+import * as ApplicationRegistry from '../ApplicationRegistry/ApplicationRegistry.ts'
+import * as Application from '../Application/Application.ts'
 import * as Command from '../Command/Command.js'
 import * as DirentType from '../DirentType/DirentType.js'
 import * as IconTheme from '../IconTheme/IconTheme.js'
@@ -48,15 +50,17 @@ export const loadContent = async (state, savedState) => {
     state.y,
     state.width,
     state.height,
-    Workspace.state.workspacePath, // TODO use workspace uri
+    state.applicationId === undefined ? Workspace.state.workspacePath : ApplicationRegistry.get(state.applicationId).workspaceUri,
     platform,
     assetDir,
+    state.applicationId,
   )
   const diffResult = await SourceControlWorker.invoke('SourceControl.diff2', state.uid)
   const commands = await SourceControlWorker.invoke('SourceControl.render2', state.uid, diffResult)
   const actionsDom = await SourceControlWorker.invoke('SourceControl.renderActions2', state.uid)
   const badgeCount = await SourceControlWorker.invoke('SourceControl.getBadgeCount', state.uid)
-  await Command.execute('Layout.setBadgeCount', ViewletModuleId.SourceControl, badgeCount)
+  if (state.applicationId === undefined) await Command.execute('Layout.setBadgeCount', ViewletModuleId.SourceControl, badgeCount)
+  else await Application.execute(state.applicationId, 'Layout.setBadgeCount', ViewletModuleId.SourceControl, badgeCount)
   return {
     ...state,
     commands,
@@ -150,7 +154,8 @@ export const handleWorkspaceChange = async (state) => {
   const commands = await SourceControlWorker.invoke('SourceControl.render2', state.uid, diffResult)
   const actionsDom = await SourceControlWorker.invoke('SourceControl.renderActions2', state.uid)
   const badgeCount = await SourceControlWorker.invoke('SourceControl.getBadgeCount', state.uid)
-  await Command.execute('Layout.setBadgeCount', ViewletModuleId.SourceControl, badgeCount)
+  if (state.applicationId === undefined) await Command.execute('Layout.setBadgeCount', ViewletModuleId.SourceControl, badgeCount)
+  else await Application.execute(state.applicationId, 'Layout.setBadgeCount', ViewletModuleId.SourceControl, badgeCount)
   return {
     ...loadingState,
     actionsDom,
@@ -206,9 +211,10 @@ export const hotReload = async (state) => {
     state.y,
     state.width,
     state.height,
-    Workspace.state.workspacePath, // TODO use workspace uri
+    state.applicationId === undefined ? Workspace.state.workspacePath : ApplicationRegistry.get(state.applicationId).workspaceUri,
     state.platform,
     state.assetDir,
+    state.applicationId,
   )
   await SourceControlWorker.invoke('SourceControl.loadContent', state.uid, savedState)
   const diffResult = await SourceControlWorker.invoke('SourceControl.diff2', state.uid)

@@ -1,6 +1,7 @@
 // @ts-nocheck
 import * as Assert from '../Assert/Assert.ts'
 import * as ApplicationRegistry from '../ApplicationRegistry/ApplicationRegistry.ts'
+import * as FilterFocusCommands from '../FilterFocusCommands/FilterFocusCommands.js'
 import * as Command from '../Command/Command.js'
 import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
 import { CancelationError } from '../Errors/CancelationError.js'
@@ -175,6 +176,13 @@ const runFnWithSideEffect = async (instance, id, key, fn, ...args) => {
 const wrapViewletCommand = (id, key, fn) => {
   Assert.string(id)
   Assert.fn(fn)
+  if (fn.targetUid) {
+    return async (uid, ...args) => {
+      const instance = ViewletStates.getByUid(uid)
+      if (!instance || instance.factory.Commands?.[key] !== fn) return
+      return runFn(instance, uid, key, fn, args)
+    }
+  }
   if (fn.returnValue) {
     const wrappedViewletCommand = async (...args) => {
       // Get the focused instance of this type, or fall back to first instance
@@ -804,7 +812,9 @@ const loadInternal = async (viewlet, focus, restore, restoreState) => {
     if (viewlet.id === ViewletModuleId.Layout && applicationId === undefined) {
       ViewletStates.set(ViewletModuleId.Layout, instance)
     }
-    ViewletStates.setFocusedInstanceByType(viewletUid, moduleId)
+    if (applicationId === undefined || focus) {
+      ViewletStates.setFocusedInstanceByType(viewletUid, moduleId)
+    }
     if (newState.badgeCount) {
       await Command.execute('Layout.handleBadgeCountChange')
     }
@@ -850,12 +860,14 @@ const loadInternal = async (viewlet, focus, restore, restoreState) => {
         // TODO avoid side effect here
         // instead, let component send commands to renderer process and renderer worker
         // so that those commands are not mixed together
-        updateDynamicFocusContext(allCommands)
-        return allCommands
+        const finalCommands = applicationId !== undefined && !focus ? FilterFocusCommands.filterFocusCommands(allCommands) : allCommands
+        updateDynamicFocusContext(finalCommands)
+        return finalCommands
       }
       commands.push(...extraCommands)
-      updateDynamicFocusContext(commands)
-      await RendererProcess.invoke(/* Viewlet.sendMultiple */ kSendMultiple, /* commands */ commands)
+      const finalCommands = applicationId !== undefined && !focus ? FilterFocusCommands.filterFocusCommands(commands) : commands
+      updateDynamicFocusContext(finalCommands)
+      await RendererProcess.invoke(/* Viewlet.sendMultiple */ kSendMultiple, /* commands */ finalCommands)
       runLoadContentLaterForCreatedViewlets(commands)
     } else if (!module.hasFunctionalEvents && shouldRender) {
       const allCommands = [

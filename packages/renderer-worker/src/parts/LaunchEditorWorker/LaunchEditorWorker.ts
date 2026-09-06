@@ -25,6 +25,8 @@ export const launchEditorWorker = async () => {
     ipc = IpcParentWithModuleWorkerAndWorkaroundForChromeDevtoolsBug.wrap(port)
   }
   HandleIpc.handleIpc(ipc)
+  const range = Id.reserve(1_000_000)
+  await JsonRpc.invoke(ipc, 'Id.configure', range.start, range.end)
   const syntaxHighlightingWorker = true
   const syncIncremental = true
   await JsonRpc.invoke(ipc, 'Initialize.initialize', syntaxHighlightingWorker, syncIncremental)
