@@ -23,6 +23,8 @@ export const test = async ({ Command, KeyBoard, Locator, Settings, expect }) => 
   const terminal = Locator('.XtermTerminal')
   await expect(terminal).toBeVisible()
   const terminalViewport = terminal.locator('.xterm-viewport')
+  await expect(terminal).toHaveCSS('background-color', 'rgb(30, 35, 36)')
+  await expect(terminalViewport).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)')
   await expect(terminalViewport).toHaveCSS('scrollbar-color', 'rgba(57, 71, 71, 0.6) rgba(0, 0, 0, 0)')
   const terminalInput = terminal.locator('.xterm-helper-textarea')
   await expect(terminalInput).toBeFocused()
