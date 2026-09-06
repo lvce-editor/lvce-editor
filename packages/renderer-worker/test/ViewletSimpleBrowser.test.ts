@@ -1935,3 +1935,22 @@ test('go closes suggestions and submits the input value', async () => {
   expect(SimpleBrowserSnapshot.dispose).toHaveBeenCalledWith('blob:https://example.com/snapshot')
   expect(ElectronWebContentsViewFunctions.setIframeSrc).toHaveBeenCalledWith(12, 'https://example.com')
 })
+
+test('opens each terminal URL in a new selected tab without replacing existing tabs', async () => {
+  // @ts-ignore
+  ElectronWebContentsView.createWebContentsView.mockResolvedValueOnce(14).mockResolvedValueOnce(15)
+  const state = createTwoTabState()
+  const uri = 'http://localhost:3333/'
+
+  const first = await ViewletSimpleBrowser.openTab(state, uri, 'foreground-tab')
+  const second = await ViewletSimpleBrowser.openTab(first, uri, 'foreground-tab')
+
+  expect(second.tabs).toHaveLength(4)
+  expect(second.tabs.slice(0, 2)).toEqual(state.tabs)
+  expect(first).toMatchObject({ browserViewId: 14, inputValue: uri, iframeSrc: uri, selectedTabIndex: 2 })
+  expect(second).toMatchObject({ browserViewId: 15, inputValue: uri, iframeSrc: uri, selectedTabIndex: 3 })
+  expect(ElectronWebContentsViewFunctions.setIframeSrc).toHaveBeenCalledWith(14, uri)
+  expect(ElectronWebContentsViewFunctions.setIframeSrc).toHaveBeenCalledWith(15, uri)
+  expect(ElectronWebContentsViewFunctions.focus).toHaveBeenLastCalledWith(15)
+  expect(ElectronWebContentsView.disposeWebContentsView).not.toHaveBeenCalled()
+})

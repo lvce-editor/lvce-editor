@@ -31,6 +31,7 @@ export const Commands = {
   handleWillNavigate: SimpleBrowser.handleWillNavigate,
   hideTabHover: SimpleBrowser.hideTabHover,
   hideOverlay: SimpleBrowser.hideOverlay,
+  openTab: SimpleBrowser.openTab,
   muteTab: SimpleBrowser.muteTab,
   reloadTab: SimpleBrowser.reloadTab,
   insertCss: ViewletSimpleBrowserInsertCss.insertCss,

@@ -5,6 +5,9 @@ import * as GetTerminalSpawnOptions from '../GetTerminalSpawnOptions/GetTerminal
 import * as Preferences from '../Preferences/Preferences.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as TerminalWorker from '../TerminalWorker/TerminalWorker.js'
+import * as Viewlet from '../Viewlet/Viewlet.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as WhenExpression from '../WhenExpression/WhenExpression.js'
 import * as Workspace from '../Workspace/Workspace.js'
 
@@ -50,6 +53,17 @@ export const loadContentLater = async (state) => {
 
 export const handleInput = async (state, data) => {
   await TerminalWorker.invoke('Terminal.write', state.uid, data)
+  return state
+}
+
+export const handleLink = async (state, uri) => {
+  Assert.string(uri)
+  if (!URL.canParse(uri) || !/^https?:\/\//i.test(uri)) {
+    return state
+  }
+  await Command.execute('Layout.showPreview', 'simple-browser://')
+  const { previewId } = ViewletStates.getState(ViewletModuleId.Layout)
+  await Viewlet.executeViewletCommand(previewId, 'openTab', uri, 'foreground-tab')
   return state
 }
 
