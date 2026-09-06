@@ -3,6 +3,7 @@ import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEven
 import * as GetSimpleBrowserVirtualDom from '../GetSimpleBrowserVirtualDom/GetSimpleBrowserVirtualDom.js'
 import * as InputName from '../InputName/InputName.js'
 import * as SimpleBrowserPageSnapshot from '../SimpleBrowserPageSnapshot/SimpleBrowserPageSnapshot.js'
+import * as TabDrag from './ViewletSimpleBrowserTabDrag.js'
 
 export const hasFunctionalRender = true
 
@@ -68,6 +69,48 @@ export const renderEventListeners = () => {
       params: ['handleTabPointerDown', 'event.currentTarget.dataset.index', 'event.button'],
     },
     {
+      name: DomEventListenerFunctions.HandleDragStartSimpleBrowserTab,
+      params: ['handleTabDragStart'],
+      stopPropagation: true,
+    },
+    {
+      name: DomEventListenerFunctions.HandleDragEndSimpleBrowserTab,
+      params: ['resetTabDrag'],
+    },
+    {
+      name: DomEventListenerFunctions.HandlePointerUpSimpleBrowserTab,
+      params: ['resetTabDrag'],
+    },
+    {
+      name: DomEventListenerFunctions.HandleDragOverSimpleBrowserTab,
+      params: [
+        'handleTabDragOver',
+        'event.currentTarget.dataset.index',
+        'event.currentTarget.offsetLeft',
+        'event.currentTarget.offsetWidth',
+        'event.currentTarget.parentElement.scrollLeft',
+        'event.clientX',
+      ],
+      preventDefault: true,
+      stopPropagation: true,
+    },
+    {
+      name: DomEventListenerFunctions.HandleDragOverSimpleBrowserTabs,
+      params: ['handleTabsDragOver'],
+      preventDefault: true,
+      stopPropagation: true,
+    },
+    {
+      name: DomEventListenerFunctions.HandleDragLeaveSimpleBrowserTab,
+      params: ['handleTabDragLeave', 'event.clientX', 'event.clientY'],
+    },
+    {
+      name: DomEventListenerFunctions.HandleDropSimpleBrowserTab,
+      params: ['handleTabDrop'],
+      preventDefault: true,
+      stopPropagation: true,
+    },
+    {
       name: DomEventListenerFunctions.HandlePointerDownSimpleBrowserTabAction,
       params: ['hideTabHover'],
       stopPropagation: true,
@@ -125,6 +168,7 @@ const getDom = (state) => {
     state.audioIndicatorEnabled,
     pageSnapshot?.dom,
     state.tabHover,
+    state.tabDropIndex,
     state.fullWidth,
     state.chromeTheme,
   )
@@ -146,6 +190,7 @@ const renderDom = {
       oldState.tabsEnabled === newState.tabsEnabled &&
       oldState.audioIndicatorEnabled === newState.audioIndicatorEnabled &&
       oldState.tabHover === newState.tabHover &&
+      oldState.tabDropIndex === newState.tabDropIndex &&
       areTabsEqual(oldState.tabs, newState.tabs)
     )
   },
@@ -213,4 +258,4 @@ const renderPageSnapshotCss = {
   multiple: true,
 }
 
-export const render = [renderDom, renderAddressValue, renderFocusAddress, renderPageSnapshotCss]
+export const render = [renderDom, renderAddressValue, renderFocusAddress, renderPageSnapshotCss, TabDrag.renderDragData]

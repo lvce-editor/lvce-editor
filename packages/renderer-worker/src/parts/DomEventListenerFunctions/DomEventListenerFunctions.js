@@ -82,3 +82,16 @@ export const HandleWheel = 'handleWheel'
 export const HandleClickSimpleBrowserFullWidth = 'HandleClickSimpleBrowserFullWidth'
 
 export const HandleErrorSimpleBrowserFavicon = 'HandleErrorSimpleBrowserFavicon'
+export const HandleDragStartSimpleBrowserTab = 'handleDragStartSimpleBrowserTab'
+
+export const HandleDragEndSimpleBrowserTab = 'handleDragEndSimpleBrowserTab'
+
+export const HandleDragOverSimpleBrowserTab = 'handleDragOverSimpleBrowserTab'
+
+export const HandleDragLeaveSimpleBrowserTab = 'handleDragLeaveSimpleBrowserTab'
+
+export const HandleDropSimpleBrowserTab = 'handleDropSimpleBrowserTab'
+
+export const HandlePointerUpSimpleBrowserTab = 'handlePointerUpSimpleBrowserTab'
+
+export const HandleDragOverSimpleBrowserTabs = 'handleDragOverSimpleBrowserTabs'

@@ -4,12 +4,20 @@ import * as ViewletSimpleBrowserHandleContextMenu from './ViewletSimpleBrowserHa
 import * as ViewletSimpleBrowserInsertCss from './ViewletSimpleBrowserInsertCss.js'
 import * as ViewletSimpleBrowserInsertJavaScript from './ViewletSimpleBrowserInsertJavaScript.js'
 
+import * as TabDrag from './ViewletSimpleBrowserTabDrag.js'
+
 export const Commands = {
   handleFaviconError: SimpleBrowser.handleFaviconError,
   prepareFullWidth: SimpleBrowser.prepareFullWidth,
   setFullWidth: SimpleBrowser.setFullWidth,
   toggleFullWidth: SimpleBrowser.toggleFullWidth,
   focusAddress: SimpleBrowser.focusAddress,
+  handleTabDragStart: TabDrag.handleTabDragStart,
+  handleTabDragOver: TabDrag.handleTabDragOver,
+  handleTabsDragOver: TabDrag.handleTabsDragOver,
+  handleTabDragLeave: TabDrag.handleTabDragLeave,
+  handleTabDrop: TabDrag.handleTabDrop,
+  resetTabDrag: TabDrag.resetTabDrag,
   acceptSuggestion: SimpleBrowser.acceptSuggestion,
   applySuggestions: SimpleBrowser.applySuggestions,
   closeSuggestions: SimpleBrowser.closeSuggestions,
