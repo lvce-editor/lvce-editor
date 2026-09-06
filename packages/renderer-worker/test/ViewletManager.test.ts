@@ -961,10 +961,19 @@ test('loading an unfocused preview does not redirect source editor keyboard comm
   jest.mocked(RendererProcess.invoke).mockResolvedValue(undefined)
   ApplicationRegistry.create({ id: 'preview', layoutUid: 90, href: '/', workspacePath: '/', workspaceUri: 'memfs:///' })
   ViewletStates.state.focusedInstanceByType.Editor = 42
-  const module = { create: jest.fn(() => ({})), loadContent: jest.fn(async (state) => state) }
+  const module = {
+    create: jest.fn(() => ({})),
+    loadContent: jest.fn(async (state) => state),
+    hasFunctionalRender: true,
+    render: () => [
+      ['Viewlet.setFocusContext', 1, 1],
+      ['Viewlet.focus', 1],
+    ],
+  }
   const viewlet = { ...ViewletManager.create(async () => module, 'Editor', 0, 'test', 0, 0, 600, 800), applicationId: 'preview', moduleId: 'Editor' }
   try {
-    await ViewletManager.load(viewlet, false, false)
+    const commands = await ViewletManager.load({ ...viewlet, show: false }, false, false)
+    expect(commands).not.toEqual(expect.arrayContaining([['Viewlet.focus', 1]]))
     expect(ViewletStates.state.focusedInstanceByType.Editor).toBe(42)
   } finally {
     ViewletStates.reset()
