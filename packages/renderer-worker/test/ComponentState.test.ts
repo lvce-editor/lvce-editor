@@ -486,3 +486,15 @@ test('refreshes state and DOM editors with their corresponding content', async (
   await ComponentState.waitForRefreshes()
   expect(Viewlet.executeViewletCommand).not.toHaveBeenCalledWith(10, expect.anything(), expect.anything(), expect.anything())
 })
+
+test('refreshes other DOM editors after a direct DOM edit', async () => {
+  const { state, dom } = createDomComponent()
+  const editor = { uid: 10, uri: 'live-component-state:///dom/2.json' }
+  ViewletStates.set(10, { factory: {}, moduleId: 'EditorText', state: editor, renderedState: editor })
+  const editedDom = [{ ...dom[0], className: 'Edited' }]
+  jest.mocked(EditorWorker.invoke).mockResolvedValue(JSON.stringify(dom))
+  jest.mocked(RendererProcess.invoke).mockResolvedValueOnce(undefined).mockResolvedValueOnce(undefined).mockResolvedValue(editedDom)
+  await ComponentState.setDom(2, editedDom)
+  expect(Viewlet.executeViewletCommand).toHaveBeenCalledWith(10, 'loadContent', undefined, { preserveFocus: true })
+  expect(ViewletStates.getState(2)).toBe(state)
+})

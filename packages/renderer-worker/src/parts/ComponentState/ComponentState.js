@@ -331,4 +331,5 @@ export const setDom = async (uid, dom) => {
     return
   }
   await RendererProcess.invoke('Viewlet.setComponentDom', uid, dom)
+  await refreshOpenEditors(uid)
 }
