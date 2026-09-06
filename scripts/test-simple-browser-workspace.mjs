@@ -122,7 +122,7 @@ try {
   await doubleControl(false)
   await expect(page.locator('.BrowserFullWidth')).toHaveCount(1)
   await expect(address).toBeFocused()
-  assert.deepEqual(await address.evaluate((input) => [input.selectionStart, input.selectionEnd]), [2, 8])
+  await expect.poll(() => address.evaluate((input) => [input.selectionStart, input.selectionEnd])).toEqual([2, 8])
   await app.evaluate(({ BrowserWindow }) => BrowserWindow.getAllWindows()[0].setSize(1100, 800))
   await expect.poll(async () => (await page.locator('.SimpleBrowser').boundingBox()).width).toBe(1100)
   await button.click()

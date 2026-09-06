@@ -61,7 +61,20 @@ export const resize = async (state) => {
 export const leave = async (state) => {
   const snapshot = state.browserFullWidth
   if (!snapshot) return { newState: state, commands: [] }
-  const newState = LayoutPoints.getPoints({ ...state, ...snapshot.layout, browserFullWidth: undefined })
+  const layout = { ...snapshot.layout }
+  const contentHeight = Math.max(
+    0,
+    state.windowHeight - (state.titleBarVisible ? state.titleBarHeight : 0) - (layout.statusBarVisible ? state.statusBarHeight : 0),
+  )
+  const panelLimit = layout.panelMaximized ? contentHeight : Math.max(0, contentHeight - 100)
+  layout.panelHeight = Math.min(layout.panelHeight, panelLimit)
+  layout.panelHeightBeforeMaximize = Math.min(layout.panelHeightBeforeMaximize, Math.max(0, contentHeight - 100))
+  const newState = LayoutPoints.getPoints({
+    ...state,
+    ...layout,
+    panelMinHeight: Math.min(state.panelMinHeight, panelLimit),
+    browserFullWidth: undefined,
+  })
   const commands = await ViewletLayout.getResizeCommands(state, newState)
   if (snapshot.browserUid !== state.previewId && snapshot.browserUid !== state.secondaryPreviewId) {
     const browser = ViewletStates.getInstance(snapshot.browserUid)
@@ -95,6 +108,7 @@ export const toggleInternal = async (initialState, requestedUid) => {
   }
   if (!browser) return { newState: state, commands }
   const browserUid = browser.state.uid
+  await RendererProcess.invoke('Window.rememberBrowserParent', browserUid)
   const addressSelection = await RendererProcess.invoke('Window.captureBrowserAddress', browserUid)
   await Viewlet.executeViewletCommand(browserUid, 'prepareFullWidth')
   // Move focus into the retained reference before the layout renderer detaches IDE panes.
@@ -146,6 +160,7 @@ export const afterRender = async (oldState, newState) => {
     return
   }
   if (!previous) return
+  await RendererProcess.invoke('Window.restoreBrowserParent', previous.browserUid)
   if (ViewletStates.getInstance(previous.browserUid)) await Viewlet.executeViewletCommand(previous.browserUid, 'setFullWidth', false)
   for (const uid of previous.hiddenBrowserUids) {
     const browser = ViewletStates.getInstance(uid)
@@ -170,4 +185,11 @@ export const afterRender = async (oldState, newState) => {
 export const loadContentLater = async (state) => {
   await configureGesture()
   return state
+}
+
+export const handleDispose = async (browserUid) => {
+  const layout = ViewletStates.getValues().find(
+    (instance) => instance.moduleId === 'Layout' && instance.state.browserFullWidth?.browserUid === browserUid,
+  )
+  if (layout) await Viewlet.executeViewletCommand(layout.state.uid, 'leaveSimpleBrowserFullWidth')
 }

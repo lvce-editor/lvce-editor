@@ -76,7 +76,9 @@ jobs:
           PLAYWRIGHT_BROWSERS_PATH: 0
       - name: Test Simple Browser workspace switching
         if: matrix.os == 'ubuntu-24.04'
-        run: xvfb-run -a npm run test:simple-browser-workspace
+        run: |
+          node packages/main-process/node_modules/electron/install.js
+          xvfb-run -a npm run test:simple-browser-workspace
       - name: Test bundled font loading
         if: matrix.os == 'ubuntu-24.04'
         working-directory: ./packages/extension-host-worker-tests

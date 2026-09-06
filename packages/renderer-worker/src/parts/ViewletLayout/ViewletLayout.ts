@@ -718,6 +718,11 @@ export const getSideBarFocusMode = (state: LayoutState): boolean => {
 }
 
 export const enterSideBarFocusMode = async (state: LayoutState, target: 'primary' | 'secondary' = 'primary'): Promise<LayoutStateResult> => {
+  if (state.browserFullWidth) {
+    const restored = await BrowserFullWidth.leave(state)
+    const result = await enterSideBarFocusMode(restored.newState, target)
+    return { newState: result.newState, commands: [...restored.commands, ...result.commands] }
+  }
   const targetVisible = target === 'secondary' ? state.secondarySideBarVisible : state.sideBarVisible
   if (state.sideBarFocusMode || !targetVisible) {
     return {
@@ -2148,7 +2153,12 @@ export const getResizeCommands = async (oldState: LayoutState, newState: LayoutS
         return []
       }
       const instanceUid = instance.state.uid
-      if (!oldState.browserFullWidth && isEqual(oldState, newState, kTop, kLeft, kWidth, kHeight)) {
+      const expandedBrowserUid = oldState.browserFullWidth?.browserUid
+      const containsExpandedBrowser =
+        expandedBrowserUid !== undefined &&
+        (instanceUid === expandedBrowserUid ||
+          (module === LayoutModules.Main && expandedBrowserUid !== oldState.previewId && expandedBrowserUid !== oldState.secondaryPreviewId))
+      if (!containsExpandedBrowser && isEqual(oldState, newState, kTop, kLeft, kWidth, kHeight)) {
         return []
       }
       const newTop = newState[kTop]
@@ -2735,11 +2745,10 @@ const callGlobalEventAndRefreshProblemsSummary = async (state: LayoutState, even
 export const handleActiveEditorChange = async (state: LayoutState, activeUri: string) => {
   const restored = state.browserFullWidth ? await BrowserFullWidth.leave(state) : { newState: state, commands: [] }
   const eventResult = await callGlobalEvent(restored.newState, 'handleActiveEditorChange', activeUri)
-  eventResult.commands.unshift(...restored.commands)
   const summaryResult = activeUri ? await refreshProblemsSummary(eventResult.newState) : await clearProblemsSummary(eventResult.newState)
   return {
     newState: summaryResult.newState,
-    commands: [...eventResult.commands, ...summaryResult.commands],
+    commands: [...restored.commands, ...eventResult.commands, ...summaryResult.commands],
   }
 }
 
