@@ -1,0 +1,15 @@
+{
+  "id": "sample.filesystem-save",
+  "name": "Filesystem Save",
+  "version": "0.0.0",
+  "browser": "main.js",
+  "isolated": true,
+  "activation": [
+    "onFileSystem:save-test"
+  ],
+  "fileSystemProviders": [
+    {
+      "id": "save-test"
+    }
+  ]
+}

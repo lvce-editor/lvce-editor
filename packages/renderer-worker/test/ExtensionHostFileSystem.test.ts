@@ -1,3 +1,4 @@
+import { setImmediate } from 'node:timers/promises'
 import { beforeEach, expect, jest, test } from '@jest/globals'
 import * as DirentType from '../src/parts/DirentType/DirentType.js'
 
@@ -331,4 +332,26 @@ test('isolated provider dispatch unwraps extension host uris', async () => {
   await expect(ExtensionHostFileSystem.readFile('extension-host://remote-ssh:///test-folder/README.md')).resolves.toBe('content')
 
   expect(invoke).toHaveBeenCalledWith('Extensions.executeFileSystemProviderReadFile', 'remote-ssh', 'remote-ssh:///test-folder/README.md')
+})
+
+test.each([
+  ['writeFile', ['save-test:///note.txt', 'saved']],
+  ['createFile', ['save-test:///note.txt']],
+  ['remove', ['save-test:///note.txt']],
+  ['rename', ['save-test:///note.txt', 'save-test:///renamed.txt']],
+])('%s completes while a workspace refresh is waiting for the caller', async (method, args) => {
+  const refresh = Promise.withResolvers<void>()
+  invoke.mockResolvedValue({ found: true, result: 'mutation completed' })
+  execute.mockReturnValue(refresh.promise)
+  const mutation = ExtensionHostFileSystem[method as keyof typeof ExtensionHostFileSystem](...args)
+  try {
+    // Model a refresh waiting for the current editor/Explorer command to finish.
+    // It must not prevent the filesystem response from reaching that command.
+    const result = await Promise.race([mutation, setImmediate('blocked by refresh')])
+    expect(result).toBe('mutation completed')
+    expect(execute).toHaveBeenCalledWith('Layout.refreshSourceControlBadgeCount')
+  } finally {
+    refresh.resolve()
+    await mutation
+  }
 })
