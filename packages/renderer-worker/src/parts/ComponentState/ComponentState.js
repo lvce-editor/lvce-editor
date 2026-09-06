@@ -8,6 +8,7 @@ import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
 const liveComponentStatePattern = /^live-component-state:\/\/\/(?:dom\/)?(\d+(?:\.\d+)?)\.json$/
+const virtualDomTypes = new Set(Object.values(VirtualDomElements))
 const domEditorUids = new Set()
 const editorUidsByComponentUid = new Map()
 const componentUidByEditorUid = new Map()
@@ -314,7 +315,8 @@ export const setDom = async (uid, dom) => {
     if (
       !node ||
       typeof node !== 'object' ||
-      !Number.isInteger(node.type) ||
+      !virtualDomTypes.has(node.type) ||
+      ((node.type === VirtualDomElements.Text || node.type === VirtualDomElements.Reference) && node.childCount !== 0) ||
       !Number.isInteger(node.childCount) ||
       node.childCount < 0 ||
       remaining === 0

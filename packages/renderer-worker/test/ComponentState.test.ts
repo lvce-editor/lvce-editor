@@ -445,6 +445,12 @@ test('reads the displayed DOM preview and does not reapply unchanged editor cont
 })
 
 test.each([
+  [{ type: 9999, childCount: 0 }],
+  [
+    { type: 4, childCount: 1 },
+    { type: 12, childCount: 1, text: 'invalid' },
+    { type: 4, childCount: 0 },
+  ],
   [{ type: 12, childCount: 0, text: 'text root' }],
   [{ type: 100, childCount: 0, uid: 2 }],
   {},
