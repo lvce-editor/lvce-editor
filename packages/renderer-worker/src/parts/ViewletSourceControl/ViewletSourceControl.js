@@ -1,5 +1,6 @@
 import * as Assert from '../Assert/Assert.ts'
 import * as ApplicationRegistry from '../ApplicationRegistry/ApplicationRegistry.ts'
+import * as Application from '../Application/Application.ts'
 import * as Command from '../Command/Command.js'
 import * as DirentType from '../DirentType/DirentType.js'
 import * as IconTheme from '../IconTheme/IconTheme.js'
@@ -58,7 +59,8 @@ export const loadContent = async (state, savedState) => {
   const commands = await SourceControlWorker.invoke('SourceControl.render2', state.uid, diffResult)
   const actionsDom = await SourceControlWorker.invoke('SourceControl.renderActions2', state.uid)
   const badgeCount = await SourceControlWorker.invoke('SourceControl.getBadgeCount', state.uid)
-  await Command.execute('Layout.setBadgeCount', ViewletModuleId.SourceControl, badgeCount)
+  if (state.applicationId === undefined) await Command.execute('Layout.setBadgeCount', ViewletModuleId.SourceControl, badgeCount)
+  else await Application.execute(state.applicationId, 'Layout.setBadgeCount', ViewletModuleId.SourceControl, badgeCount)
   return {
     ...state,
     commands,
@@ -152,7 +154,8 @@ export const handleWorkspaceChange = async (state) => {
   const commands = await SourceControlWorker.invoke('SourceControl.render2', state.uid, diffResult)
   const actionsDom = await SourceControlWorker.invoke('SourceControl.renderActions2', state.uid)
   const badgeCount = await SourceControlWorker.invoke('SourceControl.getBadgeCount', state.uid)
-  await Command.execute('Layout.setBadgeCount', ViewletModuleId.SourceControl, badgeCount)
+  if (state.applicationId === undefined) await Command.execute('Layout.setBadgeCount', ViewletModuleId.SourceControl, badgeCount)
+  else await Application.execute(state.applicationId, 'Layout.setBadgeCount', ViewletModuleId.SourceControl, badgeCount)
   return {
     ...loadingState,
     actionsDom,

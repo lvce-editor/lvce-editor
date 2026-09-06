@@ -16,6 +16,7 @@ const Application = await import('../src/parts/Application/Application.ts')
 const RendererProcess = await import('../src/parts/RendererProcess/RendererProcess.js')
 const ViewletManager = await import('../src/parts/ViewletManager/ViewletManager.js')
 const Viewlet = await import('../src/parts/Viewlet/Viewlet.js')
+const ExtensionManagementWorker = await import('../src/parts/ExtensionManagementWorker/ExtensionManagementWorker.js')
 
 const options = (id: string) => ({
   id,
@@ -105,4 +106,31 @@ test('a failed component teardown still releases application registrations', asy
 test('invalid dimensions never register an application', async () => {
   await expect(Application.create({ ...options('preview'), width: 0 })).rejects.toThrow('Invalid application root or dimensions')
   expect(() => ApplicationRegistry.get('preview')).toThrow('Application not found')
+})
+
+test('saving an editor file notifies its host and extensions without re-entering the layout command', async () => {
+  await Application.create(options('source'))
+  jest.clearAllMocks()
+  await Application.execute('source', 'FileSystem.writeFile', 'memfs:///main.ts', 'source', undefined, false)
+  expect(ViewletManager.executeForApplication).not.toHaveBeenCalled()
+  expect(ExtensionManagementWorker.invoke).toHaveBeenCalledWith('Extensions.invokeForApplication', 'source', 'Extensions.handleFileChanges', {
+    changed: ['memfs:///main.ts'],
+  })
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('ApplicationHost.fileSaved', 'source', 'memfs:///main.ts')
+})
+
+test('creating and copying source files refreshes only the source application', async () => {
+  await Application.create(options('source'))
+  await Application.create(options('preview'))
+  jest.clearAllMocks()
+  await Application.execute('source', 'FileSystem.createFile', 'memfs:///created.ts')
+  await Application.execute('source', 'FileSystem.copy', 'memfs:///created.ts', 'memfs:///copied.ts')
+  expect(ViewletManager.executeForApplication).toHaveBeenNthCalledWith(1, 'source', 'Layout.handleWorkspaceRefresh', {
+    changed: ['memfs:///created.ts'],
+  })
+  expect(ViewletManager.executeForApplication).toHaveBeenNthCalledWith(2, 'source', 'Layout.handleWorkspaceRefresh', {
+    changed: ['memfs:///copied.ts'],
+  })
+  expect(RendererProcess.invoke).toHaveBeenLastCalledWith('ApplicationHost.fileSaved', 'source', 'memfs:///copied.ts')
+  expect(await Application.execute('preview', 'FileSystem.exists', 'memfs:///copied.ts')).toBe(false)
 })

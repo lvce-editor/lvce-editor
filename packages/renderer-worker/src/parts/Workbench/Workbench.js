@@ -178,7 +178,8 @@ export const startup = async (platform, assetDir) => {
   LifeCycle.mark(LifeCyclePhase.Twelve)
 
   Performance.mark(PerformanceMarkerType.WillOpenWorkspace)
-  await Workspace.hydrate(initData.Location)
+  const isApplicationHost = platform === PlatformType.Web && new URL(initData.Location.href).searchParams.has('applicationHost')
+  if (!isApplicationHost) await Workspace.hydrate(initData.Location)
   Performance.mark(PerformanceMarkerType.DidOpenWorkspace)
 
   if (promptOptions !== undefined) {
@@ -201,7 +202,7 @@ export const startup = async (platform, assetDir) => {
 
   LifeCycle.mark(LifeCyclePhase.Four)
 
-  if (platform === PlatformType.Web && new URL(initData.Location.href).searchParams.has('applicationHost')) {
+  if (isApplicationHost) {
     await Languages.hydrate(platform, assetDir)
     await IconTheme.hydrate(platform, assetDir)
     Application.markHostReady()

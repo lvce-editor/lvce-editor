@@ -128,7 +128,10 @@ export const loadContent = async (state, savedState, context) => {
   const isQuickSuggestionsEnabled = EditorPreferences.isQuickSuggestionsEnabled()
   const completionTriggerCharacters = EditorPreferences.getCompletionTriggerCharacters()
   const diagnosticsEnabled = EditorPreferences.diagnosticsEnabled()
-  const content = state.applicationId === undefined ? await GetTextEditorContent.getTextEditorContent(uri) : await ApplicationFileSystem.execute(state.applicationId, 'readFile', uri)
+  const content =
+    state.applicationId === undefined
+      ? await GetTextEditorContent.getTextEditorContent(uri)
+      : await ApplicationFileSystem.execute(state.applicationId, 'readFile', uri)
   const languageId = context?.languageId || getLanguageId(state, content)
   const tokenizer = Tokenizer.getTokenizer(languageId)
   const tokenizerId = Id.create()
@@ -151,7 +154,21 @@ export const loadContent = async (state, savedState, context) => {
   if (useFunctionalRendering) {
     const tokenizePath = GetTokenizePath.getTokenizePath(languageId)
     const useCache = Preferences.get('editor.cache') ?? true
-    await EditorWorker.invoke('Editor.create2', id, uri, x, y, width, height, platform, assetDir, languageId, tokenizePath, useCache, ...(state.applicationId === undefined ? [] : [state.applicationId]))
+    await EditorWorker.invoke(
+      'Editor.create2',
+      id,
+      uri,
+      x,
+      y,
+      width,
+      height,
+      platform,
+      assetDir,
+      languageId,
+      tokenizePath,
+      useCache,
+      ...(state.applicationId === undefined ? [] : [state.applicationId]),
+    )
     await EditorWorker.invoke('Editor.loadContent', id, savedState?.editorState)
     const initialRender = await rerender(newState2)
     await EditorWorker.invoke('Editor.setSelections2', id, savedSelections)
@@ -310,10 +327,7 @@ export const resize = async (state, dimensions) => {
 export const dispose = async (state) => {
   Tokenizer.removeConnectedEditor(state.id)
   const commands = await EditorWorker.invoke('Editor.dispose', state.id)
-  await RendererProcess.invoke(
-    'Viewlet.sendMultiple',
-    LayoutWidgets.reconcile(commands),
-  )
+  await RendererProcess.invoke('Viewlet.sendMultiple', LayoutWidgets.reconcile(commands))
 }
 
 export const hasFunctionalRender = true

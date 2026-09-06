@@ -137,7 +137,7 @@ const loadContent = async (editor, savedState, context) => {
   }
 }
 
-const renderPending = WrapEditorCommands.renderPendingEditors
+const renderPending = Object.assign(WrapEditorCommands.renderPendingEditors, { targetUid: true })
 
 const executeWidgetCommand = WrapEditorCommands.wrapEditorCommand('Editor.executeWidgetCommand')
 const closeColorPicker = WrapEditorCommands.wrapEditorCommand('Editor.closeColorPicker')

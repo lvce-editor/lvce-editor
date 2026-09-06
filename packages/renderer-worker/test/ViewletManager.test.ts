@@ -51,6 +51,29 @@ const ViewletManager = await import('../src/parts/ViewletManager/ViewletManager.
 const ViewletExtensionViewRender = await import('../src/parts/ViewletExtensionView/ViewletExtensionViewRender.ts')
 const ViewletLayout = await import('../src/parts/ViewletLayout/ViewletLayout.ipc.js')
 
+test('UID-targeted async rendering ignores focus and never falls back after disposal', async () => {
+  const renderPending = Object.assign(
+    jest.fn((state) => state),
+    { targetUid: true },
+  )
+  const factory = {
+    Commands: { renderPending },
+    create: () => ({ uid: 91 }),
+    loadContent: (state) => state,
+    render: [],
+  }
+  await ViewletManager.load({ getModule: async () => factory, id: 'TargetedRender', uid: 91, type: 0 })
+  const other = { uid: 92 }
+  ViewletStates.set(92, { factory, moduleId: 'TargetedRender', renderedState: other, state: other })
+  ViewletStates.state.focusedInstanceByType.TargetedRender = 92
+  await Command.execute('TargetedRender.renderPending', 91)
+  expect(renderPending).toHaveBeenLastCalledWith(expect.objectContaining({ uid: 91 }))
+  ViewletStates.remove(91)
+  renderPending.mockClear()
+  await Command.execute('TargetedRender.renderPending', 91)
+  expect(renderPending).not.toHaveBeenCalled()
+})
+
 test('runLoadContentLater starts deferred loading once', async () => {
   const loadContentLater = jest.fn(async (_state: unknown) => {})
   const viewletState = { uid: 42 }

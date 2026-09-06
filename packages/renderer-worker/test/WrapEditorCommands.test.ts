@@ -8,6 +8,26 @@ jest.unstable_mockModule('../src/parts/EditorWorker/EditorWorker.ts', () => ({
 const EditorWorker = await import('../src/parts/EditorWorker/EditorWorker.ts')
 const WrapEditorCommands = await import('../src/parts/WrapEditorCommands/WrapEditorCommands.js')
 const ViewletStates = await import('../src/parts/ViewletStates/ViewletStates.js')
+const Applications = await import('../src/parts/ApplicationRegistry/ApplicationRegistry.ts')
+
+test('pending rendering never consumes a sibling application diff for the same URI', async () => {
+  Applications.create({ id: 'sibling', layoutUid: 901, href: '', workspacePath: '', workspaceUri: '' })
+  try {
+    ViewletStates.set(2, {
+      factory: {},
+      moduleId: 'Editor',
+      renderedState: { uid: 2 },
+      state: { uid: 2, applicationId: 'sibling', uri: 'memfs:///same.ts' },
+    })
+    EditorWorker.invoke.mockResolvedValue([])
+    await WrapEditorCommands.renderPendingEditors({ uid: 1, uri: 'memfs:///same.ts' })
+    expect(EditorWorker.invoke).toHaveBeenCalledWith('Editor.diff2', 1)
+    expect(EditorWorker.invoke).not.toHaveBeenCalledWith('Editor.diff2', 2)
+  } finally {
+    ViewletStates.remove(2)
+    Applications.remove('sibling')
+  }
+})
 
 beforeEach(() => {
   jest.clearAllMocks()

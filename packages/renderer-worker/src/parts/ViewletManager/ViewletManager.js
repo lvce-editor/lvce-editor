@@ -175,6 +175,13 @@ const runFnWithSideEffect = async (instance, id, key, fn, ...args) => {
 const wrapViewletCommand = (id, key, fn) => {
   Assert.string(id)
   Assert.fn(fn)
+  if (fn.targetUid) {
+    return async (uid, ...args) => {
+      const instance = ViewletStates.getByUid(uid)
+      if (!instance || instance.factory.Commands?.[key] !== fn) return
+      return runFn(instance, uid, key, fn, args)
+    }
+  }
   if (fn.returnValue) {
     const wrappedViewletCommand = async (...args) => {
       // Get the focused instance of this type, or fall back to first instance

@@ -11,7 +11,7 @@ const getEditorUids = (editor) => {
   const uids = new Set([editor.uid])
   for (const instance of Object.values(ViewletStates.getAllInstances())) {
     const state = instance?.state
-    if (isTextEditor(instance) && state?.uri === editor.uri && typeof state.uid === 'number') {
+    if (isTextEditor(instance) && state?.applicationId === editor.applicationId && state?.uri === editor.uri && typeof state.uid === 'number') {
       uids.add(state.uid)
     }
   }
@@ -87,7 +87,7 @@ export const wrapEditorCommand = (id) => {
     if (fullId === 'Editor.openFind' || fullId === 'Editor.openFind2' || fullId === 'Editor.closeFind') {
       return runEditorCommand(editor, fullId, restArgs)
     }
-    const queueKey = editor.uri || editor.uid
+    const queueKey = JSON.stringify([editor.applicationId ?? null, editor.uri || editor.uid])
     const previous = queues.get(queueKey)
     const { promise: next, resolve } = Promise.withResolvers()
     queues.set(queueKey, next)

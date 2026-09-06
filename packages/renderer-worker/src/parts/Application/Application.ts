@@ -80,7 +80,10 @@ export const create = async (options: ApplicationOptions): Promise<number> => {
     try {
       await dispose(options.id)
     } catch (cleanupError) {
-      throw new AggregateError([error, cleanupError], `Failed to create application ${options.id}: ${String(error)}; cleanup: ${String(cleanupError)}`)
+      throw new AggregateError(
+        [error, cleanupError],
+        `Failed to create application ${options.id}: ${String(error)}; cleanup: ${String(cleanupError)}`,
+      )
     }
     throw error
   }
@@ -92,16 +95,36 @@ export const execute = (applicationId: string, command: string, ...args: readonl
     return ApplicationRegistry.track(applicationId, async () => {
       const method = command.slice('FileSystem.'.length)
       const result = await ApplicationFileSystem.execute(applicationId, method, ...args)
-      if (method === 'writeFile' || method === 'remove' || method === 'rename' || method === 'mkdir') {
+      if (
+        method === 'writeFile' ||
+        method === 'remove' ||
+        method === 'rename' ||
+        method === 'mkdir' ||
+        method === 'createFile' ||
+        method === 'copy'
+      ) {
         const changes =
-          method === 'remove' ? { deleted: [args[0]] } : method === 'rename' ? { renamed: [[args[0], args[1]]] } : { changed: [args[0]] }
-        await ExtensionManagementWorker.invoke('Extensions.invokeForApplication', applicationId, 'Extensions.handleFileChanges', changes)
-        await RendererProcess.invoke('ApplicationHost.fileSaved', applicationId, args[0])
+          method === 'remove'
+            ? { deleted: [args[0]] }
+            : method === 'rename'
+              ? { renamed: [[args[0], args[1]]] }
+              : { changed: [method === 'copy' ? args[1] : args[0]] }
+        if (method !== 'writeFile' || args[3] !== false) {
+          await ViewletManager.executeForApplication(applicationId, 'Layout.handleWorkspaceRefresh', changes)
+        } else {
+          await ExtensionManagementWorker.invoke('Extensions.invokeForApplication', applicationId, 'Extensions.handleFileChanges', changes)
+        }
+        await RendererProcess.invoke('ApplicationHost.fileSaved', applicationId, method === 'copy' ? args[1] : args[0])
       }
       return result
     })
   }
   switch (command) {
+    case 'ExtensionHostSourceControl.getEnabledProviderIds':
+    case 'ExtensionHostSourceControl.getFileDecorations':
+      return ApplicationRegistry.track(applicationId, () =>
+        ExtensionManagementWorker.invoke('Extensions.invokeForApplication', applicationId, command, ...args),
+      )
     case 'Workspace.getUri':
     case 'Workspace.getWorkspaceUri':
       return Promise.resolve(application.workspaceUri)
