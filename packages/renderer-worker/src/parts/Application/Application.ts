@@ -93,6 +93,18 @@ export const create = async (options: ApplicationOptions): Promise<number> => {
 
 export const execute = (applicationId: string, command: string, ...args: readonly any[]): Promise<any> => {
   const application = ApplicationRegistry.assertOpen(applicationId)
+  if (command === 'Main.openInput' && application.textFileExtensions?.length) {
+    const [options] = args
+    const uri = options.editorInput?.uri
+    if (typeof uri === 'string' && application.textFileExtensions.some((extension) => uri.endsWith(extension))) {
+      return ApplicationRegistry.track(applicationId, () =>
+        ViewletManager.executeForApplication(applicationId, command, {
+          ...options,
+          editorInput: { ...options.editorInput, type: 'editor', forceText: true },
+        }),
+      )
+    }
+  }
   if (command === 'Main.openUri' && application.textFileExtensions?.length) {
     const [input, focus = true] = args
     const uri = typeof input === 'string' ? input : input.uri

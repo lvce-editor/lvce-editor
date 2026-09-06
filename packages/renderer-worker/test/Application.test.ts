@@ -147,4 +147,9 @@ test('text editor associations are scoped to the source application', async () =
   )
   await Application.execute('preview', 'Main.openUri', 'memfs:///icon.svg')
   expect(ViewletManager.executeForApplication).toHaveBeenLastCalledWith('preview', 'Main.openUri', 'memfs:///icon.svg')
+  await Application.execute('source', 'Main.openInput', { editorInput: { type: 'editor', uri: 'memfs:///icon.svg' }, focus: true })
+  expect(ViewletManager.executeForApplication).toHaveBeenLastCalledWith('source', 'Main.openInput', {
+    editorInput: { type: 'editor', uri: 'memfs:///icon.svg', forceText: true },
+    focus: true,
+  })
 })
