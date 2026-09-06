@@ -5,6 +5,7 @@ export const Commands = {
   handleBlur: ViewletTerminal.handleBlur,
   handleExit: ViewletTerminal.handleExit,
   handleInput: ViewletTerminal.handleInput,
+  handleLink: ViewletTerminal.handleLink,
   handleKeyDown: ViewletTerminal.handleKeyDown,
   handleMouseDown: ViewletTerminal.handleMouseDown,
   loadContentLater: ViewletTerminal.loadContentLater,
