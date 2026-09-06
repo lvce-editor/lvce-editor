@@ -169,7 +169,7 @@ test.each(['Error', 'TypeError', 'DockerNotInstalledError'])('showMessage maps p
 })
 
 test.each([0, 1, 2, undefined])('showMessageBox returns the selected option %s', async (response) => {
-  const showMessageBox = jest.fn(async () => response)
+  const showMessageBox = jest.fn<(options: unknown) => Promise<number | undefined>>().mockResolvedValue(response)
   jest.unstable_mockModule('../src/parts/ElectronDialog/ElectronDialog.js', () => ({ showMessageBox }))
   const Dialog = await import('../src/parts/Dialog/Dialog.js')
   const options = {
