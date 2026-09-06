@@ -35,6 +35,7 @@ export const getSimpleBrowserVirtualDom = (
   audioIndicatorEnabled = true,
   pageSnapshotDom = [],
   tabHover,
+  tabDropIndex = -1,
 ) => {
   const inlineSuggestion = getInlineSuggestion(value, suggestions)
   /** @type {any[]} */
@@ -54,19 +55,34 @@ export const getSimpleBrowserVirtualDom = (
       role: AriaRoles.TabList,
       ariaLabel: 'Browser tabs',
       childCount: tabs.length + 1,
+      onDragOver: DomEventListenerFunctions.HandleDragOverSimpleBrowserTabs,
+      onDragLeave: DomEventListenerFunctions.HandleDragLeaveSimpleBrowserTab,
+      onDrop: DomEventListenerFunctions.HandleDropSimpleBrowserTab,
+      onPointerUp: DomEventListenerFunctions.HandlePointerUpSimpleBrowserTab,
     })
     for (let index = 0; index < tabs.length; index++) {
       const tab = tabs[index]
       const isSelected = index === selectedTabIndex
       const isMuted = Boolean(tab.muted)
       const showAudioIndicator = audioIndicatorEnabled && (tab.isAudioPlaying || isMuted)
+      const tabClass = isSelected ? 'SimpleBrowserTab SimpleBrowserTabSelected' : 'SimpleBrowserTab'
+      const dropClass =
+        tabDropIndex === index
+          ? ' SimpleBrowserTabDropBefore'
+          : tabDropIndex === tabs.length && index === tabs.length - 1
+            ? ' SimpleBrowserTabDropAfter'
+            : ''
       dom.push({
         type: VirtualDomElements.Div,
-        className: isSelected ? 'SimpleBrowserTab SimpleBrowserTabSelected' : 'SimpleBrowserTab',
+        className: tabClass + dropClass,
         role: AriaRoles.Tab,
         ariaSelected: isSelected,
         tabIndex: isSelected ? 0 : -1,
         'data-index': index,
+        draggable: true,
+        onDragStart: DomEventListenerFunctions.HandleDragStartSimpleBrowserTab,
+        onDragEnd: DomEventListenerFunctions.HandleDragEndSimpleBrowserTab,
+        onDragOver: DomEventListenerFunctions.HandleDragOverSimpleBrowserTab,
         onContextMenu: DomEventListenerFunctions.HandleContextMenuSimpleBrowserTab,
         onPointerDown: DomEventListenerFunctions.HandlePointerDownSimpleBrowserTab,
         onPointerOut: DomEventListenerFunctions.HandlePointerOutSimpleBrowserTab,

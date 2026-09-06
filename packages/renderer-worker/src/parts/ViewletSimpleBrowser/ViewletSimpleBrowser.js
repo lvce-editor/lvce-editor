@@ -28,6 +28,8 @@ import * as SimpleBrowserSnapshot from '../SimpleBrowserSnapshot/SimpleBrowserSn
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as WhenExpression from '../WhenExpression/WhenExpression.js'
 
+import * as TabDrag from './ViewletSimpleBrowserTabDrag.js'
+
 const navigationHeaderHeight = 30
 const tabsHeaderHeight = 35
 const closeTabKeyBinding = KeyModifier.CtrlCmd | KeyCode.KeyW
@@ -148,6 +150,9 @@ export const create = (id, uri, x, y, width, height) => {
     tabsEnabled: true,
     unloadTabs: false,
     selectedTabIndex: 0,
+    draggedTab: undefined,
+    isDraggingTab: false,
+    tabDropIndex: -1,
     tabHover: undefined,
     tabHoverEnabled: false,
     zoomLevel: 0,
@@ -544,11 +549,12 @@ export const selectTab = async (state, index) => {
 }
 
 export const handleTabPointerDown = async (state, index, button) => {
-  const newState = await hideTabHover(state)
+  const newState = await hideTabHover(TabDrag.resetTabDrag(state))
   if (button !== 0) {
     return newState
   }
-  return selectTab(newState, index)
+  const selectedState = await selectTab(newState, index)
+  return TabDrag.stageTabDrag(selectedState, index, button)
 }
 
 export const focusNextTab = (state) => {
@@ -770,7 +776,7 @@ const tabHoverWidth = 320
 
 export const showTabHover = async (state, index, tabOffsetLeft, tabWidth, tabsScrollLeft) => {
   const { tabHover, tabHoverEnabled, tabs, width } = state
-  if (!tabHoverEnabled) {
+  if (!tabHoverEnabled || state.draggedTab) {
     return state
   }
   const tabIndex = Number(index)

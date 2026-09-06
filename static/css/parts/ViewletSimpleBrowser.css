@@ -282,3 +282,11 @@
   pointer-events: none;
   width: 18px;
 }
+
+.SimpleBrowserTabDropBefore {
+  box-shadow: inset 2px 0 0 white;
+}
+
+.SimpleBrowserTabDropAfter {
+  box-shadow: inset -2px 0 0 white;
+}
