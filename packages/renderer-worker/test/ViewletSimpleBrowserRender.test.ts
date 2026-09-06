@@ -215,7 +215,7 @@ test('routes tab pointer events to show and hide the rich hover', () => {
       },
       {
         name: DomEventListenerFunctions.HandlePointerDownSimpleBrowserTab,
-        params: ['hideTabHover'],
+        params: ['handleTabPointerDown', 'event.currentTarget.dataset.index', 'event.button'],
       },
     ]),
   )

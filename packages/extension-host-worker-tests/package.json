@@ -13,7 +13,8 @@
     "e2e:headless:ci": "echo ok",
     "e2e:notification-layout": "node scripts/test-notification-layout.mjs",
     "e2e:fonts": "node scripts/test-font-loading.mjs",
-    "type-check": "tsc"
+    "type-check": "tsc",
+    "e2e:simple-browser-tab-drag": "node scripts/test-simple-browser-tab-drag.mjs"
   },
   "keywords": [],
   "author": "",

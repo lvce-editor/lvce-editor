@@ -148,6 +148,9 @@ export const create = (id, uri, x, y, width, height) => {
     tabsEnabled: true,
     unloadTabs: false,
     selectedTabIndex: 0,
+    draggedTab: undefined,
+    isDraggingTab: false,
+    tabDropIndex: -1,
     tabHover: undefined,
     tabHoverEnabled: false,
     zoomLevel: 0,
@@ -762,7 +765,7 @@ const tabHoverWidth = 320
 
 export const showTabHover = async (state, index, tabOffsetLeft, tabWidth, tabsScrollLeft) => {
   const { tabHover, tabHoverEnabled, tabs, width } = state
-  if (!tabHoverEnabled) {
+  if (!tabHoverEnabled || state.draggedTab) {
     return state
   }
   const tabIndex = Number(index)

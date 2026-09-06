@@ -318,3 +318,14 @@ test('renders an accessible browser menu button', () => {
     }),
   )
 })
+
+test('browser tabs expose native drag events and drop targets', () => {
+  const dom = GetSimpleBrowserVirtualDom.getSimpleBrowserVirtualDom(false, false, false, '', '', [], -1, [
+    { browserViewId: 1, title: 'One' },
+    { browserViewId: 2, title: 'Two' },
+  ])
+  const tabs = dom.filter((node) => node.role === 'tab')
+  expect(tabs).toHaveLength(2)
+  expect(tabs[0]).toMatchObject({ draggable: true, onDragStart: 'handleDragStartSimpleBrowserTab', onDragOver: 'handleDragOverSimpleBrowserTab' })
+  expect(dom.find((node) => node.role === 'tablist')).toMatchObject({ onDrop: 'handleDropSimpleBrowserTab' })
+})

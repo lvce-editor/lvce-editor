@@ -78,3 +78,17 @@ export const HandleTitleBarButtonsClick = 'handleTitleBarButtonsClick'
 export const HandleTouchStart = 'handleTouchStart'
 export const HandleVideoError = 'handleVideoError'
 export const HandleWheel = 'handleWheel'
+
+export const HandleDragStartSimpleBrowserTab = 'handleDragStartSimpleBrowserTab'
+
+export const HandleDragEndSimpleBrowserTab = 'handleDragEndSimpleBrowserTab'
+
+export const HandleDragOverSimpleBrowserTab = 'handleDragOverSimpleBrowserTab'
+
+export const HandleDragLeaveSimpleBrowserTab = 'handleDragLeaveSimpleBrowserTab'
+
+export const HandleDropSimpleBrowserTab = 'handleDropSimpleBrowserTab'
+
+export const HandlePointerUpSimpleBrowserTab = 'handlePointerUpSimpleBrowserTab'
+
+export const HandleDragOverSimpleBrowserTabs = 'handleDragOverSimpleBrowserTabs'
