@@ -114,3 +114,9 @@ export const show = async (options) => {
 export const showWarning = async (options) => {
   await DialogWorker.invoke('Dialog.showWarning', options)
 }
+
+// Public dialog entry point for isolated extensions. The host owns the window
+// and product identity; callers supply only the message and available choices.
+export const showMessageBox = async ({ buttons, defaultId, message, type = 'info' }) => {
+  return ElectronDialog.showMessageBox({ buttons, defaultId, message, type })
+}
