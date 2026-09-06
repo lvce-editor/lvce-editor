@@ -215,7 +215,7 @@ test('routes tab pointer events to show and hide the rich hover', () => {
       },
       {
         name: DomEventListenerFunctions.HandlePointerDownSimpleBrowserTab,
-        params: ['hideTabHover'],
+        params: ['handleTabPointerDown', 'event.currentTarget.dataset.index', 'event.button'],
       },
     ]),
   )
@@ -225,6 +225,14 @@ test('routes audio button clicks to mute the tab without selecting it', () => {
   expect(ViewletSimpleBrowserRender.renderEventListeners()).toContainEqual({
     name: DomEventListenerFunctions.HandleClickSimpleBrowserTabAudio,
     params: ['muteTab', 'event.currentTarget.dataset.index'],
+    stopPropagation: true,
+  })
+})
+
+test('tab action pointer presses dismiss the hover without selecting the tab', () => {
+  expect(ViewletSimpleBrowserRender.renderEventListeners()).toContainEqual({
+    name: DomEventListenerFunctions.HandlePointerDownSimpleBrowserTabAction,
+    params: ['hideTabHover'],
     stopPropagation: true,
   })
 })

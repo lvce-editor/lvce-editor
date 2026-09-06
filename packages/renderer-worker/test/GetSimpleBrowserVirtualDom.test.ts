@@ -167,7 +167,7 @@ test('renders selectable tabs with favicon, title, close, and new tab controls',
   expect(dom).toContainEqual(
     expect.objectContaining({
       className: 'SimpleBrowserTab SimpleBrowserTabSelected',
-      onClick: 'handleClickSimpleBrowserTab',
+      onPointerDown: 'handlePointerDownSimpleBrowserTab',
       onContextMenu: 'handleContextMenuSimpleBrowserTab',
       role: 'tab',
     }),
@@ -182,12 +182,19 @@ test('renders selectable tabs with favicon, title, close, and new tab controls',
       className: 'SimpleBrowserTabAudio',
       'data-index': 0,
       onClick: 'handleClickSimpleBrowserTabAudio',
+      onPointerDown: 'handlePointerDownSimpleBrowserTabAction',
       title: 'Mute tab',
       type: VirtualDomElements.Button,
     }),
   )
   expect(dom).toContainEqual(expect.objectContaining({ className: 'MaskIcon MaskIconUnmute' }))
-  expect(dom).toContainEqual(expect.objectContaining({ className: 'SimpleBrowserTabClose', onClick: 'handleClickSimpleBrowserTabClose' }))
+  expect(dom).toContainEqual(
+    expect.objectContaining({
+      className: 'SimpleBrowserTabClose',
+      onClick: 'handleClickSimpleBrowserTabClose',
+      onPointerDown: 'handlePointerDownSimpleBrowserTabAction',
+    }),
+  )
   expect(dom).toContainEqual(expect.objectContaining({ className: 'SimpleBrowserNewTab', onClick: 'handleClickSimpleBrowserNewTab' }))
 })
 
@@ -211,6 +218,7 @@ test('renders a muted audio button for a muted tab', () => {
       className: 'SimpleBrowserTabAudio',
       'data-index': 0,
       onClick: 'handleClickSimpleBrowserTabAudio',
+      onPointerDown: 'handlePointerDownSimpleBrowserTabAction',
       title: 'Unmute tab',
       type: VirtualDomElements.Button,
     }),

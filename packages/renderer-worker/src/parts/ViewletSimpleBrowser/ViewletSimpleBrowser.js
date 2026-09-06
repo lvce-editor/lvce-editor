@@ -543,6 +543,14 @@ export const selectTab = async (state, index) => {
   return switchToTab(newState, newState.tabs, selectedTabIndex)
 }
 
+export const handleTabPointerDown = async (state, index, button) => {
+  const newState = await hideTabHover(state)
+  if (button !== 0) {
+    return newState
+  }
+  return selectTab(newState, index)
+}
+
 export const focusNextTab = (state) => {
   if (state.tabs.length === 0) {
     return state
