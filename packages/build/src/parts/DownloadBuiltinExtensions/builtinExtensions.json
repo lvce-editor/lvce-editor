@@ -7,6 +7,13 @@
     "created": "2022-07-02"
   },
   {
+    "name": "builtin.devcontainer",
+    "repository": "github.com/lvce-editor/devcontainer",
+    "version": "0.13.1",
+    "sha256": "be3c022cbdceb0fdeaffa2b717d511154bef10d6a0d923b741854e231cfac109",
+    "created": "2026-09-06"
+  },
+  {
     "name": "builtin.csv-viewer",
     "repository": "github.com/lvce-editor/csv-viewer",
     "version": "2.14.1",
