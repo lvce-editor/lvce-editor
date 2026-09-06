@@ -2,11 +2,13 @@ import * as EditorWorker from '../EditorWorker/EditorWorker.ts'
 import * as FilterFocusCommands from '../FilterFocusCommands/FilterFocusCommands.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SerializeComponentState from '../SerializeComponentState/SerializeComponentState.js'
+import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
-const liveComponentStatePattern = /^live-component-state:\/\/\/(\d+(?:\.\d+)?)\.json$/
+const liveComponentStatePattern = /^live-component-state:\/\/\/(?:dom\/)?(\d+(?:\.\d+)?)\.json$/
+const domEditorUids = new Set()
 const editorUidsByComponentUid = new Map()
 const componentUidByEditorUid = new Map()
 const mainEditorUidsAwaitingInitialRefresh = new Set()
@@ -31,6 +33,9 @@ const subscribe = (instance) => {
   }
   editorUidsByComponentUid.set(componentUid, editorUidsByComponentUid.get(componentUid)?.add(editorUid) || new Set([editorUid]))
   componentUidByEditorUid.set(editorUid, componentUid)
+  if (instance.state.uri.startsWith('live-component-state:///dom/')) {
+    domEditorUids.add(editorUid)
+  }
   if (ViewletStates.getByUid(componentUid)?.moduleId === 'Main') {
     mainEditorUidsAwaitingInitialRefresh.add(editorUid)
   }
@@ -43,6 +48,7 @@ const unsubscribeEditor = (editorUid) => {
   }
   componentUidByEditorUid.delete(editorUid)
   mainEditorUidsAwaitingInitialRefresh.delete(editorUid)
+  domEditorUids.delete(editorUid)
   const editorUids = editorUidsByComponentUid.get(componentUid)
   editorUids?.delete(editorUid)
   if (editorUids?.size === 0) {
@@ -58,6 +64,7 @@ const unsubscribeComponent = (componentUid) => {
   editorUidsByComponentUid.delete(componentUid)
   for (const editorUid of editorUids) {
     componentUidByEditorUid.delete(editorUid)
+    domEditorUids.delete(editorUid)
     mainEditorUidsAwaitingInitialRefresh.delete(editorUid)
   }
 }
@@ -115,19 +122,28 @@ const runRefreshes = async (componentUid, refresh) => {
       if (editorUidsToRefresh.length === 0) {
         continue
       }
-      let content
-      try {
-        const componentState = await getState(componentUid)
-        content = SerializeComponentState.serializeComponentState(componentState)
-      } catch {
-        content = undefined
+      const contents = new Map()
+      const getContent = (isDom) => {
+        if (!contents.has(isDom)) {
+          const read = isDom ? getDom : getState
+          contents.set(
+            isDom,
+            read(componentUid)
+              .then(SerializeComponentState.serializeComponentState)
+              .catch(() => undefined),
+          )
+        }
+        return contents.get(isDom)
       }
       await Promise.allSettled(
-        editorUidsToRefresh.map((editorUid) =>
-          content === undefined
-            ? Viewlet.executeViewletCommand(editorUid, 'loadContent', undefined, { preserveFocus: true })
-            : refreshEditorIfContentChanged(editorUid, content),
-        ),
+        editorUidsToRefresh.map(async (editorUid) => {
+          const content = await getContent(domEditorUids.has(editorUid))
+          if (content === undefined) {
+            await Viewlet.executeViewletCommand(editorUid, 'loadContent', undefined, { preserveFocus: true })
+          } else {
+            await refreshEditorIfContentChanged(editorUid, content)
+          }
+        }),
       )
       for (const editorUid of editorUidsToRefresh) {
         mainEditorUidsAwaitingInitialRefresh.delete(editorUid)
@@ -241,7 +257,8 @@ export const getDom = async (uid) => {
   if (typeof instance.factory.getComponentDom !== 'function') {
     throw new Error(`Component DOM API not available: ${instance.moduleId}`)
   }
-  return instance.factory.getComponentDom(instance.state)
+  const preview = await RendererProcess.invoke('Viewlet.getComponentDom', uid)
+  return preview ?? instance.factory.getComponentDom(instance.state)
 }
 
 const validateState = (uid, oldState, newState) => {
@@ -279,4 +296,39 @@ export const setState = async (uid, newComponentState) => {
     return
   }
   await renderState(instance, uid, newComponentState)
+}
+
+export const setDom = async (uid, dom) => {
+  const instance = getInstance(uid)
+  if (typeof instance.factory.getComponentDom !== 'function') {
+    throw new Error(`Component DOM API not available: ${instance.moduleId}`)
+  }
+  if (!Array.isArray(dom) || dom.length === 0) {
+    throw new TypeError('Component DOM must be a non-empty array')
+  }
+  if (dom[0]?.type === VirtualDomElements.Text || dom[0]?.type === VirtualDomElements.Reference) {
+    throw new TypeError('Component DOM must have an element root')
+  }
+  let remaining = 1
+  for (const node of dom) {
+    if (
+      !node ||
+      typeof node !== 'object' ||
+      !Number.isInteger(node.type) ||
+      !Number.isInteger(node.childCount) ||
+      node.childCount < 0 ||
+      remaining === 0
+    ) {
+      throw new TypeError('Component DOM must contain one complete tree')
+    }
+    remaining += node.childCount - 1
+  }
+  if (remaining !== 0) {
+    throw new TypeError('Component DOM must contain one complete tree')
+  }
+  const currentDom = await getDom(uid)
+  if (SerializeComponentState.serializeComponentState(currentDom) === SerializeComponentState.serializeComponentState(dom)) {
+    return
+  }
+  await RendererProcess.invoke('Viewlet.setComponentDom', uid, dom)
 }
