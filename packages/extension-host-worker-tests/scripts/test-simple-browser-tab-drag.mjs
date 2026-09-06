@@ -59,13 +59,13 @@ try {
   await expect(tab('One')).toHaveClass(/SimpleBrowserTabDropBefore/)
   await page.mouse.up()
   await expect.poll(titles).toEqual(['Two', 'One', 'Three'])
-  await expect(address).toHaveValue(`${baseUrl}/Three.html`)
-  await expect(tab('Three')).toHaveAttribute('aria-selected', 'true')
+  await expect(address).toHaveValue(`${baseUrl}/Two.html`)
+  await expect(tab('Two')).toHaveAttribute('aria-selected', 'true')
 
   await drag(tab('Two'), tab('Three'), 'after')
   await page.mouse.up()
   await expect.poll(titles).toEqual(['One', 'Three', 'Two'])
-  await expect(address).toHaveValue(`${baseUrl}/Three.html`)
+  await expect(address).toHaveValue(`${baseUrl}/Two.html`)
 
   await drag(tab('One'), tab('Two'), 'after')
   await page.keyboard.press('Escape')
@@ -82,7 +82,7 @@ try {
   await drag(tabs.nth(2), tab('One'), 'before')
   await page.mouse.up()
   await expect.poll(titles).toEqual(['New Tab', 'One', 'Three', 'New Tab'])
-  await expect(tabs.nth(3)).toHaveAttribute('aria-selected', 'true')
+  await expect(tabs.nth(0)).toHaveAttribute('aria-selected', 'true')
   console.log('Simple Browser native tab dragging, reordering, cancellation, active-page preservation, and new tabs passed')
 } finally {
   await app?.close()

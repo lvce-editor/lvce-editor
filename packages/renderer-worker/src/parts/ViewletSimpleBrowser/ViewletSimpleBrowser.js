@@ -28,6 +28,8 @@ import * as SimpleBrowserSnapshot from '../SimpleBrowserSnapshot/SimpleBrowserSn
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as WhenExpression from '../WhenExpression/WhenExpression.js'
 
+import * as TabDrag from './ViewletSimpleBrowserTabDrag.js'
+
 const navigationHeaderHeight = 30
 const tabsHeaderHeight = 35
 const closeTabKeyBinding = KeyModifier.CtrlCmd | KeyCode.KeyW
@@ -544,6 +546,15 @@ export const selectTab = async (state, index) => {
     newState = await closeSuggestions(state)
   }
   return switchToTab(newState, newState.tabs, selectedTabIndex)
+}
+
+export const handleTabPointerDown = async (state, index, button) => {
+  const newState = await hideTabHover(TabDrag.resetTabDrag(state))
+  if (button !== 0) {
+    return newState
+  }
+  const selectedState = await selectTab(newState, index)
+  return TabDrag.stageTabDrag(selectedState, index, button)
 }
 
 export const focusNextTab = (state) => {

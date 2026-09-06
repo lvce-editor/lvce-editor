@@ -32,10 +32,6 @@ export const renderEventListeners = () => {
       params: ['handleFocusIn', 'event.target.name'],
     },
     {
-      name: DomEventListenerFunctions.HandleClickSimpleBrowserTab,
-      params: ['selectTab', 'event.currentTarget.dataset.index'],
-    },
-    {
       name: DomEventListenerFunctions.HandleClickSimpleBrowserTabClose,
       params: ['closeTab', 'event.currentTarget.dataset.index'],
       stopPropagation: true,
@@ -107,6 +103,11 @@ export const renderEventListeners = () => {
       name: DomEventListenerFunctions.HandleDropSimpleBrowserTab,
       params: ['handleTabDrop'],
       preventDefault: true,
+      stopPropagation: true,
+    },
+    {
+      name: DomEventListenerFunctions.HandlePointerDownSimpleBrowserTabAction,
+      params: ['hideTabHover'],
       stopPropagation: true,
     },
     {

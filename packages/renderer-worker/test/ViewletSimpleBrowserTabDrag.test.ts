@@ -16,7 +16,7 @@ const createState = (): any => ({
 })
 
 const startDrag = async (state: any, index: number | string): Promise<any> =>
-  TabDrag.handleTabDragStart(await TabDrag.handleTabPointerDown(state, index, 0))
+  TabDrag.handleTabDragStart(await TabDrag.stageTabDrag(state, index, 0))
 
 test('reorders a background tab before the first tab and keeps the active page', async () => {
   const state = createState()
@@ -85,11 +85,11 @@ test('ignores foreign drags, right click, and invalid tabs', async () => {
   const { tabs } = state
   expect(TabDrag.handleTabDragOver(state, 0, 0, 100, 0, 110)).toBe(state)
   expect(TabDrag.handleTabsDragOver(state)).toBe(state)
-  const rightClick = await TabDrag.handleTabPointerDown(state, 0, 2)
-  const invalidTab = await TabDrag.handleTabPointerDown(state, 'bad', 0)
+  const rightClick = await TabDrag.stageTabDrag(state, 0, 2)
+  const invalidTab = await TabDrag.stageTabDrag(state, 'bad', 0)
   expect(rightClick.draggedTab).toBeUndefined()
   expect(invalidTab.draggedTab).toBeUndefined()
-  const staged = await TabDrag.handleTabPointerDown(state, 0, 0)
+  const staged = await TabDrag.stageTabDrag(state, 0, 0)
   expect(TabDrag.handleTabDrop({ ...staged, tabDropIndex: 4 }).tabs).toBe(tabs)
 })
 

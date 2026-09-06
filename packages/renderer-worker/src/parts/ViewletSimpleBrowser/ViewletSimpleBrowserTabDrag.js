@@ -1,5 +1,3 @@
-import * as SimpleBrowser from './ViewletSimpleBrowser.js'
-
 const getDraggedIndex = (state) => {
   const { draggedTab, tabs } = state
   if (!draggedTab) {
@@ -17,8 +15,8 @@ export const resetTabDrag = (state) => {
   return { ...state, draggedTab: undefined, isDraggingTab: false, tabDropIndex: -1 }
 }
 
-export const handleTabPointerDown = async (state, index, button) => {
-  const newState = await SimpleBrowser.hideTabHover(resetTabDrag(state))
+export const stageTabDrag = (state, index, button) => {
+  const newState = resetTabDrag(state)
   const tab = newState.tabs[Number(index)]
   if (button !== 0 || !tab) {
     return newState

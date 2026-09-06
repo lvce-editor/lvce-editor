@@ -228,3 +228,11 @@ test('routes audio button clicks to mute the tab without selecting it', () => {
     stopPropagation: true,
   })
 })
+
+test('tab action pointer presses dismiss the hover without selecting the tab', () => {
+  expect(ViewletSimpleBrowserRender.renderEventListeners()).toContainEqual({
+    name: DomEventListenerFunctions.HandlePointerDownSimpleBrowserTabAction,
+    params: ['hideTabHover'],
+    stopPropagation: true,
+  })
+})

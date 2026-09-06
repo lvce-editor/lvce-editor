@@ -7,7 +7,6 @@ import * as ViewletSimpleBrowserInsertJavaScript from './ViewletSimpleBrowserIns
 import * as TabDrag from './ViewletSimpleBrowserTabDrag.js'
 
 export const Commands = {
-  handleTabPointerDown: TabDrag.handleTabPointerDown,
   handleTabDragStart: TabDrag.handleTabDragStart,
   handleTabDragOver: TabDrag.handleTabDragOver,
   handleTabsDragOver: TabDrag.handleTabsDragOver,
@@ -37,6 +36,7 @@ export const Commands = {
   handleKeyBinding: SimpleBrowser.handleKeyBinding,
   handlePageFaviconUpdated: SimpleBrowser.handlePageFaviconUpdated,
   handleTitleUpdated: SimpleBrowser.handleTitleUpdated,
+  handleTabPointerDown: SimpleBrowser.handleTabPointerDown,
   handleWillNavigate: SimpleBrowser.handleWillNavigate,
   hideTabHover: SimpleBrowser.hideTabHover,
   hideOverlay: SimpleBrowser.hideOverlay,
