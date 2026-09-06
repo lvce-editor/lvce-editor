@@ -13,6 +13,13 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
+test('disposes only the owned source control worker state', async () => {
+  const state = { uid: 42, disposed: false }
+  expect(await ViewletSourceControl.dispose(state)).toEqual({ ...state, disposed: true })
+  expect(sourceControlWorkerInvoke.mock.calls).toEqual([['SourceControl.dispose', 42]])
+  expect(state.disposed).toBe(false)
+})
+
 test('renders pending source control worker state without replaying a command', async () => {
   const state = {
     badgeCount: 2,

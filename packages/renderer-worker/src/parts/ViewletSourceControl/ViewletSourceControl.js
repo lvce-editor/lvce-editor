@@ -74,7 +74,8 @@ export const loadContentLater = async (state) => {
   await Command.execute('Viewlet.executeViewletCommand', state.uid, 'loadContent', state.savedState)
 }
 
-export const dispose = (state) => {
+export const dispose = async (state) => {
+  await SourceControlWorker.invoke('SourceControl.dispose', state.uid)
   return {
     ...state,
     disposed: true,
