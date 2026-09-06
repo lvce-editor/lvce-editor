@@ -2,6 +2,8 @@ import * as BrowserKey from '../BrowserKey/BrowserKey.js'
 import * as Command from '../Command/Command.js'
 import * as EditorWorker from '../EditorWorker/EditorWorker.ts'
 import * as FilterFocusCommands from '../FilterFocusCommands/FilterFocusCommands.js'
+import * as Focus from '../Focus/Focus.js'
+import * as WhenExpression from '../WhenExpression/WhenExpression.js'
 import * as GetTokenizePath from '../GetTokenizePath/GetTokenizePath.js'
 import * as Languages from '../Languages/Languages.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
@@ -138,6 +140,11 @@ const loadContent = async (editor, savedState, context) => {
 }
 
 const renderPending = Object.assign(WrapEditorCommands.renderPendingEditors, { targetUid: true })
+const handleEditorFocus = WrapEditorCommands.wrapEditorCommand('Editor.handleFocus')
+const handleFocus = (editor, ...args) => {
+  if (editor.applicationId !== undefined) Focus.setFocus(WhenExpression.FocusEditorText, undefined, editor.uid, 'Editor')
+  return handleEditorFocus(editor, ...args)
+}
 
 const executeWidgetCommand = WrapEditorCommands.wrapEditorCommand('Editor.executeWidgetCommand')
 const closeColorPicker = WrapEditorCommands.wrapEditorCommand('Editor.closeColorPicker')
@@ -154,6 +161,7 @@ export const getCommands = async () => {
   const commandIds = await EditorWorker.invoke('Editor.getCommandIds')
   Object.assign(Commands, WrapEditorCommands.wrapEditorCommands(commandIds), WrapEditorCommands.wrapEditorCommands(subWidgetCommandIds), {
     __renderPending: renderPending,
+    handleFocus,
     handleUriChange,
     loadContent,
     loadContentLater,

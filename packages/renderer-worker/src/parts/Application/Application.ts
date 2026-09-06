@@ -21,6 +21,7 @@ export interface ApplicationOptions {
   readonly workspaceUri: string
   readonly extensions?: readonly any[]
   readonly files?: Readonly<Record<string, string>>
+  readonly textFileExtensions?: readonly string[]
 }
 
 const disposals = new Map<string, Promise<void>>()
@@ -73,6 +74,7 @@ export const create = async (options: ApplicationOptions): Promise<number> => {
     href: options.href,
     workspacePath: options.workspacePath,
     workspaceUri: options.workspaceUri,
+    textFileExtensions: options.textFileExtensions,
   })
   try {
     return await ApplicationRegistry.track(options.id, () => initialize(options, layoutUid))
@@ -91,6 +93,20 @@ export const create = async (options: ApplicationOptions): Promise<number> => {
 
 export const execute = (applicationId: string, command: string, ...args: readonly any[]): Promise<any> => {
   const application = ApplicationRegistry.assertOpen(applicationId)
+  if (command === 'Main.openUri' && application.textFileExtensions?.length) {
+    const [input, focus = true] = args
+    const uri = typeof input === 'string' ? input : input.uri
+    if (application.textFileExtensions.some((extension) => uri.endsWith(extension))) {
+      return ApplicationRegistry.track(applicationId, () =>
+        ViewletManager.executeForApplication(applicationId, 'Main.openInput', {
+          editorInput: { type: 'editor', uri, forceText: true },
+          focus: typeof input === 'string' ? focus : input.focus,
+          preview: typeof input === 'string' ? false : input.preview,
+          reuseExisting: typeof input === 'string' ? true : input.reuseExisting,
+        }),
+      )
+    }
+  }
   if (command.startsWith('FileSystem.')) {
     return ApplicationRegistry.track(applicationId, async () => {
       const method = command.slice('FileSystem.'.length)

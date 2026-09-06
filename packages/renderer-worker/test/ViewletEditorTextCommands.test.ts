@@ -3,6 +3,9 @@ import { beforeEach, expect, jest, test } from '@jest/globals'
 const commandExecute = jest.fn()
 const editorWorkerInvoke = jest.fn()
 const rendererProcessInvoke = jest.fn()
+const setFocus = jest.fn()
+
+jest.unstable_mockModule('../src/parts/Focus/Focus.js', () => ({ setFocus }))
 
 jest.unstable_mockModule('../src/parts/EditorWorker/EditorWorker.ts', () => {
   return {
@@ -61,6 +64,16 @@ test('getCommands registers worker commands, sub-widget commands, and local comm
   expect(commands.renderPending).toBeDefined()
   expect(commands.showOverlayMessage).toBeDefined()
   expect(commands.hotReload).toBeDefined()
+})
+
+test('a DOM focus event selects its application editor even if the worker returns no focus diff', async () => {
+  editorWorkerInvoke.mockImplementation((method) =>
+    method === 'Editor.getCommandIds' || method === 'Editor.diff2' || method === 'Editor.render2' ? [] : undefined,
+  )
+  const commands = await ViewletEditorTextCommands.getCommands()
+  await commands.handleFocus({ uid: 42, applicationId: 'source', uri: 'memfs:///main.ts' })
+  expect(setFocus).toHaveBeenCalledWith(12, undefined, 42, 'Editor')
+  expect(editorWorkerInvoke).toHaveBeenCalledWith('Editor.handleFocus', 42)
 })
 
 test('color picker slider escape closes the picker', async () => {

@@ -134,3 +134,17 @@ test('creating and copying source files refreshes only the source application', 
   expect(RendererProcess.invoke).toHaveBeenLastCalledWith('ApplicationHost.fileSaved', 'source', 'memfs:///copied.ts')
   expect(await Application.execute('preview', 'FileSystem.exists', 'memfs:///copied.ts')).toBe(false)
 })
+
+test('text editor associations are scoped to the source application', async () => {
+  await Application.create({ ...options('source'), textFileExtensions: ['.svg'] })
+  await Application.create(options('preview'))
+  jest.clearAllMocks()
+  await Application.execute('source', 'Main.openUri', { uri: 'memfs:///icon.svg', focus: true, preview: true })
+  expect(ViewletManager.executeForApplication).toHaveBeenCalledWith(
+    'source',
+    'Main.openInput',
+    expect.objectContaining({ editorInput: { type: 'editor', uri: 'memfs:///icon.svg', forceText: true }, focus: true, preview: true }),
+  )
+  await Application.execute('preview', 'Main.openUri', 'memfs:///icon.svg')
+  expect(ViewletManager.executeForApplication).toHaveBeenLastCalledWith('preview', 'Main.openUri', 'memfs:///icon.svg')
+})
