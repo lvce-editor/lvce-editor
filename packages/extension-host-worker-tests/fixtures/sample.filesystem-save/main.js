@@ -7,6 +7,9 @@ const commandMap = {
   'ExtensionApi.executeFileSystemProviderIsReadonly'() {
     return false
   },
+  'ExtensionApi.executeFileSystemProviderReadDirWithFileTypes'() {
+    return [{ name: 'note.txt', type: 7 }]
+  },
   'ExtensionApi.executeFileSystemProviderReadFile'() {
     return content
   },
