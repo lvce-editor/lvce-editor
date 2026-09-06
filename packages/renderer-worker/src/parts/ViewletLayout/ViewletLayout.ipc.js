@@ -1,5 +1,6 @@
 export * from './ViewletLayout.ts'
 export * from './ViewletLayoutCommands.js'
+export * from './ViewletLayoutComponentState.js'
 export * from './ViewletLayoutCss.js'
 export * from './ViewletLayoutKeyBindings.js'
 export * from './ViewletLayoutMenuEntries.js'

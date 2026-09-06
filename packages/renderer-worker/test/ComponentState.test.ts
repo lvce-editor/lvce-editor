@@ -357,6 +357,28 @@ test('exposes Simple Browser state and renders edits through its component state
   expect(domCommands).toEqual([['Viewlet.setDom2', 10, expect.arrayContaining([expect.objectContaining({ value: 'Live browser state' })])]])
 })
 
+test('exposes Layout state and renders edits through its component state hooks', async () => {
+  const factory = await import('../src/parts/ViewletLayout/ViewletLayout.ipc.js')
+  const state = { ...factory.create(1), initial: false, statusBarId: 6, statusBarVisible: true }
+  ViewletStates.set(1, { factory, moduleId: 'Layout', renderedState: state, state })
+
+  expect(ComponentState.getComponents()).toEqual([{ displayName: 'Layout', domAvailable: false, editable: true, moduleId: 'Layout', uid: 1 }])
+  await expect(ComponentState.getState(1)).resolves.toBe(state)
+
+  const editedState = { ...state, sideBarWidth: 320, statusBarVisible: false }
+  const domCommands = factory.render[0].apply(state, editedState)
+  const cssCommands = factory.render[1].apply(state, editedState)
+  const commands = [...domCommands, ...cssCommands]
+  jest.mocked(ViewletManager.render).mockReturnValue(commands)
+  await ComponentState.setState(1, editedState)
+
+  await expect(ComponentState.getState(1)).resolves.toBe(editedState)
+  expect(ViewletManager.render).toHaveBeenCalledWith(factory, state, editedState, 1, undefined)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.sendMultiple', commands)
+  expect(domCommands[0][2]).not.toEqual(expect.arrayContaining([expect.objectContaining({ uid: 6 })]))
+  expect(cssCommands).toEqual([['Viewlet.setCss', 1, expect.stringContaining('--SideBarWidth: 320px;')]])
+})
+
 test('does not refresh unchanged state with the schema and reordered properties from the live file', async () => {
   const state = { uid: 2, value: { b: 2, a: 1 } }
   const editor = { uid: 9, uri: 'live-component-state:///2.json' }
