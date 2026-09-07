@@ -462,8 +462,15 @@ export const getAllStates = () => {
   return states
 }
 
-export const openWidget = async (moduleId, ...args) => {
-  const layout = ViewletStates.getState(ViewletModuleId.Layout)
+export const openWidget = (moduleId, ...args) => {
+  return openWidgetWithLayout(ViewletStates.getState(ViewletModuleId.Layout), moduleId, ...args)
+}
+
+export const openWidgetForApplication = (applicationId, moduleId, ...args) => {
+  return openWidgetWithLayout(ViewletStates.getState(ViewletModuleId.Layout, applicationId), moduleId, ...args)
+}
+
+const openWidgetWithLayout = async (layout, moduleId, ...args) => {
   const applicationId = moduleId === ViewletModuleId.QuickPick ? layout?.applicationId : undefined
   const existingInstance = ViewletStates.getInstance(moduleId, applicationId)
   const type = args[0]

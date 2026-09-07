@@ -2,10 +2,12 @@ import * as ApplicationFileSystem from '../ApplicationFileSystem/ApplicationFile
 import * as ApplicationRegistry from '../ApplicationRegistry/ApplicationRegistry.ts'
 import * as Command from '../Command/Command.js'
 import * as ExtensionHostCommands from '../ExtensionHost/ExtensionHostCommands.js'
+import * as ExtensionHostQuickPick from '../ExtensionHost/ExtensionHostQuickPick.js'
 import * as ExtensionManagementWorker from '../ExtensionManagementWorker/ExtensionManagementWorker.js'
 import * as GetActiveEditor from '../GetActiveEditor/GetActiveEditor.js'
 import * as Id from '../Id/Id.js'
 import * as Platform from '../Platform/Platform.js'
+import * as QuickPick from '../QuickPick/QuickPick.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
@@ -150,6 +152,14 @@ export const execute = (applicationId: string, command: string, ...args: readonl
     })
   }
   switch (command) {
+    case 'Viewlet.openWidget':
+      return ApplicationRegistry.track(applicationId, () => Viewlet.openWidgetForApplication(applicationId, args[0], ...args.slice(1)))
+    case 'QuickPick.showCustom':
+      return ApplicationRegistry.track(applicationId, () => QuickPick.showCustom(args[0], args[1], applicationId))
+    case 'ExtensionHostQuickPick.showQuickPick':
+      return ApplicationRegistry.track(applicationId, () => ExtensionHostQuickPick.showQuickPick(args[0], applicationId))
+    case 'ExtensionHostQuickPick.showQuickInput':
+      return ApplicationRegistry.track(applicationId, () => ExtensionHostQuickPick.showQuickInput(args[0], applicationId))
     case 'ExtensionHost.executeCommand':
       return ApplicationRegistry.track(applicationId, () =>
         ExtensionManagementWorker.invoke('Extensions.invokeForApplication', applicationId, 'Extensions.executeCommand', ...args),

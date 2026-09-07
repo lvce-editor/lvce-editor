@@ -6,7 +6,15 @@ import * as ViewletStates from '../src/parts/ViewletStates/ViewletStates.js'
 jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () => ({ invoke: jest.fn(async () => {}) }))
 jest.unstable_mockModule('../src/parts/ExtensionManagementWorker/ExtensionManagementWorker.js', () => ({ invoke: jest.fn(async () => {}) }))
 jest.unstable_mockModule('../src/parts/ViewletModule/ViewletModule.js', () => ({ load: jest.fn() }))
-jest.unstable_mockModule('../src/parts/Viewlet/Viewlet.js', () => ({ dispose: jest.fn(async (uid) => ViewletStates.remove(uid)) }))
+jest.unstable_mockModule('../src/parts/Viewlet/Viewlet.js', () => ({
+  dispose: jest.fn(async (uid) => ViewletStates.remove(uid)),
+  openWidgetForApplication: jest.fn(async () => {}),
+}))
+jest.unstable_mockModule('../src/parts/ExtensionHost/ExtensionHostQuickPick.js', () => ({
+  showQuickPick: jest.fn(async () => 'staging'),
+  showQuickInput: jest.fn(async () => 'Ada'),
+}))
+jest.unstable_mockModule('../src/parts/QuickPick/QuickPick.js', () => ({ showCustom: jest.fn(async () => ({ inputValue: 'Ada' })) }))
 jest.unstable_mockModule('../src/parts/ViewletManager/ViewletManager.js', () => ({
   load: jest.fn(async () => []),
   executeForApplication: jest.fn(async () => {}),
@@ -166,4 +174,20 @@ test('extension commands execute in the owning application', async () => {
     'eslint.showPerformanceTrace',
   )
   expect(ViewletManager.executeForApplication).not.toHaveBeenCalled()
+})
+
+test('routes extension prompts and their widgets to the explicit application', async () => {
+  const ExtensionHostQuickPick = await import('../src/parts/ExtensionHost/ExtensionHostQuickPick.js')
+  const QuickPick = await import('../src/parts/QuickPick/QuickPick.js')
+  await Application.create(options('source'))
+  await Application.create(options('preview'))
+  const picks = { items: [] }
+  await expect(Application.execute('preview', 'ExtensionHostQuickPick.showQuickPick', picks)).resolves.toBe('staging')
+  expect(ExtensionHostQuickPick.showQuickPick).toHaveBeenCalledWith(picks, 'preview')
+  await expect(Application.execute('source', 'ExtensionHostQuickPick.showQuickInput', {})).resolves.toBe('Ada')
+  expect(ExtensionHostQuickPick.showQuickInput).toHaveBeenCalledWith({}, 'source')
+  await Application.execute('preview', 'Viewlet.openWidget', 'QuickPick', 'custom', [], 5, {})
+  expect(Viewlet.openWidgetForApplication).toHaveBeenCalledWith('preview', 'QuickPick', 'custom', [], 5, {})
+  await Application.execute('source', 'QuickPick.showCustom', [], { placeholder: 'Name' })
+  expect(QuickPick.showCustom).toHaveBeenCalledWith([], { placeholder: 'Name' }, 'source')
 })

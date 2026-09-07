@@ -821,3 +821,30 @@ test('openWidget assigns command palette ownership before loading it', async () 
   expect(ViewletManager.load).toHaveBeenCalledWith(expect.objectContaining({ applicationId: 'source', id: 'QuickPick' }))
   expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.executeCommands', expect.arrayContaining([['Viewlet.append', 1, 2]]))
 })
+
+test('command palettes follow focus from the source application to the preview', async () => {
+  const ApplicationRegistry = await import('../src/parts/ApplicationRegistry/ApplicationRegistry.ts')
+  const Focus = await import('../src/parts/Focus/Focus.js')
+  for (const [id, layoutUid, editorUid] of [
+    ['palette-source', 101, 103],
+    ['palette-preview', 102, 104],
+  ] as const) {
+    ApplicationRegistry.create({ id, layoutUid, href: '', workspacePath: '', workspaceUri: '' })
+    const layout = { applicationId: id, uid: layoutUid }
+    ViewletStates.set(layoutUid, { state: layout, renderedState: layout, moduleId: 'Layout', factory: {} })
+    const editor = { applicationId: id, uid: editorUid }
+    ViewletStates.set(editorUid, { state: editor, renderedState: editor, moduleId: 'EditorText', factory: {} })
+  }
+  jest.mocked(ViewletManager.load).mockResolvedValue([])
+  jest.mocked(RendererProcess.invoke).mockResolvedValue(undefined as never)
+  try {
+    Focus.setFocus(1, undefined, 103, 'EditorText')
+    Focus.setFocus(1, undefined, 104, 'EditorText')
+    await Viewlet.openWidget('QuickPick', 'commands')
+    expect(ViewletManager.load).toHaveBeenCalledWith(expect.objectContaining({ applicationId: 'palette-preview', id: 'QuickPick' }))
+    expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.executeCommands', expect.arrayContaining([['Viewlet.append', 102, 2]]))
+  } finally {
+    ApplicationRegistry.remove('palette-source')
+    ApplicationRegistry.remove('palette-preview')
+  }
+})
