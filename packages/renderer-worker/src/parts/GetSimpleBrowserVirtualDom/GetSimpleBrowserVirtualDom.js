@@ -233,7 +233,6 @@ export const getSimpleBrowserVirtualDom = (
     onFocus: DomEventListenerFunctions.HandleFocus,
     name: InputName.SimpleBrowserAddress,
     onBlur: DomEventListenerFunctions.HandleBlurSimpleBrowserAddress,
-    value,
   })
   if (inlineSuggestion) {
     dom.push(

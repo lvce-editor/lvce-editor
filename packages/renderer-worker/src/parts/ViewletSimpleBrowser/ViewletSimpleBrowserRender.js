@@ -188,6 +188,7 @@ const renderDom = {
       oldState.isLoading === newState.isLoading &&
       oldState.snapshot === newState.snapshot &&
       oldState.suggestions === newState.suggestions &&
+      (oldState.inputValue === newState.inputValue || newState.suggestions.length === 0) &&
       oldState.selectedSuggestionIndex === newState.selectedSuggestionIndex &&
       oldState.selectedTabIndex === newState.selectedTabIndex &&
       oldState.tabsEnabled === newState.tabsEnabled &&
@@ -199,11 +200,11 @@ const renderDom = {
   },
   apply(oldState, newState) {
     const newDom = getDom(newState)
-    const commands =
-      oldState.browserViewId === 0
-        ? [['Viewlet.setDom2', newState.uid, newDom]]
-        : [['Viewlet.setPatches', newState.uid, diffTree(getDom(oldState), newDom)]]
-    return commands
+    if (oldState.browserViewId === 0) {
+      return [['Viewlet.setDom2', newState.uid, newDom]]
+    }
+    const patches = diffTree(getDom(oldState), newDom)
+    return [['Viewlet.setTreePatches', newState.uid, patches]]
   },
   multiple: true,
 }
@@ -219,7 +220,11 @@ export const renderTitle = {
 
 const renderAddressValue = {
   isEqual(oldState, newState) {
-    return oldState.browserViewId === newState.browserViewId
+    return (
+      oldState.browserViewId === newState.browserViewId &&
+      oldState.iframeSrc === newState.iframeSrc &&
+      oldState.addressValueVersion === newState.addressValueVersion
+    )
   },
   apply(oldState, newState) {
     return [['Viewlet.setValueByName', newState.uid, InputName.SimpleBrowserAddress, newState.inputValue]]

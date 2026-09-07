@@ -32,7 +32,8 @@
     "test:gpu-diagnostics": "node --test scripts/test/diagnose-gpu-process.test.mjs",
     "e2e:ci": "node packages/extension-host-worker-tests/src/_all.js --ci",
     "test:simple-browser-new-tab": "node scripts/test-simple-browser-new-tab.mjs",
-    "test:simple-browser-workspace": "node scripts/test-simple-browser-workspace.mjs"
+    "test:simple-browser-workspace": "node scripts/test-simple-browser-workspace.mjs",
+    "test:simple-browser-address": "node scripts/test-simple-browser-address.mjs"
   },
   "keywords": [],
   "author": "",

@@ -127,7 +127,9 @@ test('renders the first matching suggestion inline without changing the input va
     }),
   )
   expect(dom).toContainEqual(expect.objectContaining({ className: 'SimpleBrowserInlineSuggestionSuffix' }))
-  expect(dom).toContainEqual(expect.objectContaining({ name: 'simple-browser-address', value: 'cheese' }))
+  const input = dom.find((node) => node.name === 'simple-browser-address')
+  expect(input).toBeDefined()
+  expect(input).not.toHaveProperty('value')
   expect(dom).toContainEqual(expect.objectContaining({ text: 'burger' }))
 })
 

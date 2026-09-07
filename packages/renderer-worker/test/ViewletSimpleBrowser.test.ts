@@ -3,6 +3,7 @@ import { afterEach, beforeEach, expect, jest, test } from '@jest/globals'
 afterEach(() => {
   BrowserSuggestionRequests.cancel(7)
   jest.useRealTimers()
+  delete Preferences.state['simpleBrowser.chromeTheme']
 })
 
 beforeEach(() => {
@@ -532,7 +533,7 @@ test('updates open new tab pages when the color theme changes', async () => {
   ColorTheme.state.colorThemeCss = ':root { --EditorBackground: #193549; --InputBoxBackground: #15232d; }'
   // @ts-ignore
   ElectronWebContentsViewFunctions.setIframeSrc.mockResolvedValue(undefined)
-  const state = createTwoTabState()
+  const state = { ...createTwoTabState(), chromeTheme: 'inherit' }
   const { tabs } = state
   tabs[0].iframeSrc = ''
 
@@ -540,7 +541,29 @@ test('updates open new tab pages when the color theme changes', async () => {
 
   expect(newState).toBe(state)
   expect(ElectronWebContentsViewFunctions.setIframeSrc).toHaveBeenCalledTimes(1)
-  expect(ElectronWebContentsViewFunctions.setIframeSrc).toHaveBeenCalledWith(12, SimpleBrowserNewTabPage.getUrl())
+  expect(ElectronWebContentsViewFunctions.setIframeSrc).toHaveBeenCalledWith(12, SimpleBrowserNewTabPage.getUrl(undefined, false, 'inherit'))
+})
+
+test.each(['light', 'inherit'])('updates open new tab pages when browser chrome changes to %s', async (chromeTheme) => {
+  Preferences.state['simpleBrowser.chromeTheme'] = chromeTheme
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.setIframeSrc.mockResolvedValue(undefined)
+  const state = { ...createTwoTabState(), chromeTheme: chromeTheme === 'light' ? 'inherit' : 'light' }
+  state.tabs[0].iframeSrc = ''
+
+  const newState = await ViewletSimpleBrowser.handleSettingsChanged(state)
+
+  expect(newState.chromeTheme).toBe(chromeTheme)
+  expect(ElectronWebContentsViewFunctions.setIframeSrc).toHaveBeenCalledTimes(1)
+  expect(ElectronWebContentsViewFunctions.setIframeSrc).toHaveBeenCalledWith(12, SimpleBrowserNewTabPage.getUrl(undefined, false, chromeTheme))
+})
+
+test('does not reload new tab pages for unrelated settings changes', async () => {
+  const state = { ...createTwoTabState(), chromeTheme: 'light' }
+  state.tabs[0].iframeSrc = ''
+
+  expect(await ViewletSimpleBrowser.handleSettingsChanged(state)).toBe(state)
+  expect(ElectronWebContentsViewFunctions.setIframeSrc).not.toHaveBeenCalled()
 })
 
 test('opens a target blank link in a new selected tab by default', async () => {

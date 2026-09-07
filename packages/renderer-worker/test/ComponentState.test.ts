@@ -338,7 +338,7 @@ test('rejects missing components and components without a DOM API', async () => 
 
 test('exposes Simple Browser state and renders edits through its component state hooks', async () => {
   const factory = await import('../src/parts/ViewletSimpleBrowser/ViewletSimpleBrowser.ipc.js')
-  const state = factory.create(10, 'simple-browser://', 0, 0, 800, 600)
+  const state = { ...factory.create(10, 'simple-browser://', 0, 0, 800, 600), browserViewId: 12 }
   ViewletStates.set(10, { factory, moduleId: 'SimpleBrowser', renderedState: state, state })
 
   expect(ComponentState.getComponents()).toEqual([
@@ -347,14 +347,16 @@ test('exposes Simple Browser state and renders edits through its component state
   await expect(ComponentState.getState(10)).resolves.toBe(state)
 
   const editedState = { ...state, inputValue: 'Live browser state' }
-  const domCommands = factory.render[0].apply(state, editedState)
+  const renderedState = { ...editedState, addressValueVersion: 1 }
+  expect(factory.render[1].isEqual(state, renderedState)).toBe(false)
+  const domCommands = factory.render[1].apply(state, renderedState)
   jest.mocked(ViewletManager.render).mockReturnValue(domCommands)
   await ComponentState.setState(10, editedState)
 
-  await expect(ComponentState.getState(10)).resolves.toBe(editedState)
-  expect(ViewletManager.render).toHaveBeenCalledWith(factory, state, editedState, 10, undefined)
+  await expect(ComponentState.getState(10)).resolves.toEqual(renderedState)
+  expect(ViewletManager.render).toHaveBeenCalledWith(factory, state, renderedState, 10, undefined)
   expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.sendMultiple', domCommands)
-  expect(domCommands).toEqual([['Viewlet.setDom2', 10, expect.arrayContaining([expect.objectContaining({ value: 'Live browser state' })])]])
+  expect(domCommands).toEqual([['Viewlet.setValueByName', 10, 'simple-browser-address', 'Live browser state']])
 })
 
 test('exposes Layout state and renders edits through its component state hooks', async () => {
