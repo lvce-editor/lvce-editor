@@ -55,6 +55,7 @@ export const test: Test = async ({ Command, Editor, expect, FileSystem, Locator,
     await assertDisabled()
     await Editor.type(' after stop')
     await expect(Locator('.Editor')).toHaveText('before proxied edit after stop')
+    console.info('Session replay command recording verified')
     return
   }
 

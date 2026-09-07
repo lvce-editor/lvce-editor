@@ -82,7 +82,7 @@ jobs:
         working-directory: ./packages/extension-host-worker-tests
         run: |
           npm run e2e:headless -- --test-name-prefix=session-replay.settings
-          npm run e2e:headless -- --test-name-prefix=session-replay.settings '--initial-settings={"sessionReplay.enabled":true}'
+          npm run e2e:headless -- --test-name-prefix=session-replay.settings '--initial-settings={"sessionReplay.enabled":true}' '--expect-console=Session replay command recording verified'
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0
       - name: Test Simple Browser suggestions and new-tab theme
