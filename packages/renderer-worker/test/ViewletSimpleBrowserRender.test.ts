@@ -42,6 +42,15 @@ test('rerenders when suggestions change', () => {
   expect(ViewletSimpleBrowserRender.render[0].isEqual(state, newState)).toBe(false)
 })
 
+test('updates inline completion when the input changes but suggestions stay the same', () => {
+  const oldState = { ...state, inputValue: 'what is', suggestions: ['what is'] }
+  const newState = { ...oldState, inputValue: 'what' }
+
+  expect(ViewletSimpleBrowserRender.render[0].isEqual(oldState, newState)).toBe(false)
+  const commands = ViewletSimpleBrowserRender.render[0].apply(oldState, newState)
+  expect(commands[0][2]).not.toContainEqual(expect.objectContaining({ key: 'value' }))
+})
+
 test('rerenders when the audio indicator setting changes', () => {
   const oldState = {
     ...state,

@@ -188,6 +188,7 @@ const renderDom = {
       oldState.isLoading === newState.isLoading &&
       oldState.snapshot === newState.snapshot &&
       oldState.suggestions === newState.suggestions &&
+      (oldState.inputValue === newState.inputValue || newState.suggestions.length === 0) &&
       oldState.selectedSuggestionIndex === newState.selectedSuggestionIndex &&
       oldState.selectedTabIndex === newState.selectedTabIndex &&
       oldState.tabsEnabled === newState.tabsEnabled &&
