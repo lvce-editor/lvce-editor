@@ -49,3 +49,13 @@ test('provider rejection becomes an empty update without ending the active sessi
   expect(apply).toHaveBeenCalledWith(id, [])
   expect(Requests.isCurrent(7, id, 10)).toBe(true)
 })
+
+test('distinguishes dismissed input from input superseded by a newer query', () => {
+  const id = Requests.begin(7, 10, 'typed', undefined, jest.fn())
+  Requests.cancel(7)
+  expect(Requests.isCurrent(7, id, 10)).toBe(false)
+  expect(Requests.isLatest(7, id)).toBe(true)
+  Requests.begin(7, 10, 'newer', undefined, jest.fn())
+  expect(Requests.isLatest(7, id)).toBe(false)
+  Requests.dispose(7)
+})

@@ -879,7 +879,9 @@ export const handleInput = async (state, value) => {
     (id, suggestions) => Viewlet.executeViewletCommand(state.uid, 'applySuggestions', state.uid, value, suggestions, undefined, id),
   )
   const result = await applySuggestions(newState, state.uid, value, [], getLocalSuggestions(newState, value), sessionId)
-  return BrowserSuggestionRequests.isCurrent(state.uid, sessionId, state.browserViewId) ? result : state
+  if (BrowserSuggestionRequests.isCurrent(state.uid, sessionId, state.browserViewId)) return result
+  // Dismissing suggestions must not discard the input event that started them.
+  return BrowserSuggestionRequests.isLatest(state.uid, sessionId) ? newState : state
 }
 
 const suggestionsOverlayId = 'search-suggestions'
@@ -1163,7 +1165,7 @@ export const handleAudioStateChanged = (state, browserViewId, audible) => {
 }
 
 export const dispose = async (state) => {
-  BrowserSuggestionRequests.cancel(state.uid)
+  BrowserSuggestionRequests.dispose(state.uid)
   await BrowserFullWidth.handleDispose(state.uid)
   visibleBrowserUids.delete(state.uid)
   await Promise.all([
