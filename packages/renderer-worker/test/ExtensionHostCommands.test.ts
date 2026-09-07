@@ -17,7 +17,9 @@ jest.unstable_mockModule('../src/parts/ExtensionMeta/ExtensionMeta.js', () => ({
   getExtensions,
 }))
 
-const invoke = jest.fn(async () => [{ commands: [{ id: 'source.command', label: 'Source Command' }] }])
+const invoke = jest
+  .fn<(...args: readonly any[]) => Promise<any>>()
+  .mockResolvedValue([{ commands: [{ id: 'source.command', label: 'Source Command' }] }])
 jest.unstable_mockModule('../src/parts/ExtensionManagementWorker/ExtensionManagementWorker.js', () => ({ invoke }))
 
 const ExtensionHostCommands = await import('../src/parts/ExtensionHost/ExtensionHostCommands.js')
