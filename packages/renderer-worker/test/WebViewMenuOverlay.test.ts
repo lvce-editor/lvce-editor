@@ -24,7 +24,9 @@ test('restores the browser after the menu worker closes the menu for an action',
 
   expect(RendererProcess.invoke).toHaveBeenCalledWith('Menu.hide', false)
   expect(SimpleBrowserOverlay.hide).toHaveBeenCalledWith('menu')
-  expect(RendererProcess.invoke.mock.invocationCallOrder[0]).toBeLessThan(SimpleBrowserOverlay.hide.mock.invocationCallOrder[0])
+  expect(jest.mocked(RendererProcess.invoke).mock.invocationCallOrder[0]).toBeLessThan(
+    jest.mocked(SimpleBrowserOverlay.hide).mock.invocationCallOrder[0],
+  )
 })
 
 test('keeps the snapshot when only a submenu closes', async () => {

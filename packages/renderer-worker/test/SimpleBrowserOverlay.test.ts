@@ -87,7 +87,7 @@ test('targets each visible browser by uid even when a hidden browser has focus',
   await SimpleBrowserOverlay.show('menu')
   await SimpleBrowserOverlay.hide('menu')
 
-  expect(Viewlet.executeViewletCommand.mock.calls).toEqual([
+  expect(jest.mocked(Viewlet.executeViewletCommand).mock.calls).toEqual([
     [3, 'showOverlay', 'menu'],
     [4, 'showOverlay', 'menu'],
     [3, 'hideOverlay', 'menu'],
