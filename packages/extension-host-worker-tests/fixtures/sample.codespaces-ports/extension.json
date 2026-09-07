@@ -1,0 +1,9 @@
+{
+  "id": "sample.codespaces-ports",
+  "name": "Codespaces Ports",
+  "version": "0.0.0",
+  "browser": "main.js",
+  "isolated": true,
+  "activation": ["onPorts:codespaces", "onFileSystem:codespaces"],
+  "fileSystemProviders": [{ "id": "codespaces" }]
+}

@@ -1343,6 +1343,7 @@
     "hotReloadCommand": "",
     "viewlet": {
       "name": "Ports",
+      "extraCommands": [{ "name": "handleWorkspaceChange", "method": "loadContent" }, { "name": "refresh", "method": "loadContent" }],
       "css": ["/css/parts/ViewletPorts.css"],
       "state": {
         "idKey": "uid",
@@ -1360,7 +1361,7 @@
             { "source": "state", "name": "parentUid" }
           ]
         },
-        "loadContent": { "name": "Ports.loadContent", "parameters": [{ "source": "state", "name": "uid" }] },
+        "loadContent": { "name": "Ports.loadContent", "parameters": [{ "source": "state", "name": "uid" }, { "source": "context", "name": "workspaceUri" }] },
         "diff": { "name": "Ports.diff2", "parameters": [{ "source": "state", "name": "uid" }] },
         "render": { "name": "Ports.render2", "parameters": [{ "source": "state", "name": "uid" }, { "source": "result", "name": "diff" }] },
         "dispose": { "name": "Ports.dispose", "parameters": [{ "source": "state", "name": "uid" }] },

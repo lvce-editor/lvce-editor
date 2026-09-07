@@ -148,6 +148,11 @@ export const execute = (applicationId: string, command: string, ...args: readonl
     })
   }
   switch (command) {
+    case 'PortProvider.getPorts':
+      return ApplicationRegistry.track(applicationId, async () => {
+        const { getPorts } = await import('../PortProvider/PortProvider.ts')
+        return getPorts(application.workspaceUri, applicationId)
+      })
     case 'ExtensionHostSourceControl.getEnabledProviderIds':
     case 'ExtensionHostSourceControl.getFileDecorations':
       return ApplicationRegistry.track(applicationId, () =>

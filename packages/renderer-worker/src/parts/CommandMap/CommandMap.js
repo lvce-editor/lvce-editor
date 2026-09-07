@@ -8,6 +8,7 @@ const lazy =
   }
 
 export const commandMap = {
+  'PortProvider.getPorts': async (...args) => (await import('../PortProvider/PortProvider.ts')).getPorts(...args),
   'Application.create': lazy('Application.create'),
   'Application.dispose': lazy('Application.dispose'),
   'Application.execute': lazy('Application.execute'),
