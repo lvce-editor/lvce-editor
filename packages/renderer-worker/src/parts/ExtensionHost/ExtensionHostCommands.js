@@ -16,8 +16,11 @@ const getCommandsFromExtensions = (extensions) => {
   return extensions.flatMap(getCommandsFromExtension)
 }
 
-export const getCommands = async (assetDir, platform) => {
-  const extensions = await ExtensionMeta.getExtensions(assetDir, platform)
+export const getCommands = async (assetDir, platform, applicationId) => {
+  const extensions =
+    applicationId === undefined
+      ? await ExtensionMeta.getExtensions(assetDir, platform)
+      : await ExtensionManagementWorker.invoke('Extensions.invokeForApplication', applicationId, 'Extensions.getAllExtensions', assetDir, platform)
   const commands = getCommandsFromExtensions(extensions)
   return commands
 }

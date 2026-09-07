@@ -811,3 +811,13 @@ test('an unchanged async command does not render over a newer update', async () 
   expect(ViewletManager.render).not.toHaveBeenCalled()
   expect(afterRender).not.toHaveBeenCalled()
 })
+
+test('openWidget assigns command palette ownership before loading it', async () => {
+  const layout = ViewletStates.getState('Layout')
+  layout.applicationId = 'source'
+  jest.mocked(ViewletManager.load).mockResolvedValue([])
+  jest.mocked(RendererProcess.invoke).mockResolvedValue(undefined as never)
+  await Viewlet.openWidget('QuickPick', 'commands')
+  expect(ViewletManager.load).toHaveBeenCalledWith(expect.objectContaining({ applicationId: 'source', id: 'QuickPick' }))
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.executeCommands', expect.arrayContaining([['Viewlet.append', 1, 2]]))
+})
