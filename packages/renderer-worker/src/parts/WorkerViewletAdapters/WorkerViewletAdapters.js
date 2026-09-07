@@ -206,6 +206,11 @@ export const processExplorer = {
 }
 
 export const quickPick = {
+  extendCommands(Commands) {
+    // Custom inputs resolve in the renderer; the worker's callback command
+    // must not replace QuickPick.executeCallback with a view command.
+    delete Commands.executeCallback
+  },
   extendModule() {
     return {
       dispose(state) {
