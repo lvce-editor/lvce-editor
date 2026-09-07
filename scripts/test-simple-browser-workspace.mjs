@@ -561,9 +561,13 @@ try {
   await page.locator('.PanelTab[name="Terminals"]').click()
   const terminalInput = page.locator('.xterm-helper-textarea')
   await expect(terminalInput).toBeFocused()
-  await terminalInput.pressSequentially('printf workspace-terminal')
+  const terminal = page.locator('.XtermTerminal')
+  await expect(terminal).toContainText(/[$#>%]/)
+  const terminalCommand = "printf 'workspace-%s\\n' terminal"
+  await page.keyboard.insertText(terminalCommand)
+  await expect(terminal).toContainText(terminalCommand)
   await terminalInput.press('Enter')
-  await expect(page.locator('.XtermTerminal')).toContainText('workspace-terminal')
+  await expect(terminal).toContainText('workspace-terminal')
   await terminalInput.evaluate((element) => {
     window.workspaceTerminalInput = element
   })
