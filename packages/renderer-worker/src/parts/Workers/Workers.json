@@ -1353,6 +1353,7 @@
         "resize": { "name": "Ports.resize", "parameters": [{ "source": "state", "name": "uid" }, { "source": "argument", "name": "dimensions" }] },
         "terminate": { "name": "Ports.terminate", "parameters": [] },
         "getCommandIds": { "name": "Ports.getCommandIds", "parameters": [] },
+        "getKeyBindings": { "name": "Ports.getKeyBindings", "parameters": [], "fallback": [] },
         "renderEventListeners": { "name": "Ports.renderEventListeners", "parameters": [] }
       },
       "renderComparison": "emptyCommands",
