@@ -23,6 +23,7 @@ await writeFile(
     { source: 'User', key: parseKeyBindingString('Ctrl+Alt+1'), command: 'Preferences.update', args: [{ 'simpleBrowser.chromeTheme': 'inherit' }] },
     { source: 'User', key: parseKeyBindingString('Ctrl+Alt+2'), command: 'Preferences.update', args: [{ 'simpleBrowser.chromeTheme': 'light' }] },
     { source: 'User', key: parseKeyBindingString('Ctrl+Alt+3'), command: 'Layout.handleSettingsChanged' },
+    { source: 'User', key: parseKeyBindingString('Ctrl+Alt+4'), command: 'Layout.toggleSimpleBrowserFullWidth' },
   ]),
 )
 const rendererPath = join(root, 'packages/renderer-worker/node_modules/@lvce-editor/renderer-process/dist/rendererProcessMain.js')
@@ -73,19 +74,12 @@ try {
     if (message.type() === 'error') console.error('APP ERROR', message.text())
   })
   await expect(page.locator('#Workbench')).toBeVisible()
-  const runCommand = async (label) => {
-    await page.keyboard.press('Control+Shift+P')
-    const input = page.locator('[name="QuickPickInput"]')
-    await expect(input).toBeVisible()
-    await input.fill(`>${label}`)
-    await expect(page.getByRole('option', { name: label, exact: true })).toBeVisible()
-    await input.press('Enter')
-  }
+  await expect(page.getByRole('tree', { name: 'Files Explorer' })).toBeVisible()
   await page.evaluate(() => {
     localStorage.setItem('simple-browser-search-history', JSON.stringify(['known first', 'known second', 'offline local']))
     localStorage.setItem('simple-browser-history', JSON.stringify([{ date: Date.now(), url: 'https://known.example/article' }]))
   })
-  await runCommand('Simple Browser: Toggle Full Width')
+  await page.keyboard.press('Control+Alt+4')
   await expect(page.locator('.BrowserFullWidth')).toBeVisible()
   const address = page.locator('[name="simple-browser-address"]')
   await address.fill(url)
