@@ -15,7 +15,6 @@ export const launchProblemsWorker = async () => {
     url: GetConfiguredWorkerUrl.getConfiguredWorkerUrl('develop.problemsWorkerPath', ProblemsWorkerUrl.problemsViewWorkerUrl),
   })
   HandleIpc.handleIpc(ipc)
-  await JsonRpc.invoke(ipc, 'Problems.initialize')
   const { port1, port2 } = GetPortTuple.getPortTuple()
   await Promise.all([
     JsonRpc.invokeAndTransfer(ipc, 'Problems.handleMessagePort', port1),
