@@ -10,11 +10,7 @@ const isTest = jest.fn<() => boolean>(() => false)
 const getPlatform = jest.fn(() => PlatformType.Test)
 const setWorkspaceUri = jest.fn(async (_uri: string) => {})
 const startRemoteCli = jest.fn<
-  (
-    connectionKey: string,
-    remoteCliUrl: string,
-    handleOpenRequest: (request: unknown) => Promise<void>,
-  ) => Promise<void>
+  (connectionKey: string, remoteCliUrl: string, handleOpenRequest: (request: unknown) => Promise<void>) => Promise<void>
 >(async () => {})
 const stopRemoteCli = jest.fn()
 
@@ -66,6 +62,7 @@ jest.unstable_mockModule('../src/parts/RemoteCli/RemoteCli.js', () => ({
 
 const GlobalEventBus = await import('../src/parts/GlobalEventBus/GlobalEventBus.js')
 const Workspace = await import('../src/parts/Workspace/Workspace.js')
+const WorkspaceConnection = await import('../src/parts/WorkspaceConnection/WorkspaceConnection.js')
 
 beforeEach(() => {
   createNotification.mockClear()
@@ -187,11 +184,13 @@ test('setUri uses the workspace connection path', async () => {
     command: 'workspace-provider.getWebSocketUrl',
     remoteCliUrl: 'wss://workspace.example.com/websocket/shared-process',
     workspacePath: '/work',
+    terminalSpawnOptions: { command: 'bash', args: ['-i'] },
   })
 
   expect(Workspace.getWorkspacePath()).toBe('/work')
   expect(Workspace.getWorkspaceUri()).toBe('workspace-provider://host/work')
   expect(Workspace.state.pathSeparator).toBe('/')
+  expect(WorkspaceConnection.getTerminalSpawnOptions()).toEqual({ command: 'bash', args: ['-i'] })
   expect(startRemoteCli).toHaveBeenCalledWith(
     'wss://workspace.example.com/websocket/shared-process',
     'wss://workspace.example.com/websocket/shared-process',

@@ -82,7 +82,7 @@ export const setUri = async (uri, connectionOrPathSeparator, legacyConnection) =
   state.workspaceUri = uri
   state.pathSeparator = pathSeparator
   if (connection) {
-    WorkspaceConnection.set(uri, connection.command, connection.remoteCliUrl, connection.webSocketUrl)
+    WorkspaceConnection.set(uri, connection.command, connection.remoteCliUrl, connection.webSocketUrl, connection.terminalSpawnOptions)
     if (connection.remoteCliUrl) {
       void RemoteCli.start(connection.remoteCliUrl, connection.remoteCliUrl, handleRemoteCliOpenRequest).catch(() => {})
     } else {
@@ -101,6 +101,7 @@ const handleRemoteCliOpenRequest = async (request) => {
   const command = WorkspaceConnection.getCommand()
   const remoteCliUrl = WorkspaceConnection.getRemoteCliUrl()
   const webSocketUrl = WorkspaceConnection.getWebSocketUrlTemplate()
+  const terminalSpawnOptions = WorkspaceConnection.getTerminalSpawnOptions()
   if (!currentUri || !command) {
     throw new Error('Remote workspace connection is not available')
   }
@@ -109,6 +110,7 @@ const handleRemoteCliOpenRequest = async (request) => {
     command,
     remoteCliUrl,
     webSocketUrl,
+    terminalSpawnOptions,
     workspacePath: resolved.workspacePath,
   })
   if (resolved.fileUri) {
