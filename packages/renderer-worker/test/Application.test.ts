@@ -157,6 +157,20 @@ test('text editor associations are scoped to the source application', async () =
   })
 })
 
+test('extension commands execute in the owning application', async () => {
+  await Application.create(options('source'))
+  await Application.create(options('preview'))
+  jest.clearAllMocks()
+  await Application.execute('source', 'ExtensionHost.executeCommand', 'eslint.showPerformanceTrace')
+  expect(ExtensionManagementWorker.invoke).toHaveBeenCalledWith(
+    'Extensions.invokeForApplication',
+    'source',
+    'Extensions.executeCommand',
+    'eslint.showPerformanceTrace',
+  )
+  expect(ViewletManager.executeForApplication).not.toHaveBeenCalled()
+})
+
 test('extension reload refreshes existing application views without disposing the layout', async () => {
   const source = await Application.create(options('source'))
   const preview = await Application.create(options('preview'))
