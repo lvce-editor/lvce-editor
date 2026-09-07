@@ -45,7 +45,10 @@ export const test: Test = async ({ Command, Editor, expect, FileSystem, Locator,
       await invoke('load', { session })
       const result = await invoke('seek', session.events.at(-1).timestamp)
       const textContent = (node): string => (node.text || '') + (node.children || []).map(textContent).join('')
-      if (!textContent(result.frame.dom).includes('before proxied edit')) throw new Error('Replayed virtual DOM must contain the real editor edit')
+      if (!textContent(result.frame.dom).includes('before proxied edit')) {
+        console.info('REPLAY_DEBUG', JSON.stringify({ session, result }))
+        throw new Error('Replayed virtual DOM must contain the real editor edit')
+      }
       const initial = await invoke('seek', 0)
       if (textContent(initial.frame.dom).includes('before proxied edit')) throw new Error('Seeking backwards must restore the initial DOM')
     } finally {
