@@ -6,7 +6,10 @@ import * as ViewletStates from '../src/parts/ViewletStates/ViewletStates.js'
 jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () => ({ invoke: jest.fn(async () => {}) }))
 jest.unstable_mockModule('../src/parts/ExtensionManagementWorker/ExtensionManagementWorker.js', () => ({ invoke: jest.fn(async () => {}) }))
 jest.unstable_mockModule('../src/parts/ViewletModule/ViewletModule.js', () => ({ load: jest.fn() }))
-jest.unstable_mockModule('../src/parts/Viewlet/Viewlet.js', () => ({ dispose: jest.fn(async (uid) => ViewletStates.remove(uid)) }))
+jest.unstable_mockModule('../src/parts/Viewlet/Viewlet.js', () => ({
+  dispose: jest.fn(async (uid) => ViewletStates.remove(uid)),
+  executeViewletCommand: jest.fn(async () => {}),
+}))
 jest.unstable_mockModule('../src/parts/ViewletManager/ViewletManager.js', () => ({
   load: jest.fn(async () => []),
   executeForApplication: jest.fn(async () => {}),
@@ -152,4 +155,30 @@ test('text editor associations are scoped to the source application', async () =
     editorInput: { type: 'editor', uri: 'memfs:///icon.svg', forceText: true },
     focus: true,
   })
+})
+
+test('extension reload refreshes existing application views without disposing the layout', async () => {
+  const source = await Application.create(options('source'))
+  const preview = await Application.create(options('preview'))
+  const replacement = { id: 'sample', browser: 'blob:new' }
+  const uri = 'sample-memfs:///README.md'
+  ApplicationRegistry.own('preview', 100)
+  ViewletStates.set(100, { moduleId: 'Editor', factory: {}, state: { uid: 100, uri, applicationId: 'preview' }, renderedState: { uid: 100 } })
+  await Application.execute('preview', 'Extensions.reload', 'sample', replacement)
+  expect(ExtensionManagementWorker.invoke).toHaveBeenCalledWith('Extensions.reloadApplicationExtension', 'preview', 'sample', replacement)
+  expect(Viewlet.executeViewletCommand).toHaveBeenCalledWith(100, 'loadContent', undefined, { preserveFocus: true })
+  expect(ViewletManager.executeForApplication).toHaveBeenCalledWith('preview', 'Layout.handleWorkspaceRefresh')
+  expect(Viewlet.dispose).not.toHaveBeenCalled()
+  expect(ApplicationRegistry.getOwner(source)).toBe('source')
+  expect(ApplicationRegistry.getOwner(preview)).toBe('preview')
+  expect(ApplicationRegistry.getOwner(100)).toBe('preview')
+})
+
+test('a failed extension replacement leaves application views mounted and does not refresh them', async () => {
+  await Application.create(options('preview'))
+  jest.mocked(ExtensionManagementWorker.invoke).mockRejectedValueOnce(new Error('reload failed'))
+  jest.mocked(ViewletManager.executeForApplication).mockClear()
+  await expect(Application.execute('preview', 'Extensions.reload', 'sample', {})).rejects.toThrow('reload failed')
+  expect(ViewletManager.executeForApplication).not.toHaveBeenCalled()
+  expect(Viewlet.dispose).not.toHaveBeenCalled()
 })

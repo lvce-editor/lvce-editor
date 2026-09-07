@@ -148,6 +148,17 @@ export const execute = (applicationId: string, command: string, ...args: readonl
     })
   }
   switch (command) {
+    case 'Extensions.reload':
+      return ApplicationRegistry.track(applicationId, async () => {
+        await ExtensionManagementWorker.invoke('Extensions.reloadApplicationExtension', applicationId, ...args)
+        for (const uid of ApplicationRegistry.getUids(applicationId)) {
+          const instance = ViewletStates.getByUid(uid)
+          if (instance?.moduleId === ViewletModuleId.EditorText) {
+            await Viewlet.executeViewletCommand(uid, 'loadContent', undefined, { preserveFocus: true })
+          }
+        }
+        await ViewletManager.executeForApplication(applicationId, 'Layout.handleWorkspaceRefresh')
+      })
     case 'ExtensionHostSourceControl.getEnabledProviderIds':
     case 'ExtensionHostSourceControl.getFileDecorations':
       return ApplicationRegistry.track(applicationId, () =>
