@@ -168,6 +168,12 @@ export const afterRender = async (oldState, newState) => {
   const previous = oldState.browserFullWidth
   const current = newState.browserFullWidth
   if (previous === current) return
+  // Layout roots contain multiple address inputs with the same name. Restore each
+  // retained browser's own value after the root renderer preserves named inputs.
+  await RendererProcess.invoke(
+    'Viewlet.sendMultiple',
+    getBrowsers(newState).map(({ state }) => ['Viewlet.setValueByName', state.uid, 'simple-browser-address', state.inputValue]),
+  )
   if (current) {
     for (const uid of current.hiddenBrowserUids) {
       const browser = ViewletStates.getInstance(uid)

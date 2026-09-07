@@ -4,17 +4,24 @@ const sequence = { value: 0 }
 export const cancel = (uid) => {
   const session = sessions.get(uid)
   if (session?.timer !== undefined) clearTimeout(session.timer)
+  if (session) session.active = false
+}
+
+export const dispose = (uid) => {
+  cancel(uid)
   sessions.delete(uid)
 }
 
+export const isLatest = (uid, id) => sessions.get(uid)?.id === id
+
 export const isCurrent = (uid, id, tabId) => {
   const session = sessions.get(uid)
-  return session?.id === id && session?.tabId === tabId
+  return session?.active === true && session.id === id && session.tabId === tabId
 }
 
 export const begin = (uid, tabId, query, request, apply) => {
   cancel(uid)
-  const session = { id: ++sequence.value, tabId, timer: undefined }
+  const session = { active: true, id: ++sequence.value, tabId, timer: undefined }
   sessions.set(uid, session)
   if (request) {
     session.timer = setTimeout(async () => {

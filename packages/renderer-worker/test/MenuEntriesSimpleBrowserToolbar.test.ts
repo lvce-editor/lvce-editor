@@ -4,7 +4,7 @@ import * as MenuEntrySeparator from '../src/parts/MenuEntrySeparator/MenuEntrySe
 import * as MenuItemFlags from '../src/parts/MenuItemFlags/MenuItemFlags.js'
 
 test('exposes useful Simple Browser actions in the toolbar menu', () => {
-  expect(MenuEntriesSimpleBrowserToolbar.getMenuEntries()).toEqual([
+  expect(MenuEntriesSimpleBrowserToolbar.getMenuEntries(42, 17)).toEqual([
     { command: 'SimpleBrowser.createNewTab', flags: MenuItemFlags.None, id: 'new-tab', label: 'New Tab' },
     { command: 'SimpleBrowser.reload', flags: MenuItemFlags.None, id: 'reload', label: 'Reload' },
     { command: 'SimpleBrowser.openExternal', flags: MenuItemFlags.None, id: 'open-external', label: 'Open in Default Browser' },
@@ -16,7 +16,13 @@ test('exposes useful Simple Browser actions in the toolbar menu', () => {
     { command: 'SimpleBrowser.zoomOut', flags: MenuItemFlags.None, id: 'zoom-out', label: 'Zoom Out' },
     { command: 'SimpleBrowser.resetZoom', flags: MenuItemFlags.None, id: 'reset-zoom', label: 'Reset Zoom' },
     MenuEntrySeparator.menuEntrySeparator,
-    { command: 'SimpleBrowser.toggleDevTools', flags: MenuItemFlags.None, id: 'toggle-developer-tools', label: 'Toggle Developer Tools' },
+    {
+      command: 'Viewlet.executeViewletCommand',
+      args: [42, 'handleContextMenuAction', 17, 'toggleDevTools', []],
+      flags: MenuItemFlags.None,
+      id: 'toggle-developer-tools',
+      label: 'Toggle Developer Tools',
+    },
     MenuEntrySeparator.menuEntrySeparator,
     { command: 'SimpleBrowser.closeCurrentTab', flags: MenuItemFlags.None, id: 'close-tab', label: 'Close Tab' },
   ])

@@ -1,13 +1,19 @@
 import * as EmbedsWorker from '../EmbedsWorker/EmbedsWorker.js'
 import * as GetWindowZoomLevel from '../GetWindowZoomLevel/GetWindowZoomLevel.js'
-import * as GetZoomLevelPercent from '../GetZoomLevelPercent/GetZoomLevelPercent.js'
 
 export const resizeWebContentsView = async (id, x, y, width, height) => {
   const zoomLevel = await GetWindowZoomLevel.getWindowZoomLevel()
-  const zoomValue = GetZoomLevelPercent.getZoomLevelToPercentValue(zoomLevel)
+  const zoomValue = 1.2 ** zoomLevel
   const modifiedWidth = Math.round(width * zoomValue)
   const modifiedHeight = Math.round(height * zoomValue)
-  return EmbedsWorker.invoke('ElectronWebContentsView.resizeWebContentsView', id, x, y, modifiedWidth, modifiedHeight)
+  return EmbedsWorker.invoke(
+    'ElectronWebContentsView.resizeWebContentsView',
+    id,
+    Math.round(x * zoomValue),
+    Math.round(y * zoomValue),
+    modifiedWidth,
+    modifiedHeight,
+  )
 }
 
 export const setIframeSrc = async (id, iframeSrc) => {
