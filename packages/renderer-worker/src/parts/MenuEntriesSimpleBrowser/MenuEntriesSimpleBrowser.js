@@ -47,6 +47,12 @@ const getMenuEntriesDefault = (x, y, params) => {
     },
     MenuEntrySeparator.menuEntrySeparator,
     {
+      id: 'toggle-developer-tools',
+      label: 'Toggle Developer Tools',
+      flags: MenuItemFlags.None,
+      command: 'SimpleBrowser.toggleDevTools',
+    },
+    {
       id: 'inspect-element',
       label: SimpleBrowserStrings.inspectElement(),
       flags: MenuItemFlags.None,
@@ -112,7 +118,18 @@ export const getMenuEntries = (x, y, params) => {
     menuItems.push(...getMenuEntriesLink(x, y, params))
     menuItems.push(MenuEntrySeparator.menuEntrySeparator)
   }
-  if (params.selectionText) {
+  if (params.isEditable) {
+    for (const [role, label, capability] of [
+      ['undo', 'Undo', 'canUndo'],
+      ['redo', 'Redo', 'canRedo'],
+      ['cut', SimpleBrowserStrings.cut(), 'canCut'],
+      ['copy', SimpleBrowserStrings.copy(), 'canCopy'],
+      ['paste', SimpleBrowserStrings.paste(), 'canPaste'],
+      ['selectAll', 'Select All', 'canSelectAll'],
+    ])
+      menuItems.push({ id: role, role, label, flags: params.editFlags?.[capability] ? MenuItemFlags.None : MenuItemFlags.Disabled })
+    menuItems.push(MenuEntrySeparator.menuEntrySeparator)
+  } else if (params.selectionText) {
     menuItems.push(...getMenuEntriesSelectionText(x, y, params))
     menuItems.push(MenuEntrySeparator.menuEntrySeparator)
   }

@@ -11,7 +11,7 @@ const entry = (id, label, command) => ({
 
 export const id = MenuEntryId.SimpleBrowserToolbar
 
-export const getMenuEntries = () => {
+export const getMenuEntries = (uid, browserViewId) => {
   return [
     entry('new-tab', 'New Tab', 'SimpleBrowser.createNewTab'),
     entry('reload', 'Reload', 'SimpleBrowser.reload'),
@@ -24,7 +24,10 @@ export const getMenuEntries = () => {
     entry('zoom-out', 'Zoom Out', 'SimpleBrowser.zoomOut'),
     entry('reset-zoom', 'Reset Zoom', 'SimpleBrowser.resetZoom'),
     MenuEntrySeparator.menuEntrySeparator,
-    entry('toggle-developer-tools', 'Toggle Developer Tools', 'SimpleBrowser.toggleDevTools'),
+    {
+      ...entry('toggle-developer-tools', 'Toggle Developer Tools', 'Viewlet.executeViewletCommand'),
+      args: [uid, 'handleContextMenuAction', browserViewId, 'toggleDevTools', []],
+    },
     MenuEntrySeparator.menuEntrySeparator,
     entry('close-tab', 'Close Tab', 'SimpleBrowser.closeCurrentTab'),
   ]

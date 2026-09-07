@@ -1,3 +1,4 @@
+import * as ContextMenuAction from './ViewletSimpleBrowserContextMenuAction.js'
 import * as SimpleBrowser from './ViewletSimpleBrowser.js'
 import * as ViewletSimpleBrowserGetDomTree from './ViewletSimpleBrowserGetDomTree.js'
 import * as ViewletSimpleBrowserHandleContextMenu from './ViewletSimpleBrowserHandleContextMenu.js'
@@ -7,10 +8,11 @@ import * as ViewletSimpleBrowserInsertJavaScript from './ViewletSimpleBrowserIns
 import * as TabDrag from './ViewletSimpleBrowserTabDrag.js'
 
 export const Commands = {
-  handleAddressBlur: SimpleBrowser.handleAddressBlur,
-  handleSuggestionPointerDown: SimpleBrowser.handleSuggestionPointerDown,
   handleBrowserViewDestroyed: SimpleBrowser.handleBrowserViewDestroyed,
   handleWindowOpen: SimpleBrowser.handleWindowOpen,
+  handleContextMenuAction: ContextMenuAction.handleContextMenuAction,
+  handleAddressBlur: SimpleBrowser.handleAddressBlur,
+  handleSuggestionPointerDown: SimpleBrowser.handleSuggestionPointerDown,
   handleFaviconError: SimpleBrowser.handleFaviconError,
   prepareFullWidth: SimpleBrowser.prepareFullWidth,
   setFullWidth: SimpleBrowser.setFullWidth,

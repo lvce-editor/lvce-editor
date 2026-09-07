@@ -36,6 +36,7 @@ test('getMenuEntries - default browser actions', () => {
     { command: 'SimpleBrowser.forward', flags: MenuItemFlags.None, id: 'forward', label: 'Forward' },
     { command: 'SimpleBrowser.reload', flags: MenuItemFlags.None, id: 'reload', label: 'Reload' },
     { command: '', flags: MenuItemFlags.Separator, id: 'separator', label: '' },
+    { command: 'SimpleBrowser.toggleDevTools', flags: MenuItemFlags.None, id: 'toggle-developer-tools', label: 'Toggle Developer Tools' },
     {
       args: [10, 20],
       command: 'SimpleBrowser.inspectElement',
@@ -123,6 +124,19 @@ test('getMenuEntries - linked image includes link and image actions', () => {
     'forward',
     'reload',
     'separator',
+    'toggle-developer-tools',
     'inspect-element',
+  ])
+})
+
+test('editable fields expose native roles with capability flags', () => {
+  const entries = MenuEntriesSimpleBrowser.getMenuEntries(0, 0, { isEditable: true, editFlags: { canCopy: true, canPaste: true } })
+  expect(entries.slice(0, 6).map((entry) => ['role' in entry ? entry.role : undefined, entry.flags])).toEqual([
+    ['undo', MenuItemFlags.Disabled],
+    ['redo', MenuItemFlags.Disabled],
+    ['cut', MenuItemFlags.Disabled],
+    ['copy', MenuItemFlags.None],
+    ['paste', MenuItemFlags.None],
+    ['selectAll', MenuItemFlags.Disabled],
   ])
 })

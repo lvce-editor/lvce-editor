@@ -41,8 +41,10 @@ const createNewTabKeyBinding = KeyModifier.CtrlCmd | KeyCode.KeyT
 const focusNextTabKeyBinding = KeyModifier.CtrlCmd | KeyCode.Tab
 const focusPreviousTabKeyBinding = KeyModifier.CtrlCmd | KeyModifier.Shift | KeyCode.Tab
 const openHistoryKeyBinding = KeyModifier.CtrlCmd | KeyCode.KeyH
+const toggleDevToolsKeyBinding = KeyModifier.CtrlCmd | KeyModifier.Shift | KeyCode.KeyI
 const focusAddressKeyBinding = KeyModifier.CtrlCmd | KeyCode.KeyL
 const browserTabKeyBindings = [
+  toggleDevToolsKeyBinding,
   focusAddressKeyBinding,
   closeTabKeyBinding,
   createNewTabKeyBinding,
@@ -1096,6 +1098,10 @@ export const handleFocusIn = (state, name) => {
 
 export const handleKeyBinding = async (state, browserViewId, keyBinding) => {
   if (Number(browserViewId) !== state.browserViewId) {
+    return state
+  }
+  if (keyBinding === toggleDevToolsKeyBinding) {
+    await ElectronWebContentsViewFunctions.toggleDevTools(state.browserViewId)
     return state
   }
   if (keyBinding === focusAddressKeyBinding) return focusAddress(state)

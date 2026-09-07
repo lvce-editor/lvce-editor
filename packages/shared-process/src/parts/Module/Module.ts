@@ -26,6 +26,8 @@ export const load = (moduleId: any): any => {
       return import('../Download/Download.ipc.ts')
     case ModuleId.ElectronApplicationMenu:
       return import('../ElectronApplicationMenu/ElectronApplicationMenu.ipc.ts')
+    case ModuleId.ElectronClipBoard:
+      return import('../ElectronClipBoard/ElectronClipBoard.ipc.ts')
     case ModuleId.ElectronContentTracing:
       return import('../ElectronContentTracing/ElectronContentTracing.ipc.ts')
     case ModuleId.ElectronContextMenu:

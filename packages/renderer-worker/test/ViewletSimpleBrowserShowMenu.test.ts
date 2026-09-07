@@ -13,8 +13,8 @@ beforeEach(() => {
 })
 
 test('opens the toolbar menu below the menu button in its nested toolbar', async () => {
-  const state = { uid: 42, y: 95 }
+  const state = { uid: 42, y: 95, browserViewId: 17 }
 
   await expect(ViewletSimpleBrowserShowMenu.showMenu(state, 700, 35, 0, 30)).resolves.toBe(state)
-  expect(ContextMenu.show2Below).toHaveBeenCalledWith(42, MenuEntryId.SimpleBrowserToolbar, 700, 160)
+  expect(ContextMenu.show2Below).toHaveBeenCalledWith(42, MenuEntryId.SimpleBrowserToolbar, 700, 160, 17)
 })

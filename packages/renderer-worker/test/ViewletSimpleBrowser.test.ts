@@ -172,6 +172,7 @@ beforeEach(() => {
 })
 
 const browserTabKeyBindings = [
+  KeyModifier.CtrlCmd | KeyModifier.Shift | KeyCode.KeyI,
   KeyModifier.CtrlCmd | KeyCode.KeyL,
   KeyModifier.CtrlCmd | KeyCode.KeyW,
   KeyModifier.CtrlCmd | KeyCode.KeyT,

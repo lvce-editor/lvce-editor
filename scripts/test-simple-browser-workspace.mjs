@@ -29,10 +29,16 @@ await build({
   external: ['node:*', '/static/*', 'electron'],
   logLevel: 'error',
 })
+const fixtureImage = await readFile(join(root, 'packages/build/files/icon.png'))
 const server = createServer((_request, response) => {
+  if (_request.url === '/image.png') {
+    response.setHeader('Content-Type', 'image/png')
+    response.end(fixtureImage)
+    return
+  }
   response.setHeader('Content-Type', 'text/html')
   response.end(
-    `<!doctype html><title>Workspace article</title><main style="max-width:640px;margin:auto"><h1>Workspace article</h1><input id="draft"><a href="/second" target="_blank">Second article</a><button id="play" onclick="window.audioContext=new AudioContext();let o=audioContext.createOscillator();let g=audioContext.createGain();g.gain.value=0.001;o.connect(g).connect(audioContext.destination);o.start()">Play audio</button><div style="height:3000px">Article text</div></main><script>window.documentToken=crypto.randomUUID()</script>`,
+    `<!doctype html><title>Workspace article</title><main style="max-width:640px;margin:auto"><h1>Workspace article</h1><input id="draft"><img id="picture" width="24" height="24" src="/image.png"><a href="/second" target="_blank">Second article</a><button id="play" onclick="window.audioContext=new AudioContext();let o=audioContext.createOscillator();let g=audioContext.createGain();g.gain.value=0.001;o.connect(g).connect(audioContext.destination);o.start()">Play audio</button><div style="height:3000px">Article text</div></main><script>window.documentToken=crypto.randomUUID()</script>`,
   )
 })
 await new Promise((resolveListen) => server.listen(0, '127.0.0.1', resolveListen))
@@ -66,6 +72,9 @@ try {
   })
   const page = await app.firstWindow()
   page.setDefaultTimeout(15000)
+  page.on('console', (message) => {
+    if (message.type() === 'error') console.error('APP ERROR', message.text())
+  })
   await expect(page.locator('#Workbench')).toBeVisible()
   const runCommand = async (label) => {
     await page.keyboard.press('Control+Shift+P')
@@ -305,12 +314,260 @@ try {
   await expect.poll(nativePages).toEqual([url])
   await page.locator('.SimpleBrowserFullWidthButton').click()
   await expect.poll(nativePages).toHaveLength(2)
+  // Capture the real Electron menu so its native entries can be exercised without
+  // platform-specific menu keyboard navigation. Right-click still travels through
+  // the embedded page, event bridge, worker menu construction and native process.
+  await app.evaluate(({ Menu, webContents }) => {
+    Menu.prototype.popup = function (options) {
+      globalThis.workspaceMenu = { menu: this, options }
+    }
+  })
+  const openPageMenu = async (selector, targetUrl = mainUrl) => {
+    await app.evaluate(
+      async ({ webContents }, { selector, targetUrl }) => {
+        globalThis.workspaceMenu = undefined
+        globalThis.workspaceContextEvent = undefined
+        const guest = webContents.getAllWebContents().find((item) => item.getURL() === targetUrl)
+        guest.focus()
+        guest.once('context-menu', (...args) => {
+          globalThis.workspaceContextEvent = {
+            x: args[1].x,
+            y: args[1].y,
+            id: guest.id,
+            selectionText: args[1].selectionText,
+            isEditable: args[1].isEditable,
+            types: args.map((item) => typeof item),
+          }
+        })
+        const position = await guest.executeJavaScript(
+          `(() => { const element = document.querySelector(${JSON.stringify(selector)}); element.scrollIntoView(); const r = element.getBoundingClientRect(); return { x: Math.round(r.x + r.width / 2), y: Math.round(r.y + r.height / 2) } })()`,
+        )
+        guest.sendInputEvent({ type: 'mouseDown', button: 'right', clickCount: 1, ...position })
+        guest.sendInputEvent({ type: 'mouseUp', button: 'right', clickCount: 1, ...position })
+      },
+      { selector, targetUrl },
+    )
+    try {
+      await expect.poll(() => app.evaluate(() => Boolean(globalThis.workspaceMenu))).toBe(true)
+    } catch (error) {
+      console.error('CONTEXT EVENT', await app.evaluate(() => globalThis.workspaceContextEvent))
+      throw error
+    }
+    return app.evaluate(() => globalThis.workspaceMenu.menu.items.map((item) => ({ label: item.label, enabled: item.enabled })))
+  }
+  const chooseNativeItem = async (label) =>
+    app.evaluate(({ BrowserWindow }, label) => {
+      const { menu, options } = globalThis.workspaceMenu
+      const item = menu.items.find((item) => item.label === label)
+      if (!item?.enabled) throw new Error(`Missing or disabled native item: ${label}`)
+      item.click(item, BrowserWindow.getAllWindows()[0], {})
+      options.callback()
+    }, label)
+  const labels = await openPageMenu('a')
+  assert(labels.some((item) => item.label === 'Open Link in New Tab'))
+  assert(labels.some((item) => item.label === 'Toggle Developer Tools'))
+  const tabCount = await mainBrowser.locator('.SimpleBrowserTab').count()
+  await chooseNativeItem('Open Link in New Tab')
+  await expect(mainBrowser.locator('.SimpleBrowserTab')).toHaveCount(tabCount + 1)
+  await expect(mainAddress).toHaveValue(mainUrl)
+  await expect
+    .poll(() =>
+      app.evaluate(
+        ({ webContents }, targetUrl) =>
+          webContents
+            .getAllWebContents()
+            .find((item) => item.getURL() === targetUrl)
+            .isFocused(),
+        mainUrl,
+      ),
+    )
+    .toBe(true)
+  for (const button of ['left', 'middle']) {
+    const previousTabs = await mainBrowser.locator('.SimpleBrowserTab').count()
+    await app.evaluate(
+      async ({ webContents }, { targetUrl, button }) => {
+        const guest = webContents.getAllWebContents().find((item) => item.getURL() === targetUrl)
+        guest.focus()
+        const position = await guest.executeJavaScript(
+          '(() => { const a = document.querySelector("a"); a.scrollIntoView(); const r = a.getBoundingClientRect(); return { x: Math.round(r.x + r.width / 2), y: Math.round(r.y + r.height / 2) } })()',
+        )
+        const modifiers = button === 'left' ? ['control'] : []
+        guest.sendInputEvent({ type: 'mouseDown', button, clickCount: 1, modifiers, ...position })
+        guest.sendInputEvent({ type: 'mouseUp', button, clickCount: 1, modifiers, ...position })
+      },
+      { targetUrl: mainUrl, button },
+    )
+    await expect(mainBrowser.locator('.SimpleBrowserTab')).toHaveCount(previousTabs + 1)
+    await expect(mainAddress).toHaveValue(mainUrl)
+    await expect
+      .poll(() =>
+        app.evaluate(
+          ({ webContents }, targetUrl) =>
+            webContents
+              .getAllWebContents()
+              .find((item) => item.getURL() === targetUrl)
+              .isFocused(),
+          mainUrl,
+        ),
+      )
+      .toBe(true)
+  }
+  await app.evaluate(({ clipboard }) => clipboard.writeText('native paste'))
+  await openPageMenu('#draft')
+  await chooseNativeItem('Paste')
+  await expect
+    .poll(() =>
+      app.evaluate(
+        async ({ webContents }, targetUrl) =>
+          webContents
+            .getAllWebContents()
+            .find((item) => item.getURL() === targetUrl)
+            .executeJavaScript('document.querySelector("#draft").value'),
+        mainUrl,
+      ),
+    )
+    .toBe('native paste')
+  await mainBrowser.locator('.SimpleBrowserFullWidthButton').click()
+  await expect(page.locator('.BrowserFullWidth')).toHaveCount(1)
+  await openPageMenu('h1')
+  await chooseNativeItem('Toggle Developer Tools')
+  await expect
+    .poll(() =>
+      app.evaluate(
+        ({ webContents }, targetUrl) =>
+          webContents
+            .getAllWebContents()
+            .find((item) => item.getURL() === targetUrl)
+            .isDevToolsOpened(),
+        mainUrl,
+      ),
+    )
+    .toBe(true)
+  assert.equal(await app.evaluate(({ BrowserWindow }) => BrowserWindow.getAllWindows()[0].webContents.isDevToolsOpened()), false)
+  await app.evaluate(
+    ({ webContents }, targetUrl) =>
+      webContents
+        .getAllWebContents()
+        .find((item) => item.getURL() === targetUrl)
+        .closeDevTools(),
+    mainUrl,
+  )
+  await page.locator('.SimpleBrowserFullWidthButton').click()
+  await expect(page.locator('.BrowserFullWidth')).toHaveCount(0)
+  const beforeZoomBounds = await mainBrowser.boundingBox()
+  await app.evaluate(({ BrowserWindow, webContents }, targetUrl) => {
+    BrowserWindow.getAllWindows()[0].webContents.setZoomLevel(1)
+    const guest = webContents.getAllWebContents().find((item) => item.getURL() === targetUrl)
+    guest.setZoomLevel(1)
+    const inspect = guest.inspectElement.bind(guest)
+    guest.inspectElement = (x, y) => {
+      globalThis.workspaceInspection = { x, y, id: guest.id }
+      inspect(x, y)
+    }
+  }, mainUrl)
+  await openPageMenu('h1')
+  const expectedInspection = await app.evaluate(() => globalThis.workspaceContextEvent)
+  await chooseNativeItem('Inspect Element')
+  await expect
+    .poll(() => app.evaluate(() => globalThis.workspaceInspection))
+    .toEqual({ x: expectedInspection.x, y: expectedInspection.y, id: expectedInspection.id })
+  await expect
+    .poll(() =>
+      app.evaluate(
+        ({ webContents }, targetUrl) =>
+          webContents
+            .getAllWebContents()
+            .find((item) => item.getURL() === targetUrl)
+            .devToolsWebContents?.isLoadingMainFrame(),
+        mainUrl,
+      ),
+    )
+    .toBe(false)
+  await app.evaluate(
+    ({ webContents }, targetUrl) =>
+      webContents
+        .getAllWebContents()
+        .find((item) => item.getURL() === targetUrl)
+        .closeDevTools(),
+    mainUrl,
+  )
+  await app.evaluate(({ BrowserWindow, webContents }, targetUrl) => {
+    BrowserWindow.getAllWindows()[0].webContents.setZoomLevel(0)
+    webContents
+      .getAllWebContents()
+      .find((item) => item.getURL() === targetUrl)
+      .setZoomLevel(0)
+  }, mainUrl)
+  await expect.poll(() => mainBrowser.boundingBox()).toEqual(beforeZoomBounds)
+  await expect
+    .poll(() =>
+      app.evaluate(
+        ({ BrowserWindow }, targetUrl) =>
+          BrowserWindow.getAllWindows()[0]
+            .contentView.children.find((view) => view.webContents?.getURL() === targetUrl)
+            ?.getBounds().width,
+        mainUrl,
+      ),
+    )
+    .toBe(Math.round(beforeZoomBounds.width))
+  for (const expanded of [false, true]) {
+    if (expanded) {
+      await mainBrowser.locator('.SimpleBrowserFullWidthButton').click()
+      await expect(page.locator('.BrowserFullWidth')).toHaveCount(1)
+    }
+    const imageEntries = await openPageMenu('#picture')
+    assert(imageEntries.some((item) => item.label === 'Open Image in New Tab'))
+    await chooseNativeItem('Copy Image')
+    await expect.poll(() => app.evaluate(({ clipboard }) => clipboard.readImage().isEmpty())).toBe(false)
+    await app.evaluate(async ({ webContents }, targetUrl) => {
+      await webContents
+        .getAllWebContents()
+        .find((item) => item.getURL() === targetUrl)
+        .executeJavaScript(
+          '{ const range = document.createRange(); range.selectNodeContents(document.querySelector("h1")); getSelection().removeAllRanges(); getSelection().addRange(range) }',
+        )
+    }, mainUrl)
+    await openPageMenu('h1')
+    await chooseNativeItem('Copy')
+    await expect.poll(() => app.evaluate(({ clipboard }) => clipboard.readText())).toBe('Workspace article')
+  }
+  await app.evaluate(({ webContents }, targetUrl) => {
+    const guest = webContents.getAllWebContents().find((item) => item.getURL() === targetUrl)
+    guest.focus()
+    guest.sendInputEvent({ type: 'keyDown', keyCode: 'I', modifiers: ['control', 'shift'] })
+    guest.sendInputEvent({ type: 'keyUp', keyCode: 'I', modifiers: ['control', 'shift'] })
+  }, mainUrl)
+  await expect
+    .poll(() =>
+      app.evaluate(
+        ({ webContents }, targetUrl) =>
+          webContents
+            .getAllWebContents()
+            .find((item) => item.getURL() === targetUrl)
+            .isDevToolsOpened(),
+        mainUrl,
+      ),
+    )
+    .toBe(true)
+  await app.evaluate(
+    ({ webContents }, targetUrl) =>
+      webContents
+        .getAllWebContents()
+        .find((item) => item.getURL() === targetUrl)
+        .closeDevTools(),
+    mainUrl,
+  )
+  await page.locator('.SimpleBrowserFullWidthButton').click()
   await page.locator('.PanelTab[name="Terminals"]').click()
   const terminalInput = page.locator('.xterm-helper-textarea')
   await expect(terminalInput).toBeFocused()
-  await terminalInput.pressSequentially('printf workspace-terminal')
+  const terminal = page.locator('.XtermTerminal')
+  await expect(terminal).toContainText(/[$#>%]/)
+  const terminalCommand = "printf 'workspace-%s\\n' terminal"
+  await page.keyboard.insertText(terminalCommand)
+  await expect(terminal).toContainText(terminalCommand)
   await terminalInput.press('Enter')
-  await expect(page.locator('.XtermTerminal')).toContainText('workspace-terminal')
+  await expect(terminal).toContainText('workspace-terminal')
   await terminalInput.evaluate((element) => {
     window.workspaceTerminalInput = element
   })
