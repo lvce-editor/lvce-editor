@@ -134,7 +134,7 @@ export const loadContent = async (state) => {
   if (restoredState) {
     return restoredState
   }
-  const spawnOptions = await GetTerminalSpawnOptions.getTerminalSpawnOptions()
+  const spawnOptions = await GetTerminalSpawnOptions.getTerminalSpawnOptions(cwd)
   const childUid = Id.create()
   const newState = {
     ...state,
@@ -151,7 +151,7 @@ export const loadContent = async (state) => {
 
 export const addTerminal = async (state, cwd = '') => {
   const { activeTerminalUids, focusVersion, tabs: oldTabs } = state
-  const spawnOptions = await GetTerminalSpawnOptions.getTerminalSpawnOptions()
+  const spawnOptions = await GetTerminalSpawnOptions.getTerminalSpawnOptions(cwd)
   const childUid = Id.create()
   const newTab = createTab(childUid, spawnOptions.command)
   const tabs = [...oldTabs, newTab]
