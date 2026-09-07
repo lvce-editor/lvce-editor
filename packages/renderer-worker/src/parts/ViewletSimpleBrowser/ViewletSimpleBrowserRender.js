@@ -11,6 +11,9 @@ export const hasFunctionalRootRender = true
 
 export const renderEventListeners = () => {
   return [
+    { name: DomEventListenerFunctions.HandleBlurSimpleBrowserAddress, params: ['handleAddressBlur'] },
+    { name: DomEventListenerFunctions.HandlePointerDownSimpleBrowserSuggestion, params: ['handleSuggestionPointerDown'], preventDefault: true },
+    { name: DomEventListenerFunctions.HandleClickSuggestion, params: ['acceptSuggestion', 'event.currentTarget.dataset.value'] },
     {
       name: DomEventListenerFunctions.HandleErrorSimpleBrowserFavicon,
       params: ['handleFaviconError', 'event.target.dataset.index', 'event.target.src'],
@@ -200,9 +203,6 @@ const renderDom = {
       oldState.browserViewId === 0
         ? [['Viewlet.setDom2', newState.uid, newDom]]
         : [['Viewlet.setPatches', newState.uid, diffTree(getDom(oldState), newDom)]]
-    if (newState.suggestions.length > 0) {
-      commands.push(['Viewlet.focusElementByName', newState.uid, InputName.SimpleBrowserAddress])
-    }
     return commands
   },
   multiple: true,

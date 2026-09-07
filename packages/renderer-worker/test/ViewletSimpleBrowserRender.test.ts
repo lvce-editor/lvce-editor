@@ -68,7 +68,7 @@ test('rerenders when a tab is muted', () => {
   expect(ViewletSimpleBrowserRender.render[0].isEqual(oldState, newState)).toBe(false)
 })
 
-test('renders suggestions incrementally and restores address input focus', () => {
+test('renders suggestions incrementally without taking keyboard focus', () => {
   const newState = {
     ...state,
     suggestions: ['what is'],
@@ -78,7 +78,7 @@ test('renders suggestions incrementally and restores address input focus', () =>
 
   expect(commands[0].slice(0, 2)).toEqual(['Viewlet.setPatches', 42])
   expect(commands[0][2]).not.toHaveLength(0)
-  expect(commands.at(-1)).toEqual(['Viewlet.focusElementByName', 42, 'simple-browser-address'])
+  expect(commands.some((command) => command[0] === 'Viewlet.focusElementByName')).toBe(false)
 })
 
 test('renders the initial dom in full', () => {

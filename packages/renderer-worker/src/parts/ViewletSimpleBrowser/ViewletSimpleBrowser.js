@@ -1,3 +1,5 @@
+import * as BrowserSuggestionRequests from '../BrowserSuggestionRequests/BrowserSuggestionRequests.js'
+import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as BrowserFullWidth from '../BrowserFullWidth/BrowserFullWidth.js'
 // based on vscode's simple browser by Microsoft (https://github.com/microsoft/vscode/blob/e8fe2d07d31f30698b9262dd5e1fcc59a85c6bb1/extensions/simple-browser/src/extension.ts, License MIT)
 
@@ -39,7 +41,15 @@ const createNewTabKeyBinding = KeyModifier.CtrlCmd | KeyCode.KeyT
 const focusNextTabKeyBinding = KeyModifier.CtrlCmd | KeyCode.Tab
 const focusPreviousTabKeyBinding = KeyModifier.CtrlCmd | KeyModifier.Shift | KeyCode.Tab
 const openHistoryKeyBinding = KeyModifier.CtrlCmd | KeyCode.KeyH
-const browserTabKeyBindings = [closeTabKeyBinding, createNewTabKeyBinding, focusNextTabKeyBinding, focusPreviousTabKeyBinding, openHistoryKeyBinding]
+const focusAddressKeyBinding = KeyModifier.CtrlCmd | KeyCode.KeyL
+const browserTabKeyBindings = [
+  focusAddressKeyBinding,
+  closeTabKeyBinding,
+  createNewTabKeyBinding,
+  focusNextTabKeyBinding,
+  focusPreviousTabKeyBinding,
+  openHistoryKeyBinding,
+]
 const visibleBrowserUids = new Set()
 
 const getFallThroughKeyBindings = () => {
@@ -129,6 +139,7 @@ export const create = (id, uri, x, y, width, height) => {
     width,
     height,
     focusAddressVersion: 0,
+    suggestionSessionId: 0,
     fullWidth: false,
     chromeTheme: Preferences.get('simpleBrowser.chromeTheme') === 'inherit' ? 'inherit' : 'light',
     headerHeight: getHeaderHeight(true),
@@ -161,6 +172,7 @@ export const create = (id, uri, x, y, width, height) => {
     tabHoverEnabled: false,
     zoomLevel: 0,
     visitedSites: [],
+    history: [],
   }
 }
 
@@ -221,7 +233,7 @@ export const backgroundLoadContent = async (state, savedState) => {
   const tabHoverEnabled = Preferences.get('simpleBrowser.tabHover.enabled') === true
   const unloadTabs = Preferences.get('simpleBrowser.unloadTabs') === true
   const headerHeight = getHeaderHeight(tabsEnabled)
-  const [searchHistory, visitedSites] = await Promise.all([BrowserSearchHistory.load(), BrowserVisitedSites.load()])
+  const [searchHistory, visitedSites, history] = await Promise.all([BrowserSearchHistory.load(), BrowserVisitedSites.load(), BrowserHistory.load()])
   const browserViewId = await ElectronWebContentsView.createWebContentsView(0)
   Assert.number(browserViewId)
   await ElectronWebContentsViewFunctions.resizeWebContentsView(browserViewId, x, y + headerHeight, width, height - headerHeight)
@@ -234,6 +246,7 @@ export const backgroundLoadContent = async (state, savedState) => {
     headerHeight,
     selectedTabIndex: 0,
     searchHistory,
+    history,
     tabs,
     tabsEnabled,
     tabHoverEnabled,
@@ -264,7 +277,7 @@ export const loadContent = async (state, savedState) => {
   const savedSelectedTabIndex = getSavedSelectedTabIndex(savedState, savedTabs)
   const savedSelectedTab = savedTabs[savedSelectedTabIndex]
   const iframeSrc = savedSelectedTab ? savedSelectedTab.iframeSrc : getUrlFromSavedState(savedState)
-  const [searchHistory, visitedSites] = await Promise.all([BrowserSearchHistory.load(), BrowserVisitedSites.load()])
+  const [searchHistory, visitedSites, history] = await Promise.all([BrowserSearchHistory.load(), BrowserVisitedSites.load(), BrowserHistory.load()])
   const audioIndicatorEnabled = Preferences.get('simpleBrowser.audioIndicator.enabled') !== false
   const suggestionsEnabled = Preferences.get('simpleBrowser.suggestions')
   const tabsEnabled = Preferences.get('simpleBrowser.tabs.enabled') !== false
@@ -316,6 +329,7 @@ export const loadContent = async (state, savedState) => {
     headerHeight,
     selectedTabIndex,
     searchHistory,
+    history,
     suggestionsEnabled,
     shortcuts,
     tabs,
@@ -396,6 +410,7 @@ const prepareTabDeactivation = async (state, tab) => {
 }
 
 const switchToTab = async (state, initialTabs, selectedTabIndex) => {
+  BrowserSuggestionRequests.cancel(state.uid)
   const oldTabIndex = initialTabs.findIndex((tab) => tab.browserViewId === state.browserViewId)
   const oldTab = initialTabs[oldTabIndex]
   const oldBrowserViewId = oldTab?.browserViewId || state.browserViewId
@@ -581,6 +596,7 @@ const closeTabInternal = async (state, index, disposeWebContentsView) => {
   if (tabIndex < 0 || tabIndex >= state.tabs.length) {
     return state
   }
+  if (tabIndex === state.selectedTabIndex) BrowserSuggestionRequests.cancel(state.uid)
   const currentState = tabIndex === state.selectedTabIndex && state.hasSuggestionsOverlay ? await closeSuggestions(state) : state
   const tab = currentState.tabs[tabIndex]
   if (currentState.tabs.length === 1) {
@@ -643,6 +659,7 @@ const closeTabsByIndex = async (state, indexes, preferredTabIndex) => {
   }
   const indexesToClose = new Set(indexes)
   const selectedTabWillClose = indexesToClose.has(oldSelectedTabIndex)
+  if (selectedTabWillClose) BrowserSuggestionRequests.cancel(state.uid)
   const currentState = selectedTabWillClose && hasSuggestionsOverlay ? await closeSuggestions(state) : state
   const { browserViewId, tabs: currentTabs } = currentState
   const preferredBrowserViewId = currentTabs[preferredTabIndex]?.browserViewId
@@ -750,13 +767,23 @@ export const afterRender = async (oldState, newState) => {
   const { browserViewId, overlayIds, selectedTabIndex, tabs } = newState
   const didShowFirstOverlay = oldOverlayIds.length === 0 && overlayIds.length > 0
   const selectedTab = tabs[selectedTabIndex]
-  if (!didShowFirstOverlay || selectedTab?.pageSnapshot) {
-    return
+  if (didShowFirstOverlay && !selectedTab?.pageSnapshot) {
+    try {
+      await ElectronWebContentsViewFunctions.hide(browserViewId)
+    } catch (error) {
+      console.error('[renderer-worker] Failed to hide Simple Browser page', error)
+    }
   }
-  try {
-    await ElectronWebContentsViewFunctions.hide(browserViewId)
-  } catch (error) {
-    console.error('[renderer-worker] Failed to hide Simple Browser page', error)
+  if (oldState.suggestionSessionId !== newState.suggestionSessionId && newState.suggestionSessionId) {
+    await Viewlet.executeViewletCommand(
+      newState.uid,
+      'applySuggestions',
+      newState.uid,
+      newState.inputValue,
+      [],
+      getLocalSuggestions(newState, newState.inputValue),
+      newState.suggestionSessionId,
+    )
   }
 }
 
@@ -853,24 +880,21 @@ export const hideTabHover = async (state, index, clientX, clientY) => {
   return hideOverlay({ ...state, tabHover: undefined }, tabHoverOverlayId)
 }
 
-export const handleInput = async (state, value) => {
-  const newState = {
+export const handleInput = (state, value) => {
+  const suggestionSessionId = BrowserSuggestionRequests.begin(
+    state.uid,
+    state.browserViewId,
+    value,
+    state.suggestionsEnabled && shouldRequestSuggestions(value) ? BrowserSearchSuggestions.get : undefined,
+    (id, suggestions) => Viewlet.executeViewletCommand(state.uid, 'applySuggestions', state.uid, value, suggestions, undefined, id),
+  )
+  // Commit typing before capturing the native page for the popup. Popup work runs after rendering.
+  return {
     ...updateTab(state, state.browserViewId, { inputValue: value }),
     selectedSuggestionIndex: -1,
+    suggestionSessionId,
+    suggestions: [],
   }
-  if (!state.suggestionsEnabled || value.trim().length < 2) {
-    if (state.hasSuggestionsOverlay) {
-      void Command.execute('SimpleBrowser.closeSuggestions')
-    }
-    return newState
-  }
-  if (!shouldRequestSuggestions(value)) {
-    return applySuggestions(newState, state.uid, value, [])
-  }
-  const localSuggestions = getLocalSuggestions(newState, value)
-  const stateWithLocalSuggestions = localSuggestions.length > 0 ? await applySuggestions(newState, state.uid, value, [], localSuggestions) : newState
-  void requestSuggestions(state.uid, value)
-  return stateWithLocalSuggestions
 }
 
 const suggestionsOverlayId = 'search-suggestions'
@@ -885,16 +909,6 @@ const shouldRequestSuggestions = (value) => {
   )
 }
 
-const requestSuggestions = async (uid, query) => {
-  let suggestions = []
-  try {
-    suggestions = await BrowserSearchSuggestions.get(query)
-  } catch {
-    // Provider failures should leave normal address-bar navigation available.
-  }
-  await Command.execute('SimpleBrowser.applySuggestions', uid, query, suggestions)
-}
-
 const createSearchSuggestion = (value) => {
   return { favicon: '', type: 'search', value }
 }
@@ -904,12 +918,24 @@ const getSuggestionValue = (suggestion) => {
 }
 
 const getLocalSuggestions = (state, query) => {
-  return [...BrowserSearchHistory.getSuggestions(state.searchHistory, query), ...BrowserVisitedSites.getSuggestions(state.visitedSites, query)]
+  return [
+    ...BrowserSearchHistory.getSuggestions(state.searchHistory, query),
+    ...BrowserHistory.getSuggestions(state.history || [], query),
+    ...BrowserVisitedSites.getSuggestions(state.visitedSites, query),
+  ]
 }
 
-export const applySuggestions = async (state, uid, query, suggestions, precomputedLocalSuggestions) => {
-  if (state.uid !== uid || state.inputValue !== query || !state.suggestionsEnabled) {
+export const applySuggestions = async (state, uid, query, suggestions, precomputedLocalSuggestions, sessionId) => {
+  const isCurrent = () => sessionId === undefined || BrowserSuggestionRequests.isCurrent(uid, sessionId, state.browserViewId)
+  if (!isCurrent() || state.uid !== uid || state.inputValue !== query) {
     return state
+  }
+  const updateId = sessionId === undefined ? undefined : BrowserSuggestionRequests.beginUpdate(uid, sessionId, precomputedLocalSuggestions === undefined)
+  if (sessionId !== undefined && updateId === undefined) return state
+  const isCurrentUpdate = () => isCurrent() && (sessionId === undefined || BrowserSuggestionRequests.isCurrentUpdate(uid, sessionId, updateId))
+  if (!state.suggestionsEnabled || query.trim().length < 2) {
+    const result = await dismissSuggestions(state)
+    return isCurrentUpdate() ? result : state
   }
   const localSuggestions = precomputedLocalSuggestions || getLocalSuggestions(state, query)
   const providerSuggestions = Array.isArray(suggestions) ? suggestions : []
@@ -922,21 +948,27 @@ export const applySuggestions = async (state, uid, query, suggestions, precomput
     .filter((suggestion, index) => allSuggestions.findIndex((other) => other.value === suggestion.value) === index)
     .slice(0, 8)
   if (uniqueSuggestions.length === 0) {
-    return closeSuggestions(state)
+    const result = await dismissSuggestions(state)
+    return isCurrentUpdate() ? result : state
   }
+  const selectedValue = state.selectedSuggestionIndex < 0 ? undefined : getSuggestionValue(state.suggestions[state.selectedSuggestionIndex])
   const overlayState = await showOverlay(state, suggestionsOverlayId)
+  if (!isCurrentUpdate()) {
+    if (overlayState.snapshot !== state.snapshot) SimpleBrowserSnapshot.dispose(overlayState.snapshot)
+    return state
+  }
   if (!overlayState.overlayIds.includes(suggestionsOverlayId)) {
     return state
   }
   return {
     ...overlayState,
     hasSuggestionsOverlay: true,
-    selectedSuggestionIndex: 0,
+    selectedSuggestionIndex: selectedValue === undefined ? -1 : uniqueSuggestions.findIndex((item) => item.value === selectedValue),
     suggestions: uniqueSuggestions,
   }
 }
 
-export const closeSuggestions = async (state) => {
+const dismissSuggestions = async (state) => {
   const overlayState = state.hasSuggestionsOverlay ? await hideOverlay(state, suggestionsOverlayId) : state
   return {
     ...overlayState,
@@ -945,6 +977,14 @@ export const closeSuggestions = async (state) => {
     suggestions: [],
   }
 }
+
+export const closeSuggestions = (state) => {
+  BrowserSuggestionRequests.cancel(state.uid)
+  return dismissSuggestions(state)
+}
+
+export const handleAddressBlur = closeSuggestions
+export const handleSuggestionPointerDown = (state) => state
 
 export const selectNextSuggestion = (state) => {
   if (!state.hasSuggestionsOverlay || state.suggestions.length === 0) {
@@ -962,7 +1002,7 @@ export const selectPreviousSuggestion = (state) => {
   }
   return {
     ...state,
-    selectedSuggestionIndex: Math.max(state.selectedSuggestionIndex - 1, 0),
+    selectedSuggestionIndex: Math.max(state.selectedSuggestionIndex - 1, -1),
   }
 }
 
@@ -990,6 +1030,7 @@ const addToSearchHistory = (state, value) => {
 }
 
 const navigate = (state, value) => {
+  BrowserSuggestionRequests.cancel(state.uid)
   if (openCookieImportView(value)) {
     return state
   }
@@ -1057,6 +1098,7 @@ export const handleKeyBinding = async (state, browserViewId, keyBinding) => {
   if (Number(browserViewId) !== state.browserViewId) {
     return state
   }
+  if (keyBinding === focusAddressKeyBinding) return focusAddress(state)
   if (keyBinding === closeTabKeyBinding) {
     return closeCurrentTab(state)
   }
@@ -1094,8 +1136,8 @@ export const handleDidNavigate = async (state, browserViewId, value) => {
     isLoading: false,
     pageSnapshot: undefined,
   })
-  await BrowserHistory.record(url)
-  return newState
+  const history = await BrowserHistory.record(url)
+  return { ...newState, history: history || state.history }
 }
 
 export const handleDidNavigationCancel = async (state, browserViewId) => {
@@ -1144,6 +1186,7 @@ export const handleAudioStateChanged = (state, browserViewId, audible) => {
 }
 
 export const dispose = async (state) => {
+  BrowserSuggestionRequests.dispose(state.uid)
   await BrowserFullWidth.handleDispose(state.uid)
   visibleBrowserUids.delete(state.uid)
   await Promise.all([
@@ -1154,6 +1197,7 @@ export const dispose = async (state) => {
 }
 
 export const prepareFullWidth = async (state) => {
+  BrowserSuggestionRequests.cancel(state.uid)
   if (
     !state.overlayIds.length &&
     !state.hasSuggestionsOverlay &&
@@ -1178,6 +1222,7 @@ export const toggleFullWidth = (state) => {
 }
 
 export const focusAddress = async (state) => {
+  BrowserSuggestionRequests.cancel(state.uid)
   await ElectronWindow.focus()
   await RendererProcess.invoke('Window.focusBrowserAddress', state.uid)
   Focus.setFocus(WhenExpression.FocusSimpleBrowserInput, undefined, state.uid, ViewletModuleId.SimpleBrowser)
