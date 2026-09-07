@@ -148,6 +148,17 @@ try {
   await address.press('Escape')
   await address.fill(url)
   await address.press('Escape')
+  const tokenBeforeMouseNavigation = (await guestSnapshot()).data.token
+  await address.fill(url.slice(0, -3))
+  await page.getByRole('option', { name: url, exact: true }).click()
+  await expect(page.locator('.SimpleBrowserSuggestions')).toHaveCount(0)
+  await expect.poll(async () => (await guestSnapshot()).data.token).not.toBe(tokenBeforeMouseNavigation)
+  await app.evaluate(async ({ webContents }, targetUrl) => {
+    await webContents
+      .getAllWebContents()
+      .find((item) => item.getURL() === targetUrl)
+      .executeJavaScript('document.querySelector("#draft").value="keep this draft";document.querySelector("#play").click();scrollTo(0,300)', true)
+  }, url)
   const before = await guestSnapshot()
   const button = page.locator('.SimpleBrowserFullWidthButton')
   const timings = []
