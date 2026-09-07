@@ -3,11 +3,14 @@ import * as IpcParentWithWebSocket from '../IpcParentWithWebSocket/IpcParentWith
 import * as Json from '../Json/Json.js'
 import * as WorkspaceState from '../WorkspaceState/WorkspaceState.js'
 
+/** @typedef {{ command: string, args: string[] }} TerminalSpawnOptions */
+
 const state = {
   command: '',
   remoteCliUrl: '',
   webSocketUrl: '',
   workspaceUri: '',
+  terminalSpawnOptions: /** @type {TerminalSpawnOptions | undefined} */ (undefined),
 }
 
 const validateWebSocketUrl = (value, name) => {
@@ -22,16 +25,28 @@ const validateWebSocketUrl = (value, name) => {
   }
 }
 
-export const set = (workspaceUri, command, remoteCliUrl = '', webSocketUrl = '') => {
+/** @param {TerminalSpawnOptions} [terminalSpawnOptions] */
+export const set = (workspaceUri, command, remoteCliUrl = '', webSocketUrl = '', terminalSpawnOptions = undefined) => {
   if (typeof workspaceUri !== 'string' || typeof command !== 'string' || !command) {
     throw new TypeError('Invalid workspace connection')
   }
   validateWebSocketUrl(remoteCliUrl, 'Remote CLI URL')
   validateWebSocketUrl(webSocketUrl, 'Workspace WebSocket URL')
+  if (
+    terminalSpawnOptions !== undefined &&
+    (!terminalSpawnOptions ||
+      typeof terminalSpawnOptions.command !== 'string' ||
+      !terminalSpawnOptions.command ||
+      !Array.isArray(terminalSpawnOptions.args) ||
+      !terminalSpawnOptions.args.every((arg) => typeof arg === 'string'))
+  ) {
+    throw new TypeError('Invalid remote terminal spawn options')
+  }
   state.workspaceUri = workspaceUri
   state.command = command
   state.remoteCliUrl = remoteCliUrl
   state.webSocketUrl = webSocketUrl
+  state.terminalSpawnOptions = terminalSpawnOptions ? { command: terminalSpawnOptions.command, args: [...terminalSpawnOptions.args] } : undefined
 }
 
 export const reset = () => {
@@ -39,9 +54,18 @@ export const reset = () => {
   state.command = ''
   state.remoteCliUrl = ''
   state.webSocketUrl = ''
+  state.terminalSpawnOptions = undefined
 }
 
 export const isActive = () => Boolean(state.command && WorkspaceState.state.workspaceUri === state.workspaceUri)
+
+export const getTerminalSpawnOptions = () => {
+  if (!isActive() || !state.terminalSpawnOptions) {
+    return undefined
+  }
+  const { command, args } = state.terminalSpawnOptions
+  return { command, args: [...args] }
+}
 
 export const getCommand = () => {
   if (!isActive()) {
