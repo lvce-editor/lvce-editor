@@ -147,6 +147,7 @@ export const create = (id, uri, x, y, width, height) => {
     headerHeight: getHeaderHeight(true),
     iframeSrc: '',
     inputValue: '',
+    addressValueVersion: 0,
     title: '',
     browserViewId: 0,
     canGoForward: true,
@@ -239,7 +240,10 @@ export const backgroundLoadContent = async (state, savedState) => {
   const browserViewId = await ElectronWebContentsView.createWebContentsView(0)
   Assert.number(browserViewId)
   await ElectronWebContentsViewFunctions.resizeWebContentsView(browserViewId, x, y + headerHeight, width, height - headerHeight)
-  const { newTitle } = await ElectronWebContentsViewFunctions.setIframeSrc(browserViewId, iframeSrc || SimpleBrowserNewTabPage.getUrl())
+  const { newTitle } = await ElectronWebContentsViewFunctions.setIframeSrc(
+    browserViewId,
+    iframeSrc || SimpleBrowserNewTabPage.getUrl(undefined, state.chromeTheme),
+  )
   const title = newTitle || 'Simple Browser'
   const tabs = [createTab({ browserViewId, iframeSrc, inputValue: iframeSrc, title })]
   return {
@@ -298,7 +302,7 @@ export const loadContent = async (state, savedState) => {
   await ElectronWebContentsViewFunctions.resizeWebContentsView(browserViewId, browserViewX, browserViewY, browserViewWidth, browserViewHeight)
   Assert.number(browserViewId)
   if (!iframeSrc || !id || id !== browserViewId) {
-    await ElectronWebContentsViewFunctions.setIframeSrc(browserViewId, iframeSrc || SimpleBrowserNewTabPage.getUrl())
+    await ElectronWebContentsViewFunctions.setIframeSrc(browserViewId, iframeSrc || SimpleBrowserNewTabPage.getUrl(undefined, state.chromeTheme))
   }
   const { title, canGoBack, canGoForward, isAudioMuted } = await ElectronWebContentsViewFunctions.getStats(browserViewId)
   const restoredTabs =
@@ -368,13 +372,13 @@ const createUnloadedTab = async (state) => {
 
 const createEmptyTab = async (state) => {
   const tab = await createUnloadedTab(state)
-  await ElectronWebContentsViewFunctions.setIframeSrc(tab.browserViewId, SimpleBrowserNewTabPage.getUrl())
+  await ElectronWebContentsViewFunctions.setIframeSrc(tab.browserViewId, SimpleBrowserNewTabPage.getUrl(undefined, state.chromeTheme))
   return tab
 }
 
 export const handleColorThemeChanged = async (state) => {
   const { tabs } = state
-  const newTabUrl = SimpleBrowserNewTabPage.getUrl()
+  const newTabUrl = SimpleBrowserNewTabPage.getUrl(undefined, state.chromeTheme)
   await Promise.all(
     tabs
       .filter((tab) => !tab.iframeSrc && tab.browserViewId)
@@ -1040,7 +1044,7 @@ const navigate = (state, value) => {
   void ElectronWebContentsViewFunctions.setIframeSrc(state.browserViewId, iframeSrc)
   void ElectronWebContentsViewFunctions.focus(state.browserViewId)
   const stateWithSearchHistory = addToSearchHistory(state, value)
-  return updateTab(stateWithSearchHistory, state.browserViewId, {
+  return updateTab({ ...stateWithSearchHistory, addressValueVersion: state.addressValueVersion + 1 }, state.browserViewId, {
     iframeSrc,
     inputValue: value,
     isLoading: true,
@@ -1066,7 +1070,7 @@ export const setUrl = async (state, value) => {
   void ElectronWebContentsViewFunctions.setIframeSrc(browserViewId, iframeSrc)
   const stateWithSearchHistory = addToSearchHistory(newState1, inputValue)
 
-  return updateTab(stateWithSearchHistory, browserViewId, {
+  return updateTab({ ...stateWithSearchHistory, addressValueVersion: state.addressValueVersion + 1 }, browserViewId, {
     iframeSrc,
     isLoading: true,
   })
@@ -1235,10 +1239,13 @@ export const focusAddress = async (state) => {
   return state
 }
 
-export const handleSettingsChanged = (state) => ({
-  ...state,
-  chromeTheme: Preferences.get('simpleBrowser.chromeTheme') === 'inherit' ? 'inherit' : 'light',
-})
+export const handleSettingsChanged = async (state) => {
+  const chromeTheme = Preferences.get('simpleBrowser.chromeTheme') === 'inherit' ? 'inherit' : 'light'
+  if (chromeTheme === state.chromeTheme) {
+    return state
+  }
+  return handleColorThemeChanged({ ...state, chromeTheme })
+}
 
 export const handleFaviconError = (state, index, src) => {
   const tab = state.tabs[Number(index)]

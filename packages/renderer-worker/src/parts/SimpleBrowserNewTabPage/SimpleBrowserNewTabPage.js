@@ -49,7 +49,18 @@ const getThemeVariables = (css) => {
         --WidgetBackground: ${escapeHtml(widgetBackground)};`
 }
 
-const getHtml = (colorThemeCss) => `${marker}<!doctype html>
+const lightThemeCss = `:root {
+  --EditorBackground: #ffffff;
+  --WorkbenchForeground: #24292f;
+  --InputBoxBackground: #f1f3f5;
+  --InputBoxForeground: #24292f;
+  --InputBoxPlaceholderForeground: #68717d;
+  --InputBoxBorder: #d4dce4;
+  --FocusOutline: #1769ba;
+  --WidgetBackground: #eef0f2;
+}`
+
+const getHtml = (colorThemeCss, chromeTheme) => `${marker}<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8">
@@ -58,7 +69,7 @@ const getHtml = (colorThemeCss) => `${marker}<!doctype html>
     <title>New Tab</title>
     <style>
       :root {
-        color-scheme: dark;
+        color-scheme: ${chromeTheme === 'inherit' ? 'dark' : 'light'};
         font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
         background: var(--EditorBackground);
         color: var(--WorkbenchForeground);${getThemeVariables(colorThemeCss)}
@@ -210,8 +221,9 @@ const getHtml = (colorThemeCss) => `${marker}<!doctype html>
   </body>
 </html>`
 
-export const getUrl = (colorThemeCss = ColorTheme.getColorThemeCss()) => {
-  return `${dataUrlPrefix}${encodeURIComponent(getHtml(colorThemeCss))}`
+export const getUrl = (colorThemeCss = ColorTheme.getColorThemeCss(), chromeTheme = 'light') => {
+  const css = chromeTheme === 'inherit' ? colorThemeCss : lightThemeCss
+  return `${dataUrlPrefix}${encodeURIComponent(getHtml(css, chromeTheme))}`
 }
 
 export const url = getUrl()
