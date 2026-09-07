@@ -59,6 +59,10 @@ try {
   app = await _electron.launch(launchOptions)
   await app.evaluate(({ session, net }) => {
     session.defaultSession.protocol.handle('https', async (request) => {
+      if (request.url.startsWith('https://suggestqueries.google.com/')) {
+        const query = new URL(request.url).searchParams.get('q')
+        return new Response(JSON.stringify([query, [query + ' result']]), { headers: { 'Content-Type': 'application/json' } })
+      }
       if (request.url === 'https://example.com/') return new Response('<title>Example Domain</title>', { headers: { 'Content-Type': 'text/html' } })
       return net.fetch(request.url, { bypassCustomProtocolHandlers: true })
     })
@@ -129,6 +133,17 @@ try {
   await expect(address).toHaveValue('known.example/article')
   assert.equal(await address.evaluate((input) => input === window.browserAddressInput), true)
   await expect(address).toBeFocused()
+  await address.press('Escape')
+  await expect(suggestions).toHaveCount(0)
+
+  await address.fill('known')
+  await expect(page.locator('.SimpleBrowserInlineSuggestion')).toBeVisible()
+  await address.press('End')
+  await page.keyboard.type(' query')
+  await expect(address).toHaveValue('known query')
+  await expect(page.getByRole('option', { name: 'known query result', exact: true })).toBeVisible()
+  await expect(address).toHaveValue('known query')
+  assert.equal(await address.evaluate((input) => input === window.browserAddressInput), true)
   await address.press('Escape')
   await expect(suggestions).toHaveCount(0)
 
