@@ -3,7 +3,7 @@ const sequence = { value: 0 }
 
 export const cancel = (uid) => {
   const session = sessions.get(uid)
-  if (session?.timer !== undefined) clearTimeout(session.timer)
+  if (session?.timer) clearTimeout(session.timer)
   if (session) session.active = false
 }
 
@@ -31,11 +31,11 @@ export const isCurrentUpdate = (uid, id, updateId) => {
 
 export const begin = (uid, tabId, query, request, apply) => {
   cancel(uid)
-  const session = { active: true, id: ++sequence.value, tabId, timer: undefined, updateId: 0, providerStarted: false }
+  const session = { active: true, id: ++sequence.value, tabId, timer: 0, updateId: 0, providerStarted: false }
   sessions.set(uid, session)
   if (request) {
     session.timer = setTimeout(async () => {
-      session.timer = undefined
+      session.timer = 0
       let results = []
       try {
         results = await request(query)
