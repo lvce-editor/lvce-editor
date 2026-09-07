@@ -99,16 +99,34 @@ try {
   const dimensions = await page.locator('.SimpleBrowser').boundingBox()
   assert.equal(dimensions.x, 0)
   assert.equal(dimensions.width, await page.evaluate(() => innerWidth))
-  const doubleControl = async (guestFocused) =>
+  const doubleControl = async (guestFocused, targetUrl = url, measure = false) =>
     app.evaluate(
-      ({ BrowserWindow, webContents }, { guestFocused, url }) => {
+      ({ BrowserWindow, webContents }, { guestFocused, url, measure }) => {
         const window = BrowserWindow.getAllWindows()[0]
         window.focus()
         const target = guestFocused ? webContents.getAllWebContents().find((item) => item.getURL().startsWith(url)) : window.webContents
         target.focus()
+        const settled = measure
+          ? new Promise((resolve, reject) => {
+              const start = Date.now()
+              const timer = setInterval(() => {
+                const views = window.contentView.children.filter(
+                  (view) => 'webContents' in view && view.webContents.getURL().startsWith('http://127.0.0.1:'),
+                )
+                if (views.length === 1 && views[0].webContents === target && views[0].getBounds().x === 0 && target.isFocused()) {
+                  clearInterval(timer)
+                  resolve(Date.now() - start)
+                } else if (Date.now() - start > 2000) {
+                  clearInterval(timer)
+                  reject(new Error('Browser bounds and focus did not settle'))
+                }
+              }, 1)
+            })
+          : undefined
         for (const type of ['keyDown', 'keyUp', 'keyDown', 'keyUp']) target.sendInputEvent({ type, keyCode: 'Control' })
+        return settled
       },
-      { guestFocused, url },
+      { guestFocused, url: targetUrl, measure },
     )
   await doubleControl(true)
   await expect(page.locator('.BrowserFullWidth')).toHaveCount(0)
@@ -142,7 +160,45 @@ try {
   await expect(page.locator('.BrowserFullWidth')).toHaveCount(1)
   await page.locator('.SimpleBrowserFullWidthButton').click()
   await expect(page.locator('.SimpleBrowser')).toHaveCount(2)
-  console.log(JSON.stringify({ switches: 50, preserved: before.data, maximumAutomationRoundTripMs: Math.max(...timings), profile }))
+  const mainUrl = `${url}?main`
+  const mainAddress = mainBrowser.locator('[name="simple-browser-address"]')
+  await mainAddress.fill(mainUrl)
+  await mainAddress.press('Enter')
+  await expect
+    .poll(() => app.evaluate(({ webContents }, targetUrl) => webContents.getAllWebContents().some((item) => item.getURL() === targetUrl), mainUrl))
+    .toBe(true)
+  const nativePages = () =>
+    app.evaluate(({ BrowserWindow }) => {
+      const window = BrowserWindow.getAllWindows()[0]
+      return window.contentView.children.flatMap((view) =>
+        'webContents' in view && view.webContents.getURL().startsWith('http://127.0.0.1:') ? [view.webContents.getURL()] : [],
+      )
+    })
+  await expect.poll(nativePages).toHaveLength(2)
+  const started = Date.now()
+  const nativeGestureFocusMs = await doubleControl(true, mainUrl, true)
+  await expect(page.locator('.BrowserFullWidth')).toHaveCount(1)
+  await expect(page.locator('[name="simple-browser-address"]')).toHaveValue(mainUrl)
+  await expect.poll(nativePages).toEqual([mainUrl])
+  const nativeGestureRoundTripMs = Date.now() - started
+  await page.locator('.SimpleBrowserFullWidthButton').click()
+  await expect(page.locator('.SimpleBrowser')).toHaveCount(2)
+  await expect.poll(nativePages).toHaveLength(2)
+  await page.locator('.PreviewArea .SimpleBrowserFullWidthButton').click()
+  await expect(page.locator('.BrowserFullWidth')).toHaveCount(1)
+  await expect.poll(nativePages).toEqual([url])
+  await page.locator('.SimpleBrowserFullWidthButton').click()
+  await expect.poll(nativePages).toHaveLength(2)
+  console.log(
+    JSON.stringify({
+      switches: 50,
+      preserved: before.data,
+      nativeGestureRoundTripMs,
+      nativeGestureFocusMs,
+      maximumAutomationRoundTripMs: Math.max(...timings),
+      profile,
+    }),
+  )
 } finally {
   await app?.close()
   await writeFile(rendererPath, rendererSource)

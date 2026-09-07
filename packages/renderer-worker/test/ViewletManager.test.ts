@@ -1412,3 +1412,27 @@ test('commands with side effects run afterRender after their bounds and DOM upda
   expect(callOrder).toEqual(['render', 'afterRender'])
   expect(afterRender).toHaveBeenCalledWith(oldState, newState)
 })
+
+test('functional commands retain concurrent layout flags and compare hooks against the latest rendered state', async () => {
+  const initial = { uid: 94, fullWidth: false, inputValue: '' }
+  const latest = { ...initial, fullWidth: true }
+  const afterRender = jest.fn()
+  const factory = {
+    Commands: {
+      update: async (state: typeof initial) => {
+        ViewletStates.setRenderedState(94, latest)
+        return { ...state, inputValue: 'typed' }
+      },
+    },
+    afterRender,
+    create: () => initial,
+    hasFunctionalRender: true,
+    loadContent: (state: typeof initial) => state,
+    render: [],
+  }
+  await ViewletManager.load({ getModule: async () => factory, id: 'ConcurrentBrowserInput', uid: 94, type: 0 })
+  jest.mocked(RendererProcess.invoke).mockResolvedValue(undefined as never)
+  await Command.execute('ConcurrentBrowserInput.update')
+  expect(ViewletStates.getState(94)).toEqual({ ...latest, inputValue: 'typed' })
+  expect(afterRender).toHaveBeenCalledWith(latest, { ...latest, inputValue: 'typed' })
+})

@@ -636,14 +636,15 @@ const executeViewletCommandInternal = async (uid, fnName, ...args) => {
     return
   }
   const commands = 'newState' in newState ? [...newState.commands] : []
-  commands.push(...ViewletManager.render(instance.factory, instance.renderedState, actualNewState))
+  const renderedState = instance.renderedState
+  commands.push(...ViewletManager.render(instance.factory, renderedState, actualNewState))
   UpdateDynamicFocusContext.updateDynamicFocusContext(commands)
   ViewletStates.setRenderedState(uid, actualNewState)
   if (commands.length > 0) {
     await RendererProcess.invoke(/* Viewlet.sendMultiple */ 'Viewlet.sendMultiple', /* commands */ commands)
   }
   if (ViewletStates.getInstance(uid) === instance && instance.factory.afterRender) {
-    await instance.factory.afterRender(oldState, actualNewState)
+    await instance.factory.afterRender(renderedState, actualNewState)
   }
 }
 
