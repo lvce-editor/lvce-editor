@@ -6,11 +6,11 @@ beforeEach(() => {
   ViewletStates.reset()
 })
 
-jest.unstable_mockModule('../src/parts/Viewlet/Viewlet.js', () => ({
-  executeViewletCommand: jest.fn(),
+jest.unstable_mockModule('../src/parts/Command/Command.js', () => ({
+  execute: jest.fn(),
 }))
 
-const Viewlet = await import('../src/parts/Viewlet/Viewlet.js')
+const Command = await import('../src/parts/Command/Command.js')
 const SimpleBrowserOverlay = await import('../src/parts/SimpleBrowserOverlay/SimpleBrowserOverlay.js')
 
 const addMain = (activeEditorUid) => {
@@ -44,7 +44,7 @@ test('does not show an overlay when Simple Browser is not open', async () => {
 
   await SimpleBrowserOverlay.show('menu')
 
-  expect(Viewlet.executeViewletCommand).not.toHaveBeenCalled()
+  expect(Command.execute).not.toHaveBeenCalled()
 })
 
 test('does not hide an overlay when Simple Browser is not visible', async () => {
@@ -53,7 +53,7 @@ test('does not hide an overlay when Simple Browser is not visible', async () => 
 
   await SimpleBrowserOverlay.hide('menu')
 
-  expect(Viewlet.executeViewletCommand).not.toHaveBeenCalled()
+  expect(Command.execute).not.toHaveBeenCalled()
 })
 
 test('shows and hides overlays when Simple Browser is visible', async () => {
@@ -63,8 +63,8 @@ test('shows and hides overlays when Simple Browser is visible', async () => {
   await SimpleBrowserOverlay.show('menu')
   await SimpleBrowserOverlay.hide('menu')
 
-  expect(Viewlet.executeViewletCommand).toHaveBeenNthCalledWith(1, 2, 'showOverlay', 'menu')
-  expect(Viewlet.executeViewletCommand).toHaveBeenNthCalledWith(2, 2, 'hideOverlay', 'menu')
+  expect(Command.execute).toHaveBeenNthCalledWith(1, 'Viewlet.executeViewletCommand', 2, 'showOverlay', 'menu')
+  expect(Command.execute).toHaveBeenNthCalledWith(2, 'Viewlet.executeViewletCommand', 2, 'hideOverlay', 'menu')
 })
 
 test('shows and hides overlays for a preview or full-width browser outside Main', async () => {
@@ -74,8 +74,8 @@ test('shows and hides overlays for a preview or full-width browser outside Main'
   await SimpleBrowserOverlay.show('menu')
   await SimpleBrowserOverlay.hide('menu')
 
-  expect(Viewlet.executeViewletCommand).toHaveBeenNthCalledWith(1, 2, 'showOverlay', 'menu')
-  expect(Viewlet.executeViewletCommand).toHaveBeenNthCalledWith(2, 2, 'hideOverlay', 'menu')
+  expect(Command.execute).toHaveBeenNthCalledWith(1, 'Viewlet.executeViewletCommand', 2, 'showOverlay', 'menu')
+  expect(Command.execute).toHaveBeenNthCalledWith(2, 'Viewlet.executeViewletCommand', 2, 'hideOverlay', 'menu')
 })
 
 test('targets each visible browser by uid even when a hidden browser has focus', async () => {
@@ -87,10 +87,10 @@ test('targets each visible browser by uid even when a hidden browser has focus',
   await SimpleBrowserOverlay.show('menu')
   await SimpleBrowserOverlay.hide('menu')
 
-  expect(jest.mocked(Viewlet.executeViewletCommand).mock.calls).toEqual([
-    [3, 'showOverlay', 'menu'],
-    [4, 'showOverlay', 'menu'],
-    [3, 'hideOverlay', 'menu'],
-    [4, 'hideOverlay', 'menu'],
+  expect(jest.mocked(Command.execute).mock.calls).toEqual([
+    ['Viewlet.executeViewletCommand', 3, 'showOverlay', 'menu'],
+    ['Viewlet.executeViewletCommand', 4, 'showOverlay', 'menu'],
+    ['Viewlet.executeViewletCommand', 3, 'hideOverlay', 'menu'],
+    ['Viewlet.executeViewletCommand', 4, 'hideOverlay', 'menu'],
   ])
 })

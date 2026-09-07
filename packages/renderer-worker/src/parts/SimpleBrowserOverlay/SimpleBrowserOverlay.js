@@ -1,4 +1,4 @@
-import * as Viewlet from '../Viewlet/Viewlet.js'
+import * as Command from '../Command/Command.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
@@ -9,7 +9,7 @@ const run = async (method, overlayId) => {
       continue
     }
     try {
-      await Viewlet.executeViewletCommand(instance.state.uid, method, overlayId)
+      await Command.execute('Viewlet.executeViewletCommand', instance.state.uid, method, overlayId)
     } catch (error) {
       console.error(`[renderer-worker] Failed to ${method} for Simple Browser`, error)
     }
