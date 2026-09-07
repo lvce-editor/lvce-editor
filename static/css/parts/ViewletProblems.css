@@ -1,6 +1,28 @@
 .Problems {
   color: var(--WorkbenchForeground, white);
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+}
+
+.ProblemsContent {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  position: relative;
+}
+
+.ProblemsList {
+  contain: strict;
+  height: 100%;
+  overflow: hidden;
+  width: 100%;
+}
+
+.ProblemsContentTable > .ScrollBar {
+  top: 22px;
 }
 
 .ProblemList {
@@ -60,7 +82,7 @@
 .ProblemsTableBody {
   flex: 1;
   contain: strict;
-  overflow-y: auto;
+  overflow: hidden;
 }
 
 .ProblemsTableRow {
