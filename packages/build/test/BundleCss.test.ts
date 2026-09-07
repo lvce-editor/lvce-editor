@@ -607,7 +607,7 @@ test('bundleCss preserves the running extensions empty state artwork', async () 
   }
 }, 30_000)
 
-test('bundleCss preserves the panel background for xterm', async () => {
+test('bundleCss preserves the terminal background and editor fallbacks for xterm', async () => {
   const dir = await mkdtemp(join(tmpdir(), 'lvce-bundle-css-'))
 
   try {
@@ -622,7 +622,7 @@ test('bundleCss preserves the panel background for xterm', async () => {
   width: 100%;
   height: 100%;
   overflow: hidden;
-  background: var(--PanelBackground);
+  background: var(--TerminalBackground, var(--EditorBackground, var(--EditorBackGround, var(--MainBackground))));
 }`)
   } finally {
     await rm(dir, { recursive: true, force: true })

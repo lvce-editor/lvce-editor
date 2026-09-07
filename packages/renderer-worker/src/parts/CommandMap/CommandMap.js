@@ -99,6 +99,7 @@ export const commandMap = {
   'Dialog.openFolder': lazy('Dialog.openFolder'),
   'Dialog.show': lazy('Dialog.show'),
   'Dialog.showMessage': lazy('Dialog.showMessage'),
+  'Dialog.showMessageBox': lazy('Dialog.showMessageBox'),
   'Dialog.showWarning': lazy('Dialog.showWarning'),
   'Document.getSelectionText': lazy('Document.getSelectionText'),
   'Download.downloadFile': lazy('Download.downloadFile'),
