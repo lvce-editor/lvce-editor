@@ -150,6 +150,7 @@ try {
   await button.click()
   await expect(page.locator('[name="editor"]')).toBeFocused()
   await address.click()
+  await expect.poll(() => address.evaluate((input) => input.selectionEnd - input.selectionStart)).toBe((await address.inputValue()).length)
   await address.evaluate((input) => input.setSelectionRange(2, 8))
   await doubleControl(false)
   await expect(page.locator('.BrowserFullWidth')).toHaveCount(1)
