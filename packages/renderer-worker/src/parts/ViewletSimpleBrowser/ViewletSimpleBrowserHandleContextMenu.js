@@ -14,11 +14,11 @@ export const handleContextMenu = async (state, params) => {
   const y = Math.round((state.y + state.headerHeight) * zoom + pageY)
   const entries = MenuEntriesSimpleBrowser.getMenuEntries(pageX, pageY, { ...params, canGoBack: tab.canGoBack, canGoForward: tab.canGoForward }).map(
     (entry) =>
-      entry.command?.startsWith('SimpleBrowser.')
+      'command' in entry && entry.command?.startsWith('SimpleBrowser.')
         ? {
             ...entry,
             command: 'Viewlet.executeViewletCommand',
-            args: [state.uid, 'handleContextMenuAction', browserViewId, entry.command.slice('SimpleBrowser.'.length), entry.args || []],
+            args: [state.uid, 'handleContextMenuAction', browserViewId, entry.command.slice('SimpleBrowser.'.length), 'args' in entry ? entry.args : []],
           }
         : entry,
   )

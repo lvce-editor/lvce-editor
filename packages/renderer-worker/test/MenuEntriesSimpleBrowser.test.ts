@@ -131,7 +131,7 @@ test('getMenuEntries - linked image includes link and image actions', () => {
 
 test('editable fields expose native roles with capability flags', () => {
   const entries = MenuEntriesSimpleBrowser.getMenuEntries(0, 0, { isEditable: true, editFlags: { canCopy: true, canPaste: true } })
-  expect(entries.slice(0, 6).map(({ role, flags }) => [role, flags])).toEqual([
+  expect(entries.slice(0, 6).map((entry) => ['role' in entry ? entry.role : undefined, entry.flags])).toEqual([
     ['undo', MenuItemFlags.Disabled],
     ['redo', MenuItemFlags.Disabled],
     ['cut', MenuItemFlags.Disabled],
