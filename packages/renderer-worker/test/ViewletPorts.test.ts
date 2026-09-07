@@ -28,6 +28,7 @@ beforeEach(() => {
 })
 
 test('loads the ports view with platform, assets, and parent uid', async () => {
+  expect(ViewletPorts.Css).toEqual(['/css/parts/ViewletPorts.css'])
   const state = ViewletPorts.create(1, 'ports://', 10, 20, 800, 600, {}, 99)
 
   await ViewletPorts.loadContent(state)
