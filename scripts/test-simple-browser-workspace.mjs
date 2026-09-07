@@ -434,6 +434,8 @@ try {
     mainUrl,
   )
   await page.locator('.SimpleBrowserFullWidthButton').click()
+  await expect(page.locator('.BrowserFullWidth')).toHaveCount(0)
+  const beforeZoomBounds = await mainBrowser.boundingBox()
   await app.evaluate(({ BrowserWindow, webContents }, targetUrl) => {
     BrowserWindow.getAllWindows()[0].webContents.setZoomLevel(1)
     const guest = webContents.getAllWebContents().find((item) => item.getURL() === targetUrl)
@@ -450,6 +452,18 @@ try {
   await expect
     .poll(() => app.evaluate(() => globalThis.workspaceInspection))
     .toEqual({ x: expectedInspection.x, y: expectedInspection.y, id: expectedInspection.id })
+  await expect
+    .poll(() =>
+      app.evaluate(
+        ({ webContents }, targetUrl) =>
+          webContents
+            .getAllWebContents()
+            .find((item) => item.getURL() === targetUrl)
+            .devToolsWebContents?.isLoadingMainFrame(),
+        mainUrl,
+      ),
+    )
+    .toBe(false)
   await app.evaluate(
     ({ webContents }, targetUrl) =>
       webContents
@@ -465,6 +479,18 @@ try {
       .find((item) => item.getURL() === targetUrl)
       .setZoomLevel(0)
   }, mainUrl)
+  await expect.poll(() => mainBrowser.boundingBox()).toEqual(beforeZoomBounds)
+  await expect
+    .poll(() =>
+      app.evaluate(
+        ({ BrowserWindow }, targetUrl) =>
+          BrowserWindow.getAllWindows()[0]
+            .contentView.children.find((view) => view.webContents?.getURL() === targetUrl)
+            ?.getBounds().width,
+        mainUrl,
+      ),
+    )
+    .toBe(Math.round(beforeZoomBounds.width))
   for (const expanded of [false, true]) {
     if (expanded) {
       await mainBrowser.locator('.SimpleBrowserFullWidthButton').click()
