@@ -82,6 +82,11 @@ jobs:
         run: |
           node packages/main-process/node_modules/electron/install.js
           xvfb-run -a npm run test:simple-browser-address
+      - name: Test Simple Browser new tab suggestions
+        if: matrix.os == 'ubuntu-24.04'
+        run: npm run test:simple-browser-new-tab
+        env:
+          PLAYWRIGHT_BROWSERS_PATH: 0
       - name: Test Simple Browser workspace switching
         if: matrix.os == 'ubuntu-24.04'
         run: |
@@ -103,6 +108,12 @@ jobs:
         if: matrix.os == 'ubuntu-24.04'
         working-directory: ./packages/extension-host-worker-tests
         run: npm run e2e:terminal-background
+        env:
+          PLAYWRIGHT_BROWSERS_PATH: 0
+      - name: Test output channel selection
+        if: matrix.os == 'ubuntu-24.04'
+        working-directory: ./packages/extension-host-worker-tests
+        run: npm run e2e:headless -- --test-name-prefix=viewlet.output-open-channel
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0
       - name: Test integrated terminal rendering

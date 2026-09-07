@@ -38,6 +38,7 @@ test('uses workbench theme colors', () => {
     --FocusOutline: #0088ff;
     --WidgetBackground: #122738;
   }`,
+    false,
     'inherit',
   )
   const html = getHtml(url)
@@ -55,6 +56,7 @@ test('falls back from the legacy empty EditorBackGround color to MainBackground'
     --EditorBackGround: ;
     --MainBackground: #193549;
   }`,
+    false,
     'inherit',
   )
 
@@ -65,4 +67,16 @@ test('hides the internal page URL from the address bar', () => {
   expect(SimpleBrowserNewTabPage.toDisplayUrl(SimpleBrowserNewTabPage.url)).toBe('')
   expect(SimpleBrowserNewTabPage.toDisplayUrl(SimpleBrowserNewTabPage.getUrl(':root { --EditorBackground: #193549; }'))).toBe('')
   expect(SimpleBrowserNewTabPage.toDisplayUrl('https://example.com')).toBe('https://example.com')
+})
+
+test('enables Google suggestions only when requested', () => {
+  const html = getHtml(SimpleBrowserNewTabPage.getUrl('', true))
+  expect(html).toContain('role="combobox"')
+  expect(html).toContain('aria-controls="suggestions"')
+  expect(html).toContain('role="listbox"')
+  expect(html).toContain('https://suggestqueries.google.com/complete/search')
+  expect(html).toContain('<script>')
+  expect(getHtml()).not.toContain('<script>')
+  expect(getHtml()).not.toContain('script-src')
+  expect(SimpleBrowserNewTabPage.toDisplayUrl(SimpleBrowserNewTabPage.getUrl('', true))).toBe('')
 })

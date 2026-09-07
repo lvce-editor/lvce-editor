@@ -242,7 +242,7 @@ export const backgroundLoadContent = async (state, savedState) => {
   await ElectronWebContentsViewFunctions.resizeWebContentsView(browserViewId, x, y + headerHeight, width, height - headerHeight)
   const { newTitle } = await ElectronWebContentsViewFunctions.setIframeSrc(
     browserViewId,
-    iframeSrc || SimpleBrowserNewTabPage.getUrl(undefined, state.chromeTheme),
+    iframeSrc || SimpleBrowserNewTabPage.getUrl(undefined, suggestionsEnabled, state.chromeTheme),
   )
   const title = newTitle || 'Simple Browser'
   const tabs = [createTab({ browserViewId, iframeSrc, inputValue: iframeSrc, title })]
@@ -302,7 +302,7 @@ export const loadContent = async (state, savedState) => {
   await ElectronWebContentsViewFunctions.resizeWebContentsView(browserViewId, browserViewX, browserViewY, browserViewWidth, browserViewHeight)
   Assert.number(browserViewId)
   if (!iframeSrc || !id || id !== browserViewId) {
-    await ElectronWebContentsViewFunctions.setIframeSrc(browserViewId, iframeSrc || SimpleBrowserNewTabPage.getUrl(undefined, state.chromeTheme))
+    await ElectronWebContentsViewFunctions.setIframeSrc(browserViewId, iframeSrc || SimpleBrowserNewTabPage.getUrl(undefined, suggestionsEnabled, state.chromeTheme))
   }
   const { title, canGoBack, canGoForward, isAudioMuted } = await ElectronWebContentsViewFunctions.getStats(browserViewId)
   const restoredTabs =
@@ -372,13 +372,13 @@ const createUnloadedTab = async (state) => {
 
 const createEmptyTab = async (state) => {
   const tab = await createUnloadedTab(state)
-  await ElectronWebContentsViewFunctions.setIframeSrc(tab.browserViewId, SimpleBrowserNewTabPage.getUrl(undefined, state.chromeTheme))
+  await ElectronWebContentsViewFunctions.setIframeSrc(tab.browserViewId, SimpleBrowserNewTabPage.getUrl(undefined, state.suggestionsEnabled, state.chromeTheme))
   return tab
 }
 
 export const handleColorThemeChanged = async (state) => {
   const { tabs } = state
-  const newTabUrl = SimpleBrowserNewTabPage.getUrl(undefined, state.chromeTheme)
+  const newTabUrl = SimpleBrowserNewTabPage.getUrl(undefined, state.suggestionsEnabled, state.chromeTheme)
   await Promise.all(
     tabs
       .filter((tab) => !tab.iframeSrc && tab.browserViewId)
