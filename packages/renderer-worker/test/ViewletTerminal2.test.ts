@@ -236,3 +236,11 @@ test.each(['javascript:alert(1)', 'file:///tmp/test.html', 'invalid', 'https://'
 test('registers the terminal link handler', () => {
   expect(ViewletTerminal2Commands.Commands.handleLink).toBe(ViewletTerminal2.handleLink)
 })
+
+test('uses the host launch directory supplied by the container terminal resolver', async () => {
+  const state = ViewletTerminal2.create(42, 'devcontainers:///abc123/src')
+  const options = { command: '/usr/bin/node', args: ['devcontainer.js', 'exec', 'sh'], cwd: '/host/project' }
+  const loaded = await ViewletTerminal2.loadContent(state, undefined, options)
+  await ViewletTerminal2.loadContentLater(loaded)
+  expect(terminalWorkerInvoke).toHaveBeenCalledWith('Terminal.create', 42, '/host/project', options.command, options.args, { backend: 'mock' })
+})

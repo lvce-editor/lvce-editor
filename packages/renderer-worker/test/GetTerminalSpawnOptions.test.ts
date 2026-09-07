@@ -1,6 +1,8 @@
 import { beforeEach, expect, jest, test } from '@jest/globals'
 
 const invoke = jest.fn<(...args: unknown[]) => Promise<unknown>>()
+const executeCommand = jest.fn<(...args: unknown[]) => Promise<unknown>>()
+jest.unstable_mockModule('../src/parts/ExtensionHost/ExtensionHostCommands.js', () => ({ executeCommand }))
 const workspaceState = { workspaceUri: '' }
 jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => ({ invoke }))
 jest.unstable_mockModule('../src/parts/WorkspaceState/WorkspaceState.js', () => ({ state: workspaceState }))
@@ -11,6 +13,7 @@ beforeEach(() => {
   WorkspaceConnection.reset()
   workspaceState.workspaceUri = 'codespaces://test/work'
   invoke.mockReset()
+  executeCommand.mockReset()
 })
 
 test('uses the remote shell without a local process connection', async () => {
@@ -53,3 +56,26 @@ test.each([{ command: '', args: [] }, { command: 'bash', args: [42] }, { command
     )
   },
 )
+
+test('opens devcontainer terminals through the extension instead of discovering a host shell', async () => {
+  workspaceState.workspaceUri = 'devcontainers:///abc123'
+  const options = { command: '/usr/bin/node', args: ['devcontainer.js', 'exec', 'sh'], cwd: '/host/project' }
+  executeCommand.mockResolvedValue(options)
+  await expect(getTerminalSpawnOptions()).resolves.toEqual(options)
+  expect(executeCommand).toHaveBeenCalledWith('devcontainer.getTerminalSpawnOptions', workspaceState.workspaceUri, '')
+  expect(invoke).not.toHaveBeenCalled()
+})
+
+test('does not fall back to a host shell when the container is stopped', async () => {
+  workspaceState.workspaceUri = 'devcontainers:///abc123'
+  executeCommand.mockRejectedValue(new Error('Devcontainer is not running'))
+  await expect(getTerminalSpawnOptions()).rejects.toThrow('Devcontainer is not running')
+  expect(invoke).not.toHaveBeenCalled()
+})
+
+test('passes an Explorer directory to the container terminal resolver', async () => {
+  workspaceState.workspaceUri = 'devcontainers:///abc123'
+  const cwd = 'devcontainers:///abc123/src'
+  await getTerminalSpawnOptions(cwd)
+  expect(executeCommand).toHaveBeenCalledWith('devcontainer.getTerminalSpawnOptions', workspaceState.workspaceUri, cwd)
+})

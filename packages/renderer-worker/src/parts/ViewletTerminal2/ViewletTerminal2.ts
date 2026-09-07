@@ -35,11 +35,12 @@ export const create = (id, cwd = '') => {
 }
 
 export const loadContent = async (state, _savedState?: any, configuredSpawnOptions?: any) => {
-  const { command, args } = configuredSpawnOptions || (await GetTerminalSpawnOptions.getTerminalSpawnOptions())
+  const { command, args, cwd = state.cwd } = configuredSpawnOptions || (await GetTerminalSpawnOptions.getTerminalSpawnOptions(state.cwd))
   return {
     ...state,
     command,
     args,
+    cwd,
     xtermMounted: true,
   }
 }
