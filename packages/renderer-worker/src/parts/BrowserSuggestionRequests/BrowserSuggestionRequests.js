@@ -12,16 +12,26 @@ export const dispose = (uid) => {
   sessions.delete(uid)
 }
 
-export const isLatest = (uid, id) => sessions.get(uid)?.id === id
-
 export const isCurrent = (uid, id, tabId) => {
   const session = sessions.get(uid)
   return session?.active === true && session.id === id && session.tabId === tabId
 }
 
+export const beginUpdate = (uid, id, provider) => {
+  const session = sessions.get(uid)
+  if (!session?.active || session.id !== id || (!provider && session.providerStarted)) return undefined
+  if (provider) session.providerStarted = true
+  return ++session.updateId
+}
+
+export const isCurrentUpdate = (uid, id, updateId) => {
+  const session = sessions.get(uid)
+  return session?.active === true && session.id === id && session.updateId === updateId
+}
+
 export const begin = (uid, tabId, query, request, apply) => {
   cancel(uid)
-  const session = { active: true, id: ++sequence.value, tabId, timer: undefined }
+  const session = { active: true, id: ++sequence.value, tabId, timer: undefined, updateId: 0, providerStarted: false }
   sessions.set(uid, session)
   if (request) {
     session.timer = setTimeout(async () => {

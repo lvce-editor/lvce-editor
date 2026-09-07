@@ -50,12 +50,14 @@ test('provider rejection becomes an empty update without ending the active sessi
   expect(Requests.isCurrent(7, id, 10)).toBe(true)
 })
 
-test('distinguishes dismissed input from input superseded by a newer query', () => {
+test('provider updates supersede a pending local capture and prevent late local work', () => {
   const id = Requests.begin(7, 10, 'typed', undefined, jest.fn())
+  const local = Requests.beginUpdate(7, id, false)
+  const provider = Requests.beginUpdate(7, id, true)
+  expect(Requests.isCurrentUpdate(7, id, local)).toBe(false)
+  expect(Requests.isCurrentUpdate(7, id, provider)).toBe(true)
+  expect(Requests.beginUpdate(7, id, false)).toBeUndefined()
   Requests.cancel(7)
-  expect(Requests.isCurrent(7, id, 10)).toBe(false)
-  expect(Requests.isLatest(7, id)).toBe(true)
-  Requests.begin(7, 10, 'newer', undefined, jest.fn())
-  expect(Requests.isLatest(7, id)).toBe(false)
+  expect(Requests.isCurrentUpdate(7, id, provider)).toBe(false)
   Requests.dispose(7)
 })
