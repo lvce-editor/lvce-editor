@@ -20,6 +20,11 @@ export const renderEventListeners = () => {
     },
     { name: DomEventListenerFunctions.HandleClickSimpleBrowserFullWidth, params: ['toggleFullWidth'] },
     {
+      name: DomEventListenerFunctions.HandleErrorSimpleBrowserFavicon,
+      params: ['handleFaviconError', 'event.target.dataset.index', 'event.target.src'],
+    },
+    { name: DomEventListenerFunctions.HandleClickSimpleBrowserFullWidth, params: ['toggleFullWidth'] },
+    {
       name: DomEventListenerFunctions.HandleClickBackward,
       params: ['backward'],
     },
