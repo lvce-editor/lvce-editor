@@ -740,7 +740,7 @@ export const showOverlay = async (state, overlayId) => {
   }
   let snapshot = ''
   try {
-    if (state.iframeSrc) {
+    if (state.browserViewId) {
       const bytes = await ElectronWebContentsViewFunctions.capturePage(state.browserViewId)
       snapshot = SimpleBrowserSnapshot.create(bytes)
     }
