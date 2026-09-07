@@ -1,5 +1,18 @@
 [
   {
+    "id": "sessionReplayWorker",
+    "fileName": "sessionReplayWorkerMain.js",
+    "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/renderer-process/dist/sessionReplayWorkerMain.js",
+    "productionPath": "/packages/renderer-process/dist/sessionReplayWorkerMain.js",
+    "settingName": "develop.sessionReplayWorkerPath",
+    "hotReloadCommand": "",
+    "contentSecurityPolicy": [
+      "default-src 'none'",
+      "connect-src 'self' https: http://127.0.0.1:* http://localhost:*",
+      "script-src 'self'"
+    ]
+  },
+  {
     "id": "componentState",
     "fileName": "componentStateWorkerMain.js",
     "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/component-state-worker/dist/componentStateWorkerMain.js",
