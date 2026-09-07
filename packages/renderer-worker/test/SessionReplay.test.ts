@@ -1,7 +1,7 @@
 import { expect, jest, test } from '@jest/globals'
 
 const invoke = jest.fn<(...args: readonly unknown[]) => Promise<unknown>>()
-const configureSessionReplay = jest.fn<any>().mockResolvedValue('session-id')
+const configureSessionReplay = jest.fn<(...args: readonly unknown[]) => Promise<string>>().mockResolvedValue('session-id')
 const execute = jest.fn<any>()
 const get = jest.fn<any>()
 jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () => ({ configureSessionReplay, invoke }))

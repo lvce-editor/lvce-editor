@@ -1,7 +1,7 @@
 import { beforeEach, expect, jest, test } from '@jest/globals'
 
 const invoke = jest.fn<(...args: readonly unknown[]) => Promise<unknown>>().mockResolvedValue('session-id')
-const configureSessionReplay = jest.fn<any>().mockResolvedValue('session-id')
+const configureSessionReplay = jest.fn<(...args: readonly unknown[]) => Promise<string>>().mockResolvedValue('session-id')
 const execute = jest.fn<any>()
 const get = jest.fn<(key: string) => unknown>()
 const getHref = jest.fn<() => Promise<string>>().mockResolvedValue('https://lvce-editor.dev/')

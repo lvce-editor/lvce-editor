@@ -5,8 +5,8 @@ const port2 = { close: jest.fn() }
 const originalChannel = MessageChannel
 const rpc = {}
 const originalRpc = {}
-const create = jest.fn<any>().mockResolvedValue(rpc)
-const invokeAndTransfer = jest.fn<any>()
+const create = jest.fn<(...args: readonly unknown[]) => Promise<unknown>>().mockResolvedValue(rpc)
+const invokeAndTransfer = jest.fn<(...args: readonly unknown[]) => Promise<string>>()
 const reset = jest.fn()
 jest.unstable_mockModule('../../../static/js/lvce-editor-rpc.js', () => ({ PlainMessagePortRpc: { create }, WebWorkerRpcClient2: {} }))
 jest.unstable_mockModule('../src/parts/CommandMapRef/CommandMapRef.js', () => ({ commandMapRef: {} }))
