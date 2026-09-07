@@ -139,6 +139,7 @@ export const create = (id, uri, x, y, width, height) => {
     width,
     height,
     focusAddressVersion: 0,
+    suggestionSessionId: 0,
     fullWidth: false,
     chromeTheme: Preferences.get('simpleBrowser.chromeTheme') === 'inherit' ? 'inherit' : 'light',
     headerHeight: getHeaderHeight(true),
@@ -595,6 +596,7 @@ const closeTabInternal = async (state, index, disposeWebContentsView) => {
   if (tabIndex < 0 || tabIndex >= state.tabs.length) {
     return state
   }
+  if (tabIndex === state.selectedTabIndex) BrowserSuggestionRequests.cancel(state.uid)
   const currentState = tabIndex === state.selectedTabIndex && state.hasSuggestionsOverlay ? await closeSuggestions(state) : state
   const tab = currentState.tabs[tabIndex]
   if (currentState.tabs.length === 1) {
@@ -657,6 +659,7 @@ const closeTabsByIndex = async (state, indexes, preferredTabIndex) => {
   }
   const indexesToClose = new Set(indexes)
   const selectedTabWillClose = indexesToClose.has(oldSelectedTabIndex)
+  if (selectedTabWillClose) BrowserSuggestionRequests.cancel(state.uid)
   const currentState = selectedTabWillClose && hasSuggestionsOverlay ? await closeSuggestions(state) : state
   const { browserViewId, tabs: currentTabs } = currentState
   const preferredBrowserViewId = currentTabs[preferredTabIndex]?.browserViewId
@@ -764,13 +767,23 @@ export const afterRender = async (oldState, newState) => {
   const { browserViewId, overlayIds, selectedTabIndex, tabs } = newState
   const didShowFirstOverlay = oldOverlayIds.length === 0 && overlayIds.length > 0
   const selectedTab = tabs[selectedTabIndex]
-  if (!didShowFirstOverlay || selectedTab?.pageSnapshot) {
-    return
+  if (didShowFirstOverlay && !selectedTab?.pageSnapshot) {
+    try {
+      await ElectronWebContentsViewFunctions.hide(browserViewId)
+    } catch (error) {
+      console.error('[renderer-worker] Failed to hide Simple Browser page', error)
+    }
   }
-  try {
-    await ElectronWebContentsViewFunctions.hide(browserViewId)
-  } catch (error) {
-    console.error('[renderer-worker] Failed to hide Simple Browser page', error)
+  if (oldState.suggestionSessionId !== newState.suggestionSessionId && newState.suggestionSessionId) {
+    await Viewlet.executeViewletCommand(
+      newState.uid,
+      'applySuggestions',
+      newState.uid,
+      newState.inputValue,
+      [],
+      getLocalSuggestions(newState, newState.inputValue),
+      newState.suggestionSessionId,
+    )
   }
 }
 
@@ -867,21 +880,21 @@ export const hideTabHover = async (state, index, clientX, clientY) => {
   return hideOverlay({ ...state, tabHover: undefined }, tabHoverOverlayId)
 }
 
-export const handleInput = async (state, value) => {
-  BrowserSuggestionRequests.cancel(state.uid)
-  const newState = { ...updateTab(state, state.browserViewId, { inputValue: value }), selectedSuggestionIndex: -1 }
-  if (!state.suggestionsEnabled || value.trim().length < 2) return closeSuggestions(newState)
-  const sessionId = BrowserSuggestionRequests.begin(
+export const handleInput = (state, value) => {
+  const suggestionSessionId = BrowserSuggestionRequests.begin(
     state.uid,
     state.browserViewId,
     value,
-    shouldRequestSuggestions(value) ? BrowserSearchSuggestions.get : undefined,
+    state.suggestionsEnabled && shouldRequestSuggestions(value) ? BrowserSearchSuggestions.get : undefined,
     (id, suggestions) => Viewlet.executeViewletCommand(state.uid, 'applySuggestions', state.uid, value, suggestions, undefined, id),
   )
-  const result = await applySuggestions(newState, state.uid, value, [], getLocalSuggestions(newState, value), sessionId)
-  if (BrowserSuggestionRequests.isCurrent(state.uid, sessionId, state.browserViewId)) return result
-  // Dismissing suggestions must not discard the input event that started them.
-  return BrowserSuggestionRequests.isLatest(state.uid, sessionId) ? newState : state
+  // Commit typing before capturing the native page for the popup. Popup work runs after rendering.
+  return {
+    ...updateTab(state, state.browserViewId, { inputValue: value }),
+    selectedSuggestionIndex: -1,
+    suggestionSessionId,
+    suggestions: [],
+  }
 }
 
 const suggestionsOverlayId = 'search-suggestions'
@@ -914,8 +927,15 @@ const getLocalSuggestions = (state, query) => {
 
 export const applySuggestions = async (state, uid, query, suggestions, precomputedLocalSuggestions, sessionId) => {
   const isCurrent = () => sessionId === undefined || BrowserSuggestionRequests.isCurrent(uid, sessionId, state.browserViewId)
-  if (!isCurrent() || state.uid !== uid || state.inputValue !== query || !state.suggestionsEnabled) {
+  if (!isCurrent() || state.uid !== uid || state.inputValue !== query) {
     return state
+  }
+  const updateId = sessionId === undefined ? undefined : BrowserSuggestionRequests.beginUpdate(uid, sessionId, precomputedLocalSuggestions === undefined)
+  if (sessionId !== undefined && updateId === undefined) return state
+  const isCurrentUpdate = () => isCurrent() && (sessionId === undefined || BrowserSuggestionRequests.isCurrentUpdate(uid, sessionId, updateId))
+  if (!state.suggestionsEnabled || query.trim().length < 2) {
+    const result = await dismissSuggestions(state)
+    return isCurrentUpdate() ? result : state
   }
   const localSuggestions = precomputedLocalSuggestions || getLocalSuggestions(state, query)
   const providerSuggestions = Array.isArray(suggestions) ? suggestions : []
@@ -928,11 +948,12 @@ export const applySuggestions = async (state, uid, query, suggestions, precomput
     .filter((suggestion, index) => allSuggestions.findIndex((other) => other.value === suggestion.value) === index)
     .slice(0, 8)
   if (uniqueSuggestions.length === 0) {
-    return dismissSuggestions(state)
+    const result = await dismissSuggestions(state)
+    return isCurrentUpdate() ? result : state
   }
   const selectedValue = state.selectedSuggestionIndex < 0 ? undefined : getSuggestionValue(state.suggestions[state.selectedSuggestionIndex])
   const overlayState = await showOverlay(state, suggestionsOverlayId)
-  if (!isCurrent()) {
+  if (!isCurrentUpdate()) {
     if (overlayState.snapshot !== state.snapshot) SimpleBrowserSnapshot.dispose(overlayState.snapshot)
     return state
   }

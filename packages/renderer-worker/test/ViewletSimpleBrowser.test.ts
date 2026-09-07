@@ -1623,7 +1623,8 @@ test('handleInput replaces partial search suggestions when the input becomes a U
     suggestionsEnabled: true,
   }
 
-  const newState = await ViewletSimpleBrowser.handleInput(state, 'soundcloud.com')
+  const typed = ViewletSimpleBrowser.handleInput(state, 'soundcloud.com')
+  const newState = await ViewletSimpleBrowser.applySuggestions(typed, 7, 'soundcloud.com', [], undefined, typed.suggestionSessionId)
 
   expect(BrowserSearchSuggestions.get).not.toHaveBeenCalled()
   expect(BrowserVisitedSites.getSuggestions).toHaveBeenCalledWith([], 'soundcloud.com')
@@ -1819,7 +1820,8 @@ test('handleInput shows matching search history before the provider responds', a
     suggestionsEnabled: true,
   }
 
-  const newState = await ViewletSimpleBrowser.handleInput(state, 'cheese')
+  const typed = ViewletSimpleBrowser.handleInput(state, 'cheese')
+  const newState = await ViewletSimpleBrowser.applySuggestions(typed, 7, 'cheese', [], undefined, typed.suggestionSessionId)
 
   expect(BrowserSearchHistory.getSuggestions).toHaveBeenCalledWith(['cheeseburger'], 'cheese')
   expect(newState).toMatchObject({ hasSuggestionsOverlay: true, selectedSuggestionIndex: -1, suggestions: [historySuggestion] })
@@ -2028,4 +2030,53 @@ test('Ctrl+L from the active embedded tab selects its address', async () => {
   await ViewletSimpleBrowser.handleKeyBinding(state, 12, KeyModifier.CtrlCmd | KeyCode.KeyL)
   expect(RendererProcess.invoke).toHaveBeenCalledWith('Window.focusBrowserAddress', 7)
   expect(ElectronWindow.focus).toHaveBeenCalled()
+})
+
+
+test('typing commits before a pending page capture and preserves newer short input', async () => {
+  const capture = Promise.withResolvers<Uint8Array>()
+  jest.mocked(ElectronWebContentsViewFunctions.capturePage).mockReturnValue(capture.promise as never)
+  jest.mocked(BrowserSearchHistory.getSuggestions).mockReturnValue([{ value: 'known', type: 'history', favicon: '' }] as never)
+  const state = { ...ViewletSimpleBrowser.create(7), browserViewId: 12, iframeSrc: 'https://example.com', suggestionsEnabled: true }
+  const typed = ViewletSimpleBrowser.handleInput(state, 'known')
+  expect(typed).not.toBeInstanceOf(Promise)
+  expect(typed.inputValue).toBe('known')
+  const pending = ViewletSimpleBrowser.applySuggestions(typed, 7, 'known', [], undefined, typed.suggestionSessionId)
+  const shortened = ViewletSimpleBrowser.handleInput(typed, 'k')
+  capture.resolve(new Uint8Array())
+  expect(await pending).toBe(typed)
+  expect(shortened.inputValue).toBe('k')
+})
+
+
+test.each(['switch', 'close'])('pending suggestions do not alter a tab after %s', async (action) => {
+  const capture = Promise.withResolvers<Uint8Array>()
+  jest.mocked(ElectronWebContentsViewFunctions.capturePage).mockReturnValue(capture.promise as never)
+  const state = { ...createTwoTabState(), suggestionsEnabled: true }
+  const typed = ViewletSimpleBrowser.handleInput(state, 'known')
+  const pending = ViewletSimpleBrowser.applySuggestions(typed, 7, 'known', ['known result'], undefined, typed.suggestionSessionId)
+  const changed = action === 'switch' ? ViewletSimpleBrowser.selectTab(typed, 1) : ViewletSimpleBrowser.closeTab(typed, 0)
+  capture.resolve(new Uint8Array())
+  expect(await pending).toBe(typed)
+  expect((await changed).browserViewId).toBe(13)
+})
+
+test('a delayed local popup cannot overwrite a provider popup', async () => {
+  const capture = Promise.withResolvers<Uint8Array>()
+  jest.mocked(ElectronWebContentsViewFunctions.capturePage).mockReturnValueOnce(capture.promise as never).mockResolvedValueOnce(new Uint8Array() as never)
+  const state = { ...ViewletSimpleBrowser.create(7), browserViewId: 12, iframeSrc: 'https://example.com', suggestionsEnabled: true }
+  const typed = ViewletSimpleBrowser.handleInput(state, 'known')
+  const local = ViewletSimpleBrowser.applySuggestions(typed, 7, 'known', [], [{ value: 'known local', favicon: '', type: 'history' }], typed.suggestionSessionId)
+  const provider = await ViewletSimpleBrowser.applySuggestions(typed, 7, 'known', ['known result'], undefined, typed.suggestionSessionId)
+  capture.resolve(new Uint8Array())
+  expect(await local).toBe(typed)
+  expect(provider.suggestions.some((item) => item.value === 'known result')).toBe(true)
+})
+
+test('rendering committed input starts local suggestions without waiting for the provider', async () => {
+  const state = { ...ViewletSimpleBrowser.create(7), suggestionsEnabled: true }
+  const typed = ViewletSimpleBrowser.handleInput(state, 'known')
+  await ViewletSimpleBrowser.afterRender(state, typed)
+  expect(Viewlet.executeViewletCommand).toHaveBeenCalledWith(7, 'applySuggestions', 7, 'known', [], [], typed.suggestionSessionId)
+  expect(BrowserSearchSuggestions.get).not.toHaveBeenCalled()
 })
