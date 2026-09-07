@@ -1,6 +1,6 @@
 import { expect, jest, test } from '@jest/globals'
 
-const invoke = jest.fn<any>()
+const invoke = jest.fn<(...args: readonly unknown[]) => Promise<readonly unknown[]>>()
 // The renderer worker uses its local worker launcher rather than rpc-registry.
 // eslint-disable-next-line jest/no-restricted-jest-methods
 jest.unstable_mockModule('../src/parts/ExtensionManagementWorker/ExtensionManagementWorker.js', () => ({ invoke }))
