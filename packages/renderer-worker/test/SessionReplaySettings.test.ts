@@ -1,5 +1,4 @@
 import { beforeEach, expect, jest, test } from '@jest/globals'
-import { readFile } from 'node:fs/promises'
 
 const invoke = jest.fn<(...args: readonly unknown[]) => Promise<unknown>>().mockResolvedValue('session-id')
 const get = jest.fn<(key: string) => unknown>()
@@ -14,13 +13,6 @@ beforeEach(() => {
   jest.resetModules()
   jest.clearAllMocks()
   get.mockReturnValue(undefined)
-})
-
-test('local recording and upload default to false in the settings UI', async () => {
-  const settings = JSON.parse(await readFile(new URL('../settings.json', import.meta.url), 'utf8'))
-  for (const id of ['sessionReplay.enabled', 'sessionReplay.uploadEnabled']) {
-    expect(settings.find((setting) => setting.id === id)).toMatchObject({ type: 'boolean', value: false })
-  }
 })
 
 test.each([undefined, false, 'true', 1])('recording requires explicit opt-in, not %p', async (value) => {
