@@ -628,6 +628,7 @@ const executeViewletCommandInternal = async (uid, fnName, ...args) => {
   const fn = await getFn(instance.factory, fnName)
   const oldState = instance.state
   const newState = await fn(oldState, ...args)
+  if (newState === oldState) return
   const actualNewState = RebaseState.rebaseState(oldState, instance.state, 'newState' in newState ? newState.newState : newState)
   if (oldState === actualNewState) {
     return

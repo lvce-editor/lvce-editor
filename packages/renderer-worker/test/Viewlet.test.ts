@@ -785,3 +785,29 @@ test('UID commands preserve state changed during async bounds updates and render
     ['Viewlet.setDom2', 91, []],
   ])
 })
+
+test('an unchanged async command does not render over a newer update', async () => {
+  const oldState = { uid: 92, value: 'before' }
+  const currentState = { uid: 92, value: 'current' }
+  const afterRender = jest.fn()
+  const instance = {
+    state: oldState,
+    renderedState: oldState,
+    moduleId: 'Test',
+    factory: {
+      afterRender,
+      Commands: {
+        ignore: async (state: typeof oldState) => {
+          instance.state = currentState
+          instance.renderedState = currentState
+          return state
+        },
+      },
+    },
+  }
+  ViewletStates.set(92, instance)
+  await Viewlet.executeViewletCommand(92, 'ignore')
+  expect(instance.state).toBe(currentState)
+  expect(ViewletManager.render).not.toHaveBeenCalled()
+  expect(afterRender).not.toHaveBeenCalled()
+})
