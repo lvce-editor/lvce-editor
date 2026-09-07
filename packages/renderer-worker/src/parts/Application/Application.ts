@@ -1,7 +1,9 @@
-import * as ApplicationRegistry from '../ApplicationRegistry/ApplicationRegistry.ts'
 import * as ApplicationFileSystem from '../ApplicationFileSystem/ApplicationFileSystem.ts'
+import * as ApplicationRegistry from '../ApplicationRegistry/ApplicationRegistry.ts'
 import * as Command from '../Command/Command.js'
+import * as ExtensionHostCommands from '../ExtensionHost/ExtensionHostCommands.js'
 import * as ExtensionManagementWorker from '../ExtensionManagementWorker/ExtensionManagementWorker.js'
+import * as GetActiveEditor from '../GetActiveEditor/GetActiveEditor.js'
 import * as Id from '../Id/Id.js'
 import * as Platform from '../Platform/Platform.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
@@ -148,6 +150,14 @@ export const execute = (applicationId: string, command: string, ...args: readonl
     })
   }
   switch (command) {
+    case 'ExtensionHost.executeCommand':
+      return ApplicationRegistry.track(applicationId, () =>
+        ExtensionManagementWorker.invoke('Extensions.invokeForApplication', applicationId, 'Extensions.executeCommand', ...args),
+      )
+    case 'ExtensionHost.getCommands':
+      return ApplicationRegistry.track(applicationId, () => ExtensionHostCommands.getCommands(args[0], args[1], applicationId))
+    case 'GetActiveEditor.getTextDocument':
+      return ApplicationRegistry.track(applicationId, () => GetActiveEditor.getTextDocument(applicationId))
     case 'ExtensionHostSourceControl.getEnabledProviderIds':
     case 'ExtensionHostSourceControl.getFileDecorations':
       return ApplicationRegistry.track(applicationId, () =>
