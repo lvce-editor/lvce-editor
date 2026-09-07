@@ -140,3 +140,10 @@ test('rejects conflicting settings contributions', () => {
     ]),
   ).toThrow('Conflicting builtin setting chat.enabled')
 })
+
+test('session replay settings default to disabled', async () => {
+  const settings = JSON.parse(await readFile(new URL('../../renderer-worker/settings.json', import.meta.url), 'utf8'))
+  for (const id of ['sessionReplay.enabled', 'sessionReplay.uploadEnabled']) {
+    expect(settings.find((setting) => setting.id === id)).toMatchObject({ type: 'boolean', value: false })
+  }
+})

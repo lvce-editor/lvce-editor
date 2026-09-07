@@ -11,13 +11,14 @@ const state = { authState: undefined, configuration: '', pending: Promise.resolv
 export const startRecording = async (authState) => {
   const local = Preferences.get('sessionReplay.enabled') === true
   const upload = Preferences.get('sessionReplay.uploadEnabled') === true
+  if (!state.configuration && !local && !upload) return
   const backendUrl = Preferences.get('layout.backendUrl') || Product.getBackendUrl()
   const endpoint = new URL('/session-replay', backendUrl || 'https://lvce-editor.dev')
   const href = await Location.getHref()
   if (new URL(href).searchParams.get('allowAnonymous') === 'true') endpoint.searchParams.set('allowAnonymous', 'true')
   const options = { local, upload, endpoint: endpoint.href, token: authState?.token || authState?.accessToken || '' }
   const configuration = JSON.stringify(options)
-  if (configuration === state.configuration || (!state.configuration && !local && !upload)) return
+  if (configuration === state.configuration) return
   const id = await RendererProcess.invoke('SessionReplay.configure', options)
   state.configuration = configuration
   GetSessionId.state.sessionId = id
