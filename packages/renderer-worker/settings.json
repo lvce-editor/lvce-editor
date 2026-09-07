@@ -106,9 +106,17 @@
   },
   {
     "category": "workbench",
-    "description": "Records the current session for replay",
-    "heading": "Session Replay",
+    "description": "Records visual content and messages locally for replay. Includes visible source text. Changing this setting starts a new recording segment.",
+    "heading": "Local Session Replay",
     "id": "sessionReplay.enabled",
+    "type": "boolean",
+    "value": false
+  },
+  {
+    "category": "workbench",
+    "description": "Sends recorded visual content and messages to the backend. Independent of local recording. Changing this setting starts a new recording segment.",
+    "heading": "Upload Session Replay",
+    "id": "sessionReplay.uploadEnabled",
     "type": "boolean",
     "value": false
   },
