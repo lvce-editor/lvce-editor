@@ -98,6 +98,25 @@ try {
     }, url)
   await expect.poll(articleToken).toBeTruthy()
   const token = await articleToken()
+  const articleVisible = () =>
+    app.evaluate(({ BrowserWindow }, url) => {
+      return BrowserWindow.getAllWindows().some((window) =>
+        window.contentView.children.some((view) => view.webContents?.getURL() === url && view.getVisible()),
+      )
+    }, url)
+  const snapshot = page.locator('.SimpleBrowserSnapshot')
+  const menu = page.locator('#Menu-0')
+  await expect.poll(articleVisible).toBe(true)
+  await page.locator('.SimpleBrowserTabSelected').click({ button: 'right' })
+  await expect(menu).toBeVisible()
+  await expect(snapshot).toBeVisible()
+  await expect.poll(() => snapshot.evaluate((image) => image.complete && image.naturalWidth > 0)).toBe(true)
+  await expect.poll(articleVisible).toBe(false)
+  await page.keyboard.press('Escape')
+  await expect(menu).toHaveCount(0)
+  await expect(snapshot).toHaveCount(0)
+  await expect.poll(articleVisible).toBe(true)
+  assert.equal(await articleToken(), token, 'Dismissing the tab menu must restore the same page')
   await page.getByRole('button', { name: 'New Tab', exact: true }).click()
   await expect(address).toHaveValue('')
   const newTabStyles = () =>
@@ -113,6 +132,16 @@ try {
     })
   const lightStyle = { background: 'rgb(255, 255, 255)', foreground: 'rgb(36, 41, 47)', scheme: 'light', input: 'rgb(241, 243, 245)' }
   await expect.poll(newTabStyles).toEqual([lightStyle])
+  // A background tab's menu must cover the currently visible new-tab page too.
+  await page.getByRole('tab', { name: 'Local article', exact: true }).click({ button: 'right' })
+  await expect(menu).toBeVisible()
+  await expect(snapshot).toBeVisible()
+  await expect.poll(() => snapshot.evaluate((image) => image.complete && image.naturalWidth > 0)).toBe(true)
+  await page.getByRole('menuitem', { name: 'Mute Tab', exact: true }).click()
+  await expect(menu).toHaveCount(0)
+  await expect(snapshot).toHaveCount(0)
+  await expect(address).toHaveValue('')
+  assert.equal(await articleToken(), token, 'Tab menu actions must preserve the background page')
 
   // This matches the middle of a history URL, so there is no inline completion.
   // The resulting single Add patch must append the dropdown, never replace the browser.

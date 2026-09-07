@@ -1368,7 +1368,7 @@ test('keeps the internal new tab URL out of the address state', async () => {
   expect(loadedState).toMatchObject({ iframeSrc: '', inputValue: '', isLoading: false })
 })
 
-test('showOverlay captures the WebContentsView without hiding it before the snapshot is rendered', async () => {
+test.each(['https://example.com', ''])('showOverlay captures the WebContentsView for %j before hiding it', async (iframeSrc) => {
   const png = new Uint8Array([137, 80, 78, 71])
   // @ts-ignore
   ElectronWebContentsViewFunctions.capturePage.mockResolvedValue(png)
@@ -1376,7 +1376,7 @@ test('showOverlay captures the WebContentsView without hiding it before the snap
   ElectronWebContentsViewFunctions.hide.mockResolvedValue(undefined)
   // @ts-ignore
   SimpleBrowserSnapshot.create.mockReturnValue('blob:https://example.com/snapshot')
-  const state = { ...ViewletSimpleBrowser.create(), browserViewId: 12, iframeSrc: 'https://example.com' }
+  const state = { ...ViewletSimpleBrowser.create(), browserViewId: 12, iframeSrc }
 
   const newState = await ViewletSimpleBrowser.showOverlay(state, 'quick-pick')
 
@@ -1701,9 +1701,13 @@ test('applySuggestions captures the page and shows provider results', async () =
   })
 })
 
-test('applySuggestions does not capture a page for an empty new tab', async () => {
+test('applySuggestions captures the built-in new-tab page', async () => {
   // @ts-ignore
   ElectronWebContentsViewFunctions.hide.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.capturePage.mockResolvedValue(new Uint8Array([137, 80, 78, 71]))
+  // @ts-ignore
+  SimpleBrowserSnapshot.create.mockReturnValue('blob:https://example.com/new-tab')
   const state = {
     ...ViewletSimpleBrowser.create(7),
     browserViewId: 12,
@@ -1717,13 +1721,13 @@ test('applySuggestions does not capture a page for an empty new tab', async () =
     hasSuggestionsOverlay: true,
     overlayIds: ['search-suggestions'],
     selectedSuggestionIndex: -1,
-    snapshot: '',
+    snapshot: 'blob:https://example.com/new-tab',
     suggestions: [
       { favicon: '', type: 'search', value: 'what is' },
       { favicon: '', type: 'search', value: 'what is my ip' },
     ],
   })
-  expect(ElectronWebContentsViewFunctions.capturePage).not.toHaveBeenCalled()
+  expect(ElectronWebContentsViewFunctions.capturePage).toHaveBeenCalledWith(12)
   expect(ElectronWebContentsViewFunctions.hide).not.toHaveBeenCalled()
 
   await ViewletSimpleBrowser.afterRender(state, newState)
