@@ -230,7 +230,7 @@ export const getSimpleBrowserVirtualDom = (
     inputType: HtmlInputType.Url,
     enterKeyHint: 'Go',
     onInput: DomEventListenerFunctions.HandleInput,
-    onFocus: DomEventListenerFunctions.HandleFocus,
+    onFocus: DomEventListenerFunctions.HandleFocusSimpleBrowserAddress,
     name: InputName.SimpleBrowserAddress,
     onBlur: DomEventListenerFunctions.HandleBlurSimpleBrowserAddress,
     value,

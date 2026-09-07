@@ -1,3 +1,4 @@
+import * as SimpleBrowserWorker from '../SimpleBrowserWorker/SimpleBrowserWorker.js'
 import { diffTree } from '@lvce-editor/virtual-dom-worker'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.js'
 import * as GetSimpleBrowserVirtualDom from '../GetSimpleBrowserVirtualDom/GetSimpleBrowserVirtualDom.js'
@@ -9,9 +10,11 @@ export const hasFunctionalRender = true
 
 export const hasFunctionalRootRender = true
 
-export const renderEventListeners = () => {
+export const renderEventListeners = async () => {
+  const addressListeners = await SimpleBrowserWorker.invoke('SimpleBrowser.renderAddressEventListeners')
   return [
-    { name: DomEventListenerFunctions.HandleBlurSimpleBrowserAddress, params: ['handleAddressBlur'] },
+    ...addressListeners,
+    { name: DomEventListenerFunctions.HandleClickOpenExternal, params: ['openExternal'] },
     { name: DomEventListenerFunctions.HandlePointerDownSimpleBrowserSuggestion, params: ['handleSuggestionPointerDown'], preventDefault: true },
     { name: DomEventListenerFunctions.HandleClickSuggestion, params: ['acceptSuggestion', 'event.currentTarget.dataset.value'] },
     {

@@ -1,3 +1,4 @@
+import * as SimpleBrowserWorker from '../SimpleBrowserWorker/SimpleBrowserWorker.js'
 import * as BrowserSuggestionRequests from '../BrowserSuggestionRequests/BrowserSuggestionRequests.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as BrowserFullWidth from '../BrowserFullWidth/BrowserFullWidth.js'
@@ -932,7 +933,8 @@ export const applySuggestions = async (state, uid, query, suggestions, precomput
   if (!isCurrent() || state.uid !== uid || state.inputValue !== query) {
     return state
   }
-  const updateId = sessionId === undefined ? undefined : BrowserSuggestionRequests.beginUpdate(uid, sessionId, precomputedLocalSuggestions === undefined)
+  const updateId =
+    sessionId === undefined ? undefined : BrowserSuggestionRequests.beginUpdate(uid, sessionId, precomputedLocalSuggestions === undefined)
   if (sessionId !== undefined && updateId === undefined) return state
   const isCurrentUpdate = () => isCurrent() && (sessionId === undefined || BrowserSuggestionRequests.isCurrentUpdate(uid, sessionId, updateId))
   if (!state.suggestionsEnabled || query.trim().length < 2) {
@@ -985,7 +987,28 @@ export const closeSuggestions = (state) => {
   return dismissSuggestions(state)
 }
 
-export const handleAddressBlur = closeSuggestions
+const renderAddressSelection = async (state, focused, value = state.inputValue) => {
+  const selection = await SimpleBrowserWorker.invoke(
+    'SimpleBrowser.getAddressSelection',
+    focused,
+    value,
+    state.suggestions.length > 0,
+    focused ? state.fullWidthAddressSelection : undefined,
+  )
+  await RendererProcess.invoke('Viewlet.sendMultiple', [
+    ['Viewlet.setSelectionByName', state.uid, InputName.SimpleBrowserAddress, selection.start, selection.end],
+  ])
+}
+
+export const handleAddressFocus = (state, value) => {
+  void renderAddressSelection(state, true, value)
+  return { ...state, fullWidthAddressSelection: undefined }
+}
+
+export const handleAddressBlur = (state) => {
+  void renderAddressSelection(state, false)
+  return closeSuggestions(state)
+}
 export const handleSuggestionPointerDown = (state) => state
 
 export const selectNextSuggestion = (state) => {
