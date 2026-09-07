@@ -1039,11 +1039,16 @@ export const openProblems = async (state: LayoutState, filterValue?: string): Pr
 }
 
 export const openOutput = async (state: LayoutState, channelId?: string): Promise<LayoutStateResult> => {
-  const result = await showPanel(state, ViewletModuleId.Output)
-  if (channelId !== undefined) {
-    await Command.execute('Output.selectChannel', channelId)
+  if (channelId === undefined) {
+    return showPanel(state, ViewletModuleId.Output)
   }
-  return result
+  // Commit the panel's DOM before updating the channel value in its toolbar.
+  await Viewlet.executeViewletCommand(state.uid, 'showPanel', ViewletModuleId.Output, channelId)
+  await Command.execute('Output.selectChannel', channelId)
+  return {
+    newState: state,
+    commands: [],
+  }
 }
 
 export const openDebugConsole = async (state: LayoutState, inputValue?: string): Promise<LayoutStateResult> => {
