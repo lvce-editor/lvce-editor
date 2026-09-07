@@ -224,6 +224,23 @@ try {
   await app.evaluate(({ clipboard }) => clipboard.clear())
   await page.keyboard.press('Control+c')
   await expect.poll(() => app.evaluate(({ clipboard }) => clipboard.readText())).toBe(selectedEditorText)
+  await address.click()
+  await doubleControl(true)
+  await expect(page.locator('.BrowserFullWidth')).toHaveCount(1)
+  await expect
+    .poll(() =>
+      app.evaluate(
+        ({ webContents }, targetUrl) =>
+          webContents
+            .getAllWebContents()
+            .find((item) => item.getURL().startsWith(targetUrl))
+            .isFocused(),
+        url,
+      ),
+    )
+    .toBe(true)
+  await doubleControl(true)
+  await expect(page.locator('[name="editor"]')).toBeFocused()
   await doubleControl(false)
   await expect(page.locator('.BrowserFullWidth')).toHaveCount(1)
   await button.click()
