@@ -1154,6 +1154,15 @@ export const dispose = async (state) => {
 }
 
 export const prepareFullWidth = async (state) => {
+  if (
+    !state.overlayIds.length &&
+    !state.hasSuggestionsOverlay &&
+    !state.suggestions.length &&
+    state.selectedSuggestionIndex === -1 &&
+    !state.tabHover
+  ) {
+    return state
+  }
   let next = state
   for (const overlayId of state.overlayIds) next = await hideOverlay(next, overlayId)
   return { ...next, hasSuggestionsOverlay: false, suggestions: [], selectedSuggestionIndex: -1, tabHover: undefined }
