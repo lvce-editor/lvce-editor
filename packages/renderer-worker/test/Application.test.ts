@@ -153,3 +153,15 @@ test('text editor associations are scoped to the source application', async () =
     focus: true,
   })
 })
+
+test('loads workspace ports before the initial panel is registered', async () => {
+  const ports = [{ port: 3000, forwardedAddress: 'https://test-3000.app.github.dev/' }]
+  jest.mocked(ExtensionManagementWorker.invoke).mockResolvedValueOnce([ports])
+  expect(await Application.executeForView(12345, 'PortProvider.getPorts', 'codespaces://test/app')).toEqual(ports)
+  expect(ExtensionManagementWorker.invoke).toHaveBeenCalledWith(
+    'Extensions.executeProvidersByEvent',
+    'onPorts:codespaces',
+    'ExtensionApi.providePorts',
+    'codespaces://test/app',
+  )
+})

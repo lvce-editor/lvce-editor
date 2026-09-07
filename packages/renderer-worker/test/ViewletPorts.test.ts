@@ -34,7 +34,7 @@ test('loads the ports view with platform, assets, and parent uid', async () => {
   await ViewletPorts.loadContent(state)
 
   expect(PortsViewWorker.invoke).toHaveBeenNthCalledWith(1, 'Ports.create', 1, 'ports://', 10, 20, 800, 600, 2, '/test-assets', 99)
-  expect(PortsViewWorker.invoke).toHaveBeenNthCalledWith(2, 'Ports.loadContent', 1)
+  expect(PortsViewWorker.invoke).toHaveBeenNthCalledWith(2, 'Ports.loadContent', 1, '')
   expect(PortsViewWorker.invoke).toHaveBeenNthCalledWith(3, 'Ports.diff2', 1)
   expect(PortsViewWorker.invoke).toHaveBeenNthCalledWith(4, 'Ports.render2', 1, [])
 })
