@@ -182,3 +182,15 @@ test('a failed extension replacement leaves application views mounted and does n
   expect(ViewletManager.executeForApplication).not.toHaveBeenCalled()
   expect(Viewlet.dispose).not.toHaveBeenCalled()
 })
+
+test('loads workspace ports before the initial panel is registered', async () => {
+  const ports = [{ port: 3000, forwardedAddress: 'https://test-3000.app.github.dev/' }]
+  jest.mocked(ExtensionManagementWorker.invoke).mockResolvedValueOnce([ports])
+  expect(await Application.executeForView(12345, 'PortProvider.getPorts', 'codespaces://test/app')).toEqual(ports)
+  expect(ExtensionManagementWorker.invoke).toHaveBeenCalledWith(
+    'Extensions.executeProvidersByEvent',
+    'onPorts:codespaces',
+    'ExtensionApi.providePorts',
+    'codespaces://test/app',
+  )
+})
