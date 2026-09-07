@@ -49,6 +49,7 @@ export const getModuleId = (commandId: any): any => {
     case 'ElectronContentTracing.startRecording':
     case 'ElectronContentTracing.stopRecording':
       return ModuleId.ElectronContentTracing
+    case 'ElectronContextMenu.copyImage':
     case 'ElectronContextMenu.openContextMenu':
       return ModuleId.ElectronContextMenu
     case 'ElectronDeveloper.getPerformanceEntries':

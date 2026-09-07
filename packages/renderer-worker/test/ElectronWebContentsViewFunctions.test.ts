@@ -4,6 +4,11 @@ jest.unstable_mockModule('../src/parts/EmbedsWorker/EmbedsWorker.js', () => ({
   invoke: jest.fn(),
 }))
 
+jest.unstable_mockModule('../src/parts/GetWindowZoomLevel/GetWindowZoomLevel.js', () => ({ getWindowZoomLevel: async () => 1 }))
+
+jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => ({ invoke: jest.fn() }))
+const SharedProcess = await import('../src/parts/SharedProcess/SharedProcess.js')
+
 const EmbedsWorker = await import('../src/parts/EmbedsWorker/EmbedsWorker.js')
 const ElectronWebContentsViewFunctions = await import('../src/parts/ElectronWebContentsViewFunctions/ElectronWebContentsViewFunctions.js')
 
@@ -34,4 +39,14 @@ test('insertJavaScript forwards to the embeds worker without a user gesture', as
 
   await expect(ElectronWebContentsViewFunctions.insertJavaScript(12, 'document.title')).resolves.toEqual({ value: 1 })
   expect(EmbedsWorker.invoke).toHaveBeenCalledWith('ElectronWebContentsView.insertJavaScript', 12, 'document.title', false)
+})
+
+test('scales both native position and size at the window zoom level', async () => {
+  await ElectronWebContentsViewFunctions.resizeWebContentsView(12, 100, 50, 300, 400)
+  expect(EmbedsWorker.invoke).toHaveBeenCalledWith('ElectronWebContentsView.resizeWebContentsView', 12, 120, 60, 360, 480)
+})
+
+test('copyImageAt uses the native menu bridge with its originating tab and page coordinates', async () => {
+  await ElectronWebContentsViewFunctions.copyImageAt(12, 20, 30)
+  expect(SharedProcess.invoke).toHaveBeenCalledWith('ElectronContextMenu.copyImage', 12, 20, 30)
 })

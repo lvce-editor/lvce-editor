@@ -1,3 +1,4 @@
+import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as EmbedsWorker from '../EmbedsWorker/EmbedsWorker.js'
 import * as GetWindowZoomLevel from '../GetWindowZoomLevel/GetWindowZoomLevel.js'
 
@@ -73,7 +74,7 @@ export const inspectElement = (id, x, y) => {
 }
 
 export const copyImageAt = (id, x, y) => {
-  return EmbedsWorker.invoke('ElectronWebContentsView.copyImageAt', id, x, y)
+  return SharedProcess.invoke('ElectronContextMenu.copyImage', id, x, y)
 }
 
 export const setFallthroughKeyBindings = (id, fallthroughKeyBindings) => {

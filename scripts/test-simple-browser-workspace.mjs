@@ -29,10 +29,16 @@ await build({
   external: ['node:*', '/static/*', 'electron'],
   logLevel: 'error',
 })
+const fixtureImage = await readFile(join(root, 'packages/build/files/icon.png'))
 const server = createServer((_request, response) => {
+  if (_request.url === '/image.png') {
+    response.setHeader('Content-Type', 'image/png')
+    response.end(fixtureImage)
+    return
+  }
   response.setHeader('Content-Type', 'text/html')
   response.end(
-    `<!doctype html><title>Workspace article</title><main style="max-width:640px;margin:auto"><h1>Workspace article</h1><input id="draft"><a href="/second" target="_blank">Second article</a><button id="play" onclick="window.audioContext=new AudioContext();let o=audioContext.createOscillator();let g=audioContext.createGain();g.gain.value=0.001;o.connect(g).connect(audioContext.destination);o.start()">Play audio</button><div style="height:3000px">Article text</div></main><script>window.documentToken=crypto.randomUUID()</script>`,
+    `<!doctype html><title>Workspace article</title><main style="max-width:640px;margin:auto"><h1>Workspace article</h1><input id="draft"><img id="picture" width="24" height="24" src="/image.png"><a href="/second" target="_blank">Second article</a><button id="play" onclick="window.audioContext=new AudioContext();let o=audioContext.createOscillator();let g=audioContext.createGain();g.gain.value=0.001;o.connect(g).connect(audioContext.destination);o.start()">Play audio</button><div style="height:3000px">Article text</div></main><script>window.documentToken=crypto.randomUUID()</script>`,
   )
 })
 await new Promise((resolveListen) => server.listen(0, '127.0.0.1', resolveListen))
@@ -236,6 +242,8 @@ try {
   await expect(page.locator('.SimpleBrowser')).toHaveCount(2)
   const mainUrl = `${url}?main`
   const mainAddress = mainBrowser.locator('[name="simple-browser-address"]')
+  await expect(mainBrowser.locator('.SimpleBrowserFullWidthButton')).toHaveAttribute('aria-pressed', 'false')
+  await mainAddress.click()
   await mainAddress.fill(mainUrl)
   await mainAddress.press('Enter')
   await expect
@@ -266,7 +274,7 @@ try {
   // Capture the real Electron menu so its native entries can be exercised without
   // platform-specific menu keyboard navigation. Right-click still travels through
   // the embedded page, event bridge, worker menu construction and native process.
-  await app.evaluate(({ Menu }) => {
+  await app.evaluate(({ Menu, webContents }) => {
     Menu.prototype.popup = function (options) {
       globalThis.workspaceMenu = { menu: this, options }
     }
@@ -279,7 +287,14 @@ try {
         const guest = webContents.getAllWebContents().find((item) => item.getURL() === targetUrl)
         guest.focus()
         guest.once('context-menu', (...args) => {
-          globalThis.workspaceContextEvent = { x: args[1].x, y: args[1].y, id: guest.id, types: args.map((item) => typeof item) }
+          globalThis.workspaceContextEvent = {
+            x: args[1].x,
+            y: args[1].y,
+            id: guest.id,
+            selectionText: args[1].selectionText,
+            isEditable: args[1].isEditable,
+            types: args.map((item) => typeof item),
+          }
         })
         const position = await guest.executeJavaScript(
           `(() => { const element = document.querySelector(${JSON.stringify(selector)}); element.scrollIntoView(); const r = element.getBoundingClientRect(); return { x: Math.round(r.x + r.width / 2), y: Math.round(r.y + r.height / 2) } })()`,
@@ -421,8 +436,59 @@ try {
   )
   await app.evaluate(({ BrowserWindow, webContents }, targetUrl) => {
     BrowserWindow.getAllWindows()[0].webContents.setZoomLevel(0)
-    webContents.getAllWebContents().find(item => item.getURL() === targetUrl).setZoomLevel(0)
+    webContents
+      .getAllWebContents()
+      .find((item) => item.getURL() === targetUrl)
+      .setZoomLevel(0)
   }, mainUrl)
+  for (const expanded of [false, true]) {
+    if (expanded) {
+      await mainBrowser.locator('.SimpleBrowserFullWidthButton').click()
+      await expect(page.locator('.BrowserFullWidth')).toHaveCount(1)
+    }
+    const imageEntries = await openPageMenu('#picture')
+    assert(imageEntries.some((item) => item.label === 'Open Image in New Tab'))
+    await chooseNativeItem('Copy Image')
+    await expect.poll(() => app.evaluate(({ clipboard }) => clipboard.readImage().isEmpty())).toBe(false)
+    await app.evaluate(async ({ webContents }, targetUrl) => {
+      await webContents
+        .getAllWebContents()
+        .find((item) => item.getURL() === targetUrl)
+        .executeJavaScript(
+          '{ const range = document.createRange(); range.selectNodeContents(document.querySelector("h1")); getSelection().removeAllRanges(); getSelection().addRange(range) }',
+        )
+    }, mainUrl)
+    await openPageMenu('h1')
+    await chooseNativeItem('Copy')
+    await expect.poll(() => app.evaluate(({ clipboard }) => clipboard.readText())).toBe('Workspace article')
+  }
+  await app.evaluate(({ webContents }, targetUrl) => {
+    const guest = webContents.getAllWebContents().find((item) => item.getURL() === targetUrl)
+    guest.focus()
+    guest.sendInputEvent({ type: 'keyDown', keyCode: 'I', modifiers: ['control', 'shift'] })
+    guest.sendInputEvent({ type: 'keyUp', keyCode: 'I', modifiers: ['control', 'shift'] })
+  }, mainUrl)
+  await expect
+    .poll(() =>
+      app.evaluate(
+        ({ webContents }, targetUrl) =>
+          webContents
+            .getAllWebContents()
+            .find((item) => item.getURL() === targetUrl)
+            .isDevToolsOpened(),
+        mainUrl,
+      ),
+    )
+    .toBe(true)
+  await app.evaluate(
+    ({ webContents }, targetUrl) =>
+      webContents
+        .getAllWebContents()
+        .find((item) => item.getURL() === targetUrl)
+        .closeDevTools(),
+    mainUrl,
+  )
+  await page.locator('.SimpleBrowserFullWidthButton').click()
   await page.locator('.PanelTab[name="Terminals"]').click()
   const terminalInput = page.locator('.xterm-helper-textarea')
   await expect(terminalInput).toBeFocused()

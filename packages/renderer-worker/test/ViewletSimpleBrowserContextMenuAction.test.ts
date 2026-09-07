@@ -12,7 +12,9 @@ jest.unstable_mockModule('../src/parts/ViewletSimpleBrowser/ViewletSimpleBrowser
 }))
 const functions = await import('../src/parts/ElectronWebContentsViewFunctions/ElectronWebContentsViewFunctions.js')
 const { handleContextMenuAction } = await import('../src/parts/ViewletSimpleBrowser/ViewletSimpleBrowserContextMenuAction.js')
-beforeEach(() => jest.clearAllMocks())
+beforeEach(() => {
+  jest.clearAllMocks()
+})
 test('a delayed action targets its originating tab after selection changes', async () => {
   const state = { browserViewId: 18, tabs: [{ browserViewId: 17 }, { browserViewId: 18 }] }
   await handleContextMenuAction(state, 17, 'inspectElement', [20, 30])

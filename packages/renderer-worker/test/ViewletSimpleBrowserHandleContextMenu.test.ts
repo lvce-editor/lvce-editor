@@ -4,7 +4,9 @@ jest.unstable_mockModule('../src/parts/ElectronContextMenu/ElectronContextMenu.j
 jest.unstable_mockModule('../src/parts/GetWindowZoomLevel/GetWindowZoomLevel.js', () => ({ getWindowZoomLevel: jest.fn(async () => 1) }))
 const ElectronContextMenu = await import('../src/parts/ElectronContextMenu/ElectronContextMenu.js')
 const { handleContextMenu } = await import('../src/parts/ViewletSimpleBrowser/ViewletSimpleBrowserHandleContextMenu.js')
-beforeEach(() => jest.clearAllMocks())
+beforeEach(() => {
+  jest.clearAllMocks()
+})
 const state = { uid: 42, x: 100, y: 50, headerHeight: 65, tabs: [{ browserViewId: 17, canGoBack: false, canGoForward: true }] }
 
 test('captures origin and keeps inspection coordinates separate from zoomed menu placement', async () => {
