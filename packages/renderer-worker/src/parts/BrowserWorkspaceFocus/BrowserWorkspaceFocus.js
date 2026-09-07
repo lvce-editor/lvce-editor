@@ -3,7 +3,7 @@ const browserFocusTimes = new Map()
 
 export const record = (applicationId, uid, moduleId) => {
   if (moduleId === 'SimpleBrowser') browserFocusTimes.set(uid, Date.now())
-  if (['Editor', 'EditorText', 'Terminal', 'TerminalTabs'].includes(moduleId)) {
+  if (['Editor', 'EditorText', 'Terminal', 'Terminal2', 'TerminalTabs', 'Terminals'].includes(moduleId)) {
     targets.set(applicationId, uid)
   }
 }

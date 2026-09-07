@@ -41,13 +41,14 @@ try {
   const env = { ...process.env, DEV: '1', LVCE_ROOT: root, LVCE_SHARED_PROCESS_PATH: join(root, 'packages/shared-process/src/sharedProcessMain.ts') }
   delete env.ELECTRON_RUN_AS_NODE
   for (const key of ['CONFIG', 'DATA', 'STATE', 'CACHE']) env[`XDG_${key}_HOME`] = join(profile, key.toLowerCase())
-  app = await _electron.launch({
+  const launchOptions = {
     executablePath: join(root, 'packages/main-process/node_modules/electron/dist/electron'),
     args: ['--no-sandbox', '--disable-http-cache', '.', profile],
     cwd: join(root, 'packages/main-process'),
     env,
     timeout: 60000,
-  })
+  }
+  app = await _electron.launch(launchOptions)
   const page = await app.firstWindow()
   page.setDefaultTimeout(15000)
   await expect(page.locator('#Workbench')).toBeVisible()
@@ -135,7 +136,7 @@ try {
   await expect(page.locator('.BrowserFullWidth')).toHaveCount(1)
   await button.click()
   await expect(page.locator('[name="editor"]')).toBeFocused()
-  await address.focus()
+  await address.click()
   await address.evaluate((input) => input.setSelectionRange(2, 8))
   await doubleControl(false)
   await expect(page.locator('.BrowserFullWidth')).toHaveCount(1)
@@ -153,6 +154,7 @@ try {
   await page.screenshot({ path: join(evidence, 'full-width.png') })
   await runCommand('Layout: Toggle Panel')
   await expect(page.locator('.BrowserFullWidth')).toHaveCount(0)
+  await expect(page.locator('[name="editor"]')).toBeFocused()
   await runCommand('Simple Browser: Open')
   await expect(page.locator('.SimpleBrowser')).toHaveCount(2)
   const mainBrowser = page.locator('.Main .SimpleBrowser')
@@ -189,6 +191,41 @@ try {
   await expect.poll(nativePages).toEqual([url])
   await page.locator('.SimpleBrowserFullWidthButton').click()
   await expect.poll(nativePages).toHaveLength(2)
+  await page.locator('.PanelTab[name="Terminals"]').click()
+  const terminalInput = page.locator('.xterm-helper-textarea')
+  await expect(terminalInput).toBeFocused()
+  await terminalInput.pressSequentially('printf workspace-terminal')
+  await terminalInput.press('Enter')
+  await expect(page.locator('.XtermTerminal')).toContainText('workspace-terminal')
+  await terminalInput.evaluate((element) => {
+    window.workspaceTerminalInput = element
+  })
+  await doubleControl(false)
+  await expect(page.locator('.BrowserFullWidth')).toHaveCount(1)
+  await doubleControl(true)
+  await expect(terminalInput).toBeFocused()
+  assert.equal(await terminalInput.evaluate((element) => element === window.workspaceTerminalInput), true)
+  await expect(page.locator('.XtermTerminal')).toContainText('workspace-terminal')
+  await page.locator('.PreviewArea .SimpleBrowserFullWidthButton').click()
+  await expect(page.locator('.BrowserFullWidth')).toHaveCount(1)
+  await runCommand('Layout: Hide Preview')
+  await expect(page.locator('.BrowserFullWidth')).toHaveCount(0)
+  await expect(terminalInput).toBeFocused()
+  await mainBrowser.locator('.SimpleBrowserFullWidthButton').click()
+  await expect(page.locator('.BrowserFullWidth')).toHaveCount(1)
+  await page.evaluate(() => {
+    localStorage.removeItem('Layout')
+    document.dispatchEvent(new Event('pointerleave'))
+  })
+  await page.waitForFunction(() => localStorage.getItem('Layout'))
+  const savedLayout = await page.evaluate(() => JSON.parse(localStorage.getItem('Layout')))
+  assert.equal(savedLayout.browserFullWidth, undefined)
+  await app.close()
+  app = await _electron.launch(launchOptions)
+  const restartedPage = await app.firstWindow()
+  await expect(restartedPage.locator('#Workbench')).toBeVisible()
+  await expect(restartedPage.locator('.BrowserFullWidth')).toHaveCount(0)
+  await expect(restartedPage.locator('.Main')).toBeVisible()
   console.log(
     JSON.stringify({
       switches: 50,
