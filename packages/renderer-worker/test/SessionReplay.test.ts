@@ -1,6 +1,6 @@
 import { expect, jest, test } from '@jest/globals'
 
-const invoke = jest.fn<any>()
+const invoke = jest.fn<(...args: readonly unknown[]) => Promise<unknown>>()
 const execute = jest.fn<any>()
 const get = jest.fn<any>()
 jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () => ({ invoke }))
