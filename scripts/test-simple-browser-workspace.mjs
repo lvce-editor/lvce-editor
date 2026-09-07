@@ -63,6 +63,10 @@ try {
   await page.getByRole('treeitem', { name: 'example.txt', exact: true }).dblclick()
   await expect(page.locator('[name="editor"]')).toBeAttached()
   await page.locator('[name="editor"]').focus()
+  await page.keyboard.press('Control+a')
+  await page.keyboard.press('Control+c')
+  await expect.poll(() => app.evaluate(({ clipboard }) => clipboard.readText())).toContain('second line')
+  const selectedEditorText = await app.evaluate(({ clipboard }) => clipboard.readText())
   await runCommand('Simple Browser: Toggle Full Width')
   await expect(page.locator('.BrowserFullWidth')).toBeVisible()
   const address = page.locator('[name="simple-browser-address"]')
@@ -74,6 +78,9 @@ try {
       if (!contents) return undefined
       return {
         id: contents.id,
+        listeners: Object.fromEntries(
+          ['before-input-event', 'before-mouse-event', 'focus', 'blur', 'context-menu'].map((name) => [name, contents.listenerCount(name)]),
+        ),
         data: await contents.executeJavaScript(
           '({ token: documentToken, draft: document.querySelector("#draft").value, scroll: scrollY, audio: window.audioContext?.state })',
         ),
@@ -145,6 +152,9 @@ try {
   await doubleControl(true)
   await expect(page.locator('.BrowserFullWidth')).toHaveCount(0)
   await expect(page.locator('[name="editor"]')).toBeFocused()
+  await app.evaluate(({ clipboard }) => clipboard.clear())
+  await page.keyboard.press('Control+c')
+  await expect.poll(() => app.evaluate(({ clipboard }) => clipboard.readText())).toBe(selectedEditorText)
   await doubleControl(false)
   await expect(page.locator('.BrowserFullWidth')).toHaveCount(1)
   await button.click()
