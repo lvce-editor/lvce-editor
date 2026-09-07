@@ -1,5 +1,5 @@
 import { beforeEach, expect, jest, test } from '@jest/globals'
-const execute = jest.fn(async () => {})
+const execute = jest.fn(async (..._args: unknown[]) => {})
 const instances = [
   { moduleId: 'SimpleBrowser', state: { uid: 41, tabs: [{ browserViewId: 11 }] } },
   { moduleId: 'SimpleBrowser', state: { uid: 42, tabs: [{ browserViewId: 12 }] } },
@@ -7,7 +7,9 @@ const instances = [
 jest.unstable_mockModule('../src/parts/Viewlet/Viewlet.js', () => ({ executeViewletCommand: execute }))
 jest.unstable_mockModule('../src/parts/ViewletStates/ViewletStates.js', () => ({ getValues: () => instances }))
 const Browser = await import('../src/parts/ElectronBrowserView/ElectronBrowserView.js')
-beforeEach(() => jest.clearAllMocks())
+beforeEach(() => {
+  jest.clearAllMocks()
+})
 test('native events reach their owning browser when several areas exist', async () => {
   await Browser.handleDidNavigate(12, 'https://example.com')
   expect(execute).toHaveBeenCalledWith(42, 'handleDidNavigate', 12, 'https://example.com')
