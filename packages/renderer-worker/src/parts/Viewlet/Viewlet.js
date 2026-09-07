@@ -463,7 +463,9 @@ export const getAllStates = () => {
 }
 
 export const openWidget = async (moduleId, ...args) => {
-  const existingInstance = ViewletStates.getInstance(moduleId)
+  const layout = ViewletStates.getState(ViewletModuleId.Layout)
+  const applicationId = moduleId === ViewletModuleId.QuickPick ? layout?.applicationId : undefined
+  const existingInstance = ViewletStates.getInstance(moduleId, applicationId)
   const type = args[0]
   if (ElectronBrowserView.isOpen() && moduleId === ViewletModuleId.QuickPick) {
     // TODO recycle quickpick instance
@@ -476,6 +478,7 @@ export const openWidget = async (moduleId, ...args) => {
   const disposeCommands = existingInstance && !isOwnedWidget ? disposeFunctional(existingInstance.state.uid) : []
   const childUid = Id.create()
   const commands = await ViewletManager.load({
+    ...(applicationId !== undefined && { applicationId }),
     getModule: ViewletModule.load,
     id: moduleId,
     type: 0,
@@ -493,7 +496,6 @@ export const openWidget = async (moduleId, ...args) => {
   if (disposeCommands.length > 0) {
     commands.unshift(...disposeCommands)
   }
-  const layout = ViewletStates.getState(ViewletModuleId.Layout)
   const appendBeforeIndex = commands.findIndex((command) => {
     return (
       command[0] === 'Viewlet.commitPending' ||

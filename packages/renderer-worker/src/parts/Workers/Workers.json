@@ -1343,6 +1343,7 @@
     "hotReloadCommand": "",
     "viewlet": {
       "name": "Ports",
+      "extraCommands": [{ "name": "handleWorkspaceChange", "method": "loadContent" }, { "name": "refresh", "method": "loadContent" }],
       "css": ["/css/parts/ViewletPorts.css"],
       "state": {
         "idKey": "uid",
@@ -1360,7 +1361,7 @@
             { "source": "state", "name": "parentUid" }
           ]
         },
-        "loadContent": { "name": "Ports.loadContent", "parameters": [{ "source": "state", "name": "uid" }] },
+        "loadContent": { "name": "Ports.loadContent", "parameters": [{ "source": "state", "name": "uid" }, { "source": "context", "name": "workspaceUri" }] },
         "diff": { "name": "Ports.diff2", "parameters": [{ "source": "state", "name": "uid" }] },
         "render": { "name": "Ports.render2", "parameters": [{ "source": "state", "name": "uid" }, { "source": "result", "name": "diff" }] },
         "dispose": { "name": "Ports.dispose", "parameters": [{ "source": "state", "name": "uid" }] },
@@ -1516,7 +1517,8 @@
           { "source": "state", "name": "uid" }, { "source": "state", "name": "uri" }, { "source": "literal", "value": 22 },
           { "source": "state", "name": "x" }, { "source": "state", "name": "y" }, { "source": "state", "name": "width" },
           { "source": "state", "name": "height" }, { "source": "state", "name": "platform" }, { "source": "state", "name": "args" },
-          { "source": "literal", "value": true }, { "source": "context", "name": "workspacePath" }, { "source": "state", "name": "assetDir" }
+          { "source": "literal", "value": true }, { "source": "context", "name": "workspacePath" }, { "source": "state", "name": "assetDir" },
+          { "source": "context", "name": "applicationId" }
         ] },
         "loadContent": { "name": "QuickPick.loadContent", "parameters": [{ "source": "state", "name": "uid" }] },
         "diff": { "name": "QuickPick.diff2", "parameters": [{ "source": "state", "name": "uid" }] },
