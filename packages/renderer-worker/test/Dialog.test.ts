@@ -167,3 +167,19 @@ test.each(['Error', 'TypeError', 'DockerNotInstalledError'])('showMessage maps p
   expect(Viewlet.openWidget).toHaveBeenCalledWith('Dialog', { message: error.message, title: type, type: 'error' })
   expect(error.type).toBe(type)
 })
+
+test.each([0, 1, 2, undefined])('showMessageBox returns the selected option %s', async (response) => {
+  const showMessageBox = jest.fn<(options: unknown) => Promise<number | undefined>>().mockResolvedValue(response)
+  jest.unstable_mockModule('../src/parts/ElectronDialog/ElectronDialog.js', () => ({ showMessageBox }))
+  const Dialog = await import('../src/parts/Dialog/Dialog.js')
+  const options = {
+    buttons: ['Commit Anyway', 'Cancel', 'Commit to a New Branch'],
+    defaultId: 2,
+    message: 'You are trying to commit to a protected branch.',
+    type: 'warning',
+  }
+  const untrustedOptions = { ...options, productName: 'Untrusted title', windowId: 123 }
+  const result = await Dialog.showMessageBox(untrustedOptions)
+  expect(result).toBe(response)
+  expect(showMessageBox).toHaveBeenCalledWith(options)
+})
