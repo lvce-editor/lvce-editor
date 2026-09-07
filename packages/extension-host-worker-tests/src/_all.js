@@ -138,6 +138,13 @@ const runTests = async () => {
         }
       : undefined,
   })
+  const initialSettingsArgument = argv.find((argument) => argument.startsWith('--initial-settings='))
+  if (initialSettingsArgument) {
+    const settings = JSON.parse(initialSettingsArgument.slice('--initial-settings='.length))
+    await context.addInitScript((value) => {
+      if (location.protocol === 'http:' || location.protocol === 'https:') localStorage.setItem('settings', JSON.stringify(value))
+    }, settings)
+  }
   const page = await context.newPage()
   try {
     page.on('console', handleConsole)

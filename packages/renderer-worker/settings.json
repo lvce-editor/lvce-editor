@@ -106,7 +106,7 @@
   },
   {
     "category": "workbench",
-    "description": "Records visual content and messages locally for replay. Includes visible source text. Changing this setting starts a new recording segment.",
+    "description": "Records visual content and messages locally for replay. Includes visible source text. Reload the window to start recording. Disabling recording takes effect immediately.",
     "heading": "Local Session Replay",
     "id": "sessionReplay.enabled",
     "type": "boolean",
@@ -114,7 +114,7 @@
   },
   {
     "category": "workbench",
-    "description": "Sends recorded visual content and messages to the backend. Independent of local recording. Changing this setting starts a new recording segment.",
+    "description": "Sends recorded visual content and messages to the backend. Independent of local recording. Reload the window to start recording. Disabling recording takes effect immediately.",
     "heading": "Upload Session Replay",
     "id": "sessionReplay.uploadEnabled",
     "type": "boolean",

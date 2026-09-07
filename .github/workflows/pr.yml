@@ -80,7 +80,9 @@ jobs:
       - name: Test session replay settings
         if: matrix.os == 'ubuntu-24.04'
         working-directory: ./packages/extension-host-worker-tests
-        run: npm run e2e:headless -- --test-name-prefix=session-replay.settings
+        run: |
+          npm run e2e:headless -- --test-name-prefix=session-replay.settings
+          npm run e2e:headless -- --test-name-prefix=session-replay.settings '--initial-settings={"sessionReplay.enabled":true}'
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0
       - name: Test Simple Browser suggestions and new-tab theme
