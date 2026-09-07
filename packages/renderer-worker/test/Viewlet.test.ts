@@ -759,3 +759,55 @@ test('openWidget - replaces an existing widget by its numeric uid', async () => 
   expect(ViewletStates.getInstance(2)).toBeUndefined()
   expect(ViewletStates.getInstance(3)?.moduleId).toBe('QuickPick')
 })
+
+test('UID commands preserve state changed during async bounds updates and render bounds before layout', async () => {
+  jest.mocked(RendererProcess.invoke).mockResolvedValue(undefined as never)
+  const oldState = { uid: 91, expanded: false, widgetReferences: [] as number[] }
+  const instance = {
+    state: oldState,
+    renderedState: oldState,
+    moduleId: 'Layout',
+    factory: {
+      CommandsWithSideEffects: {
+        expand: async (state: typeof oldState) => {
+          instance.state = { ...state, widgetReferences: [92] }
+          return { newState: { ...state, expanded: true }, commands: [['Viewlet.setBounds', 92, 0, 0, 800, 600]] }
+        },
+      },
+    },
+  }
+  ViewletStates.set(91, instance)
+  jest.mocked(ViewletManager.render).mockReturnValue([['Viewlet.setDom2', 91, []]] as never)
+  await Viewlet.executeViewletCommand(91, 'expand')
+  expect(instance.state).toEqual({ uid: 91, expanded: true, widgetReferences: [92] })
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.sendMultiple', [
+    ['Viewlet.setBounds', 92, 0, 0, 800, 600],
+    ['Viewlet.setDom2', 91, []],
+  ])
+})
+
+test('an unchanged async command does not render over a newer update', async () => {
+  const oldState = { uid: 92, value: 'before' }
+  const currentState = { uid: 92, value: 'current' }
+  const afterRender = jest.fn()
+  const instance = {
+    state: oldState,
+    renderedState: oldState,
+    moduleId: 'Test',
+    factory: {
+      afterRender,
+      Commands: {
+        ignore: async (state: typeof oldState) => {
+          instance.state = currentState
+          instance.renderedState = currentState
+          return state
+        },
+      },
+    },
+  }
+  ViewletStates.set(92, instance)
+  await Viewlet.executeViewletCommand(92, 'ignore')
+  expect(instance.state).toBe(currentState)
+  expect(ViewletManager.render).not.toHaveBeenCalled()
+  expect(afterRender).not.toHaveBeenCalled()
+})

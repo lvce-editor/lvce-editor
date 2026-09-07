@@ -1,3 +1,5 @@
+import * as ApplicationRegistry from '../ApplicationRegistry/ApplicationRegistry.ts'
+import * as BrowserWorkspaceFocus from '../BrowserWorkspaceFocus/BrowserWorkspaceFocus.js'
 import * as Assert from '../Assert/Assert.ts'
 import * as Browser from '../Browser/Browser.js'
 import * as Context from '../Context/Context.js'
@@ -26,6 +28,7 @@ export const setFocus = (focusKey, additionalFocusKey, uid, viewletModuleId) => 
   // Track the focused viewlet instance if provided
   if (typeof uid === 'number' && typeof viewletModuleId === 'string') {
     ViewletStates.setFocusedInstanceByType(uid, viewletModuleId)
+    BrowserWorkspaceFocus.record(ApplicationRegistry.getOwner(uid), uid, viewletModuleId)
   }
 
   KeyBindingsState.update()
@@ -55,6 +58,7 @@ export const setAdditionalFocus = (key, uid, viewletModuleId) => {
   // Track the focused viewlet instance if provided
   if (typeof uid === 'number' && typeof viewletModuleId === 'string') {
     ViewletStates.setFocusedInstanceByType(uid, viewletModuleId)
+    BrowserWorkspaceFocus.record(ApplicationRegistry.getOwner(uid), uid, viewletModuleId)
   }
 
   KeyBindingsState.update()

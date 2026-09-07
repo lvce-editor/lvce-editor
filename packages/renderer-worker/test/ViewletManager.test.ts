@@ -1367,3 +1367,72 @@ test('backgroundLoad', async () => {
     { value: 42 },
   )
 })
+
+test('commands with side effects run afterRender after their bounds and DOM updates', async () => {
+  const callOrder: string[] = []
+  const oldState = { content: 'old', uid: 15 }
+  const newState = { content: 'new', uid: 15 }
+  const afterRender = jest.fn(async (_oldState: Readonly<typeof oldState>, _newState: Readonly<typeof newState>): Promise<void> => {
+    callOrder.push('afterRender')
+  })
+  const mockModule = {
+    CommandsWithSideEffects: {
+      update: jest.fn(async (): Promise<any> => ({ newState, commands: [['Viewlet.setBounds', 15, 0, 0, 800, 600]] })),
+    },
+    afterRender,
+    create: jest.fn((): typeof oldState => oldState),
+    hasFunctionalRender: true,
+    hasFunctionalRootRender: true,
+    loadContent: jest.fn((state: Readonly<typeof oldState>): Readonly<typeof oldState> => state),
+    render: [
+      {
+        apply: jest.fn((): string[][] => [['Viewlet.setText', 'new']]),
+        isEqual: jest.fn((): boolean => false),
+        multiple: true,
+      },
+    ],
+  }
+  const viewlet = {
+    disposed: false,
+    focus: false,
+    getModule: async (): Promise<typeof mockModule> => mockModule,
+    id: 'SideEffectAfterRenderTest',
+    show: false,
+    type: 0,
+    uid: 15,
+    uri: '',
+  }
+  await ViewletManager.load(viewlet)
+  jest.mocked(RendererProcess.invoke).mockImplementation(async (): Promise<void> => {
+    callOrder.push('render')
+  })
+
+  await Command.execute('SideEffectAfterRenderTest.update')
+
+  expect(callOrder).toEqual(['render', 'afterRender'])
+  expect(afterRender).toHaveBeenCalledWith(oldState, newState)
+})
+
+test('functional commands retain concurrent layout flags and compare hooks against the latest rendered state', async () => {
+  const initial = { uid: 94, fullWidth: false, inputValue: '' }
+  const latest = { ...initial, fullWidth: true }
+  const afterRender = jest.fn()
+  const factory = {
+    Commands: {
+      update: async (state: typeof initial) => {
+        ViewletStates.setRenderedState(94, latest)
+        return { ...state, inputValue: 'typed' }
+      },
+    },
+    afterRender,
+    create: () => initial,
+    hasFunctionalRender: true,
+    loadContent: (state: typeof initial) => state,
+    render: [],
+  }
+  await ViewletManager.load({ getModule: async () => factory, id: 'ConcurrentBrowserInput', uid: 94, type: 0 })
+  jest.mocked(RendererProcess.invoke).mockResolvedValue(undefined as never)
+  await Command.execute('ConcurrentBrowserInput.update')
+  expect(ViewletStates.getState(94)).toEqual({ ...latest, inputValue: 'typed' })
+  expect(afterRender).toHaveBeenCalledWith(latest, { ...latest, inputValue: 'typed' })
+})

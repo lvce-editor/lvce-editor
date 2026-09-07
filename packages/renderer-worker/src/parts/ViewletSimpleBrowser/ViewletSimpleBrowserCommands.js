@@ -7,6 +7,13 @@ import * as ViewletSimpleBrowserInsertJavaScript from './ViewletSimpleBrowserIns
 import * as TabDrag from './ViewletSimpleBrowserTabDrag.js'
 
 export const Commands = {
+  handleBrowserViewDestroyed: SimpleBrowser.handleBrowserViewDestroyed,
+  handleWindowOpen: SimpleBrowser.handleWindowOpen,
+  handleFaviconError: SimpleBrowser.handleFaviconError,
+  prepareFullWidth: SimpleBrowser.prepareFullWidth,
+  setFullWidth: SimpleBrowser.setFullWidth,
+  toggleFullWidth: SimpleBrowser.toggleFullWidth,
+  focusAddress: SimpleBrowser.focusAddress,
   handleTabDragStart: TabDrag.handleTabDragStart,
   handleTabDragOver: TabDrag.handleTabDragOver,
   handleTabsDragOver: TabDrag.handleTabsDragOver,
@@ -29,6 +36,7 @@ export const Commands = {
   go: SimpleBrowser.go,
   handleAudioStateChanged: SimpleBrowser.handleAudioStateChanged,
   handleColorThemeChanged: SimpleBrowser.handleColorThemeChanged,
+  handleSettingsChanged: SimpleBrowser.handleSettingsChanged,
   handleDidNavigate: SimpleBrowser.handleDidNavigate,
   handleDidNavigationCancel: SimpleBrowser.handleDidNavigationCancel,
   handleFocusIn: SimpleBrowser.handleFocusIn,

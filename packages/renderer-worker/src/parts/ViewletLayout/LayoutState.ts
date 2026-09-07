@@ -20,7 +20,20 @@ export interface WidgetReference {
   readonly uid: number
 }
 
+export interface BrowserFullWidthState {
+  readonly browserWasVisible?: boolean
+  readonly browserUid: number
+  readonly layout: Partial<LayoutState>
+  readonly browserBounds: { x: number; y: number; width: number; height: number }
+  readonly ideFocusUid: number | undefined
+  readonly addressSelection?: { start: number; end: number }
+  readonly addressFocused: boolean
+  readonly hiddenBrowserUids: readonly number[]
+}
+
 export interface LayoutState {
+  readonly browserFullWidth?: BrowserFullWidthState
+
   readonly applicationId?: string
   readonly activityBarHeight: number
   readonly activityBarId: number

@@ -36,13 +36,15 @@ export const getSimpleBrowserVirtualDom = (
   pageSnapshotDom = [],
   tabHover,
   tabDropIndex = -1,
+  fullWidth = false,
+  chromeTheme = 'light',
 ) => {
   const inlineSuggestion = getInlineSuggestion(value, suggestions)
   /** @type {any[]} */
   const dom = [
     {
       type: VirtualDomElements.Div,
-      className: tabsEnabled ? 'Viewlet SimpleBrowser SimpleBrowserTabsEnabled' : 'Viewlet SimpleBrowser',
+      className: `Viewlet SimpleBrowser${tabsEnabled ? ' SimpleBrowserTabsEnabled' : ''}${chromeTheme === 'inherit' ? '' : ' SimpleBrowserLight'}`,
       onFocusIn: DomEventListenerFunctions.HandleFocusInSimpleBrowser,
       childCount:
         1 + (tabsEnabled ? 1 : 0) + (snapshot ? 1 : 0) + (pageSnapshotDom.length > 0 ? 1 : 0) + (suggestions.length > 0 ? 1 : 0) + (tabHover ? 1 : 0),
@@ -89,17 +91,25 @@ export const getSimpleBrowserVirtualDom = (
         onPointerOver: DomEventListenerFunctions.HandlePointerOverSimpleBrowserTab,
         ariaDescribedBy: tabHover?.index === index ? 'SimpleBrowserTabHover' : undefined,
         ariaLabel: tab.title || 'New Tab',
-        childCount: 2 + (tab.favicon ? 1 : 0) + (showAudioIndicator ? 1 : 0),
+        childCount: 3 + (showAudioIndicator ? 1 : 0),
       })
       if (tab.favicon) {
         dom.push({
           type: VirtualDomElements.Img,
           className: 'SimpleBrowserTabFavicon',
+          alt: '',
+          'data-index': index,
+          onError: DomEventListenerFunctions.HandleErrorSimpleBrowserFavicon,
           crossOrigin: 'anonymous',
           src: tab.favicon,
           draggable: false,
           childCount: 0,
         })
+      } else {
+        dom.push(
+          { type: VirtualDomElements.Span, className: 'SimpleBrowserTabFavicon SimpleBrowserTabFaviconFallback', ariaHidden: true, childCount: 1 },
+          text('◉'),
+        )
       }
       dom.push(
         {
@@ -168,7 +178,7 @@ export const getSimpleBrowserVirtualDom = (
     {
       type: VirtualDomElements.Div,
       className: ClassNames.SimpleBrowserHeader,
-      childCount: 6,
+      childCount: 7,
     },
     {
       type: VirtualDomElements.Button,
@@ -261,6 +271,16 @@ export const getSimpleBrowserVirtualDom = (
       childCount: 0,
       onClick: DomEventListenerFunctions.HandleClickOpenExternal,
     },
+    {
+      type: VirtualDomElements.Button,
+      className: 'IconButton SimpleBrowserFullWidthButton',
+      ariaLabel: fullWidth ? 'Restore Coding Layout' : 'Simple Browser: Toggle Full Width',
+      title: `${fullWidth ? 'Restore Coding Layout' : 'Simple Browser: Toggle Full Width'} (Ctrl Ctrl)`,
+      ariaPressed: fullWidth,
+      onClick: DomEventListenerFunctions.HandleClickSimpleBrowserFullWidth,
+      childCount: 1,
+    },
+    { type: VirtualDomElements.Div, className: fullWidth ? 'MaskIcon MaskIconRestore' : 'MaskIcon MaskIconMaximize', childCount: 0 },
     {
       type: VirtualDomElements.Button,
       className: `${ClassNames.IconButton} SimpleBrowserMenuButton`,

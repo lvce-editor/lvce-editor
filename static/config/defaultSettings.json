@@ -52,6 +52,8 @@
   "sessionReplay.enabled": false,
 
   "simpleBrowser.audioIndicator.enabled": true,
+  "simpleBrowser.chromeTheme": "light",
+  "simpleBrowser.fullWidth.doubleControlEnabled": true,
   "simpleBrowser.suggestions": false,
   "simpleBrowser.shortcuts": [],
   "simpleBrowser.tabHover.enabled": false,

@@ -79,6 +79,9 @@ export const HandleTouchStart = 'handleTouchStart'
 export const HandleVideoError = 'handleVideoError'
 export const HandleWheel = 'handleWheel'
 
+export const HandleClickSimpleBrowserFullWidth = 'HandleClickSimpleBrowserFullWidth'
+
+export const HandleErrorSimpleBrowserFavicon = 'HandleErrorSimpleBrowserFavicon'
 export const HandleDragStartSimpleBrowserTab = 'handleDragStartSimpleBrowserTab'
 
 export const HandleDragEndSimpleBrowserTab = 'handleDragEndSimpleBrowserTab'

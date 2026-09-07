@@ -129,13 +129,15 @@ const runFn = async (instance, id, key, fn, args) => {
     if (oldState === newState) {
       return
     }
-    const commands = render(instance.factory, oldState, newState, newState.uid || id)
+    const renderedState = instance.renderedState
+    const rebasedState = RebaseState.rebaseState(oldState, instance.state, newState)
+    const commands = render(instance.factory, renderedState, rebasedState, rebasedState.uid || id)
     updateDynamicFocusContext(commands)
-    ViewletStates.setRenderedState(id, newState)
+    ViewletStates.setRenderedState(id, rebasedState)
     await RendererProcess.invoke(/* Viewlet.sendMultiple */ kSendMultiple, /* commands */ commands)
     runLoadContentLaterForCreatedViewlets(commands)
     if (ViewletStates.getInstance(id) === instance && instance.factory.afterRender) {
-      await instance.factory.afterRender(oldState, newState)
+      await instance.factory.afterRender(renderedState, rebasedState)
     }
   } else {
     return fn(instance.state, ...args)
@@ -168,6 +170,9 @@ const runFnWithSideEffect = async (instance, id, key, fn, ...args) => {
   updateDynamicFocusContext(commands)
   await RendererProcess.invoke(/* Viewlet.sendMultiple */ kSendMultiple, /* commands */ commands)
   runLoadContentLaterForCreatedViewlets(commands)
+  if (ViewletStates.getByUid(id) === instance && instance.factory.afterRender) {
+    await instance.factory.afterRender(oldState, rebasedState)
+  }
 }
 
 // TODO maybe wrapViewletCommand should accept module instead of id string

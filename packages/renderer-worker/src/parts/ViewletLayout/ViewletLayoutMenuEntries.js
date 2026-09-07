@@ -463,6 +463,7 @@ export const getQuickPickMenuEntries = () => {
       id: 'Window.zoomReset',
       label: 'Window: Reset Zoom',
     },
+    { id: 'Layout.toggleSimpleBrowserFullWidth', label: 'Simple Browser: Toggle Full Width' },
     {
       id: 'Main.openUri',
       label: 'Simple Browser: Open',

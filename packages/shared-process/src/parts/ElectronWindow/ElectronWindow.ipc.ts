@@ -11,6 +11,7 @@ export const Commands = {
   openNew: ElectronWindow.openNew,
   openNewWithUri: ElectronWindow.openNewWithUri,
   reload: ElectronWindow.reload,
+  setBrowserFullWidthGestureEnabled: ElectronWindow.setBrowserFullWidthGestureEnabled,
   toggleDevtools: ElectronWindow.toggleDevtools,
   toggleFullScreen: ElectronWindow.toggleFullScreen,
   unmaximize: ElectronWindow.unmaximize,

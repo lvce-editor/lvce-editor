@@ -142,3 +142,9 @@
   height: var(--PanelHeight);
   width: var(--PanelWidth);
 }
+
+.Workbench.BrowserFullWidth > .SimpleBrowser {
+  flex: 1;
+  min-width: 0;
+  width: 100%;
+}
