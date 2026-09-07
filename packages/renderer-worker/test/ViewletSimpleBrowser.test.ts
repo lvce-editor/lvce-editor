@@ -502,6 +502,7 @@ test('creates and selects an empty tab while keeping the original view alive', a
   const state = {
     ...ViewletSimpleBrowser.create(7, '', 10, 20, 300, 200),
     browserViewId: 12,
+    suggestionsEnabled: true,
     tabs: [
       {
         browserViewId: 12,
@@ -523,7 +524,7 @@ test('creates and selects an empty tab while keeping the original view alive', a
   expect(ElectronWebContentsView.disposeWebContentsView).not.toHaveBeenCalled()
   expect(ElectronWebContentsViewFunctions.hide).toHaveBeenCalledWith(12)
   expect(ElectronWebContentsViewFunctions.show).toHaveBeenCalledWith(13)
-  expect(ElectronWebContentsViewFunctions.setIframeSrc).toHaveBeenCalledWith(13, SimpleBrowserNewTabPage.getUrl())
+  expect(ElectronWebContentsViewFunctions.setIframeSrc).toHaveBeenCalledWith(13, SimpleBrowserNewTabPage.getUrl(undefined, true))
   expect(ElectronWindow.focus).toHaveBeenCalledTimes(1)
 })
 
