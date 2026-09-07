@@ -158,12 +158,24 @@ try {
   }, url)
   const before = await guestSnapshot()
   const button = page.locator('.SimpleBrowserFullWidthButton')
+  await button.click()
+  await expect(page.locator('[name="editor"]')).toBeFocused()
+  const sash = await page.locator('.SashPreview').boundingBox()
+  await page.mouse.move(sash.x + sash.width / 2, sash.y + sash.height / 2)
+  await page.mouse.down()
+  await page.mouse.move(sash.x - 100, sash.y + sash.height / 2, { steps: 4 })
+  await page.mouse.up()
+  await expect.poll(async () => Math.round((await page.locator('.SimpleBrowser').boundingBox()).x)).toBe(Math.round(sash.x - 100))
+  const codingBrowserBounds = await page.locator('.SimpleBrowser').boundingBox()
+  await button.click()
+  await expect(page.locator('.BrowserFullWidth')).toHaveCount(1)
   const timings = []
   for (let index = 0; index < 50; index++) {
     const start = performance.now()
     await button.click()
     await expect(page.locator('.BrowserFullWidth')).toHaveCount(index % 2 === 0 ? 0 : 1)
     timings.push(performance.now() - start)
+    if (index % 2 === 0) assert.deepEqual(await page.locator('.SimpleBrowser').boundingBox(), codingBrowserBounds)
   }
   assert.deepEqual(await guestSnapshot(), before)
   const dimensions = await page.locator('.SimpleBrowser').boundingBox()
@@ -171,11 +183,12 @@ try {
   assert.equal(dimensions.width, await page.evaluate(() => innerWidth))
   const doubleControl = async (guestFocused, targetUrl = url, measure = false) =>
     app.evaluate(
-      ({ BrowserWindow, webContents }, { guestFocused, url, measure }) => {
+      async ({ BrowserWindow, webContents }, { guestFocused, url, measure }) => {
         const window = BrowserWindow.getAllWindows()[0]
         window.focus()
         const target = guestFocused ? webContents.getAllWebContents().find((item) => item.getURL().startsWith(url)) : window.webContents
         target.focus()
+        if (guestFocused) await target.executeJavaScript('document.querySelector("#draft").focus()')
         const settled = measure
           ? new Promise((resolve, reject) => {
               const start = Date.now()
@@ -206,6 +219,7 @@ try {
   await button.click()
   await expect(page.locator('[name="editor"]')).toBeFocused()
   await address.click()
+  await expect.poll(() => address.evaluate((input) => input.selectionEnd - input.selectionStart)).toBe((await address.inputValue()).length)
   await address.evaluate((input) => input.setSelectionRange(2, 8))
   await doubleControl(false)
   await expect(page.locator('.BrowserFullWidth')).toHaveCount(1)
@@ -233,6 +247,8 @@ try {
   await expect(page.locator('.SimpleBrowser')).toHaveCount(2)
   const mainUrl = `${url}?main`
   const mainAddress = mainBrowser.locator('[name="simple-browser-address"]')
+  await expect(mainBrowser.locator('.SimpleBrowserFullWidthButton')).toHaveAttribute('aria-pressed', 'false')
+  await mainAddress.click()
   await mainAddress.fill(mainUrl)
   await mainAddress.press('Enter')
   await expect

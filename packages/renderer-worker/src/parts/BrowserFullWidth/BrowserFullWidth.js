@@ -7,7 +7,6 @@ import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
-import * as ViewletLayout from '../ViewletLayout/ViewletLayout.ts'
 import * as LayoutPoints from '../ViewletLayout/LayoutPoints.ts'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
@@ -76,6 +75,7 @@ export const leave = async (state) => {
     panelMinHeight: Math.min(state.panelMinHeight, panelLimit),
     browserFullWidth: undefined,
   })
+  const ViewletLayout = await import('../ViewletLayout/ViewletLayout.ts')
   const commands = await ViewletLayout.getResizeCommands(state, newState)
   if (snapshot.browserUid !== state.previewId && snapshot.browserUid !== state.secondaryPreviewId) {
     const browser = ViewletStates.getInstance(snapshot.browserUid)
@@ -86,6 +86,7 @@ export const leave = async (state) => {
 
 export const toggleInternal = async (initialState, requestedUid) => {
   if (initialState.browserFullWidth) return leave(initialState)
+  const ViewletLayout = await import('../ViewletLayout/ViewletLayout.ts')
   let state = initialState
   const commands = []
   if (state.sideBarFocusMode) {

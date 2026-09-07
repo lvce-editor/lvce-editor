@@ -1,4 +1,4 @@
-import * as Viewlet from '../Viewlet/Viewlet.js'
+import * as Command from '../Command/Command.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 
@@ -12,7 +12,7 @@ const dispatch =
       const instance = ViewletStates.getValues().find(
         (item) => item.moduleId === 'SimpleBrowser' && item.state.tabs.some((tab) => tab.browserViewId === browserViewId),
       )
-      if (instance) return Viewlet.executeViewletCommand(instance.state.uid, command, ...args)
+      if (instance) return Command.execute('Viewlet.executeViewletCommand', instance.state.uid, command, ...args)
       return GlobalEventBus.emitEvent(key, ...args)
     })
     pendingEvent = event.catch(() => {})
