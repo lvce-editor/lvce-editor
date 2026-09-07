@@ -1,0 +1,166 @@
+.Ports {
+  box-sizing: border-box;
+  display: grid;
+  height: 100%;
+  min-height: 0;
+  outline: none;
+  overflow: hidden;
+  color: var(--PanelForeground, var(--WorkbenchForeground));
+  background: var(--PanelBackground, var(--WorkbenchBackground));
+  font-size: 13px;
+}
+
+.PortsTable {
+  display: grid;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.PortsTableHeader,
+.PortsTableRow {
+  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: 42px minmax(72px, 0.65fr) minmax(160px, 1.25fr) minmax(120px, 1.7fr) minmax(110px, 1fr);
+  min-width: 620px;
+}
+
+.PortsTableHeader {
+  align-items: center;
+  color: var(--PanelTitleActiveForeground, var(--WorkbenchForeground));
+  font-weight: 600;
+  border-bottom: 1px solid var(--PanelSectionBorder, rgba(128, 128, 128, 0.35));
+}
+
+.PortsTableBody {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.PortsTableRow {
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.PortsTableRowOdd {
+  background: var(--TreeTableOddRowsBackground, rgba(255, 255, 255, 0.025));
+}
+
+.PortsTableRow:hover {
+  background: var(--ListHoverBackground, rgba(255, 255, 255, 0.06));
+}
+
+.PortsTableRow.Focused {
+  background: var(--ListActiveSelectionBackground, #405c50);
+  color: var(--ListActiveSelectionForeground, white);
+}
+
+.PortsTableCell {
+  box-sizing: border-box;
+  min-width: 0;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  border-right: 1px solid var(--PanelSectionBorder, rgba(128, 128, 128, 0.2));
+}
+
+.PortsStatusColumn {
+  justify-content: center;
+  padding: 0;
+}
+
+.PortsStatusButton {
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  color: inherit;
+  background: transparent;
+  cursor: pointer;
+}
+
+.PortsStatusIcon {
+  font-size: 14px;
+}
+
+.PortsStatusIconActive {
+  color: var(--PortsIconRunningProcessForeground, #89d185);
+}
+
+.PortsStatusIconInactive {
+  color: var(--DisabledForeground, #8c8c8c);
+}
+
+.PortsAddressLink {
+  color: var(--TextLinkForeground, #3794ff);
+  cursor: pointer;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.PortsAddressLink:hover {
+  color: var(--TextLinkActiveForeground, #4daafc);
+  text-decoration: underline;
+}
+
+.PortsEmpty {
+  padding: 12px 16px;
+  color: var(--DescriptionForeground, #9d9d9d);
+}
+
+.PortsFooter {
+  display: flex;
+  align-items: center;
+  padding-left: 52px;
+}
+
+.AddPortButton,
+.CancelAddPortButton {
+  border: 0;
+  border-radius: 2px;
+  padding: 3px 12px;
+  background: var(--ButtonBackground, #0e639c);
+  color: var(--ButtonForeground, white);
+  cursor: pointer;
+}
+
+.CancelAddPortButton {
+  background: var(--ButtonSecondaryBackground, #3a3d41);
+  color: var(--ButtonSecondaryForeground, white);
+}
+
+.AddPortButton:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.AddPortEditor {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.AddPortInput {
+  box-sizing: border-box;
+  width: 160px;
+  height: 24px;
+  border: 1px solid var(--InputBorder, transparent);
+  outline: none;
+  padding: 2px 6px;
+  background: var(--InputBackground, #3c3c3c);
+  color: var(--InputForeground, white);
+}
+
+.AddPortInput:focus {
+  border-color: var(--FocusBorder, #007fd4);
+}
+
+.AddPortError {
+  color: var(--InputValidationErrorForeground, #f48771);
+  margin-left: 6px;
+}

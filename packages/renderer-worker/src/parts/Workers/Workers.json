@@ -1330,6 +1330,7 @@
     "hotReloadCommand": "",
     "viewlet": {
       "name": "Ports",
+      "css": ["/css/parts/ViewletPorts.css"],
       "state": {
         "idKey": "uid",
         "fields": ["parentUid", "uri", "x", "y", "width", "height"],
