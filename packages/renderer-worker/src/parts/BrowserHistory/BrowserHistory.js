@@ -116,3 +116,17 @@ export const removeEntry = async (entry) => {
     return remove(entries, index)
   })
 }
+
+export const getSuggestions = (entries, query) => {
+  const text = query.trim().toLowerCase()
+  if (text.length < 2) return []
+  const seen = new Set()
+  return entries
+    .filter(({ url }) => {
+      if (!url.toLowerCase().includes(text) || seen.has(url)) return false
+      seen.add(url)
+      return true
+    })
+    .slice(0, 4)
+    .map(({ url }) => ({ value: url, type: 'url', favicon: '' }))
+}

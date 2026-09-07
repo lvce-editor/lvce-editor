@@ -4,6 +4,7 @@ import * as WhenExpression from '../WhenExpression/WhenExpression.js'
 
 const getBrowserTabKeyBindings = (when) => {
   return [
+    { key: KeyModifier.CtrlCmd | KeyCode.KeyL, command: 'SimpleBrowser.focusAddress', when },
     {
       key: KeyModifier.CtrlCmd | KeyCode.KeyW,
       command: 'SimpleBrowser.closeCurrentTab',
