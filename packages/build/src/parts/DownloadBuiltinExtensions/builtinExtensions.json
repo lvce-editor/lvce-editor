@@ -2,8 +2,8 @@
   {
     "name": "builtin.git",
     "repository": "github.com/lvce-editor/git",
-    "version": "5.27.0",
-    "sha256": "93ca183272f99771532e507c3b81c10a51e7953f58ceb03e259e707d18ef6986",
+    "version": "5.29.0",
+    "sha256": "9ba32d7a0aac1ee0f459ea907ef04aeb24180bc149edcfe5e746b42c5d4935b0",
     "created": "2022-07-02"
   },
   {
@@ -45,8 +45,8 @@
   {
     "name": "builtin.pull-request-github",
     "repository": "github.com/lvce-editor/pull-request-github",
-    "version": "1.1.0",
-    "sha256": "e91c246a578349b4601e844c185f05f9db00c8db3161524bc82a27186397036b",
+    "version": "1.2.0",
+    "sha256": "ae5535e428d25fb3e72d714d5ced9ec9f2c932d1e304a9dd285bad5cb8c476ad",
     "created": "2026-08-19",
     "enabled": false
   },

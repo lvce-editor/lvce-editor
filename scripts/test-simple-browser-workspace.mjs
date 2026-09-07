@@ -43,13 +43,14 @@ try {
   const env = { ...process.env, DEV: '1', LVCE_ROOT: root, LVCE_SHARED_PROCESS_PATH: join(root, 'packages/shared-process/src/sharedProcessMain.ts') }
   delete env.ELECTRON_RUN_AS_NODE
   for (const key of ['CONFIG', 'DATA', 'STATE', 'CACHE']) env[`XDG_${key}_HOME`] = join(profile, key.toLowerCase())
-  app = await _electron.launch({
+  const launchOptions = {
     executablePath: join(root, 'packages/main-process/node_modules/electron/dist/electron'),
     args: ['--no-sandbox', '--disable-http-cache', '.', profile],
     cwd: join(root, 'packages/main-process'),
     env,
     timeout: 60000,
-  })
+  }
+  app = await _electron.launch(launchOptions)
   await app.evaluate(({ session, net }) => {
     globalThis.browserSuggestionQueries = []
     globalThis.completedBrowserSuggestionQueries = []
@@ -160,16 +161,34 @@ try {
   const dimensions = await page.locator('.SimpleBrowser').boundingBox()
   assert.equal(dimensions.x, 0)
   assert.equal(dimensions.width, await page.evaluate(() => innerWidth))
-  const doubleControl = async (guestFocused, targetUrl = url) =>
+  const doubleControl = async (guestFocused, targetUrl = url, measure = false) =>
     app.evaluate(
-      ({ BrowserWindow, webContents }, { guestFocused, url }) => {
+      ({ BrowserWindow, webContents }, { guestFocused, url, measure }) => {
         const window = BrowserWindow.getAllWindows()[0]
         window.focus()
         const target = guestFocused ? webContents.getAllWebContents().find((item) => item.getURL().startsWith(url)) : window.webContents
         target.focus()
+        const settled = measure
+          ? new Promise((resolve, reject) => {
+              const start = Date.now()
+              const timer = setInterval(() => {
+                const views = window.contentView.children.filter(
+                  (view) => 'webContents' in view && view.webContents.getURL().startsWith('http://127.0.0.1:'),
+                )
+                if (views.length === 1 && views[0].webContents === target && views[0].getBounds().x === 0 && target.isFocused()) {
+                  clearInterval(timer)
+                  resolve(Date.now() - start)
+                } else if (Date.now() - start > 2000) {
+                  clearInterval(timer)
+                  reject(new Error('Browser bounds and focus did not settle'))
+                }
+              }, 1)
+            })
+          : undefined
         for (const type of ['keyDown', 'keyUp', 'keyDown', 'keyUp']) target.sendInputEvent({ type, keyCode: 'Control' })
+        return settled
       },
-      { guestFocused, url: targetUrl },
+      { guestFocused, url: targetUrl, measure },
     )
   await doubleControl(true)
   await expect(page.locator('.BrowserFullWidth')).toHaveCount(0)
@@ -220,7 +239,7 @@ try {
     })
   await expect.poll(nativePages).toHaveLength(2)
   const started = Date.now()
-  await doubleControl(true, mainUrl)
+  const nativeGestureFocusMs = await doubleControl(true, mainUrl, true)
   await expect(page.locator('.BrowserFullWidth')).toHaveCount(1)
   await expect(page.locator('[name="simple-browser-address"]')).toHaveValue(mainUrl)
   await expect.poll(nativePages).toEqual([mainUrl])
@@ -389,8 +408,54 @@ try {
         .closeDevTools(),
     mainUrl,
   )
+  await app.evaluate(({ BrowserWindow, webContents }, targetUrl) => {
+    BrowserWindow.getAllWindows()[0].webContents.setZoomLevel(0)
+    webContents.getAllWebContents().find(item => item.getURL() === targetUrl).setZoomLevel(0)
+  }, mainUrl)
+  await page.locator('.PanelTab[name="Terminals"]').click()
+  const terminalInput = page.locator('.xterm-helper-textarea')
+  await expect(terminalInput).toBeFocused()
+  await terminalInput.pressSequentially('printf workspace-terminal')
+  await terminalInput.press('Enter')
+  await expect(page.locator('.XtermTerminal')).toContainText('workspace-terminal')
+  await terminalInput.evaluate((element) => {
+    window.workspaceTerminalInput = element
+  })
+  await doubleControl(false)
+  await expect(page.locator('.BrowserFullWidth')).toHaveCount(1)
+  await doubleControl(true)
+  await expect(terminalInput).toBeFocused()
+  assert.equal(await terminalInput.evaluate((element) => element === window.workspaceTerminalInput), true)
+  await expect(page.locator('.XtermTerminal')).toContainText('workspace-terminal')
+  await page.locator('.PreviewArea .SimpleBrowserFullWidthButton').click()
+  await expect(page.locator('.BrowserFullWidth')).toHaveCount(1)
+  await runCommand('Layout: Hide Preview')
+  await expect(page.locator('.BrowserFullWidth')).toHaveCount(0)
+  await expect(terminalInput).toBeFocused()
+  await mainBrowser.locator('.SimpleBrowserFullWidthButton').click()
+  await expect(page.locator('.BrowserFullWidth')).toHaveCount(1)
+  await page.evaluate(() => {
+    localStorage.removeItem('Layout')
+    document.dispatchEvent(new Event('pointerleave'))
+  })
+  await page.waitForFunction(() => localStorage.getItem('Layout'))
+  const savedLayout = await page.evaluate(() => JSON.parse(localStorage.getItem('Layout')))
+  assert.equal(savedLayout.browserFullWidth, undefined)
+  await app.close()
+  app = await _electron.launch(launchOptions)
+  const restartedPage = await app.firstWindow()
+  await expect(restartedPage.locator('#Workbench')).toBeVisible()
+  await expect(restartedPage.locator('.BrowserFullWidth')).toHaveCount(0)
+  await expect(restartedPage.locator('.Main')).toBeVisible()
   console.log(
-    JSON.stringify({ switches: 50, preserved: before.data, nativeGestureRoundTripMs, maximumAutomationRoundTripMs: Math.max(...timings), profile }),
+    JSON.stringify({
+      switches: 50,
+      preserved: before.data,
+      nativeGestureRoundTripMs,
+      nativeGestureFocusMs,
+      maximumAutomationRoundTripMs: Math.max(...timings),
+      profile,
+    }),
   )
 } finally {
   await app?.close()
