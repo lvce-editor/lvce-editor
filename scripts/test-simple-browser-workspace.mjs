@@ -130,6 +130,32 @@ try {
   }, url)
   await expect(address).toBeFocused()
   await expect.poll(() => address.evaluate((input) => [input.selectionStart, input.selectionEnd])).toEqual([0, url.length])
+  const cdp = await page.context().newCDPSession(page)
+  // Playwright's focus emulation suppresses native WebContentsView blur events.
+  await cdp.send('Emulation.setFocusEmulationEnabled', { enabled: false })
+  try {
+    await app.evaluate(({ BrowserWindow }) => BrowserWindow.getAllWindows()[0].webContents.focus())
+    await address.focus()
+    await address.press('Control+a')
+    await expect.poll(() => address.evaluate((input) => [input.selectionStart, input.selectionEnd])).toEqual([0, url.length])
+    await app.evaluate(({ webContents }, prefix) => {
+      webContents
+        .getAllWebContents()
+        .find((item) => item.getURL().startsWith(prefix))
+        .focus()
+    }, url)
+    await expect.poll(() => address.evaluate((input) => [input.selectionStart, input.selectionEnd])).toEqual([0, 0])
+    await expect(address).toHaveValue(url)
+    await app.evaluate(({ webContents }, prefix) => {
+      const guest = webContents.getAllWebContents().find((item) => item.getURL().startsWith(prefix))
+      guest.sendInputEvent({ type: 'keyDown', keyCode: 'L', modifiers: ['control'] })
+      guest.sendInputEvent({ type: 'keyUp', keyCode: 'L', modifiers: ['control'] })
+    }, url)
+    await expect.poll(() => address.evaluate((input) => [input.selectionStart, input.selectionEnd])).toEqual([0, url.length])
+  } finally {
+    await cdp.send('Emulation.setFocusEmulationEnabled', { enabled: true })
+    await cdp.detach()
+  }
   await address.fill('known')
   await expect(page.getByRole('option', { name: 'known first', exact: true })).toBeVisible()
   await expect(page.locator('.SimpleBrowserSuggestionSelected')).toHaveCount(0)

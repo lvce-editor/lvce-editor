@@ -12,6 +12,7 @@ export const Commands = {
   handleWindowOpen: SimpleBrowser.handleWindowOpen,
   handleContextMenuAction: ContextMenuAction.handleContextMenuAction,
   handleAddressBlur: SimpleBrowser.handleAddressBlur,
+  handleAddressFocus: SimpleBrowser.handleAddressFocus,
   handleSuggestionPointerDown: SimpleBrowser.handleSuggestionPointerDown,
   handleFaviconError: SimpleBrowser.handleFaviconError,
   prepareFullWidth: SimpleBrowser.prepareFullWidth,

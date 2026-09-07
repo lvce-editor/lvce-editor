@@ -1,6 +1,12 @@
-import { expect, test } from '@jest/globals'
+import { expect, jest, test } from '@jest/globals'
 import * as DomEventListenerFunctions from '../src/parts/DomEventListenerFunctions/DomEventListenerFunctions.js'
-import * as ViewletSimpleBrowserRender from '../src/parts/ViewletSimpleBrowser/ViewletSimpleBrowserRender.js'
+jest.unstable_mockModule('../src/parts/SimpleBrowserWorker/SimpleBrowserWorker.js', () => ({
+  invoke: jest.fn(async () => [
+    { name: 'handleAddressFocus', params: ['handleAddressFocus', 'event.target.value'] },
+    { name: 'handleAddressBlur', params: ['handleAddressBlur'] },
+  ]),
+}))
+const ViewletSimpleBrowserRender = await import('../src/parts/ViewletSimpleBrowser/ViewletSimpleBrowserRender.js')
 
 const state = {
   browserViewId: 12,
@@ -147,8 +153,8 @@ test('removes cached page css when the real page becomes visible', () => {
   expect(ViewletSimpleBrowserRender.render[3].apply(oldState, newState)).toEqual([['Css.removeCssStyleSheet', 'simple-browser-preview-42']])
 })
 
-test('routes the browser menu button click with its bottom-edge coordinates', () => {
-  expect(ViewletSimpleBrowserRender.renderEventListeners()).toContainEqual({
+test('routes the browser menu button click with its bottom-edge coordinates', async () => {
+  expect(await ViewletSimpleBrowserRender.renderEventListeners()).toContainEqual({
     name: 'handleClickSimpleBrowserMenu',
     params: [
       'showMenu',
@@ -164,29 +170,29 @@ test.each([
   [DomEventListenerFunctions.HandleClickBackward, 'backward'],
   [DomEventListenerFunctions.HandleClickForward, 'forward'],
   [DomEventListenerFunctions.HandleClickReload, 'reload'],
-])('routes %s to the %s command', (name, command) => {
-  expect(ViewletSimpleBrowserRender.renderEventListeners()).toContainEqual({
+])('routes %s to the %s command', async (name, command) => {
+  expect(await ViewletSimpleBrowserRender.renderEventListeners()).toContainEqual({
     name,
     params: [command],
   })
 })
 
-test('routes address input changes to the simple browser state', () => {
-  expect(ViewletSimpleBrowserRender.renderEventListeners()).toContainEqual({
+test('routes address input changes to the simple browser state', async () => {
+  expect(await ViewletSimpleBrowserRender.renderEventListeners()).toContainEqual({
     name: DomEventListenerFunctions.HandleInput,
     params: ['handleInput', 'event.target.value'],
   })
 })
 
-test('routes browser chrome focus with the focused element name', () => {
-  expect(ViewletSimpleBrowserRender.renderEventListeners()).toContainEqual({
+test('routes browser chrome focus with the focused element name', async () => {
+  expect(await ViewletSimpleBrowserRender.renderEventListeners()).toContainEqual({
     name: DomEventListenerFunctions.HandleFocusInSimpleBrowser,
     params: ['handleFocusIn', 'event.target.name'],
   })
 })
 
-test('routes tab context-menu events with the tab index and pointer coordinates', () => {
-  const listener = ViewletSimpleBrowserRender.renderEventListeners().find(
+test('routes tab context-menu events with the tab index and pointer coordinates', async () => {
+  const listener = (await ViewletSimpleBrowserRender.renderEventListeners()).find(
     (candidate) => candidate.name === DomEventListenerFunctions.HandleContextMenuSimpleBrowserTab,
   )
 
@@ -196,8 +202,8 @@ test('routes tab context-menu events with the tab index and pointer coordinates'
   })
 })
 
-test('routes tab pointer events to show and hide the rich hover', () => {
-  expect(ViewletSimpleBrowserRender.renderEventListeners()).toEqual(
+test('routes tab pointer events to show and hide the rich hover', async () => {
+  expect(await ViewletSimpleBrowserRender.renderEventListeners()).toEqual(
     expect.arrayContaining([
       {
         name: DomEventListenerFunctions.HandlePointerOverSimpleBrowserTab,
@@ -221,18 +227,28 @@ test('routes tab pointer events to show and hide the rich hover', () => {
   )
 })
 
-test('routes audio button clicks to mute the tab without selecting it', () => {
-  expect(ViewletSimpleBrowserRender.renderEventListeners()).toContainEqual({
+test('routes audio button clicks to mute the tab without selecting it', async () => {
+  expect(await ViewletSimpleBrowserRender.renderEventListeners()).toContainEqual({
     name: DomEventListenerFunctions.HandleClickSimpleBrowserTabAudio,
     params: ['muteTab', 'event.currentTarget.dataset.index'],
     stopPropagation: true,
   })
 })
 
-test('tab action pointer presses dismiss the hover without selecting the tab', () => {
-  expect(ViewletSimpleBrowserRender.renderEventListeners()).toContainEqual({
+test('tab action pointer presses dismiss the hover without selecting the tab', async () => {
+  expect(await ViewletSimpleBrowserRender.renderEventListeners()).toContainEqual({
     name: DomEventListenerFunctions.HandlePointerDownSimpleBrowserTabAction,
     params: ['hideTabHover'],
     stopPropagation: true,
   })
+})
+
+test('registers the worker-owned address focus and blur listeners', async () => {
+  expect(await ViewletSimpleBrowserRender.renderEventListeners()).toEqual(
+    expect.arrayContaining([
+      { name: 'handleAddressFocus', params: ['handleAddressFocus', 'event.target.value'] },
+      { name: 'handleAddressBlur', params: ['handleAddressBlur'] },
+      { name: 'handleClickOpenExternal', params: ['openExternal'] },
+    ]),
+  )
 })
