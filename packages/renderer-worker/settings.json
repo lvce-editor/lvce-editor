@@ -140,6 +140,32 @@
   },
   {
     "category": "features",
+    "description": "Selects a light browser toolbar or inherits the editor theme",
+    "heading": "Simple Browser Toolbar Theme",
+    "id": "simpleBrowser.chromeTheme",
+    "options": [
+      {
+        "id": "light",
+        "label": "Light"
+      },
+      {
+        "id": "inherit",
+        "label": "Editor Theme"
+      }
+    ],
+    "type": "enum",
+    "value": "light"
+  },
+  {
+    "category": "features",
+    "description": "Allows pressing Control twice to switch between the editor and the full-width browser",
+    "heading": "Simple Browser Double Control Gesture",
+    "id": "simpleBrowser.fullWidth.doubleControlEnabled",
+    "type": "boolean",
+    "value": true
+  },
+  {
+    "category": "features",
     "description": "Shows search suggestions in the simple browser",
     "heading": "Simple Browser Suggestions",
     "id": "simpleBrowser.suggestions",

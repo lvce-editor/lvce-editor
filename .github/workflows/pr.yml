@@ -67,6 +67,9 @@ jobs:
         if: steps.builtin-extensions-cache.outputs.cache-hit != 'true'
       - run: npm run lint
       - run: npm run type-check
+      - name: Validate builtin setting declarations
+        working-directory: ./packages/build
+        run: npm test -- --runTestsByPath test/BundleBuiltinSettings.test.ts
       - run: npx lerna run test --since origin/main
       - name: install playwright dependencies (extension host worker tests)
         working-directory: ./packages/extension-host-worker-tests
