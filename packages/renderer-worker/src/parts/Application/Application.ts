@@ -168,6 +168,22 @@ export const execute = (applicationId: string, command: string, ...args: readonl
       return ApplicationRegistry.track(applicationId, () => ExtensionHostCommands.getCommands(args[0], args[1], applicationId))
     case 'GetActiveEditor.getTextDocument':
       return ApplicationRegistry.track(applicationId, () => GetActiveEditor.getTextDocument(applicationId))
+    case 'Extensions.reload':
+      return ApplicationRegistry.track(applicationId, async () => {
+        await ExtensionManagementWorker.invoke('Extensions.reloadApplicationExtension', applicationId, ...args)
+        for (const uid of ApplicationRegistry.getUids(applicationId)) {
+          const instance = ViewletStates.getByUid(uid)
+          if (instance?.moduleId === ViewletModuleId.EditorText) {
+            await Viewlet.executeViewletCommand(uid, 'loadContent', undefined, { preserveFocus: true })
+          }
+        }
+        await ViewletManager.executeForApplication(applicationId, 'Layout.handleWorkspaceRefresh')
+      })
+    case 'PortProvider.getPorts':
+      return ApplicationRegistry.track(applicationId, async () => {
+        const { getPorts } = await import('../PortProvider/PortProvider.ts')
+        return getPorts(application.workspaceUri, applicationId)
+      })
     case 'ExtensionHostSourceControl.getEnabledProviderIds':
     case 'ExtensionHostSourceControl.getFileDecorations':
       return ApplicationRegistry.track(applicationId, () =>
@@ -192,6 +208,10 @@ export const execute = (applicationId: string, command: string, ...args: readonl
 export const executeForView = (uid: number, command: string, ...args: readonly any[]): Promise<any> => {
   const applicationId = ApplicationRegistry.getOwner(uid)
   if (applicationId === undefined) {
+    // Ports requests its initial content before the view is added to ViewletStates.
+    if (command === 'PortProvider.getPorts') {
+      return import('../PortProvider/PortProvider.ts').then(({ getPorts }) => getPorts(args[0]))
+    }
     if (!ViewletStates.getByUid(uid)) {
       return Promise.reject(new Error(`Component not found: ${uid}`))
     }

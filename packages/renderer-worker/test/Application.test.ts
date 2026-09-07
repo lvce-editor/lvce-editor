@@ -8,6 +8,7 @@ jest.unstable_mockModule('../src/parts/ExtensionManagementWorker/ExtensionManage
 jest.unstable_mockModule('../src/parts/ViewletModule/ViewletModule.js', () => ({ load: jest.fn() }))
 jest.unstable_mockModule('../src/parts/Viewlet/Viewlet.js', () => ({
   dispose: jest.fn(async (uid) => ViewletStates.remove(uid)),
+  executeViewletCommand: jest.fn(async () => {}),
   openWidgetForApplication: jest.fn(async () => {}),
 }))
 jest.unstable_mockModule('../src/parts/ExtensionHost/ExtensionHostQuickPick.js', () => ({
@@ -174,6 +175,44 @@ test('extension commands execute in the owning application', async () => {
     'eslint.showPerformanceTrace',
   )
   expect(ViewletManager.executeForApplication).not.toHaveBeenCalled()
+})
+
+test('extension reload refreshes existing application views without disposing the layout', async () => {
+  const source = await Application.create(options('source'))
+  const preview = await Application.create(options('preview'))
+  const replacement = { id: 'sample', browser: 'blob:new' }
+  const uri = 'sample-memfs:///README.md'
+  ApplicationRegistry.own('preview', 100)
+  ViewletStates.set(100, { moduleId: 'Editor', factory: {}, state: { uid: 100, uri, applicationId: 'preview' }, renderedState: { uid: 100 } })
+  await Application.execute('preview', 'Extensions.reload', 'sample', replacement)
+  expect(ExtensionManagementWorker.invoke).toHaveBeenCalledWith('Extensions.reloadApplicationExtension', 'preview', 'sample', replacement)
+  expect(Viewlet.executeViewletCommand).toHaveBeenCalledWith(100, 'loadContent', undefined, { preserveFocus: true })
+  expect(ViewletManager.executeForApplication).toHaveBeenCalledWith('preview', 'Layout.handleWorkspaceRefresh')
+  expect(Viewlet.dispose).not.toHaveBeenCalled()
+  expect(ApplicationRegistry.getOwner(source)).toBe('source')
+  expect(ApplicationRegistry.getOwner(preview)).toBe('preview')
+  expect(ApplicationRegistry.getOwner(100)).toBe('preview')
+})
+
+test('a failed extension replacement leaves application views mounted and does not refresh them', async () => {
+  await Application.create(options('preview'))
+  jest.mocked(ExtensionManagementWorker.invoke).mockRejectedValueOnce(new Error('reload failed'))
+  jest.mocked(ViewletManager.executeForApplication).mockClear()
+  await expect(Application.execute('preview', 'Extensions.reload', 'sample', {})).rejects.toThrow('reload failed')
+  expect(ViewletManager.executeForApplication).not.toHaveBeenCalled()
+  expect(Viewlet.dispose).not.toHaveBeenCalled()
+})
+
+test('loads workspace ports before the initial panel is registered', async () => {
+  const ports = [{ port: 3000, forwardedAddress: 'https://test-3000.app.github.dev/' }]
+  jest.mocked(ExtensionManagementWorker.invoke).mockResolvedValueOnce([ports])
+  expect(await Application.executeForView(12345, 'PortProvider.getPorts', 'codespaces://test/app')).toEqual(ports)
+  expect(ExtensionManagementWorker.invoke).toHaveBeenCalledWith(
+    'Extensions.executeProvidersByEvent',
+    'onPorts:codespaces',
+    'ExtensionApi.providePorts',
+    'codespaces://test/app',
+  )
 })
 
 test('routes extension prompts and their widgets to the explicit application', async () => {
