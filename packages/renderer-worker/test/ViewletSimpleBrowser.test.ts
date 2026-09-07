@@ -7,6 +7,7 @@ afterEach(() => {
 
 beforeEach(() => {
   jest.resetAllMocks()
+  FocusState.set(0)
 })
 
 jest.unstable_mockModule('../src/parts/ElectronWebContentsViewFunctions/ElectronWebContentsViewFunctions.js', () => {
@@ -794,7 +795,7 @@ test('keeps the inactive web contents alive when snapshot capture fails', async 
   }
 })
 
-test('shows a cached virtual-dom preview while an unloaded tab reloads', async () => {
+test.each([true, false])('finishes a cached preview reload with browser focus %s', async (browserFocused) => {
   // @ts-ignore
   ElectronWebContentsView.createWebContentsView.mockResolvedValue(18)
   // @ts-ignore
@@ -833,11 +834,12 @@ test('shows a cached virtual-dom preview while an unloaded tab reloads', async (
 
   // @ts-ignore
   ElectronWebContentsViewFunctions.getStats.mockResolvedValue({ canGoBack: false, canGoForward: false })
-  FocusState.set(WhenExpression.FocusSimpleBrowser)
+  FocusState.set(browserFocused ? WhenExpression.FocusSimpleBrowser : 0)
   const loadedState = await ViewletSimpleBrowser.handleDidNavigate(loadingState, 18, 'https://one.example')
 
   expect(ElectronWebContentsViewFunctions.show).toHaveBeenCalledWith(18)
-  expect(ElectronWebContentsViewFunctions.focus).toHaveBeenCalledWith(18)
+  if (browserFocused) expect(ElectronWebContentsViewFunctions.focus).toHaveBeenCalledWith(18)
+  else expect(ElectronWebContentsViewFunctions.focus).not.toHaveBeenCalledWith(18)
   expect(loadedState.tabs[1]).toMatchObject({ browserViewId: 18, isLoading: false })
   expect(loadedState.tabs[1].pageSnapshot).toBeUndefined()
 })
