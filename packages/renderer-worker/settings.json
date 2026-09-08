@@ -8,6 +8,14 @@
     "value": "none"
   },
   {
+    "category": "applications",
+    "description": "Loads and executes commands from config/onLoadCommands.json on web startup",
+    "heading": "Use On Load JSON",
+    "id": "application.useOnLoadJson",
+    "type": "boolean",
+    "value": false
+  },
+  {
     "category": "workbench",
     "description": "Stores the cached color theme",
     "heading": "Color Theme Cache",
