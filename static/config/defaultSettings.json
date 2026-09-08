@@ -1,5 +1,6 @@
 {
   "application.updateMode": "none",
+  "application.useOnLoadJson": false,
 
   "breadcrumbs.enabled": false,
 

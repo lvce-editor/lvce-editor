@@ -54,6 +54,8 @@ const main = async () => {
   }
   await ReadFile.readFile(join(tmpDir, 'dist', commitHash, 'tests', 'sample.test.html'))
   await ReadFile.readFile(join(tmpDir, 'dist', 'tests', 'sample.test.html'))
+  // Static e2e pages must start without an optional on-load commands file.
+  await Remove.remove(join(tmpDir, 'dist', commitHash, 'config', 'onLoadCommands.json'))
   const testOverview = await ReadFile.readFile(join(tmpDir, 'dist', commitHash, 'tests', 'index.html'))
   if (!testOverview.includes('sample.test.html')) {
     throw new Error('static export test overview does not include sample.test.html')
