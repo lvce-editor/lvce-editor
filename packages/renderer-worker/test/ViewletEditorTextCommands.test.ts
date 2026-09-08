@@ -406,8 +406,9 @@ test('diagnostic renders after a background reload preserve focus while navigati
   editorWorkerInvoke.mockImplementation((method) => {
     switch (method) {
       case 'Editor.getCommandIds':
-        return ['loadContent']
+        return ['loadContent', 'updateDiagnostics']
       case 'Editor.loadContent':
+      case 'Editor.updateDiagnostics':
         return undefined
       case 'Editor.diff2':
         return []
@@ -420,5 +421,6 @@ test('diagnostic renders after a background reload preserve focus while navigati
   const commands = await ViewletEditorTextCommands.getCommands()
   await commands.loadContent(editor, undefined, { preserveFocus: true })
   expect((await commands.__renderPending(editor)).commands).toEqual(contentCommands)
+  expect((await commands.updateDiagnostics(editor)).commands).toEqual(contentCommands)
   expect((await commands.loadContent(editor)).commands).toEqual([...contentCommands, ...focusCommands])
 })

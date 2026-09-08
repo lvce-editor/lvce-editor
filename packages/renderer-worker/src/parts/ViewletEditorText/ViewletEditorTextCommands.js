@@ -133,6 +133,8 @@ const loadContent = (editor, savedState, context) => {
   return load(editor, savedState)
 }
 
+const updateDiagnostics = WrapEditorCommands.wrapEditorCommand('Editor.updateDiagnostics', { preserveFocus: true })
+
 const renderPending = Object.assign(WrapEditorCommands.renderPendingEditors, { targetUid: true })
 const handleEditorFocus = WrapEditorCommands.wrapEditorCommand('Editor.handleFocus')
 const handleFocus = (editor, ...args) => {
@@ -161,6 +163,7 @@ export const getCommands = async () => {
     loadContentLater,
     renderPending,
     showOverlayMessage,
+    updateDiagnostics,
     hotReload,
     'ColorPicker.handleSliderKeyDown': handleColorPickerSliderKeyDown,
   })
