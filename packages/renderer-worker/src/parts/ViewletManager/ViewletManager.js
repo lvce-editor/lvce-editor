@@ -1,3 +1,4 @@
+import * as InvokeViewletEvent from '../InvokeViewletEvent/InvokeViewletEvent.js'
 // @ts-nocheck
 import * as Assert from '../Assert/Assert.ts'
 import * as ApplicationRegistry from '../ApplicationRegistry/ApplicationRegistry.ts'
@@ -502,9 +503,9 @@ const maybeRegisterEvents = (module) => {
         return
       }
       const savedState = await SaveState.getSavedViewletState(module.name)
-      const newState = await value(instance.state, ...params, savedState)
+      const newState = await InvokeViewletEvent.invokeViewletEvent(module.name, instance, value, ...params, savedState)
       if (!newState) {
-        throw new Error('newState must be defined')
+        return
       }
       if (module.shouldApplyNewstate && !module.shouldApplyNewState(newState)) {
         console.log('[viewlet manager] return', newState)
@@ -529,9 +530,9 @@ const maybeRegisterEvents = (module) => {
         if (!instance) {
           return
         }
-        const newState = await value(instance.state, ...params)
+        const newState = await InvokeViewletEvent.invokeViewletEvent(module.name, instance, value, ...params)
         if (!newState) {
-          throw new Error('newState must be defined')
+          return
         }
         if (module.shouldApplyNewstate && !module.shouldApplyNewState(newState)) {
           console.log('[viewlet manager] return', newState)
