@@ -22,6 +22,7 @@
     "packages/main-process": {
       "entry": ["src/mainProcessMain.js", "test/**/*.test.js"],
       "project": ["src/**/*.js", "test/**/*.js"],
+      "ignoreDependencies": ["electron"],
       "ignoreBinaries": ["dbus-daemon"]
     },
     "packages/renderer-worker": {
