@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "rootDir": ".",
-    "lib": ["esnext"],
+    "lib": ["esnext", "webworker"],
     "checkJs": true,
     "module": "NodeNext",
     "target": "esnext",

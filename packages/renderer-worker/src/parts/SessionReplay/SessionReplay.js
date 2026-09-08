@@ -8,7 +8,7 @@ import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 
 const state = { authState: undefined, configuration: '', pending: Promise.resolve() }
 
-export const startRecording = async (authState) => {
+export const startRecording = async (authState, startup = false) => {
   const local = Preferences.get('sessionReplay.enabled') === true
   const upload = Preferences.get('sessionReplay.uploadEnabled') === true
   if (!state.configuration && !local && !upload) return
@@ -21,9 +21,17 @@ export const startRecording = async (authState) => {
   const options = { local, upload, endpoint: endpoint.href, token: authState?.token || authState?.accessToken || '' }
   const configuration = JSON.stringify(options)
   if (configuration === state.configuration) return
-  const id = await RendererProcess.invoke('SessionReplay.configure', options)
+  if (startup && (local || upload)) {
+    GetSessionId.state.sessionId = await RendererProcess.configureSessionReplay(options)
+    state.configuration = configuration
+    return
+  }
+  await RendererProcess.invoke('SessionReplay.configure', { ...options, local: false, upload: false })
   state.configuration = configuration
-  GetSessionId.state.sessionId = id
+  GetSessionId.state.sessionId = ''
+  if (local || upload) {
+    await Command.execute('Notification.create', 'info', 'Reload the window to start session replay')
+  }
 }
 
 export const getSessionContent = async () => JSON.stringify(await RendererProcess.invoke('SessionReplay.getSession'))
@@ -62,5 +70,6 @@ const handlePreferencesChanged = () => {
 export const initialize = async (authState) => {
   state.authState = authState
   GlobalEventBus.addListener('preferences.changed', handlePreferencesChanged)
-  await handlePreferencesChanged()
+  state.pending = startRecording(authState, true)
+  await state.pending
 }

@@ -1,9 +1,10 @@
 import { expect, jest, test } from '@jest/globals'
 
 const invoke = jest.fn<(...args: readonly unknown[]) => Promise<unknown>>()
+const configureSessionReplay = jest.fn<(...args: readonly unknown[]) => Promise<string>>().mockResolvedValue('session-id')
 const execute = jest.fn<any>()
 const get = jest.fn<any>()
-jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () => ({ invoke }))
+jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () => ({ configureSessionReplay, invoke }))
 jest.unstable_mockModule('../src/parts/Command/Command.js', () => ({ execute }))
 jest.unstable_mockModule('../src/parts/Location/Location.js', () => ({
   getHref: () => 'https://lvce-editor.dev/?allowAnonymous=true&folder=test#token',
@@ -15,17 +16,17 @@ const SessionReplay = await import('../src/parts/SessionReplay/SessionReplay.js'
 test('local recording and upload have independent settings', async () => {
   get.mockImplementation((key) => key === 'sessionReplay.uploadEnabled')
   invoke.mockResolvedValue('session-id')
-  await SessionReplay.startRecording({ accessToken: 'test-token' })
-  expect(invoke).toHaveBeenCalledWith('SessionReplay.configure', {
-    local: false,
-    upload: true,
+  await SessionReplay.startRecording({ accessToken: 'test-token' }, true)
+  expect(configureSessionReplay).toHaveBeenCalledWith({
     endpoint: 'https://backend.example/session-replay?allowAnonymous=true',
+    local: false,
     token: 'test-token',
+    upload: true,
   })
 })
 
 test('download exports the versioned worker recording', async () => {
-  const session = { version: 1, id: 'test', events: [] }
+  const session = { events: [], id: 'test', version: 1 }
   invoke.mockResolvedValue(session)
   await SessionReplay.downloadSession()
   expect(execute).toHaveBeenCalledWith('Download.downloadJson', session, 'test.json')
