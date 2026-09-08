@@ -83,5 +83,12 @@
       "**/.tmp/**"
     ],
     "exec": "node packages/server/bin/server.js"
+  },
+  "allowScripts": {
+    "nx@20.8.4": true,
+    "nx@21.6.11": true,
+    "@parcel/watcher@2.6.0": true,
+    "unrs-resolver@1.12.2": true,
+    "fsevents@2.3.3": true
   }
 }
