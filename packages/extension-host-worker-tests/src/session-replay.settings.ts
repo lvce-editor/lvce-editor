@@ -14,13 +14,16 @@ export const test: Test = async ({ Command, Settings }) => {
   }
 
   await assertDisabled()
-  if ((await Command.execute('Preferences.get', 'sessionReplay.allowAnonymousUploads')) !== false) {
+  if (await Command.execute('Preferences.get', 'sessionReplay.allowAnonymousUploads')) {
     throw new Error('Anonymous session replay uploads must default to disabled')
   }
   await Settings.update({ 'sessionReplay.allowAnonymousUploads': true })
-  await assertDisabled()
-  await Settings.update({ 'sessionReplay.enabled': true })
   try {
+    if ((await Command.execute('Preferences.get', 'sessionReplay.allowAnonymousUploads')) !== true) {
+      throw new Error('Anonymous session replay upload permission must be configurable')
+    }
+    await assertDisabled()
+    await Settings.update({ 'sessionReplay.enabled': true })
     if (await Command.execute('Preferences.get', 'sessionReplay.uploadEnabled')) {
       throw new Error('Enabling local replay must not enable uploads')
     }
