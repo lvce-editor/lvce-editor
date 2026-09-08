@@ -14,6 +14,11 @@ export const test: Test = async ({ Command, Settings }) => {
   }
 
   await assertDisabled()
+  if ((await Command.execute('Preferences.get', 'sessionReplay.allowAnonymousUploads')) !== false) {
+    throw new Error('Anonymous session replay uploads must default to disabled')
+  }
+  await Settings.update({ 'sessionReplay.allowAnonymousUploads': true })
+  await assertDisabled()
   await Settings.update({ 'sessionReplay.enabled': true })
   try {
     if (await Command.execute('Preferences.get', 'sessionReplay.uploadEnabled')) {
@@ -24,7 +29,7 @@ export const test: Test = async ({ Command, Settings }) => {
       throw new Error('Local session replay must capture a versioned recording with a visual frame')
     }
   } finally {
-    await Settings.update({ 'sessionReplay.enabled': false })
+    await Settings.update({ 'sessionReplay.enabled': false, 'sessionReplay.allowAnonymousUploads': false })
   }
   await assertDisabled()
 }

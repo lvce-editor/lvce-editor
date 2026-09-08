@@ -121,6 +121,14 @@
     "value": false
   },
   {
+    "category": "workbench",
+    "description": "Allows session replay uploads without signing in when sessionReplay.uploadEnabled is enabled. Existing authentication is still used when available. The allowAnonymous=true URL parameter also permits anonymous uploads. Changing this setting starts a new recording segment.",
+    "heading": "Allow Anonymous Session Replay Uploads",
+    "id": "sessionReplay.allowAnonymousUploads",
+    "type": "boolean",
+    "value": false
+  },
+  {
     "category": "features",
     "description": "Selects the terminal backend",
     "heading": "Terminal Backend",
