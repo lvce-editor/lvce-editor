@@ -4,6 +4,14 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
+jest.unstable_mockModule('../src/parts/GetWebSocketUrl/GetWebSocketUrl.js', () => ({
+  getWebSocketUrl: () => 'ws://localhost:3000/websocket/extension-node-process',
+}))
+
+jest.unstable_mockModule('../src/parts/Location/Location.js', () => ({
+  getHost: () => 'localhost:3000',
+}))
+
 jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => ({
   invokeAndTransfer: jest.fn(),
 }))
@@ -80,4 +88,35 @@ test('bridges an extension-bound message port to an active remote workspace', as
   expect(SharedProcess.invokeAndTransfer).not.toHaveBeenCalled()
   port1.close()
   port2.close()
+})
+
+test('keeps the SSH transport node process local when a remote workspace is active', async () => {
+  jest.mocked(WebSocketCapability.create).mockResolvedValue({
+    protocols: [],
+    url: 'ws://127.0.0.1:46099/websocket/extension-node-process?token=remote-token',
+  })
+
+  await expect(ExtensionNodeRpc.createConnection('builtin.remote-ssh', 'builtin.remote-ssh.node')).resolves.toEqual({
+    protocols: [],
+    url: 'ws://localhost:3000/websocket/extension-node-process?extensionId=builtin.remote-ssh&rpcId=builtin.remote-ssh.node',
+  })
+  expect(WebSocketCapability.create).not.toHaveBeenCalled()
+})
+
+test('keeps the SSH transport message port in the local shared process', async () => {
+  const { port1, port2 } = new MessageChannel()
+  jest.mocked(WorkspaceConnection.connectMessagePort).mockResolvedValueOnce(true)
+  try {
+    await ExtensionNodeRpc.createMessagePort(port1, 'builtin.remote-ssh', 'builtin.remote-ssh.node')
+    expect(WorkspaceConnection.connectMessagePort).not.toHaveBeenCalled()
+    expect(SharedProcess.invokeAndTransfer).toHaveBeenCalledWith(
+      'HandleMessagePortForExtensionNodeProcess.handleMessagePortForExtensionNodeProcess',
+      port1,
+      'builtin.remote-ssh',
+      'builtin.remote-ssh.node',
+    )
+  } finally {
+    port1.close()
+    port2.close()
+  }
 })
