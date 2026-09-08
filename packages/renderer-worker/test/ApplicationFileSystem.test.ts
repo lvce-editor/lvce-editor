@@ -1,4 +1,5 @@
 import { expect, jest, test } from '@jest/globals'
+// @ts-ignore Node APIs are available in Jest but excluded from the web worker types.
 import { createHash } from 'node:crypto'
 
 jest.unstable_mockModule('../src/parts/FileSystem/FileSystem.js', () => ({
