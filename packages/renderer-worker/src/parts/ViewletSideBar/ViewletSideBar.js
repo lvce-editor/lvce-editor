@@ -97,8 +97,8 @@ const getChildModuleId = (moduleId) => {
   return ViewletModuleId.ExtensionView
 }
 
-const getExtensionViewMetadata = async (moduleId) => {
-  const view = await GetExtensionViews.getExtensionView(moduleId)
+const getExtensionViewMetadata = async (moduleId, applicationId) => {
+  const view = await GetExtensionViews.getExtensionView(moduleId, applicationId)
   return {
     extensionId: view?.extensionId || '',
     titleAreaHeight: view?.showSideBarHeader === false ? 0 : defaultTitleAreaHeight,
@@ -141,7 +141,7 @@ export const handleSideBarViewletChange = async (state, moduleId, restore = true
   const childModuleId = getChildModuleId(moduleId)
   const extensionViewMetadata =
     childModuleId === ViewletModuleId.ExtensionView
-      ? await getExtensionViewMetadata(moduleId)
+      ? await getExtensionViewMetadata(moduleId, state.applicationId)
       : {
           extensionId: '',
           titleAreaHeight: defaultTitleAreaHeight,
