@@ -850,3 +850,19 @@ test('command palettes follow focus from the source application to the preview',
     ApplicationRegistry.remove('palette-preview')
   }
 })
+
+test('dialog widgets acquire their application owner before loading', async () => {
+  const ApplicationRegistry = await import('../src/parts/ApplicationRegistry/ApplicationRegistry.ts')
+  ApplicationRegistry.create({ id: 'dialog-preview', layoutUid: 101, href: '', workspacePath: '', workspaceUri: '' })
+  const layout = { applicationId: 'dialog-preview', uid: 101 }
+  ViewletStates.set(101, { state: layout, renderedState: layout, moduleId: 'Layout', factory: {} })
+  jest.mocked(ViewletManager.load).mockResolvedValue([])
+  jest.mocked(RendererProcess.invoke).mockResolvedValue(undefined as never)
+  try {
+    await Viewlet.openWidgetForApplication('dialog-preview', 'Dialog', { message: 'Preview message', type: 'warning' })
+    expect(ViewletManager.load).toHaveBeenCalledWith(expect.objectContaining({ applicationId: 'dialog-preview', id: 'Dialog' }))
+    expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.executeCommands', expect.arrayContaining([['Viewlet.append', 101, 2]]))
+  } finally {
+    ApplicationRegistry.remove('dialog-preview')
+  }
+})
