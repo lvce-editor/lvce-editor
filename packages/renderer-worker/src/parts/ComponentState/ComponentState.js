@@ -221,6 +221,9 @@ const getInstance = (uid) => {
   return instance
 }
 
+/**
+ * @param {number=} viewUid
+ */
 export const getComponents = (viewUid = undefined) => {
   const applicationId = viewUid === undefined ? undefined : ApplicationRegistry.getOwner(viewUid)
   const seen = new Set()

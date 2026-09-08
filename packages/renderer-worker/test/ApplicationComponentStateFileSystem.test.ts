@@ -20,7 +20,7 @@ afterEach(() => {
 })
 
 const setup = () => {
-  Registry.create({ href: '', id: 'preview', layoutUid: 200, rootId: 'preview', workspacePath: '', workspaceUri: '' })
+  Registry.create({ href: '', id: 'preview', layoutUid: 200, workspacePath: '', workspaceUri: '' })
   Registry.own('preview', 201)
 }
 

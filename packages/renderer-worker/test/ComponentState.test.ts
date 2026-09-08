@@ -513,7 +513,7 @@ test('lists only components belonging to the requesting inspector application', 
     ['source', 100],
     ['preview', 200],
   ] as const) {
-    Registry.create({ href: '', id, layoutUid: uid, rootId: id, workspacePath: '', workspaceUri: '' })
+    Registry.create({ href: '', id, layoutUid: uid, workspacePath: '', workspaceUri: '' })
     for (const componentUid of [uid, uid + 1]) {
       const state = { applicationId: id, uid: componentUid }
       ViewletStates.set(componentUid, { factory: {}, moduleId: 'Layout', renderedState: state, state })
@@ -538,7 +538,7 @@ test('uses the preview tab state to preserve unsaved live component edits', asyn
     ['source', 100, sourceMain],
     ['preview', 200, previewMain],
   ] as const) {
-    Registry.create({ href: '', id, layoutUid: uid, rootId: id, workspacePath: '', workspaceUri: '' })
+    Registry.create({ href: '', id, layoutUid: uid, workspacePath: '', workspaceUri: '' })
     const state = { applicationId: id, uid: uid + 1 }
     ViewletStates.set(uid + 1, { factory: { getComponentState }, moduleId: 'Main', renderedState: state, state })
   }
