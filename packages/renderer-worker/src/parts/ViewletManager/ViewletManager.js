@@ -1,5 +1,5 @@
-import * as InvokeViewletEvent from '../InvokeViewletEvent/InvokeViewletEvent.js'
 // @ts-nocheck
+import * as InvokeViewletEvent from '../InvokeViewletEvent/InvokeViewletEvent.js'
 import * as Assert from '../Assert/Assert.ts'
 import * as ApplicationRegistry from '../ApplicationRegistry/ApplicationRegistry.ts'
 import * as FilterFocusCommands from '../FilterFocusCommands/FilterFocusCommands.js'
