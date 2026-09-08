@@ -78,7 +78,7 @@ test('sendMessagePortToFileWatcherExplorer', async () => {
 
   await SendMessagePortToExtensionHostWorker.sendMessagePortToFileWatcherExplorer(port)
 
-  expect(WorkspaceConnection.connectMessagePort).toHaveBeenCalledWith('file-watcher-explorer', port)
+  expect(WorkspaceConnection.connectMessagePort).not.toHaveBeenCalled()
   expect(SharedProcess.invokeAndTransfer).toHaveBeenCalledWith(
     'HandleMessagePortForFileWatcherExplorer.handleMessagePortForFileWatcherExplorer',
     port,
