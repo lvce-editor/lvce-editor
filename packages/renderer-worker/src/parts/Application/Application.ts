@@ -181,7 +181,7 @@ export const execute = (applicationId: string, command: string, ...args: readonl
         await ExtensionManagementWorker.invoke('Extensions.reloadApplicationExtension', applicationId, ...args)
         for (const uid of ApplicationRegistry.getUids(applicationId)) {
           const instance = ViewletStates.getByUid(uid)
-          if (instance?.moduleId === ViewletModuleId.EditorText) {
+          if (instance?.moduleId === ViewletModuleId.EditorText || instance?.moduleId === ViewletModuleId.ExtensionView) {
             await Viewlet.executeViewletCommand(uid, 'loadContent', undefined, { preserveFocus: true })
           }
         }

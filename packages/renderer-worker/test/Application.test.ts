@@ -184,9 +184,12 @@ test('extension reload refreshes existing application views without disposing th
   const uri = 'sample-memfs:///README.md'
   ApplicationRegistry.own('preview', 100)
   ViewletStates.set(100, { moduleId: 'Editor', factory: {}, state: { uid: 100, uri, applicationId: 'preview' }, renderedState: { uid: 100 } })
+  ApplicationRegistry.own('preview', 101)
+  ViewletStates.set(101, { moduleId: 'ExtensionView', factory: {}, state: { uid: 101, applicationId: 'preview' }, renderedState: { uid: 101 } })
   await Application.execute('preview', 'Extensions.reload', 'sample', replacement)
   expect(ExtensionManagementWorker.invoke).toHaveBeenCalledWith('Extensions.reloadApplicationExtension', 'preview', 'sample', replacement)
   expect(Viewlet.executeViewletCommand).toHaveBeenCalledWith(100, 'loadContent', undefined, { preserveFocus: true })
+  expect(Viewlet.executeViewletCommand).toHaveBeenCalledWith(101, 'loadContent', undefined, { preserveFocus: true })
   expect(ViewletManager.executeForApplication).toHaveBeenCalledWith('preview', 'Layout.handleWorkspaceRefresh')
   expect(Viewlet.dispose).not.toHaveBeenCalled()
   expect(ApplicationRegistry.getOwner(source)).toBe('source')
