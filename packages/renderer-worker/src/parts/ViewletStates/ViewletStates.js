@@ -227,6 +227,7 @@ export const setFocusedInstanceByType = (uid, moduleId) => {
   const applicationId = ApplicationRegistry.getOwner(uid)
   if (applicationId !== undefined) {
     state.focusedInstanceByType[JSON.stringify([applicationId, moduleId])] = uid
+    state.focusedInstanceByType.Layout = ApplicationRegistry.get(applicationId).layoutUid
   }
 }
 

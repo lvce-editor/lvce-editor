@@ -1,7 +1,6 @@
 import * as BrowserKey from '../BrowserKey/BrowserKey.js'
 import * as Command from '../Command/Command.js'
 import * as EditorWorker from '../EditorWorker/EditorWorker.ts'
-import * as FilterFocusCommands from '../FilterFocusCommands/FilterFocusCommands.js'
 import * as Focus from '../Focus/Focus.js'
 import * as WhenExpression from '../WhenExpression/WhenExpression.js'
 import * as GetTokenizePath from '../GetTokenizePath/GetTokenizePath.js'
@@ -127,17 +126,14 @@ const loadContentLater = async (editor) => {
 }
 
 const loadEditorContent = WrapEditorCommands.wrapEditorCommand('Editor.loadContent')
+const loadEditorContentPreservingFocus = WrapEditorCommands.wrapEditorCommand('Editor.loadContent', { preserveFocus: true })
 
-const loadContent = async (editor, savedState, context) => {
-  const newState = await loadEditorContent(editor, savedState)
-  if (!context?.preserveFocus) {
-    return newState
-  }
-  return {
-    ...newState,
-    commands: FilterFocusCommands.filterFocusCommands(newState.commands),
-  }
+const loadContent = (editor, savedState, context) => {
+  const load = context?.preserveFocus ? loadEditorContentPreservingFocus : loadEditorContent
+  return load(editor, savedState)
 }
+
+const updateDiagnostics = WrapEditorCommands.wrapEditorCommand('Editor.updateDiagnostics', { preserveFocus: true })
 
 const renderPending = Object.assign(WrapEditorCommands.renderPendingEditors, { targetUid: true })
 const handleEditorFocus = WrapEditorCommands.wrapEditorCommand('Editor.handleFocus')
@@ -167,6 +163,7 @@ export const getCommands = async () => {
     loadContentLater,
     renderPending,
     showOverlayMessage,
+    updateDiagnostics,
     hotReload,
     'ColorPicker.handleSliderKeyDown': handleColorPickerSliderKeyDown,
   })
