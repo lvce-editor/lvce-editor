@@ -1,3 +1,4 @@
+import * as ApplicationRegistry from '../ApplicationRegistry/ApplicationRegistry.ts'
 import * as EditorWorker from '../EditorWorker/EditorWorker.ts'
 import * as FilterFocusCommands from '../FilterFocusCommands/FilterFocusCommands.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
@@ -70,8 +71,8 @@ const unsubscribeComponent = (componentUid) => {
   }
 }
 
-const getEditorTabStates = async () => {
-  const mainInstance = ViewletStates.getInstance('Main')
+const getEditorTabStates = async (componentUid) => {
+  const mainInstance = ViewletStates.getInstance('Main', ApplicationRegistry.getOwner(componentUid))
   if (!mainInstance || typeof mainInstance.factory.getComponentState !== 'function') {
     return new Map()
   }
@@ -111,7 +112,7 @@ const runRefreshes = async (componentUid, refresh) => {
     while (refresh.pending) {
       refresh.pending = false
       const editorUids = [...(editorUidsByComponentUid.get(componentUid) || [])]
-      const editorTabStates = await getEditorTabStates()
+      const editorTabStates = await getEditorTabStates(componentUid)
       const isMainComponent = ViewletStates.getByUid(componentUid)?.moduleId === 'Main'
       const editorUidsToRefresh = editorUids.filter((editorUid) => {
         if (mainEditorUidsAwaitingInitialRefresh.has(editorUid)) {
@@ -220,12 +221,13 @@ const getInstance = (uid) => {
   return instance
 }
 
-export const getComponents = () => {
+export const getComponents = (viewUid = undefined) => {
+  const applicationId = viewUid === undefined ? undefined : ApplicationRegistry.getOwner(viewUid)
   const seen = new Set()
   const components = []
   for (const instance of ViewletStates.getValues()) {
     const uid = getUid(instance)
-    if (typeof uid !== 'number' || seen.has(uid)) {
+    if (typeof uid !== 'number' || seen.has(uid) || (viewUid !== undefined && ApplicationRegistry.getOwner(uid) !== applicationId)) {
       continue
     }
     seen.add(uid)
