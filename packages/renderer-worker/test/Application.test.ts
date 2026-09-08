@@ -230,3 +230,26 @@ test('routes extension prompts and their widgets to the explicit application', a
   await Application.execute('source', 'QuickPick.showCustom', [], { placeholder: 'Name' })
   expect(QuickPick.showCustom).toHaveBeenCalledWith([], { placeholder: 'Name' }, 'source')
 })
+
+test('notification creation targets the originating layout', async () => {
+  const source = await Application.create(options('source'))
+  const preview = await Application.create(options('preview'))
+  jest.clearAllMocks()
+  await Application.execute('preview', 'Notification.create', 'info', 'Hello World!')
+  await Application.execute('source', 'Notification.create', 'warning', 'Source warning')
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(1, 'Notification.create', 'info', 'Hello World!', preview)
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(2, 'Notification.create', 'warning', 'Source warning', source)
+  expect(ViewletManager.executeForApplication).not.toHaveBeenCalled()
+})
+
+test('dialog entry points create a widget in the calling application before an instance exists', async () => {
+  await Application.create(options('source'))
+  await Application.create(options('preview'))
+  jest.clearAllMocks()
+  const warning = { title: 'Warning', message: 'Continue?', type: 'info' }
+  await Application.execute('preview', 'Dialog.showWarning', warning)
+  await Application.execute('source', 'Dialog.show', { message: 'Source dialog', type: 'info' })
+  expect(Viewlet.openWidgetForApplication).toHaveBeenNthCalledWith(1, 'preview', 'Dialog', { ...warning, type: 'warning' })
+  expect(Viewlet.openWidgetForApplication).toHaveBeenNthCalledWith(2, 'source', 'Dialog', { message: 'Source dialog', type: 'info' })
+  expect(ViewletManager.executeForApplication).not.toHaveBeenCalled()
+})

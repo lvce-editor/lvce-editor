@@ -473,7 +473,7 @@ export const openWidgetForApplication = (applicationId, moduleId, ...args) => {
 }
 
 const openWidgetWithLayout = async (layout, moduleId, ...args) => {
-  const applicationId = moduleId === ViewletModuleId.QuickPick ? layout?.applicationId : undefined
+  const applicationId = moduleId === ViewletModuleId.QuickPick || moduleId === ViewletModuleId.Dialog ? layout?.applicationId : undefined
   const existingInstance = ViewletStates.getInstance(moduleId, applicationId)
   const type = args[0]
   if (ElectronBrowserView.isOpen() && moduleId === ViewletModuleId.QuickPick) {
