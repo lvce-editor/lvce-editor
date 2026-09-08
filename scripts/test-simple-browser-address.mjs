@@ -176,13 +176,18 @@ try {
   await expect.poll(newTabStyles).toEqual([lightStyle, lightStyle])
   await address.focus()
   await page.keyboard.press('Control+Alt+1')
-  await expect.poll(async () => JSON.parse(await readFile(settingsPath, 'utf8'))['simpleBrowser.chromeTheme']).toBe('inherit')
+  // Settings may be temporarily empty or incomplete while they are being saved.
+  await expect(async () => {
+    expect(JSON.parse(await readFile(settingsPath, 'utf8'))['simpleBrowser.chromeTheme']).toBe('inherit')
+  }).toPass({ timeout: 5000 })
   await page.keyboard.press('Control+Alt+3')
   await expect(page.locator('.SimpleBrowserLight')).toHaveCount(0)
   await expect.poll(async () => (await newTabStyles()).map((style) => style.scheme)).toEqual(['dark', 'dark'])
   assert((await newTabStyles()).every((style) => style.background !== lightStyle.background))
   await page.keyboard.press('Control+Alt+2')
-  await expect.poll(async () => JSON.parse(await readFile(settingsPath, 'utf8'))['simpleBrowser.chromeTheme']).toBe('light')
+  await expect(async () => {
+    expect(JSON.parse(await readFile(settingsPath, 'utf8'))['simpleBrowser.chromeTheme']).toBe('light')
+  }).toPass({ timeout: 5000 })
   await page.keyboard.press('Control+Alt+3')
   await expect(page.locator('.SimpleBrowserLight')).toHaveCount(1)
   await expect.poll(newTabStyles).toEqual([lightStyle, lightStyle])
