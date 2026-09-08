@@ -122,5 +122,10 @@
         }
       ]
     }
+  },
+  "allowScripts": {
+    "node-pty@1.1.0-beta34": true,
+    "@parcel/watcher@2.6.0": true,
+    "@vscode/windows-process-tree@0.8.0": true
   }
 }

@@ -119,5 +119,8 @@
     "@lvce-editor/chat-message-parsing-worker": "^1.8.0",
     "@types/node": "^26.1.1",
     "@vscode/codicons": "^0.0.45"
+  },
+  "allowScripts": {
+    "@parcel/watcher@2.6.0": true
   }
 }

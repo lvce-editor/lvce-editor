@@ -33,5 +33,8 @@
     "@jest/globals": "^30.5.1",
     "electron": "43.1.0",
     "ws": "^8.21.3"
+  },
+  "allowScripts": {
+    "@parcel/watcher@2.6.0": true
   }
 }
