@@ -518,7 +518,15 @@ try {
     const imageEntries = await openPageMenu('#picture')
     assert(imageEntries.some((item) => item.label === 'Open Image in New Tab'))
     await chooseNativeItem('Copy Image')
-    await expect.poll(() => app.evaluate(({ clipboard }) => clipboard.readImage().isEmpty())).toBe(false)
+    await expect
+      .poll(() =>
+        app.evaluate(async ({ clipboard }) => {
+          const items = await clipboard.read()
+          const image = items.find((item) => item.types.includes('image/png'))
+          return image ? (await image.getType('image/png')).size > 0 : false
+        }),
+      )
+      .toBe(true)
     await app.evaluate(async ({ webContents }, targetUrl) => {
       await webContents
         .getAllWebContents()
