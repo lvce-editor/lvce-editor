@@ -58,6 +58,10 @@ export const execute = async (id: string, method: string, ...args: readonly any[
   if (method === 'readJson') {
     return JSON.parse(await execute(id, 'readFile', ...args))
   }
+  if (uri.startsWith('live-component-state:')) {
+    const ComponentStateFileSystem = await import('../ApplicationComponentStateFileSystem/ApplicationComponentStateFileSystem.ts')
+    return ComponentStateFileSystem.execute(id, method, uri, ...args.slice(1))
+  }
   if (uri.startsWith('untitled:') && method === 'readFile') {
     return ''
   }
