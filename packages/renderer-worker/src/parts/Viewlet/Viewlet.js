@@ -463,7 +463,9 @@ export const getAllStates = () => {
 }
 
 export const openWidget = (moduleId, ...args) => {
-  return openWidgetWithLayout(ViewletStates.getState(ViewletModuleId.Layout), moduleId, ...args)
+  const focusedLayoutUid = ViewletStates.getFocusedInstanceByType(ViewletModuleId.Layout)
+  const layout = ViewletStates.getState(focusedLayoutUid ?? ViewletModuleId.Layout)
+  return openWidgetWithLayout(layout, moduleId, ...args)
 }
 
 export const openWidgetForApplication = (applicationId, moduleId, ...args) => {

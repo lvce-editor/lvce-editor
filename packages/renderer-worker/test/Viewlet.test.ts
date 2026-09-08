@@ -835,6 +835,8 @@ test('command palettes follow focus from the source application to the preview',
     const editor = { applicationId: id, uid: editorUid }
     ViewletStates.set(editorUid, { state: editor, renderedState: editor, moduleId: 'EditorText', factory: {} })
   }
+  // The first mounted layout also has a module-name alias.
+  ViewletStates.set('Layout', ViewletStates.getByUid(101))
   jest.mocked(ViewletManager.load).mockResolvedValue([])
   jest.mocked(RendererProcess.invoke).mockResolvedValue(undefined as never)
   try {
