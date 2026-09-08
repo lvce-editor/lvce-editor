@@ -140,6 +140,7 @@ export const commandMap = {
   'ExtensionHost.executeCommand': lazy('ExtensionHost.executeCommand'),
   'ExtensionHost.getCommands': lazy('ExtensionHost.getCommands'),
   'ExtensionHost.loadWebExtension': lazy('ExtensionHost.loadWebExtension'),
+  'ExtensionHost.searchFileWithProvider': lazy('ExtensionHost.searchFileWithProvider'),
   'ExtensionHost.searchFileWithFetch': lazy('ExtensionHost.searchFileWithFetch'),
   'ExtensionHostBraceCompletion.executeBraceCompletionProvider': lazy('ExtensionHostBraceCompletion.executeBraceCompletionProvider'),
   'ExtensionHostClosingTagCompletion.executeClosingTagProvider': lazy('ExtensionHostClosingTagCompletion.executeClosingTagProvider'),

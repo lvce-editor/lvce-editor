@@ -77,6 +77,12 @@ jobs:
         if: steps.npm-cache.outputs.cache-hit != 'true'
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0
+      - name: Test local services in remote workspaces
+        run: |
+          node --experimental-vm-modules node_modules/jest/bin/jest.js --config packages/renderer-worker/package.json --runInBand --coverage=false --testPathPatterns='(IpcParentWithNodeAlternate|LaunchFileSystemWorker|WebSocketCapability|ExtensionNodeRpc|WorkspaceConnection|WorkspaceSetUri|LoadProcessExplorerViewletModule|GetTerminalSpawnOptions).test'
+          npm run e2e:headless --prefix packages/extension-host-worker-tests -- --test-name-prefix=workspace.remote-local-services
+        env:
+          PLAYWRIGHT_BROWSERS_PATH: 0
       - name: Test Codespaces workspace ports
         working-directory: ./packages/extension-host-worker-tests
         run: npm run e2e:headless -- --test-name-prefix=viewlet.ports-codespaces
