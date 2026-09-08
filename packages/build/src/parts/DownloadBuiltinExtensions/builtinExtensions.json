@@ -2,8 +2,8 @@
   {
     "name": "builtin.git",
     "repository": "github.com/lvce-editor/git",
-    "version": "5.29.0",
-    "sha256": "9ba32d7a0aac1ee0f459ea907ef04aeb24180bc149edcfe5e746b42c5d4935b0",
+    "version": "5.31.0",
+    "sha256": "888a4ad3d7e040e273e0fbe7132379d9cf7feefcb9707f55725682416cea1db8",
     "created": "2022-07-02"
   },
   {
