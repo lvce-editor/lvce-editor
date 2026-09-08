@@ -1,3 +1,4 @@
+import * as ExtensionManagementWorker from '../ExtensionManagementWorker/ExtensionManagementWorker.js'
 import * as ExtensionHostCommands from '../ExtensionHost/ExtensionHostCommands.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as WorkspaceConnection from '../WorkspaceConnection/WorkspaceConnection.js'
@@ -7,6 +8,10 @@ export const getTerminalSpawnOptions = async (cwd = '') => {
   const { workspaceUri } = WorkspaceState.state
   if (workspaceUri?.startsWith('devcontainers:///')) {
     return ExtensionHostCommands.executeCommand('devcontainer.getTerminalSpawnOptions', workspaceUri, cwd)
+  }
+  const transportUri = await ExtensionManagementWorker.invoke('Extensions.getWorkspaceTransportUri')
+  if (transportUri) {
+    return ExtensionManagementWorker.invoke('Extensions.executeWorkspaceRequest', transportUri, 'terminal-options')
   }
   const remoteOptions = WorkspaceConnection.getTerminalSpawnOptions()
   if (remoteOptions) {

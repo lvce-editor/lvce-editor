@@ -1,6 +1,8 @@
 import { beforeEach, expect, jest, test } from '@jest/globals'
 
 const invoke = jest.fn<(...args: unknown[]) => Promise<unknown>>()
+const extensionInvoke = jest.fn(async (..._args: readonly unknown[]): Promise<unknown> => '')
+jest.unstable_mockModule('../src/parts/ExtensionManagementWorker/ExtensionManagementWorker.js', () => ({ invoke: extensionInvoke }))
 const executeCommand = jest.fn<(...args: unknown[]) => Promise<unknown>>()
 jest.unstable_mockModule('../src/parts/ExtensionHost/ExtensionHostCommands.js', () => ({ executeCommand }))
 const workspaceState = { workspaceUri: '' }
@@ -12,6 +14,8 @@ const { getTerminalSpawnOptions } = await import('../src/parts/GetTerminalSpawnO
 beforeEach(() => {
   WorkspaceConnection.reset()
   workspaceState.workspaceUri = 'codespaces://test/work'
+  extensionInvoke.mockReset()
+  extensionInvoke.mockResolvedValue('')
   invoke.mockReset()
   executeCommand.mockReset()
 })
@@ -78,4 +82,11 @@ test('passes an Explorer directory to the container terminal resolver', async ()
   const cwd = 'devcontainers:///abc123/src'
   await getTerminalSpawnOptions(cwd)
   expect(executeCommand).toHaveBeenCalledWith('devcontainer.getTerminalSpawnOptions', workspaceState.workspaceUri, cwd)
+})
+
+test('discovers the remote shell through its transport extension', async () => {
+  extensionInvoke.mockResolvedValueOnce('remote-ssh://host/work').mockResolvedValueOnce({ command: 'bash', args: ['-l'] })
+  await expect(getTerminalSpawnOptions()).resolves.toEqual({ command: 'bash', args: ['-l'] })
+  expect(extensionInvoke).toHaveBeenLastCalledWith('Extensions.executeWorkspaceRequest', 'remote-ssh://host/work', 'terminal-options')
+  expect(invoke).not.toHaveBeenCalled()
 })

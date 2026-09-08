@@ -97,9 +97,6 @@ export const sendMessagePortToProcessExplorer = async (port) => {
 
 export const sendMessagePortToFileWatcherExplorer = async (port) => {
   Assert.object(port)
-  if (await WorkspaceConnection.connectMessagePort('file-watcher-explorer', port)) {
-    return
-  }
   await SharedProcess.invokeAndTransfer('HandleMessagePortForFileWatcherExplorer.handleMessagePortForFileWatcherExplorer', port)
 }
 

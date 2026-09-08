@@ -1,15 +1,7 @@
 import { createWorkerViewlet } from '../CreateWorkerViewlet/CreateWorkerViewlet.js'
 import * as Platform from '../Platform/Platform.js'
-import * as PlatformType from '../PlatformType/PlatformType.js'
-import * as WorkspaceConnection from '../WorkspaceConnection/WorkspaceConnection.js'
 
-const getPlatform = () => {
-  const platform = Platform.getPlatform()
-  if (platform === PlatformType.Electron) {
-    return platform
-  }
-  return WorkspaceConnection.isActive() ? PlatformType.Remote : platform
-}
+const getPlatform = Platform.getPlatform
 
 export const {
   Commands,

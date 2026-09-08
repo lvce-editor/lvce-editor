@@ -13,6 +13,9 @@ const startRemoteCli = jest.fn<
   (connectionKey: string, remoteCliUrl: string, handleOpenRequest: (request: unknown) => Promise<void>) => Promise<void>
 >(async () => {})
 const stopRemoteCli = jest.fn()
+const execute = jest.fn(async (_command: string, _uri: string) => {})
+
+jest.unstable_mockModule('../src/parts/Command/Command.js', () => ({ execute }))
 
 jest.unstable_mockModule('../src/parts/FileSystem/FileSystem.js', () => ({
   exists,
@@ -65,6 +68,7 @@ const Workspace = await import('../src/parts/Workspace/Workspace.js')
 const WorkspaceConnection = await import('../src/parts/WorkspaceConnection/WorkspaceConnection.js')
 
 beforeEach(() => {
+  execute.mockClear()
   createNotification.mockClear()
   exists.mockClear()
   exists.mockResolvedValue(true)
@@ -208,4 +212,17 @@ test('setUri persists the workspace uri in an Electron window', async () => {
   })
 
   expect(setWorkspaceUri).toHaveBeenCalledWith('workspace-provider://host/work')
+})
+
+test('keeps the remote URI for filesystem provider dispatch and leaves remote CLI ownership in the extension', async () => {
+  await Workspace.setUri('remote-ssh://host/work', { command: 'remote-ssh.getWebSocketUrl' })
+  expect(Workspace.getPath()).toBe('remote-ssh://host/work')
+  expect(Workspace.getUri()).toBe('remote-ssh://host/work')
+  expect(startRemoteCli).not.toHaveBeenCalled()
+})
+
+test('opens a requested file after switching workspace', async () => {
+  await Workspace.setUri('remote-ssh://host/work', undefined, undefined, 'remote-ssh://host/work/readme.md')
+  expect(Workspace.getUri()).toBe('remote-ssh://host/work')
+  expect(execute).toHaveBeenCalledWith('Main.openUri', 'remote-ssh://host/work/readme.md')
 })
