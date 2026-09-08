@@ -23,6 +23,9 @@ export const test: Test = async ({ Command, Editor, expect, FileSystem, Locator,
     const session = JSON.parse(await Command.execute('FileSystem.readFile', 'app://session.json'))
     const frames = session.events.filter((event) => event.type === 'frame')
     if (frames.length !== 1 || !frames[0].data.commandReplay) throw new Error('Proxy recording must contain exactly one initial frame')
+    if (session.events.some((event) => event.type === 'message' && !event.data.renderer)) {
+      throw new Error('Session replay must exclude unrelated worker traffic')
+    }
     if (session.events.every((event) => !(event.type === 'message' && event.data.renderer) || event.data.label === 'renderer')) {
       throw new Error('Direct view worker messages must pass through the recording proxy')
     }
