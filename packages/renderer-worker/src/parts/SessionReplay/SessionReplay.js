@@ -15,7 +15,9 @@ export const startRecording = async (authState) => {
   const backendUrl = Preferences.get('layout.backendUrl') || Product.getBackendUrl()
   const endpoint = new URL('/session-replay', backendUrl || 'https://lvce-editor.dev')
   const href = await Location.getHref()
-  if (new URL(href).searchParams.get('allowAnonymous') === 'true') endpoint.searchParams.set('allowAnonymous', 'true')
+  if (Preferences.get('sessionReplay.allowAnonymousUploads') === true || new URL(href).searchParams.get('allowAnonymous') === 'true') {
+    endpoint.searchParams.set('allowAnonymous', 'true')
+  }
   const options = { local, upload, endpoint: endpoint.href, token: authState?.token || authState?.accessToken || '' }
   const configuration = JSON.stringify(options)
   if (configuration === state.configuration) return

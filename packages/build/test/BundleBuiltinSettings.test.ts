@@ -67,8 +67,8 @@ test('bundles schema-complete renderer settings contributions', async () => {
     const index = JSON.parse(await readFile(join(toRoot, 'builtin-settings', 'index.json'), 'utf8'))
     const settings = JSON.parse(await readFile(join(toRoot, 'builtin-settings', 'renderer-worker.json'), 'utf8'))
     const fileNames = await readdir(join(toRoot, 'builtin-settings'))
-    expect(index).toEqual(['renderer-worker.json'])
-    expect(fileNames).toEqual(['index.json', 'renderer-worker.json'])
+    expect(index).toEqual(['renderer-worker.json', 'session-replay-worker.json'])
+    expect(fileNames).toEqual(['index.json', 'renderer-worker.json', 'session-replay-worker.json'])
     expect(settings).toEqual(
       expect.arrayContaining([
         {
@@ -141,9 +141,32 @@ test('rejects conflicting settings contributions', () => {
   ).toThrow('Conflicting builtin setting chat.enabled')
 })
 
-test('session replay settings default to disabled', async () => {
-  const settings = JSON.parse(await readFile(new URL('../../renderer-worker/settings.json', import.meta.url), 'utf8'))
-  for (const id of ['sessionReplay.enabled', 'sessionReplay.uploadEnabled']) {
-    expect(settings.find((setting) => setting.id === id)).toMatchObject({ type: 'boolean', value: false })
+test('bundles session replay declarations from their owning worker with disabled defaults', async () => {
+  const toRoot = await mkdtemp(join(tmpdir(), 'lvce-session-replay-settings-'))
+  try {
+    const workersUrl = new URL('../../renderer-worker/src/parts/Workers/Workers.json', import.meta.url)
+    const workers = JSON.parse(await readFile(workersUrl, 'utf8'))
+    await bundleBuiltinSettings({ toRoot, workers })
+    const index = JSON.parse(await readFile(join(toRoot, 'builtin-settings', 'index.json'), 'utf8'))
+    expect(index).toContain('session-replay-worker.json')
+    const contributions = await Promise.all(
+      index.map(async (fileName) => ({
+        fileName,
+        settings: JSON.parse(await readFile(join(toRoot, 'builtin-settings', fileName), 'utf8')),
+      })),
+    )
+    for (const id of ['sessionReplay.enabled', 'sessionReplay.uploadEnabled', 'sessionReplay.allowAnonymousUploads']) {
+      const owners = contributions.filter(({ settings }) => settings.some((setting) => setting.id === id))
+      expect(owners.map(({ fileName }) => fileName)).toEqual(['session-replay-worker.json'])
+      expect(owners[0].settings.find((setting) => setting.id === id)).toMatchObject({
+        category: 'workbench',
+        description: expect.any(String),
+        heading: expect.any(String),
+        type: 'boolean',
+        value: false,
+      })
+    }
+  } finally {
+    await rm(toRoot, { force: true, recursive: true })
   }
 })
