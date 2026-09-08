@@ -378,7 +378,7 @@ test('background reload also suppresses focus in diagnostic renders before the r
   expect(pendingCommands).toEqual([...contentCommands, ...focusCommands])
 })
 
-test('failed background reloads release their focus suppression', async () => {
+test('failed background reloads leave idle diagnostic renders unable to steal focus', async () => {
   const editor = { uid: 42 }
   editorWorkerInvoke.mockImplementation((method) => {
     switch (method) {
@@ -396,5 +396,29 @@ test('failed background reloads release their focus suppression', async () => {
   })
   const commands = await ViewletEditorTextCommands.getCommands()
   await expect(commands.loadContent(editor, undefined, { preserveFocus: true })).rejects.toThrow('reload failed')
-  expect((await commands.__renderPending(editor)).commands).toEqual([['Viewlet.focusSelector', 42, '[name="editor"]']])
+  expect((await commands.__renderPending(editor)).commands).toEqual([])
+})
+
+test('diagnostic renders after a background reload preserve focus while navigation can still focus the editor', async () => {
+  const editor = { uid: 42, uri: 'live-component-state:///1.json' }
+  const focusCommands = [['Viewlet.focusSelector', 42, '[name="editor"]']]
+  const contentCommands = [['Viewlet.setPatches', 42, []]]
+  editorWorkerInvoke.mockImplementation((method) => {
+    switch (method) {
+      case 'Editor.getCommandIds':
+        return ['loadContent']
+      case 'Editor.loadContent':
+        return undefined
+      case 'Editor.diff2':
+        return []
+      case 'Editor.render2':
+        return [...contentCommands, ...focusCommands]
+      default:
+        throw new Error(`unexpected method ${method}`)
+    }
+  })
+  const commands = await ViewletEditorTextCommands.getCommands()
+  await commands.loadContent(editor, undefined, { preserveFocus: true })
+  expect((await commands.__renderPending(editor)).commands).toEqual(contentCommands)
+  expect((await commands.loadContent(editor)).commands).toEqual([...contentCommands, ...focusCommands])
 })

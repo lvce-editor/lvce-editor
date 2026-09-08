@@ -3,8 +3,8 @@ import * as FilterFocusCommands from '../FilterFocusCommands/FilterFocusCommands
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
 const queues = new Map()
-// Async effects may render the same document before a background reload returns.
-const focusSuppression = new Set()
+// Only an active foreground command may move focus during an asynchronous render.
+const focusPolicies = new Map()
 
 const getQueueKey = (editor) => JSON.stringify([editor.applicationId ?? null, editor.uri || editor.uid])
 
@@ -67,21 +67,21 @@ const renderEditor = async (uid, sourceUid) => {
   }
 }
 
-export const renderPendingEditors = async (editor) => {
+export const renderPendingEditors = async (editor, preserveFocusOverride) => {
   const queueKey = getQueueKey(editor)
-  const preserveFocus = focusSuppression.has(queueKey)
+  const preserveFocus = preserveFocusOverride ?? focusPolicies.get(queueKey) !== false
   const editorUids = await getExistingEditorUids(editor)
   const commandLists = await Promise.all(editorUids.map((uid) => renderEditor(uid, editor.uid)))
   const commands = commandLists.flat()
   return {
     ...editor,
-    commands: preserveFocus || focusSuppression.has(queueKey) ? FilterFocusCommands.filterFocusCommands(commands) : commands,
+    commands: preserveFocus ? FilterFocusCommands.filterFocusCommands(commands) : commands,
   }
 }
 
-const runEditorCommand = async (editor, fullId, restArgs) => {
+const runEditorCommand = async (editor, fullId, restArgs, preserveFocus = false) => {
   await EditorWorker.invoke(fullId, editor.uid, ...restArgs)
-  return renderPendingEditors(editor)
+  return renderPendingEditors(editor, preserveFocus)
 }
 
 export const wrapEditorCommand = (id, { preserveFocus = false } = {}) => {
@@ -104,14 +104,10 @@ export const wrapEditorCommand = (id, { preserveFocus = false } = {}) => {
       await previous
     }
     try {
-      if (preserveFocus) {
-        focusSuppression.add(queueKey)
-      }
-      return await runEditorCommand(editor, fullId, restArgs)
+      focusPolicies.set(queueKey, preserveFocus)
+      return await runEditorCommand(editor, fullId, restArgs, preserveFocus)
     } finally {
-      if (preserveFocus) {
-        focusSuppression.delete(queueKey)
-      }
+      focusPolicies.delete(queueKey)
       resolve(undefined)
       if (queues.get(queueKey) === next) {
         queues.delete(queueKey)
