@@ -2879,8 +2879,11 @@ export const openSideBarView = async (state: LayoutState, moduleId, focus = fals
     return result
   }
   await ViewletManager.waitForLoadContentLater(moduleId)
-  await Viewlet.focus(moduleId)
-  return result
+  const focusCommands = await Viewlet.getFocusCommands(moduleId)
+  return {
+    newState: result.newState,
+    commands: [...result.commands, ...focusCommands],
+  }
 }
 
 export const openTextSearch = async (state: LayoutState): Promise<LayoutStateResult> => {
