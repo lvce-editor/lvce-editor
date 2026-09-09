@@ -10,6 +10,8 @@ export const load = (moduleId: any): any => {
       return import('../AutoUpdaterAppImage/AutoUpdaterAppImage.ipc.ts')
     case ModuleId.AutoUpdaterWindowsNsis:
       return import('../AutoUpdaterWindowsNsis/AutoUpdaterWindowsNsis.ipc.ts')
+    case ModuleId.BrowserFind:
+      return import('../BrowserFind/BrowserFind.ipc.ts')
     case ModuleId.BulkReplacement:
       return import('../BulkReplacement/BulkReplacement.ipc.ts')
     case ModuleId.ClipBoard:

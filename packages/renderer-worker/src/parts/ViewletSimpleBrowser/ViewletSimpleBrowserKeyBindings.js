@@ -4,6 +4,7 @@ import * as WhenExpression from '../WhenExpression/WhenExpression.js'
 
 const getBrowserTabKeyBindings = (when) => {
   return [
+    { key: KeyModifier.CtrlCmd | KeyCode.KeyF, command: 'SimpleBrowser.toggleFind', when },
     { key: KeyModifier.CtrlCmd | KeyCode.KeyL, command: 'SimpleBrowser.focusAddress', when },
     { key: KeyModifier.CtrlCmd | KeyModifier.Shift | KeyCode.KeyI, command: 'SimpleBrowser.toggleDevTools', when },
     {
@@ -38,6 +39,12 @@ export const getKeyBindings = () => {
   return [
     ...getBrowserTabKeyBindings(WhenExpression.FocusSimpleBrowserInput),
     ...getBrowserTabKeyBindings(WhenExpression.FocusSimpleBrowser),
+    ...getBrowserTabKeyBindings(WhenExpression.FocusSimpleBrowserFind),
+    ...getBrowserTabKeyBindings(WhenExpression.FocusSimpleBrowserFindInput),
+    { key: KeyCode.Escape, command: 'SimpleBrowser.closeFind', when: WhenExpression.FocusSimpleBrowserFindInput },
+    { key: KeyCode.Escape, command: 'SimpleBrowser.closeFind', when: WhenExpression.FocusSimpleBrowserFind },
+    { key: KeyCode.Enter, command: 'SimpleBrowser.findNext', when: WhenExpression.FocusSimpleBrowserFindInput },
+    { key: KeyModifier.Shift | KeyCode.Enter, command: 'SimpleBrowser.findPrevious', when: WhenExpression.FocusSimpleBrowserFindInput },
     {
       key: KeyCode.DownArrow,
       command: 'SimpleBrowser.selectNextSuggestion',
@@ -55,7 +62,7 @@ export const getKeyBindings = () => {
     },
     {
       key: KeyCode.Escape,
-      command: 'SimpleBrowser.closeSuggestions',
+      command: 'SimpleBrowser.escapeAddress',
       when: WhenExpression.FocusSimpleBrowserInput,
     },
   ]

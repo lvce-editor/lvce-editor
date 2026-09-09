@@ -173,6 +173,7 @@ beforeEach(() => {
 })
 
 const browserTabKeyBindings = [
+  KeyModifier.CtrlCmd | KeyCode.KeyF,
   KeyModifier.CtrlCmd | KeyModifier.Shift | KeyCode.KeyI,
   KeyModifier.CtrlCmd | KeyCode.KeyL,
   KeyModifier.CtrlCmd | KeyCode.KeyW,
@@ -2061,7 +2062,6 @@ test('Ctrl+L from the active embedded tab selects its address', async () => {
   expect(ElectronWindow.focus).toHaveBeenCalled()
 })
 
-
 test('typing commits before a pending page capture and preserves newer short input', async () => {
   const capture = Promise.withResolvers<Uint8Array>()
   jest.mocked(ElectronWebContentsViewFunctions.capturePage).mockReturnValue(capture.promise as never)
@@ -2077,7 +2077,6 @@ test('typing commits before a pending page capture and preserves newer short inp
   expect(shortened.inputValue).toBe('k')
 })
 
-
 test.each(['switch', 'close'])('pending suggestions do not alter a tab after %s', async (action) => {
   const capture = Promise.withResolvers<Uint8Array>()
   jest.mocked(ElectronWebContentsViewFunctions.capturePage).mockReturnValue(capture.promise as never)
@@ -2092,10 +2091,20 @@ test.each(['switch', 'close'])('pending suggestions do not alter a tab after %s'
 
 test('a delayed local popup cannot overwrite a provider popup', async () => {
   const capture = Promise.withResolvers<Uint8Array>()
-  jest.mocked(ElectronWebContentsViewFunctions.capturePage).mockReturnValueOnce(capture.promise as never).mockResolvedValueOnce(new Uint8Array() as never)
+  jest
+    .mocked(ElectronWebContentsViewFunctions.capturePage)
+    .mockReturnValueOnce(capture.promise as never)
+    .mockResolvedValueOnce(new Uint8Array() as never)
   const state = { ...ViewletSimpleBrowser.create(7), browserViewId: 12, iframeSrc: 'https://example.com', suggestionsEnabled: true }
   const typed = ViewletSimpleBrowser.handleInput(state, 'known')
-  const local = ViewletSimpleBrowser.applySuggestions(typed, 7, 'known', [], [{ value: 'known local', favicon: '', type: 'history' }], typed.suggestionSessionId)
+  const local = ViewletSimpleBrowser.applySuggestions(
+    typed,
+    7,
+    'known',
+    [],
+    [{ value: 'known local', favicon: '', type: 'history' }],
+    typed.suggestionSessionId,
+  )
   const provider = await ViewletSimpleBrowser.applySuggestions(typed, 7, 'known', ['known result'], undefined, typed.suggestionSessionId)
   capture.resolve(new Uint8Array())
   expect(await local).toBe(typed)

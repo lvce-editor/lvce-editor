@@ -1,3 +1,4 @@
+import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as BrowserSuggestionRequests from '../BrowserSuggestionRequests/BrowserSuggestionRequests.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as BrowserFullWidth from '../BrowserFullWidth/BrowserFullWidth.js'
@@ -32,6 +33,7 @@ import * as SimpleBrowserSnapshot from '../SimpleBrowserSnapshot/SimpleBrowserSn
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as WhenExpression from '../WhenExpression/WhenExpression.js'
 
+import * as BrowserFind from './ViewletSimpleBrowserFind.js'
 import * as TabDrag from './ViewletSimpleBrowserTabDrag.js'
 
 const navigationHeaderHeight = 30
@@ -43,7 +45,9 @@ const focusPreviousTabKeyBinding = KeyModifier.CtrlCmd | KeyModifier.Shift | Key
 const openHistoryKeyBinding = KeyModifier.CtrlCmd | KeyCode.KeyH
 const toggleDevToolsKeyBinding = KeyModifier.CtrlCmd | KeyModifier.Shift | KeyCode.KeyI
 const focusAddressKeyBinding = KeyModifier.CtrlCmd | KeyCode.KeyL
+const findKeyBinding = KeyModifier.CtrlCmd | KeyCode.KeyF
 const browserTabKeyBindings = [
+  findKeyBinding,
   toggleDevToolsKeyBinding,
   focusAddressKeyBinding,
   closeTabKeyBinding,
@@ -57,6 +61,12 @@ const visibleBrowserUids = new Set()
 const getFallThroughKeyBindings = () => {
   const keyBindings = KeyBindingsState.getKeyBindings()
   return [...new Set([...GetFallThroughKeyBindings.getFallThroughKeyBindings(keyBindings), ...browserTabKeyBindings])]
+}
+
+export const updateFindKeyBindings = (state) => {
+  const keys = getFallThroughKeyBindings()
+  if (state.findVisible) keys.push(KeyCode.Escape)
+  return ElectronWebContentsViewFunctions.setFallthroughKeyBindings(state.browserViewId, keys)
 }
 
 const getHeaderHeight = (tabsEnabled) => navigationHeaderHeight + (tabsEnabled ? tabsHeaderHeight : 0)
@@ -140,6 +150,12 @@ export const create = (id, uri, x, y, width, height) => {
     y,
     width,
     height,
+    findVisible: false,
+    findValue: '',
+    findMatchCase: false,
+    findMatches: 0,
+    findActiveMatch: 0,
+    findFocusVersion: 0,
     focusAddressVersion: 0,
     suggestionSessionId: 0,
     fullWidth: false,
@@ -302,7 +318,10 @@ export const loadContent = async (state, savedState) => {
   await ElectronWebContentsViewFunctions.resizeWebContentsView(browserViewId, browserViewX, browserViewY, browserViewWidth, browserViewHeight)
   Assert.number(browserViewId)
   if (!iframeSrc || !id || id !== browserViewId) {
-    await ElectronWebContentsViewFunctions.setIframeSrc(browserViewId, iframeSrc || SimpleBrowserNewTabPage.getUrl(undefined, suggestionsEnabled, state.chromeTheme))
+    await ElectronWebContentsViewFunctions.setIframeSrc(
+      browserViewId,
+      iframeSrc || SimpleBrowserNewTabPage.getUrl(undefined, suggestionsEnabled, state.chromeTheme),
+    )
   }
   const { title, canGoBack, canGoForward, isAudioMuted } = await ElectronWebContentsViewFunctions.getStats(browserViewId)
   const restoredTabs =
@@ -372,7 +391,10 @@ const createUnloadedTab = async (state) => {
 
 const createEmptyTab = async (state) => {
   const tab = await createUnloadedTab(state)
-  await ElectronWebContentsViewFunctions.setIframeSrc(tab.browserViewId, SimpleBrowserNewTabPage.getUrl(undefined, state.suggestionsEnabled, state.chromeTheme))
+  await ElectronWebContentsViewFunctions.setIframeSrc(
+    tab.browserViewId,
+    SimpleBrowserNewTabPage.getUrl(undefined, state.suggestionsEnabled, state.chromeTheme),
+  )
   return tab
 }
 
@@ -416,6 +438,7 @@ const prepareTabDeactivation = async (state, tab) => {
 }
 
 const switchToTab = async (state, initialTabs, selectedTabIndex) => {
+  state = await BrowserFind.closeFind({ ...state, tabs: initialTabs }, false)
   BrowserSuggestionRequests.cancel(state.uid)
   const oldTabIndex = initialTabs.findIndex((tab) => tab.browserViewId === state.browserViewId)
   const oldTab = initialTabs[oldTabIndex]
@@ -936,7 +959,8 @@ export const applySuggestions = async (state, uid, query, suggestions, precomput
   if (!isCurrent() || state.uid !== uid || state.inputValue !== query) {
     return state
   }
-  const updateId = sessionId === undefined ? undefined : BrowserSuggestionRequests.beginUpdate(uid, sessionId, precomputedLocalSuggestions === undefined)
+  const updateId =
+    sessionId === undefined ? undefined : BrowserSuggestionRequests.beginUpdate(uid, sessionId, precomputedLocalSuggestions === undefined)
   if (sessionId !== undefined && updateId === undefined) return state
   const isCurrentUpdate = () => isCurrent() && (sessionId === undefined || BrowserSuggestionRequests.isCurrentUpdate(uid, sessionId, updateId))
   if (!state.suggestionsEnabled || query.trim().length < 2) {
@@ -1095,7 +1119,14 @@ export const handleWillNavigate = (state, browserViewId, value) => {
 }
 
 export const handleFocusIn = (state, name) => {
-  const focusKey = name === InputName.SimpleBrowserAddress ? WhenExpression.FocusSimpleBrowserInput : WhenExpression.FocusSimpleBrowser
+  const focusKey =
+    name === 'simple-browser-find'
+      ? WhenExpression.FocusSimpleBrowserFindInput
+      : name?.startsWith('simple-browser-find')
+        ? WhenExpression.FocusSimpleBrowserFind
+        : name === InputName.SimpleBrowserAddress
+          ? WhenExpression.FocusSimpleBrowserInput
+          : WhenExpression.FocusSimpleBrowser
   Focus.setFocus(focusKey, undefined, state.uid, ViewletModuleId.SimpleBrowser)
   return state
 }
@@ -1104,6 +1135,8 @@ export const handleKeyBinding = async (state, browserViewId, keyBinding) => {
   if (Number(browserViewId) !== state.browserViewId) {
     return state
   }
+  if (keyBinding === findKeyBinding) return BrowserFind.toggleFind(state)
+  if (keyBinding === KeyCode.Escape && state.findVisible) return BrowserFind.closeFind(state)
   if (keyBinding === toggleDevToolsKeyBinding) {
     await ElectronWebContentsViewFunctions.toggleDevTools(state.browserViewId)
     return state
@@ -1147,7 +1180,8 @@ export const handleDidNavigate = async (state, browserViewId, value) => {
     pageSnapshot: undefined,
   })
   const history = await BrowserHistory.record(url)
-  return { ...newState, history: history || state.history }
+  const stateWithHistory = { ...newState, history: history || state.history }
+  return actualBrowserViewId === state.browserViewId ? BrowserFind.refreshFind(stateWithHistory) : stateWithHistory
 }
 
 export const handleDidNavigationCancel = async (state, browserViewId) => {
@@ -1196,6 +1230,7 @@ export const handleAudioStateChanged = (state, browserViewId, audible) => {
 }
 
 export const dispose = async (state) => {
+  if (state.findVisible) await SharedProcess.invoke('BrowserFind.stop', state.browserViewId)
   BrowserSuggestionRequests.dispose(state.uid)
   await BrowserFullWidth.handleDispose(state.uid)
   visibleBrowserUids.delete(state.uid)
