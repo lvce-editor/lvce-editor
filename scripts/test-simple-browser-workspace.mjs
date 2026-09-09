@@ -1,4 +1,6 @@
 import assert from 'node:assert/strict'
+import { parseKeyBindingString } from '../packages/renderer-worker/src/parts/ParseKeyBindingString/ParseKeyBindingString.js'
+import { setTimeout as delay } from 'node:timers/promises'
 import { createServer } from 'node:http'
 import { createRequire } from 'node:module'
 import { mkdtemp, mkdir, readFile, writeFile } from 'node:fs/promises'
@@ -16,7 +18,26 @@ const profile = await mkdtemp(join(tmpdir(), 'lvce-browser-workspace-'))
 const editorFile = join(profile, 'example.txt')
 await writeFile(editorFile, 'keep editor selection\nsecond line\n')
 await mkdir(join(profile, 'config/lvce-oss'), { recursive: true })
-await writeFile(join(profile, 'config/lvce-oss/settings.json'), JSON.stringify({ 'simpleBrowser.suggestions': true }))
+const settingsPath = join(profile, 'config/lvce-oss/settings.json')
+await writeFile(settingsPath, JSON.stringify({ 'simpleBrowser.suggestions': true }))
+await writeFile(
+  join(profile, 'config/lvce-oss/keybindings.json'),
+  JSON.stringify([
+    {
+      source: 'User',
+      key: parseKeyBindingString('Ctrl+Alt+1'),
+      command: 'Preferences.update',
+      args: [{ 'simpleBrowser.toggleModifier': 'ctrl-hold', 'simpleBrowser.chromeTheme': 'inherit' }],
+    },
+    {
+      source: 'User',
+      key: parseKeyBindingString('Ctrl+Alt+2'),
+      command: 'Preferences.update',
+      args: [{ 'simpleBrowser.toggleModifier': 'ctrl=twice', 'simpleBrowser.chromeTheme': 'light' }],
+    },
+    { source: 'User', key: parseKeyBindingString('Ctrl+Alt+3'), command: 'Layout.handleSettingsChanged' },
+  ]),
+)
 const rendererPath = join(root, 'packages/renderer-worker/node_modules/@lvce-editor/renderer-process/dist/rendererProcessMain.js')
 const rendererSource = await readFile(rendererPath, 'utf8')
 const bundleUrl = '/packages/renderer-worker/dist/browserWorkspaceTestMain.js'
@@ -254,6 +275,60 @@ try {
   await expect(page.locator('.BrowserFullWidth')).toHaveCount(1)
   await button.click()
   await expect(page.locator('[name="editor"]')).toBeFocused()
+  const setToggleModifier = async (hold) => {
+    await address.focus()
+    await page.keyboard.press(hold ? 'Control+Alt+1' : 'Control+Alt+2')
+    await expect(async () => {
+      expect(JSON.parse(await readFile(settingsPath, 'utf8'))['simpleBrowser.toggleModifier']).toBe(hold ? 'ctrl-hold' : 'ctrl=twice')
+    }).toPass({ timeout: 5000 })
+    await page.keyboard.press('Control+Alt+3')
+    // Theme rendering follows native gesture configuration and acknowledges the settings reload.
+    await expect(page.locator('.SimpleBrowserLight')).toHaveCount(hold ? 0 : 1)
+  }
+  const sendControlInput = (guestFocused, type, releaseAfter = 0) =>
+    app.evaluate(
+      async ({ BrowserWindow, webContents }, { guestFocused, type, url, releaseAfter }) => {
+        const window = BrowserWindow.getAllWindows()[0]
+        const target = guestFocused ? webContents.getAllWebContents().find((item) => item.getURL().startsWith(url)) : window.webContents
+        if (type === 'keyDown') {
+          window.focus()
+          target.focus()
+        }
+        target.sendInputEvent({ type, keyCode: 'Control' })
+        if (releaseAfter) {
+          await new Promise((resolve) => setTimeout(resolve, releaseAfter))
+          target.sendInputEvent({ type: 'keyUp', keyCode: 'Control' })
+        }
+      },
+      { guestFocused, type, url, releaseAfter },
+    )
+  await setToggleModifier(true)
+  await doubleControl(false)
+  await delay(400)
+  await expect(page.locator('.BrowserFullWidth')).toHaveCount(0)
+  await sendControlInput(false, 'keyDown', 100)
+  await delay(400)
+  await expect(page.locator('.BrowserFullWidth')).toHaveCount(0)
+  // Enter from the editor and leave from the embedded page while Control remains down.
+  for (const [guestFocused, expectedCount] of [
+    [false, 1],
+    [true, 0],
+  ]) {
+    await sendControlInput(guestFocused, 'keyDown')
+    try {
+      await expect(page.locator('.BrowserFullWidth')).toHaveCount(expectedCount)
+      await delay(600)
+      await expect(page.locator('.BrowserFullWidth')).toHaveCount(expectedCount)
+    } finally {
+      await sendControlInput(guestFocused, 'keyUp')
+    }
+  }
+  await setToggleModifier(false)
+  await doubleControl(false)
+  await expect(page.locator('.BrowserFullWidth')).toHaveCount(1)
+  await doubleControl(true)
+  await expect(page.locator('.BrowserFullWidth')).toHaveCount(0)
+  assert.deepEqual(await guestSnapshot(), before)
   await address.click()
   await expect.poll(() => address.evaluate((input) => input.selectionEnd - input.selectionStart)).toBe((await address.inputValue()).length)
   await address.fill('keep this address edit')

@@ -55,6 +55,7 @@
   "simpleBrowser.audioIndicator.enabled": true,
   "simpleBrowser.chromeTheme": "light",
   "simpleBrowser.fullWidth.doubleControlEnabled": true,
+  "simpleBrowser.toggleModifier": "ctrl=twice",
   "simpleBrowser.suggestions": false,
   "simpleBrowser.shortcuts": [],
   "simpleBrowser.tabHover.enabled": false,

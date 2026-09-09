@@ -40,3 +40,13 @@ test('openNew forwards url', async () => {
   expect(AppWindow.openNew).toHaveBeenCalledTimes(1)
   expect(AppWindow.openNew).toHaveBeenCalledWith('lvce-oss://-/?test=1')
 })
+
+test.each(['ctrl=twice', 'ctrl-hold'])('forwards the browser gesture mode: %s', async (modifier) => {
+  await ElectronWindow.setBrowserFullWidthGestureEnabled(1, true, modifier)
+  expect(ParentIpc.invoke).toHaveBeenCalledWith('ElectronWindow.executeWindowFunction', 1, 'enableBrowserFullWidthGesture', modifier)
+})
+
+test('defaults to double Ctrl and preserves disabling the browser gesture', async () => {
+  await ElectronWindow.setBrowserFullWidthGestureEnabled(1, false)
+  expect(ParentIpc.invoke).toHaveBeenCalledWith('ElectronWindow.executeWindowFunction', 1, 'disableBrowserFullWidthGesture', 'ctrl=twice')
+})

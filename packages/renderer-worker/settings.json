@@ -1,5 +1,23 @@
 [
   {
+    "category": "features",
+    "description": "Selects the Control gesture that toggles the desktop Simple Browser full-width layout",
+    "heading": "Simple Browser Toggle Modifier",
+    "id": "simpleBrowser.toggleModifier",
+    "options": [
+      {
+        "id": "ctrl=twice",
+        "label": "Press Control Twice"
+      },
+      {
+        "id": "ctrl-hold",
+        "label": "Hold Control for 300 ms"
+      }
+    ],
+    "type": "enum",
+    "value": "ctrl=twice"
+  },
+  {
     "category": "applications",
     "description": "Controls how application updates are installed",
     "heading": "Update Mode",

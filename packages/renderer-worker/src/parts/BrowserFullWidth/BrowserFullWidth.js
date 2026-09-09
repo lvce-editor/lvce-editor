@@ -45,7 +45,10 @@ const getBrowsers = (state) =>
 
 export const configureGesture = async () => {
   if (Platform.platform === PlatformType.Electron) {
-    await ElectronWindow.setBrowserFullWidthGestureEnabled(Preferences.get('simpleBrowser.fullWidth.doubleControlEnabled') !== false)
+    await ElectronWindow.setBrowserFullWidthGestureEnabled(
+      Preferences.get('simpleBrowser.fullWidth.doubleControlEnabled') !== false,
+      Preferences.get('simpleBrowser.toggleModifier') === 'ctrl-hold' ? 'ctrl-hold' : 'ctrl=twice',
+    )
   }
 }
 
