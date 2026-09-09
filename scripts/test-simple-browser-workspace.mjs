@@ -302,6 +302,7 @@ try {
       },
       { guestFocused, type, url, releaseAfter },
     )
+  const beforeHold = await guestSnapshot()
   await setToggleModifier(true)
   await doubleControl(false)
   await delay(400)
@@ -328,7 +329,7 @@ try {
   await expect(page.locator('.BrowserFullWidth')).toHaveCount(1)
   await doubleControl(true)
   await expect(page.locator('.BrowserFullWidth')).toHaveCount(0)
-  assert.deepEqual(await guestSnapshot(), before)
+  assert.deepEqual(await guestSnapshot(), beforeHold)
   await address.click()
   await expect.poll(() => address.evaluate((input) => input.selectionEnd - input.selectionStart)).toBe((await address.inputValue()).length)
   await address.fill('keep this address edit')
