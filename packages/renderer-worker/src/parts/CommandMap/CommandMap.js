@@ -403,6 +403,7 @@ export const commandMap = {
   'SendMessagePortToExtensionHostWorker.sendMessagePortToMarkdownWorker': lazy(
     'SendMessagePortToExtensionHostWorker.sendMessagePortToMarkdownWorker',
   ),
+  'SendMessagePortToExtensionHostWorker.sendMessagePortToMenuWorker': lazy('SendMessagePortToExtensionHostWorker.sendMessagePortToMenuWorker'),
   'SendMessagePortToExtensionHostWorker.sendMessagePortToRendererProcess': lazy(
     'SendMessagePortToExtensionHostWorker.sendMessagePortToRendererProcess',
   ),
