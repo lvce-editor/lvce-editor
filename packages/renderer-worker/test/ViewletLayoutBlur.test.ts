@@ -11,7 +11,9 @@ const ViewletStates = await import('../src/parts/ViewletStates/ViewletStates.js'
 
 beforeEach(() => {
   ViewletStates.reset()
-  ApplicationRegistry.reset()
+  for (const id of ['first', 'second', 'other', 'current']) {
+    ApplicationRegistry.remove(id)
+  }
   jest.clearAllMocks()
 })
 
