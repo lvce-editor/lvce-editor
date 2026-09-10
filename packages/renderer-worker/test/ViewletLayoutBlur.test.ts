@@ -1,7 +1,7 @@
 import { beforeEach, expect, jest, test } from '@jest/globals'
 
 const executeViewletCommand = jest.fn<(...args: unknown[]) => Promise<void>>()
-const handleFocusChange = jest.fn(() => [])
+const handleFocusChange = jest.fn<(id: string, isFocused: boolean) => unknown[]>(() => [])
 
 jest.unstable_mockModule('../src/parts/Viewlet/Viewlet.js', () => ({ executeViewletCommand, handleFocusChange }))
 
