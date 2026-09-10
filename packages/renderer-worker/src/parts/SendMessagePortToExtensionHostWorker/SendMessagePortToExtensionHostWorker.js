@@ -292,5 +292,5 @@ export const sendMessagePortToDiffWorker = async (port, initialCommand, rpcId) =
 
 export const sendMessagePortToMenuWorker = async (port) => {
   Assert.object(port)
-  await MenuWorker.invokeAndTransfer('HandleMessagePort.handleMessagePort', port)
+  await MenuWorker.invokeAndTransfer('Menu.handleMessagePort', port)
 }

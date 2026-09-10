@@ -164,5 +164,5 @@ test('sendMessagePortToViewWorker rejects unknown workers', async () => {
 test('transfers a port to the menu worker', async () => {
   const port = {}
   await SendMessagePortToExtensionHostWorker.sendMessagePortToMenuWorker(port)
-  expect(MenuWorker.invokeAndTransfer).toHaveBeenCalledWith('HandleMessagePort.handleMessagePort', port)
+  expect(MenuWorker.invokeAndTransfer).toHaveBeenCalledWith('Menu.handleMessagePort', port)
 })
