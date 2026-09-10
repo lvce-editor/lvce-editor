@@ -83,6 +83,13 @@ jobs:
           npm run e2e:headless --prefix packages/extension-host-worker-tests -- --test-name-prefix=workspace.remote-local-services
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0
+      - name: Test title bar application blur
+        if: matrix.os == 'ubuntu-24.04'
+        run: |
+          node --experimental-vm-modules node_modules/jest/bin/jest.js --config packages/renderer-worker/package.json --runInBand --coverage=false --testPathPatterns=ViewletLayoutBlur.test
+          npm run e2e:headless --prefix packages/extension-host-worker-tests -- --test-name-prefix=viewlet.title-bar-menu-close-on-application-blur
+        env:
+          PLAYWRIGHT_BROWSERS_PATH: 0
       - name: Test Codespaces workspace ports
         working-directory: ./packages/extension-host-worker-tests
         run: npm run e2e:headless -- --test-name-prefix=viewlet.ports-codespaces
