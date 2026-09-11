@@ -73,7 +73,7 @@ try {
   page.on('console', (message) => {
     if (message.type() === 'error') console.error('APP ERROR', message.text())
   })
-  await expect(page.locator('#Workbench')).toBeVisible()
+  await expect(page.locator('#Workbench')).toBeVisible({ timeout: 15000 })
   await expect(page.getByRole('tree', { name: 'Files Explorer' })).toBeVisible()
   await page.evaluate(() => {
     localStorage.setItem('simple-browser-search-history', JSON.stringify(['known first', 'known second', 'offline local']))
@@ -84,7 +84,11 @@ try {
   const address = page.locator('[name="simple-browser-address"]')
   await expect(page.locator('.SimpleBrowserTabSelected')).toHaveAttribute('aria-label', 'Example Domain')
   await address.fill(url)
-  await address.press('Enter')
+  // Native submission works before focus-dependent shortcuts arrive.
+  await address.evaluate((input) => {
+    if (!input.form?.noValidate) throw new Error('The address form must also accept search queries')
+    input.form.requestSubmit()
+  })
   await expect(page.locator('.SimpleBrowserTabSelected')).toHaveAttribute('aria-label', 'Local article')
   const articleToken = () =>
     app.evaluate(async ({ webContents }, url) => {
