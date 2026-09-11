@@ -29,6 +29,7 @@ export const Commands = {
   closeSuggestions: SimpleBrowser.closeSuggestions,
   closeCurrentTab: SimpleBrowser.closeCurrentTab,
   closeOtherTabs: SimpleBrowser.closeOtherTabs,
+  reopenClosedTab: SimpleBrowser.reopenClosedTab,
   closeTab: SimpleBrowser.closeTab,
   closeTabsToTheLeft: SimpleBrowser.closeTabsToTheLeft,
   closeTabsToTheRight: SimpleBrowser.closeTabsToTheRight,

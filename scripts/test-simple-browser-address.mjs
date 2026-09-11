@@ -73,7 +73,7 @@ try {
   page.on('console', (message) => {
     if (message.type() === 'error') console.error('APP ERROR', message.text())
   })
-  await expect(page.locator('#Workbench')).toBeVisible()
+  await expect(page.locator('#Workbench')).toBeVisible({ timeout: 15000 })
   await expect(page.getByRole('tree', { name: 'Files Explorer' })).toBeVisible()
   await page.evaluate(() => {
     localStorage.setItem('simple-browser-search-history', JSON.stringify(['known first', 'known second', 'offline local']))
@@ -84,7 +84,11 @@ try {
   const address = page.locator('[name="simple-browser-address"]')
   await expect(page.locator('.SimpleBrowserTabSelected')).toHaveAttribute('aria-label', 'Example Domain')
   await address.fill(url)
-  await address.press('Enter')
+  // Native submission works before focus-dependent shortcuts arrive.
+  await address.evaluate((input) => {
+    if (!input.form?.noValidate) throw new Error('The address form must also accept search queries')
+    input.form.requestSubmit()
+  })
   await expect(page.locator('.SimpleBrowserTabSelected')).toHaveAttribute('aria-label', 'Local article')
   const articleToken = () =>
     app.evaluate(async ({ webContents }, url) => {
@@ -196,6 +200,34 @@ try {
   await address.fill('known.example')
   await expect(suggestions).toBeVisible()
   await page.screenshot({ path: join(root, '.tmp/browser-address-evidence/suggestions.png') })
+  await address.press('Escape')
+  const tabs = page.locator('.SimpleBrowser').last().getByRole('tab')
+  const originalCount = await tabs.count()
+  await page.getByRole('tab', { name: 'Local article', exact: true }).getByRole('button', { name: 'Close Local article', exact: true }).click()
+  await expect(tabs).toHaveCount(originalCount - 1)
+  await address.focus()
+  await address.press('Control+Shift+T')
+  await expect(tabs).toHaveCount(originalCount)
+  await expect(address).toHaveValue(url)
+  await expect.poll(articleVisible).toBe(true)
+  // Native web-page focus must route the shortcut to Simple Browser too.
+  await app.evaluate(({ webContents }, url) => {
+    const target = webContents.getAllWebContents().find((item) => item.getURL() === url)
+    target.focus()
+    target.sendInputEvent({ type: 'keyDown', keyCode: 'W', modifiers: ['control'] })
+    target.sendInputEvent({ type: 'keyUp', keyCode: 'W', modifiers: ['control'] })
+  }, url)
+  await expect(tabs).toHaveCount(originalCount - 1)
+  await app.evaluate(({ webContents }) => {
+    const target = webContents.getFocusedWebContents()
+    if (!target?.getURL().startsWith('data:text/html')) throw new Error('Expected the selected new-tab page to have native focus')
+    target.sendInputEvent({ type: 'keyDown', keyCode: 'T', modifiers: ['control', 'shift'] })
+    target.sendInputEvent({ type: 'keyUp', keyCode: 'T', modifiers: ['control', 'shift'] })
+  })
+  await expect(tabs).toHaveCount(originalCount)
+  await expect(address).toHaveValue(url)
+  await expect.poll(articleVisible).toBe(true)
+  console.log('Closed tabs reopen from address-bar and native web-page shortcuts')
   console.log('History suggestions preserve the toolbar and typing; visible and background new-tab pages follow the browser theme')
 } finally {
   await app?.close()

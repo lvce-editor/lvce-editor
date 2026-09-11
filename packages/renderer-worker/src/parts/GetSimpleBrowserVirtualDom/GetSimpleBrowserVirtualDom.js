@@ -224,8 +224,10 @@ export const getSimpleBrowserVirtualDom = (
       childCount: 0,
     },
     {
-      type: VirtualDomElements.Div,
+      type: VirtualDomElements.Form,
       className: 'SimpleBrowserAddressBar',
+      noValidate: true,
+      onSubmit: DomEventListenerFunctions.HandleSubmitSimpleBrowserAddress,
       childCount: inlineSuggestion ? 2 : 1,
     },
   )
