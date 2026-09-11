@@ -464,26 +464,26 @@
   mask-image: url(/icons/sort-precedence.svg);
 }
 
-.EditorBreadcrumbSymbol[data-symbolKind='19'] > .ColoredMaskIcon {
+.MaskIconSymbolObject {
   mask-image: url(/icons/json.svg);
 }
 
-.EditorBreadcrumbSymbol[data-symbolKind='18'] > .ColoredMaskIcon {
+.MaskIconSymbolArray {
   mask-image: url(/icons/symbol-array.svg);
 }
 
-.EditorBreadcrumbSymbol[data-symbolKind='15'] > .ColoredMaskIcon {
+.MaskIconSymbolString {
   mask-image: url(/icons/symbol-string.svg);
 }
 
-.EditorBreadcrumbSymbol[data-symbolKind='16'] > .ColoredMaskIcon {
+.MaskIconSymbolNumber {
   mask-image: url(/icons/symbol-numeric.svg);
 }
 
-.EditorBreadcrumbSymbol[data-symbolKind='17'] > .ColoredMaskIcon {
+.MaskIconSymbolBoolean {
   mask-image: url(/icons/symbol-boolean.svg);
 }
 
-.EditorBreadcrumbSymbol[data-symbolKind='21'] > .ColoredMaskIcon {
+.MaskIconSymbolNull {
   mask-image: url(/icons/circle-slash.svg);
 }
