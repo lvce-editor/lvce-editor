@@ -696,7 +696,8 @@ const closeTabsByIndex = async (state, indexes, preferredTabIndex) => {
   const tabsToClose = currentTabs.filter((tab, index) => indexesToClose.has(index))
   const closedTabs = [
     ...currentState.closedTabs,
-    ...indexes.map((index) => ({ iframeSrc: currentTabs[index].iframeSrc, title: currentTabs[index].title, index })),
+    // Store positions as if the tabs were closed one at a time from left to right.
+    ...indexes.map((index, offset) => ({ iframeSrc: currentTabs[index].iframeSrc, title: currentTabs[index].title, index: index - offset })),
   ]
   const closedState = { ...currentState, closedTabs }
   let remainingTabs = currentTabs.filter((tab, index) => !indexesToClose.has(index))

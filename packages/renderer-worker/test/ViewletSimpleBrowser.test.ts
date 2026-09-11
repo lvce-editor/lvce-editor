@@ -2155,3 +2155,35 @@ test('does not reopen tabs when browser tabs are disabled', async () => {
   }
   expect(await ViewletSimpleBrowser.reopenClosedTab(state)).toBe(state)
 })
+
+test.each(['closeTabsToTheLeft', 'closeTabsToTheRight', 'closeOtherTabs'])('restores original order after %s', async (command) => {
+  for (const name of ['hide', 'show', 'focus', 'resizeWebContentsView', 'setIframeSrc']) {
+    ElectronWebContentsViewFunctions[name].mockResolvedValue(undefined)
+  }
+  jest.mocked(ElectronWebContentsView.disposeWebContentsView).mockResolvedValue(undefined as never)
+  let id = 40
+  jest.mocked(ElectronWebContentsView.createWebContentsView).mockImplementation(async () => ++id as never)
+  const state = createTabsState()
+  let restored = await ViewletSimpleBrowser[command](state, 2)
+  while (restored.closedTabs.length) {
+    restored = await ViewletSimpleBrowser.reopenClosedTab(restored)
+  }
+  expect(restored.tabs.map((tab) => tab.title)).toEqual(state.tabs.map((tab) => tab.title))
+})
+
+test('reopens the last closed tab alongside the replacement new tab', async () => {
+  for (const name of ['hide', 'show', 'focus', 'resizeWebContentsView', 'setIframeSrc']) {
+    ElectronWebContentsViewFunctions[name].mockResolvedValue(undefined)
+  }
+  jest.mocked(ElectronWebContentsView.disposeWebContentsView).mockResolvedValue(undefined as never)
+  jest
+    .mocked(ElectronWebContentsView.createWebContentsView)
+    .mockResolvedValueOnce(40 as never)
+    .mockResolvedValueOnce(41 as never)
+  const initial = createTabsState()
+  const state = { ...initial, tabs: initial.tabs.slice(0, 1) }
+  const closed = await ViewletSimpleBrowser.closeTab(state, 0)
+  const reopened = await ViewletSimpleBrowser.reopenClosedTab(closed)
+  expect(reopened.tabs).toHaveLength(2)
+  expect(reopened).toMatchObject({ browserViewId: 41, iframeSrc: 'https://one.example', selectedTabIndex: 0, closedTabs: [] })
+})
