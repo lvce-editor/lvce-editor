@@ -215,14 +215,15 @@ try {
   }, url)
   await expect(tabs).toHaveCount(originalCount - 1)
   await app.evaluate(({ webContents }) => {
-    const target = webContents.getAllWebContents().find((item) => item.getURL().startsWith('data:text/html'))
-    target.focus()
+    const target = webContents.getFocusedWebContents()
+    if (!target?.getURL().startsWith('data:text/html')) throw new Error('Expected the selected new-tab page to have native focus')
     target.sendInputEvent({ type: 'keyDown', keyCode: 'T', modifiers: ['control', 'shift'] })
     target.sendInputEvent({ type: 'keyUp', keyCode: 'T', modifiers: ['control', 'shift'] })
   })
   await expect(tabs).toHaveCount(originalCount)
   await expect(address).toHaveValue(url)
   await expect.poll(articleVisible).toBe(true)
+  console.log('Closed tabs reopen from address-bar and native web-page shortcuts')
   console.log('History suggestions preserve the toolbar and typing; visible and background new-tab pages follow the browser theme')
 } finally {
   await app?.close()
