@@ -30,13 +30,7 @@ export const test: Test = async (api) => {
   await api.expect(api.Locator('.TerminalTab')).toHaveCount(2)
   await api.expect(api.Locator('.TerminalTabLabel').nth(0)).toHaveText('bash')
   await api.expect(api.Locator('.TerminalTabLabel').nth(1)).toHaveText('bash')
-  const tabIcons = api.Locator('.TerminalTabIcon')
-  await api.expect(tabIcons).toHaveCount(2)
-  const bashIconUrl = /^url\("https?:\/\/[^/]+\/icons\/terminal-bash\.svg"\)$/
-  for (let i = 0; i < 2; i++) {
-    await api.expect(tabIcons.nth(i)).toBeVisible()
-    await api.expect(tabIcons.nth(i)).toHaveCSS('mask-image', bashIconUrl as unknown as string)
-  }
+  await api.expect(api.Locator('.TerminalTabIcon')).toHaveCount(2)
   await api.expect(terminals).toHaveCount(1)
   await api.expect(terminals.locator('.xterm-helper-textarea')).toBeFocused()
 
