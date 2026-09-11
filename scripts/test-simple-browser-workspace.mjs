@@ -57,15 +57,7 @@ try {
     timeout: 60000,
   }
   app = await _electron.launch(launchOptions)
-  await app.evaluate(({ app, session, net, webContents }) => {
-    globalThis.navigationTrace = []
-    const observe = (contents) => {
-      for (const event of ['did-start-navigation', 'did-fail-load', 'did-finish-load', 'focus', 'blur', 'before-input-event']) {
-        contents.on(event, (_event, ...args) => globalThis.navigationTrace.push({ event, id: contents.id, url: contents.getURL(), args, time: Date.now() }))
-      }
-    }
-    webContents.getAllWebContents().forEach(observe)
-    app.on('web-contents-created', (_event, contents) => observe(contents))
+  await app.evaluate(({ session, net }) => {
     globalThis.browserSuggestionQueries = []
     globalThis.completedBrowserSuggestionQueries = []
     session.defaultSession.protocol.handle('https', async (request) => {
@@ -110,12 +102,6 @@ try {
   await expect(page.locator('.BrowserFullWidth')).toBeVisible()
   const address = page.locator('[name="simple-browser-address"]')
   await expect(page.locator('.SimpleBrowserTabSelected')).toHaveAttribute('aria-label', 'Example Domain')
-  await page.evaluate(() => {
-    window.addressTrace = []
-    for (const event of ['input', 'keydown', 'focusin', 'focusout']) {
-      document.addEventListener(event, (e) => window.addressTrace.push({ event, name: e.target.name, value: e.target.value, key: e.key, time: Date.now() }), true)
-    }
-  })
   await address.fill(url)
   await address.press('Enter')
   const guestSnapshot = () =>
@@ -132,13 +118,7 @@ try {
         ),
       }
     }, url)
-  try {
-    await expect.poll(guestSnapshot).toBeTruthy()
-  } catch (error) {
-    console.log('[DEBUG-electron44]', JSON.stringify(await app.evaluate(({ webContents }) => ({ trace: globalThis.navigationTrace, contents: webContents.getAllWebContents().map(c => ({ id: c.id, url: c.getURL(), focused: c.isFocused() })) }))))
-    console.log('[DEBUG-electron44]', JSON.stringify(await page.evaluate(() => ({ trace: window.addressTrace, active: document.activeElement?.outerHTML, tabs: [...document.querySelectorAll('.SimpleBrowserTab')].map(t => t.outerHTML) }))))
-    throw error
-  }
+  await expect.poll(guestSnapshot).toBeTruthy()
   await app.evaluate(async ({ webContents }, urlPrefix) => {
     const guest = webContents.getAllWebContents().find((item) => item.getURL().startsWith(urlPrefix))
     await guest.executeJavaScript(

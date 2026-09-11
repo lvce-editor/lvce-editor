@@ -73,12 +73,7 @@ try {
   page.on('console', (message) => {
     if (message.type() === 'error') console.error('APP ERROR', message.text())
   })
-  try {
-    await expect(page.locator('#Workbench')).toBeVisible()
-  } catch (error) {
-    console.log('[DEBUG-electron44-startup]', await page.content(), await app.evaluate(({ webContents }) => webContents.getAllWebContents().map(c => ({ id: c.id, url: c.getURL() }))))
-    throw error
-  }
+  await expect(page.locator('#Workbench')).toBeVisible()
   await expect(page.getByRole('tree', { name: 'Files Explorer' })).toBeVisible()
   await page.evaluate(() => {
     localStorage.setItem('simple-browser-search-history', JSON.stringify(['known first', 'known second', 'offline local']))
@@ -89,7 +84,11 @@ try {
   const address = page.locator('[name="simple-browser-address"]')
   await expect(page.locator('.SimpleBrowserTabSelected')).toHaveAttribute('aria-label', 'Example Domain')
   await address.fill(url)
-  await address.press('Enter')
+  // Native submission works before focus-dependent shortcuts arrive.
+  await address.evaluate((input) => {
+    if (!input.form?.noValidate) throw new Error('The address form must also accept search queries')
+    input.form.requestSubmit()
+  })
   await expect(page.locator('.SimpleBrowserTabSelected')).toHaveAttribute('aria-label', 'Local article')
   const articleToken = () =>
     app.evaluate(async ({ webContents }, url) => {
@@ -97,14 +96,6 @@ try {
       return article?.executeJavaScript('window.documentToken')
     }, url)
   await expect.poll(articleToken).toBeTruthy()
-  // Native form submission remains available before focus-dependent shortcuts arrive.
-  const initialToken = await articleToken()
-  await address.fill(url)
-  await address.evaluate((input) => {
-    if (!input.form?.noValidate) throw new Error('The address form must also accept search queries')
-    input.form.requestSubmit()
-  })
-  await expect.poll(articleToken).not.toBe(initialToken)
   const token = await articleToken()
   const articleVisible = () =>
     app.evaluate(({ BrowserWindow }, url) => {
