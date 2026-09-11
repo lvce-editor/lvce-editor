@@ -438,6 +438,7 @@ export const commandMap = {
   'SideBar.open': lazy('SideBar.open'),
   'SideBar.openViewlet': lazy('SideBar.openViewlet'),
   'SideBar.show': lazy('SideBar.show'),
+  'SimpleBrowser.executeWorkflow': lazy('SimpleBrowser.executeWorkflow'),
   'SimpleBrowser.acceptSuggestion': lazy('SimpleBrowser.acceptSuggestion'),
   'SimpleBrowser.closeSuggestions': lazy('SimpleBrowser.closeSuggestions'),
   'SimpleBrowser.getDomTree': lazy('SimpleBrowser.getDomTree'),

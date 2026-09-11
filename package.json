@@ -33,7 +33,8 @@
     "e2e:ci": "node packages/extension-host-worker-tests/src/_all.js --ci",
     "test:simple-browser-new-tab": "node scripts/test-simple-browser-new-tab.mjs",
     "test:simple-browser-workspace": "node scripts/test-simple-browser-workspace.mjs",
-    "test:simple-browser-address": "node scripts/test-simple-browser-address.mjs"
+    "test:simple-browser-address": "node scripts/test-simple-browser-address.mjs",
+    "test:simple-browser-workflows": "node scripts/test-simple-browser-workflows.mjs"
   },
   "keywords": [],
   "author": "",
