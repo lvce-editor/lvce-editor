@@ -463,3 +463,27 @@
 .MaskIconSortPrecedence {
   mask-image: url(/icons/sort-precedence.svg);
 }
+
+.EditorBreadcrumbSymbol[data-symbolKind='19'] > .ColoredMaskIcon {
+  mask-image: url(/icons/json.svg);
+}
+
+.EditorBreadcrumbSymbol[data-symbolKind='18'] > .ColoredMaskIcon {
+  mask-image: url(/icons/symbol-array.svg);
+}
+
+.EditorBreadcrumbSymbol[data-symbolKind='15'] > .ColoredMaskIcon {
+  mask-image: url(/icons/symbol-string.svg);
+}
+
+.EditorBreadcrumbSymbol[data-symbolKind='16'] > .ColoredMaskIcon {
+  mask-image: url(/icons/symbol-numeric.svg);
+}
+
+.EditorBreadcrumbSymbol[data-symbolKind='17'] > .ColoredMaskIcon {
+  mask-image: url(/icons/symbol-boolean.svg);
+}
+
+.EditorBreadcrumbSymbol[data-symbolKind='21'] > .ColoredMaskIcon {
+  mask-image: url(/icons/circle-slash.svg);
+}
