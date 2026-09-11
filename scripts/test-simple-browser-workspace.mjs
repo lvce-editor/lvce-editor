@@ -78,7 +78,7 @@ try {
   page.on('console', (message) => {
     if (message.type() === 'error') console.error('APP ERROR', message.text())
   })
-  await expect(page.locator('#Workbench')).toBeVisible()
+  await expect(page.locator('#Workbench')).toBeVisible({ timeout: 15000 })
   const runCommand = async (label) => {
     await page.keyboard.press('Control+Shift+P')
     const input = page.locator('[name="QuickPickInput"]')
@@ -606,7 +606,7 @@ try {
   await app.close()
   app = await _electron.launch(launchOptions)
   const restartedPage = await app.firstWindow()
-  await expect(restartedPage.locator('#Workbench')).toBeVisible()
+  await expect(restartedPage.locator('#Workbench')).toBeVisible({ timeout: 15000 })
   await expect(restartedPage.locator('.BrowserFullWidth')).toHaveCount(0)
   await expect(restartedPage.locator('.Main')).toBeVisible()
   console.log(

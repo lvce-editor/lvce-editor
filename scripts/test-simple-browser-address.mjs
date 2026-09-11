@@ -73,19 +73,7 @@ try {
   page.on('console', (message) => {
     if (message.type() === 'error') console.error('APP ERROR', message.text())
   })
-  try {
-    await expect(page.locator('#Workbench')).toBeVisible()
-  } catch (error) {
-    const started = Date.now()
-    console.error('Startup failure snapshot', await page.content(), await app.evaluate(({ webContents }) => webContents.getAllWebContents().map(c => ({ id: c.id, url: c.getURL() }))))
-    try {
-      await expect(page.locator('#Workbench')).toBeVisible({ timeout: 15000 })
-      console.error('Workbench became visible after the failed assertion', Date.now() - started)
-    } catch {
-      console.error('Workbench still missing', await page.content())
-    }
-    throw error
-  }
+  await expect(page.locator('#Workbench')).toBeVisible({ timeout: 15000 })
   await expect(page.getByRole('tree', { name: 'Files Explorer' })).toBeVisible()
   await page.evaluate(() => {
     localStorage.setItem('simple-browser-search-history', JSON.stringify(['known first', 'known second', 'offline local']))
