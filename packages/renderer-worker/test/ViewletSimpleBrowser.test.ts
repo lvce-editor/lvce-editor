@@ -2133,9 +2133,11 @@ test('typing keeps the dimmed snapshot through local and provider suggestion upd
     suggestionsEnabled: true,
   }
   const typed = ViewletSimpleBrowser.handleInput(state, 'what is l')
-  expect(typed.suggestions).toEqual([{ favicon: '', type: 'search', value: 'what is l' }])
+  expect(typed.suggestions).toBe(state.suggestions)
   const local = await ViewletSimpleBrowser.applySuggestions(typed, 7, 'what is l', [], [], typed.suggestionSessionId)
+  expect(local.suggestions).toBe(state.suggestions)
   const provider = await ViewletSimpleBrowser.applySuggestions(local, 7, 'what is l', ['what is love'], undefined, typed.suggestionSessionId)
+  expect(provider.suggestions.map((item) => item.value)).toEqual(['what is l', 'what is love'])
   for (const next of [typed, local, provider]) {
     expect(next.snapshot).toBe(state.snapshot)
     expect(next.overlayIds).toEqual(['search-suggestions'])

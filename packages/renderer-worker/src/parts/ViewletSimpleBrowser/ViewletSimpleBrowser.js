@@ -929,7 +929,7 @@ export const handleInput = (state, value) => {
     ...updateTab(state, state.browserViewId, { inputValue: value }),
     selectedSuggestionIndex: -1,
     suggestionSessionId,
-    suggestions: state.hasSuggestionsOverlay ? [createSearchSuggestion(value)] : [],
+    suggestions: state.hasSuggestionsOverlay ? state.suggestions : [],
   }
 }
 
@@ -973,6 +973,10 @@ export const applySuggestions = async (state, uid, query, suggestions, precomput
   if (!state.suggestionsEnabled || query.trim().length < 2) {
     const result = await dismissSuggestions(state)
     return isCurrentUpdate() ? result : state
+  }
+  // Keep the visible list stable until the provider completes this query.
+  if (precomputedLocalSuggestions !== undefined && state.hasSuggestionsOverlay && shouldRequestSuggestions(query)) {
+    return state
   }
   const localSuggestions = precomputedLocalSuggestions || getLocalSuggestions(state, query)
   const providerSuggestions = Array.isArray(suggestions) ? suggestions : []

@@ -62,6 +62,10 @@ try {
     session.defaultSession.protocol.handle('https', async (request) => {
       if (request.url.startsWith('https://suggestqueries.google.com/')) {
         const query = new URL(request.url).searchParams.get('q')
+        if (query.startsWith('known ')) {
+          globalThis.pendingSuggestionQuery = query
+          await globalThis.suggestionResponseGate
+        }
         return new Response(JSON.stringify([query, [query + ' result']]), { headers: { 'Content-Type': 'application/json' } })
       }
       if (request.url === 'https://example.com/') return new Response('<title>Example Domain</title>', { headers: { 'Content-Type': 'text/html' } })
@@ -165,7 +169,14 @@ try {
   await expect(suggestions).toHaveCount(0)
 
   await address.fill('known')
+  await expect(page.getByRole('option', { name: 'known result', exact: true })).toBeVisible()
   await expect(page.locator('.SimpleBrowserInlineSuggestion')).toBeVisible()
+  const previousSuggestions = await suggestions.getByRole('option').allTextContents()
+  await app.evaluate(() => {
+    globalThis.suggestionResponseGate = new Promise((resolve) => {
+      globalThis.releaseSuggestionResponse = resolve
+    })
+  })
   await snapshot.evaluate((image) => {
     window.browserSnapshot = image
     window.browserSnapshotChanges = []
@@ -181,6 +192,10 @@ try {
   await address.press('End')
   await page.keyboard.type(' query')
   await expect(address).toHaveValue('known query')
+  await expect.poll(() => app.evaluate(() => globalThis.pendingSuggestionQuery)).toBe('known query')
+  await expect(suggestions).toBeVisible()
+  assert.deepEqual(await suggestions.getByRole('option').allTextContents(), previousSuggestions, 'Pending results must preserve the visible suggestions')
+  await app.evaluate(() => globalThis.releaseSuggestionResponse())
   await expect(page.getByRole('option', { name: 'known query result', exact: true })).toBeVisible()
   assert.equal(await snapshot.evaluate((image) => image === window.browserSnapshot), true, 'Typing must retain the same snapshot image')
   await expect(snapshot).toHaveAttribute('src', snapshotSource)
