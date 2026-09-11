@@ -59,8 +59,16 @@
   display: flex;
   flex: 0 0 35px;
   height: 35px;
+  overflow: hidden;
+}
+
+.SimpleBrowserTabItems {
+  display: flex;
+  flex: 0 1 auto;
+  min-width: 0;
   overflow-x: auto;
   overflow-y: hidden;
+  scrollbar-width: none;
 }
 
 .SimpleBrowserTab {
@@ -73,7 +81,7 @@
   display: flex;
   flex: 0 1 180px;
   gap: 6px;
-  min-width: 90px;
+  min-width: 64px;
   padding: 0 5px 0 9px;
 }
 
