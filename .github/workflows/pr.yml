@@ -103,6 +103,11 @@ jobs:
           npm run e2e:headless -- --test-name-prefix=session-replay.settings '--initial-settings={"sessionReplay.enabled":true}' '--expect-console=Session replay command recording verified'
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0
+      - name: Diagnose Electron 44 workspace navigation
+        if: matrix.os == 'ubuntu-24.04'
+        run: |
+          node packages/main-process/node_modules/electron/install.js
+          xvfb-run -a npm run test:simple-browser-workspace
       - name: Test Simple Browser tab overflow
         run: node scripts/test-simple-browser-tabs.mjs
         env:

@@ -73,7 +73,12 @@ try {
   page.on('console', (message) => {
     if (message.type() === 'error') console.error('APP ERROR', message.text())
   })
-  await expect(page.locator('#Workbench')).toBeVisible()
+  try {
+    await expect(page.locator('#Workbench')).toBeVisible()
+  } catch (error) {
+    console.log('[DEBUG-electron44-startup]', await page.content(), await app.evaluate(({ webContents }) => webContents.getAllWebContents().map(c => ({ id: c.id, url: c.getURL() }))))
+    throw error
+  }
   await expect(page.getByRole('tree', { name: 'Files Explorer' })).toBeVisible()
   await page.evaluate(() => {
     localStorage.setItem('simple-browser-search-history', JSON.stringify(['known first', 'known second', 'offline local']))
