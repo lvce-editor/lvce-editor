@@ -177,6 +177,7 @@ const browserTabKeyBindings = [
   KeyModifier.CtrlCmd | KeyCode.KeyL,
   KeyModifier.CtrlCmd | KeyCode.KeyW,
   KeyModifier.CtrlCmd | KeyCode.KeyT,
+  KeyModifier.CtrlCmd | KeyModifier.Shift | KeyCode.KeyT,
   KeyModifier.CtrlCmd | KeyCode.Tab,
   KeyModifier.CtrlCmd | KeyModifier.Shift | KeyCode.Tab,
   KeyModifier.CtrlCmd | KeyCode.KeyH,
@@ -2061,7 +2062,6 @@ test('Ctrl+L from the active embedded tab selects its address', async () => {
   expect(ElectronWindow.focus).toHaveBeenCalled()
 })
 
-
 test('typing commits before a pending page capture and preserves newer short input', async () => {
   const capture = Promise.withResolvers<Uint8Array>()
   jest.mocked(ElectronWebContentsViewFunctions.capturePage).mockReturnValue(capture.promise as never)
@@ -2077,7 +2077,6 @@ test('typing commits before a pending page capture and preserves newer short inp
   expect(shortened.inputValue).toBe('k')
 })
 
-
 test.each(['switch', 'close'])('pending suggestions do not alter a tab after %s', async (action) => {
   const capture = Promise.withResolvers<Uint8Array>()
   jest.mocked(ElectronWebContentsViewFunctions.capturePage).mockReturnValue(capture.promise as never)
@@ -2092,10 +2091,20 @@ test.each(['switch', 'close'])('pending suggestions do not alter a tab after %s'
 
 test('a delayed local popup cannot overwrite a provider popup', async () => {
   const capture = Promise.withResolvers<Uint8Array>()
-  jest.mocked(ElectronWebContentsViewFunctions.capturePage).mockReturnValueOnce(capture.promise as never).mockResolvedValueOnce(new Uint8Array() as never)
+  jest
+    .mocked(ElectronWebContentsViewFunctions.capturePage)
+    .mockReturnValueOnce(capture.promise as never)
+    .mockResolvedValueOnce(new Uint8Array() as never)
   const state = { ...ViewletSimpleBrowser.create(7), browserViewId: 12, iframeSrc: 'https://example.com', suggestionsEnabled: true }
   const typed = ViewletSimpleBrowser.handleInput(state, 'known')
-  const local = ViewletSimpleBrowser.applySuggestions(typed, 7, 'known', [], [{ value: 'known local', favicon: '', type: 'history' }], typed.suggestionSessionId)
+  const local = ViewletSimpleBrowser.applySuggestions(
+    typed,
+    7,
+    'known',
+    [],
+    [{ value: 'known local', favicon: '', type: 'history' }],
+    typed.suggestionSessionId,
+  )
   const provider = await ViewletSimpleBrowser.applySuggestions(typed, 7, 'known', ['known result'], undefined, typed.suggestionSessionId)
   capture.resolve(new Uint8Array())
   expect(await local).toBe(typed)
@@ -2108,4 +2117,41 @@ test('rendering committed input starts local suggestions without waiting for the
   await ViewletSimpleBrowser.afterRender(state, typed)
   expect(Viewlet.executeViewletCommand).toHaveBeenCalledWith(7, 'applySuggestions', 7, 'known', [], [], typed.suggestionSessionId)
   expect(BrowserSearchSuggestions.get).not.toHaveBeenCalled()
+})
+
+test('reopens closed tabs in reverse close order with fresh views and their original positions', async () => {
+  for (const name of ['hide', 'show', 'focus', 'resizeWebContentsView', 'setIframeSrc']) {
+    ElectronWebContentsViewFunctions[name].mockResolvedValue(undefined)
+  }
+  jest.mocked(ElectronWebContentsView.disposeWebContentsView).mockResolvedValue(undefined as never)
+  jest
+    .mocked(ElectronWebContentsView.createWebContentsView)
+    .mockResolvedValueOnce(40 as never)
+    .mockResolvedValueOnce(41 as never)
+  const state = createTabsState()
+  const firstClose = await ViewletSimpleBrowser.closeTab(state, 1)
+  const secondClose = await ViewletSimpleBrowser.closeTab(firstClose, 1)
+  const reopened = await ViewletSimpleBrowser.handleKeyBinding(
+    secondClose,
+    secondClose.browserViewId,
+    KeyModifier.CtrlCmd | KeyModifier.Shift | KeyCode.KeyT,
+  )
+  expect(reopened.tabs.map((tab) => tab.title)).toEqual(['One', 'Three', 'Four'])
+  expect(reopened.browserViewId).toBe(40)
+  const restored = await ViewletSimpleBrowser.reopenClosedTab(reopened)
+  expect(restored.tabs.map((tab) => tab.title)).toEqual(['One', 'Two', 'Three', 'Four'])
+  expect(restored.browserViewId).toBe(41)
+  expect(restored.closedTabs).toEqual([])
+  expect(ElectronWebContentsViewFunctions.setIframeSrc).toHaveBeenCalledWith(41, 'https://two.example')
+  expect(await ViewletSimpleBrowser.reopenClosedTab(restored)).toBe(restored)
+  expect(state.closedTabs).toEqual([])
+})
+
+test('does not reopen tabs when browser tabs are disabled', async () => {
+  const state = {
+    ...ViewletSimpleBrowser.create(),
+    tabsEnabled: false,
+    closedTabs: [{ iframeSrc: 'https://example.com', title: 'Example', index: 0 }],
+  }
+  expect(await ViewletSimpleBrowser.reopenClosedTab(state)).toBe(state)
 })
