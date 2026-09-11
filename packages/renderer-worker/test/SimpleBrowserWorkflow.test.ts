@@ -57,19 +57,18 @@ test.each([
 })
 
 test('waits for navigation before sending sequential keys', async () => {
-  let finishLoad: () => void = () => {}
-  jest.mocked(EmbedsWorker.invoke).mockImplementationOnce(
-    () =>
-      new Promise<void>((resolve) => {
-        finishLoad = resolve
-      }),
-  )
+  const loaded = Promise.withResolvers<void>()
+  const started = Promise.withResolvers<void>()
+  jest.mocked(EmbedsWorker.invoke).mockImplementationOnce(() => {
+    started.resolve()
+    return loaded.promise
+  })
   const run = executeWorkflow('music')
-  for (let i = 0; i < 5; i++) await Promise.resolve()
+  await started.promise
   expect(EmbedsWorker.invoke).toHaveBeenCalledTimes(1)
   expect(EmbedsWorker.invoke).toHaveBeenCalledWith('ElectronWebContentsView.navigate', 42, 'https://example.com/')
   await expect(executeWorkflow('music')).rejects.toThrow('already running')
-  finishLoad()
+  loaded.resolve()
   await run
   expect(ViewletStates.getByUid).toHaveBeenCalledWith(7)
   expect(jest.mocked(EmbedsWorker.invoke).mock.calls).toEqual([
