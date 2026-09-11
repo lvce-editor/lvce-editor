@@ -20,6 +20,13 @@ export const test: Test = async ({ Command, expect, FileSystem, Locator, Main, Q
   await Command.execute('QuickPick.showCommands')
   const input = Locator('#QuickPick .InputBox')
   await expect(input).toBeFocused()
+  const editorComponents = await Command.execute('ComponentState.getComponents')
+  const editor = editorComponents.find((component) => component.moduleId === 'Editor' || component.moduleId === 'EditorText')
+  if (!editor) {
+    throw new Error('Expected an editor component')
+  }
+  await Command.execute('Viewlet.reload', editor.uid)
+  await expect(input).toBeFocused()
 
   for (const focusedIndex of [1, 0, 1]) {
     const state = await Command.execute('ComponentState.getState', explorer.uid)
