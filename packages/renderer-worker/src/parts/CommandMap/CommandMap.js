@@ -278,6 +278,7 @@ export const commandMap = {
   'Markdown.renderMarkdown': lazy('Markdown.renderMarkdown'),
   'MeasureTextHeight.measureTextBlockHeight': lazy('MeasureTextHeight.measureTextBlockHeight'),
   'MeasureTextHeight.measureTextHeight': lazy('MeasureTextHeight.measureTextHeight'),
+  'Menu.prepareContextMenu': lazy('Menu.prepareContextMenu'),
   'Menu.focusFirst': lazy('Menu.focusFirst'),
   'Menu.focusIndex': lazy('Menu.focusIndex'),
   'Menu.focusLast': lazy('Menu.focusLast'),
