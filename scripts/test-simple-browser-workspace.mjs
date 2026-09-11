@@ -61,6 +61,9 @@ try {
     globalThis.browserSuggestionQueries = []
     globalThis.completedBrowserSuggestionQueries = []
     session.defaultSession.protocol.handle('https', async (request) => {
+      if (request.url === 'https://example.com/') {
+        return new Response('<title>Example Domain</title>', { headers: { 'Content-Type': 'text/html' } })
+      }
       if (!request.url.startsWith('https://suggestqueries.google.com/')) return net.fetch(request.url, { bypassCustomProtocolHandlers: true })
       const query = new URL(request.url).searchParams.get('q')
       globalThis.browserSuggestionQueries.push(query)
@@ -98,6 +101,7 @@ try {
   await runCommand('Simple Browser: Toggle Full Width')
   await expect(page.locator('.BrowserFullWidth')).toBeVisible()
   const address = page.locator('[name="simple-browser-address"]')
+  await expect(page.locator('.SimpleBrowserTabSelected')).toHaveAttribute('aria-label', 'Example Domain')
   await address.fill(url)
   await address.press('Enter')
   const guestSnapshot = () =>
