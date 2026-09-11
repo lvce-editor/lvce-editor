@@ -899,7 +899,7 @@ export const handleInput = (state, value) => {
     ...updateTab(state, state.browserViewId, { inputValue: value }),
     selectedSuggestionIndex: -1,
     suggestionSessionId,
-    suggestions: [],
+    suggestions: state.hasSuggestionsOverlay ? [createSearchSuggestion(value)] : [],
   }
 }
 
@@ -947,7 +947,7 @@ export const applySuggestions = async (state, uid, query, suggestions, precomput
   const providerSuggestions = Array.isArray(suggestions) ? suggestions : []
   const allSuggestions = [
     ...localSuggestions,
-    ...(providerSuggestions.length > 0 ? [createSearchSuggestion(query)] : []),
+    ...((state.hasSuggestionsOverlay && shouldRequestSuggestions(query)) || providerSuggestions.length > 0 ? [createSearchSuggestion(query)] : []),
     ...providerSuggestions.map(createSearchSuggestion),
   ]
   const uniqueSuggestions = allSuggestions
