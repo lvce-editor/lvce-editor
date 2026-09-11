@@ -97,6 +97,14 @@ try {
       return article?.executeJavaScript('window.documentToken')
     }, url)
   await expect.poll(articleToken).toBeTruthy()
+  // Native form submission remains available before focus-dependent shortcuts arrive.
+  const initialToken = await articleToken()
+  await address.fill(url)
+  await address.evaluate((input) => {
+    if (!input.form?.noValidate) throw new Error('The address form must also accept search queries')
+    input.form.requestSubmit()
+  })
+  await expect.poll(articleToken).not.toBe(initialToken)
   const token = await articleToken()
   const articleVisible = () =>
     app.evaluate(({ BrowserWindow }, url) => {
