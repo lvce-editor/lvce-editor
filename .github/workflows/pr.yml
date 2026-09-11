@@ -107,7 +107,7 @@ jobs:
         if: matrix.os == 'ubuntu-24.04'
         run: |
           node packages/main-process/node_modules/electron/install.js
-          xvfb-run -a npm run test:simple-browser-workspace
+          for attempt in {1..10}; do xvfb-run -a npm run test:simple-browser-workspace || exit 1; done
       - name: Test Simple Browser tab overflow
         run: node scripts/test-simple-browser-tabs.mjs
         env:
