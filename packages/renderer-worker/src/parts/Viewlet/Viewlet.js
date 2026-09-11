@@ -2,6 +2,7 @@ import * as Assert from '../Assert/Assert.ts'
 import * as ApplicationRegistry from '../ApplicationRegistry/ApplicationRegistry.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.js'
 import * as ElectronBrowserView from '../ElectronBrowserView/ElectronBrowserView.js'
+import * as FilterFocusCommands from '../FilterFocusCommands/FilterFocusCommands.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as Id from '../Id/Id.js'
 import * as KeyBindingsState from '../KeyBindingsState/KeyBindingsState.js'
@@ -162,9 +163,9 @@ export const reload = async (id) => {
       commands.push(...contentLoadedCommands)
     }
     ViewletStates.setRenderedState(id, newState)
-    UpdateDynamicFocusContext.updateDynamicFocusContext(commands)
-    if (commands.length > 0) {
-      await RendererProcess.invoke('Viewlet.sendMultiple', commands)
+    const backgroundCommands = FilterFocusCommands.filterFocusCommands(commands)
+    if (backgroundCommands.length > 0) {
+      await RendererProcess.invoke('Viewlet.sendMultiple', backgroundCommands)
     }
     instance.loadContentLaterStarted = false
     instance.loadContentLaterPromise = undefined
