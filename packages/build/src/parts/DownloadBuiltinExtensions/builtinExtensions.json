@@ -2,8 +2,8 @@
   {
     "name": "builtin.git",
     "repository": "github.com/lvce-editor/git",
-    "version": "5.29.0",
-    "sha256": "9ba32d7a0aac1ee0f459ea907ef04aeb24180bc149edcfe5e746b42c5d4935b0",
+    "version": "5.31.0",
+    "sha256": "888a4ad3d7e040e273e0fbe7132379d9cf7feefcb9707f55725682416cea1db8",
     "created": "2022-07-02"
   },
   {
@@ -81,8 +81,8 @@
   {
     "name": "builtin.eslint",
     "repository": "github.com/lvce-editor/eslint",
-    "version": "1.17.0",
-    "sha256": "734e650230e7dba295dca480927e73bbf12029c2f36c44824045606e7f173d2b",
+    "version": "1.20.0",
+    "sha256": "cc5280744dc037f0c4b5ffdc758b7447e89b1d734d863b83d3974644cb7eb776",
     "created": "2026-08-01"
   },
   {
@@ -95,8 +95,8 @@
   {
     "name": "builtin.remote-ssh",
     "repository": "github.com/lvce-editor/remote-ssh",
-    "version": "0.10.7",
-    "sha256": "aac7fff1f4073748fde565564becc853b663d64fd6e897a1310fded868072c8a",
+    "version": "0.11.0",
+    "sha256": "c4ef20fdfef49abcb54b55274fc07786a61e390067304fe5fa1167914482b39e",
     "created": "2026-08-03"
   },
   {
@@ -460,8 +460,8 @@
   {
     "name": "builtin.language-basics-yaml",
     "repository": "github.com/lvce-editor/language-basics-yaml",
-    "version": "1.9.0",
-    "sha256": "f132a85e3109f132673c203292149299f559da8d5fa14e8f7c1a3da8322fdacd",
+    "version": "1.9.1",
+    "sha256": "b4b328888e532d739af817a614fc19975872b27be7cefba7893c98b4beff53e9",
     "created": "2022-06-16"
   },
   {

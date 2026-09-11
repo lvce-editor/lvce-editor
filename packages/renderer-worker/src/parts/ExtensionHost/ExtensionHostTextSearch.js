@@ -1,3 +1,5 @@
+import * as ExtensionManagementWorker from '../ExtensionManagementWorker/ExtensionManagementWorker.js'
+import * as Workspace from '../Workspace/Workspace.js'
 import * as DirentType from '../DirentType/DirentType.js'
 import * as FileSystemHtml from '../FileSystem/FileSystemHtml.js'
 import * as FileSystemMemory from '../FileSystem/FileSystemMemory.js'
@@ -37,8 +39,13 @@ const searchText = (file, content, query, flags = 0) => {
   return matches.length === 0 ? [] : [{ end: 0, lineNumber: 0, start: 0, text: file, type: FILE_RESULT }, ...matches]
 }
 
-export const executeTextSearchProvider = async (scheme) => {
-  throw new Error(`No isolated text search provider found for ${scheme}`)
+export const executeTextSearchProvider = async (
+  scheme,
+  query,
+  root = Workspace.getUri(),
+  ripGrepArgs = ['--json', '--hidden', '--fixed-strings', '--', query, '.'],
+) => {
+  return ExtensionManagementWorker.invoke('Extensions.executeWorkspaceRequest', root, 'text-search', ripGrepArgs)
 }
 
 export const textSearchFetch = async (scheme, root, query, options, assetDir) => {

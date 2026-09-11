@@ -53,6 +53,11 @@ jest.unstable_mockModule('../src/parts/WorkspaceConnection/WorkspaceConnection.j
   }
 })
 
+jest.unstable_mockModule('../src/parts/MenuWorker/MenuWorker.js', () => ({
+  invokeAndTransfer: jest.fn(),
+}))
+
+const MenuWorker = await import('../src/parts/MenuWorker/MenuWorker.js')
 const ExtensionManagementWorker = await import('../src/parts/ExtensionManagementWorker/ExtensionManagementWorker.js')
 const ExplorerViewWorker = await import('../src/parts/ExplorerViewWorker/ExplorerViewWorker.js')
 const HandleDialogWorkerMessagePort = await import('../src/parts/HandleDialogWorkerMessagePort/HandleDialogWorkerMessagePort.ts')
@@ -78,7 +83,7 @@ test('sendMessagePortToFileWatcherExplorer', async () => {
 
   await SendMessagePortToExtensionHostWorker.sendMessagePortToFileWatcherExplorer(port)
 
-  expect(WorkspaceConnection.connectMessagePort).toHaveBeenCalledWith('file-watcher-explorer', port)
+  expect(WorkspaceConnection.connectMessagePort).not.toHaveBeenCalled()
   expect(SharedProcess.invokeAndTransfer).toHaveBeenCalledWith(
     'HandleMessagePortForFileWatcherExplorer.handleMessagePortForFileWatcherExplorer',
     port,
@@ -154,4 +159,10 @@ test('sendMessagePortToViewWorker rejects unknown workers', async () => {
   await expect(SendMessagePortToExtensionHostWorker.sendMessagePortToViewWorker({}, 'Unknown')).rejects.toThrow(
     'direct view worker not found: Unknown',
   )
+})
+
+test('transfers a port to the menu worker', async () => {
+  const port = {}
+  await SendMessagePortToExtensionHostWorker.sendMessagePortToMenuWorker(port)
+  expect(MenuWorker.invokeAndTransfer).toHaveBeenCalledWith('Menu.handleMessagePort', port)
 })

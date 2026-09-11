@@ -1,6 +1,7 @@
 import * as Ajax from '../Ajax/Ajax.js'
 import * as Command from '../Command/Command.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
+import * as Preferences from '../Preferences/Preferences.js'
 
 const defaultDependencies = {
   executeCommand: Command.execute,
@@ -29,7 +30,7 @@ export const executeOnLoadCommands = async (commands, executeCommand = Command.e
 }
 
 export const run = async (assetDir, platform, dependencies = defaultDependencies) => {
-  if (platform !== PlatformType.Web) {
+  if (platform !== PlatformType.Web || Preferences.get('application.useOnLoadJson') !== true) {
     return
   }
   const commands = await getOnLoadCommands(assetDir, dependencies.getJson)

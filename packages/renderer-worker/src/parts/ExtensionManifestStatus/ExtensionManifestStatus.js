@@ -1,3 +1,3 @@
-export const Resolved = 'resolved'
+export const Resolved = 1
 
-export const Rejected = 'rejected'
+export const Rejected = 2

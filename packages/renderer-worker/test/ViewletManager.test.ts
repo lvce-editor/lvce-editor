@@ -1436,3 +1436,24 @@ test('functional commands retain concurrent layout flags and compare hooks again
   expect(ViewletStates.getState(94)).toEqual({ ...latest, inputValue: 'typed' })
   expect(afterRender).toHaveBeenCalledWith(latest, { ...latest, inputValue: 'typed' })
 })
+
+test('commands without an instance still run after the last viewlet is disposed', async () => {
+  const refreshAll = Object.assign(
+    jest.fn(async () => {}),
+    { requiresInstance: false },
+  )
+  const factory = {
+    Commands: { refreshAll },
+    create: () => ({ uid: 93 }),
+    loadContent: (state) => state,
+    render: [],
+  }
+  await ViewletManager.load({ getModule: async () => factory, id: 'RefreshAll', uid: 93, type: 0 })
+  await Command.execute('RefreshAll.refreshAll')
+  expect(refreshAll).toHaveBeenLastCalledWith()
+  ViewletStates.remove(93)
+  refreshAll.mockClear()
+  await Command.execute('RefreshAll.refreshAll')
+  expect(refreshAll).toHaveBeenCalledTimes(1)
+  expect(refreshAll).toHaveBeenLastCalledWith()
+})

@@ -152,6 +152,14 @@ export const execute = (applicationId: string, command: string, ...args: readonl
     })
   }
   switch (command) {
+    case 'Notification.create':
+      return ApplicationRegistry.track(applicationId, () => RendererProcess.invoke('Notification.create', args[0], args[1], application.layoutUid))
+    case 'Dialog.show':
+      return ApplicationRegistry.track(applicationId, () => Viewlet.openWidgetForApplication(applicationId, ViewletModuleId.Dialog, args[0]))
+    case 'Dialog.showWarning':
+      return ApplicationRegistry.track(applicationId, () =>
+        Viewlet.openWidgetForApplication(applicationId, ViewletModuleId.Dialog, { ...args[0], type: 'warning' }),
+      )
     case 'Viewlet.openWidget':
       return ApplicationRegistry.track(applicationId, () => Viewlet.openWidgetForApplication(applicationId, args[0], ...args.slice(1)))
     case 'QuickPick.showCustom':
@@ -173,7 +181,7 @@ export const execute = (applicationId: string, command: string, ...args: readonl
         await ExtensionManagementWorker.invoke('Extensions.reloadApplicationExtension', applicationId, ...args)
         for (const uid of ApplicationRegistry.getUids(applicationId)) {
           const instance = ViewletStates.getByUid(uid)
-          if (instance?.moduleId === ViewletModuleId.EditorText) {
+          if (instance?.moduleId === ViewletModuleId.EditorText || instance?.moduleId === ViewletModuleId.ExtensionView) {
             await Viewlet.executeViewletCommand(uid, 'loadContent', undefined, { preserveFocus: true })
           }
         }
