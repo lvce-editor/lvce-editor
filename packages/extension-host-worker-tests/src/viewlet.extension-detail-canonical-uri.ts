@@ -11,7 +11,7 @@ export const test: Test = async ({ Command, expect, ExtensionDetail, ExtensionSe
   const extensionId = 'builtin.theme-atom-one-dark'
   const canonicalUri = `extension-detail:///${extensionId}`
   const assertDetail = async (): Promise<void> => {
-    await expect(Locator('.ExtensionDetailName')).toHaveText('Atom One Dark Theme')
+    await expect(Locator('.ExtensionDetailName')).toHaveText('Atom One Dark Themebuiltin')
     const components = (await Command.execute('ComponentState.getComponents')) as readonly ComponentInfo[]
     const component = components.find((item) => item.moduleId === 'ExtensionDetail')
     if (!component) {
@@ -36,9 +36,10 @@ export const test: Test = async ({ Command, expect, ExtensionDetail, ExtensionSe
   await Main.closeAllEditors()
 
   await ExtensionSearch.open()
-  await ExtensionSearch.handleInput('Atom One Dark Theme')
-  const item = Locator('.ExtensionListItem', { hasText: 'Atom One Dark Theme' })
+  await ExtensionSearch.handleInput('atom one dark')
+  const item = Locator('.ExtensionListItem').first()
   await expect(item).toBeVisible()
-  await item.click()
+  await expect(item.locator('.ExtensionListItemName')).toHaveText('Atom One Dark Theme')
+  await ExtensionSearch.handleClick(0)
   await assertDetail()
 }
