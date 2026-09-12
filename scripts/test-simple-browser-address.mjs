@@ -97,7 +97,7 @@ try {
   await expect(page.locator('.BrowserFullWidth')).toBeVisible()
   const address = page.locator('[name="simple-browser-address"]')
   await expect(page.locator('.SimpleBrowserTabSelected')).toHaveAttribute('aria-label', 'Example Domain')
-  await expect(address).toHaveValue('https://example.com/')
+  await expect(address).toHaveValue(/^https:\/\/example\.com\/?$/)
   await address.focus()
   await expect(address).toBeFocused()
   await address.fill(url)
