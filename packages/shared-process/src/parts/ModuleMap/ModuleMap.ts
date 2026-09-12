@@ -16,6 +16,9 @@ export const getModuleId = (commandId: any): any => {
     case 'AutoUpdaterWindowsNsis.downloadUpdate':
     case 'AutoUpdaterWindowsNsis.installAndRestart':
       return ModuleId.AutoUpdaterWindowsNsis
+    case 'BrowserFind.find':
+    case 'BrowserFind.stop':
+      return ModuleId.BrowserFind
     case 'BulkReplacement.applyBulkReplacement':
       return ModuleId.BulkReplacement
     case 'ChromeExtension.install':

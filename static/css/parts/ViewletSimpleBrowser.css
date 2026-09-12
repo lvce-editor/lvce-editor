@@ -372,3 +372,38 @@
 .SimpleBrowserTabDropAfter {
   box-shadow: inset -2px 0 0 white;
 }
+
+.SimpleBrowserFind {
+  align-items: center;
+  background: var(--MainBackground, var(--EditorBackground));
+  border-bottom: 1px solid var(--PanelBorder, transparent);
+  box-sizing: border-box;
+  display: flex;
+  flex: 0 0 36px;
+  gap: 4px;
+  height: 36px;
+  justify-content: flex-end;
+  padding: 4px 8px;
+}
+
+.SimpleBrowserFind .InputBox {
+  background: var(--InputBoxBackground);
+  color: var(--InputBoxForeground);
+  flex: 0 1 240px;
+  min-width: 30px;
+}
+
+.SimpleBrowserFindCount {
+  flex-shrink: 0;
+  font-size: 12px;
+  min-width: 54px;
+}
+
+.SimpleBrowserFind .IconButton {
+  flex-shrink: 0;
+}
+
+.SimpleBrowserFind [aria-pressed='true'] {
+  background: var(--ListHoverBackground);
+  outline: 1px solid var(--FocusBorder);
+}

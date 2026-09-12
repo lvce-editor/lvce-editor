@@ -1,3 +1,4 @@
+import * as BrowserFind from './ViewletSimpleBrowserFind.js'
 import { executeWorkflow } from '../SimpleBrowserWorkflow/SimpleBrowserWorkflow.js'
 import * as ContextMenuAction from './ViewletSimpleBrowserContextMenuAction.js'
 import * as SimpleBrowser from './ViewletSimpleBrowser.js'
@@ -9,6 +10,14 @@ import * as ViewletSimpleBrowserInsertJavaScript from './ViewletSimpleBrowserIns
 import * as TabDrag from './ViewletSimpleBrowserTabDrag.js'
 
 export const Commands = {
+  escapeAddress: SimpleBrowser.escapeAddress,
+  applyFindResult: BrowserFind.applyFindResult,
+  toggleFind: SimpleBrowser.toggleFind,
+  closeFind: SimpleBrowser.closeFind,
+  handleFindInput: BrowserFind.handleFindInput,
+  findNext: BrowserFind.findNext,
+  findPrevious: BrowserFind.findPrevious,
+  toggleFindMatchCase: BrowserFind.toggleFindMatchCase,
   executeWorkflow,
   handleBrowserViewDestroyed: SimpleBrowser.handleBrowserViewDestroyed,
   handleWindowOpen: SimpleBrowser.handleWindowOpen,
