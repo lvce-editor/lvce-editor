@@ -23,10 +23,9 @@ export const test: Test = async (api) => {
   await runCommand('echo first-terminal')
   await api.expect(terminals).toContainText('first-terminal')
 
-  await api.Locator('.TitleBarTopLevelEntry[aria-label="More ..."]').click()
-  await api.Locator('#Menu-0 .MenuItem', { hasText: 'Terminal' }).hover()
-  await api.expect(api.Locator('#Menu-1')).toBeVisible()
-  await api.Locator('#Menu-1 .MenuItem', { hasText: 'New Terminal' }).click()
+  await api.Locator('.TitleBarTopLevelEntry', { hasText: 'Terminal' }).click()
+  await api.expect(api.Locator('#Menu-0')).toBeVisible()
+  await api.Locator('#Menu-0 .MenuItem', { hasText: 'New Terminal' }).click()
   await api.expect(api.Locator('.TerminalTab')).toHaveCount(2)
   await api.expect(api.Locator('.TerminalTabLabel').nth(0)).toHaveText('bash')
   await api.expect(api.Locator('.TerminalTabLabel').nth(1)).toHaveText('bash')
@@ -34,7 +33,7 @@ export const test: Test = async (api) => {
   await api.expect(terminals).toHaveCount(1)
   await api.expect(terminals.locator('.xterm-helper-textarea')).toBeFocused()
 
-  await api.Locator('#Panel .IconButton[title="New Terminal"]').click()
+  await api.Locator('.Panel .IconButton[title="New Terminal"]').click()
   await api.expect(api.Locator('.TerminalTab')).toHaveCount(3)
   await api.expect(terminals).toHaveCount(1)
   await runCommand('echo left-terminal')
@@ -49,7 +48,9 @@ export const test: Test = async (api) => {
   await api.expect(terminals.locator('.xterm-helper-textarea')).toBeFocused()
 
   const thirdTerminalTab = api.Locator('.TerminalTab').nth(2)
-  await thirdTerminalTab.hover()
+  // Synthetic hover events do not activate CSS :hover; focus the keyboard-accessible action instead.
+  const { uid: terminalsUid } = await api.ComponentState.getComponent('Terminals')
+  await api.Command.execute('Viewlet.focusSelector', terminalsUid, '.TerminalTab:nth-child(3) .TerminalTabKill')
   const killThirdTerminal = thirdTerminalTab.locator('.TerminalTabKill')
   await api.expect(killThirdTerminal).toHaveCSS('opacity', '1')
   await killThirdTerminal.click()
@@ -63,22 +64,22 @@ export const test: Test = async (api) => {
   await api.Locator('.TerminalTab').nth(1).click()
   await api.expect(terminals).toContainText('previous-terminal')
 
-  await api.Locator('#Panel .IconButton[title="Split Terminal"]').click()
+  await api.Locator('.Panel .IconButton[title="Split Terminal"]').click()
   await api.expect(terminals).toHaveCount(2)
   await runCommand('echo right-terminal')
   await api.expect(terminals.nth(1)).toContainText('right-terminal')
 
   await terminals.nth(0).click()
   await api.expect(terminals.nth(0).locator('.xterm-helper-textarea')).toBeFocused()
-  await api.Locator('#Panel .IconButton[title="Kill Terminal"]').click()
+  await api.Locator('.Panel .IconButton[title="Kill Terminal"]').click()
   await api.expect(terminals).toHaveCount(1)
   await api.expect(terminals).toContainText('right-terminal')
 
-  await api.Locator('#Panel .IconButton[title="Kill Terminal"]').click()
+  await api.Locator('.Panel .IconButton[title="Kill Terminal"]').click()
   await api.expect(terminals).toHaveCount(1)
   await api.expect(terminals).toContainText('first-terminal')
-  await api.Locator('#Panel .IconButton[title="Kill Terminal"]').click()
-  await api.expect(api.Locator('#Panel')).toHaveCount(0)
+  await api.Locator('.Panel .IconButton[title="Kill Terminal"]').click()
+  await api.expect(api.Locator('.Panel')).toHaveCount(0)
   await api.expect(terminals).toHaveCount(0)
 
   await api.Command.execute('Layout.showPanel', 'Terminals')
