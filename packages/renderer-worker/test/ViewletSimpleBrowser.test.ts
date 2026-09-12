@@ -613,7 +613,7 @@ test('opens a target blank link in a new selected tab by default', async () => {
   expect(ElectronWebContentsViewFunctions.focus).toHaveBeenCalledWith(13)
 })
 
-test('keeps a target blank background tab hidden', async () => {
+test('keeps a target blank background tab hidden and restores source tab focus', async () => {
   // @ts-ignore
   ElectronWebContentsViewFunctions.hide.mockResolvedValue(undefined)
   // @ts-ignore
@@ -632,6 +632,27 @@ test('keeps a target blank background tab hidden', async () => {
   expect(newState.tabs).toHaveLength(2)
   expect(ElectronWebContentsViewFunctions.hide).toHaveBeenCalledWith(13)
   expect(ElectronWebContentsViewFunctions.show).not.toHaveBeenCalled()
+  expect(ElectronWebContentsViewFunctions.focus).toHaveBeenCalledWith(12)
+  // @ts-ignore
+  expect(ElectronWebContentsViewFunctions.hide.mock.invocationCallOrder[0]).toBeLessThan(ElectronWebContentsViewFunctions.focus.mock.invocationCallOrder[0])
+})
+
+test('does not focus an inactive source tab when it opens a background child', async () => {
+  const state = {
+    ...ViewletSimpleBrowser.create(7, '', 10, 20, 300, 200),
+    browserViewId: 14,
+    selectedTabIndex: 1,
+    tabs: [
+      { browserViewId: 12, iframeSrc: 'https://example.com', inputValue: 'https://example.com', title: 'Example' },
+      { browserViewId: 14, iframeSrc: 'https://active.example', inputValue: 'https://active.example', title: 'Active' },
+    ],
+  }
+
+  const newState = await ViewletSimpleBrowser.handleWindowOpen(state, 12, 13, 'https://example.com/docs', 'background-tab')
+
+  expect(newState).toMatchObject({ browserViewId: 14, selectedTabIndex: 1 })
+  expect(ElectronWebContentsViewFunctions.hide).toHaveBeenCalledWith(13)
+  expect(ElectronWebContentsViewFunctions.focus).not.toHaveBeenCalled()
 })
 
 test('keeps a popup child loaded when tab unloading is enabled', async () => {
