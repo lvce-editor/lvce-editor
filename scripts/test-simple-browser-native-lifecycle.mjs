@@ -22,6 +22,7 @@ await writeFile(
 )
 const rendererPath = join(root, 'packages/renderer-worker/node_modules/@lvce-editor/renderer-process/dist/rendererProcessMain.js')
 const rendererSource = await readFile(rendererPath, 'utf8')
+assert.ok(rendererSource.includes('/packages/renderer-worker/src/rendererWorkerMain.ts'), 'Renderer entry must be clean before the native test')
 const bundleUrl = '/packages/renderer-worker/dist/browserNativeLifecycleTestMain.js'
 await build({
   entryPoints: [join(root, 'packages/renderer-worker/src/rendererWorkerMain.ts')],
@@ -161,8 +162,11 @@ try {
   await waitForLiveFrames(ownership.original[0])
   console.log('PASS: originating window owns browser tabs and native frames resume after overlays and tab switches')
 } finally {
-  await app?.close()
-  await writeFile(rendererPath, rendererSource)
-  await new Promise((resolveClose) => server.close(resolveClose))
-  await rm(profile, { recursive: true, force: true })
+  try {
+    await app?.close()
+  } finally {
+    await writeFile(rendererPath, rendererSource)
+    await new Promise((resolveClose) => server.close(resolveClose))
+    await rm(profile, { recursive: true, force: true })
+  }
 }
