@@ -1,4 +1,5 @@
 import * as EmbedsWorker from '../EmbedsWorker/EmbedsWorker.js'
+import * as GetWindowId from '../GetWindowId/GetWindowId.js'
 
 const state = {
   refs: 0,
@@ -9,8 +10,9 @@ export const adoptWebContentsView = () => {
 }
 
 export const createWebContentsView = async (restoreId, fallThroughKeyBindings) => {
+  const windowId = await GetWindowId.getWindowId()
   state.refs++
-  return EmbedsWorker.invoke('ElectronWebContentsView.createWebContentsView', restoreId, fallThroughKeyBindings)
+  return EmbedsWorker.invoke('ElectronWebContentsView.createWebContentsView', restoreId, fallThroughKeyBindings, windowId)
 }
 
 export const disposeWebContentsView = async (id) => {
