@@ -164,6 +164,7 @@ try {
   await address.press('Escape')
   await page.locator('.SimpleBrowserFullWidthButton').click()
   await expect(page.locator('.BrowserFullWidth')).toHaveCount(0)
+  await expect(page.locator('[name="editor"]')).toBeFocused()
   // Blur suggestions while opening an Explorer menu, then dismiss it immediately.
   // The native page must stay attached, and the snapshot must remain owned by the menu.
   for (let iteration = 0; iteration < 20; iteration++) {
