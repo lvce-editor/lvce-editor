@@ -82,6 +82,7 @@ try {
   page.setDefaultTimeout(15000)
   const captureErrors = []
   page.on('console', (message) => {
+    if (message.text().includes('[DEBUG-new-tab-focus]')) console.log(message.text())
     if (message.type() === 'error' && message.text().includes('Failed to capture Simple Browser page')) captureErrors.push(message.text())
     if (message.type() === 'error') console.error('APP ERROR', message.text())
   })
@@ -187,6 +188,11 @@ try {
     if (iteration % 2 === 0) {
       await address.click()
       await expect(address).toBeFocused()
+      await address.evaluate((input) => {
+        input.addEventListener('keydown', (event) => {
+          queueMicrotask(() => console.log('[DEBUG-new-tab-focus] DOM key', event.key, event.ctrlKey, event.defaultPrevented))
+        }, { once: true })
+      })
       await address.press('Control+t')
     } else {
       await app.evaluate(({ BrowserWindow }) => {

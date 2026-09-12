@@ -16,6 +16,7 @@ import * as ViewletStates from '../ViewletStates/ViewletStates.js'
  * @param {string=} viewletModuleId - Optional: Module ID of the viewlet instance (e.g., 'EditorText', 'Explorer')
  */
 export const setFocus = (focusKey, additionalFocusKey, uid, viewletModuleId) => {
+  console.log('[DEBUG-new-tab-focus] focus', focusKey, uid, viewletModuleId)
   Assert.number(focusKey)
   Context.reset()
   ExtensionViewContext.restore()

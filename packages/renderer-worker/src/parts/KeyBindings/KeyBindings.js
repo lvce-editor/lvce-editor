@@ -18,6 +18,7 @@ export const lookupKeyBinding = (commandId) => {
 export const handleKeyBinding = async (identifier) => {
   Assert.number(identifier)
   const keyBinding = KeyBindingsState.getKeyBinding(identifier)
+  console.log('[DEBUG-new-tab-focus] key', identifier, keyBinding?.command)
   if (!keyBinding) {
     throw new Error(`keybinding not found for identifier ${identifier}`)
   }
