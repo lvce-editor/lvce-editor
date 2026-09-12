@@ -57,20 +57,19 @@ const invokeMainAreaCommand = async (key: string, uid: number, args: readonly an
 
 export const wrapMainAreaCommand = (key: string) => {
   const fn = async (state, ...args) => {
+    const commands = []
     if (key === 'resize') {
-      const commands = await MainAreaWorker.invoke(`MainArea.${key}`, state.uid, ...args)
-      Assert.array(commands)
-      return {
-        ...state,
-        commands,
-      }
+      const resizeCommands = await MainAreaWorker.invoke(`MainArea.${key}`, state.uid, ...args)
+      Assert.array(resizeCommands)
+      commands.push(...resizeCommands)
+    } else {
+      await invokeMainAreaCommand(key, state.uid, args)
     }
-    await invokeMainAreaCommand(key, state.uid, args)
     const diffResult = await MainAreaWorker.invoke('MainArea.diff2', state.uid)
-    if (diffResult.length === 0) {
-      return state
+    if (diffResult.length > 0) {
+      const renderCommands = await MainAreaWorker.invoke('MainArea.render2', state.uid, diffResult)
+      commands.push(...renderCommands)
     }
-    const commands = await MainAreaWorker.invoke('MainArea.render2', state.uid, diffResult)
     if (commands.length === 0) {
       return state
     }
