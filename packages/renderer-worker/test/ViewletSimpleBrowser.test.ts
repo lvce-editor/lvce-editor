@@ -638,7 +638,9 @@ test.each([true, false])('keeps a target blank background tab hidden and preserv
   if (browserFocused) {
     expect(ElectronWebContentsViewFunctions.focus).toHaveBeenCalledWith(12)
     // @ts-ignore
-    expect(ElectronWebContentsViewFunctions.hide.mock.invocationCallOrder[0]).toBeLessThan(ElectronWebContentsViewFunctions.focus.mock.invocationCallOrder[0])
+    expect(ElectronWebContentsViewFunctions.hide.mock.invocationCallOrder[0]).toBeLessThan(
+      ElectronWebContentsViewFunctions.focus.mock.invocationCallOrder[0],
+    )
   } else {
     expect(ElectronWebContentsViewFunctions.focus).not.toHaveBeenCalled()
   }
@@ -2285,7 +2287,6 @@ test('reopens the last closed tab alongside the replacement new tab', async () =
   expect(reopened.tabs).toHaveLength(2)
   expect(reopened).toMatchObject({ browserViewId: 41, iframeSrc: 'https://one.example', selectedTabIndex: 0, closedTabs: [] })
 })
-
 
 test('openOrRevealTab selects an existing background tab without navigation', async () => {
   const state = createTwoTabState()

@@ -21,7 +21,10 @@ const rendererPath = join(root, 'packages/renderer-worker/node_modules/@lvce-edi
 const rendererSource = await readFile(rendererPath, 'utf8')
 const bundleUrl = '/packages/renderer-worker/dist/openRemoteTestMain.js'
 await build({
-  entryPoints: [join(root, 'packages/renderer-worker/src/rendererWorkerMain.ts')],
+  stdin: {
+    contents: `import './packages/renderer-worker/src/rendererWorkerMain.ts'; import { state } from './packages/renderer-worker/src/parts/KeyBindingsState/KeyBindingsState.js'; globalThis.remoteShortcutReady = () => state.matchingKeyBindings.some(binding => binding.command === 'Workspace.openRemote');`,
+    resolveDir: root,
+  },
   outfile: join(root, bundleUrl),
   bundle: true,
   format: 'esm',
@@ -69,6 +72,12 @@ try {
   const explorer = page.getByRole('tree', { name: 'Files Explorer' })
   await expect(explorer).toBeVisible()
   await page.getByRole('treeitem', { name: 'cache', exact: true }).click()
+  await expect
+    .poll(async () => {
+      const worker = page.workers().find((worker) => worker.url().includes('openRemoteTestMain'))
+      return worker?.evaluate(() => globalThis.remoteShortcutReady())
+    })
+    .toBe(true)
   await page.keyboard.press('.')
   const address = page.locator('[name="simple-browser-address"]')
   await expect(address).toHaveValue(url)
@@ -101,6 +110,12 @@ try {
   await command('Layout: Hide Preview')
   await expect(page.locator('.SimpleBrowser')).not.toBeVisible()
   await page.getByRole('treeitem', { name: 'cache', exact: true }).click()
+  await expect
+    .poll(async () => {
+      const worker = page.workers().find((worker) => worker.url().includes('openRemoteTestMain'))
+      return worker?.evaluate(() => globalThis.remoteShortcutReady())
+    })
+    .toBe(true)
   await page.keyboard.press('.')
   await expect(address).toHaveValue(url)
   await expect.poll(token).toBeTruthy()
