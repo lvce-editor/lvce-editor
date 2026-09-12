@@ -1505,7 +1505,7 @@ test.each(['command', 'lazy', 'targetUid', 'sideEffect', 'lazySideEffect', 'even
         ? GlobalEventBus.emitEvent('queued-browser-event')
         : Command.execute('QueuedBrowser.navigate', ...(kind === 'targetUid' ? [95] : []))
     try {
-      await new Promise<void>((resolve) => setImmediate(resolve))
+      await new Promise<void>((resolve) => setTimeout(resolve, 0))
       expect(navigate).not.toHaveBeenCalled()
     } finally {
       finishRendering.resolve()

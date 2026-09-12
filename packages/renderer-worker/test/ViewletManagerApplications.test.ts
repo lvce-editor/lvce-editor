@@ -134,7 +134,7 @@ test('application commands wait for DOM commands and skip disposed queued work',
   const Viewlet = await import('../src/parts/Viewlet/Viewlet.js')
   const started = Promise.withResolvers<void>()
   const finish = Promise.withResolvers<void>()
-  const update = jest.fn(async (state) => ({ ...state, value: 'updated' }))
+  const update = jest.fn(async (state: { uid: number; value: string }) => ({ ...state, value: 'updated' }))
   addLayout('source', 1, {
     async pause(state) {
       started.resolve()
@@ -148,7 +148,7 @@ test('application commands wait for DOM commands and skip disposed queued work',
   await started.promise
   const next = ViewletManager.executeForApplication('source', 'Layout.update')
   try {
-    await new Promise<void>((resolve) => setImmediate(resolve))
+    await new Promise<void>((resolve) => setTimeout(resolve, 0))
     expect(update).not.toHaveBeenCalled()
     ViewletStates.remove(1)
   } finally {
