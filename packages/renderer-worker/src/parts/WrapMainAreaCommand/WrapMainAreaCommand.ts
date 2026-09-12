@@ -57,7 +57,7 @@ const invokeMainAreaCommand = async (key: string, uid: number, args: readonly an
 
 export const wrapMainAreaCommand = (key: string) => {
   const fn = async (state, ...args) => {
-    const commands = []
+    const commands: any[] = []
     if (key === 'resize') {
       const resizeCommands = await MainAreaWorker.invoke(`MainArea.${key}`, state.uid, ...args)
       Assert.array(resizeCommands)
