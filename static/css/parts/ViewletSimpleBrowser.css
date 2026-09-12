@@ -18,6 +18,13 @@
   display: flex;
 }
 
+.SimpleBrowserButtonsLeft,
+.SimpleBrowserButtonsRight {
+  display: flex;
+  flex-shrink: 0;
+  gap: inherit;
+}
+
 .SimpleBrowserAddressBar {
   background: var(--InputBoxBackground, var(--MainBackground, var(--EditorBackground)));
   flex: 1;

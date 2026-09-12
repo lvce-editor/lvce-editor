@@ -191,7 +191,12 @@ export const getSimpleBrowserVirtualDom = (
     {
       type: VirtualDomElements.Div,
       className: ClassNames.SimpleBrowserHeader,
-      childCount: 7,
+      childCount: 3,
+    },
+    {
+      type: VirtualDomElements.Div,
+      className: 'SimpleBrowserButtonsLeft',
+      childCount: 3,
     },
     {
       type: VirtualDomElements.Button,
@@ -273,6 +278,11 @@ export const getSimpleBrowserVirtualDom = (
     )
   }
   dom.push(
+    {
+      type: VirtualDomElements.Div,
+      className: 'SimpleBrowserButtonsRight',
+      childCount: 3,
+    },
     {
       type: VirtualDomElements.Button,
       className: ClassNames.IconButton,
