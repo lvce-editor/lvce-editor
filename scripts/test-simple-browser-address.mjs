@@ -164,6 +164,22 @@ try {
   await address.press('Escape')
   await page.locator('.SimpleBrowserFullWidthButton').click()
   await expect(page.locator('.BrowserFullWidth')).toHaveCount(0)
+  // Blur suggestions while opening an Explorer menu, then dismiss it immediately.
+  // The native page must stay attached, and the snapshot must remain owned by the menu.
+  for (let iteration = 0; iteration < 20; iteration++) {
+    await address.click()
+    await address.fill('known')
+    if (iteration % 2 === 0) await expect(page.locator('.SimpleBrowserSuggestions')).toBeVisible()
+    await page.getByRole('treeitem', { name: 'other-workspace', exact: true }).click({ button: 'right' })
+    await expect(page.getByRole('menuitem', { name: 'New File...', exact: true })).toBeVisible()
+    await expect(snapshot).toBeVisible()
+    await expect.poll(articleVisible).toBe(false)
+    await page.keyboard.press('Escape')
+    await expect(page.getByRole('menuitem', { name: 'New File...', exact: true })).toHaveCount(0)
+    await expect(snapshot).toHaveCount(0)
+    await expect.poll(articleVisible).toBe(true)
+    assert.equal(await articleToken(), token)
+  }
   for (const folder of [otherFolder, profile]) {
     await page.getByRole('menuitem', { name: 'File', exact: true }).click()
     await page.getByRole('menuitem', { name: 'Open Recent', exact: true }).hover()

@@ -6,6 +6,7 @@ const ElectronContextMenu = await import('../src/parts/ElectronContextMenu/Elect
 const { handleContextMenu } = await import('../src/parts/ViewletSimpleBrowser/ViewletSimpleBrowserHandleContextMenu.js')
 beforeEach(() => {
   jest.clearAllMocks()
+  jest.mocked(ElectronContextMenu.openBrowserContextMenu).mockResolvedValue(undefined as never)
 })
 const state = { uid: 42, x: 100, y: 50, headerHeight: 65, tabs: [{ browserViewId: 17, canGoBack: false, canGoForward: true }] }
 
