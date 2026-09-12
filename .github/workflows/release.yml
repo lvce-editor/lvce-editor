@@ -48,7 +48,6 @@ jobs:
             { os: macos-26, arch: arm64 },
             { os: ubuntu-24.04, arch: x64 },
             { os: ubuntu-24.04, arch: arm64 },
-            { os: ubuntu-24.04, arch: armhf },
           ]
     runs-on: ${{ matrix.versions.os }}
     timeout-minutes: 80
@@ -73,7 +72,6 @@ jobs:
         with:
           path: '**/node_modules'
           key: ${{ runner.os }}-cacheNodeModules-${{ steps.nodeModulesCacheKey.outputs.value }}
-          restore-keys: ${{ runner.os }}-cacheNodeModules-
       - uses: actions/cache@v6
         id: electron-builder-cache
         with:
@@ -170,28 +168,6 @@ jobs:
       - name: Publish Electron App (deb, arm64) to Cloudsmith
         if: matrix.versions.os == 'ubuntu-24.04' && matrix.versions.arch == 'arm64'
         run: cloudsmith push deb lvce-editor/lvce-editor-2/any-distro/any-version "${{ env.ASSET_DEB_ARM64 }}"
-      - name: Build Electron App (deb, armhf)
-        if: matrix.versions.os == 'ubuntu-24.04' && matrix.versions.arch == 'armhf'
-        run: npm run build:electron:deb:armhf -- --product=lvce
-        env:
-          HIGHEST_COMPRESSION: 1
-      - name: Rename Electron App (deb, armhf)
-        if: matrix.versions.os == 'ubuntu-24.04' && matrix.versions.arch == 'armhf'
-        shell: bash
-        run: |
-          staging="lvce-${{ needs.create-release.outputs.rg_version }}_armhf.deb"
-          mv "packages/build/.tmp/releases/lvce-armhf.deb" "$staging"
-          echo "ASSET_DEB_ARMHF=$staging" >> $GITHUB_ENV
-      - name: Release Electron App (deb, armhf)
-        uses: actions/upload-release-asset@v1.0.1
-        if: matrix.versions.os == 'ubuntu-24.04' && matrix.versions.arch == 'armhf'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ needs.create-release.outputs.upload_url }}
-          asset_path: ${{ env.ASSET_DEB_ARMHF }}
-          asset_name: ${{ env.ASSET_DEB_ARMHF }}
-          asset_content_type: application/octet-stream
       # - name: Build Electron App (Macos dmg, x64)
       #   if: matrix.versions.os == 'macos-26'
       #   run: npm run build:electron:mac:x64 -- --product=lvce

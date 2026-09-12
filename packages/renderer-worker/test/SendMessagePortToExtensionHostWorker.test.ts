@@ -57,6 +57,8 @@ jest.unstable_mockModule('../src/parts/MenuWorker/MenuWorker.js', () => ({
   invokeAndTransfer: jest.fn(),
 }))
 
+const Command = await import('../src/parts/Command/Command.js')
+const { commandMap } = await import('../src/parts/CommandMap/CommandMap.js')
 const MenuWorker = await import('../src/parts/MenuWorker/MenuWorker.js')
 const ExtensionManagementWorker = await import('../src/parts/ExtensionManagementWorker/ExtensionManagementWorker.js')
 const ExplorerViewWorker = await import('../src/parts/ExplorerViewWorker/ExplorerViewWorker.js')
@@ -161,8 +163,9 @@ test('sendMessagePortToViewWorker rejects unknown workers', async () => {
   )
 })
 
-test('transfers a port to the menu worker', async () => {
+test('transfers a port to the menu worker through the registered IPC command', async () => {
+  Command.setLoad(() => import('../src/parts/SendMessagePortToExtensionHostWorker/SendMessagePortToExtensionHostWorker.ipc.js'))
   const port = {}
-  await SendMessagePortToExtensionHostWorker.sendMessagePortToMenuWorker(port)
+  await commandMap['SendMessagePortToExtensionHostWorker.sendMessagePortToMenuWorker'](port)
   expect(MenuWorker.invokeAndTransfer).toHaveBeenCalledWith('Menu.handleMessagePort', port)
 })

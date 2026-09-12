@@ -1,3 +1,4 @@
+import { executeWorkflow } from '../SimpleBrowserWorkflow/SimpleBrowserWorkflow.js'
 import * as ContextMenuAction from './ViewletSimpleBrowserContextMenuAction.js'
 import * as SimpleBrowser from './ViewletSimpleBrowser.js'
 import * as ViewletSimpleBrowserGetDomTree from './ViewletSimpleBrowserGetDomTree.js'
@@ -8,6 +9,7 @@ import * as ViewletSimpleBrowserInsertJavaScript from './ViewletSimpleBrowserIns
 import * as TabDrag from './ViewletSimpleBrowserTabDrag.js'
 
 export const Commands = {
+  executeWorkflow,
   handleBrowserViewDestroyed: SimpleBrowser.handleBrowserViewDestroyed,
   handleWindowOpen: SimpleBrowser.handleWindowOpen,
   handleContextMenuAction: ContextMenuAction.handleContextMenuAction,

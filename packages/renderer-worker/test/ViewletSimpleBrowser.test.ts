@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, expect, jest, test } from '@jest/globals'
+import * as GetSimpleBrowserVirtualDom from '../src/parts/GetSimpleBrowserVirtualDom/GetSimpleBrowserVirtualDom.js'
 
 afterEach(() => {
   BrowserSuggestionRequests.cancel(7)
@@ -528,6 +529,20 @@ test('creates and selects an empty tab while keeping the original view alive', a
   expect(ElectronWebContentsViewFunctions.show).toHaveBeenCalledWith(13)
   expect(ElectronWebContentsViewFunctions.setIframeSrc).toHaveBeenCalledWith(13, SimpleBrowserNewTabPage.getUrl(undefined, true))
   expect(ElectronWindow.focus).toHaveBeenCalledTimes(1)
+})
+
+test('workflow tab creation preserves page focus without scheduling address focus', async () => {
+  // @ts-ignore
+  ElectronWebContentsView.createWebContentsView.mockResolvedValue(13)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.getStats.mockResolvedValue({ title: 'New Tab' })
+  const state = { ...createTwoTabState(), focusAddressVersion: 3 }
+
+  const newState = await ViewletSimpleBrowser.createNewTab(state, false)
+
+  expect(newState.focusAddressVersion).toBe(3)
+  expect(ElectronWindow.focus).not.toHaveBeenCalled()
+  expect(ElectronWebContentsViewFunctions.focus).toHaveBeenCalledWith(13)
 })
 
 test('updates open new tab pages when the color theme changes', async () => {
@@ -1736,7 +1751,7 @@ test('applySuggestions captures the built-in new-tab page', async () => {
   expect(ElectronWebContentsViewFunctions.hide).toHaveBeenCalledWith(12)
 })
 
-test('applySuggestions closes an existing popup after a provider failure', async () => {
+test('applySuggestions preserves an existing popup after a provider failure', async () => {
   // @ts-ignore
   ElectronWebContentsViewFunctions.show.mockResolvedValue(undefined)
   const state = {
@@ -1754,14 +1769,14 @@ test('applySuggestions closes an existing popup after a provider failure', async
   const newState = await ViewletSimpleBrowser.applySuggestions(state, 7, 'what is', [])
 
   expect(newState).toMatchObject({
-    hasSuggestionsOverlay: false,
-    overlayIds: [],
-    selectedSuggestionIndex: -1,
-    snapshot: '',
-    suggestions: [],
+    hasSuggestionsOverlay: true,
+    overlayIds: ['search-suggestions'],
+    selectedSuggestionIndex: 0,
+    snapshot: 'blob:https://example.com/snapshot',
+    suggestions: [{ favicon: '', type: 'search', value: 'what is' }],
   })
-  expect(ElectronWebContentsViewFunctions.show).toHaveBeenCalledWith(12)
-  expect(SimpleBrowserSnapshot.dispose).toHaveBeenCalledWith('blob:https://example.com/snapshot')
+  expect(ElectronWebContentsViewFunctions.show).not.toHaveBeenCalled()
+  expect(SimpleBrowserSnapshot.dispose).not.toHaveBeenCalled()
 })
 
 test('suggestion selection stays within the available results', () => {
@@ -2117,6 +2132,46 @@ test('rendering committed input starts local suggestions without waiting for the
   await ViewletSimpleBrowser.afterRender(state, typed)
   expect(Viewlet.executeViewletCommand).toHaveBeenCalledWith(7, 'applySuggestions', 7, 'known', [], [], typed.suggestionSessionId)
   expect(BrowserSearchSuggestions.get).not.toHaveBeenCalled()
+})
+
+test('typing keeps the dimmed snapshot through local and provider suggestion updates', async () => {
+  jest.useFakeTimers()
+  const state = {
+    ...ViewletSimpleBrowser.create(7),
+    browserViewId: 12,
+    hasSuggestionsOverlay: true,
+    inputValue: 'what is',
+    overlayIds: ['search-suggestions'],
+    snapshot: 'blob:https://example.com/snapshot',
+    suggestions: [{ favicon: '', type: 'search', value: 'what is love' }],
+    suggestionsEnabled: true,
+  }
+  const typed = ViewletSimpleBrowser.handleInput(state, 'what is l')
+  expect(typed.suggestions).toBe(state.suggestions)
+  const local = await ViewletSimpleBrowser.applySuggestions(typed, 7, 'what is l', [], [], typed.suggestionSessionId)
+  expect(local.suggestions).toBe(state.suggestions)
+  const provider = await ViewletSimpleBrowser.applySuggestions(local, 7, 'what is l', ['what is love'], undefined, typed.suggestionSessionId)
+  expect(provider.suggestions.map((item) => item.value)).toEqual(['what is l', 'what is love'])
+  for (const next of [typed, local, provider]) {
+    expect(next.snapshot).toBe(state.snapshot)
+    expect(next.overlayIds).toEqual(['search-suggestions'])
+    const dom = GetSimpleBrowserVirtualDom.getSimpleBrowserVirtualDom(false, false, false, next.inputValue, next.snapshot, next.suggestions)
+    expect(dom).toContainEqual(
+      expect.objectContaining({
+        className: 'SimpleBrowserSnapshot SimpleBrowserSnapshotSearchSuggestions',
+        src: state.snapshot,
+      }),
+    )
+    await ViewletSimpleBrowser.afterRender(state, next)
+  }
+  expect(ElectronWebContentsViewFunctions.capturePage).not.toHaveBeenCalled()
+  expect(ElectronWebContentsViewFunctions.hide).not.toHaveBeenCalled()
+  expect(ElectronWebContentsViewFunctions.show).not.toHaveBeenCalled()
+  expect(SimpleBrowserSnapshot.dispose).not.toHaveBeenCalled()
+  const closed = await ViewletSimpleBrowser.handleAddressBlur(provider)
+  expect(closed.snapshot).toBe('')
+  expect(closed.overlayIds).toEqual([])
+  expect(ElectronWebContentsViewFunctions.show).toHaveBeenCalledWith(12)
 })
 
 test('reopens closed tabs in reverse close order with fresh views and their original positions', async () => {

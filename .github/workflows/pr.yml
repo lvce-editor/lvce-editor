@@ -117,6 +117,9 @@ jobs:
         run: npm run test:simple-browser-new-tab
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0
+      - name: Test Simple Browser workflows
+        if: matrix.os == 'ubuntu-24.04'
+        run: xvfb-run -a npm run test:simple-browser-workflows
       - name: Test Simple Browser workspace switching
         if: matrix.os == 'ubuntu-24.04'
         run: |
@@ -155,7 +158,7 @@ jobs:
       - name: Test integrated terminal rendering
         if: matrix.os == 'ubuntu-24.04'
         working-directory: ./packages/extension-host-worker-tests
-        run: npm run e2e:headless -- --test-name-prefix=viewlet.terminal-xterm
+        run: npm run e2e:headless -- --test-name-prefix=viewlet.terminal-
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0
       - name: Test error dialog and notification rendering
@@ -195,6 +198,12 @@ jobs:
       - name: Run extension host worker tests
         working-directory: ./packages/extension-host-worker-tests
         run: npm run e2e:headless:ci
+        env:
+          PLAYWRIGHT_BROWSERS_PATH: 0
+      - name: Test canonical extension detail URIs
+        if: matrix.os == 'ubuntu-24.04'
+        working-directory: ./packages/extension-host-worker-tests
+        run: npm run e2e:headless -- --test-name-prefix=viewlet.extension-detail-canonical-uri
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0
       - name: Test saving extension filesystem files
