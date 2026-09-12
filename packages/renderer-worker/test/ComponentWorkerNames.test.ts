@@ -1,15 +1,12 @@
-import { expect, jest, test } from '@jest/globals'
+import { expect, test } from '@jest/globals'
 
-jest.unstable_mockModule('../src/parts/GetConfiguredWorkerUrl/GetConfiguredWorkerUrl.ts', () => ({
-  getConfiguredWorkerUrl: (key: string) => (key === 'develop.explorerWorkerPath' ? '/custom/explorer.js' : ''),
-}))
-
-const { getName, registerViewlet, registerWorker } = await import('../src/parts/ComponentWorkerNames/ComponentWorkerNames.js')
+const { getName, registerUrl, registerViewlet, registerWorker } = await import('../src/parts/ComponentWorkerNames/ComponentWorkerNames.js')
 
 test('resolves the actual launch name through factory identity, including configured paths', () => {
   const factory = { create: () => {} }
   registerViewlet(factory.create, 'explorer')
   expect(() => getName(factory, 'Explorer')).toThrow('Component worker not found: explorer')
+  registerUrl('develop.explorerWorkerPath', '/custom/explorer.js')
   registerWorker('/custom/explorer.js', 'Custom Explorer')
   expect(getName(factory, 'Explorer')).toBe('Custom Explorer')
   registerWorker('/packages/explorerViewWorkerMain.js', 'Explorer Worker')

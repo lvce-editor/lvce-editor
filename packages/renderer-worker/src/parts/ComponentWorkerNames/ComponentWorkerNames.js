@@ -1,8 +1,16 @@
-import * as GetConfiguredWorkerUrl from '../GetConfiguredWorkerUrl/GetConfiguredWorkerUrl.ts'
 import workers from '../Workers/Workers.json' with { type: 'json' }
 
 const owners = new WeakMap()
 const names = new Map()
+const urls = new Map()
+
+export const registerUrl = (preferenceKey, url) => {
+  for (const worker of workers) {
+    if (worker.settingName === preferenceKey) {
+      urls.set(worker.id, url)
+    }
+  }
+}
 
 export const registerViewlet = (create, workerId) => {
   owners.set(create, workerId)
@@ -13,7 +21,7 @@ export const registerWorker = (url, name) => {
     return
   }
   for (const worker of workers) {
-    if (url.endsWith(worker.fileName) || url === GetConfiguredWorkerUrl.getConfiguredWorkerUrl(worker.settingName, '')) {
+    if (url.endsWith(worker.fileName) || url === urls.get(worker.id)) {
       names.set(worker.id, name)
     }
   }
