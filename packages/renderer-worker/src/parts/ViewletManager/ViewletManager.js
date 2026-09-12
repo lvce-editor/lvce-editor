@@ -20,6 +20,7 @@ import * as RebaseState from '../RebaseState/RebaseState.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SaveState from '../SaveState/SaveState.js'
 import { updateDynamicFocusContext } from '../UpdateDynamicFocusContext/UpdateDynamicFocusContext.js'
+import * as ViewletCommandQueue from '../ViewletCommandQueue/ViewletCommandQueue.js'
 import * as ViewletManagerVisitor from '../ViewletManagerVisitor/ViewletManagerVisitor.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
@@ -85,7 +86,7 @@ const kAppendViewlet = 'Viewlet.appendViewlet'
 const kHandleError = 'Viewlet.handleError'
 const kDispose = 'Viewlet.dispose'
 
-const runFn = async (instance, id, key, fn, args) => {
+const runFnInternal = async (instance, id, key, fn, args) => {
   if (!instance) {
     console.info(`cannot execute viewlet command ${id}.${key}: no active instance for ${id}`)
     return
@@ -145,7 +146,7 @@ const runFn = async (instance, id, key, fn, args) => {
   }
 }
 
-const runFnWithSideEffect = async (instance, id, key, fn, ...args) => {
+const runFnWithSideEffectInternal = async (instance, id, key, fn, ...args) => {
   if (!instance) {
     console.info(`cannot execute viewlet command ${id}.${key}: no active instance for ${id}`)
     return
@@ -175,6 +176,21 @@ const runFnWithSideEffect = async (instance, id, key, fn, ...args) => {
     await instance.factory.afterRender(oldState, rebasedState)
   }
 }
+
+// Named commands, shortcuts, and DOM commands must finish rendering and effects in one queue.
+const runWithCommandQueue = (instance, callback) => {
+  if (!instance?.factory?.serializeCommands) return callback()
+  const uid = instance.state.uid
+  return ViewletCommandQueue.enqueue(uid, () => {
+    if (ViewletStates.getByUid(uid) !== instance) return
+    return callback()
+  })
+}
+
+const runFn = (instance, id, key, fn, args) => runWithCommandQueue(instance, () => runFnInternal(instance, id, key, fn, args))
+
+const runFnWithSideEffect = (instance, id, key, fn, ...args) =>
+  runWithCommandQueue(instance, () => runFnWithSideEffectInternal(instance, id, key, fn, ...args))
 
 // TODO maybe wrapViewletCommand should accept module instead of id string
 // then check if instance.factory matches module -> only compare reference (int) instead of string
@@ -533,20 +549,22 @@ const maybeRegisterEvents = (module) => {
         if (!instance) {
           return
         }
-        const newState = await InvokeViewletEvent.invokeViewletEvent(module.name, instance, value, ...params)
-        if (!newState) {
-          return
-        }
-        if (module.shouldApplyNewstate && !module.shouldApplyNewState(newState)) {
-          console.log('[viewlet manager] return', newState)
-          return
-        }
-        const uid = instance.uid || instance.state.uid
-        Assert.number(uid)
-        const commands = render(instance.factory, instance.renderedState, newState, uid, newState.parentUid)
-        instance.state = newState
-        instance.renderedState = newState
-        await RendererProcess.invoke(/* Viewlet.sendMultiple */ kSendMultiple, /* commands */ commands)
+        return runWithCommandQueue(instance, async () => {
+          const newState = await InvokeViewletEvent.invokeViewletEvent(module.name, instance, value, ...params)
+          if (!newState) {
+            return
+          }
+          if (module.shouldApplyNewstate && !module.shouldApplyNewState(newState)) {
+            console.log('[viewlet manager] return', newState)
+            return
+          }
+          const uid = instance.uid || instance.state.uid
+          Assert.number(uid)
+          const commands = render(instance.factory, instance.renderedState, newState, uid, newState.parentUid)
+          instance.state = newState
+          instance.renderedState = newState
+          await RendererProcess.invoke(/* Viewlet.sendMultiple */ kSendMultiple, /* commands */ commands)
+        })
       }
       GlobalEventBus.addListener(key, handleUpdate)
     }
