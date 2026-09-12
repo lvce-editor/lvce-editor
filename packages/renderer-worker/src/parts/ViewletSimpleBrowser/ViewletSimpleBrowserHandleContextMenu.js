@@ -22,6 +22,9 @@ export const handleContextMenu = async (state, params) => {
           }
         : entry,
   )
-  await ElectronContextMenu.openBrowserContextMenu(x, y, entries, browserViewId)
+  // Opening a menu can enqueue overlay changes or actions on this same viewlet.
+  void ElectronContextMenu.openBrowserContextMenu(x, y, entries, browserViewId).catch((error) => {
+    console.error('[renderer-worker] Failed to open browser menu', error)
+  })
   return state
 }

@@ -36,6 +36,9 @@ import * as WhenExpression from '../WhenExpression/WhenExpression.js'
 import * as BrowserFind from './ViewletSimpleBrowserFind.js'
 import * as TabDrag from './ViewletSimpleBrowserTabDrag.js'
 
+// Overlay snapshots and native visibility must commit together before the next command.
+export const serializeCommands = true
+
 const navigationHeaderHeight = 30
 const tabsHeaderHeight = 35
 const closeTabKeyBinding = KeyModifier.CtrlCmd | KeyCode.KeyW
@@ -838,7 +841,8 @@ export const afterRender = async (oldState, newState) => {
     }
   }
   if (oldState.suggestionSessionId !== newState.suggestionSessionId && newState.suggestionSessionId) {
-    await Viewlet.executeViewletCommand(
+    // Queue the follow-up without waiting on the command that is currently rendering.
+    void Viewlet.executeViewletCommand(
       newState.uid,
       'applySuggestions',
       newState.uid,
@@ -846,7 +850,9 @@ export const afterRender = async (oldState, newState) => {
       [],
       getLocalSuggestions(newState, newState.inputValue),
       newState.suggestionSessionId,
-    )
+    ).catch((error) => {
+      console.error('[renderer-worker] Failed to apply browser suggestions', error)
+    })
   }
 }
 
@@ -1199,7 +1205,10 @@ export const handleKeyBinding = async (state, browserViewId, keyBinding) => {
     await Command.execute('Main.openUri', 'simple-browser-history://')
     return state
   }
-  await KeyBindings.handleKeyBinding(keyBinding)
+  // A fallback binding may dispatch another command to this viewlet.
+  void KeyBindings.handleKeyBinding(keyBinding).catch((error) => {
+    console.error('[renderer-worker] Failed to handle browser key binding', error)
+  })
   return state
 }
 

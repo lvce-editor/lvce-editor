@@ -9,6 +9,7 @@ afterEach(() => {
 
 beforeEach(() => {
   jest.resetAllMocks()
+  jest.mocked(Viewlet.executeViewletCommand).mockResolvedValue(undefined as never)
   FocusState.set(0)
 })
 
@@ -2152,6 +2153,19 @@ test('a delayed local popup cannot overwrite a provider popup', async () => {
   capture.resolve(new Uint8Array())
   expect(await local).toBe(typed)
   expect(provider.suggestions.some((item) => item.value === 'known result')).toBe(true)
+})
+
+test('rendering does not wait for suggestions queued behind its own command', async () => {
+  const state = { ...ViewletSimpleBrowser.create(7), suggestionsEnabled: true }
+  const typed = ViewletSimpleBrowser.handleInput(state, 'known')
+  const pending = Promise.withResolvers<void>()
+  jest.mocked(Viewlet.executeViewletCommand).mockReturnValue(pending.promise as never)
+  try {
+    await ViewletSimpleBrowser.afterRender(state, typed)
+    expect(Viewlet.executeViewletCommand).toHaveBeenCalled()
+  } finally {
+    pending.resolve()
+  }
 })
 
 test('rendering committed input starts local suggestions without waiting for the provider', async () => {

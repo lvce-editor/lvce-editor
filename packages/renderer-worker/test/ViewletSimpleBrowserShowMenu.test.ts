@@ -10,6 +10,7 @@ const ViewletSimpleBrowserShowMenu = await import('../src/parts/ViewletSimpleBro
 
 beforeEach(() => {
   jest.resetAllMocks()
+  jest.mocked(ContextMenu.show2Below).mockResolvedValue(undefined as never)
 })
 
 test('opens the toolbar menu below the menu button in its nested toolbar', async () => {
