@@ -459,13 +459,16 @@ const switchToTab = async (state, initialTabs, selectedTabIndex) => {
   return activateTab(state, tabs, selectedTabIndex)
 }
 
-export const createNewTab = async (state) => {
+export const createNewTab = async (state, focusAddress = true) => {
   if (!state.tabsEnabled) {
     return state
   }
   const currentState = state.hasSuggestionsOverlay ? await closeSuggestions(state) : state
   const tab = await createEmptyTab(currentState)
   const newState = await switchToTab(currentState, [...currentState.tabs, tab], currentState.tabs.length)
+  if (!focusAddress) {
+    return newState
+  }
   await ElectronWindow.focus()
   return { ...newState, focusAddressVersion: newState.focusAddressVersion + 1 }
 }
