@@ -256,3 +256,37 @@ test('renders pending state for tab selection commands', async () => {
   select.resolve(undefined)
   await resultPromise
 })
+
+test('resize includes refreshed main area rendering after child resize commands', async () => {
+  const dimensions = { x: 0, y: 25, width: 832, height: 900 }
+  const childCommands = [['Viewlet.setBounds', 8, 0, 60, 416, 865]]
+  const renderCommands = [['Viewlet.setCss', 7, '.SashVertical { left: 50%; }']]
+  // @ts-ignore
+  MainAreaWorker.invoke.mockImplementation((method) => {
+    if (method === 'MainArea.resize') {
+      return childCommands
+    }
+    if (method === 'MainArea.diff2') {
+      return [2]
+    }
+    return renderCommands
+  })
+
+  const result = await wrapMainAreaCommand('resize')(state, dimensions)
+
+  expect(MainAreaWorker.invoke).toHaveBeenNthCalledWith(1, 'MainArea.resize', state.uid, dimensions)
+  expect(MainAreaWorker.invoke).toHaveBeenNthCalledWith(2, 'MainArea.diff2', state.uid)
+  expect(MainAreaWorker.invoke).toHaveBeenNthCalledWith(3, 'MainArea.render2', state.uid, [2])
+  expect(result).toEqual({ ...state, commands: [...childCommands, ...renderCommands] })
+})
+
+test('resize preserves child commands when the main area has no render diff', async () => {
+  const childCommands = [['Viewlet.setBounds', 8, 0, 60, 416, 865]]
+  // @ts-ignore
+  MainAreaWorker.invoke.mockImplementation((method) => (method === 'MainArea.resize' ? childCommands : []))
+
+  const result = await wrapMainAreaCommand('resize')(state, { width: 832 })
+
+  expect(result).toEqual({ ...state, commands: childCommands })
+  expect(MainAreaWorker.invoke).toHaveBeenCalledTimes(2)
+})
