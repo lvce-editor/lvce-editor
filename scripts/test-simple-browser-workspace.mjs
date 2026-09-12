@@ -217,7 +217,7 @@ try {
               const start = Date.now()
               const timer = setInterval(() => {
                 const views = window.contentView.children.filter(
-                  (view) => 'webContents' in view && view.webContents.getURL().startsWith('http://127.0.0.1:'),
+                  (view) => 'webContents' in view && view.getVisible() && view.webContents.getURL().startsWith('http://127.0.0.1:'),
                 )
                 if (views.length === 1 && views[0].webContents === target && views[0].getBounds().x === 0 && target.isFocused()) {
                   clearInterval(timer)
@@ -303,7 +303,7 @@ try {
     app.evaluate(({ BrowserWindow }) => {
       const window = BrowserWindow.getAllWindows()[0]
       return window.contentView.children.flatMap((view) =>
-        'webContents' in view && view.webContents.getURL().startsWith('http://127.0.0.1:') ? [view.webContents.getURL()] : [],
+        'webContents' in view && view.getVisible() && view.webContents.getURL().startsWith('http://127.0.0.1:') ? [view.webContents.getURL()] : [],
       )
     })
   await expect.poll(nativePages).toHaveLength(2)
