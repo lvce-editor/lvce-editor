@@ -186,6 +186,7 @@ try {
   for (let iteration = 0; iteration < 20; iteration++) {
     if (iteration % 2 === 0) {
       await address.click()
+      await expect(address).toBeFocused()
       await address.press('Control+t')
     } else {
       await app.evaluate(({ BrowserWindow }) => {
