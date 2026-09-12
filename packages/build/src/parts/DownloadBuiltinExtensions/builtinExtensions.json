@@ -502,8 +502,8 @@
   {
     "name": "builtin.prettier",
     "repository": "github.com/lvce-editor/prettier",
-    "version": "2.23.0",
-    "sha256": "8cb6da699e58ce39b51881ec1dbc30f38c64ac07765f90dc2438504d86e7498a",
+    "version": "2.23.1",
+    "sha256": "715807883bf727230c4d6af5b471424fdacbb989f6cd55fa089854db702e5b25",
     "created": "2022-06-16"
   },
   {
