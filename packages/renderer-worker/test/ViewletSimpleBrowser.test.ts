@@ -9,6 +9,7 @@ afterEach(() => {
 
 beforeEach(() => {
   jest.resetAllMocks()
+  jest.mocked(Viewlet.executeViewletCommand).mockResolvedValue(undefined as never)
   FocusState.set(0)
 })
 
@@ -174,6 +175,7 @@ beforeEach(() => {
 })
 
 const browserTabKeyBindings = [
+  KeyModifier.CtrlCmd | KeyCode.KeyF,
   KeyModifier.CtrlCmd | KeyModifier.Shift | KeyCode.KeyI,
   KeyModifier.CtrlCmd | KeyCode.KeyL,
   KeyModifier.CtrlCmd | KeyCode.KeyW,
@@ -311,7 +313,8 @@ test('loadContent', async () => {
   expect(await ViewletSimpleBrowser.loadContent(state)).toMatchObject({
     audioIndicatorEnabled: true,
     headerHeight: 65,
-    iframeSrc: 'https://example.com',
+    iframeSrc: 'https://example.com/',
+    inputValue: 'https://example.com/',
     searchHistory: ['cheeseburger'],
     tabHoverEnabled: false,
     tabsEnabled: true,
@@ -420,7 +423,7 @@ test('loadContent - restore id - same browser view', async () => {
   ElectronWebContentsViewFunctions.setIframeSrc.mockImplementation(() => {})
   const state = ViewletSimpleBrowser.create(0, 'simple-browser://1', 0, 0, 0, 0)
   expect(await ViewletSimpleBrowser.loadContent(state)).toMatchObject({
-    iframeSrc: 'https://example.com',
+    iframeSrc: 'https://example.com/',
   })
   expect(ElectronWebContentsView.createWebContentsView).toHaveBeenCalledTimes(1)
   expect(ElectronWebContentsView.createWebContentsView).toHaveBeenCalledWith(1, 0)
@@ -438,14 +441,14 @@ test('loadContent - restore id - browser view does not exist yet', async () => {
   ElectronWebContentsViewFunctions.setIframeSrc.mockImplementation(() => {})
   const state = ViewletSimpleBrowser.create(0, 'simple-browser://1', 0, 0, 0, 0)
   expect(await ViewletSimpleBrowser.loadContent(state)).toMatchObject({
-    iframeSrc: 'https://example.com',
+    iframeSrc: 'https://example.com/',
   })
   expect(ElectronWebContentsView.createWebContentsView).toHaveBeenCalledTimes(1)
   expect(ElectronWebContentsView.createWebContentsView).toHaveBeenCalledWith(1, 0)
   expect(ElectronWebContentsViewFunctions.setFallthroughKeyBindings).toHaveBeenCalledTimes(1)
   expect(ElectronWebContentsViewFunctions.setFallthroughKeyBindings).toHaveBeenCalledWith(2, browserTabKeyBindings)
   expect(ElectronWebContentsViewFunctions.setIframeSrc).toHaveBeenCalledTimes(1)
-  expect(ElectronWebContentsViewFunctions.setIframeSrc).toHaveBeenCalledWith(2, 'https://example.com')
+  expect(ElectronWebContentsViewFunctions.setIframeSrc).toHaveBeenCalledWith(2, 'https://example.com/')
 })
 
 test('loadContent restores every tab but creates a web contents view only for the selected tab', async () => {
@@ -531,6 +534,20 @@ test('creates and selects an empty tab while keeping the original view alive', a
   expect(ElectronWindow.focus).toHaveBeenCalledTimes(1)
 })
 
+test('workflow tab creation preserves page focus without scheduling address focus', async () => {
+  // @ts-ignore
+  ElectronWebContentsView.createWebContentsView.mockResolvedValue(13)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.getStats.mockResolvedValue({ title: 'New Tab' })
+  const state = { ...createTwoTabState(), focusAddressVersion: 3 }
+
+  const newState = await ViewletSimpleBrowser.createNewTab(state, false)
+
+  expect(newState.focusAddressVersion).toBe(3)
+  expect(ElectronWindow.focus).not.toHaveBeenCalled()
+  expect(ElectronWebContentsViewFunctions.focus).toHaveBeenCalledWith(13)
+})
+
 test('updates open new tab pages when the color theme changes', async () => {
   ColorTheme.state.colorThemeCss = ':root { --EditorBackground: #193549; --InputBoxBackground: #15232d; }'
   // @ts-ignore
@@ -598,7 +615,8 @@ test('opens a target blank link in a new selected tab by default', async () => {
   expect(ElectronWebContentsViewFunctions.focus).toHaveBeenCalledWith(13)
 })
 
-test('keeps a target blank background tab hidden', async () => {
+test.each([true, false])('keeps a target blank background tab hidden and preserves browser focus (%s)', async (browserFocused) => {
+  FocusState.set(browserFocused ? WhenExpression.FocusSimpleBrowser : 0)
   // @ts-ignore
   ElectronWebContentsViewFunctions.hide.mockResolvedValue(undefined)
   // @ts-ignore
@@ -617,6 +635,32 @@ test('keeps a target blank background tab hidden', async () => {
   expect(newState.tabs).toHaveLength(2)
   expect(ElectronWebContentsViewFunctions.hide).toHaveBeenCalledWith(13)
   expect(ElectronWebContentsViewFunctions.show).not.toHaveBeenCalled()
+  if (browserFocused) {
+    expect(ElectronWebContentsViewFunctions.focus).toHaveBeenCalledWith(12)
+    // @ts-ignore
+    expect(ElectronWebContentsViewFunctions.hide.mock.invocationCallOrder[0]).toBeLessThan(ElectronWebContentsViewFunctions.focus.mock.invocationCallOrder[0])
+  } else {
+    expect(ElectronWebContentsViewFunctions.focus).not.toHaveBeenCalled()
+  }
+})
+
+test('does not focus an inactive source tab when it opens a background child', async () => {
+  FocusState.set(WhenExpression.FocusSimpleBrowser)
+  const state = {
+    ...ViewletSimpleBrowser.create(7, '', 10, 20, 300, 200),
+    browserViewId: 14,
+    selectedTabIndex: 1,
+    tabs: [
+      { browserViewId: 12, iframeSrc: 'https://example.com', inputValue: 'https://example.com', title: 'Example' },
+      { browserViewId: 14, iframeSrc: 'https://active.example', inputValue: 'https://active.example', title: 'Active' },
+    ],
+  }
+
+  const newState = await ViewletSimpleBrowser.handleWindowOpen(state, 12, 13, 'https://example.com/docs', 'background-tab')
+
+  expect(newState).toMatchObject({ browserViewId: 14, selectedTabIndex: 1 })
+  expect(ElectronWebContentsViewFunctions.hide).toHaveBeenCalledWith(13)
+  expect(ElectronWebContentsViewFunctions.focus).not.toHaveBeenCalled()
 })
 
 test('keeps a popup child loaded when tab unloading is enabled', async () => {
@@ -2110,6 +2154,19 @@ test('a delayed local popup cannot overwrite a provider popup', async () => {
   capture.resolve(new Uint8Array())
   expect(await local).toBe(typed)
   expect(provider.suggestions.some((item) => item.value === 'known result')).toBe(true)
+})
+
+test('rendering does not wait for suggestions queued behind its own command', async () => {
+  const state = { ...ViewletSimpleBrowser.create(7), suggestionsEnabled: true }
+  const typed = ViewletSimpleBrowser.handleInput(state, 'known')
+  const pending = Promise.withResolvers<void>()
+  jest.mocked(Viewlet.executeViewletCommand).mockReturnValue(pending.promise as never)
+  try {
+    await ViewletSimpleBrowser.afterRender(state, typed)
+    expect(Viewlet.executeViewletCommand).toHaveBeenCalled()
+  } finally {
+    pending.resolve()
+  }
 })
 
 test('rendering committed input starts local suggestions without waiting for the provider', async () => {

@@ -14,6 +14,12 @@ const { _electron } = requireTests('playwright')
 const { expect } = requireTests('@playwright/test')
 const { build } = requireBuild('esbuild')
 const profile = await mkdtemp(join(tmpdir(), 'lvce-browser-address-'))
+await writeFile(join(profile, 'example.txt'), 'Editor fixture')
+const otherFolder = join(profile, 'other-workspace')
+await mkdir(otherFolder)
+await writeFile(join(otherFolder, 'other.txt'), 'Other workspace')
+await mkdir(join(profile, 'cache/lvce-oss'), { recursive: true })
+await writeFile(join(profile, 'cache/lvce-oss/recently-opened.json'), JSON.stringify(['file://' + otherFolder]))
 await mkdir(join(profile, 'config/lvce-oss'), { recursive: true })
 const settingsPath = join(profile, 'config/lvce-oss/settings.json')
 await writeFile(settingsPath, JSON.stringify({ 'simpleBrowser.suggestions': true }))
@@ -74,11 +80,15 @@ try {
   })
   const page = await app.firstWindow()
   page.setDefaultTimeout(15000)
+  const captureErrors = []
   page.on('console', (message) => {
+    if (message.type() === 'error' && message.text().includes('Failed to capture Simple Browser page')) captureErrors.push(message.text())
     if (message.type() === 'error') console.error('APP ERROR', message.text())
   })
   await expect(page.locator('#Workbench')).toBeVisible({ timeout: 15000 })
   await expect(page.getByRole('tree', { name: 'Files Explorer' })).toBeVisible()
+  await page.getByRole('treeitem', { name: 'example.txt', exact: true }).dblclick()
+  await expect(page.locator('[name="editor"]')).toBeAttached()
   await page.evaluate(() => {
     localStorage.setItem('simple-browser-search-history', JSON.stringify(['known first', 'known second', 'offline local']))
     localStorage.setItem('simple-browser-history', JSON.stringify([{ date: Date.now(), url: 'https://known.example/article' }]))
@@ -87,6 +97,9 @@ try {
   await expect(page.locator('.BrowserFullWidth')).toBeVisible()
   const address = page.locator('[name="simple-browser-address"]')
   await expect(page.locator('.SimpleBrowserTabSelected')).toHaveAttribute('aria-label', 'Example Domain')
+  await expect(address).toHaveValue(/^https:\/\/example\.com\/?$/)
+  await address.click()
+  await expect(address).toBeFocused()
   await address.fill(url)
   // Native submission works before focus-dependent shortcuts arrive.
   await address.evaluate((input) => {
@@ -108,6 +121,162 @@ try {
       )
     }, url)
   const snapshot = page.locator('.SimpleBrowserSnapshot')
+  // Replay compositor failures at the native boundary while exercising the real suggestion overlay.
+  for (const failure of ['UnknownVizError', 'empty']) {
+    await app.evaluate(
+      ({ nativeImage, webContents }, { targetUrl, failure }) => {
+        const guest = webContents.getAllWebContents().find((item) => item.getURL() === targetUrl)
+        const original = guest.capturePage.bind(guest)
+        globalThis.restoreBrowserCapture = () => {
+          guest.capturePage = original
+        }
+        globalThis.browserCaptureAttempts = 0
+        guest.capturePage = async (...args) => {
+          if (++globalThis.browserCaptureAttempts === 1) {
+            if (failure === 'empty') return nativeImage.createEmpty()
+            throw new Error(failure)
+          }
+          return original(...args)
+        }
+      },
+      { targetUrl: url, failure },
+    )
+    try {
+      await address.fill('known')
+      await expect(page.getByRole('option', { name: 'known first', exact: true })).toBeVisible()
+      await expect(snapshot).toBeVisible()
+      await expect.poll(() => snapshot.evaluate((image) => image.naturalWidth)).toBeGreaterThan(0)
+      await expect.poll(articleVisible).toBe(false)
+      assert.equal(await app.evaluate(() => globalThis.browserCaptureAttempts), 2, failure)
+      await address.press('Escape')
+      await expect(snapshot).toHaveCount(0)
+      await expect.poll(articleVisible).toBe(true)
+      assert.equal(await articleToken(), token)
+    } finally {
+      await app.evaluate(() => {
+        globalThis.restoreBrowserCapture()
+        delete globalThis.restoreBrowserCapture
+      })
+    }
+  }
+  assert.deepEqual(captureErrors, [], 'Transient compositor errors must recover without reaching the renderer')
+  await address.fill(url)
+  await address.press('Escape')
+  await page.locator('.SimpleBrowserFullWidthButton').click()
+  await expect(page.locator('.BrowserFullWidth')).toHaveCount(0)
+  await expect(page.locator('[name="editor"]')).toBeFocused()
+  // Blur suggestions while opening an Explorer menu, then dismiss it immediately.
+  // The native page must stay attached, and the snapshot must remain owned by the menu.
+  for (let iteration = 0; iteration < 20; iteration++) {
+    await address.click()
+    await address.fill('known')
+    if (iteration % 2 === 0) await expect(page.locator('.SimpleBrowserSuggestions')).toBeVisible()
+    await page.getByRole('treeitem', { name: 'other-workspace', exact: true }).click({ button: 'right' })
+    await expect(page.getByRole('menuitem', { name: 'New File...', exact: true })).toBeVisible()
+    await expect(snapshot).toBeVisible()
+    await expect.poll(articleVisible).toBe(false)
+    await page.keyboard.press('Escape')
+    await expect(page.getByRole('menuitem', { name: 'New File...', exact: true })).toHaveCount(0)
+    await expect(snapshot).toHaveCount(0)
+    await expect.poll(articleVisible).toBe(true)
+    assert.equal(await articleToken(), token)
+  }
+  // Ctrl+T and Enter use named commands; typing and suggestion updates use DOM commands.
+  // Repeated searches must keep the selected native view attached across both paths.
+  // Start by focusing the native page after Explorer restored its own focus.
+  for (let iteration = 0; iteration < 20; iteration++) {
+    if (iteration % 2 === 1) {
+      await address.click()
+      await expect(address).toBeFocused()
+      await address.press('Control+t')
+    } else {
+      await app.evaluate(({ BrowserWindow }) => {
+        const view = BrowserWindow.getAllWindows()
+          .flatMap((window) => window.contentView.children)
+          .find((view) => view.webContents && view.getVisible())
+        if (!view) throw new Error('The current browser page must be visible before Ctrl+T')
+        view.webContents.focus()
+        view.webContents.sendInputEvent({ type: 'keyDown', keyCode: 'T', modifiers: ['control'] })
+        view.webContents.sendInputEvent({ type: 'keyUp', keyCode: 'T', modifiers: ['control'] })
+      })
+    }
+    await expect(page.locator('.SimpleBrowserTab')).toHaveCount(iteration + 2)
+    await expect(address).toHaveValue('')
+    const failure = iteration === 18 ? 'UnknownVizError' : iteration === 19 ? 'Current display surface not available for capture' : ''
+    assert.deepEqual(captureErrors, [], 'Earlier searches must not report capture failures')
+    const guestId = await app.evaluate(({ webContents }, failure) => {
+      const guest = webContents.getAllWebContents().sort((a, b) => b.id - a.id)[0]
+      globalThis.searchFixtureSessions ||= new WeakSet()
+      if (!globalThis.searchFixtureSessions.has(guest.session)) {
+        globalThis.searchFixtureSessions.add(guest.session)
+        guest.session.protocol.handle('https', async (request) => {
+          if (request.url.startsWith('https://suggestqueries.google.com/')) {
+            return new Response(JSON.stringify(['mdn', ['mdn web docs']]), { headers: { 'Content-Type': 'application/json' } })
+          }
+          return new Response('<!doctype html><title>MDN search fixture</title><h1>MDN search results</h1>', {
+            headers: { 'Content-Type': 'text/html' },
+          })
+        })
+      }
+      const capture = guest.capturePage.bind(guest)
+      globalThis.searchCaptureAttempts = 0
+      globalThis.restoreSearchCapture = () => {
+        guest.capturePage = capture
+      }
+      guest.capturePage = async (...args) => {
+        globalThis.searchCaptureAttempts++
+        if (failure && (failure !== 'UnknownVizError' || globalThis.searchCaptureAttempts === 1)) throw new Error(failure)
+        return capture(...args)
+      }
+      return guest.id
+    }, failure)
+    try {
+      await address.fill('mdn')
+      if (failure) await expect.poll(() => app.evaluate(() => globalThis.searchCaptureAttempts)).toBeGreaterThanOrEqual(2)
+      await address.press('Enter')
+      await expect(page.locator('.SimpleBrowserTabSelected')).toHaveAttribute('aria-label', 'MDN search fixture')
+      await expect(snapshot).toHaveCount(0)
+      await expect
+        .poll(() =>
+          app.evaluate(
+            ({ BrowserWindow }, id) =>
+              BrowserWindow.getAllWindows().some((window) =>
+                window.contentView.children.some(
+                  (view) => view.webContents?.id === id && view.getVisible() && view.getBounds().width > 100 && view.getBounds().height > 100,
+                ),
+              ),
+            guestId,
+          ),
+        )
+        .toBe(true)
+    } finally {
+      await app.evaluate(() => {
+        globalThis.restoreSearchCapture()
+        delete globalThis.restoreSearchCapture
+      })
+    }
+  }
+  assert.ok(captureErrors.length > 0, 'The persistent capture failure must be exercised')
+  for (const error of captureErrors) assert.match(error, /Current display surface not available for capture/)
+  // Return to the original page for the remaining workspace and toolbar checks.
+  for (let remaining = 20; remaining > 0; remaining--) {
+    await address.click()
+    await address.press('Control+w')
+    await expect(page.locator('.SimpleBrowserTab')).toHaveCount(remaining)
+  }
+  await expect.poll(articleVisible).toBe(true)
+  assert.equal(await articleToken(), token)
+  for (const folder of [otherFolder, profile]) {
+    await page.getByRole('menuitem', { name: 'File', exact: true }).click()
+    await page.getByRole('menuitem', { name: 'Open Recent', exact: true }).hover()
+    await page.getByRole('menuitem', { name: folder, exact: true }).click()
+    await expect(page.getByRole('treeitem', { name: folder === otherFolder ? 'other.txt' : 'example.txt', exact: true })).toBeVisible()
+    await expect(snapshot).toHaveCount(0)
+    await expect.poll(articleVisible).toBe(true)
+    assert.equal(await articleToken(), token)
+  }
+  await page.locator('.SimpleBrowserFullWidthButton').click()
+  await expect(page.locator('.BrowserFullWidth')).toHaveCount(1)
   const menu = page.locator('#Menu-0')
   await expect.poll(articleVisible).toBe(true)
   await page.locator('.SimpleBrowserTabSelected').click({ button: 'right' })
@@ -194,7 +363,11 @@ try {
   await expect(address).toHaveValue('known query')
   await expect.poll(() => app.evaluate(() => globalThis.pendingSuggestionQuery)).toBe('known query')
   await expect(suggestions).toBeVisible()
-  assert.deepEqual(await suggestions.getByRole('option').allTextContents(), previousSuggestions, 'Pending results must preserve the visible suggestions')
+  assert.deepEqual(
+    await suggestions.getByRole('option').allTextContents(),
+    previousSuggestions,
+    'Pending results must preserve the visible suggestions',
+  )
   await app.evaluate(() => globalThis.releaseSuggestionResponse())
   await expect(page.getByRole('option', { name: 'known query result', exact: true })).toBeVisible()
   assert.equal(await snapshot.evaluate((image) => image === window.browserSnapshot), true, 'Typing must retain the same snapshot image')
@@ -205,7 +378,11 @@ try {
     return window.browserSnapshotChanges
   })
   for (const change of snapshotChanges) {
-    assert.equal(change.oldValue, change.attribute === 'class' ? snapshotClass : snapshotSource, 'Typing must not temporarily change the snapshot appearance')
+    assert.equal(
+      change.oldValue,
+      change.attribute === 'class' ? snapshotClass : snapshotSource,
+      'Typing must not temporarily change the snapshot appearance',
+    )
   }
   await expect(address).toHaveValue('known query')
   assert.equal(await address.evaluate((input) => input === window.browserAddressInput), true)

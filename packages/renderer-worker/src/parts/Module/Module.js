@@ -6,6 +6,8 @@ export const load = (moduleId) => {
       return import('../About/About.ipc.js')
     case ModuleId.Ajax:
       return import('../Ajax/Ajax.ipc.js')
+    case ModuleId.SimpleBrowserWorkflow:
+      return import('../SimpleBrowserWorkflow/SimpleBrowserWorkflow.ipc.js')
     case ModuleId.Audio:
       return import('../Audio/Audio.ipc.js')
     case ModuleId.AutoUpdater:

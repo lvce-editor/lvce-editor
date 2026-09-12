@@ -83,6 +83,11 @@ jobs:
           npm run e2e:headless --prefix packages/extension-host-worker-tests -- --test-name-prefix=workspace.remote-local-services
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0
+      - name: Test TypeScript readonly union highlighting
+        working-directory: ./packages/extension-host-worker-tests
+        run: npm run e2e:headless -- --test-name-prefix=viewlet.editor-typescript-readonly-union-parameters
+        env:
+          PLAYWRIGHT_BROWSERS_PATH: 0
       - name: Test title bar application blur
         if: matrix.os == 'ubuntu-24.04'
         run: |
@@ -117,6 +122,9 @@ jobs:
         run: npm run test:simple-browser-new-tab
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0
+      - name: Test Simple Browser workflows
+        if: matrix.os == 'ubuntu-24.04'
+        run: xvfb-run -a npm run test:simple-browser-workflows
       - name: Test Simple Browser workspace switching
         if: matrix.os == 'ubuntu-24.04'
         run: |
@@ -155,9 +163,7 @@ jobs:
       - name: Test integrated terminal rendering
         if: matrix.os == 'ubuntu-24.04'
         working-directory: ./packages/extension-host-worker-tests
-        run: |
-          npm run e2e:headless -- --test-name-prefix=viewlet.terminal-xterm
-          npm run e2e:headless -- --test-name-prefix=viewlet.terminal-tab-icons
+        run: npm run e2e:headless -- --test-name-prefix=viewlet.terminal-
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0
       - name: Test error dialog and notification rendering
@@ -203,6 +209,12 @@ jobs:
         if: matrix.os == 'ubuntu-24.04'
         working-directory: ./packages/extension-host-worker-tests
         run: npm run e2e:headless -- --test-name-prefix=viewlet.extension-detail-canonical-uri
+        env:
+          PLAYWRIGHT_BROWSERS_PATH: 0
+      - name: Test extension detail sidebar resizing
+        if: matrix.os == 'ubuntu-24.04'
+        working-directory: ./packages/extension-host-worker-tests
+        run: npm run e2e:headless -- --test-name-prefix=viewlet.extension-detail-sidebar-resize
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0
       - name: Test saving extension filesystem files

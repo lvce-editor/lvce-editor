@@ -744,6 +744,10 @@
           "name": "ExtensionDetail.render2",
           "parameters": [{ "source": "state", "name": "uid" }, { "source": "result", "name": "diff" }]
         },
+        "resize": {
+          "name": "ExtensionDetail.resize",
+          "parameters": [{ "source": "state", "name": "uid" }, { "source": "argument", "name": "dimensions" }]
+        },
         "saveState": { "name": "ExtensionDetail.saveState", "parameters": [{ "source": "state", "name": "uid" }] },
         "terminate": { "name": "ExtensionDetail.terminate", "parameters": [] },
         "getCommandIds": { "name": "ExtensionDetail.getCommandIds", "parameters": [] },

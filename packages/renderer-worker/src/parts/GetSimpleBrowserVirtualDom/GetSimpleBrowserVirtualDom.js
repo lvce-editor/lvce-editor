@@ -1,3 +1,4 @@
+import * as BrowserFind from '../GetBrowserFindVirtualDom/GetBrowserFindVirtualDom.js'
 import * as ClassNames from '../ClassNames/ClassNames.js'
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as HtmlInputType from '../HtmlInputType/HtmlInputType.js'
@@ -38,6 +39,7 @@ export const getSimpleBrowserVirtualDom = (
   tabDropIndex = -1,
   fullWidth = false,
   chromeTheme = 'light',
+  findState,
 ) => {
   const inlineSuggestion = getInlineSuggestion(value, suggestions)
   /** @type {any[]} */
@@ -47,7 +49,13 @@ export const getSimpleBrowserVirtualDom = (
       className: `Viewlet SimpleBrowser${tabsEnabled ? ' SimpleBrowserTabsEnabled' : ''}${chromeTheme === 'inherit' ? '' : ' SimpleBrowserLight'}`,
       onFocusIn: DomEventListenerFunctions.HandleFocusInSimpleBrowser,
       childCount:
-        1 + (tabsEnabled ? 1 : 0) + (snapshot ? 1 : 0) + (pageSnapshotDom.length > 0 ? 1 : 0) + (suggestions.length > 0 ? 1 : 0) + (tabHover ? 1 : 0),
+        1 +
+        (findState?.findVisible ? 1 : 0) +
+        (tabsEnabled ? 1 : 0) +
+        (snapshot ? 1 : 0) +
+        (pageSnapshotDom.length > 0 ? 1 : 0) +
+        (suggestions.length > 0 ? 1 : 0) +
+        (tabHover ? 1 : 0),
     },
   ]
   if (tabsEnabled) {
@@ -183,7 +191,12 @@ export const getSimpleBrowserVirtualDom = (
     {
       type: VirtualDomElements.Div,
       className: ClassNames.SimpleBrowserHeader,
-      childCount: 7,
+      childCount: 3,
+    },
+    {
+      type: VirtualDomElements.Div,
+      className: 'SimpleBrowserButtonsLeft',
+      childCount: 3,
     },
     {
       type: VirtualDomElements.Button,
@@ -266,6 +279,11 @@ export const getSimpleBrowserVirtualDom = (
   }
   dom.push(
     {
+      type: VirtualDomElements.Div,
+      className: 'SimpleBrowserButtonsRight',
+      childCount: 3,
+    },
+    {
       type: VirtualDomElements.Button,
       className: ClassNames.IconButton,
       title: 'Open External',
@@ -301,6 +319,7 @@ export const getSimpleBrowserVirtualDom = (
       childCount: 0,
     },
   )
+  if (findState?.findVisible) dom.push(...BrowserFind.getBrowserFindVirtualDom(findState))
   if (snapshot) {
     dom.push(
       {
