@@ -29,7 +29,7 @@ const createTabDom = (tab, index, isSelected) => {
     div(
       {
         className: ClassNames.TerminalTabIcon,
-        maskImage: `url(/icons/${icon}.svg)`,
+        maskImage: `/icons/${icon}.svg`,
       },
       0,
     ),
