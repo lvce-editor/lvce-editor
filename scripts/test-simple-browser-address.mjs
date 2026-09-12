@@ -98,7 +98,7 @@ try {
   const address = page.locator('[name="simple-browser-address"]')
   await expect(page.locator('.SimpleBrowserTabSelected')).toHaveAttribute('aria-label', 'Example Domain')
   await expect(address).toHaveValue(/^https:\/\/example\.com\/?$/)
-  await address.focus()
+  await address.click()
   await expect(address).toBeFocused()
   await address.fill(url)
   // Native submission works before focus-dependent shortcuts arrive.
