@@ -138,6 +138,9 @@ try {
       await expect(page.getByRole('menuitem', { name: 'Hide Activity Bar', exact: true })).toBeVisible()
       await expect(page.locator('.SimpleBrowserSnapshot')).toBeVisible()
       await expect.poll(getLiveIds).toEqual([])
+      await expect
+        .poll(() => app.evaluate(({ webContents }, id) => webContents.fromId(id).executeJavaScript('document.visibilityState'), id))
+        .toBe('hidden')
       await page.keyboard.press('Escape')
       await expect(page.locator('.SimpleBrowserSnapshot')).toHaveCount(0)
       await expect.poll(getLiveIds).toEqual([id])
