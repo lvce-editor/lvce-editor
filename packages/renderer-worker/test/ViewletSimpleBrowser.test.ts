@@ -313,7 +313,8 @@ test('loadContent', async () => {
   expect(await ViewletSimpleBrowser.loadContent(state)).toMatchObject({
     audioIndicatorEnabled: true,
     headerHeight: 65,
-    iframeSrc: 'https://example.com',
+    iframeSrc: 'https://example.com/',
+    inputValue: 'https://example.com/',
     searchHistory: ['cheeseburger'],
     tabHoverEnabled: false,
     tabsEnabled: true,
@@ -422,7 +423,7 @@ test('loadContent - restore id - same browser view', async () => {
   ElectronWebContentsViewFunctions.setIframeSrc.mockImplementation(() => {})
   const state = ViewletSimpleBrowser.create(0, 'simple-browser://1', 0, 0, 0, 0)
   expect(await ViewletSimpleBrowser.loadContent(state)).toMatchObject({
-    iframeSrc: 'https://example.com',
+    iframeSrc: 'https://example.com/',
   })
   expect(ElectronWebContentsView.createWebContentsView).toHaveBeenCalledTimes(1)
   expect(ElectronWebContentsView.createWebContentsView).toHaveBeenCalledWith(1, 0)
@@ -440,14 +441,14 @@ test('loadContent - restore id - browser view does not exist yet', async () => {
   ElectronWebContentsViewFunctions.setIframeSrc.mockImplementation(() => {})
   const state = ViewletSimpleBrowser.create(0, 'simple-browser://1', 0, 0, 0, 0)
   expect(await ViewletSimpleBrowser.loadContent(state)).toMatchObject({
-    iframeSrc: 'https://example.com',
+    iframeSrc: 'https://example.com/',
   })
   expect(ElectronWebContentsView.createWebContentsView).toHaveBeenCalledTimes(1)
   expect(ElectronWebContentsView.createWebContentsView).toHaveBeenCalledWith(1, 0)
   expect(ElectronWebContentsViewFunctions.setFallthroughKeyBindings).toHaveBeenCalledTimes(1)
   expect(ElectronWebContentsViewFunctions.setFallthroughKeyBindings).toHaveBeenCalledWith(2, browserTabKeyBindings)
   expect(ElectronWebContentsViewFunctions.setIframeSrc).toHaveBeenCalledTimes(1)
-  expect(ElectronWebContentsViewFunctions.setIframeSrc).toHaveBeenCalledWith(2, 'https://example.com')
+  expect(ElectronWebContentsViewFunctions.setIframeSrc).toHaveBeenCalledWith(2, 'https://example.com/')
 })
 
 test('loadContent restores every tab but creates a web contents view only for the selected tab', async () => {
