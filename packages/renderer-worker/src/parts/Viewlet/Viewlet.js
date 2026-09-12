@@ -14,35 +14,13 @@ import * as SaveState from '../SaveState/SaveState.js'
 import * as SimpleBrowserOverlay from '../SimpleBrowserOverlay/SimpleBrowserOverlay.js'
 import * as UpdateDynamicFocusContext from '../UpdateDynamicFocusContext/UpdateDynamicFocusContext.js'
 import { VError } from '../VError/VError.js'
+import * as ViewletCommandQueue from '../ViewletCommandQueue/ViewletCommandQueue.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletManagerVisitor from '../ViewletManagerVisitor/ViewletManagerVisitor.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as ViewletElectron from './ViewletElectron.js'
-
-const commandQueues = new Map()
-
-const enqueueCommand = async (uid, command) => {
-  const previous = commandQueues.get(uid) || Promise.resolve()
-  const run = async () => {
-    try {
-      await previous
-    } catch {
-      // The previous caller receives its error; later commands must still run.
-    }
-    return command()
-  }
-  const current = run()
-  commandQueues.set(uid, current)
-  try {
-    return await current
-  } finally {
-    if (commandQueues.get(uid) === current) {
-      commandQueues.delete(uid)
-    }
-  }
-}
 
 const getKeyBindingSetId = (instance, fallback) => {
   return instance.moduleId || fallback
@@ -664,7 +642,7 @@ const executeViewletCommandInternal = async (uid, fnName, ...args) => {
 export const executeViewletCommand = (uid, fnName, ...args) => {
   const instance = ViewletStates.getInstance(uid)
   if (instance?.factory.serializeCommands) {
-    return enqueueCommand(uid, () => executeViewletCommandInternal(uid, fnName, ...args))
+    return ViewletCommandQueue.enqueue(uid, () => executeViewletCommandInternal(uid, fnName, ...args))
   }
   return executeViewletCommandInternal(uid, fnName, ...args)
 }

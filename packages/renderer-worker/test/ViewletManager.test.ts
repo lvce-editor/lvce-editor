@@ -1457,3 +1457,62 @@ test('commands without an instance still run after the last viewlet is disposed'
   expect(refreshAll).toHaveBeenCalledTimes(1)
   expect(refreshAll).toHaveBeenLastCalledWith()
 })
+
+test.each(['command', 'lazy', 'targetUid', 'sideEffect', 'lazySideEffect', 'event'])(
+  '%s commands share the viewlet queue through rendering and native visibility effects',
+  async (kind) => {
+    const Viewlet = await import('../src/parts/Viewlet/Viewlet.js')
+    const GlobalEventBus = await import('../src/parts/GlobalEventBus/GlobalEventBus.js')
+    const startedRendering = Promise.withResolvers<void>()
+    const finishRendering = Promise.withResolvers<void>()
+    const initial = { uid: 95, overlay: false }
+    let nativeVisible = true
+    const navigate = jest.fn(async (state: typeof initial) => {
+      nativeVisible = true
+      const newState = { ...state, overlay: false }
+      return kind.includes('SideEffect') || kind === 'sideEffect' ? { newState, commands: [] } : newState
+    })
+    if (kind === 'targetUid') Object.assign(navigate, { targetUid: true })
+    const factory = {
+      name: 'QueuedBrowser',
+      Events: kind === 'event' ? { 'queued-browser-event': navigate } : {},
+      create: () => initial,
+      loadContent: (state) => state,
+      hasFunctionalRender: true,
+      serializeCommands: true,
+      Commands: {
+        showOverlay: (state) => ({ ...state, overlay: true }),
+        ...(['command', 'targetUid'].includes(kind) ? { navigate } : {}),
+      },
+      LazyCommands: kind === 'lazy' ? { navigate: async () => ({ navigate }) } : {},
+      CommandsWithSideEffects: kind === 'sideEffect' ? { navigate } : {},
+      CommandsWithSideEffectsLazy: kind === 'lazySideEffect' ? { navigate: async () => ({ navigate }) } : {},
+      render: () => [['Viewlet.setText', 95, 'overlay']],
+      afterRender: async (_oldState, newState) => {
+        if (newState.overlay) nativeVisible = false
+      },
+    }
+    await ViewletManager.load({ getModule: async () => factory, id: 'QueuedBrowser', uid: 95, type: 0 })
+    jest.mocked(RendererProcess.invoke).mockImplementation(async () => {})
+    jest.mocked(RendererProcess.invoke).mockImplementationOnce(async () => {
+      startedRendering.resolve()
+      await finishRendering.promise
+    })
+    const overlay = Viewlet.executeViewletCommand(95, 'showOverlay')
+    await startedRendering.promise
+    const navigation =
+      kind === 'event'
+        ? GlobalEventBus.emitEvent('queued-browser-event')
+        : Command.execute('QueuedBrowser.navigate', ...(kind === 'targetUid' ? [95] : []))
+    try {
+      await new Promise<void>((resolve) => setImmediate(resolve))
+      expect(navigate).not.toHaveBeenCalled()
+    } finally {
+      finishRendering.resolve()
+      await Promise.all([overlay, navigation])
+      delete GlobalEventBus.state.listenerMap['queued-browser-event']
+    }
+    expect(ViewletStates.getState(95).overlay).toBe(false)
+    expect(nativeVisible).toBe(true)
+  },
+)

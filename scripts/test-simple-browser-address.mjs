@@ -181,6 +181,77 @@ try {
     await expect.poll(articleVisible).toBe(true)
     assert.equal(await articleToken(), token)
   }
+  // Ctrl+T and Enter use named commands; typing and suggestion updates use DOM commands.
+  // Repeated searches must keep the selected native view attached across both paths.
+  for (let iteration = 0; iteration < 20; iteration++) {
+    await address.click()
+    await address.press('Control+t')
+    await expect(page.locator('.SimpleBrowserTab')).toHaveCount(iteration + 2)
+    await expect(address).toHaveValue('')
+    const failure = iteration === 18 ? 'UnknownVizError' : iteration === 19 ? 'Current display surface not available for capture' : ''
+    assert.deepEqual(captureErrors, [], 'Earlier searches must not report capture failures')
+    const guestId = await app.evaluate(({ webContents }, failure) => {
+      const guest = webContents.getAllWebContents().sort((a, b) => b.id - a.id)[0]
+      globalThis.searchFixtureSessions ||= new WeakSet()
+      if (!globalThis.searchFixtureSessions.has(guest.session)) {
+        globalThis.searchFixtureSessions.add(guest.session)
+        guest.session.protocol.handle('https', async (request) => {
+          if (request.url.startsWith('https://suggestqueries.google.com/')) {
+            return new Response(JSON.stringify(['mdn', ['mdn web docs']]), { headers: { 'Content-Type': 'application/json' } })
+          }
+          return new Response('<!doctype html><title>MDN search fixture</title><h1>MDN search results</h1>', {
+            headers: { 'Content-Type': 'text/html' },
+          })
+        })
+      }
+      const capture = guest.capturePage.bind(guest)
+      globalThis.searchCaptureAttempts = 0
+      globalThis.restoreSearchCapture = () => {
+        guest.capturePage = capture
+      }
+      guest.capturePage = async (...args) => {
+        globalThis.searchCaptureAttempts++
+        if (failure && (failure !== 'UnknownVizError' || globalThis.searchCaptureAttempts === 1)) throw new Error(failure)
+        return capture(...args)
+      }
+      return guest.id
+    }, failure)
+    try {
+      await address.fill('mdn')
+      if (failure) await expect.poll(() => app.evaluate(() => globalThis.searchCaptureAttempts)).toBeGreaterThanOrEqual(2)
+      await address.press('Enter')
+      await expect(page.locator('.SimpleBrowserTabSelected')).toHaveAttribute('aria-label', 'MDN search fixture')
+      await expect(snapshot).toHaveCount(0)
+      await expect
+        .poll(() =>
+          app.evaluate(
+            ({ BrowserWindow }, id) =>
+              BrowserWindow.getAllWindows().some((window) =>
+                window.contentView.children.some(
+                  (view) => view.webContents?.id === id && view.getVisible() && view.getBounds().width > 100 && view.getBounds().height > 100,
+                ),
+              ),
+            guestId,
+          ),
+        )
+        .toBe(true)
+    } finally {
+      await app.evaluate(() => {
+        globalThis.restoreSearchCapture()
+        delete globalThis.restoreSearchCapture
+      })
+    }
+  }
+  assert.ok(captureErrors.length > 0, 'The persistent capture failure must be exercised')
+  for (const error of captureErrors) assert.match(error, /Current display surface not available for capture/)
+  // Return to the original page for the remaining workspace and toolbar checks.
+  for (let remaining = 20; remaining > 0; remaining--) {
+    await address.click()
+    await address.press('Control+w')
+    await expect(page.locator('.SimpleBrowserTab')).toHaveCount(remaining)
+  }
+  await expect.poll(articleVisible).toBe(true)
+  assert.equal(await articleToken(), token)
   for (const folder of [otherFolder, profile]) {
     await page.getByRole('menuitem', { name: 'File', exact: true }).click()
     await page.getByRole('menuitem', { name: 'Open Recent', exact: true }).hover()
@@ -278,7 +349,11 @@ try {
   await expect(address).toHaveValue('known query')
   await expect.poll(() => app.evaluate(() => globalThis.pendingSuggestionQuery)).toBe('known query')
   await expect(suggestions).toBeVisible()
-  assert.deepEqual(await suggestions.getByRole('option').allTextContents(), previousSuggestions, 'Pending results must preserve the visible suggestions')
+  assert.deepEqual(
+    await suggestions.getByRole('option').allTextContents(),
+    previousSuggestions,
+    'Pending results must preserve the visible suggestions',
+  )
   await app.evaluate(() => globalThis.releaseSuggestionResponse())
   await expect(page.getByRole('option', { name: 'known query result', exact: true })).toBeVisible()
   assert.equal(await snapshot.evaluate((image) => image === window.browserSnapshot), true, 'Typing must retain the same snapshot image')
@@ -289,7 +364,11 @@ try {
     return window.browserSnapshotChanges
   })
   for (const change of snapshotChanges) {
-    assert.equal(change.oldValue, change.attribute === 'class' ? snapshotClass : snapshotSource, 'Typing must not temporarily change the snapshot appearance')
+    assert.equal(
+      change.oldValue,
+      change.attribute === 'class' ? snapshotClass : snapshotSource,
+      'Typing must not temporarily change the snapshot appearance',
+    )
   }
   await expect(address).toHaveValue('known query')
   assert.equal(await address.evaluate((input) => input === window.browserAddressInput), true)
