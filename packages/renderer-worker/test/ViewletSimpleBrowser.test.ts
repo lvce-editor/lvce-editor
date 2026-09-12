@@ -613,7 +613,8 @@ test('opens a target blank link in a new selected tab by default', async () => {
   expect(ElectronWebContentsViewFunctions.focus).toHaveBeenCalledWith(13)
 })
 
-test('keeps a target blank background tab hidden', async () => {
+test.each([true, false])('keeps a target blank background tab hidden and preserves browser focus (%s)', async (browserFocused) => {
+  FocusState.set(browserFocused ? WhenExpression.FocusSimpleBrowser : 0)
   // @ts-ignore
   ElectronWebContentsViewFunctions.hide.mockResolvedValue(undefined)
   // @ts-ignore
@@ -632,6 +633,11 @@ test('keeps a target blank background tab hidden', async () => {
   expect(newState.tabs).toHaveLength(2)
   expect(ElectronWebContentsViewFunctions.hide).toHaveBeenCalledWith(13)
   expect(ElectronWebContentsViewFunctions.show).not.toHaveBeenCalled()
+  if (browserFocused) {
+    expect(ElectronWebContentsViewFunctions.focus).toHaveBeenCalledWith(12)
+  } else {
+    expect(ElectronWebContentsViewFunctions.focus).not.toHaveBeenCalled()
+  }
 })
 
 test('keeps a popup child loaded when tab unloading is enabled', async () => {
