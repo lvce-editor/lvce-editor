@@ -3,6 +3,7 @@ import * as EmbedsWorker from '../EmbedsWorker/EmbedsWorker.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import { validateWorkflow } from './ValidateWorkflow.js'
+import { waitForBrowserFrame } from './WaitForBrowserFrame.js'
 
 let running = false
 
@@ -25,6 +26,7 @@ export const executeWorkflow = async (id) => {
           throw new Error('Simple Browser requires an Electron browser tab')
         }
         await EmbedsWorker.invoke('ElectronWebContentsView.navigate', browserViewId, task.url)
+        await waitForBrowserFrame(browserViewId)
       } else {
         if (ViewletStates.getByUid(instance.state.uid) !== instance || instance.state.browserViewId !== browserViewId) {
           throw new Error('The workflow browser tab was closed or changed')
