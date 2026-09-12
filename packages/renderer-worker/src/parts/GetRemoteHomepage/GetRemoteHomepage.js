@@ -1,3 +1,7 @@
+/**
+ * @param {string} remote
+ * @param {unknown} hosts
+ */
 export const getRemoteHomepage = (remote, hosts = { 'github.com': 'https://github.com' }) => {
   const value = remote.trim()
   const scp = value.match(/^(?:[^@/]+@)?([^/:]+):([^/].*)$/) || value.match(/^[^@/]+@([^/:]+)\/(.+)$/)
