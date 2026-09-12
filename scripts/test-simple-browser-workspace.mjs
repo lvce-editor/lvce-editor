@@ -102,6 +102,9 @@ try {
   await expect(page.locator('.BrowserFullWidth')).toBeVisible()
   const address = page.locator('[name="simple-browser-address"]')
   await expect(page.locator('.SimpleBrowserTabSelected')).toHaveAttribute('aria-label', 'Example Domain')
+  await expect(address).toHaveValue('https://example.com/')
+  await address.click()
+  await expect(address).toBeFocused()
   await address.fill(url)
   await address.press('Enter')
   const guestSnapshot = () =>
