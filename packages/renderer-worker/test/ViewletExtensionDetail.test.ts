@@ -124,3 +124,25 @@ test.skip('loadContent - error - readme not found', async () => {
   expect(FileSystem.readFile).toHaveBeenCalledTimes(1)
   expect(FileSystem.readFile).toHaveBeenCalledWith('/test/test-extension/README.md')
 })
+
+test('resize forwards dimensions to the worker and renders the updated layout', async () => {
+  const state = { uid: 42, width: 1000, height: 600, x: 0, y: 0 }
+  const dimensions = { width: 400, height: 600, x: 0, y: 0 }
+  const commands = [['Viewlet.setCss', 42, ':root {}']]
+  // @ts-ignore
+  ExtensionDetailViewWorker.invoke.mockImplementation(async (method) => {
+    if (method === 'ExtensionDetail.diff2') {
+      return [7, 5]
+    }
+    if (method === 'ExtensionDetail.render2') {
+      return commands
+    }
+  })
+
+  const result = await ViewletExtensionDetail.resize(state, dimensions)
+
+  expect(ExtensionDetailViewWorker.invoke).toHaveBeenNthCalledWith(1, 'ExtensionDetail.resize', 42, dimensions)
+  expect(ExtensionDetailViewWorker.invoke).toHaveBeenNthCalledWith(2, 'ExtensionDetail.diff2', 42)
+  expect(ExtensionDetailViewWorker.invoke).toHaveBeenNthCalledWith(3, 'ExtensionDetail.render2', 42, [7, 5])
+  expect(result).toMatchObject({ ...dimensions, commands })
+})
