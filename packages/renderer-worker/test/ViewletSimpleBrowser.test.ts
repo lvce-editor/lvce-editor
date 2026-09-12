@@ -635,9 +635,30 @@ test.each([true, false])('keeps a target blank background tab hidden and preserv
   expect(ElectronWebContentsViewFunctions.show).not.toHaveBeenCalled()
   if (browserFocused) {
     expect(ElectronWebContentsViewFunctions.focus).toHaveBeenCalledWith(12)
+    // @ts-ignore
+    expect(ElectronWebContentsViewFunctions.hide.mock.invocationCallOrder[0]).toBeLessThan(ElectronWebContentsViewFunctions.focus.mock.invocationCallOrder[0])
   } else {
     expect(ElectronWebContentsViewFunctions.focus).not.toHaveBeenCalled()
   }
+})
+
+test('does not focus an inactive source tab when it opens a background child', async () => {
+  FocusState.set(WhenExpression.FocusSimpleBrowser)
+  const state = {
+    ...ViewletSimpleBrowser.create(7, '', 10, 20, 300, 200),
+    browserViewId: 14,
+    selectedTabIndex: 1,
+    tabs: [
+      { browserViewId: 12, iframeSrc: 'https://example.com', inputValue: 'https://example.com', title: 'Example' },
+      { browserViewId: 14, iframeSrc: 'https://active.example', inputValue: 'https://active.example', title: 'Active' },
+    ],
+  }
+
+  const newState = await ViewletSimpleBrowser.handleWindowOpen(state, 12, 13, 'https://example.com/docs', 'background-tab')
+
+  expect(newState).toMatchObject({ browserViewId: 14, selectedTabIndex: 1 })
+  expect(ElectronWebContentsViewFunctions.hide).toHaveBeenCalledWith(13)
+  expect(ElectronWebContentsViewFunctions.focus).not.toHaveBeenCalled()
 })
 
 test('keeps a popup child loaded when tab unloading is enabled', async () => {
