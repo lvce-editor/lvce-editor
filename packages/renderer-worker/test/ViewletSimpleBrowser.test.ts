@@ -672,9 +672,8 @@ test.each([true, false])('keeps a target blank background tab hidden and preserv
   expect(ElectronWebContentsViewFunctions.show).not.toHaveBeenCalled()
   if (browserFocused) {
     expect(ElectronWebContentsViewFunctions.focus).toHaveBeenCalledWith(12)
-    // @ts-ignore
-    expect(ElectronWebContentsViewFunctions.hide.mock.invocationCallOrder[0]).toBeLessThan(
-      ElectronWebContentsViewFunctions.focus.mock.invocationCallOrder[0],
+    expect(jest.mocked(ElectronWebContentsViewFunctions.hide).mock.invocationCallOrder[0]).toBeLessThan(
+      jest.mocked(ElectronWebContentsViewFunctions.focus).mock.invocationCallOrder[0],
     )
   } else {
     expect(ElectronWebContentsViewFunctions.focus).not.toHaveBeenCalled()
