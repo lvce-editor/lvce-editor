@@ -5,6 +5,11 @@ import * as WhenExpression from '../WhenExpression/WhenExpression.js'
 export const getKeyBindings = () => {
   return [
     {
+      key: KeyCode.Period,
+      command: 'Workspace.openRemote',
+      when: WhenExpression.FocusExplorer,
+    },
+    {
       key: KeyCode.Escape,
       command: 'Viewlet.closeWidget',
       when: WhenExpression.FocusFindWidget,

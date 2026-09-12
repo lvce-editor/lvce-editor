@@ -2321,3 +2321,23 @@ test('reopens the last closed tab alongside the replacement new tab', async () =
   expect(reopened.tabs).toHaveLength(2)
   expect(reopened).toMatchObject({ browserViewId: 41, iframeSrc: 'https://one.example', selectedTabIndex: 0, closedTabs: [] })
 })
+
+test('openOrRevealTab selects an existing background tab without navigation', async () => {
+  const state = createTwoTabState()
+  const url = state.tabs[1].iframeSrc
+  const result = await ViewletSimpleBrowser.openOrRevealTab(state, url)
+  expect(result.selectedTabIndex).toBe(1)
+  expect(result.tabs).toHaveLength(2)
+  expect(ElectronWebContentsViewFunctions.setIframeSrc).not.toHaveBeenCalled()
+})
+
+test('openOrRevealTab preserves existing tabs when opening a new remote', async () => {
+  // @ts-ignore
+  ElectronWebContentsView.createWebContentsView.mockResolvedValue(14)
+  const state = createTwoTabState()
+  const url = 'https://github.com/owner/repo'
+  const result = await ViewletSimpleBrowser.openOrRevealTab(state, url)
+  expect(result.tabs).toHaveLength(3)
+  expect(result.tabs.slice(0, 2)).toEqual(state.tabs)
+  expect(result.iframeSrc).toBe(url)
+})

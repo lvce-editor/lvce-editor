@@ -64,6 +64,7 @@ export const Commands = {
   handleWillNavigate: SimpleBrowser.handleWillNavigate,
   hideTabHover: SimpleBrowser.hideTabHover,
   hideOverlay: SimpleBrowser.hideOverlay,
+  openOrRevealTab: SimpleBrowser.openOrRevealTab,
   openTab: SimpleBrowser.openTab,
   muteTab: SimpleBrowser.muteTab,
   reloadTab: SimpleBrowser.reloadTab,

@@ -74,7 +74,7 @@ test('renders terminal tabs with switch commands', () => {
   expect(dom).toContainEqual(
     expect.objectContaining({
       className: 'TerminalTabIcon',
-      maskImage: 'url(/icons/terminal-bash.svg)',
+      maskImage: '/icons/terminal-bash.svg',
     }),
   )
 })
