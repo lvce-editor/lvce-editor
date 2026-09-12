@@ -184,8 +184,20 @@ try {
   // Ctrl+T and Enter use named commands; typing and suggestion updates use DOM commands.
   // Repeated searches must keep the selected native view attached across both paths.
   for (let iteration = 0; iteration < 20; iteration++) {
-    await address.click()
-    await address.press('Control+t')
+    if (iteration % 2 === 0) {
+      await address.click()
+      await address.press('Control+t')
+    } else {
+      await app.evaluate(({ BrowserWindow }) => {
+        const view = BrowserWindow.getAllWindows()
+          .flatMap((window) => window.contentView.children)
+          .find((view) => view.webContents && view.getVisible())
+        if (!view) throw new Error('The current browser page must be visible before Ctrl+T')
+        view.webContents.focus()
+        view.webContents.sendInputEvent({ type: 'keyDown', keyCode: 'T', modifiers: ['control'] })
+        view.webContents.sendInputEvent({ type: 'keyUp', keyCode: 'T', modifiers: ['control'] })
+      })
+    }
     await expect(page.locator('.SimpleBrowserTab')).toHaveCount(iteration + 2)
     await expect(address).toHaveValue('')
     const failure = iteration === 18 ? 'UnknownVizError' : iteration === 19 ? 'Current display surface not available for capture' : ''
