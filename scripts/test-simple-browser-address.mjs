@@ -82,7 +82,6 @@ try {
   page.setDefaultTimeout(15000)
   const captureErrors = []
   page.on('console', (message) => {
-    if (message.text().includes('[DEBUG-new-tab-focus]')) console.log(message.text())
     if (message.type() === 'error' && message.text().includes('Failed to capture Simple Browser page')) captureErrors.push(message.text())
     if (message.type() === 'error') console.error('APP ERROR', message.text())
   })
@@ -184,15 +183,11 @@ try {
   }
   // Ctrl+T and Enter use named commands; typing and suggestion updates use DOM commands.
   // Repeated searches must keep the selected native view attached across both paths.
+  // Start by focusing the native page after Explorer restored its own focus.
   for (let iteration = 0; iteration < 20; iteration++) {
-    if (iteration % 2 === 0) {
+    if (iteration % 2 === 1) {
       await address.click()
       await expect(address).toBeFocused()
-      await address.evaluate((input) => {
-        input.addEventListener('keydown', (event) => {
-          queueMicrotask(() => console.log('[DEBUG-new-tab-focus] DOM key', event.key, event.ctrlKey, event.defaultPrevented))
-        }, { once: true })
-      })
       await address.press('Control+t')
     } else {
       await app.evaluate(({ BrowserWindow }) => {
