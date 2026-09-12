@@ -460,8 +460,8 @@
   {
     "name": "builtin.language-basics-yaml",
     "repository": "github.com/lvce-editor/language-basics-yaml",
-    "version": "1.9.0",
-    "sha256": "f132a85e3109f132673c203292149299f559da8d5fa14e8f7c1a3da8322fdacd",
+    "version": "1.9.1",
+    "sha256": "b4b328888e532d739af817a614fc19975872b27be7cefba7893c98b4beff53e9",
     "created": "2022-06-16"
   },
   {
@@ -481,8 +481,8 @@
   {
     "name": "builtin.language-features-json",
     "repository": "github.com/lvce-editor/language-features-json",
-    "version": "1.22.2",
-    "sha256": "f15cb900ad9f2a9a88bb7e35515d8575f3281f55228f4ccf204bcfdf5c47320f",
+    "version": "1.23.0",
+    "sha256": "e84abb3d919f49fcc25c8eff4bcbb3b6a4a7176d2af1e556f03027f614238d28",
     "created": "2024-02-28"
   },
   {

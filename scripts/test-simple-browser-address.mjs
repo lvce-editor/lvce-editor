@@ -62,6 +62,10 @@ try {
     session.defaultSession.protocol.handle('https', async (request) => {
       if (request.url.startsWith('https://suggestqueries.google.com/')) {
         const query = new URL(request.url).searchParams.get('q')
+        if (query.startsWith('known ')) {
+          globalThis.pendingSuggestionQuery = query
+          await globalThis.suggestionResponseGate
+        }
         return new Response(JSON.stringify([query, [query + ' result']]), { headers: { 'Content-Type': 'application/json' } })
       }
       if (request.url === 'https://example.com/') return new Response('<title>Example Domain</title>', { headers: { 'Content-Type': 'text/html' } })
@@ -73,7 +77,7 @@ try {
   page.on('console', (message) => {
     if (message.type() === 'error') console.error('APP ERROR', message.text())
   })
-  await expect(page.locator('#Workbench')).toBeVisible()
+  await expect(page.locator('#Workbench')).toBeVisible({ timeout: 15000 })
   await expect(page.getByRole('tree', { name: 'Files Explorer' })).toBeVisible()
   await page.evaluate(() => {
     localStorage.setItem('simple-browser-search-history', JSON.stringify(['known first', 'known second', 'offline local']))
@@ -84,7 +88,11 @@ try {
   const address = page.locator('[name="simple-browser-address"]')
   await expect(page.locator('.SimpleBrowserTabSelected')).toHaveAttribute('aria-label', 'Example Domain')
   await address.fill(url)
-  await address.press('Enter')
+  // Native submission works before focus-dependent shortcuts arrive.
+  await address.evaluate((input) => {
+    if (!input.form?.noValidate) throw new Error('The address form must also accept search queries')
+    input.form.requestSubmit()
+  })
   await expect(page.locator('.SimpleBrowserTabSelected')).toHaveAttribute('aria-label', 'Local article')
   const articleToken = () =>
     app.evaluate(async ({ webContents }, url) => {
@@ -161,11 +169,44 @@ try {
   await expect(suggestions).toHaveCount(0)
 
   await address.fill('known')
+  await expect(page.getByRole('option', { name: 'known result', exact: true })).toBeVisible()
   await expect(page.locator('.SimpleBrowserInlineSuggestion')).toBeVisible()
+  const previousSuggestions = await suggestions.getByRole('option').allTextContents()
+  await app.evaluate(() => {
+    globalThis.suggestionResponseGate = new Promise((resolve) => {
+      globalThis.releaseSuggestionResponse = resolve
+    })
+  })
+  await snapshot.evaluate((image) => {
+    window.browserSnapshot = image
+    window.browserSnapshotChanges = []
+    window.browserSnapshotObserver = new MutationObserver((records) => {
+      for (const record of records) {
+        window.browserSnapshotChanges.push({ attribute: record.attributeName, oldValue: record.oldValue })
+      }
+    })
+    window.browserSnapshotObserver.observe(image, { attributes: true, attributeOldValue: true, attributeFilter: ['class', 'src'] })
+  })
+  const snapshotSource = await snapshot.getAttribute('src')
+  const snapshotClass = await snapshot.getAttribute('class')
   await address.press('End')
   await page.keyboard.type(' query')
   await expect(address).toHaveValue('known query')
+  await expect.poll(() => app.evaluate(() => globalThis.pendingSuggestionQuery)).toBe('known query')
+  await expect(suggestions).toBeVisible()
+  assert.deepEqual(await suggestions.getByRole('option').allTextContents(), previousSuggestions, 'Pending results must preserve the visible suggestions')
+  await app.evaluate(() => globalThis.releaseSuggestionResponse())
   await expect(page.getByRole('option', { name: 'known query result', exact: true })).toBeVisible()
+  assert.equal(await snapshot.evaluate((image) => image === window.browserSnapshot), true, 'Typing must retain the same snapshot image')
+  await expect(snapshot).toHaveAttribute('src', snapshotSource)
+  await expect(snapshot).toHaveAttribute('class', snapshotClass)
+  const snapshotChanges = await page.evaluate(() => {
+    window.browserSnapshotObserver.disconnect()
+    return window.browserSnapshotChanges
+  })
+  for (const change of snapshotChanges) {
+    assert.equal(change.oldValue, change.attribute === 'class' ? snapshotClass : snapshotSource, 'Typing must not temporarily change the snapshot appearance')
+  }
   await expect(address).toHaveValue('known query')
   assert.equal(await address.evaluate((input) => input === window.browserAddressInput), true)
   await address.press('Escape')
@@ -196,6 +237,34 @@ try {
   await address.fill('known.example')
   await expect(suggestions).toBeVisible()
   await page.screenshot({ path: join(root, '.tmp/browser-address-evidence/suggestions.png') })
+  await address.press('Escape')
+  const tabs = page.locator('.SimpleBrowser').last().getByRole('tab')
+  const originalCount = await tabs.count()
+  await page.getByRole('tab', { name: 'Local article', exact: true }).getByRole('button', { name: 'Close Local article', exact: true }).click()
+  await expect(tabs).toHaveCount(originalCount - 1)
+  await address.focus()
+  await address.press('Control+Shift+T')
+  await expect(tabs).toHaveCount(originalCount)
+  await expect(address).toHaveValue(url)
+  await expect.poll(articleVisible).toBe(true)
+  // Native web-page focus must route the shortcut to Simple Browser too.
+  await app.evaluate(({ webContents }, url) => {
+    const target = webContents.getAllWebContents().find((item) => item.getURL() === url)
+    target.focus()
+    target.sendInputEvent({ type: 'keyDown', keyCode: 'W', modifiers: ['control'] })
+    target.sendInputEvent({ type: 'keyUp', keyCode: 'W', modifiers: ['control'] })
+  }, url)
+  await expect(tabs).toHaveCount(originalCount - 1)
+  await app.evaluate(({ webContents }) => {
+    const target = webContents.getFocusedWebContents()
+    if (!target?.getURL().startsWith('data:text/html')) throw new Error('Expected the selected new-tab page to have native focus')
+    target.sendInputEvent({ type: 'keyDown', keyCode: 'T', modifiers: ['control', 'shift'] })
+    target.sendInputEvent({ type: 'keyUp', keyCode: 'T', modifiers: ['control', 'shift'] })
+  })
+  await expect(tabs).toHaveCount(originalCount)
+  await expect(address).toHaveValue(url)
+  await expect.poll(articleVisible).toBe(true)
+  console.log('Closed tabs reopen from address-bar and native web-page shortcuts')
   console.log('History suggestions preserve the toolbar and typing; visible and background new-tab pages follow the browser theme')
 } finally {
   await app?.close()

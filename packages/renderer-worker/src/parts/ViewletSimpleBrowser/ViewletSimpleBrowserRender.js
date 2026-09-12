@@ -11,6 +11,12 @@ export const hasFunctionalRootRender = true
 
 export const renderEventListeners = () => {
   return [
+    { name: 'handleSimpleBrowserFindInput', params: ['handleFindInput', 'event.target.value'] },
+    { name: 'handleSimpleBrowserFindCase', params: ['toggleFindMatchCase'] },
+    { name: 'handleSimpleBrowserFindNext', params: ['findNext'] },
+    { name: 'handleSimpleBrowserFindPrevious', params: ['findPrevious'] },
+    { name: 'handleSimpleBrowserFindClose', params: ['closeFind'] },
+    { name: DomEventListenerFunctions.HandleSubmitSimpleBrowserAddress, params: ['go'], preventDefault: true },
     { name: DomEventListenerFunctions.HandleBlurSimpleBrowserAddress, params: ['handleAddressBlur'] },
     { name: DomEventListenerFunctions.HandlePointerDownSimpleBrowserSuggestion, params: ['handleSuggestionPointerDown'], preventDefault: true },
     { name: DomEventListenerFunctions.HandleClickSuggestion, params: ['acceptSuggestion', 'event.currentTarget.dataset.value'] },
@@ -174,12 +180,18 @@ const getDom = (state) => {
     state.tabDropIndex,
     state.fullWidth,
     state.chromeTheme,
+    state,
   )
 }
 
 const renderDom = {
   isEqual(oldState, newState) {
     return (
+      oldState.findVisible === newState.findVisible &&
+      oldState.findValue === newState.findValue &&
+      oldState.findMatchCase === newState.findMatchCase &&
+      oldState.findMatches === newState.findMatches &&
+      oldState.findActiveMatch === newState.findActiveMatch &&
       oldState.fullWidth === newState.fullWidth &&
       oldState.chromeTheme === newState.chromeTheme &&
       oldState.iframeSrc === newState.iframeSrc &&
@@ -263,4 +275,17 @@ const renderPageSnapshotCss = {
   multiple: true,
 }
 
-export const render = [renderDom, renderAddressValue, renderFocusAddress, renderPageSnapshotCss, TabDrag.renderDragData]
+const renderFindFocus = {
+  isEqual(oldState, newState) {
+    return oldState.findFocusVersion === newState.findFocusVersion
+  },
+  apply(oldState, newState) {
+    return [
+      ['Viewlet.focusElementByName', newState.uid, 'simple-browser-find'],
+      ['Viewlet.setSelectionByName', newState.uid, 'simple-browser-find', 0, newState.findValue.length],
+    ]
+  },
+  multiple: true,
+}
+
+export const render = [renderDom, renderAddressValue, renderFocusAddress, renderPageSnapshotCss, TabDrag.renderDragData, renderFindFocus]

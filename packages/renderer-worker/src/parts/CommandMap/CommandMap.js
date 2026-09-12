@@ -278,6 +278,7 @@ export const commandMap = {
   'Markdown.renderMarkdown': lazy('Markdown.renderMarkdown'),
   'MeasureTextHeight.measureTextBlockHeight': lazy('MeasureTextHeight.measureTextBlockHeight'),
   'MeasureTextHeight.measureTextHeight': lazy('MeasureTextHeight.measureTextHeight'),
+  'Menu.prepareContextMenu': lazy('Menu.prepareContextMenu'),
   'Menu.focusFirst': lazy('Menu.focusFirst'),
   'Menu.focusIndex': lazy('Menu.focusIndex'),
   'Menu.focusLast': lazy('Menu.focusLast'),
@@ -403,6 +404,7 @@ export const commandMap = {
   'SendMessagePortToExtensionHostWorker.sendMessagePortToMarkdownWorker': lazy(
     'SendMessagePortToExtensionHostWorker.sendMessagePortToMarkdownWorker',
   ),
+  'SendMessagePortToExtensionHostWorker.sendMessagePortToMenuWorker': lazy('SendMessagePortToExtensionHostWorker.sendMessagePortToMenuWorker'),
   'SendMessagePortToExtensionHostWorker.sendMessagePortToRendererProcess': lazy(
     'SendMessagePortToExtensionHostWorker.sendMessagePortToRendererProcess',
   ),
@@ -436,6 +438,7 @@ export const commandMap = {
   'SideBar.open': lazy('SideBar.open'),
   'SideBar.openViewlet': lazy('SideBar.openViewlet'),
   'SideBar.show': lazy('SideBar.show'),
+  'SimpleBrowser.executeWorkflow': lazy('SimpleBrowser.executeWorkflow'),
   'SimpleBrowser.acceptSuggestion': lazy('SimpleBrowser.acceptSuggestion'),
   'SimpleBrowser.closeSuggestions': lazy('SimpleBrowser.closeSuggestions'),
   'SimpleBrowser.getDomTree': lazy('SimpleBrowser.getDomTree'),

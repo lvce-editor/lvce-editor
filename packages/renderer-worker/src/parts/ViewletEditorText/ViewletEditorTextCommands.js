@@ -153,6 +153,8 @@ const handleColorPickerSliderKeyDown = (editor, ...args) => {
   return executeWidgetCommand(editor, ...args)
 }
 
+const refreshGutterDecorationsAll = Object.assign(() => EditorWorker.invoke('Editor.refreshGutterDecorationsAll'), { requiresInstance: false })
+
 export const getCommands = async () => {
   const commandIds = await EditorWorker.invoke('Editor.getCommandIds')
   Object.assign(Commands, WrapEditorCommands.wrapEditorCommands(commandIds), WrapEditorCommands.wrapEditorCommands(subWidgetCommandIds), {
@@ -162,6 +164,7 @@ export const getCommands = async () => {
     loadContent,
     loadContentLater,
     renderPending,
+    refreshGutterDecorationsAll,
     showOverlayMessage,
     updateDiagnostics,
     hotReload,

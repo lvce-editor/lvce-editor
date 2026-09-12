@@ -100,3 +100,13 @@ export const resetFocusedIndex = async (menu) => {
 // TODO pageup / pagedown keys
 
 // TODO more tests
+
+export const prepareContextMenu = async (port) => {
+  await SimpleBrowserOverlay.show('menu')
+  try {
+    await MenuWorker.invokeAndTransfer('Menu.handleMessagePort', port)
+  } catch (error) {
+    await SimpleBrowserOverlay.hide('menu')
+    throw error
+  }
+}

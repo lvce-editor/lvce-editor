@@ -695,8 +695,10 @@ test('toggleSideBarView appends focus commands after showing the requested view'
   expect(result.commands).toEqual([['activity-bar.render2'], ['Viewlet.focusElementByName', 12, 'SearchValue']])
 })
 
-test('openSideBarView waits for deferred content and focuses the mounted view when requested', async () => {
+test('openSideBarView waits for deferred content and appends focus after showing the view', async () => {
   mockActivityBarRender()
+  // @ts-ignore
+  Viewlet.getFocusCommands.mockResolvedValue([['Viewlet.focusSelector', 12, '[name="SourceControlInput"]']])
   const state = {
     ...ViewletLayout.create(1),
     activityBarId: 7,
@@ -704,11 +706,12 @@ test('openSideBarView waits for deferred content and focuses the mounted view wh
     sideBarVisible: true,
   }
 
-  const result = await ViewletLayout.openSideBarView(state, 'Extensions', true, undefined)
+  const result = await ViewletLayout.openSideBarView(state, 'Source Control', true, undefined)
 
-  expect(ViewletManager.waitForLoadContentLater).toHaveBeenCalledWith('Extensions')
-  expect(Viewlet.focus).toHaveBeenCalledWith('Extensions')
-  expect(result.commands).toEqual([['activity-bar.render2']])
+  expect(ViewletManager.waitForLoadContentLater).toHaveBeenCalledWith('Source Control')
+  expect(Viewlet.getFocusCommands).toHaveBeenCalledWith('Source Control')
+  expect(Viewlet.focus).not.toHaveBeenCalled()
+  expect(result.commands).toEqual([['activity-bar.render2'], ['Viewlet.focusSelector', 12, '[name="SourceControlInput"]']])
 })
 
 test('openSideBarView does not request focus by default', async () => {
@@ -723,6 +726,7 @@ test('openSideBarView does not request focus by default', async () => {
   await ViewletLayout.openSideBarView(state, 'Extensions', false, undefined)
 
   expect(ViewletManager.waitForLoadContentLater).not.toHaveBeenCalled()
+  expect(Viewlet.getFocusCommands).not.toHaveBeenCalled()
   expect(Viewlet.focus).not.toHaveBeenCalled()
 })
 
