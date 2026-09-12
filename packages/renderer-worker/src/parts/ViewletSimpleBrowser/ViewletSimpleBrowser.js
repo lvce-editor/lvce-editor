@@ -547,6 +547,18 @@ export const reloadTab = async (state, index) => {
   return updateTab(state, tab.browserViewId, { isLoading: true })
 }
 
+export const openOrRevealTab = async (state, url) => {
+  const index = state.tabs.findIndex((tab) => tab.iframeSrc === url)
+  if (index !== -1) {
+    const selected = await selectTab(state, index)
+    return updateTab({ ...selected, addressValueVersion: selected.addressValueVersion + 1 }, selected.browserViewId, { inputValue: url })
+  }
+  if (!state.iframeSrc) {
+    return setUrl(state, url)
+  }
+  return openTab(state, url, 'foreground-tab')
+}
+
 export const openTab = async (state, url, disposition) => {
   const { hasSuggestionsOverlay } = state
   const currentState = hasSuggestionsOverlay ? await closeSuggestions(state) : state

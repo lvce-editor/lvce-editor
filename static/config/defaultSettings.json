@@ -1,4 +1,5 @@
 {
+  "git.remoteHosts": { "github.com": "https://github.com" },
   "application.updateMode": "none",
   "application.useOnLoadJson": false,
 

@@ -463,6 +463,7 @@ export const getQuickPickMenuEntries = () => {
       id: 'Window.zoomReset',
       label: 'Window: Reset Zoom',
     },
+    { id: 'Workspace.openRemote', label: 'Git: Open Remote in Simple Browser' },
     { id: 'Layout.toggleSimpleBrowserFullWidth', label: 'Simple Browser: Toggle Full Width' },
     {
       id: 'Main.openUri',

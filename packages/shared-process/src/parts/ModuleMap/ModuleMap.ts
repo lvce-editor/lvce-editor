@@ -314,6 +314,7 @@ export const getModuleId = (commandId: any): any => {
     case 'WebViewServer.setInfo2':
     case 'WebViewServer.start':
       return ModuleId.WebViewServer
+    case 'Workspace.getGitRemote':
     case 'Workspace.getHomeDir':
     case 'Workspace.resolveRoot':
       return ModuleId.Workspace
