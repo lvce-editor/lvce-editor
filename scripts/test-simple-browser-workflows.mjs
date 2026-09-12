@@ -92,6 +92,14 @@ try {
   ])
   await expect.poll(() => getKeys(`${url}/second`), { timeout: 30000 }).toEqual([{ key: 'Enter', shift: false, trusted: true }])
   await expect(page.locator('.SimpleBrowserTabSelected')).toHaveAttribute('aria-label', 'Workflow fixture')
+  const header = page.locator('.SimpleBrowserHeader')
+  await expect(header.locator(':scope > button')).toHaveCount(0)
+  await expect(header.locator(':scope > div.SimpleBrowserButtonsLeft > button')).toHaveCount(3)
+  await expect(header.locator(':scope > div.SimpleBrowserButtonsRight > button')).toHaveCount(3)
+  for (const title of ['Back', 'Forward', 'Reload']) {
+    await expect(header.locator('.SimpleBrowserButtonsLeft').getByRole('button', { name: title, exact: true })).toBeVisible()
+  }
+  await expect(header.locator('.SimpleBrowserButtonsRight .SimpleBrowserMenuButton')).toBeVisible()
   console.log('Workflow shortcut opened a browser and delivered sequential trusted Space and Shift+L events')
 } finally {
   await app?.close()
