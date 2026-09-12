@@ -63,7 +63,7 @@ test('opens a new terminal panel view with the requested cwd', async () => {
   expect(commandExecute).not.toHaveBeenCalled()
 })
 
-test('adds a focused terminal without reselecting the active terminal panel view', async () => {
+test.each([true, false])('adds a focused terminal after revealing existing terminals (panel visible: %s)', async (panelVisible) => {
   ViewletStates.set('Terminals', {
     factory: {},
     moduleId: 'Terminals',
@@ -76,11 +76,26 @@ test('adds a focused terminal without reselecting the active terminal panel view
     panelVisible: true,
   }
 
+  state.panelVisible = panelVisible
   const result = await ViewletLayout.openIntegratedTerminal(state, 'file:///workspace/folder')
 
-  expect(result.newState.panelView).toBe('Terminals')
+  expect(executeViewletCommand).toHaveBeenCalledWith(state.uid, 'showPanel', 'Terminals')
+  expect(result.newState).toBe(state)
   expect(panelWorkerInvocations).toEqual([])
   expect(commandExecute).toHaveBeenCalledWith('Terminals.addTerminal', 'file:///workspace/folder')
+})
+
+test('adds a terminal directly when the terminal panel is active', async () => {
+  ViewletStates.set('Terminals', {
+    factory: {},
+    moduleId: 'Terminals',
+    renderedState: { uid: 88 },
+    state: { uid: 88 },
+  })
+  const state = { ...ViewletLayout.create(1), panelView: 'Terminals', panelVisible: true }
+  await ViewletLayout.openIntegratedTerminal(state, '')
+  expect(executeViewletCommand).not.toHaveBeenCalled()
+  expect(commandExecute).toHaveBeenCalledWith('Terminals.addTerminal', '')
 })
 
 test.each([
