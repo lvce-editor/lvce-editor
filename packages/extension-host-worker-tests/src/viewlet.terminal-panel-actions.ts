@@ -73,4 +73,17 @@ export const test: Test = async (api) => {
   await api.Locator('#Panel .IconButton[title="Kill Terminal"]').click()
   await api.expect(terminals).toHaveCount(1)
   await api.expect(terminals).toContainText('right-terminal')
+
+  await api.Locator('#Panel .IconButton[title="Kill Terminal"]').click()
+  await api.expect(terminals).toHaveCount(1)
+  await api.expect(terminals).toContainText('first-terminal')
+  await api.Locator('#Panel .IconButton[title="Kill Terminal"]').click()
+  await api.expect(api.Locator('#Panel')).toHaveCount(0)
+  await api.expect(terminals).toHaveCount(0)
+
+  await api.Command.execute('Layout.showPanel', 'Terminals')
+  await api.expect(terminals).toHaveCount(1)
+  await api.expect(terminals.locator('.xterm-helper-textarea')).toBeFocused()
+  await runCommand('echo reopened-terminal')
+  await api.expect(terminals).toContainText('reopened-terminal')
 }
