@@ -75,7 +75,7 @@ test('getLanguageConfiguration - uses file name language over extension language
     throw new Error('unexpected message')
   })
   const editor = {
-    uri: 'app://settings.json',
+    uri: 'app:///settings.json',
     languageId: 'json',
   }
   expect(await Languages.getLanguageConfiguration(editor)).toEqual({
@@ -190,7 +190,7 @@ test('getLanguageId - by file name in uri', async () => {
       fileNames: ['settings.json'],
     },
   ])
-  expect(Languages.getLanguageId('app://settings.json')).toBe('jsonc')
+  expect(Languages.getLanguageId('app:///settings.json')).toBe('jsonc')
 })
 
 test("addLanguage - don't override tokenize path", async () => {
