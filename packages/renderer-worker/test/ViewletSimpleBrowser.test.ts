@@ -415,6 +415,12 @@ test('loadContent enables inactive tab unloading through simpleBrowser.unloadTab
 })
 
 test('loadContent - restore id - same browser view', async () => {
+  jest.mocked(ElectronWebContentsViewFunctions.getStats).mockResolvedValue({
+    title: 'Example',
+    url: 'https://example.com/',
+    canGoBack: true,
+    canGoForward: false,
+  } as never)
   // @ts-ignore
   ElectronWebContentsView.createWebContentsView.mockImplementation(() => {
     return 1
@@ -430,6 +436,35 @@ test('loadContent - restore id - same browser view', async () => {
   expect(ElectronWebContentsViewFunctions.setFallthroughKeyBindings).toHaveBeenCalledTimes(1)
   expect(ElectronWebContentsViewFunctions.setFallthroughKeyBindings).toHaveBeenCalledWith(1, browserTabKeyBindings)
   expect(ElectronWebContentsViewFunctions.setIframeSrc).not.toHaveBeenCalled()
+})
+
+test('loadContent navigates a restored tab when a new native view reuses its saved id', async () => {
+  jest.mocked(ElectronWebContentsView.createWebContentsView).mockResolvedValue(2 as never)
+  jest.mocked(ElectronWebContentsViewFunctions.setIframeSrc).mockResolvedValue(undefined as never)
+  jest.mocked(ElectronWebContentsViewFunctions.getStats).mockResolvedValue({
+    canGoBack: false,
+    canGoForward: false,
+    title: '',
+    url: '',
+  } as never)
+  const state = ViewletSimpleBrowser.create(7, 'simple-browser://2', 0, 0, 600, 400)
+  const savedState = {
+    iframeSrc: 'https://selected.example/',
+    selectedTabIndex: 1,
+    tabs: [
+      { iframeSrc: 'https://background.example/', title: 'Background' },
+      { iframeSrc: 'https://selected.example/', title: 'Selected' },
+    ],
+  }
+
+  const restored = await ViewletSimpleBrowser.loadContent(state, savedState)
+
+  expect(ElectronWebContentsViewFunctions.setIframeSrc).toHaveBeenCalledWith(2, 'https://selected.example/')
+  expect(restored.tabs).toMatchObject([
+    { browserViewId: 0, title: 'Background' },
+    { browserViewId: 2, title: 'Selected' },
+  ])
+  expect(restored.selectedTabIndex).toBe(1)
 })
 
 test('loadContent - restore id - browser view does not exist yet', async () => {
@@ -638,7 +673,9 @@ test.each([true, false])('keeps a target blank background tab hidden and preserv
   if (browserFocused) {
     expect(ElectronWebContentsViewFunctions.focus).toHaveBeenCalledWith(12)
     // @ts-ignore
-    expect(ElectronWebContentsViewFunctions.hide.mock.invocationCallOrder[0]).toBeLessThan(ElectronWebContentsViewFunctions.focus.mock.invocationCallOrder[0])
+    expect(ElectronWebContentsViewFunctions.hide.mock.invocationCallOrder[0]).toBeLessThan(
+      ElectronWebContentsViewFunctions.focus.mock.invocationCallOrder[0],
+    )
   } else {
     expect(ElectronWebContentsViewFunctions.focus).not.toHaveBeenCalled()
   }

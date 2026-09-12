@@ -327,7 +327,9 @@ export const loadContent = async (state, savedState) => {
   await ElectronWebContentsViewFunctions.setFallthroughKeyBindings(browserViewId, fallThroughKeyBindings)
   await ElectronWebContentsViewFunctions.resizeWebContentsView(browserViewId, browserViewX, browserViewY, browserViewWidth, browserViewHeight)
   Assert.number(browserViewId)
-  if (!iframeSrc || !id || id !== browserViewId) {
+  // Native IDs are reused after an app restart; a matching ID can still belong to a new, empty view.
+  const existingUrl = id && id === browserViewId ? (await ElectronWebContentsViewFunctions.getStats(browserViewId)).url : ''
+  if (!iframeSrc || !existingUrl) {
     await ElectronWebContentsViewFunctions.setIframeSrc(
       browserViewId,
       iframeSrc || SimpleBrowserNewTabPage.getUrl(undefined, suggestionsEnabled, state.chromeTheme),
