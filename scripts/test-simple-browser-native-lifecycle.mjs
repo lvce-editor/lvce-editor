@@ -6,11 +6,11 @@ import { mkdtemp, mkdir, readFile, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { launchNativeElectron } from './launch-native-electron.mjs'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const requireTests = createRequire(join(root, 'packages/extension-host-worker-tests/package.json'))
 const requireBuild = createRequire(join(root, 'packages/build/package.json'))
-const { _electron } = requireTests('playwright')
 const { expect } = requireTests('@playwright/test')
 const { build } = requireBuild('esbuild')
 const profile = await mkdtemp(join(tmpdir(), 'lvce-browser-native-lifecycle-'))
@@ -55,7 +55,7 @@ try {
     env,
     timeout: 60000,
   }
-  app = await _electron.launch(launchOptions)
+  app = await launchNativeElectron(launchOptions)
   await app.evaluate(({ session }) => {
     session.fromPartition('persist:browserView').protocol.handle('https', () => new Response('<title>Example</title>'))
   })
@@ -67,8 +67,10 @@ try {
     return window.id
   })
   await expect.poll(() => page.evaluate(() => innerWidth)).toBe(1100)
-  const otherId = await app.evaluate(({ BrowserWindow }) => {
-    const other = new BrowserWindow({ height: 200, show: true, width: 300 })
+  const otherId = await app.evaluate(async ({ BrowserWindow }) => {
+    const other = new BrowserWindow({ height: 200, show: false, width: 300 })
+    await other.loadURL('data:text/html,<title>Other window</title>')
+    other.show()
     other.focus()
     return other.id
   })
