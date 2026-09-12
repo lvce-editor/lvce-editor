@@ -387,6 +387,7 @@ try {
     )
     .toBe(true)
   for (const button of ['left', 'middle']) {
+    const existingContents = await app.evaluate(({ webContents }) => webContents.getAllWebContents().map((item) => item.id))
     const previousTabs = await mainBrowser.locator('.SimpleBrowserTab').count()
     await app.evaluate(
       async ({ webContents }, { targetUrl, button }) => {
@@ -402,6 +403,15 @@ try {
       { targetUrl: mainUrl, button },
     )
     await expect(mainBrowser.locator('.SimpleBrowserTab')).toHaveCount(previousTabs + 1)
+    await expect
+      .poll(() =>
+        app.evaluate(
+          ({ webContents }, { existingContents, targetUrl }) =>
+            webContents.getAllWebContents().some((item) => !existingContents.includes(item.id) && item.getURL() === targetUrl && !item.isLoading()),
+          { existingContents, targetUrl: new URL('/second', mainUrl).href },
+        ),
+      )
+      .toBe(true)
     await expect(mainAddress).toHaveValue(mainUrl)
     await expect
       .poll(() =>

@@ -587,7 +587,7 @@ export const handleWindowOpen = async (state, browserViewId, childBrowserViewId,
   const tabs = [...currentState.tabs, tab]
   if (disposition === 'background-tab') {
     await ElectronWebContentsViewFunctions.hide(childBrowserViewId)
-    if (currentState.browserViewId === Number(browserViewId)) {
+    if (currentState.browserViewId === Number(browserViewId) && FocusState.get() === WhenExpression.FocusSimpleBrowser) {
       await ElectronWebContentsViewFunctions.focus(currentState.browserViewId)
     }
     return { ...currentState, tabs }
