@@ -1,13 +1,12 @@
 import { beforeEach, expect, jest, test } from '@jest/globals'
 
 jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => ({ invoke: jest.fn() }))
-jest.unstable_mockModule('../src/parts/ElectronWebContentsViewFunctions/ElectronWebContentsViewFunctions.js', () => ({ focus: jest.fn() }))
+jest.unstable_mockModule('../src/parts/ElectronWebContentsViewFunctions/ElectronWebContentsViewFunctions.js', () => ({
+  focus: jest.fn(),
+  setFallthroughKeyBindings: jest.fn(),
+}))
 jest.unstable_mockModule('../src/parts/ElectronWindow/ElectronWindow.js', () => ({ focus: jest.fn() }))
 jest.unstable_mockModule('../src/parts/Viewlet/Viewlet.js', () => ({ executeViewletCommand: jest.fn() }))
-jest.unstable_mockModule('../src/parts/ViewletSimpleBrowser/ViewletSimpleBrowser.js', () => ({
-  closeSuggestions: jest.fn(async (state) => state),
-  updateFindKeyBindings: jest.fn(),
-}))
 jest.unstable_mockModule('../src/parts/ViewletSimpleBrowser/ViewletSimpleBrowserResize.js', () => ({ resizeEffect: jest.fn() }))
 
 const Find = await import('../src/parts/ViewletSimpleBrowser/ViewletSimpleBrowserFind.js')
@@ -50,17 +49,17 @@ test('updates the query immediately and applies only the matching native respons
 })
 
 test('closing clears highlights, restores page bounds and focuses the page', async () => {
-  const next = await Find.closeFind(state)
+  const next = await Find.closeFind(state, [2082])
   expect(next).toMatchObject({ findVisible: false, headerHeight: 65, findMatches: 0, findValue: 'needle' })
   expect(SharedProcess.invoke).toHaveBeenCalledWith('BrowserFind.stop', 12)
   expect(Resize.resizeEffect).toHaveBeenCalledWith(next)
   expect(Native.focus).toHaveBeenCalledWith(12)
-  await expect(Find.closeFind(next)).resolves.toBe(next)
+  await expect(Find.closeFind(next, [2082])).resolves.toBe(next)
   expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
 })
 
 test('switching tabs does not restore focus to the old page', async () => {
-  await Find.closeFind(state, false)
+  await Find.closeFind(state, [2082], false)
   expect(Native.focus).not.toHaveBeenCalled()
 })
 

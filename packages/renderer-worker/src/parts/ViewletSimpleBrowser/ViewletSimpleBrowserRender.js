@@ -16,6 +16,7 @@ export const renderEventListeners = () => {
     { name: 'handleSimpleBrowserFindNext', params: ['findNext'] },
     { name: 'handleSimpleBrowserFindPrevious', params: ['findPrevious'] },
     { name: 'handleSimpleBrowserFindClose', params: ['closeFind'] },
+    { name: DomEventListenerFunctions.HandleSubmitSimpleBrowserAddress, params: ['go'], preventDefault: true },
     { name: DomEventListenerFunctions.HandleBlurSimpleBrowserAddress, params: ['handleAddressBlur'] },
     { name: DomEventListenerFunctions.HandlePointerDownSimpleBrowserSuggestion, params: ['handleSuggestionPointerDown'], preventDefault: true },
     { name: DomEventListenerFunctions.HandleClickSuggestion, params: ['acceptSuggestion', 'event.currentTarget.dataset.value'] },

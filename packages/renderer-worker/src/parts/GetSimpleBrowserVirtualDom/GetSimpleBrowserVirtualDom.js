@@ -64,11 +64,16 @@ export const getSimpleBrowserVirtualDom = (
       className: 'SimpleBrowserTabs',
       role: AriaRoles.TabList,
       ariaLabel: 'Browser tabs',
-      childCount: tabs.length + 1,
+      childCount: 2,
       onDragOver: DomEventListenerFunctions.HandleDragOverSimpleBrowserTabs,
       onDragLeave: DomEventListenerFunctions.HandleDragLeaveSimpleBrowserTab,
       onDrop: DomEventListenerFunctions.HandleDropSimpleBrowserTab,
       onPointerUp: DomEventListenerFunctions.HandlePointerUpSimpleBrowserTab,
+    })
+    dom.push({
+      type: VirtualDomElements.Div,
+      className: 'SimpleBrowserTabItems',
+      childCount: tabs.length,
     })
     for (let index = 0; index < tabs.length; index++) {
       const tab = tabs[index]
@@ -227,8 +232,10 @@ export const getSimpleBrowserVirtualDom = (
       childCount: 0,
     },
     {
-      type: VirtualDomElements.Div,
+      type: VirtualDomElements.Form,
       className: 'SimpleBrowserAddressBar',
+      noValidate: true,
+      onSubmit: DomEventListenerFunctions.HandleSubmitSimpleBrowserAddress,
       childCount: inlineSuggestion ? 2 : 1,
     },
   )

@@ -424,3 +424,13 @@ test('diagnostic renders after a background reload preserve focus while navigati
   expect((await commands.updateDiagnostics(editor)).commands).toEqual(contentCommands)
   expect((await commands.loadContent(editor)).commands).toEqual([...contentCommands, ...focusCommands])
 })
+
+test('refreshing all gutter decorations does not require or forward an active editor', async () => {
+  editorWorkerInvoke.mockImplementation(async (method) => (method === 'Editor.getCommandIds' ? ['refreshGutterDecorationsAll'] : undefined))
+  const commands = await ViewletEditorTextCommands.getCommands()
+  editorWorkerInvoke.mockClear()
+  expect(commands.refreshGutterDecorationsAll.requiresInstance).toBe(false)
+  await commands.refreshGutterDecorationsAll()
+  expect(editorWorkerInvoke).toHaveBeenCalledTimes(1)
+  expect(editorWorkerInvoke).toHaveBeenCalledWith('Editor.refreshGutterDecorationsAll')
+})

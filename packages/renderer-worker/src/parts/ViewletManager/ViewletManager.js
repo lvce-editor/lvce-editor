@@ -182,6 +182,9 @@ const runFnWithSideEffect = async (instance, id, key, fn, ...args) => {
 const wrapViewletCommand = (id, key, fn) => {
   Assert.string(id)
   Assert.fn(fn)
+  if (fn.requiresInstance === false) {
+    return fn
+  }
   if (fn.targetUid) {
     return async (uid, ...args) => {
       const instance = ViewletStates.getByUid(uid)

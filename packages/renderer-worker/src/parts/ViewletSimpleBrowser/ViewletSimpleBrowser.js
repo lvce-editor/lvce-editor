@@ -39,6 +39,7 @@ import * as TabDrag from './ViewletSimpleBrowserTabDrag.js'
 const navigationHeaderHeight = 30
 const tabsHeaderHeight = 35
 const closeTabKeyBinding = KeyModifier.CtrlCmd | KeyCode.KeyW
+const reopenClosedTabKeyBinding = KeyModifier.CtrlCmd | KeyModifier.Shift | KeyCode.KeyT
 const createNewTabKeyBinding = KeyModifier.CtrlCmd | KeyCode.KeyT
 const focusNextTabKeyBinding = KeyModifier.CtrlCmd | KeyCode.Tab
 const focusPreviousTabKeyBinding = KeyModifier.CtrlCmd | KeyModifier.Shift | KeyCode.Tab
@@ -52,6 +53,7 @@ const browserTabKeyBindings = [
   focusAddressKeyBinding,
   closeTabKeyBinding,
   createNewTabKeyBinding,
+  reopenClosedTabKeyBinding,
   focusNextTabKeyBinding,
   focusPreviousTabKeyBinding,
   openHistoryKeyBinding,
@@ -63,11 +65,15 @@ const getFallThroughKeyBindings = () => {
   return [...new Set([...GetFallThroughKeyBindings.getFallThroughKeyBindings(keyBindings), ...browserTabKeyBindings])]
 }
 
-export const updateFindKeyBindings = (state) => {
-  const keys = getFallThroughKeyBindings()
-  if (state.findVisible) keys.push(KeyCode.Escape)
-  return ElectronWebContentsViewFunctions.setFallthroughKeyBindings(state.browserViewId, keys)
+export const closeFind = (state, restoreFocus = true) => BrowserFind.closeFind(state, getFallThroughKeyBindings(), restoreFocus)
+
+export const toggleFind = async (state) => {
+  if (state.findVisible) return closeFind(state)
+  const current = await closeSuggestions(state)
+  return BrowserFind.openFind(current, getFallThroughKeyBindings())
 }
+
+export const escapeAddress = (state) => (state.findVisible ? closeFind(state) : closeSuggestions(state))
 
 const getHeaderHeight = (tabsEnabled) => navigationHeaderHeight + (tabsEnabled ? tabsHeaderHeight : 0)
 
@@ -180,6 +186,7 @@ export const create = (id, uri, x, y, width, height) => {
     searchHistory: [],
     shortcuts: [],
     tabs: [],
+    closedTabs: [],
     audioIndicatorEnabled: true,
     tabsEnabled: true,
     unloadTabs: false,
@@ -438,7 +445,7 @@ const prepareTabDeactivation = async (state, tab) => {
 }
 
 const switchToTab = async (state, initialTabs, selectedTabIndex) => {
-  state = await BrowserFind.closeFind({ ...state, tabs: initialTabs }, false)
+  state = await closeFind({ ...state, tabs: initialTabs }, false)
   BrowserSuggestionRequests.cancel(state.uid)
   const oldTabIndex = initialTabs.findIndex((tab) => tab.browserViewId === state.browserViewId)
   const oldTab = initialTabs[oldTabIndex]
@@ -473,13 +480,16 @@ const switchToTab = async (state, initialTabs, selectedTabIndex) => {
   return activateTab(state, tabs, selectedTabIndex)
 }
 
-export const createNewTab = async (state) => {
+export const createNewTab = async (state, focusAddress = true) => {
   if (!state.tabsEnabled) {
     return state
   }
   const currentState = state.hasSuggestionsOverlay ? await closeSuggestions(state) : state
   const tab = await createEmptyTab(currentState)
   const newState = await switchToTab(currentState, [...currentState.tabs, tab], currentState.tabs.length)
+  if (!focusAddress) {
+    return newState
+  }
   await ElectronWindow.focus()
   return { ...newState, focusAddressVersion: newState.focusAddressVersion + 1 }
 }
@@ -628,13 +638,15 @@ const closeTabInternal = async (state, index, disposeWebContentsView) => {
   if (tabIndex === state.selectedTabIndex) BrowserSuggestionRequests.cancel(state.uid)
   const currentState = tabIndex === state.selectedTabIndex && state.hasSuggestionsOverlay ? await closeSuggestions(state) : state
   const tab = currentState.tabs[tabIndex]
+  const closedTabs = [...currentState.closedTabs, { iframeSrc: tab.iframeSrc, title: tab.title, index: tabIndex }]
+  const closedState = { ...currentState, closedTabs }
   if (currentState.tabs.length === 1) {
     const replacement = await createEmptyTab(currentState)
     if (disposeWebContentsView) {
       await ElectronWebContentsView.disposeWebContentsView(tab.browserViewId)
     }
     await ElectronWebContentsViewFunctions.show(replacement.browserViewId)
-    const newState = activateTab(currentState, [replacement], 0)
+    const newState = activateTab(closedState, [replacement], 0)
     return { ...newState, focusAddressVersion: newState.focusAddressVersion + 1 }
   }
   let tabs = currentState.tabs.toSpliced(tabIndex, 1)
@@ -649,7 +661,7 @@ const closeTabInternal = async (state, index, disposeWebContentsView) => {
     await ElectronWebContentsView.disposeWebContentsView(tab.browserViewId)
   }
   if (!wasSelected) {
-    return { ...currentState, selectedTabIndex, tabs }
+    return { ...closedState, selectedTabIndex, tabs }
   }
   let selectedTab = tabs[selectedTabIndex]
   if (!selectedTab.browserViewId) {
@@ -660,7 +672,7 @@ const closeTabInternal = async (state, index, disposeWebContentsView) => {
     await ElectronWebContentsViewFunctions.show(selectedTab.browserViewId)
     await ElectronWebContentsViewFunctions.focus(selectedTab.browserViewId)
   }
-  return activateTab(currentState, tabs, selectedTabIndex)
+  return activateTab(closedState, tabs, selectedTabIndex)
 }
 
 export const closeTab = (state, index) => {
@@ -675,6 +687,19 @@ export const handleBrowserViewDestroyed = async (state, browserViewId) => {
   const newState = await closeTabInternal(state, tabIndex, false)
   await ElectronWebContentsView.releaseWebContentsView()
   return newState
+}
+
+export const reopenClosedTab = async (state) => {
+  if (!state.tabsEnabled || state.closedTabs.length === 0) {
+    return state
+  }
+  const currentState = state.hasSuggestionsOverlay ? await closeSuggestions(state) : state
+  const closedTab = currentState.closedTabs.at(-1)
+  const tab = createTab({ browserViewId: 0, iframeSrc: closedTab.iframeSrc, inputValue: closedTab.iframeSrc, title: closedTab.title })
+  const index = Math.min(closedTab.index, currentState.tabs.length)
+  const tabs = currentState.tabs.toSpliced(index, 0, tab)
+  const newState = await switchToTab(currentState, tabs, index)
+  return { ...newState, closedTabs: currentState.closedTabs.slice(0, -1) }
 }
 
 export const closeCurrentTab = (state) => {
@@ -693,12 +718,18 @@ const closeTabsByIndex = async (state, indexes, preferredTabIndex) => {
   const { browserViewId, tabs: currentTabs } = currentState
   const preferredBrowserViewId = currentTabs[preferredTabIndex]?.browserViewId
   const tabsToClose = currentTabs.filter((tab, index) => indexesToClose.has(index))
+  const closedTabs = [
+    ...currentState.closedTabs,
+    // Store positions as if the tabs were closed one at a time from left to right.
+    ...indexes.map((index, offset) => ({ iframeSrc: currentTabs[index].iframeSrc, title: currentTabs[index].title, index: index - offset })),
+  ]
+  const closedState = { ...currentState, closedTabs }
   let remainingTabs = currentTabs.filter((tab, index) => !indexesToClose.has(index))
   await Promise.all(tabsToClose.filter((tab) => tab.browserViewId).map((tab) => ElectronWebContentsView.disposeWebContentsView(tab.browserViewId)))
   const retainedSelectedTabIndex = remainingTabs.findIndex((tab) => tab.browserViewId === browserViewId)
   if (retainedSelectedTabIndex !== -1) {
     return {
-      ...currentState,
+      ...closedState,
       selectedTabIndex: retainedSelectedTabIndex,
       tabs: remainingTabs,
     }
@@ -716,7 +747,7 @@ const closeTabsByIndex = async (state, indexes, preferredTabIndex) => {
     await ElectronWebContentsViewFunctions.show(selectedTab.browserViewId)
     await ElectronWebContentsViewFunctions.focus(selectedTab.browserViewId)
   }
-  return activateTab(currentState, remainingTabs, selectedTabIndex)
+  return activateTab(closedState, remainingTabs, selectedTabIndex)
 }
 
 export const closeTabsToTheLeft = async (state, index) => {
@@ -922,7 +953,7 @@ export const handleInput = (state, value) => {
     ...updateTab(state, state.browserViewId, { inputValue: value }),
     selectedSuggestionIndex: -1,
     suggestionSessionId,
-    suggestions: [],
+    suggestions: state.hasSuggestionsOverlay ? state.suggestions : [],
   }
 }
 
@@ -967,11 +998,15 @@ export const applySuggestions = async (state, uid, query, suggestions, precomput
     const result = await dismissSuggestions(state)
     return isCurrentUpdate() ? result : state
   }
+  // Keep the visible list stable until the provider completes this query.
+  if (precomputedLocalSuggestions !== undefined && state.hasSuggestionsOverlay && shouldRequestSuggestions(query)) {
+    return state
+  }
   const localSuggestions = precomputedLocalSuggestions || getLocalSuggestions(state, query)
   const providerSuggestions = Array.isArray(suggestions) ? suggestions : []
   const allSuggestions = [
     ...localSuggestions,
-    ...(providerSuggestions.length > 0 ? [createSearchSuggestion(query)] : []),
+    ...((state.hasSuggestionsOverlay && shouldRequestSuggestions(query)) || providerSuggestions.length > 0 ? [createSearchSuggestion(query)] : []),
     ...providerSuggestions.map(createSearchSuggestion),
   ]
   const uniqueSuggestions = allSuggestions
@@ -1135,8 +1170,8 @@ export const handleKeyBinding = async (state, browserViewId, keyBinding) => {
   if (Number(browserViewId) !== state.browserViewId) {
     return state
   }
-  if (keyBinding === findKeyBinding) return BrowserFind.toggleFind(state)
-  if (keyBinding === KeyCode.Escape && state.findVisible) return BrowserFind.closeFind(state)
+  if (keyBinding === findKeyBinding) return toggleFind(state)
+  if (keyBinding === KeyCode.Escape && state.findVisible) return closeFind(state)
   if (keyBinding === toggleDevToolsKeyBinding) {
     await ElectronWebContentsViewFunctions.toggleDevTools(state.browserViewId)
     return state
@@ -1144,6 +1179,9 @@ export const handleKeyBinding = async (state, browserViewId, keyBinding) => {
   if (keyBinding === focusAddressKeyBinding) return focusAddress(state)
   if (keyBinding === closeTabKeyBinding) {
     return closeCurrentTab(state)
+  }
+  if (keyBinding === reopenClosedTabKeyBinding) {
+    return reopenClosedTab(state)
   }
   if (keyBinding === createNewTabKeyBinding) {
     return createNewTab(state)

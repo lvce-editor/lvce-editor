@@ -2399,7 +2399,11 @@ export const showE2eTests = async (state: LayoutState) => {
   return state
 }
 
-export const handleBlur = (state: LayoutState) => {
+export const handleBlur = async (state: LayoutState) => {
+  const titleBar = ViewletStates.getInstance(LayoutModules.TitleBar.moduleId, state.applicationId)
+  if (titleBar) {
+    await Viewlet.executeViewletCommand(titleBar.state.uid, 'closeMenu', false)
+  }
   return handleFocusChange(state, false)
 }
 
