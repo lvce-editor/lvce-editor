@@ -8,7 +8,7 @@ export const getGitRemote = async (cwd: string): Promise<string> => {
     const { stdout } = await execPromise('git', ['config', '--get', 'remote.origin.url'], { cwd, maxBuffer: 1024 * 1024, timeout: 10000 })
     return stdout.trim()
   } catch (error) {
-    if (error instanceof Error && 'code' in error && error.code === 1) {
+    if (error && typeof error === 'object' && 'code' in error && error.code === 1) {
       return ''
     }
     throw error
