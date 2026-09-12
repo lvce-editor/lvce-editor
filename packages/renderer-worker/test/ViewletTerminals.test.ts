@@ -642,3 +642,27 @@ test('focus does nothing when there are no terminal instances', () => {
   expect(ViewletTerminals.focus(state)).toBe(state)
   expect(focusSetFocus).not.toHaveBeenCalled()
 })
+
+test.each(['killTerminal', 'killTerminalTab'])('%s hides the panel after rendering the final terminal removal', async (command) => {
+  const state = createLoadedState()
+  const newState = await ViewletTerminals[command](state, 0)
+  expect(newState.tabs).toEqual([])
+  expect(commandExecute).not.toHaveBeenCalled()
+  await ViewletTerminals.afterRender(state, newState)
+  expect(commandExecute).toHaveBeenCalledWith('Layout.hidePanel')
+})
+
+test('afterRender keeps the panel open while terminals remain', async () => {
+  const state = createLoadedState()
+  const splitState = { ...state, childUids: [41, 42], tabs: [{ ...state.tabs[0], terminalUids: [41, 42] }] }
+  const newState = await ViewletTerminals.killTerminal(splitState)
+  await ViewletTerminals.afterRender(splitState, newState)
+  expect(commandExecute).not.toHaveBeenCalled()
+})
+
+test('afterRender does not hide the panel for a terminal exit', async () => {
+  const state = createLoadedState()
+  const newState = await ViewletTerminals.handleTerminalExit(state, 41)
+  await ViewletTerminals.afterRender(state, newState)
+  expect(commandExecute).not.toHaveBeenCalled()
+})

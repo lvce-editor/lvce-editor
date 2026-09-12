@@ -531,6 +531,20 @@ test('creates and selects an empty tab while keeping the original view alive', a
   expect(ElectronWindow.focus).toHaveBeenCalledTimes(1)
 })
 
+test('workflow tab creation preserves page focus without scheduling address focus', async () => {
+  // @ts-ignore
+  ElectronWebContentsView.createWebContentsView.mockResolvedValue(13)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.getStats.mockResolvedValue({ title: 'New Tab' })
+  const state = { ...createTwoTabState(), focusAddressVersion: 3 }
+
+  const newState = await ViewletSimpleBrowser.createNewTab(state, false)
+
+  expect(newState.focusAddressVersion).toBe(3)
+  expect(ElectronWindow.focus).not.toHaveBeenCalled()
+  expect(ElectronWebContentsViewFunctions.focus).toHaveBeenCalledWith(13)
+})
+
 test('updates open new tab pages when the color theme changes', async () => {
   ColorTheme.state.colorThemeCss = ':root { --EditorBackground: #193549; --InputBoxBackground: #15232d; }'
   // @ts-ignore
