@@ -217,7 +217,7 @@ export const quickPick = {
         return state
       },
       async handleIconThemeChange(state) {
-        await worker.invoke('QuickPick.handleIconThemeChange', state.uid)
+        await worker.invoke('QuickPick.setDeltaY', state.uid, state.deltaY, true)
         const diff = await worker.invoke('QuickPick.diff2', state.uid)
         const commands = await worker.invoke('QuickPick.render2', state.uid, diff)
         return { ...state, commands }
