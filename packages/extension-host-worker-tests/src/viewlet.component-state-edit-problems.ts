@@ -13,6 +13,11 @@ export const test: Test = async ({ Command, Editor, expect, Locator, Main }) => 
   await expect(Locator('.Problems .Message')).toBeVisible()
   const filter = Locator('.Panel .InputBox')
   await expect(filter).toBeVisible()
+  for (const command of ['Problems.viewAsTable', 'Problems.viewAsList']) {
+    await Command.execute(command)
+    await expect(Locator('.Problems .Message')).toBeVisible()
+    await expect(filter).toBeVisible()
+  }
   await Command.execute('Developer.openComponentState')
   const components = (await Command.execute('ComponentState.getComponents')) as readonly ComponentInfo[]
   const component = components.find((item) => item.moduleId === 'Problems')
