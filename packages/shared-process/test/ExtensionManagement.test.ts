@@ -355,10 +355,10 @@ test('bundled notebook keeps explicit enablement when manifests are loaded again
   // @ts-ignore
   PlatformPaths.getOnlyExtensionPath.mockReturnValue(undefined)
 
-  expect(await ExtensionManagement.getExtensions()).toEqual([expect.objectContaining({ id: extensionId, disabled: true, isBuiltin: true })])
+  expect(await ExtensionManagement.getExtensions()).toEqual([expect.objectContaining({ disabled: true, id: extensionId, isBuiltin: true })])
   await ExtensionManagement.enable(extensionId)
   expect(JSON.parse(await readFile(disabledExtensionsJsonPath, 'utf8')).enabledExtensions).toContain(extensionId)
-  expect(await ExtensionManagement.getExtensions()).toEqual([expect.objectContaining({ id: extensionId, disabled: false, isBuiltin: true })])
+  expect(await ExtensionManagement.getExtensions()).toEqual([expect.objectContaining({ disabled: false, id: extensionId, isBuiltin: true })])
   expect(JSON.parse(await readFile(join(builtinExtensionsPath, extensionId, 'extension.json'), 'utf8')).disabled).toBe(true)
 })
 
