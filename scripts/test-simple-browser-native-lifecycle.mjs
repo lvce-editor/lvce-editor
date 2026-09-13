@@ -128,7 +128,11 @@ try {
     }, id)
   }
   for (const path of ['first', 'second']) {
-    if (path === 'second') await page.getByRole('button', { name: 'New Tab', exact: true }).click()
+    if (path === 'second') {
+      await page.getByRole('button', { name: 'New Tab', exact: true }).click()
+      await expect(page.locator('.SimpleBrowserTabSelected')).toHaveAttribute('aria-label', 'New Tab')
+      await expect(address).toHaveValue('')
+    }
     await address.fill(url + '/' + path)
     await address.evaluate((input) => input.form.requestSubmit())
     try {
