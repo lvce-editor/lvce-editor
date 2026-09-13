@@ -1092,12 +1092,12 @@ export const selectNextSuggestion = (state) => {
 }
 
 export const selectPreviousSuggestion = (state) => {
-  if (!state.hasSuggestionsOverlay || state.suggestions.length === 0) {
+  if (!state.hasSuggestionsOverlay || state.suggestions.length <= 1) {
     return state
   }
   return {
     ...state,
-    selectedSuggestionIndex: Math.max(state.selectedSuggestionIndex - 1, -1),
+    selectedSuggestionIndex: state.selectedSuggestionIndex === 0 ? state.suggestions.length - 1 : Math.max(state.selectedSuggestionIndex - 1, -1),
   }
 }
 

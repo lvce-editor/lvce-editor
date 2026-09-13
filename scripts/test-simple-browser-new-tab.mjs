@@ -22,7 +22,14 @@ try {
         await route.abort('failed')
         return
       }
-      const values = query === 'markup' ? ['<img src=x onerror=alert(1)>', '', 42, 'duplicate', 'duplicate'] : [query + ' first', query + ' second']
+      const values =
+        query === 'markup'
+          ? ['<img src=x onerror=alert(1)>', '', 42, 'duplicate', 'duplicate']
+          : query === 'single'
+            ? [query + ' first']
+            : query === 'empty'
+              ? []
+              : [query + ' first', query + ' second']
       const data = query === 'malformed' ? {} : [query, values]
       await route.fulfill({
         headers: { 'Content-Type': 'text/javascript; charset=UTF-8', 'Content-Disposition': 'attachment; filename="f.txt"' },
@@ -45,8 +52,16 @@ try {
   await expect(input).toHaveAttribute('aria-expanded', 'true')
   await input.press('ArrowDown')
   await expect(input).toHaveAttribute('aria-activedescendant', 'suggestion-0')
-  await input.press('ArrowDown')
   await input.press('ArrowUp')
+  await expect(input).toHaveAttribute('aria-activedescendant', 'suggestion-1')
+  await input.press('ArrowUp')
+  await expect(input).toHaveAttribute('aria-activedescendant', 'suggestion-0')
+  await input.press('ArrowDown')
+  await expect(input).toHaveAttribute('aria-activedescendant', 'suggestion-1')
+  await input.press('ArrowDown')
+  await expect(input).toHaveAttribute('aria-activedescendant', 'suggestion-1')
+  await input.press('ArrowUp')
+  await expect(input).toHaveAttribute('aria-activedescendant', 'suggestion-0')
   await input.press('Enter')
   await expect(page).toHaveURL('https://www.google.com/search?q=cat+first')
 
@@ -54,6 +69,20 @@ try {
   await input.fill('mouse & keyboard')
   await options.nth(1).click()
   await expect(page).toHaveURL('https://www.google.com/search?q=mouse+%26+keyboard+second')
+
+  await page.goto(newTab)
+  await input.fill('single')
+  await expect(options).toHaveText(['single first'])
+  await input.press('ArrowDown')
+  await expect(input).toHaveAttribute('aria-activedescendant', 'suggestion-0')
+  await input.press('ArrowUp')
+  await expect(input).toHaveAttribute('aria-activedescendant', 'suggestion-0')
+
+  await page.goto(newTab)
+  await input.fill('empty')
+  await expect(list).toBeHidden()
+  await input.press('ArrowUp')
+  await expect(input).not.toHaveAttribute('aria-activedescendant')
 
   await page.goto(newTab)
   await input.fill('slow')
@@ -101,7 +130,7 @@ try {
   await input.press('ArrowDown')
   await input.press('ArrowUp')
   await input.press('Enter')
-  await expect(page).toHaveURL('https://www.google.com/search?q=composition')
+  await expect(page).toHaveURL('https://www.google.com/search?q=composition+second')
 
   await page.goto(getUrl('', false))
   const disabledInput = page.getByRole('searchbox', { name: 'Search with Google' })
