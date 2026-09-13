@@ -460,8 +460,8 @@
   {
     "name": "builtin.language-basics-yaml",
     "repository": "github.com/lvce-editor/language-basics-yaml",
-    "version": "1.9.1",
-    "sha256": "b4b328888e532d739af817a614fc19975872b27be7cefba7893c98b4beff53e9",
+    "version": "1.11.0",
+    "sha256": "246100eca30dce9e590c18bbc427f7cb48ded96ef94272efacc46650a7b5de31",
     "created": "2022-06-16"
   },
   {
