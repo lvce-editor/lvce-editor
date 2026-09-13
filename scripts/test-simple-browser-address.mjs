@@ -340,7 +340,16 @@ try {
   await address.fill('known')
   await expect(page.getByRole('option', { name: 'known result', exact: true })).toBeVisible()
   await expect(page.locator('.SimpleBrowserInlineSuggestion')).toBeVisible()
+  const addressOptions = suggestions.getByRole('option')
   const previousSuggestions = await suggestions.getByRole('option').allTextContents()
+  const lastAddressOption = (await addressOptions.count()) - 1
+  assert(lastAddressOption > 0, 'Expected multiple address suggestions')
+  await address.press('ArrowDown')
+  await expect(addressOptions.nth(0)).toHaveAttribute('aria-selected', 'true')
+  await address.press('ArrowUp')
+  await expect(addressOptions.nth(lastAddressOption)).toHaveAttribute('aria-selected', 'true')
+  await address.press('ArrowUp')
+  await expect(addressOptions.nth(lastAddressOption - 1)).toHaveAttribute('aria-selected', 'true')
   await app.evaluate(() => {
     globalThis.suggestionResponseGate = new Promise((resolve) => {
       globalThis.releaseSuggestionResponse = resolve

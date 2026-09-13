@@ -1,6 +1,6 @@
 export const name = 'viewlet.editor-typescript-readonly-union-parameters'
 
-export const test = async ({ FileSystem, Workspace, Main, Locator, expect }) => {
+export const test = async ({ FileSystem, Workspace, Main, Locator, Settings, expect }) => {
   const tmpDir = await FileSystem.getTmpDir()
   const filePath = `${tmpDir}/processes.ts`
   await FileSystem.writeFile(
@@ -20,6 +20,7 @@ export const test = async ({ FileSystem, Workspace, Main, Locator, expect }) => 
 const nextValue = 123
 `,
   )
+  await Settings.update({ 'editor.combineWhitespaceTokens': false })
   await Workspace.setPath(tmpDir)
   await Main.openUri(filePath)
 
