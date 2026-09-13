@@ -1,5 +1,13 @@
 [
   {
+    "name": "builtin.notebook",
+    "repository": "github.com/lvce-editor/notebook",
+    "version": "0.1.1",
+    "sha256": "45db1cf6a86fd1e42de99d80a949ff3779d3040535110a2d86d9e64a3dc405ae",
+    "created": "2026-08-17",
+    "enabled": false
+  },
+  {
     "name": "builtin.git",
     "repository": "github.com/lvce-editor/git",
     "version": "5.34.0",
