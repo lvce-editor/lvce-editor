@@ -53,7 +53,7 @@ try {
   const renderer = page.workers().find((worker) => worker.url().includes('rendererWorkerMain'))
   assert.ok(renderer, 'Expected the renderer worker')
   await renderer.evaluate(async () => {
-    const Command = await import('./parts/Command/Command.js')
+    const Command = await import(new URL('./parts/Command/Command.js', globalThis.location.href).href)
     await Command.execute('ProcessExplorer.refresh')
   })
   await expect(networkRow).toHaveCount(1)
