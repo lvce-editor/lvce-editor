@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { createRequire } from 'node:module'
-import { mkdtemp, readFile, readdir, rm, writeFile } from 'node:fs/promises'
+import { mkdir, mkdtemp, readFile, readdir, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -13,6 +13,7 @@ const { expect } = requireTests('@playwright/test')
 const { build } = requireBuild('esbuild')
 const profile = await mkdtemp(join(tmpdir(), 'lvce-process-explorer-heap-'))
 const downloads = join(profile, 'downloads')
+await mkdir(downloads)
 await writeFile(join(profile, 'example.txt'), 'process explorer renderer heap snapshot acceptance\n')
 const rendererPath = join(root, 'packages/renderer-worker/node_modules/@lvce-editor/renderer-process/dist/rendererProcessMain.js')
 const rendererSource = await readFile(rendererPath, 'utf8')
@@ -44,15 +45,24 @@ try {
   await app.evaluate(({ app }, path) => app.setPath('downloads', path), downloads)
   const page = await app.firstWindow()
   page.setDefaultTimeout(15000)
-  processExplorer = await (async () => {
-    const windowPromise = app.waitForEvent('window')
-    await page.keyboard.press('Control+Shift+P')
-    const input = page.locator('[name="QuickPickInput"]')
-    await input.fill('>Developer: Open Process Explorer')
-    await expect(page.getByRole('option', { name: 'Developer: Open Process Explorer', exact: true })).toBeVisible()
-    await input.press('Enter')
-    return windowPromise
-  })()
+  await expect(page.locator('#Workbench')).toBeVisible({ timeout: 60000 })
+  await page.getByRole('menuitem', { name: 'View', exact: true }).click()
+  await page.getByRole('menuitem', { name: 'Command Palette', exact: true }).click()
+  const input = page.locator('[name="QuickPickInput"]')
+  await expect(input).toBeVisible({ timeout: 60000 })
+  await page.waitForTimeout(1000)
+  for (let attempt = 0; attempt < 10; attempt++) {
+    try {
+      await input.fill('>Developer: Open Process Explorer')
+      break
+    } catch (error) {
+      if (attempt === 9) throw error
+      await page.waitForTimeout(100)
+    }
+  }
+  await expect(page.getByRole('option', { name: 'Developer: Open Process Explorer', exact: true })).toBeVisible({ timeout: 60000 })
+  await input.press('Enter')
+  processExplorer = page
   processExplorer.setDefaultTimeout(15000)
   await expect(processExplorer.locator('#Workbench')).toBeVisible()
   const processExplorerPid = await app.evaluate(({ BrowserWindow }, url) => {
