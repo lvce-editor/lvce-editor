@@ -75,7 +75,7 @@
     "@lvce-editor/file-watcher-view": "^0.1.1",
     "@lvce-editor/find-widget-worker": "^3.16.1",
     "@lvce-editor/hover-worker": "^2.15.0",
-    "@lvce-editor/icon-theme-worker": "^2.18.1",
+    "@lvce-editor/icon-theme-worker": "^2.18.2",
     "@lvce-editor/iframe-inspector": "^2.4.0",
     "@lvce-editor/iframe-worker": "^6.20.0",
     "@lvce-editor/keybindings-view": "^8.17.1",
