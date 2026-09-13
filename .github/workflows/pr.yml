@@ -122,6 +122,9 @@ jobs:
         run: |
           node packages/main-process/node_modules/electron/install.js
           xvfb-run -a npm run test:simple-browser-address
+      - name: Test Process Explorer network service naming
+        if: matrix.os == 'ubuntu-24.04'
+        run: xvfb-run -a node scripts/test-process-explorer-network-service.mjs
       - name: Test Simple Browser restoration after app restart
         if: matrix.os == 'ubuntu-24.04'
         run: xvfb-run -a npm run test:simple-browser-restore
