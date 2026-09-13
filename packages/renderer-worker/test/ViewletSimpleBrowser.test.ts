@@ -7,9 +7,21 @@ afterEach(() => {
   delete Preferences.state['simpleBrowser.chromeTheme']
 })
 
+const getFaviconSource = (favicon: unknown): string => {
+  if (typeof favicon === 'string') {
+    return favicon
+  }
+  if (favicon && typeof favicon === 'object' && 'url' in favicon && typeof favicon.url === 'string') {
+    return favicon.url
+  }
+  return ''
+}
+
 beforeEach(() => {
   jest.resetAllMocks()
   jest.mocked(Viewlet.executeViewletCommand).mockResolvedValue(undefined as never)
+  jest.mocked(SimpleBrowserFavicon.create).mockImplementation((favicon) => (typeof favicon === 'string' ? favicon : 'blob:created-favicon'))
+  jest.mocked(SimpleBrowserFavicon.getSource).mockImplementation(getFaviconSource)
   FocusState.set(0)
 })
 
@@ -119,6 +131,12 @@ jest.unstable_mockModule('../src/parts/SimpleBrowserSnapshot/SimpleBrowserSnapsh
   dispose: jest.fn(),
 }))
 
+jest.unstable_mockModule('../src/parts/SimpleBrowserFavicon/SimpleBrowserFavicon.js', () => ({
+  create: jest.fn((favicon) => (typeof favicon === 'string' ? favicon : 'blob:created-favicon')),
+  dispose: jest.fn(),
+  getSource: jest.fn(getFaviconSource),
+}))
+
 jest.unstable_mockModule('../src/parts/Viewlet/Viewlet.js', () => ({ executeViewletCommand: jest.fn() }))
 const Viewlet = await import('../src/parts/Viewlet/Viewlet.js')
 const BrowserSuggestionRequests = await import('../src/parts/BrowserSuggestionRequests/BrowserSuggestionRequests.js')
@@ -144,6 +162,7 @@ const Preferences = await import('../src/parts/Preferences/Preferences.js')
 const RendererProcess = await import('../src/parts/RendererProcess/RendererProcess.js')
 const SimpleBrowserNewTabPage = await import('../src/parts/SimpleBrowserNewTabPage/SimpleBrowserNewTabPage.js')
 const SimpleBrowserSnapshot = await import('../src/parts/SimpleBrowserSnapshot/SimpleBrowserSnapshot.js')
+const SimpleBrowserFavicon = await import('../src/parts/SimpleBrowserFavicon/SimpleBrowserFavicon.js')
 const ViewletModuleId = await import('../src/parts/ViewletModuleId/ViewletModuleId.js')
 const FocusState = await import('../src/parts/FocusState/FocusState.js')
 const WhenExpression = await import('../src/parts/WhenExpression/WhenExpression.js')
@@ -1130,6 +1149,39 @@ test('remembers the origin when a page favicon is received', () => {
   expect(newState).toMatchObject({ favicon: 'https://soundcloud.com/favicon.ico', visitedSites })
 })
 
+test('creates a renderer object url for fetched favicon bytes and persists its source url', () => {
+  const favicon = { bytes: new Uint8Array([0, 1, 2]), mimeType: 'image/png', url: 'https://soundcloud.com/favicon.ico' }
+  jest.mocked(SimpleBrowserFavicon.create).mockReturnValue('blob:favicon')
+  const visitedSites = [{ favicon: favicon.url, origin: 'https://soundcloud.com' }]
+  jest.mocked(BrowserVisitedSites.add).mockReturnValue(visitedSites)
+  const state = {
+    ...ViewletSimpleBrowser.create(),
+    browserViewId: 12,
+    tabs: [{ browserViewId: 12, favicon: '', iframeSrc: 'https://soundcloud.com/discover', title: 'SoundCloud' }],
+  }
+
+  const newState = ViewletSimpleBrowser.handlePageFaviconUpdated(state, 12, [favicon])
+
+  expect(newState).toMatchObject({ favicon: 'blob:favicon', faviconUrl: favicon.url, visitedSites })
+  expect(ViewletSimpleBrowser.saveState(newState).tabs[0].favicon).toBe(favicon.url)
+  expect(BrowserVisitedSites.add).toHaveBeenCalledWith([], 'https://soundcloud.com/discover', favicon.url)
+})
+
+test('revokes a replaced favicon object url', () => {
+  jest.mocked(SimpleBrowserFavicon.create).mockReturnValue('blob:new-favicon')
+  const state = {
+    ...ViewletSimpleBrowser.create(),
+    browserViewId: 12,
+    tabs: [{ browserViewId: 12, favicon: 'blob:old-favicon', iframeSrc: 'https://example.com', title: 'Example' }],
+  }
+
+  ViewletSimpleBrowser.handlePageFaviconUpdated(state, 12, [
+    { bytes: new Uint8Array([0]), mimeType: 'image/png', url: 'https://example.com/favicon.ico' },
+  ])
+
+  expect(SimpleBrowserFavicon.dispose).toHaveBeenCalledWith('blob:old-favicon')
+})
+
 test('updates audio state for the selected tab', () => {
   const state = {
     ...ViewletSimpleBrowser.create(),
@@ -1152,7 +1204,7 @@ test('closing a tab disposes only its web contents view', async () => {
     browserViewId: 12,
     tabs: [
       { browserViewId: 12, favicon: '', iframeSrc: 'https://one.example', inputValue: 'https://one.example', title: 'One' },
-      { browserViewId: 13, favicon: '', iframeSrc: 'https://two.example', inputValue: 'https://two.example', title: 'Two' },
+      { browserViewId: 13, favicon: 'blob:two-favicon', iframeSrc: 'https://two.example', inputValue: 'https://two.example', title: 'Two' },
     ],
   }
 
@@ -1161,6 +1213,7 @@ test('closing a tab disposes only its web contents view', async () => {
   expect(newState.tabs).toHaveLength(1)
   expect(newState.browserViewId).toBe(12)
   expect(ElectronWebContentsView.disposeWebContentsView).toHaveBeenCalledWith(13)
+  expect(SimpleBrowserFavicon.dispose).toHaveBeenCalledWith('blob:two-favicon')
 })
 
 test('closes an oauth tab when its child web contents closes itself', async () => {
