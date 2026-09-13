@@ -1,5 +1,18 @@
 [
   {
+    "id": "sessionReplayWorker",
+    "fileName": "sessionReplayWorkerMain.js",
+    "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/renderer-process/dist/sessionReplayWorkerMain.js",
+    "productionPath": "/packages/renderer-process/dist/sessionReplayWorkerMain.js",
+    "settingName": "develop.sessionReplayWorkerPath",
+    "hotReloadCommand": "",
+    "contentSecurityPolicy": [
+      "default-src 'none'",
+      "connect-src 'self' https: http://127.0.0.1:* http://localhost:*",
+      "script-src 'self'"
+    ]
+  },
+  {
     "id": "componentState",
     "fileName": "componentStateWorkerMain.js",
     "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/component-state-worker/dist/componentStateWorkerMain.js",
@@ -731,6 +744,10 @@
           "name": "ExtensionDetail.render2",
           "parameters": [{ "source": "state", "name": "uid" }, { "source": "result", "name": "diff" }]
         },
+        "resize": {
+          "name": "ExtensionDetail.resize",
+          "parameters": [{ "source": "state", "name": "uid" }, { "source": "argument", "name": "dimensions" }]
+        },
         "saveState": { "name": "ExtensionDetail.saveState", "parameters": [{ "source": "state", "name": "uid" }] },
         "terminate": { "name": "ExtensionDetail.terminate", "parameters": [] },
         "getCommandIds": { "name": "ExtensionDetail.getCommandIds", "parameters": [] },
@@ -1330,6 +1347,8 @@
     "hotReloadCommand": "",
     "viewlet": {
       "name": "Ports",
+      "extraCommands": [{ "name": "handleWorkspaceChange", "method": "loadContent" }, { "name": "refresh", "method": "loadContent" }],
+      "css": ["/css/parts/ViewletPorts.css"],
       "state": {
         "idKey": "uid",
         "fields": ["parentUid", "uri", "x", "y", "width", "height"],
@@ -1346,13 +1365,14 @@
             { "source": "state", "name": "parentUid" }
           ]
         },
-        "loadContent": { "name": "Ports.loadContent", "parameters": [{ "source": "state", "name": "uid" }] },
+        "loadContent": { "name": "Ports.loadContent", "parameters": [{ "source": "state", "name": "uid" }, { "source": "context", "name": "workspaceUri" }] },
         "diff": { "name": "Ports.diff2", "parameters": [{ "source": "state", "name": "uid" }] },
         "render": { "name": "Ports.render2", "parameters": [{ "source": "state", "name": "uid" }, { "source": "result", "name": "diff" }] },
         "dispose": { "name": "Ports.dispose", "parameters": [{ "source": "state", "name": "uid" }] },
         "resize": { "name": "Ports.resize", "parameters": [{ "source": "state", "name": "uid" }, { "source": "argument", "name": "dimensions" }] },
         "terminate": { "name": "Ports.terminate", "parameters": [] },
         "getCommandIds": { "name": "Ports.getCommandIds", "parameters": [] },
+        "getKeyBindings": { "name": "Ports.getKeyBindings", "parameters": [], "fallback": [] },
         "renderEventListeners": { "name": "Ports.renderEventListeners", "parameters": [] }
       },
       "renderComparison": "emptyCommands",
@@ -1501,7 +1521,8 @@
           { "source": "state", "name": "uid" }, { "source": "state", "name": "uri" }, { "source": "literal", "value": 22 },
           { "source": "state", "name": "x" }, { "source": "state", "name": "y" }, { "source": "state", "name": "width" },
           { "source": "state", "name": "height" }, { "source": "state", "name": "platform" }, { "source": "state", "name": "args" },
-          { "source": "literal", "value": true }, { "source": "context", "name": "workspacePath" }, { "source": "state", "name": "assetDir" }
+          { "source": "literal", "value": true }, { "source": "context", "name": "workspacePath" }, { "source": "state", "name": "assetDir" },
+          { "source": "context", "name": "applicationId" }
         ] },
         "loadContent": { "name": "QuickPick.loadContent", "parameters": [{ "source": "state", "name": "uid" }] },
         "diff": { "name": "QuickPick.diff2", "parameters": [{ "source": "state", "name": "uid" }] },

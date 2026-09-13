@@ -1016,8 +1016,13 @@ export const showPanel = async (state: LayoutState, moduleId = state.panelView, 
 }
 
 export const openIntegratedTerminal = async (state: LayoutState, cwd: string): Promise<LayoutStateResult> => {
-  const terminalsActive = state.panelVisible && Boolean(ViewletStates.getInstance(ViewletModuleId.Terminals))
-  if (terminalsActive) {
+  const terminalsExist = Boolean(ViewletStates.getInstance(ViewletModuleId.Terminals))
+  if (terminalsExist) {
+    if (!state.panelVisible || state.panelView !== ViewletModuleId.Terminals) {
+      await Viewlet.executeViewletCommand(state.uid, 'showPanel', ViewletModuleId.Terminals)
+      await Command.execute('Terminals.addTerminal', cwd)
+      return { newState: state, commands: [] }
+    }
     await Command.execute('Terminals.addTerminal', cwd)
     return {
       newState: {
@@ -1039,11 +1044,16 @@ export const openProblems = async (state: LayoutState, filterValue?: string): Pr
 }
 
 export const openOutput = async (state: LayoutState, channelId?: string): Promise<LayoutStateResult> => {
-  const result = await showPanel(state, ViewletModuleId.Output)
-  if (channelId !== undefined) {
-    await Command.execute('Output.selectChannel', channelId)
+  if (channelId === undefined) {
+    return showPanel(state, ViewletModuleId.Output)
   }
-  return result
+  // Commit the panel's DOM before updating the channel value in its toolbar.
+  await Viewlet.executeViewletCommand(state.uid, 'showPanel', ViewletModuleId.Output, channelId)
+  await Command.execute('Output.selectChannel', channelId)
+  return {
+    newState: state,
+    commands: [],
+  }
 }
 
 export const openDebugConsole = async (state: LayoutState, inputValue?: string): Promise<LayoutStateResult> => {
@@ -2394,7 +2404,11 @@ export const showE2eTests = async (state: LayoutState) => {
   return state
 }
 
-export const handleBlur = (state: LayoutState) => {
+export const handleBlur = async (state: LayoutState) => {
+  const titleBar = ViewletStates.getInstance(LayoutModules.TitleBar.moduleId, state.applicationId)
+  if (titleBar) {
+    await Viewlet.executeViewletCommand(titleBar.state.uid, 'closeMenu', false)
+  }
   return handleFocusChange(state, false)
 }
 
@@ -2874,8 +2888,11 @@ export const openSideBarView = async (state: LayoutState, moduleId, focus = fals
     return result
   }
   await ViewletManager.waitForLoadContentLater(moduleId)
-  await Viewlet.focus(moduleId)
-  return result
+  const focusCommands = await Viewlet.getFocusCommands(moduleId)
+  return {
+    newState: result.newState,
+    commands: [...result.commands, ...focusCommands],
+  }
 }
 
 export const openTextSearch = async (state: LayoutState): Promise<LayoutStateResult> => {

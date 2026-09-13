@@ -1,6 +1,7 @@
 import { beforeEach, expect, jest, test } from '@jest/globals'
 
 const commandExecute = jest.fn()
+const executeViewletCommand = jest.fn()
 const panelWorkerInvocations: any[] = []
 
 jest.unstable_mockModule('../src/parts/Command/Command.js', () => {
@@ -27,11 +28,14 @@ jest.unstable_mockModule('../src/parts/PanelWorker/PanelWorker.js', () => {
   }
 })
 
+jest.unstable_mockModule('../src/parts/Viewlet/Viewlet.js', () => ({ executeViewletCommand }))
+
 const ViewletLayout = await import('../src/parts/ViewletLayout/ViewletLayout.ts')
 const ViewletStates = await import('../src/parts/ViewletStates/ViewletStates.js')
 
 beforeEach(() => {
   commandExecute.mockClear()
+  executeViewletCommand.mockReset()
   panelWorkerInvocations.length = 0
   ViewletStates.reset()
   ViewletStates.set('Panel', {
@@ -59,7 +63,7 @@ test('opens a new terminal panel view with the requested cwd', async () => {
   expect(commandExecute).not.toHaveBeenCalled()
 })
 
-test('adds a focused terminal without reselecting the active terminal panel view', async () => {
+test.each([true, false])('adds a focused terminal after revealing existing terminals (panel visible: %s)', async (panelVisible) => {
   ViewletStates.set('Terminals', {
     factory: {},
     moduleId: 'Terminals',
@@ -72,16 +76,30 @@ test('adds a focused terminal without reselecting the active terminal panel view
     panelVisible: true,
   }
 
+  state.panelVisible = panelVisible
   const result = await ViewletLayout.openIntegratedTerminal(state, 'file:///workspace/folder')
 
-  expect(result.newState.panelView).toBe('Terminals')
+  expect(executeViewletCommand).toHaveBeenCalledWith(state.uid, 'showPanel', 'Terminals')
+  expect(result.newState).toBe(state)
   expect(panelWorkerInvocations).toEqual([])
   expect(commandExecute).toHaveBeenCalledWith('Terminals.addTerminal', 'file:///workspace/folder')
 })
 
+test('adds a terminal directly when the terminal panel is active', async () => {
+  ViewletStates.set('Terminals', {
+    factory: {},
+    moduleId: 'Terminals',
+    renderedState: { uid: 88 },
+    state: { uid: 88 },
+  })
+  const state = { ...ViewletLayout.create(1), panelView: 'Terminals', panelVisible: true }
+  await ViewletLayout.openIntegratedTerminal(state, '')
+  expect(executeViewletCommand).not.toHaveBeenCalled()
+  expect(commandExecute).toHaveBeenCalledWith('Terminals.addTerminal', '')
+})
+
 test.each([
   ['openProblems', 'Problems', 'Problems.handleFilterInput', 'typescript'],
-  ['openOutput', 'Output', 'Output.selectChannel', 'Window'],
   ['openDebugConsole', 'Debug Console', 'ViewletDebugConsole.handleInput', 'process.version'],
 ] as const)('opens the requested panel view with its initial option: %s', async (method, panelView, command, value) => {
   const state = {
@@ -115,4 +133,21 @@ test.each([
 
   expect(result.newState.panelView).toBe(panelView)
   expect(commandExecute).not.toHaveBeenCalled()
+})
+
+test('renders the output panel before selecting the requested channel', async () => {
+  const state = ViewletLayout.create(1)
+  const panelRendered = Promise.withResolvers<void>()
+  executeViewletCommand.mockImplementation(() => panelRendered.promise)
+
+  const pending = ViewletLayout.openOutput(state, 'Window')
+
+  expect(executeViewletCommand).toHaveBeenCalledWith(state.uid, 'showPanel', 'Output', 'Window')
+  expect(commandExecute).not.toHaveBeenCalled()
+
+  panelRendered.resolve()
+  const result = await pending
+
+  expect(commandExecute).toHaveBeenCalledWith('Output.selectChannel', 'Window')
+  expect(result).toEqual({ newState: state, commands: [] })
 })

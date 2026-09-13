@@ -1,4 +1,5 @@
 import * as ColorTheme from '../ColorTheme/ColorTheme.js'
+import * as SimpleBrowserNewTabSuggestions from '../SimpleBrowserNewTabSuggestions/SimpleBrowserNewTabSuggestions.js'
 
 const dataUrlPrefix = 'data:text/html;charset=utf-8,'
 const marker = '<!--lvce-simple-browser-new-tab-->'
@@ -49,16 +50,27 @@ const getThemeVariables = (css) => {
         --WidgetBackground: ${escapeHtml(widgetBackground)};`
 }
 
-const getHtml = (colorThemeCss) => `${marker}<!doctype html>
+const lightThemeCss = `:root {
+  --EditorBackground: #ffffff;
+  --WorkbenchForeground: #24292f;
+  --InputBoxBackground: #f1f3f5;
+  --InputBoxForeground: #24292f;
+  --InputBoxPlaceholderForeground: #68717d;
+  --InputBoxBorder: #d4dce4;
+  --FocusOutline: #1769ba;
+  --WidgetBackground: #eef0f2;
+}`
+
+const getHtml = (colorThemeCss, suggestionsEnabled, chromeTheme) => `${marker}<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; form-action https://www.google.com">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; ${suggestionsEnabled ? "script-src 'unsafe-inline' https://suggestqueries.google.com/complete/search; " : ''}form-action https://www.google.com">
     <title>New Tab</title>
     <style>
       :root {
-        color-scheme: dark;
+        color-scheme: ${chromeTheme === 'inherit' ? 'dark' : 'light'};
         font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
         background: var(--EditorBackground);
         color: var(--WorkbenchForeground);${getThemeVariables(colorThemeCss)}
@@ -119,7 +131,33 @@ const getHtml = (colorThemeCss) => `${marker}<!doctype html>
       }
 
       form {
+        position: relative;
         width: 100%;
+      }
+
+      .Suggestions {
+        position: absolute;
+        width: 100%;
+        max-height: min(320px, 40vh);
+        overflow-y: auto;
+        margin-top: 8px;
+        padding: 6px;
+        border: 1px solid var(--InputBoxBorder);
+        border-radius: 15px;
+        background: var(--WidgetBackground);
+        box-shadow: 0 10px 28px rgba(0, 0, 0, 0.24);
+      }
+
+      .Suggestion {
+        padding: 10px 14px;
+        border-radius: 9px;
+        overflow-wrap: anywhere;
+        cursor: pointer;
+      }
+
+      .Suggestion:hover,
+      .Suggestion[aria-selected="true"] {
+        background: color-mix(in srgb, var(--FocusOutline) 20%, var(--WidgetBackground));
       }
 
       .SearchBox {
@@ -203,15 +241,18 @@ const getHtml = (colorThemeCss) => `${marker}<!doctype html>
           <svg class="SearchIcon" viewBox="0 0 24 24" aria-hidden="true">
             <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2" d="m20 20-4.2-4.2m1.2-5.3a6.5 6.5 0 1 1-13 0 6.5 6.5 0 0 1 13 0Z"></path>
           </svg>
-          <input type="search" name="q" aria-label="Search with Google" placeholder="Search with Google" autocomplete="off" spellcheck="false">
+          <input type="search" name="q" aria-label="Search with Google" placeholder="Search with Google" autocomplete="off" spellcheck="false"${suggestionsEnabled ? ' role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="suggestions"' : ''}>
         </label>
+        ${suggestionsEnabled ? '<div id="suggestions" class="Suggestions" role="listbox" aria-label="Google suggestions" hidden></div>' : ''}
       </form>
     </main>
+    ${suggestionsEnabled ? `<script>${SimpleBrowserNewTabSuggestions.script}</script>` : ''}
   </body>
 </html>`
 
-export const getUrl = (colorThemeCss = ColorTheme.getColorThemeCss()) => {
-  return `${dataUrlPrefix}${encodeURIComponent(getHtml(colorThemeCss))}`
+export const getUrl = (colorThemeCss = ColorTheme.getColorThemeCss(), suggestionsEnabled = false, chromeTheme = 'light') => {
+  const css = chromeTheme === 'inherit' ? colorThemeCss : lightThemeCss
+  return `${dataUrlPrefix}${encodeURIComponent(getHtml(css, suggestionsEnabled, chromeTheme))}`
 }
 
 export const url = getUrl()

@@ -32,7 +32,6 @@ jobs:
         with:
           path: '**/node_modules'
           key: ${{ runner.os }}-cacheNodeModules-${{ steps.nodeModulesCacheKey.outputs.value }}
-          restore-keys: ${{ runner.os }}-cacheNodeModules-
       - uses: actions/cache@v6
         id: electron-builder-cache
         with:

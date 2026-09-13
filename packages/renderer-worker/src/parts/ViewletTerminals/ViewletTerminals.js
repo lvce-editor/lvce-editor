@@ -134,7 +134,7 @@ export const loadContent = async (state) => {
   if (restoredState) {
     return restoredState
   }
-  const spawnOptions = await GetTerminalSpawnOptions.getTerminalSpawnOptions()
+  const spawnOptions = await GetTerminalSpawnOptions.getTerminalSpawnOptions(cwd)
   const childUid = Id.create()
   const newState = {
     ...state,
@@ -151,7 +151,7 @@ export const loadContent = async (state) => {
 
 export const addTerminal = async (state, cwd = '') => {
   const { activeTerminalUids, focusVersion, tabs: oldTabs } = state
-  const spawnOptions = await GetTerminalSpawnOptions.getTerminalSpawnOptions()
+  const spawnOptions = await GetTerminalSpawnOptions.getTerminalSpawnOptions(cwd)
   const childUid = Id.create()
   const newTab = createTab(childUid, spawnOptions.command)
   const tabs = [...oldTabs, newTab]
@@ -302,8 +302,21 @@ export const handleTerminalExit = (state, terminalUid) => {
   return removeTerminal(state, terminalUid)
 }
 
-export const killTerminal = (state) => {
-  return removeTerminal(state, state.childUid)
+export const killTerminal = async (state) => {
+  const newState = await removeTerminal(state, state.childUid)
+  if (newState === state) {
+    return state
+  }
+  return {
+    ...newState,
+    hidePanel: newState.tabs.length === 0,
+  }
+}
+
+export const afterRender = async (oldState, newState) => {
+  if (newState.hidePanel && oldState.tabs.length > 0 && newState.tabs.length === 0) {
+    await Command.execute('Layout.hidePanel')
+  }
 }
 
 export const handleClickTab = (state, index) => {
@@ -328,6 +341,7 @@ export const killTerminalTab = async (state, index) => {
     activeTerminalUids,
     childUid,
     childUids,
+    hidePanel: tabs.length === 0,
     focusVersion: childUid === -1 ? focusVersion : focusVersion + 1,
     selectedIndex,
     tabs,

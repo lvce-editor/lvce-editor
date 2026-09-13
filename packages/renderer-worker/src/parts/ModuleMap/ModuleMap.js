@@ -14,6 +14,9 @@ const getPrefix = (commandId) => {
 }
 
 export const getModuleId = (commandId) => {
+  if (commandId === 'SimpleBrowser.executeWorkflow') {
+    return ModuleId.SimpleBrowserWorkflow
+  }
   const prefix = getPrefix(commandId)
   if (!prefix) {
     throw new CommandNotFoundError(commandId)

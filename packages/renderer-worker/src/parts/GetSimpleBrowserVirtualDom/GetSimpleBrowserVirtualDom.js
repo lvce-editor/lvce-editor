@@ -1,3 +1,4 @@
+import * as BrowserFind from '../GetBrowserFindVirtualDom/GetBrowserFindVirtualDom.js'
 import * as ClassNames from '../ClassNames/ClassNames.js'
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as HtmlInputType from '../HtmlInputType/HtmlInputType.js'
@@ -38,6 +39,7 @@ export const getSimpleBrowserVirtualDom = (
   tabDropIndex = -1,
   fullWidth = false,
   chromeTheme = 'light',
+  findState,
 ) => {
   const inlineSuggestion = getInlineSuggestion(value, suggestions)
   /** @type {any[]} */
@@ -47,7 +49,13 @@ export const getSimpleBrowserVirtualDom = (
       className: `Viewlet SimpleBrowser${tabsEnabled ? ' SimpleBrowserTabsEnabled' : ''}${chromeTheme === 'inherit' ? '' : ' SimpleBrowserLight'}`,
       onFocusIn: DomEventListenerFunctions.HandleFocusInSimpleBrowser,
       childCount:
-        1 + (tabsEnabled ? 1 : 0) + (snapshot ? 1 : 0) + (pageSnapshotDom.length > 0 ? 1 : 0) + (suggestions.length > 0 ? 1 : 0) + (tabHover ? 1 : 0),
+        1 +
+        (findState?.findVisible ? 1 : 0) +
+        (tabsEnabled ? 1 : 0) +
+        (snapshot ? 1 : 0) +
+        (pageSnapshotDom.length > 0 ? 1 : 0) +
+        (suggestions.length > 0 ? 1 : 0) +
+        (tabHover ? 1 : 0),
     },
   ]
   if (tabsEnabled) {
@@ -56,11 +64,16 @@ export const getSimpleBrowserVirtualDom = (
       className: 'SimpleBrowserTabs',
       role: AriaRoles.TabList,
       ariaLabel: 'Browser tabs',
-      childCount: tabs.length + 1,
+      childCount: 2,
       onDragOver: DomEventListenerFunctions.HandleDragOverSimpleBrowserTabs,
       onDragLeave: DomEventListenerFunctions.HandleDragLeaveSimpleBrowserTab,
       onDrop: DomEventListenerFunctions.HandleDropSimpleBrowserTab,
       onPointerUp: DomEventListenerFunctions.HandlePointerUpSimpleBrowserTab,
+    })
+    dom.push({
+      type: VirtualDomElements.Div,
+      className: 'SimpleBrowserTabItems',
+      childCount: tabs.length,
     })
     for (let index = 0; index < tabs.length; index++) {
       const tab = tabs[index]
@@ -178,7 +191,12 @@ export const getSimpleBrowserVirtualDom = (
     {
       type: VirtualDomElements.Div,
       className: ClassNames.SimpleBrowserHeader,
-      childCount: 7,
+      childCount: 3,
+    },
+    {
+      type: VirtualDomElements.Div,
+      className: 'SimpleBrowserButtonsLeft',
+      childCount: 3,
     },
     {
       type: VirtualDomElements.Button,
@@ -219,8 +237,10 @@ export const getSimpleBrowserVirtualDom = (
       childCount: 0,
     },
     {
-      type: VirtualDomElements.Div,
+      type: VirtualDomElements.Form,
       className: 'SimpleBrowserAddressBar',
+      noValidate: true,
+      onSubmit: DomEventListenerFunctions.HandleSubmitSimpleBrowserAddress,
       childCount: inlineSuggestion ? 2 : 1,
     },
   )
@@ -233,7 +253,6 @@ export const getSimpleBrowserVirtualDom = (
     onFocus: DomEventListenerFunctions.HandleFocus,
     name: InputName.SimpleBrowserAddress,
     onBlur: DomEventListenerFunctions.HandleBlurSimpleBrowserAddress,
-    value,
   })
   if (inlineSuggestion) {
     dom.push(
@@ -259,6 +278,11 @@ export const getSimpleBrowserVirtualDom = (
     )
   }
   dom.push(
+    {
+      type: VirtualDomElements.Div,
+      className: 'SimpleBrowserButtonsRight',
+      childCount: 3,
+    },
     {
       type: VirtualDomElements.Button,
       className: ClassNames.IconButton,
@@ -295,6 +319,7 @@ export const getSimpleBrowserVirtualDom = (
       childCount: 0,
     },
   )
+  if (findState?.findVisible) dom.push(...BrowserFind.getBrowserFindVirtualDom(findState))
   if (snapshot) {
     dom.push(
       {

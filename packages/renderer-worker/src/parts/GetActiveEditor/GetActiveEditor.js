@@ -31,8 +31,8 @@ export const getDiagnostics = async () => {
   return getDiagnosticsWithInvoke(EditorWorker.invoke)
 }
 
-export const getTextDocumentWithInvoke = async (invoke) => {
-  const instance = ViewletStates.getInstance(ViewletModuleId.EditorText)
+export const getTextDocumentWithInvoke = async (invoke, applicationId) => {
+  const instance = ViewletStates.getInstance(ViewletModuleId.EditorText, applicationId)
   if (!instance) {
     return undefined
   }
@@ -44,8 +44,8 @@ export const getTextDocumentWithInvoke = async (invoke) => {
   }
 }
 
-export const getTextDocument = async () => {
-  return getTextDocumentWithInvoke(EditorWorker.invoke)
+export const getTextDocument = async (applicationId) => {
+  return getTextDocumentWithInvoke(EditorWorker.invoke, applicationId)
 }
 
 export const getSelectionsWithInvoke = async (invoke) => {

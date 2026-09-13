@@ -55,3 +55,11 @@ test('showQuickInput returns undefined when canceled', async () => {
 
   await expect(ExtensionHostQuickPick.showQuickInput({ placeholder: 'Enter SSH host' })).resolves.toBeUndefined()
 })
+
+test('prompt options preserve their caller application', async () => {
+  invoke.mockResolvedValue({ canceled: false, inputValue: 'Ada' })
+  await ExtensionHostQuickPick.showQuickPick({ applicationId: 'source', items: [] }, 'preview')
+  expect(invoke).toHaveBeenLastCalledWith('QuickPick.showQuickPick', { applicationId: 'preview', items: [] })
+  await expect(ExtensionHostQuickPick.showQuickInput({ value: 'World', placeholder: 'Name' }, 'preview')).resolves.toBe('Ada')
+  expect(invoke).toHaveBeenLastCalledWith('QuickPick.showQuickInput', { applicationId: 'preview', initialValue: 'World', placeholder: 'Name' })
+})

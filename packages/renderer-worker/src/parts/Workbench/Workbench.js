@@ -142,13 +142,6 @@ export const startup = async (platform, assetDir) => {
 
   const promptOptions = platform === PlatformType.Electron ? await PromptMode.getPromptOptions() : undefined
 
-  if (initData.Location.href.includes('?replayId')) {
-    const url = new URL(initData.Location.href)
-    const replayId = url.searchParams.get('replayId')
-    await SessionReplay.replaySession(replayId)
-    return
-  }
-
   Bounds.set(initData.Layout.bounds.windowWidth, initData.Layout.bounds.windowHeight)
 
   Performance.mark(PerformanceMarkerType.WillLoadPreferences)
@@ -160,13 +153,6 @@ export const startup = async (platform, assetDir) => {
 
   LaunchTestWorker.preloadTestWorker(initData.Location.href, promptOptions !== undefined)
 
-  // TODO only load this if session replay is enabled in preferences
-  if (promptOptions === undefined && Preferences.get('sessionReplay.enabled')) {
-    Performance.mark(PerformanceMarkerType.WillLoadSessionReplay)
-    await SessionReplay.startRecording()
-    Performance.mark(PerformanceMarkerType.DidLoadSessionReplay)
-  }
-
   const hasAuthCallback = HasCodeQueryParam.hasCodeQueryParam(initData.Location.href)
   if (hasAuthCallback) {
     await CleanAuthCallbackUrl.cleanAuthCallbackUrl(initData.Location.href)
@@ -174,6 +160,16 @@ export const startup = async (platform, assetDir) => {
   const authState = shouldInitializeAuth(hasAuthCallback, promptOptions !== undefined)
     ? await StartupAuth.initializeAuth(platform, initData.Location.href)
     : undefined
+
+  if (promptOptions === undefined) {
+    Performance.mark(PerformanceMarkerType.WillLoadSessionReplay)
+    try {
+      await SessionReplay.initialize(authState)
+    } catch (error) {
+      console.warn('Failed to start session replay', error)
+    }
+    Performance.mark(PerformanceMarkerType.DidLoadSessionReplay)
+  }
 
   LifeCycle.mark(LifeCyclePhase.Twelve)
 

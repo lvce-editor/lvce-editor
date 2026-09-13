@@ -11,6 +11,12 @@ export const hasFunctionalRootRender = true
 
 export const renderEventListeners = () => {
   return [
+    { name: 'handleSimpleBrowserFindInput', params: ['handleFindInput', 'event.target.value'] },
+    { name: 'handleSimpleBrowserFindCase', params: ['toggleFindMatchCase'] },
+    { name: 'handleSimpleBrowserFindNext', params: ['findNext'] },
+    { name: 'handleSimpleBrowserFindPrevious', params: ['findPrevious'] },
+    { name: 'handleSimpleBrowserFindClose', params: ['closeFind'] },
+    { name: DomEventListenerFunctions.HandleSubmitSimpleBrowserAddress, params: ['go'], preventDefault: true },
     { name: DomEventListenerFunctions.HandleBlurSimpleBrowserAddress, params: ['handleAddressBlur'] },
     { name: DomEventListenerFunctions.HandlePointerDownSimpleBrowserSuggestion, params: ['handleSuggestionPointerDown'], preventDefault: true },
     { name: DomEventListenerFunctions.HandleClickSuggestion, params: ['acceptSuggestion', 'event.currentTarget.dataset.value'] },
@@ -174,12 +180,18 @@ const getDom = (state) => {
     state.tabDropIndex,
     state.fullWidth,
     state.chromeTheme,
+    state,
   )
 }
 
 const renderDom = {
   isEqual(oldState, newState) {
     return (
+      oldState.findVisible === newState.findVisible &&
+      oldState.findValue === newState.findValue &&
+      oldState.findMatchCase === newState.findMatchCase &&
+      oldState.findMatches === newState.findMatches &&
+      oldState.findActiveMatch === newState.findActiveMatch &&
       oldState.fullWidth === newState.fullWidth &&
       oldState.chromeTheme === newState.chromeTheme &&
       oldState.iframeSrc === newState.iframeSrc &&
@@ -188,6 +200,7 @@ const renderDom = {
       oldState.isLoading === newState.isLoading &&
       oldState.snapshot === newState.snapshot &&
       oldState.suggestions === newState.suggestions &&
+      (oldState.inputValue === newState.inputValue || newState.suggestions.length === 0) &&
       oldState.selectedSuggestionIndex === newState.selectedSuggestionIndex &&
       oldState.selectedTabIndex === newState.selectedTabIndex &&
       oldState.tabsEnabled === newState.tabsEnabled &&
@@ -199,11 +212,11 @@ const renderDom = {
   },
   apply(oldState, newState) {
     const newDom = getDom(newState)
-    const commands =
-      oldState.browserViewId === 0
-        ? [['Viewlet.setDom2', newState.uid, newDom]]
-        : [['Viewlet.setPatches', newState.uid, diffTree(getDom(oldState), newDom)]]
-    return commands
+    if (oldState.browserViewId === 0) {
+      return [['Viewlet.setDom2', newState.uid, newDom]]
+    }
+    const patches = diffTree(getDom(oldState), newDom)
+    return [['Viewlet.setTreePatches', newState.uid, patches]]
   },
   multiple: true,
 }
@@ -219,7 +232,11 @@ export const renderTitle = {
 
 const renderAddressValue = {
   isEqual(oldState, newState) {
-    return oldState.browserViewId === newState.browserViewId
+    return (
+      oldState.browserViewId === newState.browserViewId &&
+      oldState.iframeSrc === newState.iframeSrc &&
+      oldState.addressValueVersion === newState.addressValueVersion
+    )
   },
   apply(oldState, newState) {
     return [['Viewlet.setValueByName', newState.uid, InputName.SimpleBrowserAddress, newState.inputValue]]
@@ -258,4 +275,17 @@ const renderPageSnapshotCss = {
   multiple: true,
 }
 
-export const render = [renderDom, renderAddressValue, renderFocusAddress, renderPageSnapshotCss, TabDrag.renderDragData]
+const renderFindFocus = {
+  isEqual(oldState, newState) {
+    return oldState.findFocusVersion === newState.findFocusVersion
+  },
+  apply(oldState, newState) {
+    return [
+      ['Viewlet.focusElementByName', newState.uid, 'simple-browser-find'],
+      ['Viewlet.setSelectionByName', newState.uid, 'simple-browser-find', 0, newState.findValue.length],
+    ]
+  },
+  multiple: true,
+}
+
+export const render = [renderDom, renderAddressValue, renderFocusAddress, renderPageSnapshotCss, TabDrag.renderDragData, renderFindFocus]

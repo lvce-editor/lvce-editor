@@ -2,6 +2,7 @@ import * as Assert from '../Assert/Assert.ts'
 import * as ApplicationRegistry from '../ApplicationRegistry/ApplicationRegistry.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.js'
 import * as ElectronBrowserView from '../ElectronBrowserView/ElectronBrowserView.js'
+import * as FilterFocusCommands from '../FilterFocusCommands/FilterFocusCommands.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as Id from '../Id/Id.js'
 import * as KeyBindingsState from '../KeyBindingsState/KeyBindingsState.js'
@@ -13,35 +14,13 @@ import * as SaveState from '../SaveState/SaveState.js'
 import * as SimpleBrowserOverlay from '../SimpleBrowserOverlay/SimpleBrowserOverlay.js'
 import * as UpdateDynamicFocusContext from '../UpdateDynamicFocusContext/UpdateDynamicFocusContext.js'
 import { VError } from '../VError/VError.js'
+import * as ViewletCommandQueue from '../ViewletCommandQueue/ViewletCommandQueue.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletManagerVisitor from '../ViewletManagerVisitor/ViewletManagerVisitor.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as ViewletElectron from './ViewletElectron.js'
-
-const commandQueues = new Map()
-
-const enqueueCommand = async (uid, command) => {
-  const previous = commandQueues.get(uid) || Promise.resolve()
-  const run = async () => {
-    try {
-      await previous
-    } catch {
-      // The previous caller receives its error; later commands must still run.
-    }
-    return command()
-  }
-  const current = run()
-  commandQueues.set(uid, current)
-  try {
-    return await current
-  } finally {
-    if (commandQueues.get(uid) === current) {
-      commandQueues.delete(uid)
-    }
-  }
-}
 
 const getKeyBindingSetId = (instance, fallback) => {
   return instance.moduleId || fallback
@@ -162,9 +141,9 @@ export const reload = async (id) => {
       commands.push(...contentLoadedCommands)
     }
     ViewletStates.setRenderedState(id, newState)
-    UpdateDynamicFocusContext.updateDynamicFocusContext(commands)
-    if (commands.length > 0) {
-      await RendererProcess.invoke('Viewlet.sendMultiple', commands)
+    const backgroundCommands = FilterFocusCommands.filterFocusCommands(commands)
+    if (backgroundCommands.length > 0) {
+      await RendererProcess.invoke('Viewlet.sendMultiple', backgroundCommands)
     }
     instance.loadContentLaterStarted = false
     instance.loadContentLaterPromise = undefined
@@ -462,8 +441,19 @@ export const getAllStates = () => {
   return states
 }
 
-export const openWidget = async (moduleId, ...args) => {
-  const existingInstance = ViewletStates.getInstance(moduleId)
+export const openWidget = (moduleId, ...args) => {
+  const focusedLayoutUid = ViewletStates.getFocusedInstanceByType(ViewletModuleId.Layout)
+  const layout = ViewletStates.getState(focusedLayoutUid ?? ViewletModuleId.Layout)
+  return openWidgetWithLayout(layout, moduleId, ...args)
+}
+
+export const openWidgetForApplication = (applicationId, moduleId, ...args) => {
+  return openWidgetWithLayout(ViewletStates.getState(ViewletModuleId.Layout, applicationId), moduleId, ...args)
+}
+
+const openWidgetWithLayout = async (layout, moduleId, ...args) => {
+  const applicationId = moduleId === ViewletModuleId.QuickPick || moduleId === ViewletModuleId.Dialog ? layout?.applicationId : undefined
+  const existingInstance = ViewletStates.getInstance(moduleId, applicationId)
   const type = args[0]
   if (ElectronBrowserView.isOpen() && moduleId === ViewletModuleId.QuickPick) {
     // TODO recycle quickpick instance
@@ -476,6 +466,7 @@ export const openWidget = async (moduleId, ...args) => {
   const disposeCommands = existingInstance && !isOwnedWidget ? disposeFunctional(existingInstance.state.uid) : []
   const childUid = Id.create()
   const commands = await ViewletManager.load({
+    ...(applicationId !== undefined && { applicationId }),
     getModule: ViewletModule.load,
     id: moduleId,
     type: 0,
@@ -493,7 +484,6 @@ export const openWidget = async (moduleId, ...args) => {
   if (disposeCommands.length > 0) {
     commands.unshift(...disposeCommands)
   }
-  const layout = ViewletStates.getState(ViewletModuleId.Layout)
   const appendBeforeIndex = commands.findIndex((command) => {
     return (
       command[0] === 'Viewlet.commitPending' ||
@@ -652,7 +642,7 @@ const executeViewletCommandInternal = async (uid, fnName, ...args) => {
 export const executeViewletCommand = (uid, fnName, ...args) => {
   const instance = ViewletStates.getInstance(uid)
   if (instance?.factory.serializeCommands) {
-    return enqueueCommand(uid, () => executeViewletCommandInternal(uid, fnName, ...args))
+    return ViewletCommandQueue.enqueue(uid, () => executeViewletCommandInternal(uid, fnName, ...args))
   }
   return executeViewletCommandInternal(uid, fnName, ...args)
 }

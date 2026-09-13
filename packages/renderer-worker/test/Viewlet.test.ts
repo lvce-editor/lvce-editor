@@ -315,7 +315,7 @@ test('reload restores a viewlet from its current saved state and rerenders it', 
   const saveState = jest.fn(async (_state: typeof oldState) => savedState)
   const dispose = jest.fn(async (_state: typeof oldState) => {})
   const loadContent = jest.fn(async (_state: typeof oldState, _savedState: typeof savedState) => newState)
-  const contentLoaded = jest.fn(async (_state: typeof newState) => [['Viewlet.afterLoad', 2]])
+  const contentLoaded = jest.fn(async (_state: typeof newState) => [['Viewlet.afterLoad', 2], ['Viewlet.focus', 2]])
   const contentLoadedEffects = jest.fn(async (_state: typeof newState) => {})
   ViewletStates.set(2, {
     factory: { contentLoaded, contentLoadedEffects, dispose, loadContent, saveState },
@@ -323,7 +323,11 @@ test('reload restores a viewlet from its current saved state and rerenders it', 
     renderedState: oldState,
     state: oldState,
   })
-  jest.mocked(ViewletManager.render).mockReturnValue([['Viewlet.setDom2', 2, []]])
+  jest.mocked(ViewletManager.render).mockReturnValue([
+    ['Viewlet.setDom2', 2, []],
+    ['Viewlet.send', 2, 'focusSelector', 'textarea'],
+    ['Viewlet.setFocusContext', 2, 1],
+  ])
   jest.mocked(RendererProcess.invoke).mockResolvedValue(undefined)
 
   await Viewlet.reload(2)
@@ -810,4 +814,59 @@ test('an unchanged async command does not render over a newer update', async () 
   expect(instance.state).toBe(currentState)
   expect(ViewletManager.render).not.toHaveBeenCalled()
   expect(afterRender).not.toHaveBeenCalled()
+})
+
+test('openWidget assigns command palette ownership before loading it', async () => {
+  const layout = ViewletStates.getState('Layout')
+  layout.applicationId = 'source'
+  jest.mocked(ViewletManager.load).mockResolvedValue([])
+  jest.mocked(RendererProcess.invoke).mockResolvedValue(undefined as never)
+  await Viewlet.openWidget('QuickPick', 'commands')
+  expect(ViewletManager.load).toHaveBeenCalledWith(expect.objectContaining({ applicationId: 'source', id: 'QuickPick' }))
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.executeCommands', expect.arrayContaining([['Viewlet.append', 1, 2]]))
+})
+
+test('command palettes follow focus from the source application to the preview', async () => {
+  const ApplicationRegistry = await import('../src/parts/ApplicationRegistry/ApplicationRegistry.ts')
+  const Focus = await import('../src/parts/Focus/Focus.js')
+  for (const [id, layoutUid, editorUid] of [
+    ['palette-source', 101, 103],
+    ['palette-preview', 102, 104],
+  ] as const) {
+    ApplicationRegistry.create({ id, layoutUid, href: '', workspacePath: '', workspaceUri: '' })
+    const layout = { applicationId: id, uid: layoutUid }
+    ViewletStates.set(layoutUid, { state: layout, renderedState: layout, moduleId: 'Layout', factory: {} })
+    const editor = { applicationId: id, uid: editorUid }
+    ViewletStates.set(editorUid, { state: editor, renderedState: editor, moduleId: 'EditorText', factory: {} })
+  }
+  // The first mounted layout also has a module-name alias.
+  ViewletStates.set('Layout', ViewletStates.getByUid(101))
+  jest.mocked(ViewletManager.load).mockResolvedValue([])
+  jest.mocked(RendererProcess.invoke).mockResolvedValue(undefined as never)
+  try {
+    Focus.setFocus(1, undefined, 103, 'EditorText')
+    Focus.setFocus(1, undefined, 104, 'EditorText')
+    await Viewlet.openWidget('QuickPick', 'commands')
+    expect(ViewletManager.load).toHaveBeenCalledWith(expect.objectContaining({ applicationId: 'palette-preview', id: 'QuickPick' }))
+    expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.executeCommands', expect.arrayContaining([['Viewlet.append', 102, 2]]))
+  } finally {
+    ApplicationRegistry.remove('palette-source')
+    ApplicationRegistry.remove('palette-preview')
+  }
+})
+
+test('dialog widgets acquire their application owner before loading', async () => {
+  const ApplicationRegistry = await import('../src/parts/ApplicationRegistry/ApplicationRegistry.ts')
+  ApplicationRegistry.create({ id: 'dialog-preview', layoutUid: 101, href: '', workspacePath: '', workspaceUri: '' })
+  const layout = { applicationId: 'dialog-preview', uid: 101 }
+  ViewletStates.set(101, { state: layout, renderedState: layout, moduleId: 'Layout', factory: {} })
+  jest.mocked(ViewletManager.load).mockResolvedValue([])
+  jest.mocked(RendererProcess.invoke).mockResolvedValue(undefined as never)
+  try {
+    await Viewlet.openWidgetForApplication('dialog-preview', 'Dialog', { message: 'Preview message', type: 'warning' })
+    expect(ViewletManager.load).toHaveBeenCalledWith(expect.objectContaining({ applicationId: 'dialog-preview', id: 'Dialog' }))
+    expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.executeCommands', expect.arrayContaining([['Viewlet.append', 101, 2]]))
+  } finally {
+    ApplicationRegistry.remove('dialog-preview')
+  }
 })

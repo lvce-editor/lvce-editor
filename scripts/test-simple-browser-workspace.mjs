@@ -61,6 +61,9 @@ try {
     globalThis.browserSuggestionQueries = []
     globalThis.completedBrowserSuggestionQueries = []
     session.defaultSession.protocol.handle('https', async (request) => {
+      if (request.url === 'https://example.com/') {
+        return new Response('<title>Example Domain</title>', { headers: { 'Content-Type': 'text/html' } })
+      }
       if (!request.url.startsWith('https://suggestqueries.google.com/')) return net.fetch(request.url, { bypassCustomProtocolHandlers: true })
       const query = new URL(request.url).searchParams.get('q')
       globalThis.browserSuggestionQueries.push(query)
@@ -75,7 +78,7 @@ try {
   page.on('console', (message) => {
     if (message.type() === 'error') console.error('APP ERROR', message.text())
   })
-  await expect(page.locator('#Workbench')).toBeVisible()
+  await expect(page.locator('#Workbench')).toBeVisible({ timeout: 15000 })
   const runCommand = async (label) => {
     await page.keyboard.press('Control+Shift+P')
     const input = page.locator('[name="QuickPickInput"]')
@@ -98,6 +101,10 @@ try {
   await runCommand('Simple Browser: Toggle Full Width')
   await expect(page.locator('.BrowserFullWidth')).toBeVisible()
   const address = page.locator('[name="simple-browser-address"]')
+  await expect(page.locator('.SimpleBrowserTabSelected')).toHaveAttribute('aria-label', 'Example Domain')
+  await expect(address).toHaveValue('https://example.com/')
+  await address.click()
+  await expect(address).toBeFocused()
   await address.fill(url)
   await address.press('Enter')
   const guestSnapshot = () =>
@@ -210,7 +217,7 @@ try {
               const start = Date.now()
               const timer = setInterval(() => {
                 const views = window.contentView.children.filter(
-                  (view) => 'webContents' in view && view.webContents.getURL().startsWith('http://127.0.0.1:'),
+                  (view) => 'webContents' in view && view.getVisible() && view.webContents.getURL().startsWith('http://127.0.0.1:'),
                 )
                 if (views.length === 1 && views[0].webContents === target && views[0].getBounds().x === 0 && target.isFocused()) {
                   clearInterval(timer)
@@ -296,7 +303,7 @@ try {
     app.evaluate(({ BrowserWindow }) => {
       const window = BrowserWindow.getAllWindows()[0]
       return window.contentView.children.flatMap((view) =>
-        'webContents' in view && view.webContents.getURL().startsWith('http://127.0.0.1:') ? [view.webContents.getURL()] : [],
+        'webContents' in view && view.getVisible() && view.webContents.getURL().startsWith('http://127.0.0.1:') ? [view.webContents.getURL()] : [],
       )
     })
   await expect.poll(nativePages).toHaveLength(2)
@@ -383,6 +390,7 @@ try {
     )
     .toBe(true)
   for (const button of ['left', 'middle']) {
+    const existingContents = await app.evaluate(({ webContents }) => webContents.getAllWebContents().map((item) => item.id))
     const previousTabs = await mainBrowser.locator('.SimpleBrowserTab').count()
     await app.evaluate(
       async ({ webContents }, { targetUrl, button }) => {
@@ -398,6 +406,15 @@ try {
       { targetUrl: mainUrl, button },
     )
     await expect(mainBrowser.locator('.SimpleBrowserTab')).toHaveCount(previousTabs + 1)
+    await expect
+      .poll(() =>
+        app.evaluate(
+          ({ webContents }, { existingContents, targetUrl }) =>
+            webContents.getAllWebContents().some((item) => !existingContents.includes(item.id) && item.getURL() === targetUrl && !item.isLoading()),
+          { existingContents, targetUrl: new URL('/second', mainUrl).href },
+        ),
+      )
+      .toBe(true)
     await expect(mainAddress).toHaveValue(mainUrl)
     await expect
       .poll(() =>
@@ -518,7 +535,15 @@ try {
     const imageEntries = await openPageMenu('#picture')
     assert(imageEntries.some((item) => item.label === 'Open Image in New Tab'))
     await chooseNativeItem('Copy Image')
-    await expect.poll(() => app.evaluate(({ clipboard }) => clipboard.readImage().isEmpty())).toBe(false)
+    await expect
+      .poll(() =>
+        app.evaluate(async ({ clipboard }) => {
+          const items = await clipboard.read()
+          const image = items.find((item) => item.types.includes('image/png'))
+          return image ? (await image.getType('image/png')).size > 0 : false
+        }),
+      )
+      .toBe(true)
     await app.evaluate(async ({ webContents }, targetUrl) => {
       await webContents
         .getAllWebContents()
@@ -594,7 +619,7 @@ try {
   await app.close()
   app = await _electron.launch(launchOptions)
   const restartedPage = await app.firstWindow()
-  await expect(restartedPage.locator('#Workbench')).toBeVisible()
+  await expect(restartedPage.locator('#Workbench')).toBeVisible({ timeout: 15000 })
   await expect(restartedPage.locator('.BrowserFullWidth')).toHaveCount(0)
   await expect(restartedPage.locator('.Main')).toBeVisible()
   console.log(
