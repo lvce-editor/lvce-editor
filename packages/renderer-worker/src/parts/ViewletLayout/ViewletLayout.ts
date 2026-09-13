@@ -2663,9 +2663,9 @@ export const refreshAuthState = async (state: LayoutState): Promise<LayoutStateR
   return setAuthState(state, authState)
 }
 
-const showAuthNotification = async (type: string, message: string): Promise<void> => {
+const showAuthNotification = async (type: string, message: string): Promise<string | undefined> => {
   try {
-    await Command.execute('Notification.create', type, message)
+    return await Command.execute('Notification.create', type, message)
   } catch {
     // Authentication should continue when notifications are unavailable.
   }
@@ -2673,10 +2673,25 @@ const showAuthNotification = async (type: string, message: string): Promise<void
 
 export const signIn = async (state: LayoutState): Promise<LayoutStateResult> => {
   const { platform, backendUrl } = state
+  let notificationId: string | undefined
   if (platform === PlatformType.Electron) {
-    await showAuthNotification('info', 'Continue signing in in your browser. If it did not open, check your system default browser settings.')
+    notificationId = await showAuthNotification(
+      'info',
+      'Continue signing in in your browser. If it did not open, check your system default browser settings.',
+    )
   }
-  const authState = await AuthWorker.signIn(backendUrl, platform)
+  let authState
+  try {
+    authState = await AuthWorker.signIn(backendUrl, platform)
+  } finally {
+    if (notificationId !== undefined) {
+      try {
+        await Command.execute('Notification.dispose', notificationId)
+      } catch {
+        // Notification cleanup must not prevent authentication from completing.
+      }
+    }
+  }
   const newState = mergeAuthState(state, authState)
   if (newState.authErrorMessage) {
     await showAuthNotification('error', newState.authErrorMessage)
