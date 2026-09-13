@@ -1898,7 +1898,7 @@ test('applySuggestions preserves an existing popup after a provider failure', as
   expect(SimpleBrowserSnapshot.dispose).not.toHaveBeenCalled()
 })
 
-test('suggestion selection stays within the available results', () => {
+test('suggestion selection wraps from the first result to the last', () => {
   const state = {
     ...ViewletSimpleBrowser.create(7),
     hasSuggestionsOverlay: true,
@@ -1909,10 +1909,20 @@ test('suggestion selection stays within the available results', () => {
   const second = ViewletSimpleBrowser.selectNextSuggestion(state)
   const stillSecond = ViewletSimpleBrowser.selectNextSuggestion(second)
   const first = ViewletSimpleBrowser.selectPreviousSuggestion(stillSecond)
+  const last = ViewletSimpleBrowser.selectPreviousSuggestion(first)
 
   expect(second.selectedSuggestionIndex).toBe(1)
   expect(stillSecond.selectedSuggestionIndex).toBe(1)
   expect(first.selectedSuggestionIndex).toBe(0)
+  expect(last.selectedSuggestionIndex).toBe(1)
+})
+
+test('suggestion selection does not change for zero or one result', () => {
+  const zeroState = { ...ViewletSimpleBrowser.create(7), hasSuggestionsOverlay: true, selectedSuggestionIndex: 0, suggestions: [] }
+  const oneState = { ...ViewletSimpleBrowser.create(7), hasSuggestionsOverlay: true, selectedSuggestionIndex: 0, suggestions: ['one'] }
+
+  expect(ViewletSimpleBrowser.selectPreviousSuggestion(zeroState)).toBe(zeroState)
+  expect(ViewletSimpleBrowser.selectPreviousSuggestion(oneState)).toBe(oneState)
 })
 
 test('applySuggestions places matching visited sites before provider results', async () => {
