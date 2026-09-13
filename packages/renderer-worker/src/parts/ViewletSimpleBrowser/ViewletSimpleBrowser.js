@@ -26,6 +26,7 @@ import * as KeyModifier from '../KeyModifier/KeyModifier.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as PrettyBytes from '../PrettyBytes/PrettyBytes.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
+import * as SimpleBrowserFavicon from '../SimpleBrowserFavicon/SimpleBrowserFavicon.js'
 import * as SimpleBrowserNewTabPage from '../SimpleBrowserNewTabPage/SimpleBrowserNewTabPage.js'
 import * as SimpleBrowserPageSnapshot from '../SimpleBrowserPageSnapshot/SimpleBrowserPageSnapshot.js'
 import * as SimpleBrowserPreferences from '../SimpleBrowserPreferences/SimpleBrowserPreferences.js'
@@ -85,6 +86,7 @@ const createTab = ({
   canGoBack = false,
   canGoForward = false,
   favicon = '',
+  faviconUrl = favicon,
   iframeSrc = '',
   inputValue = '',
   isAudioPlaying = false,
@@ -98,6 +100,7 @@ const createTab = ({
   canGoBack,
   canGoForward,
   favicon,
+  faviconUrl,
   iframeSrc,
   inputValue,
   isAudioPlaying,
@@ -211,7 +214,7 @@ export const saveState = (state) => {
     iframeSrc,
     selectedTabIndex,
     tabs: tabs.map((tab) => ({
-      favicon: tab.favicon,
+      favicon: tab.faviconUrl || SimpleBrowserFavicon.getSource(tab.favicon),
       iframeSrc: tab.iframeSrc,
       inputValue: tab.inputValue,
       title: tab.title,
@@ -230,6 +233,7 @@ const getTabsFromSavedState = (savedState) => {
       return createTab({
         browserViewId: 0,
         favicon: typeof tab.favicon === 'string' ? tab.favicon : '',
+        faviconUrl: typeof tab.favicon === 'string' && !tab.favicon.startsWith('blob:') ? tab.favicon : '',
         iframeSrc,
         inputValue: typeof tab.inputValue === 'string' ? tab.inputValue : iframeSrc,
         title: typeof tab.title === 'string' ? tab.title : 'New Tab',
@@ -665,6 +669,7 @@ const closeTabInternal = async (state, index, disposeWebContentsView) => {
     if (disposeWebContentsView) {
       await ElectronWebContentsView.disposeWebContentsView(tab.browserViewId)
     }
+    SimpleBrowserFavicon.dispose(tab.favicon)
     await ElectronWebContentsViewFunctions.show(replacement.browserViewId)
     const newState = activateTab(closedState, [replacement], 0)
     return { ...newState, focusAddressVersion: newState.focusAddressVersion + 1 }
@@ -680,6 +685,7 @@ const closeTabInternal = async (state, index, disposeWebContentsView) => {
   if (disposeWebContentsView && tab.browserViewId) {
     await ElectronWebContentsView.disposeWebContentsView(tab.browserViewId)
   }
+  SimpleBrowserFavicon.dispose(tab.favicon)
   if (!wasSelected) {
     return { ...closedState, selectedTabIndex, tabs }
   }
@@ -746,6 +752,7 @@ const closeTabsByIndex = async (state, indexes, preferredTabIndex) => {
   const closedState = { ...currentState, closedTabs }
   let remainingTabs = currentTabs.filter((tab, index) => !indexesToClose.has(index))
   await Promise.all(tabsToClose.filter((tab) => tab.browserViewId).map((tab) => ElectronWebContentsView.disposeWebContentsView(tab.browserViewId)))
+  tabsToClose.forEach((tab) => SimpleBrowserFavicon.dispose(tab.favicon))
   const retainedSelectedTabIndex = remainingTabs.findIndex((tab) => tab.browserViewId === browserViewId)
   if (retainedSelectedTabIndex !== -1) {
     return {
@@ -1271,13 +1278,18 @@ export const handleTitleUpdated = async (state, browserViewId, value) => {
 
 export const handlePageFaviconUpdated = (state, browserViewId, favicons) => {
   const [actualBrowserViewId, actualFavicons] = parseWebContentsEvent(state, browserViewId, favicons)
-  const favicon = Array.isArray(actualFavicons) ? actualFavicons[0] || '' : ''
+  const faviconData = Array.isArray(actualFavicons) ? actualFavicons[0] || '' : ''
   const tab = state.tabs.find((tab) => tab.browserViewId === actualBrowserViewId)
-  const newState = updateTab(state, actualBrowserViewId, { favicon })
   if (!tab) {
-    return newState
+    return state
   }
-  const visitedSites = BrowserVisitedSites.add(state.visitedSites, tab.iframeSrc, favicon)
+  const favicon = SimpleBrowserFavicon.create(faviconData)
+  if (tab.favicon !== favicon) {
+    SimpleBrowserFavicon.dispose(tab.favicon)
+  }
+  const faviconUrl = SimpleBrowserFavicon.getSource(faviconData)
+  const newState = updateTab(state, actualBrowserViewId, { favicon, faviconUrl })
+  const visitedSites = BrowserVisitedSites.add(state.visitedSites, tab.iframeSrc, faviconUrl)
   if (visitedSites === state.visitedSites) {
     return newState
   }
@@ -1300,6 +1312,7 @@ export const dispose = async (state) => {
   visibleBrowserUids.delete(state.uid)
   await Promise.all([
     ...state.tabs.filter((tab) => tab.browserViewId).map((tab) => ElectronWebContentsView.disposeWebContentsView(tab.browserViewId)),
+    ...state.tabs.map((tab) => SimpleBrowserFavicon.dispose(tab.favicon)),
     RendererProcess.invoke('Viewlet.sendMultiple', [['Css.removeCssStyleSheet', SimpleBrowserPageSnapshot.getStyleSheetId(state.uid)]]),
     SimpleBrowserSnapshot.dispose(state.snapshot),
   ])
