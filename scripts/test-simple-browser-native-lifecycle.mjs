@@ -131,7 +131,27 @@ try {
     if (path === 'second') await page.getByRole('button', { name: 'New Tab', exact: true }).click()
     await address.fill(url + '/' + path)
     await address.evaluate((input) => input.form.requestSubmit())
-    await expect(page.locator('.SimpleBrowserTabSelected')).toHaveAttribute('aria-label', 'Article /article/' + path)
+    try {
+      await expect(page.locator('.SimpleBrowserTabSelected')).toHaveAttribute('aria-label', 'Article /article/' + path)
+    } catch (error) {
+      console.error('Native lifecycle navigation diagnostics', {
+        requestedUrl: url + '/' + path,
+        address: await address.inputValue(),
+        nativeViews: await app.evaluate(
+          ({ BrowserWindow }, id) =>
+            BrowserWindow.fromId(id)
+              .contentView.children.filter((view) => view.webContents)
+              .map(({ webContents }) => ({
+                id: webContents.id,
+                url: webContents.getURL(),
+                title: webContents.getTitle(),
+                loading: webContents.isLoading(),
+              })),
+          originalId,
+        ),
+      })
+      throw error
+    }
     await expect.poll(async () => (await getLiveIds()).length).toBe(1)
     const [id] = await getLiveIds()
     await waitForLiveFrames(id)
