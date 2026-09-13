@@ -2668,6 +2668,7 @@ const showAuthNotification = async (type: string, message: string): Promise<stri
     return await Command.execute('Notification.create', type, message)
   } catch {
     // Authentication should continue when notifications are unavailable.
+    return undefined
   }
 }
 
