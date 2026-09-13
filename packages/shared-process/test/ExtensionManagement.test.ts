@@ -335,6 +335,33 @@ test('getExtensions - explicit enable overrides a builtin disabled by default', 
   })
 })
 
+test('bundled notebook keeps explicit enablement when manifests are loaded again', async () => {
+  const installedExtensionsPath = await getTmpDir()
+  const builtinExtensionsPath = await getTmpDir()
+  const disabledExtensionsPath = await getTmpDir()
+  const disabledExtensionsJsonPath = join(disabledExtensionsPath, 'disabled-extensions.json')
+  const extensionId = 'builtin.notebook'
+  const manifest = await readFile(new URL('../../../extensions/builtin.notebook/extension.json', import.meta.url), 'utf8')
+  await mkdir(join(builtinExtensionsPath, extensionId))
+  await writeFile(join(builtinExtensionsPath, extensionId, 'extension.json'), manifest)
+  // @ts-ignore
+  PlatformPaths.getExtensionsPath.mockReturnValue(installedExtensionsPath)
+  // @ts-ignore
+  PlatformPaths.getBuiltinExtensionsPath.mockReturnValue(builtinExtensionsPath)
+  // @ts-ignore
+  PlatformPaths.getDisabledExtensionsPath.mockReturnValue(disabledExtensionsPath)
+  // @ts-ignore
+  PlatformPaths.getDisabledExtensionsJsonPath.mockReturnValue(disabledExtensionsJsonPath)
+  // @ts-ignore
+  PlatformPaths.getOnlyExtensionPath.mockReturnValue(undefined)
+
+  expect(await ExtensionManagement.getExtensions()).toEqual([expect.objectContaining({ id: extensionId, disabled: true, isBuiltin: true })])
+  await ExtensionManagement.enable(extensionId)
+  expect(JSON.parse(await readFile(disabledExtensionsJsonPath, 'utf8')).enabledExtensions).toContain(extensionId)
+  expect(await ExtensionManagement.getExtensions()).toEqual([expect.objectContaining({ id: extensionId, disabled: false, isBuiltin: true })])
+  expect(JSON.parse(await readFile(join(builtinExtensionsPath, extensionId, 'extension.json'), 'utf8')).disabled).toBe(true)
+})
+
 test('disable', async () => {
   const tmpDir1 = await getTmpDir()
   const tmpDir2 = await getTmpDir()

@@ -83,6 +83,11 @@ jobs:
           npm run e2e:headless --prefix packages/extension-host-worker-tests -- --test-name-prefix=workspace.remote-local-services
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0
+      - name: Test bundled notebook defaults and enablement
+        working-directory: ./packages/extension-host-worker-tests
+        run: npm run e2e:headless -- --test-name-prefix=extension.notebook-disabled-by-default
+        env:
+          PLAYWRIGHT_BROWSERS_PATH: 0
       - name: Test split editor divider after hiding Explorer
         working-directory: ./packages/extension-host-worker-tests
         run: npm run e2e:headless -- --test-name-prefix=viewlet.main-area-split-hide-explorer
@@ -288,6 +293,10 @@ jobs:
       - name: Build Electron App (deb)
         if: matrix.os == 'ubuntu-24.04'
         run: npm run build:electron:deb
+      - name: Test packaged notebook enablement across restart
+        if: matrix.os == 'ubuntu-24.04'
+        working-directory: ./packages/extension-host-worker-tests
+        run: xvfb-run -a node scripts/test-notebook-defaults.mjs
       - name: Test Simple Browser tab dragging in Electron
         if: matrix.os == 'ubuntu-24.04'
         working-directory: ./packages/extension-host-worker-tests
