@@ -1501,7 +1501,7 @@
     "hotReloadCommand": "ProcessExplorer.hotReload",
     "viewlet": {
       "name": "ProcessExplorer",
-      "css": ["/css/parts/ViewletProcessExplorer.css"],
+      "css": ["/css/parts/MaskIcon.css", "/css/parts/ViewletProcessExplorer.css"],
       "state": { "idKey": "uid", "fields": ["parentUid", "uri", "x", "y", "width", "height"], "contextFields": ["platform", "assetDir"] },
       "commandPrefix": "ProcessExplorer",
       "methods": {
