@@ -1,3 +1,4 @@
+import * as ComponentWorkerNames from '../ComponentWorkerNames/ComponentWorkerNames.js'
 import * as AdjustCommands from '../AdjustCommands/AdjustCommands.js'
 import * as ApplicationRegistry from '../ApplicationRegistry/ApplicationRegistry.ts'
 import * as AssetDir from '../AssetDir/AssetDir.js'
@@ -519,5 +520,7 @@ export const createWorkerViewlet = ({ workerId, getPlatform = Platform.getPlatfo
   const context = createContext(getPlatform)
   const worker = WorkerInvokerMap.getWorkerInvoker(workerId)
   const adapter = WorkerViewletAdapterMap.getWorkerViewletAdapter(workerId)
-  return createWorkerViewletInternal({ adapter, config, context, worker })
+  const viewlet = createWorkerViewletInternal({ adapter, config, context, worker })
+  ComponentWorkerNames.registerViewlet(viewlet.create, workerId)
+  return viewlet
 }

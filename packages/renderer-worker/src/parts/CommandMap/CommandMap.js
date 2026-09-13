@@ -52,6 +52,7 @@ export const commandMap = {
   'ClipBoard.getSelectionText': lazy('ClipBoard.getSelectionText'),
   'ComponentState.getComponents': lazy('ComponentState.getComponents'),
   'ComponentState.getState': lazy('ComponentState.getState'),
+  'ComponentState.getWorkerName': lazy('ComponentState.getWorkerName'),
   'ComponentState.setState': lazy('ComponentState.setState'),
   'ColorTheme.getColorThemeNames': lazy('ColorTheme.getColorThemeNames'),
   'ColorTheme.hydrate': lazy('ColorTheme.hydrate'),
