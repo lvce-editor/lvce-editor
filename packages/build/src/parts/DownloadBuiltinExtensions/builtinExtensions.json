@@ -2,8 +2,8 @@
   {
     "name": "builtin.git",
     "repository": "github.com/lvce-editor/git",
-    "version": "5.31.0",
-    "sha256": "888a4ad3d7e040e273e0fbe7132379d9cf7feefcb9707f55725682416cea1db8",
+    "version": "5.34.0",
+    "sha256": "fbaf34434c1f0425e340212cc5deb5b06ed92a17693a03b08e5e061af82dd240",
     "created": "2022-07-02"
   },
   {
@@ -30,9 +30,9 @@
   {
     "name": "builtin.chat-view-2",
     "repository": "github.com/lvce-editor/chat-view-2",
-    "version": "1.19.0",
-    "sha256": "7a4ead735b26dfbe57351596baa23632939966ea7cb0fc58d0b162faeea1d137",
-    "created": "2026-07-14"
+    "version": "1.22.1",
+    "sha256": "6d6598d3219a165731451e283b5c79f60dfcf5aca28454a8dfa6fb174a1a8009",
+    "created": "2026-09-13"
   },
   {
     "name": "builtin.gpt-voice",
@@ -95,8 +95,8 @@
   {
     "name": "builtin.remote-ssh",
     "repository": "github.com/lvce-editor/remote-ssh",
-    "version": "0.11.0",
-    "sha256": "c4ef20fdfef49abcb54b55274fc07786a61e390067304fe5fa1167914482b39e",
+    "version": "0.12.1",
+    "sha256": "f6d94599bddbdac3fd7917c65edfa87ef017a83333f4ff3a73f854d10fb07adf",
     "created": "2026-08-03"
   },
   {
@@ -362,8 +362,8 @@
   {
     "name": "builtin.language-basics-python",
     "repository": "github.com/lvce-editor/language-basics-python",
-    "version": "0.15.0",
-    "sha256": "166c257e76cf00e5a840b8a9072b39ea575b4b80a0401cfddc5519c67a433208",
+    "version": "0.16.0",
+    "sha256": "22f3382ac4e27a15680154d21c8c292ca6e55c5758076a5f4d8aee398bbe9fb0",
     "created": "2022-06-16"
   },
   {
@@ -460,8 +460,8 @@
   {
     "name": "builtin.language-basics-yaml",
     "repository": "github.com/lvce-editor/language-basics-yaml",
-    "version": "1.9.1",
-    "sha256": "b4b328888e532d739af817a614fc19975872b27be7cefba7893c98b4beff53e9",
+    "version": "1.11.0",
+    "sha256": "246100eca30dce9e590c18bbc427f7cb48ded96ef94272efacc46650a7b5de31",
     "created": "2022-06-16"
   },
   {
