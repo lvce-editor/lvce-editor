@@ -16,6 +16,8 @@ const state = {
   platform: PlatformType.Web,
 }
 
+let iconThemeLoad = Promise.resolve()
+
 const getPreferredIconThemeId = () => {
   const configuredIconThemeId = Preferences.get('workbench.iconTheme')
   return configuredIconThemeId === undefined ? FALLBACK_ICON_THEME_ID : configuredIconThemeId
@@ -28,7 +30,7 @@ export const getIconThemePlatform = (platform, assetDir) => {
   return platform
 }
 
-export const setIconTheme = async (iconThemeId, platform, assetDir) => {
+const doSetIconTheme = async (iconThemeId, platform, assetDir) => {
   try {
     const useCache = Preferences.get('icon-theme.cache') ?? true
     const extensions = iconThemeId === null ? [] : await ExtensionManagementWorker.invoke('Extensions.getAllExtensions', assetDir, platform)
@@ -45,6 +47,12 @@ export const setIconTheme = async (iconThemeId, platform, assetDir) => {
   }
 }
 
+export const setIconTheme = (iconThemeId, platform, assetDir) => {
+  const promise = iconThemeLoad.then(() => doSetIconTheme(iconThemeId, platform, assetDir))
+  iconThemeLoad = promise.catch(() => {})
+  return promise
+}
+
 export const handlePreferencesChanged = async () => {
   const iconThemeId = getPreferredIconThemeId()
   const { assetDir, iconThemeId: currentIconThemeId, platform } = state
@@ -52,6 +60,11 @@ export const handlePreferencesChanged = async () => {
     return
   }
   state.iconThemeId = iconThemeId
+  await setIconTheme(iconThemeId, platform, assetDir)
+}
+
+export const reload = async () => {
+  const { assetDir, iconThemeId, platform } = state
   await setIconTheme(iconThemeId, platform, assetDir)
 }
 
