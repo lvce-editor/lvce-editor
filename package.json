@@ -34,6 +34,7 @@
     "test:simple-browser-restore": "node scripts/test-simple-browser-restore.mjs",
     "test:simple-browser-native-lifecycle": "node scripts/test-simple-browser-native-lifecycle.mjs",
     "test:simple-browser-new-tab": "node scripts/test-simple-browser-new-tab.mjs",
+    "test:process-explorer-renderer-heap-snapshot": "node scripts/test-process-explorer-renderer-heap-snapshot.mjs",
     "test:simple-browser-workspace": "node scripts/test-simple-browser-workspace.mjs",
     "test:simple-browser-address": "node scripts/test-simple-browser-address.mjs",
     "test:simple-browser-workflows": "node scripts/test-simple-browser-workflows.mjs"
