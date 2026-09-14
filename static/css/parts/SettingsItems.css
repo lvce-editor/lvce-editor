@@ -97,12 +97,13 @@
   max-width: var(--SettingsSelectMaxWidth);
 }
 
-.SettingsItem h3 {
+.SettingsItemHeading {
   margin-top: 0;
   margin-bottom: 0;
   padding-top: 20px;
   padding-bottom: 5px;
   contain: content;
+  user-select: text;
 }
 
 /* TODO avoid nesting */
@@ -121,10 +122,6 @@
   top: 0;
   height: 100%;
   width: 2px;
-}
-
-.SettingsItemHeading {
-  user-select: text;
 }
 
 .Settings .Label {
