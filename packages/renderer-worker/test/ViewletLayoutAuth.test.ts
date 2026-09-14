@@ -388,3 +388,62 @@ test('signOut merges logged out auth state into layout state', async () => {
     },
   })
 })
+
+test('signIn dismisses its browser notification only after authentication completes', async () => {
+  const authResult = Promise.withResolvers<any>()
+  jest.mocked(AuthWorker.signIn).mockReturnValue(authResult.promise)
+  jest.mocked(Command.execute).mockResolvedValue('Notification-42' as never)
+  const state = { ...ViewletLayout.create(1), platform: PlatformType.Electron }
+
+  const pending = ViewletLayout.signIn(state)
+  await Promise.resolve()
+  await Promise.resolve()
+  expect(Command.execute).not.toHaveBeenCalledWith('Notification.dispose', expect.anything())
+
+  authResult.resolve({ userState: 'loggedIn', userName: 'Test User', authErrorMessage: '' })
+  const result = await pending
+
+  expect(result.newState.userState).toBe('loggedIn')
+  expect(Command.execute).toHaveBeenLastCalledWith('Notification.dispose', 'Notification-42')
+})
+
+test('signIn removes the browser prompt before showing an authentication error', async () => {
+  jest.mocked(AuthWorker.signIn).mockResolvedValue({ authErrorMessage: 'Login failed', userState: 'loggedOut' } as never)
+  jest.mocked(Command.execute).mockResolvedValue('Notification-42' as never)
+
+  await ViewletLayout.signIn({ ...ViewletLayout.create(1), platform: PlatformType.Electron })
+
+  expect(Command.execute).toHaveBeenNthCalledWith(2, 'Notification.dispose', 'Notification-42')
+  expect(Command.execute).toHaveBeenNthCalledWith(3, 'Notification.create', 'error', 'Login failed')
+})
+
+test('signIn cleans up the browser prompt when the auth worker rejects', async () => {
+  jest.mocked(AuthWorker.signIn).mockRejectedValue(new Error('Worker closed') as never)
+  jest.mocked(Command.execute).mockResolvedValue('Notification-42' as never)
+
+  await expect(ViewletLayout.signIn({ ...ViewletLayout.create(1), platform: PlatformType.Electron })).rejects.toThrow('Worker closed')
+
+  expect(Command.execute).toHaveBeenLastCalledWith('Notification.dispose', 'Notification-42')
+})
+
+test('notification cleanup failure does not discard successful authentication', async () => {
+  jest.mocked(AuthWorker.signIn).mockResolvedValue({ userState: 'loggedIn', authErrorMessage: '' } as never)
+  jest
+    .mocked(Command.execute)
+    .mockResolvedValueOnce('Notification-42' as never)
+    .mockRejectedValueOnce(new Error('Renderer closed') as never)
+
+  const result = await ViewletLayout.signIn({ ...ViewletLayout.create(1), platform: PlatformType.Electron })
+
+  expect(result.newState.userState).toBe('loggedIn')
+})
+
+test('signIn continues when the browser notification cannot be created', async () => {
+  jest.mocked(AuthWorker.signIn).mockResolvedValue({ userState: 'loggedIn', authErrorMessage: '' } as never)
+  jest.mocked(Command.execute).mockRejectedValue(new Error('Notifications unavailable') as never)
+
+  const result = await ViewletLayout.signIn({ ...ViewletLayout.create(1), platform: PlatformType.Electron })
+
+  expect(result.newState.userState).toBe('loggedIn')
+  expect(Command.execute).toHaveBeenCalledTimes(1)
+})

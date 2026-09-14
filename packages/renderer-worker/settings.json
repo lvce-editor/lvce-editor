@@ -154,6 +154,23 @@
   },
   {
     "category": "workbench",
+    "description": "Enables experimental recycling of compatible virtual DOM elements and text nodes",
+    "heading": "Virtual DOM Recycling",
+    "id": "virtualDom.recycling.enabled",
+    "type": "boolean",
+    "value": false
+  },
+  {
+    "category": "workbench",
+    "description": "Sets the maximum number of virtual DOM elements and text nodes retained for recycling",
+    "heading": "Virtual DOM Recycling Size",
+    "id": "virtualDom.recycling.size",
+    "minimum": 0,
+    "type": "number",
+    "value": 100
+  },
+  {
+    "category": "workbench",
     "description": "Specifies the workbench color theme",
     "heading": "Color Theme",
     "id": "workbench.colorTheme",
