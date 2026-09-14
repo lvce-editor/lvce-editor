@@ -11,6 +11,7 @@ import * as ExtensionManagementWorker from '../ExtensionManagementWorker/Extensi
 import * as FileSystemMap from '../FileSystemMap/FileSystemMap.js'
 import * as FileSystemState from '../FileSystemState/FileSystemState.js'
 import * as Focus from '../Focus/Focus.js'
+import * as GetRendererOptions from '../GetRendererOptions/GetRendererOptions.js'
 import * as HasCodeQueryParam from '../HasCodeQueryParam/HasCodeQueryParam.js'
 import * as HeadlessLayout from '../HeadlessLayout/HeadlessLayout.js'
 import * as IconTheme from '../IconTheme/IconTheme.js'
@@ -150,6 +151,7 @@ export const startup = async (platform, assetDir) => {
     PreferencesState.set('layout.backendUrl', promptOptions.backendUrl)
   }
   Performance.mark(PerformanceMarkerType.DidLoadPreferences)
+  await RendererProcess.invoke('VirtualDom.configure', GetRendererOptions.getRendererOptions())
 
   LaunchTestWorker.preloadTestWorker(initData.Location.href, promptOptions !== undefined)
 
