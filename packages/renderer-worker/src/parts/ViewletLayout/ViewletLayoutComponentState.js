@@ -1,4 +1,12 @@
-export const getComponentState = (state) => state
+const sanitizeState = (state) => {
+  if (!Object.hasOwn(state, 'authAccessToken')) {
+    return state
+  }
+  const { authAccessToken, ...safeState } = state
+  return safeState
+}
+
+export const getComponentState = (state) => sanitizeState(state)
 
 export const setComponentState = (currentState, state) => {
   if (!state || typeof state !== 'object' || Array.isArray(state)) {
@@ -7,5 +15,5 @@ export const setComponentState = (currentState, state) => {
   if (state.uid !== currentState.uid) {
     throw new Error(`Layout state uid must remain ${currentState.uid}`)
   }
-  return state
+  return sanitizeState(state)
 }

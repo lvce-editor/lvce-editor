@@ -3,6 +3,7 @@ import * as ActivityBarWorker from '../ActivityBarWorker/ActivityBarWorker.js'
 import * as ApplicationRegistry from '../ApplicationRegistry/ApplicationRegistry.ts'
 import * as Assert from '../Assert/Assert.ts'
 import { assetDir } from '../AssetDir/AssetDir.js'
+import * as AuthAccessToken from '../AuthAccessToken/AuthAccessToken.js'
 import * as AuthWorker from '../AuthWorker/AuthWorker.js'
 import * as AutoUpdateType from '../AutoUpdateType/AutoUpdateType.js'
 import * as ChatViewWorker from '../ChatViewWorker/ChatViewWorker.js'
@@ -63,7 +64,6 @@ const getInitialBackendUrl = () => {
 
 const getDefaultAuthState = () => {
   return {
-    authAccessToken: '',
     authErrorMessage: '',
     userName: '',
     userState: 'loggedOut',
@@ -74,7 +74,7 @@ const getDefaultAuthState = () => {
 
 const toAuthState = (state) => {
   return {
-    accessToken: state.authAccessToken,
+    accessToken: AuthAccessToken.get(state.uid),
     signInState: state.userState,
     userName: state.userName,
   }
@@ -82,7 +82,6 @@ const toAuthState = (state) => {
 
 const toUserInfo = (state) => {
   return {
-    authAccessToken: state.authAccessToken,
     authErrorMessage: state.authErrorMessage,
     userName: state.userName,
     userState: state.userState,
@@ -91,12 +90,9 @@ const toUserInfo = (state) => {
   }
 }
 
-const toFilteredUserInfo = (state: LayoutState, options: { readonly includeAccessToken?: boolean; readonly includeTokenUsage?: boolean } = {}) => {
-  const { includeAccessToken = true, includeTokenUsage = true } = options
+const toFilteredUserInfo = (state: LayoutState, options: { readonly includeTokenUsage?: boolean } = {}) => {
+  const { includeTokenUsage = true } = options
   const info = toUserInfo(state)
-  if (!includeAccessToken) {
-    delete info.authAccessToken
-  }
   if (!includeTokenUsage) {
     delete info.userUsedTokens
   }
@@ -118,6 +114,7 @@ const toActivityBarUserLoginState = (userState) => {
 
 export const create = (id: number): LayoutState => {
   Assert.number(id)
+  AuthAccessToken.clear(id)
   return {
     sideBarLocation: SideBarLocationType.Right,
     uid: id,
@@ -662,12 +659,7 @@ const renderActivityBarAuthCommands = async (state: LayoutState) => {
   if (activityBarId === -1) {
     return []
   }
-  await ActivityBarWorker.invoke(
-    'ActivityBar.setUserLoginState',
-    activityBarId,
-    toActivityBarUserLoginState(userState),
-    toFilteredUserInfo(state, { includeAccessToken: false }),
-  )
+  await ActivityBarWorker.invoke('ActivityBar.setUserLoginState', activityBarId, toActivityBarUserLoginState(userState), toFilteredUserInfo(state))
   const diffResult = await ActivityBarWorker.invoke('ActivityBar.diff2', activityBarId)
   return ActivityBarWorker.invoke('ActivityBar.render2', activityBarId, diffResult)
 }
@@ -676,7 +668,10 @@ const renderChatAuthCommands = async (state: LayoutState) => {
   if (state.secondarySideBarId === -1 || state.secondarySideBarView !== ViewletModuleId.Chat) {
     return []
   }
-  await ChatViewWorker.invoke('Chat.handleAuthStateChange', state.secondarySideBarId, toUserInfo(state))
+  await ChatViewWorker.invoke('Chat.handleAuthStateChange', state.secondarySideBarId, {
+    ...toUserInfo(state),
+    authAccessToken: AuthAccessToken.get(state.uid),
+  })
   const diffResult = await ChatViewWorker.invoke('Chat.diff2', state.secondarySideBarId)
   return ChatViewWorker.invoke('Chat.render2', state.secondarySideBarId, diffResult)
 }
@@ -2626,12 +2621,10 @@ export const getUserInfo = (state: LayoutState, options: { readonly includeAcces
 }
 
 const mergeAuthState = (state: LayoutState, authState) => {
-  const authAccessToken =
-    typeof authState?.authAccessToken === 'string'
-      ? authState.authAccessToken
-      : typeof authState?.accessToken === 'string'
-        ? authState.accessToken
-        : state.authAccessToken
+  const authAccessToken = typeof authState?.authAccessToken === 'string' ? authState.authAccessToken : authState?.accessToken
+  if (typeof authAccessToken === 'string') {
+    AuthAccessToken.set(state.uid, authAccessToken)
+  }
   const userState =
     typeof authState?.userState === 'string'
       ? authState.userState
@@ -2640,7 +2633,6 @@ const mergeAuthState = (state: LayoutState, authState) => {
         : state.userState
   return {
     ...state,
-    authAccessToken,
     authErrorMessage: typeof authState?.authErrorMessage === 'string' ? authState.authErrorMessage : state.authErrorMessage,
     userName: typeof authState?.userName === 'string' ? authState.userName : state.userName,
     userState,
