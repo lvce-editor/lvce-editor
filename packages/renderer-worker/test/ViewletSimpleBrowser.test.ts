@@ -341,6 +341,27 @@ test('loadContent', async () => {
   })
 })
 
+test('loadContent renders a history URI without creating a native browser view', async () => {
+  const state = ViewletSimpleBrowser.create(0, 'simple-browser-history://', 0, 0, 300, 200)
+
+  const newState = await ViewletSimpleBrowser.loadContent(state)
+
+  expect(newState).toMatchObject({
+    browserViewId: 0,
+    iframeSrc: 'simple-browser-history://',
+    inputValue: 'simple-browser-history://',
+    title: 'History',
+  })
+  expect(newState.tabs).toEqual([
+    expect.objectContaining({
+      browserViewId: 0,
+      iframeSrc: 'simple-browser-history://',
+      title: 'History',
+    }),
+  ])
+  expect(ElectronWebContentsView.createWebContentsView).not.toHaveBeenCalled()
+})
+
 test('loadContent uses registered keybindings without loading every viewlet', async () => {
   const registeredKeyBinding = {
     command: 'test.registered',
@@ -1085,8 +1106,12 @@ test('Ctrl+H from the focused web contents opens history', async () => {
 
   const newState = await ViewletSimpleBrowser.handleKeyBinding(state, 12, KeyModifier.CtrlCmd | KeyCode.KeyH)
 
-  expect(newState).toBe(state)
-  expect(Command.execute).toHaveBeenCalledWith('Main.openUri', 'simple-browser-history://')
+  expect(newState.selectedTabIndex).toBe(2)
+  expect(newState.tabs[2]).toMatchObject({
+    browserViewId: 0,
+    iframeSrc: 'simple-browser-history://',
+    title: 'History',
+  })
 })
 
 test('ignores keybindings from another simple browser instance', async () => {

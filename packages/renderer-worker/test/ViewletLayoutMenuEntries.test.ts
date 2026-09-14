@@ -121,9 +121,8 @@ test('getQuickPickMenuEntries includes simple browser history command', () => {
   const entries = ViewletLayoutMenuEntries.getQuickPickMenuEntries()
 
   expect(entries).toContainEqual({
-    id: 'Main.openUri',
+    id: 'SimpleBrowser.openHistory',
     label: 'Simple Browser: Open History',
-    args: ['simple-browser-history://'],
     aliases: ['Open Browser History'],
   })
 })
