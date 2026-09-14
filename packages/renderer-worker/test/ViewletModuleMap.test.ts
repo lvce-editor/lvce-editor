@@ -36,6 +36,8 @@ const componentStateViewlets = [
   ViewletModuleId.ExtensionDetail,
   ViewletModuleId.Extensions,
   ViewletModuleId.Main,
+  ViewletModuleId.Problems,
+  ViewletModuleId.ProcessExplorer,
   ViewletModuleId.Search,
   ViewletModuleId.Settings,
   ViewletModuleId.SourceControl,
@@ -48,6 +50,12 @@ test.each(componentStateViewlets)('viewlet %s exposes live component state acces
 
   expect(typeof module.getComponentState).toBe('function')
   expect(typeof module.setComponentState).toBe('function')
+})
+
+test.each([ViewletModuleId.Problems, ViewletModuleId.ProcessExplorer])('viewlet %s exposes live component DOM access', async (moduleId) => {
+  const module = await ViewletModuleMap.map[moduleId]()
+
+  expect(typeof module.getComponentDom).toBe('function')
 })
 
 test('running extensions uses worker-backed module', async () => {

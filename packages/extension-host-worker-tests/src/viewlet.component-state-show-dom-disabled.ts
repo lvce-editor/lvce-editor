@@ -1,6 +1,6 @@
 import type { Test } from '@lvce-editor/test-with-playwright'
 
-export const name = 'viewlet.component-state-show-dom-disabled'
+export const name = 'viewlet.component-state-show-dom-problems'
 
 export const test: Test = async ({ Command, Editor, expect, FileSystem, KeyBoard, Locator, Main }) => {
   const tmpDir = await FileSystem.getTmpDir()
@@ -12,8 +12,8 @@ export const test: Test = async ({ Command, Editor, expect, FileSystem, KeyBoard
   await Command.execute('Developer.openComponentState')
   const components = await Command.execute('ComponentState.getComponents')
   const component = components.find((item) => item.moduleId === 'Problems')
-  if (!component?.editable || component.domAvailable !== false) {
-    throw new Error('Expected Problems to support state inspection without a DOM API')
+  if (!component?.editable || component.domAvailable !== true) {
+    throw new Error('Expected Problems to support state and DOM inspection')
   }
 
   const card = Locator(`.ComponentStateCard[data-uid="${component.uid}"]`)
@@ -28,12 +28,13 @@ export const test: Test = async ({ Command, Editor, expect, FileSystem, KeyBoard
   } as unknown as string)
   const showDom = Locator('.Menu .MenuItem', { hasText: 'Show Dom' })
   await expect(showDom).toBeVisible()
-  await expect(showDom).toHaveAttribute('aria-disabled', 'true')
+  await expect(showDom).toHaveAttribute('aria-disabled', null)
   await showDom.click()
-  await expect(Locator('.MainTabSelected .TabTitle')).toHaveText('context-menu.txt')
-  const content = await Editor.getText()
-  if (content !== 'Keep this editor open') {
-    throw new Error(`Disabled Show Dom changed the editor: ${content}`)
+  await expect(Locator('.MainTabSelected .TabTitle')).toHaveText(`${component.uid}.json`)
+  await expect(Locator('.Editor')).toContainText('childCount')
+  const dom = JSON.parse(await Editor.getText())
+  if (!Array.isArray(dom) || !dom.some((node) => node.className?.split(' ').includes('Problems'))) {
+    throw new Error('Expected Problems virtual DOM')
   }
   await KeyBoard.press('Escape')
   await expect(Locator('.Menu')).toBeHidden()
