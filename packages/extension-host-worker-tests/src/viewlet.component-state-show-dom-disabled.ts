@@ -31,6 +31,7 @@ export const test: Test = async ({ Command, Editor, expect, FileSystem, KeyBoard
   await expect(showDom).toHaveAttribute('aria-disabled', null)
   await showDom.click()
   await expect(Locator('.MainTabSelected .TabTitle')).toHaveText(`${component.uid}.json`)
+  await expect(Locator('.Editor')).toContainText('childCount')
   const dom = JSON.parse(await Editor.getText())
   if (!Array.isArray(dom) || !dom.some((node) => node.className?.split(' ').includes('Problems'))) {
     throw new Error('Expected Problems virtual DOM')

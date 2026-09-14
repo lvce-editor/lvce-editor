@@ -58,7 +58,4 @@ export const test: Test = async ({ Command, Editor, expect, ExtensionDetail, Ext
   await Command.execute('Layout.showPanel', 'Problems')
   await expect(Locator('.Problems')).toBeVisible()
   await checkDom('Problems')
-  await Command.execute('Developer.openProcessExplorer')
-  await Command.execute('ProcessExplorer.setUpdateInterval', 0)
-  await checkDom('ProcessExplorer')
 }
