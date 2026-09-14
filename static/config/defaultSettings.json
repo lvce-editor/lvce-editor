@@ -75,6 +75,8 @@
   "window.controlsOverlay.enabled": true,
 
   "Workers.cleanUpAfterLoad": false,
+  "virtualDom.recycling.enabled": false,
+  "virtualDom.recycling.size": 100,
 
   "workbench.colorTheme": "slime",
   "workbench.iconTheme": "vscode-icons",
