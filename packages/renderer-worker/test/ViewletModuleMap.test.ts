@@ -37,6 +37,7 @@ const componentStateViewlets = [
   ViewletModuleId.Extensions,
   ViewletModuleId.Main,
   ViewletModuleId.Search,
+  ViewletModuleId.Settings,
   ViewletModuleId.SourceControl,
   ViewletModuleId.StatusBar,
   ViewletModuleId.TitleBar,
