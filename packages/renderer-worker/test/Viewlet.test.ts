@@ -334,7 +334,7 @@ test('reload restores a viewlet from its current saved state and rerenders it', 
 
   expect(saveState).toHaveBeenCalledWith(oldState)
   expect(dispose).toHaveBeenCalledWith(oldState)
-  expect(loadContent).toHaveBeenCalledWith(oldState, savedState)
+  expect(loadContent).toHaveBeenCalledWith(oldState, savedState, { preserveFocus: true })
   expect(ViewletManager.render).toHaveBeenCalledWith(expect.anything(), oldState, newState)
   expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.sendMultiple', [
     ['Viewlet.setDom2', 2, []],
