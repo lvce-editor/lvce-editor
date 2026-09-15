@@ -1,6 +1,6 @@
 .DefineKeyBinding {
   position: absolute;
-  inset: 0;
+  inset: 0 var(--PreviewAreasWidth, 0px) 0 0;
   place-items: center;
   display: grid;
 }
