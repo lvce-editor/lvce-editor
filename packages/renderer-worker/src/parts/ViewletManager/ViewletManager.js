@@ -398,7 +398,7 @@ const getRenderCommands = (module, oldState, newState, uid = newState.uid || mod
             newParentRenderedState.parentUid,
           ),
         )
-      } else {
+      } else if (!parentInstance || parentInstance.factory?.setTitle) {
         commands.push(['Viewlet.send', parentId, 'setTitle', title])
       }
     }

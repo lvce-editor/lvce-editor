@@ -43,7 +43,6 @@ export interface LayoutState {
   readonly activityBarTop: number
   readonly activityBarVisible: boolean
   readonly activityBarWidth: number
-  readonly authAccessToken: string
   readonly authErrorMessage: string
   readonly assetDir: string
   readonly backendUrl: string
