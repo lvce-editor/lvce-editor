@@ -198,7 +198,8 @@ export const getQuickPickMenuEntries = () => {
     },
     {
       id: 'Preferences.openKeyBindingsJson',
-      label: 'Preferences: Open User Key Bindings',
+      label: 'Preferences: Open Keyboard Shortcuts (JSON)',
+      aliases: ['Open User Key Bindings', 'Keyboard Shortcuts', 'Key Bindings'],
     },
     {
       id: 'Main.openKeyBindings',

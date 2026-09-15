@@ -1347,7 +1347,11 @@ export const handleDidNavigate = async (state, browserViewId, value) => {
     pageSnapshot: undefined,
   })
   const history = await BrowserHistory.record(url)
-  const stateWithHistory = { ...newState, history: history || state.history }
+  const stateWithHistory = {
+    ...newState,
+    addressValueVersion: state.addressValueVersion + (actualBrowserViewId === state.browserViewId ? 1 : 0),
+    history: history || state.history,
+  }
   return actualBrowserViewId === state.browserViewId ? BrowserFind.refreshFind(stateWithHistory) : stateWithHistory
 }
 

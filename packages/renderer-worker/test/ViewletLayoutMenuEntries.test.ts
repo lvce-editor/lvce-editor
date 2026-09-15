@@ -47,7 +47,8 @@ test('getQuickPickMenuEntries includes executable keybindings commands', () => {
     expect.arrayContaining([
       {
         id: 'Preferences.openKeyBindingsJson',
-        label: 'Preferences: Open User Key Bindings',
+        aliases: ['Open User Key Bindings', 'Keyboard Shortcuts', 'Key Bindings'],
+        label: 'Preferences: Open Keyboard Shortcuts (JSON)',
       },
       {
         id: 'Main.openKeyBindings',

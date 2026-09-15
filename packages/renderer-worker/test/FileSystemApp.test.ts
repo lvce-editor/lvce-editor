@@ -95,6 +95,16 @@ test('writeFile - keybindings reloads runtime keybindings after persisting', asy
   expect(KeyBindings.reloadUserKeyBindings).toHaveBeenCalledTimes(1)
 })
 
+test('readFile - keybindings creates an empty array for a new profile', async () => {
+  jest.mocked(PlatformPaths.getUserKeyBindingsPath).mockResolvedValue('~/.config/app/keybindings.json')
+  jest.mocked(FileSystem.mkdir).mockResolvedValue()
+  jest.mocked(FileSystem.writeFile).mockResolvedValue()
+  jest.mocked(FileSystem.readFile).mockRejectedValueOnce(new NodeError(FileSytemErrorCodes.ENOENT))
+
+  await expect(FileSystemApp.readFile('keybindings.json')).resolves.toBe('[]')
+  expect(FileSystem.writeFile).toHaveBeenCalledWith('~/.config/app/keybindings.json', '[]')
+})
+
 test('readFile - settings - error', async () => {
   // @ts-ignore
   PlatformPaths.getUserSettingsPath.mockImplementation(() => {

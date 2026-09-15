@@ -24,6 +24,14 @@
     "value": ""
   },
   {
+    "category": "workbench",
+    "description": "Controls whether boolean settings are rendered as toggles",
+    "heading": "Use Toggles for Boolean Settings",
+    "id": "settings.useToggles",
+    "type": "boolean",
+    "value": true
+  },
+  {
     "category": "text-editor",
     "description": "Controls the delay in milliseconds before completions are loaded",
     "heading": "Completions Loading Delay",

@@ -1,0 +1,34 @@
+{
+  "codespaces": [
+    "packages/extension-host-worker-tests/src/viewlet.ports-codespaces.ts"
+  ],
+  "component-state-worker": [
+    "packages/extension-host-worker-tests/src/viewlet.component-state-*.ts"
+  ],
+  "extension-detail-view": [
+    "packages/extension-host-worker-tests/src/viewlet.extension-detail-sidebar-resize.ts"
+  ],
+  "extension-host-worker": [
+    "packages/extension-host-worker-tests/src/viewlet.main-save-extension-filesystem.ts"
+  ],
+  "git": [
+    "scripts/test-open-remote.mjs"
+  ],
+  "main-area-worker": [
+    "packages/extension-host-worker-tests/src/viewlet.main-area-split-hide-explorer.ts"
+  ],
+  "notebook": [
+    "packages/extension-host-worker-tests/scripts/test-notebook-defaults.mjs",
+    "packages/extension-host-worker-tests/src/extension.notebook-disabled-by-default.ts"
+  ],
+  "output-view": [
+    "packages/extension-host-worker-tests/src/viewlet.output-open-channel.ts"
+  ],
+  "simple-browser-view": [
+    "packages/extension-host-worker-tests/src/viewlet.simple-browser-*.ts",
+    "scripts/test-simple-browser-*.mjs"
+  ],
+  "title-bar-worker": [
+    "packages/extension-host-worker-tests/src/viewlet.title-bar-menu-close-on-application-blur.ts"
+  ]
+}

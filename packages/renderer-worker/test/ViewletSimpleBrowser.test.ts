@@ -2429,3 +2429,28 @@ test('openOrRevealTab preserves existing tabs when opening a new remote', async 
   expect(result.tabs.slice(0, 2)).toEqual(state.tabs)
   expect(result.iframeSrc).toBe(url)
 })
+
+test('synchronizes the address after a page starts and finishes navigation', async () => {
+  const state = { ...ViewletSimpleBrowser.create(), browserViewId: 12, inputValue: 'https://example.com', iframeSrc: 'https://example.com' }
+  const loadingState = ViewletSimpleBrowser.handleWillNavigate(state, 12, 'https://example.com/next')
+  jest.mocked(ElectronWebContentsViewFunctions.getStats).mockResolvedValueOnce({ canGoBack: true, canGoForward: false })
+  const loadedState = await ViewletSimpleBrowser.handleDidNavigate(loadingState, 12, 'https://example.com/next')
+
+  expect(loadingState.iframeSrc).toBe('https://example.com/next')
+  expect(loadedState.inputValue).toBe('https://example.com/next')
+  expect(loadedState.addressValueVersion).toBe(loadingState.addressValueVersion + 1)
+})
+
+test('background navigation preserves the selected address value version', async () => {
+  const state = {
+    ...ViewletSimpleBrowser.create(),
+    browserViewId: 12,
+    inputValue: 'unfinished input',
+    tabs: [{ browserViewId: 12 }, { browserViewId: 13 }],
+  }
+  jest.mocked(ElectronWebContentsViewFunctions.getStats).mockResolvedValueOnce({ canGoBack: true, canGoForward: false })
+  const loadedState = await ViewletSimpleBrowser.handleDidNavigate(state, 13, 'https://example.com/next')
+
+  expect(loadedState.inputValue).toBe('unfinished input')
+  expect(loadedState.addressValueVersion).toBe(state.addressValueVersion)
+})
