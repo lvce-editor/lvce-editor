@@ -6,7 +6,9 @@ import { waitForServerReady } from '../scripts/wait-for-server-ready.mjs'
 test('waits for the listening acknowledgement before navigation can begin', async () => {
   const server = new EventEmitter()
   let ready = false
-  const pending = waitForServerReady(server).then(() => { ready = true })
+  const pending = waitForServerReady(server).then(() => {
+    ready = true
+  })
   server.emit('message', 'starting')
   await new Promise((resolve) => setImmediate(resolve))
   assert.equal(ready, false)
