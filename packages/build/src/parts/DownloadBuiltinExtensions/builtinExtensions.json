@@ -559,8 +559,8 @@
   {
     "name": "builtin.theme-monokai",
     "repository": "github.com/lvce-editor/theme-monokai",
-    "version": "0.16.0",
-    "sha256": "b87d4e4eb18853b4893caaa5bfae2d6768614482b72f5d21d2954fff713cacba",
+    "version": "0.17.0",
+    "sha256": "1fc9f326d61879b7fdef05269f82c71b95a5d25f79a9ff749e15ef0438b10f12",
     "created": "2022-06-16"
   },
   {
