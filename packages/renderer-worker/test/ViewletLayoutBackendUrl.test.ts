@@ -53,15 +53,14 @@ test('getBackendUrl returns backend url from layout state', () => {
   ).toBe('https://example.com/')
 })
 
-test('getAuthState returns auth data from layout state', () => {
-  expect(
-    // @ts-ignore
-    ViewletLayout.getAuthState({
-      authAccessToken: 'token-1',
-      userName: 'Test User',
-      userState: 'loggedIn',
-    }),
-  ).toEqual({
+test('getAuthState returns the private access token for explicit auth consumers', async () => {
+  const state = ViewletLayout.create(1)
+  const { newState } = await ViewletLayout.setAuthState(state, {
+    authAccessToken: 'token-1',
+    userName: 'Test User',
+    userState: 'loggedIn',
+  })
+  expect(ViewletLayout.getAuthState(newState)).toEqual({
     accessToken: 'token-1',
     signInState: 'loggedIn',
     userName: 'Test User',

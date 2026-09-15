@@ -98,7 +98,6 @@ test('setAuthState merges startup auth state into layout state', async () => {
     commands: [],
     newState: {
       ...state,
-      authAccessToken: 'token-1',
       authErrorMessage: '',
       userName: 'Test User',
       userState: 'loggedIn',
@@ -121,7 +120,6 @@ test('setAuthState accepts public auth state shape', async () => {
     commands: [],
     newState: {
       ...state,
-      authAccessToken: 'token-2',
       authErrorMessage: '',
       userName: 'Another User',
       userState: 'loggedIn',
@@ -131,10 +129,9 @@ test('setAuthState accepts public auth state shape', async () => {
   })
 })
 
-test('getUserInfo returns the full auth snapshot from layout state', () => {
+test('getUserInfo returns the public auth snapshot without the access token', () => {
   const state = {
     ...ViewletLayout.create(1),
-    authAccessToken: 'token-1',
     authErrorMessage: 'error',
     userName: 'Test User',
     userState: 'loggedIn',
@@ -143,7 +140,6 @@ test('getUserInfo returns the full auth snapshot from layout state', () => {
   }
 
   expect(ViewletLayout.getUserInfo(state)).toEqual({
-    authAccessToken: 'token-1',
     authErrorMessage: 'error',
     userName: 'Test User',
     userState: 'loggedIn',
@@ -155,7 +151,6 @@ test('getUserInfo returns the full auth snapshot from layout state', () => {
 test('getUserInfo can omit auth access token and token usage', () => {
   const state = {
     ...ViewletLayout.create(1),
-    authAccessToken: 'token-1',
     authErrorMessage: 'error',
     userName: 'Test User',
     userState: 'loggedIn',
@@ -253,7 +248,6 @@ test('refreshAuthState initializes auth on demand and merges the result', async 
     commands: [],
     newState: {
       ...state,
-      authAccessToken: 'token-1',
       authErrorMessage: '',
       userName: 'Test User',
       userState: 'loggedIn',
@@ -288,7 +282,6 @@ test('signIn merges auth worker state into layout state', async () => {
     commands: [],
     newState: {
       ...state,
-      authAccessToken: 'token-1',
       authErrorMessage: '',
       userName: 'Test User',
       userState: 'loggedIn',
@@ -363,7 +356,6 @@ test('signOut merges logged out auth state into layout state', async () => {
   const state = {
     ...ViewletLayout.create(1),
     backendUrl: 'https://example.com/',
-    authAccessToken: 'token-1',
     authErrorMessage: '',
     userName: 'Test User',
     userState: 'loggedIn',
@@ -379,7 +371,7 @@ test('signOut merges logged out auth state into layout state', async () => {
     commands: [],
     newState: {
       ...state,
-      authAccessToken: '',
+
       authErrorMessage: '',
       userName: '',
       userState: 'loggedOut',
