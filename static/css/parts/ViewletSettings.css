@@ -34,6 +34,8 @@
   padding-left: 15px;
 }
 
-.SettingsResizer {
+.SettingsMain > .SettingsResizer {
   background: var(--ExtensionDetailTabsBorder);
+  flex: 0 0 var(--SashSize);
+  position: relative;
 }
