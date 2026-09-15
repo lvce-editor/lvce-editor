@@ -314,8 +314,13 @@ test('reload restores a viewlet from its current saved state and rerenders it', 
   const savedState = { selection: 3 } as const
   const saveState = jest.fn(async (_state: typeof oldState) => savedState)
   const dispose = jest.fn(async (_state: typeof oldState) => {})
-  const loadContent = jest.fn(async (_state: typeof oldState, _savedState: typeof savedState) => newState)
-  const contentLoaded = jest.fn(async (_state: typeof newState) => [['Viewlet.afterLoad', 2], ['Viewlet.focus', 2]])
+  const loadContent = jest.fn(
+    async (_state: typeof oldState, _savedState: typeof savedState, _context: { readonly preserveFocus: boolean }) => newState,
+  )
+  const contentLoaded = jest.fn(async (_state: typeof newState) => [
+    ['Viewlet.afterLoad', 2],
+    ['Viewlet.focus', 2],
+  ])
   const contentLoadedEffects = jest.fn(async (_state: typeof newState) => {})
   ViewletStates.set(2, {
     factory: { contentLoaded, contentLoadedEffects, dispose, loadContent, saveState },
