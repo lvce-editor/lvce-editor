@@ -80,3 +80,10 @@ test('enables Google suggestions only when requested', () => {
   expect(getHtml()).not.toContain('script-src')
   expect(SimpleBrowserNewTabPage.toDisplayUrl(SimpleBrowserNewTabPage.getUrl('', true))).toBe('')
 })
+
+test('wraps ArrowUp from the first new-tab suggestion when multiple results exist', () => {
+  const html = getHtml(SimpleBrowserNewTabPage.getUrl('', true))
+
+  expect(html).toContain('suggestions.length > 1')
+  expect(html).toContain('suggestions.length > 1 ? suggestions.length - 1 : selectedIndex')
+})

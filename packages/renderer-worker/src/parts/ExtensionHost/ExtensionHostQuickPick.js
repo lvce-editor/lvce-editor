@@ -8,12 +8,13 @@ export const show = async (picks) => {
   return promise
 }
 
-export const showQuickPick = (options) => {
-  return QuickPickWorker.invoke('QuickPick.showQuickPick', options)
+export const showQuickPick = (options, applicationId) => {
+  return QuickPickWorker.invoke('QuickPick.showQuickPick', applicationId === undefined ? options : { ...options, applicationId })
 }
 
-export const showQuickInput = async (options = {}) => {
+export const showQuickInput = async (options = {}, applicationId) => {
   const result = await QuickPickWorker.invoke('QuickPick.showQuickInput', {
+    ...(applicationId !== undefined && { applicationId }),
     initialValue: options.value,
     placeholder: options.placeholder,
   })

@@ -10,11 +10,14 @@ export const test: Test = async ({ Command, KeyBoard, Locator, Settings, expect 
   await Command.execute('Layout.showPanel', 'Terminals')
   const terminal = Locator('.XtermTerminal')
   await expect(terminal).toBeVisible()
+  await terminal.click()
+  await expect(terminal.locator('.xterm-helper-textarea')).toBeFocused()
 
   for (const character of 'touch persistent-terminal.txt') {
     await KeyBoard.press(character === ' ' ? 'Space' : character)
   }
   await KeyBoard.press('Enter')
+  await expect(terminal.locator('.xterm-rows')).toContainText('persistent-terminal.txt$')
   await KeyBoard.press('l')
   await KeyBoard.press('s')
   await KeyBoard.press('Enter')
@@ -26,6 +29,8 @@ export const test: Test = async ({ Command, KeyBoard, Locator, Settings, expect 
   await Command.execute('Layout.showPanel', 'Terminals')
   const reopenedTerminal = Locator('.XtermTerminal')
   await expect(reopenedTerminal).toBeVisible()
+  await reopenedTerminal.click()
+  await expect(reopenedTerminal.locator('.xterm-helper-textarea')).toBeFocused()
   await expect(reopenedTerminal).toContainText('ls')
   await expect(reopenedTerminal).toContainText('persistent-terminal.txt')
 

@@ -5,6 +5,7 @@ import * as ViewletSimpleBrowserKeyBindings from '../src/parts/ViewletSimpleBrow
 import * as WhenExpression from '../src/parts/WhenExpression/WhenExpression.js'
 
 const expectedTabKeyBindings = [
+  { key: KeyModifier.CtrlCmd | KeyModifier.Shift | KeyCode.KeyT, command: 'SimpleBrowser.reopenClosedTab' },
   {
     key: KeyModifier.CtrlCmd | KeyCode.KeyW,
     command: 'SimpleBrowser.closeCurrentTab',

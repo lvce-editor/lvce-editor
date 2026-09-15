@@ -1,3 +1,4 @@
+import { diffTree } from '@lvce-editor/virtual-dom-worker'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.js'
 import * as GetSimpleBrowserHistoryVirtualDom from '../GetSimpleBrowserHistoryVirtualDom/GetSimpleBrowserHistoryVirtualDom.js'
 
@@ -27,8 +28,13 @@ const renderDom = {
     return oldState.loaded === newState.loaded && oldState.entries === newState.entries && oldState.searchValue === newState.searchValue
   },
   apply(oldState, newState) {
-    const dom = GetSimpleBrowserHistoryVirtualDom.getSimpleBrowserHistoryVirtualDom(newState.entries, newState.searchValue)
-    return ['Viewlet.setDom2', dom]
+    const newDom = GetSimpleBrowserHistoryVirtualDom.getSimpleBrowserHistoryVirtualDom(newState.entries, newState.searchValue, oldState.searchValue)
+    if (!oldState.loaded) {
+      return ['Viewlet.setDom2', GetSimpleBrowserHistoryVirtualDom.getSimpleBrowserHistoryVirtualDom(newState.entries, newState.searchValue)]
+    }
+    const oldDom = GetSimpleBrowserHistoryVirtualDom.getSimpleBrowserHistoryVirtualDom(oldState.entries, oldState.searchValue)
+    const patches = /** @type {readonly unknown[]} */ (diffTree(oldDom, newDom))
+    return ['Viewlet.setTreePatches', patches]
   },
 }
 

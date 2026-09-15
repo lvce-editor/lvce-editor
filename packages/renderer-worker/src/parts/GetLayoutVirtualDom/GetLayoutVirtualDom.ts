@@ -514,7 +514,7 @@ export const getLayoutVirtualDom = (state: LayoutState) => {
   }
 
   if (state.browserFullWidth) {
-    dom[0].className += ' BrowserFullWidth'
+    dom[0].className += ` BrowserFullWidth${state.browserFullWidth.hideTitleBar ? ' BrowserFullWidthHideTitleBar' : ''}`
     dom[0].childCount = workbenchChildCount + 1
     dom.push({ type: VirtualDomElements.Reference, uid: state.browserFullWidth.browserUid })
     return dom

@@ -29,6 +29,7 @@ import * as KeyBindingsViewWorker from '../KeyBindingsViewWorker/KeyBindingsView
 import * as LanguageModelsViewWorker from '../LanguageModelsViewWorker/LanguageModelsViewWorker.js'
 import * as MainAreaWorker from '../MainAreaWorker/MainAreaWorker.js'
 import * as MarkdownWorker from '../MarkdownWorker/MarkdownWorker.js'
+import * as MenuWorker from '../MenuWorker/MenuWorker.js'
 import * as OpenerWorker from '../OpenerWorker/OpenerWorker.js'
 import * as OutputViewWorker from '../OutputViewWorker/OutputViewWorker.js'
 import * as PanelWorker from '../PanelWorker/PanelWorker.js'
@@ -97,9 +98,6 @@ export const sendMessagePortToProcessExplorer = async (port) => {
 
 export const sendMessagePortToFileWatcherExplorer = async (port) => {
   Assert.object(port)
-  if (await WorkspaceConnection.connectMessagePort('file-watcher-explorer', port)) {
-    return
-  }
   await SharedProcess.invokeAndTransfer('HandleMessagePortForFileWatcherExplorer.handleMessagePortForFileWatcherExplorer', port)
 }
 
@@ -291,3 +289,8 @@ export const sendMessagePortToDiffWorker = async (port, initialCommand, rpcId) =
 }
 
 // TODO add only one function sendMessagePortToRpc(rpcId) which sends it to the matching rpc module
+
+export const sendMessagePortToMenuWorker = async (port) => {
+  Assert.object(port)
+  await MenuWorker.invokeAndTransfer('Menu.handleMessagePort', port)
+}

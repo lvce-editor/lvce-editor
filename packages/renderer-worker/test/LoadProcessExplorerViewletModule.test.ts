@@ -32,16 +32,11 @@ test('loads unsupported viewlet on web', async () => {
   expect(module.getKeyBindings()).toEqual([])
 })
 
-test('loads worker-backed viewlet on web with an active workspace connection', async () => {
+test('does not replace the local process explorer platform for a remote workspace', async () => {
   jest.mocked(WorkspaceConnection.isActive).mockReturnValue(true)
-
   const module = await LoadProcessExplorerViewletModule.loadProcessExplorerViewletModule(PlatformType.Web)
-
   const state = module.create(7, 'process-explorer://', 1, 2, 3, 4)
-  const { platform } = state
-  expect(platform).toBe(PlatformType.Remote)
-  expect(typeof module.getCommands).toBe('function')
-  expect(typeof module.getKeyBindings).toBe('function')
+  expect(module.loadContent(state).message).toBe('Process Explorer is not supported on web.')
 })
 
 test('keeps electron platform with an active workspace connection', async () => {

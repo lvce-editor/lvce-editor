@@ -1,3 +1,4 @@
+import sessionReplaySettings from '@lvce-editor/session-replay-worker/settings' with { type: 'json' }
 import { existsSync } from 'node:fs'
 import * as JsonFile from '../JsonFile/JsonFile.ts'
 import * as Path from '../Path/Path.ts'
@@ -116,6 +117,10 @@ export const bundleBuiltinSettings = async ({ workers, toRoot }): Promise<void> 
     {
       fileName: 'renderer-worker.json',
       settings: await JsonFile.readJson(Path.absolute(rendererSettingsPath)),
+    },
+    {
+      fileName: 'session-replay-worker.json',
+      settings: sessionReplaySettings,
     },
   ]
   for (const candidate of getSettingsContributionCandidates(workers)) {

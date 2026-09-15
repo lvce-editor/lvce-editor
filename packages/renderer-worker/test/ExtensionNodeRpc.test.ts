@@ -4,6 +4,14 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
+jest.unstable_mockModule('../src/parts/GetWebSocketUrl/GetWebSocketUrl.js', () => ({
+  getWebSocketUrl: () => 'ws://localhost:3000/websocket/extension-node-process',
+}))
+
+jest.unstable_mockModule('../src/parts/Location/Location.js', () => ({
+  getHost: () => 'localhost:3000',
+}))
+
 jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => ({
   invokeAndTransfer: jest.fn(),
 }))
@@ -21,31 +29,12 @@ const SharedProcess = await import('../src/parts/SharedProcess/SharedProcess.js'
 const WebSocketCapability = await import('../src/parts/WebSocketCapability/WebSocketCapability.js')
 const WorkspaceConnection = await import('../src/parts/WorkspaceConnection/WorkspaceConnection.js')
 
-test('createConnection returns an authenticated remote node process URL', async () => {
-  // @ts-ignore
-  WebSocketCapability.create.mockResolvedValue({
+test.each(['builtin.git', 'builtin.remote-ssh', 'custom.extension'])('creates local Node process URLs for %s', async (extensionId) => {
+  await expect(ExtensionNodeRpc.createConnection(extensionId, 'client')).resolves.toEqual({
     protocols: [],
-    url: 'ws://127.0.0.1:3000/websocket/extension-node-process?token=test-token',
+    url: `ws://localhost:3000/websocket/extension-node-process?extensionId=${extensionId}&rpcId=client`,
   })
-
-  await expect(ExtensionNodeRpc.createConnection('builtin.git', 'git-client')).resolves.toEqual({
-    protocols: [],
-    url: 'ws://127.0.0.1:3000/websocket/extension-node-process?token=test-token&extensionId=builtin.git&rpcId=git-client',
-  })
-  expect(WebSocketCapability.create).toHaveBeenCalledWith('extension-node-process')
-})
-
-test('createConnection returns a current-server node process URL without a workspace connection', async () => {
-  // @ts-ignore
-  WebSocketCapability.create.mockResolvedValue({
-    protocols: [],
-    url: 'ws://localhost:3000/websocket/extension-node-process',
-  })
-
-  await expect(ExtensionNodeRpc.createConnection('builtin.git', 'git-client')).resolves.toEqual({
-    protocols: [],
-    url: 'ws://localhost:3000/websocket/extension-node-process?extensionId=builtin.git&rpcId=git-client',
-  })
+  expect(WebSocketCapability.create).not.toHaveBeenCalled()
 })
 
 test('supports direct Electron connections', () => {
@@ -67,17 +56,23 @@ test('transfers an extension-bound message port to the shared process', async ()
   port2.close()
 })
 
-test('bridges an extension-bound message port to an active remote workspace', async () => {
-  const { port1, port2 } = new MessageChannel()
-  jest.mocked(WorkspaceConnection.connectMessagePort).mockResolvedValueOnce(true)
-
-  await ExtensionNodeRpc.createMessagePort(port1, 'builtin.git', 'git-client')
-
-  expect(WorkspaceConnection.connectMessagePort).toHaveBeenCalledWith('extension-node-process', port1, {
-    extensionId: 'builtin.git',
-    rpcId: 'git-client',
-  })
-  expect(SharedProcess.invokeAndTransfer).not.toHaveBeenCalled()
-  port1.close()
-  port2.close()
-})
+test.each(['builtin.git', 'builtin.remote-ssh', 'custom.extension'])(
+  'transfers %s ports locally without interpreting workspace transport',
+  async (extensionId) => {
+    const { port1, port2 } = new MessageChannel()
+    jest.mocked(WorkspaceConnection.connectMessagePort).mockResolvedValueOnce(true)
+    try {
+      await ExtensionNodeRpc.createMessagePort(port1, extensionId, 'client')
+      expect(WorkspaceConnection.connectMessagePort).not.toHaveBeenCalled()
+      expect(SharedProcess.invokeAndTransfer).toHaveBeenCalledWith(
+        'HandleMessagePortForExtensionNodeProcess.handleMessagePortForExtensionNodeProcess',
+        port1,
+        extensionId,
+        'client',
+      )
+    } finally {
+      port1.close()
+      port2.close()
+    }
+  },
+)

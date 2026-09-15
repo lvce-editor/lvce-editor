@@ -4,6 +4,7 @@ import * as Menu from './Menu.js'
 export const name = 'Menu'
 
 export const Commands = {
+  prepareContextMenu: Menu.prepareContextMenu,
   focusFirst: Menu.focusFirst,
   focusIndex: Menu.focusIndex,
   focusLast: Menu.focusLast,

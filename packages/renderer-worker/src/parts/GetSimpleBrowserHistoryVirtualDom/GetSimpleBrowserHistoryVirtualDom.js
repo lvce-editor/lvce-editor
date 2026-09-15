@@ -12,7 +12,7 @@ const getVisibleEntries = (entries, searchValue) => {
   return entries.map((entry, index) => ({ entry, index })).filter(({ entry }) => !query || entry.url.toLowerCase().includes(query))
 }
 
-export const getSimpleBrowserHistoryVirtualDom = (entries, searchValue) => {
+export const getSimpleBrowserHistoryVirtualDom = (entries, searchValue, inputValue = searchValue) => {
   const visibleEntries = getVisibleEntries(entries, searchValue)
   /** @type {any[]} */
   const dom = [
@@ -44,7 +44,7 @@ export const getSimpleBrowserHistoryVirtualDom = (entries, searchValue) => {
       placeholder: 'Search history',
       ariaLabel: 'Search history',
       onInput: DomEventListenerFunctions.HandleInputSimpleBrowserHistory,
-      value: searchValue,
+      value: inputValue,
       childCount: 0,
     },
     {

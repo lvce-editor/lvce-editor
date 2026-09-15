@@ -8,6 +8,7 @@ const lazy =
   }
 
 export const commandMap = {
+  'PortProvider.getPorts': async (workspaceUri) => (await import('../PortProvider/PortProvider.ts')).getPorts(workspaceUri),
   'Application.create': lazy('Application.create'),
   'Application.dispose': lazy('Application.dispose'),
   'Application.execute': lazy('Application.execute'),
@@ -139,6 +140,7 @@ export const commandMap = {
   'ExtensionHost.executeCommand': lazy('ExtensionHost.executeCommand'),
   'ExtensionHost.getCommands': lazy('ExtensionHost.getCommands'),
   'ExtensionHost.loadWebExtension': lazy('ExtensionHost.loadWebExtension'),
+  'ExtensionHost.searchFileWithProvider': lazy('ExtensionHost.searchFileWithProvider'),
   'ExtensionHost.searchFileWithFetch': lazy('ExtensionHost.searchFileWithFetch'),
   'ExtensionHostBraceCompletion.executeBraceCompletionProvider': lazy('ExtensionHostBraceCompletion.executeBraceCompletionProvider'),
   'ExtensionHostClosingTagCompletion.executeClosingTagProvider': lazy('ExtensionHostClosingTagCompletion.executeClosingTagProvider'),
@@ -231,6 +233,7 @@ export const commandMap = {
   'GetActiveEditor.getOpenEditorUris': lazy('GetActiveEditor.getOpenEditorUris'),
   'GetActiveEditor.getSelections': lazy('GetActiveEditor.getSelections'),
   'GetActiveEditor.getTextDocument': lazy('GetActiveEditor.getTextDocument'),
+  'GetActiveEditor.getTextDocumentWithScroll': lazy('GetActiveEditor.getTextDocumentWithScroll'),
   'GetActiveEditor.setSelections': lazy('GetActiveEditor.setSelections'),
   'GetActiveEditor.updateAllDiagnostics': lazy('GetActiveEditor.updateAllDiagnostics'),
   'GetActiveEditor.updateDiagnostics': lazy('GetActiveEditor.updateDiagnostics'),
@@ -276,6 +279,7 @@ export const commandMap = {
   'Markdown.renderMarkdown': lazy('Markdown.renderMarkdown'),
   'MeasureTextHeight.measureTextBlockHeight': lazy('MeasureTextHeight.measureTextBlockHeight'),
   'MeasureTextHeight.measureTextHeight': lazy('MeasureTextHeight.measureTextHeight'),
+  'Menu.prepareContextMenu': lazy('Menu.prepareContextMenu'),
   'Menu.focusFirst': lazy('Menu.focusFirst'),
   'Menu.focusIndex': lazy('Menu.focusIndex'),
   'Menu.focusLast': lazy('Menu.focusLast'),
@@ -401,6 +405,7 @@ export const commandMap = {
   'SendMessagePortToExtensionHostWorker.sendMessagePortToMarkdownWorker': lazy(
     'SendMessagePortToExtensionHostWorker.sendMessagePortToMarkdownWorker',
   ),
+  'SendMessagePortToExtensionHostWorker.sendMessagePortToMenuWorker': lazy('SendMessagePortToExtensionHostWorker.sendMessagePortToMenuWorker'),
   'SendMessagePortToExtensionHostWorker.sendMessagePortToRendererProcess': lazy(
     'SendMessagePortToExtensionHostWorker.sendMessagePortToRendererProcess',
   ),
@@ -434,6 +439,7 @@ export const commandMap = {
   'SideBar.open': lazy('SideBar.open'),
   'SideBar.openViewlet': lazy('SideBar.openViewlet'),
   'SideBar.show': lazy('SideBar.show'),
+  'SimpleBrowser.executeWorkflow': lazy('SimpleBrowser.executeWorkflow'),
   'SimpleBrowser.acceptSuggestion': lazy('SimpleBrowser.acceptSuggestion'),
   'SimpleBrowser.closeSuggestions': lazy('SimpleBrowser.closeSuggestions'),
   'SimpleBrowser.getDomTree': lazy('SimpleBrowser.getDomTree'),
@@ -545,6 +551,7 @@ export const commandMap = {
   'Window.zoomOut': lazy('Window.zoomOut'),
   'Window.zoomReset': lazy('Window.zoomReset'),
   'WindowTitle.set': lazy('WindowTitle.set'),
+  'Workspace.openRemote': lazy('Workspace.openRemote'),
   'Workspace.close': lazy('Workspace.close'),
   'Workspace.getPath': lazy('Workspace.getPath'),
   'Workspace.getUri': lazy('Workspace.getUri'),

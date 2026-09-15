@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "rootDir": ".",
-    "lib": ["esnext"],
+    "lib": ["esnext", "webworker"],
     "checkJs": true,
     "module": "NodeNext",
     "target": "esnext",
@@ -20,6 +20,7 @@
     "src",
     "test",
     "typings",
+    "scripts/wait-for-server-ready.mjs",
     "fixtures/running-extensions-test-helpers.js",
     "fixtures/sample.extension-disable-lifecycle/test.js",
     "fixtures/sample.running-extensions-live-view/test.js"
