@@ -2,6 +2,7 @@ import { beforeEach, expect, jest, test } from '@jest/globals'
 
 jest.unstable_mockModule('../src/parts/MenuWorker/MenuWorker.js', () => ({
   invoke: jest.fn(),
+  invokeAndTransfer: jest.fn(),
 }))
 jest.unstable_mockModule('../src/parts/SimpleBrowserOverlay/SimpleBrowserOverlay.js', () => ({
   hide: jest.fn(),
@@ -54,4 +55,19 @@ test('selectCurrent invokes the menu worker command', async () => {
 
 test('selectCurrent is exported through the menu IPC command map', () => {
   expect(MenuIpc.Commands.selectCurrent).toBe(Menu.selectCurrent)
+})
+
+test('prepareContextMenu connects the menu worker and hides the browser overlay', async () => {
+  const port = {} as MessagePort
+  await Menu.prepareContextMenu(port)
+  expect(SimpleBrowserOverlay.show).toHaveBeenCalledWith('menu')
+  expect(MenuWorker.invokeAndTransfer).toHaveBeenCalledWith('Menu.handleMessagePort', port)
+  expect(MenuIpc.Commands.prepareContextMenu).toBe(Menu.prepareContextMenu)
+})
+
+test('prepareContextMenu restores the browser when connection fails', async () => {
+  // @ts-ignore
+  MenuWorker.invokeAndTransfer.mockRejectedValue(new Error('connection failed'))
+  await expect(Menu.prepareContextMenu({} as MessagePort)).rejects.toThrow('connection failed')
+  expect(SimpleBrowserOverlay.hide).toHaveBeenCalledWith('menu')
 })

@@ -14,14 +14,13 @@
     "e2e:notification-layout": "node scripts/test-notification-layout.mjs",
     "e2e:terminal-background": "node scripts/test-terminal-background.mjs",
     "e2e:fonts": "node scripts/test-font-loading.mjs",
-    "type-check": "tsc",
-    "e2e:simple-browser-tab-drag": "node scripts/test-simple-browser-tab-drag.mjs"
+    "type-check": "tsc"
   },
   "keywords": [],
   "author": "",
   "license": "MIT",
   "devDependencies": {
-    "@lvce-editor/test-with-playwright": "^22.32.0",
+    "@lvce-editor/test-with-playwright": "^22.35.0",
     "@playwright/test": "^1.63.0",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",

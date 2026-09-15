@@ -5,6 +5,7 @@ import * as ExtensionManagementWorker from '../ExtensionManagementWorker/Extensi
 import * as ExtensionManifestStatus from '../ExtensionManifestStatus/ExtensionManifestStatus.js'
 import * as ExtensionViewContext from '../ExtensionViewContext/ExtensionViewContext.js'
 import * as GetActiveEditor from '../GetActiveEditor/GetActiveEditor.js'
+import * as IconTheme from '../IconTheme/IconTheme.js'
 import * as InstallExtension from '../InstallExtension/InstallExtension.js'
 import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 import * as Platform from '../Platform/Platform.js'
@@ -32,6 +33,7 @@ export const handleExtensionsCacheInvalidated = async (extensionId, disabled) =>
   try {
     const hasExtensionState = typeof extensionId === 'string' && typeof disabled === 'boolean'
     await Command.execute('KeyBindings.hydrate')
+    await IconTheme.reload()
     await Command.execute('ColorTheme.reload')
     if (hasExtensionState) {
       await Command.execute('Layout.handleExtensionsChanged', extensionId, disabled)

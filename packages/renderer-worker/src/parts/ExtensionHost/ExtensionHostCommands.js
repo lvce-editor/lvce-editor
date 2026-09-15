@@ -60,3 +60,5 @@ export const searchFileWithMemory = () => {
     .filter(([, value]) => value.type === DirentType.File)
     .map(([path]) => path)
 }
+
+export const searchFileWithProvider = (uri) => ExtensionManagementWorker.invoke('Extensions.executeWorkspaceRequest', uri, 'file-search')

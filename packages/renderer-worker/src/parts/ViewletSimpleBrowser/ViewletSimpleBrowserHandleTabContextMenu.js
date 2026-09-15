@@ -10,6 +10,9 @@ export const handleTabContextMenu = async (state, index, x, y) => {
   if (tabIndex < 0 || tabIndex >= tabs.length) {
     return state
   }
-  await ContextMenu.show2(uid, MenuEntryId.SimpleBrowserTab, x, y, tabIndex)
+  // Opening a menu can enqueue overlay changes or actions on this same viewlet.
+  void ContextMenu.show2(uid, MenuEntryId.SimpleBrowserTab, x, y, tabIndex).catch((error) => {
+    console.error('[renderer-worker] Failed to open browser menu', error)
+  })
   return state
 }

@@ -1,4 +1,5 @@
 {
+  "git.remoteHosts": { "github.com": "https://github.com" },
   "application.updateMode": "none",
   "application.useOnLoadJson": false,
 
@@ -55,6 +56,7 @@
   "simpleBrowser.audioIndicator.enabled": true,
   "simpleBrowser.chromeTheme": "light",
   "simpleBrowser.fullWidth.doubleControlEnabled": true,
+  "simpleBrowser.fullWidth.hideTitleBar": false,
   "simpleBrowser.suggestions": false,
   "simpleBrowser.shortcuts": [],
   "simpleBrowser.tabHover.enabled": false,
@@ -74,6 +76,8 @@
   "window.controlsOverlay.enabled": true,
 
   "Workers.cleanUpAfterLoad": false,
+  "virtualDom.recycling.enabled": false,
+  "virtualDom.recycling.size": 100,
 
   "workbench.colorTheme": "slime",
   "workbench.iconTheme": "vscode-icons",

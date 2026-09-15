@@ -198,7 +198,8 @@ export const getQuickPickMenuEntries = () => {
     },
     {
       id: 'Preferences.openKeyBindingsJson',
-      label: 'Preferences: Open User Key Bindings',
+      label: 'Preferences: Open Keyboard Shortcuts (JSON)',
+      aliases: ['Open User Key Bindings', 'Keyboard Shortcuts', 'Key Bindings'],
     },
     {
       id: 'Main.openKeyBindings',
@@ -463,6 +464,7 @@ export const getQuickPickMenuEntries = () => {
       id: 'Window.zoomReset',
       label: 'Window: Reset Zoom',
     },
+    { id: 'Workspace.openRemote', label: 'Git: Open Remote in Simple Browser' },
     { id: 'Layout.toggleSimpleBrowserFullWidth', label: 'Simple Browser: Toggle Full Width' },
     {
       id: 'Main.openUri',
@@ -475,9 +477,8 @@ export const getQuickPickMenuEntries = () => {
       args: ['simple-browser://'],
     },
     {
-      id: 'Main.openUri',
+      id: 'SimpleBrowser.openHistory',
       label: 'Simple Browser: Open History',
-      args: ['simple-browser-history://'],
       aliases: ['Open Browser History'],
     },
     {

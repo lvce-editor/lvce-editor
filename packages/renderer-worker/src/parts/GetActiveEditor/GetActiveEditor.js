@@ -44,6 +44,22 @@ export const getTextDocumentWithInvoke = async (invoke, applicationId) => {
   }
 }
 
+export const getTextDocumentWithScroll = async (applicationId) => {
+  const instance = ViewletStates.getInstance(ViewletModuleId.EditorText, applicationId)
+  if (!instance) {
+    return undefined
+  }
+  const { id, uri, deltaY, finalDeltaY, height } = instance.state
+  const text = await EditorWorker.invoke('Editor.getText', id)
+  return {
+    text,
+    uri,
+    scrollTop: deltaY,
+    scrollHeight: finalDeltaY,
+    viewportHeight: height,
+  }
+}
+
 export const getTextDocument = async (applicationId) => {
   return getTextDocumentWithInvoke(EditorWorker.invoke, applicationId)
 }

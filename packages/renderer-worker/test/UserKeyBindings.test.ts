@@ -13,13 +13,15 @@ beforeEach(() => {
 
 test('getKeyBindings loads valid user entries from persisted keybindings', async () => {
   const userKeyBinding = { command: 'Explorer.focusNext', key: 29, when: 13, source: 'User' }
-  jest.mocked(FileSystem.readFile).mockResolvedValue(
-    JSON.stringify([
-      { command: 'Explorer.focusNext', key: 16, when: 13, source: 'System' },
-      userKeyBinding,
-      { command: '', key: 30, source: 'User' },
-    ]),
-  )
+  jest
+    .mocked(FileSystem.readFile)
+    .mockResolvedValue(
+      JSON.stringify([
+        { command: 'Explorer.focusNext', key: 16, when: 13, source: 'System' },
+        userKeyBinding,
+        { command: '', key: 30, source: 'User' },
+      ]),
+    )
 
   await expect(UserKeyBindings.getKeyBindings()).resolves.toEqual([userKeyBinding])
   expect(FileSystem.readFile).toHaveBeenCalledWith('app://keybindings.json')
@@ -35,4 +37,16 @@ test('getKeyBindings ignores read errors', async () => {
   jest.mocked(FileSystem.readFile).mockRejectedValue(new Error('EACCES'))
 
   await expect(UserKeyBindings.getKeyBindings()).resolves.toEqual([])
+})
+
+test('accepts readable workflow shortcuts and preserves command arguments', async () => {
+  jest.mocked(FileSystem.readFile).mockResolvedValue(
+    JSON.stringify([
+      { key: 'ctrl+shift+s', command: 'SimpleBrowser.executeWorkflow', args: ['music'] },
+      { key: 'unknown', command: 'SimpleBrowser.executeWorkflow' },
+    ]),
+  )
+  await expect(UserKeyBindings.getKeyBindings()).resolves.toEqual([
+    { key: 3119, source: 'User', command: 'SimpleBrowser.executeWorkflow', args: ['music'] },
+  ])
 })

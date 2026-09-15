@@ -81,3 +81,4 @@ export const HandleMessagePortForExtensionNodeProcess = 93
 export const FileWatcherExplorer = 94
 export const HandleMessagePortForFileWatcherExplorer = 95
 export const RemoteCli = 96
+export const BrowserFind = 97
