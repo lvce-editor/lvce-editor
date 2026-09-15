@@ -39,6 +39,11 @@ export const getKeyBindings = () => {
       args: ['Terminals'],
     },
     {
+      key: KeyModifier.CtrlCmd | KeyModifier.Shift | KeyCode.Backquote,
+      command: 'Layout.openIntegratedTerminal',
+      args: [''],
+    },
+    {
       key: KeyModifier.CtrlCmd | KeyModifier.Shift | KeyCode.KeyM,
       command: 'ViewService.toggleView',
       args: ['Output'],

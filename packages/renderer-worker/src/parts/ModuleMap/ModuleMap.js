@@ -14,7 +14,7 @@ const getPrefix = (commandId) => {
 }
 
 export const getModuleId = (commandId) => {
-  if (commandId === 'SimpleBrowser.executeWorkflow') {
+  if (commandId === 'SimpleBrowser.executeWorkflow' || commandId === 'SimpleBrowser.openHistory') {
     return ModuleId.SimpleBrowserWorkflow
   }
   const prefix = getPrefix(commandId)

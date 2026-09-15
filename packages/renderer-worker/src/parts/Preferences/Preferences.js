@@ -21,7 +21,7 @@ export const openSettingsUi = async () => {
 }
 
 export const openKeyBindingsJson = async () => {
-  await OpenUri.openUri('app://keyBindings.json')
+  await OpenUri.openUri('app://keybindings.json')
 }
 
 // TODO command for opening workspace settings

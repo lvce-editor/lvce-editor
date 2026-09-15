@@ -24,6 +24,14 @@
     "value": ""
   },
   {
+    "category": "workbench",
+    "description": "Controls whether boolean settings are rendered as toggles",
+    "heading": "Use Toggles for Boolean Settings",
+    "id": "settings.useToggles",
+    "type": "boolean",
+    "value": true
+  },
+  {
     "category": "text-editor",
     "description": "Controls the delay in milliseconds before completions are loaded",
     "heading": "Completions Loading Delay",
@@ -154,6 +162,23 @@
   },
   {
     "category": "workbench",
+    "description": "Enables experimental recycling of compatible virtual DOM elements and text nodes",
+    "heading": "Virtual DOM Recycling",
+    "id": "virtualDom.recycling.enabled",
+    "type": "boolean",
+    "value": false
+  },
+  {
+    "category": "workbench",
+    "description": "Sets the maximum number of virtual DOM elements and text nodes retained for recycling",
+    "heading": "Virtual DOM Recycling Size",
+    "id": "virtualDom.recycling.size",
+    "minimum": 0,
+    "type": "number",
+    "value": 100
+  },
+  {
+    "category": "workbench",
     "description": "Specifies the workbench color theme",
     "heading": "Color Theme",
     "id": "workbench.colorTheme",
@@ -175,6 +200,14 @@
     "id": "workbench.activityBar.visible",
     "type": "boolean",
     "value": true
+  },
+  {
+    "category": "workbench",
+    "description": "Hides the editor title bar while Simple Browser is full width",
+    "heading": "Simple Browser Full Width Title Bar",
+    "id": "simpleBrowser.fullWidth.hideTitleBar",
+    "type": "boolean",
+    "value": false
   },
   {
     "category": "workbench",

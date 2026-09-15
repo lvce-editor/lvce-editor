@@ -31,10 +31,7 @@
     "test-static-export": "node packages/build/src/parts/TestStaticExport/TestStaticExport.ts",
     "test:gpu-diagnostics": "node --test scripts/test/diagnose-gpu-process.test.mjs",
     "e2e:ci": "node packages/extension-host-worker-tests/src/_all.js --ci",
-    "test:simple-browser-new-tab": "node scripts/test-simple-browser-new-tab.mjs",
-    "test:simple-browser-workspace": "node scripts/test-simple-browser-workspace.mjs",
-    "test:simple-browser-address": "node scripts/test-simple-browser-address.mjs",
-    "test:simple-browser-workflows": "node scripts/test-simple-browser-workflows.mjs"
+    "test:process-explorer-renderer-heap-snapshot": "node scripts/test-process-explorer-renderer-heap-snapshot.mjs"
   },
   "keywords": [],
   "author": "",
@@ -48,10 +45,10 @@
   },
   "devDependencies": {
     "@lerna/legacy-package-management": "^8.2.4",
-    "@lvce-editor/eslint-config": "^18.11.0",
+    "@lvce-editor/eslint-config": "^18.13.0",
     "@types/jest": "^30.0.0",
     "@types/node": "^25.0.1",
-    "eslint": "^10.10.0",
+    "eslint": "^10.9.1",
     "jest": "^30.2.0",
     "jest-environment-jsdom": "^30.2.0",
     "knip": "^6.35.1",

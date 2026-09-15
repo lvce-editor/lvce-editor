@@ -1408,6 +1408,7 @@
         "resize": { "name": "Problems.resize", "parameters": [{ "source": "state", "name": "uid" }, { "source": "argument", "name": "dimensions" }] },
         "saveState": { "name": "Problems.saveState", "parameters": [{ "source": "state", "name": "uid" }] },
         "getCommandIds": { "name": "Problems.getCommandIds", "parameters": [] },
+        "getComponentDom": { "name": "Problems.getComponentDom", "parameters": [{ "source": "state", "name": "uid" }] },
         "getComponentState": { "name": "Problems.getComponentState", "parameters": [{ "source": "state", "name": "uid" }] },
         "getMenuEntryIds": { "name": "Problems.getMenuIds", "parameters": [] },
         "getMenuEntries": { "name": "Problems.getMenuEntries2", "parameters": [{ "source": "argument", "name": "args", "spread": true }] },
@@ -1482,6 +1483,7 @@
         "dispose": { "name": "ProcessExplorer.dispose", "parameters": [{ "source": "state", "name": "uid" }] },
         "terminate": { "name": "ProcessExplorer.terminate", "parameters": [] },
         "getCommandIds": { "name": "ProcessExplorer.getCommandIds", "parameters": [] },
+        "getComponentDom": { "name": "ProcessExplorer.getComponentDom", "parameters": [{ "source": "state", "name": "uid" }] },
         "getComponentState": { "name": "ProcessExplorer.getComponentState", "parameters": [{ "source": "state", "name": "uid" }] },
         "setComponentState": { "name": "ProcessExplorer.setComponentState", "parameters": [{ "source": "state", "name": "uid" }, { "source": "argument", "name": "componentState" }] },
         "getKeyBindings": { "name": "ProcessExplorer.getKeyBindings", "parameters": [] },
@@ -1691,13 +1693,18 @@
         "saveState": { "name": "Settings.saveState", "parameters": [{ "source": "state", "name": "uid" }] },
         "terminate": { "name": "Settings.terminate", "parameters": [] },
         "getCommandIds": { "name": "Settings.getCommandIds", "parameters": [] },
+        "getComponentState": { "name": "Settings.getComponentState", "parameters": [{ "source": "state", "name": "uid" }] },
         "getKeyBindings": { "name": "Settings.getKeyBindings", "parameters": [] },
         "getMenuEntryIds": { "name": "Settings.getMenuIds", "parameters": [] },
         "getMenuEntries": {
           "name": "Settings.getMenuEntries",
           "parameters": [{ "source": "argument", "name": "args", "spread": true }]
         },
-        "renderEventListeners": { "name": "Settings.renderEventListeners", "parameters": [] }
+        "renderEventListeners": { "name": "Settings.renderEventListeners", "parameters": [] },
+        "setComponentState": {
+          "name": "Settings.setComponentState",
+          "parameters": [{ "source": "state", "name": "uid" }, { "source": "argument", "name": "componentState" }]
+        }
       },
       "outputs": [{ "stateField": "actionsDom", "hotReload": false, "method": { "name": "Settings.renderActions", "parameters": [{ "source": "state", "name": "uid" }] } }],
       "capabilities": { "directRender": true, "events": true, "render": true, "resize": true, "rootRender": true },

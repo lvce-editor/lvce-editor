@@ -1,4 +1,5 @@
 import * as Assert from '../Assert/Assert.ts'
+import * as Command from '../Command/Command.js'
 import * as Id from '../Id/Id.js'
 import * as MeasureTabWidth from '../MeasureTabWidth/MeasureTabWidth.js'
 import * as PathDisplay from '../PathDisplay/PathDisplay.js'
@@ -14,6 +15,13 @@ import * as ViewletMainFocusIndex from './ViewletMainFocusIndex.js'
 export const openUri = async (state, uri, focus = true, { preview = false, ...context } = {}) => {
   Assert.object(state)
   Assert.string(uri)
+  if (uri.startsWith('simple-browser-history://')) {
+    await Command.execute('SimpleBrowser.openHistory')
+    return {
+      newState: state,
+      commands: [],
+    }
+  }
   const resolvedUri = await resolveInternalSourceUri(uri)
   const { tabFontWeight, tabFontSize, tabFontFamily, tabLetterSpacing, groups, activeGroupIndex, tabHeight } = state
   const x = state.x

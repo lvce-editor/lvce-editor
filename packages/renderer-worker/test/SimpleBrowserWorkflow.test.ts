@@ -73,6 +73,7 @@ test('waits for navigation before sending sequential keys', async () => {
   expect(ViewletStates.getByUid).toHaveBeenCalledWith(7)
   expect(jest.mocked(EmbedsWorker.invoke).mock.calls).toEqual([
     ['ElectronWebContentsView.navigate', 42, 'https://example.com/'],
+    ['ElectronWebContentsView.insertJavaScript', 42, expect.any(String)],
     ['ElectronWebContentsView.pressKey', 42, 'Space', []],
     ['ElectronWebContentsView.pressKey', 42, 'L', ['shift']],
   ])
@@ -93,5 +94,35 @@ test('stops after navigation failure and allows another invocation', async () =>
 test('does not send keys after the browser tab is closed', async () => {
   jest.mocked(ViewletStates.getByUid).mockReturnValue(undefined)
   await expect(executeWorkflow('music')).rejects.toThrow('closed or changed')
-  expect(EmbedsWorker.invoke).toHaveBeenCalledTimes(1)
+  expect(EmbedsWorker.invoke).toHaveBeenCalledTimes(2)
+})
+
+test('does not send a key until rendering is ready, and rechecks the selected tab afterwards', async () => {
+  const frame = Promise.withResolvers<void>()
+  const waiting = Promise.withResolvers<void>()
+  jest.mocked(EmbedsWorker.invoke).mockImplementation(async (method) => {
+    if (method === 'ElectronWebContentsView.insertJavaScript') {
+      waiting.resolve()
+      await frame.promise
+    }
+  })
+  const run = executeWorkflow('music')
+  await waiting.promise
+  expect(EmbedsWorker.invoke).not.toHaveBeenCalledWith('ElectronWebContentsView.pressKey', expect.anything(), expect.anything(), expect.anything())
+  jest.mocked(ViewletStates.getByUid).mockReturnValue(undefined)
+  frame.resolve()
+  await expect(run).rejects.toThrow('closed or changed')
+  expect(EmbedsWorker.invoke).toHaveBeenCalledTimes(2)
+})
+
+test('stops when rendering does not become ready and allows another invocation', async () => {
+  jest.mocked(EmbedsWorker.invoke).mockImplementation(async (method) => {
+    if (method === 'ElectronWebContentsView.insertJavaScript') {
+      throw new Error('The workflow browser tab did not become ready for input')
+    }
+  })
+  await expect(executeWorkflow('music')).rejects.toThrow('did not become ready for input')
+  expect(EmbedsWorker.invoke).toHaveBeenCalledTimes(2)
+  jest.mocked(EmbedsWorker.invoke).mockReset()
+  await expect(executeWorkflow('music')).resolves.toBeUndefined()
 })
