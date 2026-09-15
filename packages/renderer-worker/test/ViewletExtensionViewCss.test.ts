@@ -188,6 +188,7 @@ test('loadContent opens a document view with its contributed id and resource uri
     },
     '',
     4,
+    undefined,
   )
   expect(newState.uri).toBe('file:///workspace/image.png')
   expect(newState.viewId).toBe('sample.views.testing')

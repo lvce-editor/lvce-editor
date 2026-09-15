@@ -3,6 +3,7 @@ import * as MenuEntryId from '../src/parts/MenuEntryId/MenuEntryId.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
+  jest.mocked(ContextMenu.show2).mockResolvedValue(undefined as never)
 })
 
 jest.unstable_mockModule('../src/parts/ContextMenu/ContextMenu.js', () => ({

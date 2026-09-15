@@ -184,9 +184,12 @@ test('extension reload refreshes existing application views without disposing th
   const uri = 'sample-memfs:///README.md'
   ApplicationRegistry.own('preview', 100)
   ViewletStates.set(100, { moduleId: 'Editor', factory: {}, state: { uid: 100, uri, applicationId: 'preview' }, renderedState: { uid: 100 } })
+  ApplicationRegistry.own('preview', 101)
+  ViewletStates.set(101, { moduleId: 'ExtensionView', factory: {}, state: { uid: 101, applicationId: 'preview' }, renderedState: { uid: 101 } })
   await Application.execute('preview', 'Extensions.reload', 'sample', replacement)
   expect(ExtensionManagementWorker.invoke).toHaveBeenCalledWith('Extensions.reloadApplicationExtension', 'preview', 'sample', replacement)
   expect(Viewlet.executeViewletCommand).toHaveBeenCalledWith(100, 'loadContent', undefined, { preserveFocus: true })
+  expect(Viewlet.executeViewletCommand).toHaveBeenCalledWith(101, 'loadContent', undefined, { preserveFocus: true })
   expect(ViewletManager.executeForApplication).toHaveBeenCalledWith('preview', 'Layout.handleWorkspaceRefresh')
   expect(Viewlet.dispose).not.toHaveBeenCalled()
   expect(ApplicationRegistry.getOwner(source)).toBe('source')
@@ -229,4 +232,27 @@ test('routes extension prompts and their widgets to the explicit application', a
   expect(Viewlet.openWidgetForApplication).toHaveBeenCalledWith('preview', 'QuickPick', 'custom', [], 5, {})
   await Application.execute('source', 'QuickPick.showCustom', [], { placeholder: 'Name' })
   expect(QuickPick.showCustom).toHaveBeenCalledWith([], { placeholder: 'Name' }, 'source')
+})
+
+test('notification creation targets the originating layout', async () => {
+  const source = await Application.create(options('source'))
+  const preview = await Application.create(options('preview'))
+  jest.clearAllMocks()
+  await Application.execute('preview', 'Notification.create', 'info', 'Hello World!')
+  await Application.execute('source', 'Notification.create', 'warning', 'Source warning')
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(1, 'Notification.create', 'info', 'Hello World!', preview)
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(2, 'Notification.create', 'warning', 'Source warning', source)
+  expect(ViewletManager.executeForApplication).not.toHaveBeenCalled()
+})
+
+test('dialog entry points create a widget in the calling application before an instance exists', async () => {
+  await Application.create(options('source'))
+  await Application.create(options('preview'))
+  jest.clearAllMocks()
+  const warning = { title: 'Warning', message: 'Continue?', type: 'info' }
+  await Application.execute('preview', 'Dialog.showWarning', warning)
+  await Application.execute('source', 'Dialog.show', { message: 'Source dialog', type: 'info' })
+  expect(Viewlet.openWidgetForApplication).toHaveBeenNthCalledWith(1, 'preview', 'Dialog', { ...warning, type: 'warning' })
+  expect(Viewlet.openWidgetForApplication).toHaveBeenNthCalledWith(2, 'source', 'Dialog', { message: 'Source dialog', type: 'info' })
+  expect(ViewletManager.executeForApplication).not.toHaveBeenCalled()
 })

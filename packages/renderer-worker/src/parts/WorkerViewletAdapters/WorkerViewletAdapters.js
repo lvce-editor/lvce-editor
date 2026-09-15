@@ -211,10 +211,16 @@ export const quickPick = {
     // must not replace QuickPick.executeCallback with a view command.
     delete Commands.executeCallback
   },
-  extendModule() {
+  extendModule(_workerViewlet, { worker }) {
     return {
       dispose(state) {
         return state
+      },
+      async handleIconThemeChange(state) {
+        await worker.invoke('QuickPick.setDeltaY', state.uid, state.deltaY, true)
+        const diff = await worker.invoke('QuickPick.diff2', state.uid)
+        const commands = await worker.invoke('QuickPick.render2', state.uid, diff)
+        return { ...state, commands }
       },
       saveState() {
         return {}

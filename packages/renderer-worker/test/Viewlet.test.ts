@@ -314,8 +314,13 @@ test('reload restores a viewlet from its current saved state and rerenders it', 
   const savedState = { selection: 3 } as const
   const saveState = jest.fn(async (_state: typeof oldState) => savedState)
   const dispose = jest.fn(async (_state: typeof oldState) => {})
-  const loadContent = jest.fn(async (_state: typeof oldState, _savedState: typeof savedState) => newState)
-  const contentLoaded = jest.fn(async (_state: typeof newState) => [['Viewlet.afterLoad', 2]])
+  const loadContent = jest.fn(
+    async (_state: typeof oldState, _savedState: typeof savedState, _context: { readonly preserveFocus: boolean }) => newState,
+  )
+  const contentLoaded = jest.fn(async (_state: typeof newState) => [
+    ['Viewlet.afterLoad', 2],
+    ['Viewlet.focus', 2],
+  ])
   const contentLoadedEffects = jest.fn(async (_state: typeof newState) => {})
   ViewletStates.set(2, {
     factory: { contentLoaded, contentLoadedEffects, dispose, loadContent, saveState },
@@ -323,14 +328,18 @@ test('reload restores a viewlet from its current saved state and rerenders it', 
     renderedState: oldState,
     state: oldState,
   })
-  jest.mocked(ViewletManager.render).mockReturnValue([['Viewlet.setDom2', 2, []]])
+  jest.mocked(ViewletManager.render).mockReturnValue([
+    ['Viewlet.setDom2', 2, []],
+    ['Viewlet.send', 2, 'focusSelector', 'textarea'],
+    ['Viewlet.setFocusContext', 2, 1],
+  ])
   jest.mocked(RendererProcess.invoke).mockResolvedValue(undefined)
 
   await Viewlet.reload(2)
 
   expect(saveState).toHaveBeenCalledWith(oldState)
   expect(dispose).toHaveBeenCalledWith(oldState)
-  expect(loadContent).toHaveBeenCalledWith(oldState, savedState)
+  expect(loadContent).toHaveBeenCalledWith(oldState, savedState, { preserveFocus: true })
   expect(ViewletManager.render).toHaveBeenCalledWith(expect.anything(), oldState, newState)
   expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.sendMultiple', [
     ['Viewlet.setDom2', 2, []],
@@ -848,5 +857,21 @@ test('command palettes follow focus from the source application to the preview',
   } finally {
     ApplicationRegistry.remove('palette-source')
     ApplicationRegistry.remove('palette-preview')
+  }
+})
+
+test('dialog widgets acquire their application owner before loading', async () => {
+  const ApplicationRegistry = await import('../src/parts/ApplicationRegistry/ApplicationRegistry.ts')
+  ApplicationRegistry.create({ id: 'dialog-preview', layoutUid: 101, href: '', workspacePath: '', workspaceUri: '' })
+  const layout = { applicationId: 'dialog-preview', uid: 101 }
+  ViewletStates.set(101, { state: layout, renderedState: layout, moduleId: 'Layout', factory: {} })
+  jest.mocked(ViewletManager.load).mockResolvedValue([])
+  jest.mocked(RendererProcess.invoke).mockResolvedValue(undefined as never)
+  try {
+    await Viewlet.openWidgetForApplication('dialog-preview', 'Dialog', { message: 'Preview message', type: 'warning' })
+    expect(ViewletManager.load).toHaveBeenCalledWith(expect.objectContaining({ applicationId: 'dialog-preview', id: 'Dialog' }))
+    expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.executeCommands', expect.arrayContaining([['Viewlet.append', 101, 2]]))
+  } finally {
+    ApplicationRegistry.remove('dialog-preview')
   }
 })

@@ -1,4 +1,4 @@
-import { expect, test } from '@jest/globals'
+import { expect, jest, test } from '@jest/globals'
 import * as GetMimeType from '../src/parts/GetMimeType/GetMimeType.js'
 
 test('html', () => {
@@ -38,4 +38,22 @@ test.each([
 
 test('json', () => {
   expect(GetMimeType.getMimeType('.json')).toBe('application/json')
+})
+
+test.each([
+  ['.mp4', 'video/mp4'],
+  ['.oga', 'audio/ogg'],
+  ['.ogg', 'audio/ogg'],
+  ['.ogv', 'video/ogg'],
+  ['.opus', 'audio/ogg'],
+  ['.wav', 'audio/wav'],
+])('preview media type %s does not warn', (extension, expected) => {
+  const warn = jest.spyOn(console, 'warn').mockImplementation(() => {})
+  try {
+    expect(GetMimeType.getMimeType(extension)).toBe(expected)
+    expect(GetMimeType.getMimeType(extension.toUpperCase())).toBe(expected)
+    expect(warn).not.toHaveBeenCalled()
+  } finally {
+    warn.mockRestore()
+  }
 })
