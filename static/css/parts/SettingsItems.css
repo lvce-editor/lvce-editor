@@ -15,18 +15,26 @@
   display: flex;
   contain: strict;
   flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  position: relative;
 }
 
 .SettingsItems {
   display: flex;
   flex-direction: column;
   contain: content;
-  flex: 1;
+  flex: 0 0 var(--SettingsItemsHeight);
+  height: var(--SettingsItemsHeight);
+  transform: translateY(var(--SettingsItemsTranslateY));
 }
 
 .SettingsItem {
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
+  flex: 0 0 var(--SettingsItemHeight);
+  height: var(--SettingsItemHeight);
   contain: content;
   padding-left: 14px;
 }
@@ -151,9 +159,21 @@
   max-width: var(--SettingsInputMaxWidth);
 }
 
-/* TODO avoid nesting */
 .SettingsItem .Select {
+  appearance: auto;
+  background: var(--DropDownBackground, var(--InputBoxBackground, #313131));
+  border: 1px solid var(--DropDownBorder, var(--InputBoxBorder, rgb(55, 65, 63)));
+  box-sizing: border-box;
+  color: var(--DropDownForeground, var(--InputForeground, var(--WorkbenchForeground)));
+  cursor: pointer;
   max-width: var(--SettingsSelectMaxWidth);
+  min-height: 24px;
+  padding: 3px 6px;
+}
+
+.SettingsItem .Select:focus-visible {
+  outline: 1px solid var(--FocusOutline, var(--FocusBorder, #007fd4));
+  outline-offset: 2px;
 }
 
 .SettingsItem h3 {
