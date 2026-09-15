@@ -74,6 +74,14 @@ try {
     await page.keyboard.press('Enter')
     await expect(page.locator('.XtermTerminal')).toContainText(text)
   }
+  const readSize = async (page, label) => {
+    await page.locator('.xterm-helper-textarea').focus()
+    await page.keyboard.type(`printf '${label}:%s\\n' "$(stty size)"`)
+    await page.keyboard.press('Enter')
+    const pattern = new RegExp(`${label}:(\\d+) (\\d+)`)
+    await expect(page.locator('.XtermTerminal')).toContainText(pattern)
+    return (await page.locator('.XtermTerminal').textContent()).match(pattern).slice(1)
+  }
   const close = async (page) => {
     await page.locator('.Panel .IconButton[title="Kill Terminal"]').click()
     await expect(page.locator('.XtermTerminal')).toHaveCount(0)
@@ -104,7 +112,11 @@ try {
     await checkOutput(first, `reopened-${cycle}`)
     await expect.poll(processes).toHaveLength(1)
     assert.notEqual((await processes())[0], originalPid)
-    await app.evaluate(({ BrowserWindow }) => BrowserWindow.getAllWindows()[0].setSize(1000, 700))
+    const originalSize = await readSize(first, `size-before-${cycle}`)
+    const window = await app.browserWindow(first)
+    await window.evaluate((window, cycle) => window.setSize(850 + cycle * 100, 550 + cycle * 100), cycle)
+    let sample = 0
+    await expect.poll(() => readSize(first, `size-after-${cycle}-${sample++}`)).not.toEqual(originalSize)
     await checkOutput(first, `resized-${cycle}`)
     // A new connection is acquired while the other window closes its last terminal.
     await Promise.all([close(first), open(second)])
