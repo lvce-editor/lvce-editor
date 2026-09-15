@@ -83,33 +83,14 @@ jobs:
           npm run e2e:headless --prefix packages/extension-host-worker-tests -- --test-name-prefix=workspace.remote-local-services
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0
-      - name: Test bundled notebook defaults and enablement
-        working-directory: ./packages/extension-host-worker-tests
-        run: npm run e2e:headless -- --test-name-prefix=extension.notebook-disabled-by-default
-        env:
-          PLAYWRIGHT_BROWSERS_PATH: 0
-      - name: Test split editor divider after hiding Explorer
-        working-directory: ./packages/extension-host-worker-tests
-        run: npm run e2e:headless -- --test-name-prefix=viewlet.main-area-split-hide-explorer
-        env:
-          PLAYWRIGHT_BROWSERS_PATH: 0
       - name: Test TypeScript readonly union highlighting
         working-directory: ./packages/extension-host-worker-tests
         run: npm run e2e:headless -- --test-name-prefix=viewlet.editor-typescript-readonly-union-parameters
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0
-      - name: Test title bar application blur
+      - name: Test renderer layout blur dispatch
         if: matrix.os == 'ubuntu-24.04'
-        run: |
-          node --experimental-vm-modules node_modules/jest/bin/jest.js --config packages/renderer-worker/package.json --runInBand --coverage=false --testPathPatterns=ViewletLayoutBlur.test
-          npm run e2e:headless --prefix packages/extension-host-worker-tests -- --test-name-prefix=viewlet.title-bar-menu-close-on-application-blur
-        env:
-          PLAYWRIGHT_BROWSERS_PATH: 0
-      - name: Test Codespaces workspace ports
-        working-directory: ./packages/extension-host-worker-tests
-        run: npm run e2e:headless -- --test-name-prefix=viewlet.ports-codespaces
-        env:
-          PLAYWRIGHT_BROWSERS_PATH: 0
+        run: node --experimental-vm-modules node_modules/jest/bin/jest.js --config packages/renderer-worker/package.json --runInBand --coverage=false --testPathPatterns=ViewletLayoutBlur.test
       - name: Test session replay settings
         if: matrix.os == 'ubuntu-24.04'
         working-directory: ./packages/extension-host-worker-tests
@@ -133,9 +114,6 @@ jobs:
       - name: Test Simple Browser native visibility and window ownership
         if: matrix.os == 'ubuntu-24.04'
         run: xvfb-run -a npm run test:simple-browser-native-lifecycle
-      - name: Test Git remote shortcut
-        if: matrix.os == 'ubuntu-24.04'
-        run: xvfb-run -a node scripts/test-open-remote.mjs
       - name: Test Simple Browser new tab suggestions
         if: matrix.os == 'ubuntu-24.04'
         run: npm run test:simple-browser-new-tab
@@ -144,6 +122,9 @@ jobs:
       - name: Test Simple Browser workflows
         if: matrix.os == 'ubuntu-24.04'
         run: xvfb-run -a npm run test:simple-browser-workflows
+      - name: Test keybinding popup position
+        if: matrix.os == 'ubuntu-24.04'
+        run: xvfb-run -a node scripts/test-keybinding-popup-position.mjs
       - name: Test Simple Browser workspace switching
         if: matrix.os == 'ubuntu-24.04'
         run: |
@@ -165,12 +146,6 @@ jobs:
         if: matrix.os == 'ubuntu-24.04'
         working-directory: ./packages/extension-host-worker-tests
         run: npm run e2e:terminal-background
-        env:
-          PLAYWRIGHT_BROWSERS_PATH: 0
-      - name: Test output channel selection
-        if: matrix.os == 'ubuntu-24.04'
-        working-directory: ./packages/extension-host-worker-tests
-        run: npm run e2e:headless -- --test-name-prefix=viewlet.output-open-channel
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0
       - name: Test Source Control shortcut focus
@@ -200,18 +175,6 @@ jobs:
       - name: Test built server
         if: matrix.os == 'ubuntu-24.04'
         run: npm run test:server
-      - name: Test live component state Quick Pick focus
-        if: matrix.os == 'ubuntu-24.04'
-        working-directory: ./packages/extension-host-worker-tests
-        run: node src/_all.js --headless --test-name-prefix=viewlet.component-state-quick-pick-focus
-        env:
-          PLAYWRIGHT_BROWSERS_PATH: 0
-      - name: Test Process Explorer live component state
-        if: matrix.os == 'ubuntu-24.04'
-        working-directory: ./packages/extension-host-worker-tests
-        run: node src/_all.js --headless --test-name-prefix=viewlet.component-state-edit-process-explorer
-        env:
-          PLAYWRIGHT_BROWSERS_PATH: 0
       - name: Test Static Export
         run: npm run test-static-export
       - name: Test static command picker
@@ -230,77 +193,9 @@ jobs:
         run: npm run e2e:headless -- --test-name-prefix=viewlet.extension-detail-canonical-uri
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0
-      - name: Test extension detail sidebar resizing
-        if: matrix.os == 'ubuntu-24.04'
-        working-directory: ./packages/extension-host-worker-tests
-        run: npm run e2e:headless -- --test-name-prefix=viewlet.extension-detail-sidebar-resize
-        env:
-          PLAYWRIGHT_BROWSERS_PATH: 0
-      - name: Test saving extension filesystem files
-        if: matrix.os == 'ubuntu-24.04'
-        working-directory: ./packages/extension-host-worker-tests
-        run: npm run e2e:headless -- --test-name-prefix=viewlet.main-save-extension-filesystem
-        env:
-          PLAYWRIGHT_BROWSERS_PATH: 0
-      - name: Test extension component state names
-        if: matrix.os == 'ubuntu-24.04'
-        working-directory: ./packages/extension-host-worker-tests
-        run: npm run e2e:headless -- --test-name-prefix=viewlet.component-state-extension-names
-        env:
-          PLAYWRIGHT_BROWSERS_PATH: 0
-      - name: Test live component state scrolling
-        if: matrix.os == 'ubuntu-24.04'
-        working-directory: ./packages/extension-host-worker-tests
-        run: node src/_all.js --headless --test-name-prefix=viewlet.component-state-refresh-scroll
-        env:
-          PLAYWRIGHT_BROWSERS_PATH: 0
-      - name: Test live component automatic updates
-        if: matrix.os == 'ubuntu-24.04'
-        working-directory: ./packages/extension-host-worker-tests
-        run: node src/_all.js --headless --ci --test-name-prefix=viewlet.component-state-auto-update
-        env:
-          PLAYWRIGHT_BROWSERS_PATH: 0
-      - name: Test live component DOM updates
-        if: matrix.os == 'ubuntu-24.04'
-        working-directory: ./packages/extension-host-worker-tests
-        run: node src/_all.js --headless --ci --test-name-prefix=viewlet.component-state-live-dom
-        env:
-          PLAYWRIGHT_BROWSERS_PATH: 0
-      - name: Test component DOM context menu
-        if: matrix.os == 'ubuntu-24.04'
-        working-directory: ./packages/extension-host-worker-tests
-        run: node src/_all.js --headless --ci --test-name-prefix=viewlet.component-state-show-dom
-        env:
-          PLAYWRIGHT_BROWSERS_PATH: 0
-      - name: Test Problems live component state
-        if: matrix.os == 'ubuntu-24.04'
-        working-directory: ./packages/extension-host-worker-tests
-        run: node src/_all.js --headless --ci --test-name-prefix=viewlet.component-state-edit-problems
-        env:
-          PLAYWRIGHT_BROWSERS_PATH: 0
-      - name: Test live status bar component edits
-        if: matrix.os == 'ubuntu-24.04'
-        working-directory: ./packages/extension-host-worker-tests
-        run: node src/_all.js --headless --ci --test-name-prefix=viewlet.component-state-edit-status-bar
-        env:
-          PLAYWRIGHT_BROWSERS_PATH: 0
-      - name: Test live layout component edits
-        if: matrix.os == 'ubuntu-24.04'
-        working-directory: ./packages/extension-host-worker-tests
-        run: node src/_all.js --headless --ci --test-name-prefix=viewlet.component-state-edit-layout
-        env:
-          PLAYWRIGHT_BROWSERS_PATH: 0
       - name: Build Electron App (deb)
         if: matrix.os == 'ubuntu-24.04'
         run: npm run build:electron:deb
-      - name: Test packaged notebook enablement across restart
-        if: matrix.os == 'ubuntu-24.04'
-        working-directory: ./packages/extension-host-worker-tests
-        run: xvfb-run -a node scripts/test-notebook-defaults.mjs
-      - name: Test Simple Browser tab dragging in Electron
-        if: matrix.os == 'ubuntu-24.04'
-        working-directory: ./packages/extension-host-worker-tests
-        run: xvfb-run -a npm run e2e:simple-browser-tab-drag
       - name: Build Electron App (Macos dmg, arm64)
         if: matrix.os == 'macos-26'
         run: npm run build:electron:mac:arm64

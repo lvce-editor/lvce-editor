@@ -62,6 +62,49 @@ test('bundleCss styles settings checkboxes like compact editor controls', async 
   }
 }, 30_000)
 
+test('bundleCss styles settings selects as native dropdown controls', async () => {
+  const dir = await mkdtemp(join(tmpdir(), 'lvce-bundle-css-'))
+
+  try {
+    await bundleCss({
+      outDir: dir,
+      assetDir: '',
+    })
+
+    const css = await readFile(join(dir, 'parts', 'SettingsItems.css'), 'utf8')
+
+    expect(css).toContain(`.SettingsItem .Select {
+  appearance: auto;`)
+    expect(css).toContain('border: 1px solid var(--DropDownBorder, var(--InputBoxBorder, rgb(55, 65, 63)));')
+    expect(css).toContain('.SettingsItem .Select:focus-visible {')
+  } finally {
+    await rm(dir, { recursive: true, force: true })
+  }
+}, 30_000)
+
+test('bundleCss keeps virtualized settings items within the content column', async () => {
+  const dir = await mkdtemp(join(tmpdir(), 'lvce-bundle-css-'))
+
+  try {
+    await bundleCss({
+      outDir: dir,
+      assetDir: '',
+    })
+
+    const css = await readFile(join(dir, 'parts', 'SettingsItems.css'), 'utf8')
+
+    expect(css).toContain(`.SettingsItems {
+  display: flex;
+  flex-direction: column;
+  contain: content;
+  flex: 1 1 0;
+  height: var(--SettingsItemsHeight);
+  min-width: 0;`)
+  } finally {
+    await rm(dir, { recursive: true, force: true })
+  }
+}, 30_000)
+
 test('bundleCss lets the simple browser fill the preview area height and use workbench theme colors', async () => {
   const dir = await mkdtemp(join(tmpdir(), 'lvce-bundle-css-'))
 
@@ -250,6 +293,23 @@ test('bundleCss centers quick pick in the non-preview area', async () => {
     const css = await readFile(join(dir, 'App.css'), 'utf8')
 
     expect(css).toContain('left: calc((100% - var(--PreviewAreasWidth, 0px)) / 2);')
+  } finally {
+    await rm(dir, { recursive: true, force: true })
+  }
+}, 30_000)
+
+test('bundleCss centers define keybinding in the non-preview area', async () => {
+  const dir = await mkdtemp(join(tmpdir(), 'lvce-bundle-css-'))
+
+  try {
+    await bundleCss({
+      outDir: dir,
+      assetDir: '',
+    })
+
+    const css = await readFile(join(dir, 'parts', 'ViewletDefineKeyBinding.css'), 'utf8')
+
+    expect(css).toContain('inset: 0 var(--PreviewAreasWidth, 0px) 0 0;')
   } finally {
     await rm(dir, { recursive: true, force: true })
   }
