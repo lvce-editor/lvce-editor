@@ -26,5 +26,6 @@ export const test: Test = async ({ Command, expect, Locator, SideBar }) => {
   await waitFor(() => expect(sourceControlItem).toHaveAttribute('aria-selected', 'true'))
 
   await expect(badge).toHaveText('2')
+  await expect(badge).toHaveCSS('contain', 'strict')
   await expect(sourceControlItem).toHaveCSS('background-color', 'rgb(31, 39, 39)')
 }
