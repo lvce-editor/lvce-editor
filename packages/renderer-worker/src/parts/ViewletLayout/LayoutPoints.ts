@@ -20,6 +20,7 @@ const getPreviewHeights = (source: LayoutState, totalHeight: number): readonly [
 
 export const getPoints = (source: LayoutState, sideBarLocation = source.sideBarLocation ?? SideBarLocationType.Right): LayoutState => {
   if (source.browserFullWidth) {
+    const hideTitleBar = source.browserFullWidth.hideTitleBar === true
     return {
       ...source,
       activityBarVisible: false,
@@ -35,6 +36,7 @@ export const getPoints = (source: LayoutState, sideBarLocation = source.sideBarL
       panelSashVisible: false,
       previewSashVisible: false,
       secondaryPreviewSashVisible: false,
+      titleBarHeight: hideTitleBar ? 0 : source.titleBarHeight,
       titleBarWidth: source.windowWidth,
     }
   }

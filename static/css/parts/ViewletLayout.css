@@ -148,3 +148,28 @@
   min-width: 0;
   width: 100%;
 }
+
+.Workbench.BrowserFullWidthHideTitleBar > .TitleBar {
+  contain: none;
+  flex: 0 0 0;
+  height: 0;
+  left: 0;
+  overflow: visible;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  z-index: 4;
+}
+
+.Workbench.BrowserFullWidthHideTitleBar > .TitleBar > :not(.TitleBarButtons) {
+  display: none;
+}
+
+.Workbench.BrowserFullWidthHideTitleBar > .TitleBar > .TitleBarButtons {
+  flex-grow: 0;
+  height: 35px;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: auto;
+}
