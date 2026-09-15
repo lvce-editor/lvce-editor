@@ -36,6 +36,8 @@ const layoutKeys = [
   'secondaryPreviewWidth',
   'secondaryPreviewHeight',
   'secondaryPreviewSashVisible',
+  'titleBarHeight',
+  'titleBarVisible',
 ]
 
 const getBrowsers = (state) =>
@@ -64,7 +66,7 @@ export const leave = async (state) => {
   const layout = { ...snapshot.layout }
   const contentHeight = Math.max(
     0,
-    state.windowHeight - (state.titleBarVisible ? state.titleBarHeight : 0) - (layout.statusBarVisible ? state.statusBarHeight : 0),
+    state.windowHeight - (layout.titleBarVisible ? layout.titleBarHeight : 0) - (layout.statusBarVisible ? state.statusBarHeight : 0),
   )
   const panelLimit = layout.panelMaximized ? contentHeight : Math.max(0, contentHeight - 100)
   layout.panelHeight = Math.min(layout.panelHeight, panelLimit)
@@ -138,6 +140,7 @@ export const toggleInternal = async (initialState, requestedUid) => {
     browserWasVisible: browser.factory.isVisible(browser.state),
     browserBounds: { x, y, width, height },
     layout: Object.fromEntries(layoutKeys.map((key) => [key, state[key]])),
+    hideTitleBar: Preferences.get('simpleBrowser.fullWidth.hideTitleBar') === true,
     ideFocusUid: BrowserWorkspaceFocus.get(state.applicationId),
     addressFocused: Boolean(addressSelection),
     addressSelection,

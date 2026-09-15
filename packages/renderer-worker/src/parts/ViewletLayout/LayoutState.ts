@@ -23,6 +23,7 @@ export interface WidgetReference {
 export interface BrowserFullWidthState {
   readonly browserWasVisible?: boolean
   readonly browserUid: number
+  readonly hideTitleBar?: boolean
   readonly layout: Partial<LayoutState>
   readonly browserBounds: { x: number; y: number; width: number; height: number }
   readonly ideFocusUid: number | undefined

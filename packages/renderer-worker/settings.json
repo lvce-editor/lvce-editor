@@ -203,6 +203,14 @@
   },
   {
     "category": "workbench",
+    "description": "Hides the editor title bar while Simple Browser is full width",
+    "heading": "Simple Browser Full Width Title Bar",
+    "id": "simpleBrowser.fullWidth.hideTitleBar",
+    "type": "boolean",
+    "value": false
+  },
+  {
+    "category": "workbench",
     "description": "Shows editor tabs while their content is loading",
     "heading": "Show Tabs While Loading",
     "id": "workbench.editor.showTabsWhileLoading",
