@@ -610,7 +610,7 @@ const executeViewletCommandInternal = async (uid, fnName, ...args) => {
   const instance = ViewletStates.getInstance(uid)
   if (!instance) {
     // Worker render notifications can arrive or leave the command queue after disposal.
-    if (fnName !== DomEventListenerFunctions.HandleBlur && fnName !== '__renderPending') {
+    if (fnName !== DomEventListenerFunctions.HandleBlur && fnName !== '__renderPending' && fnName !== 'updateGitIgnoredUris') {
       Logger.warn(`cannot execute ${fnName} instance not found ${uid}`)
     }
     return
