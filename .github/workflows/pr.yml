@@ -89,19 +89,7 @@ jobs:
           PLAYWRIGHT_BROWSERS_PATH: 0
       - name: Test TypeScript readonly union highlighting
         working-directory: ./packages/extension-host-worker-tests
-        shell: bash
-        run: |
-          failures=0
-          for attempt in $(seq 1 20); do
-            echo "STARTUP_ATTEMPT=$attempt"
-            if npm run e2e:headless -- --test-name-prefix=viewlet.editor-typescript-readonly-union-parameters; then
-              echo "STARTUP_PASS=$attempt"
-            else
-              echo "STARTUP_FAIL=$attempt"
-              failures=$((failures + 1))
-            fi
-          done
-          test "$failures" -eq 0
+        run: npm run e2e:headless -- --test-name-prefix=viewlet.editor-typescript-readonly-union-parameters
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0
       - name: Test renderer layout blur dispatch
