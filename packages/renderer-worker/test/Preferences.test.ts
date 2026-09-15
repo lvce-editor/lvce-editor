@@ -43,11 +43,18 @@ jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
   }
 })
 
+jest.unstable_mockModule('../src/parts/OpenUri/OpenUri.js', () => {
+  return {
+    openUri: jest.fn(),
+  }
+})
+
 const RendererProcess = await import('../src/parts/RendererProcess/RendererProcess.js')
 const SharedProcess = await import('../src/parts/SharedProcess/SharedProcess.js')
 const ErrorHandling = await import('../src/parts/ErrorHandling/ErrorHandling.js')
 const GlobalEventBus = await import('../src/parts/GlobalEventBus/GlobalEventBus.js')
 const IsTest = await import('../src/parts/IsTest/IsTest.js')
+const OpenUri = await import('../src/parts/OpenUri/OpenUri.js')
 const Preferences = await import('../src/parts/Preferences/Preferences.js')
 
 const Main = await import('../src/parts/ViewletMain/ViewletMain.js')
@@ -64,16 +71,10 @@ test.skip('openSettingsJson', async () => {
   expect(Main.openUri).toHaveBeenCalledWith('app://settings.json')
 })
 
-test.skip('openKeyBindingsJson', async () => {
-  // @ts-ignore
-  RendererProcess.invoke.mockImplementation(() => {})
-  // @ts-ignore
-  Main.openUri.mockImplementation(() => {})
+test('openKeyBindingsJson', async () => {
   await Preferences.openKeyBindingsJson()
-  // @ts-ignore
-  expect(Main.openUri).toHaveBeenCalledTimes(1)
-  // @ts-ignore
-  expect(Main.openUri).toHaveBeenCalledWith('app://keyBindings.json')
+  expect(OpenUri.openUri).toHaveBeenCalledTimes(1)
+  expect(OpenUri.openUri).toHaveBeenCalledWith('app://keybindings.json')
 })
 
 test('hydrate', async () => {
