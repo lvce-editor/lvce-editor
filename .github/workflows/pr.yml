@@ -65,6 +65,8 @@ jobs:
       - name: Download Builtin Extensions
         run: node packages/build/src/parts/DownloadBuiltinExtensions/DownloadBuiltinExtensions.ts
         if: steps.builtin-extensions-cache.outputs.cache-hit != 'true'
+      - name: Test e2e server readiness
+        run: node --test packages/extension-host-worker-tests/test/wait-for-server-ready.test.mjs
       - name: Check feature e2e ownership
         run: node scripts/check-e2e-ownership.mjs
       - run: npm run lint
@@ -87,7 +89,19 @@ jobs:
           PLAYWRIGHT_BROWSERS_PATH: 0
       - name: Test TypeScript readonly union highlighting
         working-directory: ./packages/extension-host-worker-tests
-        run: npm run e2e:headless -- --test-name-prefix=viewlet.editor-typescript-readonly-union-parameters
+        shell: bash
+        run: |
+          failures=0
+          for attempt in $(seq 1 20); do
+            echo "STARTUP_ATTEMPT=$attempt"
+            if npm run e2e:headless -- --test-name-prefix=viewlet.editor-typescript-readonly-union-parameters; then
+              echo "STARTUP_PASS=$attempt"
+            else
+              echo "STARTUP_FAIL=$attempt"
+              failures=$((failures + 1))
+            fi
+          done
+          test "$failures" -eq 0
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0
       - name: Test renderer layout blur dispatch
