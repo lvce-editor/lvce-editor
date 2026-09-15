@@ -22,6 +22,36 @@ test('renders a snapshot below the browser header', () => {
   ])
 })
 
+test('renders history as an interactive browser tab page', () => {
+  const dom = GetSimpleBrowserVirtualDom.getSimpleBrowserVirtualDom(
+    false,
+    false,
+    false,
+    'simple-browser-history://',
+    '',
+    [],
+    -1,
+    [{ iframeSrc: 'simple-browser-history://', title: 'History' }],
+    0,
+    true,
+    true,
+    [],
+    undefined,
+    -1,
+    false,
+    'light',
+    undefined,
+    true,
+    [{ date: Date.UTC(2026, 8, 3, 12, 30), url: 'https://newer.example/docs' }],
+    '',
+  )
+
+  expect(dom).toContainEqual(expect.objectContaining({ className: expect.stringContaining('SimpleBrowserHistory') }))
+  expect(dom).toContainEqual(expect.objectContaining({ className: expect.stringContaining('SimpleBrowserHistorySearchInput') }))
+  expect(dom).toContainEqual(expect.objectContaining({ onClick: 'handleClickSimpleBrowserHistoryClear' }))
+  expect(dom).toContainEqual(expect.objectContaining({ onClick: 'handleClickSimpleBrowserHistoryRemove' }))
+})
+
 test('renders a cached page snapshot through the virtual dom', () => {
   const pageSnapshotDom = [
     {
@@ -127,7 +157,9 @@ test('renders the first matching suggestion inline without changing the input va
     }),
   )
   expect(dom).toContainEqual(expect.objectContaining({ className: 'SimpleBrowserInlineSuggestionSuffix' }))
-  expect(dom).toContainEqual(expect.objectContaining({ name: 'simple-browser-address', value: 'cheese' }))
+  const input = dom.find((node) => node.name === 'simple-browser-address')
+  expect(input).toBeDefined()
+  expect(input).not.toHaveProperty('value')
   expect(dom).toContainEqual(expect.objectContaining({ text: 'burger' }))
 })
 

@@ -38,6 +38,7 @@
   },
   "dependencies": {
     "@lvce-editor/assert": "^1.9.0",
+    "@lvce-editor/session-replay-worker": "^1.3.0",
     "@lvce-editor/verror": "^1.7.0",
     "bytes": "^3.1.2",
     "esbuild": "^0.28.2",
@@ -105,5 +106,11 @@
         }
       ]
     }
+  },
+  "allowScripts": {
+    "@parcel/watcher@2.6.0": true,
+    "electron-winstaller@5.4.0": true,
+    "esbuild@0.28.2": true,
+    "fsevents@2.3.3": true
   }
 }

@@ -47,7 +47,8 @@ test('getQuickPickMenuEntries includes executable keybindings commands', () => {
     expect.arrayContaining([
       {
         id: 'Preferences.openKeyBindingsJson',
-        label: 'Preferences: Open User Key Bindings',
+        aliases: ['Open User Key Bindings', 'Keyboard Shortcuts', 'Key Bindings'],
+        label: 'Preferences: Open Keyboard Shortcuts (JSON)',
       },
       {
         id: 'Main.openKeyBindings',
@@ -121,9 +122,8 @@ test('getQuickPickMenuEntries includes simple browser history command', () => {
   const entries = ViewletLayoutMenuEntries.getQuickPickMenuEntries()
 
   expect(entries).toContainEqual({
-    id: 'Main.openUri',
+    id: 'SimpleBrowser.openHistory',
     label: 'Simple Browser: Open History',
-    args: ['simple-browser-history://'],
     aliases: ['Open Browser History'],
   })
 })

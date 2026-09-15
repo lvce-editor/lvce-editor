@@ -4,13 +4,9 @@ import * as IpcParent from '../IpcParent/IpcParent.js'
 import * as IpcParentType from '../IpcParentType/IpcParentType.js'
 import * as JsonRpc from '../JsonRpc/JsonRpc.js'
 import * as Platform from '../Platform/Platform.js'
-import * as PlatformType from '../PlatformType/PlatformType.js'
-import * as WorkspaceConnection from '../WorkspaceConnection/WorkspaceConnection.js'
 import * as GetConfiguredWorkerUrl from '../GetConfiguredWorkerUrl/GetConfiguredWorkerUrl.ts'
 
-export const getFileSystemPlatform = (platform = Platform.getPlatform(), connectionActive = WorkspaceConnection.isActive()) => {
-  return connectionActive ? PlatformType.Remote : platform
-}
+export const getFileSystemPlatform = (platform = Platform.getPlatform()) => platform
 
 export const launchFileSystemWorker = async () => {
   const name = 'File System Worker'

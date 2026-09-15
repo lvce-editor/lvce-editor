@@ -1,3 +1,4 @@
+import * as ExtensionManagementWorker from '../ExtensionManagementWorker/ExtensionManagementWorker.js'
 import * as GetWebSocketUrl from '../GetWebSocketUrl/GetWebSocketUrl.js'
 import * as Location from '../Location/Location.js'
 import * as WorkspaceConnection from '../WorkspaceConnection/WorkspaceConnection.js'
@@ -5,7 +6,10 @@ import * as WorkspaceConnection from '../WorkspaceConnection/WorkspaceConnection
 export const isActive = WorkspaceConnection.isActive
 
 export const create = async (type) => {
-  const remoteUrl = await WorkspaceConnection.getWebSocketUrl(type)
+  if (type === 'terminal-process' && (await ExtensionManagementWorker.invoke('Extensions.getWorkspaceTransportUri'))) {
+    return { type: 'message-port' }
+  }
+  const remoteUrl = type === 'terminal-process' ? await WorkspaceConnection.getWebSocketUrl(type) : ''
   return {
     protocols: [],
     url: remoteUrl || GetWebSocketUrl.getWebSocketUrl(type, Location.getHost()),

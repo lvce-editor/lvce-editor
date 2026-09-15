@@ -17,6 +17,7 @@ export const state = {
   pendingFrame: undefined,
   /** @type {any} */
   rpc: undefined,
+  /** @type {Promise<any>} */
   tail: Promise.resolve(),
 }
 

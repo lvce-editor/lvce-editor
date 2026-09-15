@@ -5,6 +5,11 @@ import * as WhenExpression from '../WhenExpression/WhenExpression.js'
 export const getKeyBindings = () => {
   return [
     {
+      key: KeyCode.Period,
+      command: 'Workspace.openRemote',
+      when: WhenExpression.FocusExplorer,
+    },
+    {
       key: KeyCode.Escape,
       command: 'Viewlet.closeWidget',
       when: WhenExpression.FocusFindWidget,
@@ -32,6 +37,11 @@ export const getKeyBindings = () => {
       key: KeyModifier.CtrlCmd | KeyCode.Backquote,
       command: 'Layout.togglePanel',
       args: ['Terminals'],
+    },
+    {
+      key: KeyModifier.CtrlCmd | KeyModifier.Shift | KeyCode.Backquote,
+      command: 'Layout.openIntegratedTerminal',
+      args: [''],
     },
     {
       key: KeyModifier.CtrlCmd | KeyModifier.Shift | KeyCode.KeyM,
@@ -64,7 +74,7 @@ export const getKeyBindings = () => {
     {
       key: KeyModifier.CtrlCmd | KeyModifier.Shift | KeyCode.KeyG,
       command: 'Layout.openSideBarViewlet',
-      args: ['Source Control'],
+      args: ['Source Control', true],
     },
     {
       key: KeyModifier.CtrlCmd | KeyModifier.Shift | KeyCode.KeyE,

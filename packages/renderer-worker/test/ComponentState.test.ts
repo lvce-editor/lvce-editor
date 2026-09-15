@@ -338,7 +338,7 @@ test('rejects missing components and components without a DOM API', async () => 
 
 test('exposes Simple Browser state and renders edits through its component state hooks', async () => {
   const factory = await import('../src/parts/ViewletSimpleBrowser/ViewletSimpleBrowser.ipc.js')
-  const state = factory.create(10, 'simple-browser://', 0, 0, 800, 600)
+  const state = { ...factory.create(10, 'simple-browser://', 0, 0, 800, 600), browserViewId: 12 }
   ViewletStates.set(10, { factory, moduleId: 'SimpleBrowser', renderedState: state, state })
 
   expect(ComponentState.getComponents()).toEqual([
@@ -347,14 +347,16 @@ test('exposes Simple Browser state and renders edits through its component state
   await expect(ComponentState.getState(10)).resolves.toBe(state)
 
   const editedState = { ...state, inputValue: 'Live browser state' }
-  const domCommands = factory.render[0].apply(state, editedState)
+  const renderedState = { ...editedState, addressValueVersion: 1 }
+  expect(factory.render[1].isEqual(state, renderedState)).toBe(false)
+  const domCommands = factory.render[1].apply(state, renderedState)
   jest.mocked(ViewletManager.render).mockReturnValue(domCommands)
   await ComponentState.setState(10, editedState)
 
-  await expect(ComponentState.getState(10)).resolves.toBe(editedState)
-  expect(ViewletManager.render).toHaveBeenCalledWith(factory, state, editedState, 10, undefined)
+  await expect(ComponentState.getState(10)).resolves.toEqual(renderedState)
+  expect(ViewletManager.render).toHaveBeenCalledWith(factory, state, renderedState, 10, undefined)
   expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.sendMultiple', domCommands)
-  expect(domCommands).toEqual([['Viewlet.setDom2', 10, expect.arrayContaining([expect.objectContaining({ value: 'Live browser state' })])]])
+  expect(domCommands).toEqual([['Viewlet.setValueByName', 10, 'simple-browser-address', 'Live browser state']])
 })
 
 test('exposes Layout state and renders edits through its component state hooks', async () => {
@@ -503,4 +505,56 @@ test('refreshes other DOM editors after a direct DOM edit', async () => {
   await ComponentState.setDom(2, editedDom)
   expect(Viewlet.executeViewletCommand).toHaveBeenCalledWith(10, 'loadContent', undefined, { preserveFocus: true })
   expect(ViewletStates.getState(2)).toBe(state)
+})
+
+test('lists only components belonging to the requesting inspector application', async () => {
+  const Registry = await import('../src/parts/ApplicationRegistry/ApplicationRegistry.ts')
+  for (const [id, uid] of [
+    ['source', 100],
+    ['preview', 200],
+  ] as const) {
+    Registry.create({ href: '', id, layoutUid: uid, workspacePath: '', workspaceUri: '' })
+    for (const componentUid of [uid, uid + 1]) {
+      const state = { applicationId: id, uid: componentUid }
+      ViewletStates.set(componentUid, { factory: {}, moduleId: 'Layout', renderedState: state, state })
+    }
+  }
+  try {
+    expect(ComponentState.getComponents(100).map(({ uid }) => uid)).toEqual([100, 101])
+    expect(ComponentState.getComponents(200).map(({ uid }) => uid)).toEqual([200, 201])
+    expect(ComponentState.getComponents().map(({ uid }) => uid)).toEqual([100, 101, 200, 201])
+  } finally {
+    ViewletStates.reset()
+    Registry.remove('source')
+    Registry.remove('preview')
+  }
+})
+
+test('uses the preview tab state to preserve unsaved live component edits', async () => {
+  const Registry = await import('../src/parts/ApplicationRegistry/ApplicationRegistry.ts')
+  const sourceMain = jest.fn(async () => ({ layout: { groups: [] } }))
+  const previewMain = jest.fn(async () => ({ layout: { groups: [{ tabs: [{ editorUid: 203, isDirty: true }] }] } }))
+  for (const [id, uid, getComponentState] of [
+    ['source', 100, sourceMain],
+    ['preview', 200, previewMain],
+  ] as const) {
+    Registry.create({ href: '', id, layoutUid: uid, workspacePath: '', workspaceUri: '' })
+    const state = { applicationId: id, uid: uid + 1 }
+    ViewletStates.set(uid + 1, { factory: { getComponentState }, moduleId: 'Main', renderedState: state, state })
+  }
+  try {
+    const componentState = { applicationId: 'preview', uid: 202, value: 0 }
+    const editorState = { applicationId: 'preview', uid: 203, uri: 'live-component-state:///202.json' }
+    ViewletStates.set(202, { factory: {}, moduleId: 'Explorer', renderedState: componentState, state: componentState })
+    ViewletStates.set(203, { factory: {}, moduleId: 'EditorText', renderedState: editorState, state: editorState })
+    ViewletStates.setRenderedState(202, { ...componentState, value: 1 })
+    await ComponentState.waitForRefreshes()
+    expect(previewMain).toHaveBeenCalledTimes(1)
+    expect(sourceMain).not.toHaveBeenCalled()
+    expect(Viewlet.executeViewletCommand).not.toHaveBeenCalled()
+  } finally {
+    ViewletStates.reset()
+    Registry.remove('source')
+    Registry.remove('preview')
+  }
 })

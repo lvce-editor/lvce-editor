@@ -1,12 +1,13 @@
 import { chromium, expect } from '@playwright/test'
 import { fork } from 'child_process'
-import { readdir, rm } from 'fs/promises'
+import { mkdir, readdir, rm, writeFile } from 'fs/promises'
 import { mkdtemp } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import express from 'express'
 import cors from 'cors'
+import { waitForServerReady } from '../scripts/wait-for-server-ready.mjs'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const root = join(__dirname, '..', '..', '..')
@@ -57,7 +58,7 @@ const testFile = async (page, name) => {
 }
 
 const handleConsole = (event) => {
-  console.log(event)
+  console.log(event.text())
 }
 
 const getTmpDir = () => {
@@ -96,6 +97,12 @@ const launchServer = async ({ ci, configDir, cacheDir, dataDir }) => {
       XDG_DATA_HOME: dataDir,
     },
   })
+  try {
+    await waitForServerReady(server)
+  } catch (error) {
+    server.kill('SIGKILL')
+    throw error
+  }
   return {
     dispose() {
       server.kill('SIGKILL')
@@ -112,6 +119,13 @@ const runTests = async () => {
   const headless = argv.includes('--headless')
   const ci = argv.includes('--ci')
   const serve = argv.includes('--serve')
+  const initialSettingsArgument = argv.find((argument) => argument.startsWith('--initial-settings='))
+  const initialSettings = initialSettingsArgument ? JSON.parse(initialSettingsArgument.slice('--initial-settings='.length)) : undefined
+  if (initialSettings) {
+    const applicationConfigDir = join(configDir, 'lvce-oss')
+    await mkdir(applicationConfigDir, { recursive: true })
+    await writeFile(join(applicationConfigDir, 'settings.json'), JSON.stringify(initialSettings))
+  }
   const server = await launchServer({
     configDir,
     cacheDir,
@@ -138,13 +152,24 @@ const runTests = async () => {
         }
       : undefined,
   })
+  if (initialSettings) {
+    await context.addInitScript((value) => {
+      if (location.protocol === 'http:' || location.protocol === 'https:') localStorage.setItem('settings', JSON.stringify(value))
+    }, initialSettings)
+  }
   const page = await context.newPage()
   try {
-    page.on('console', handleConsole)
+    const expectedConsole = argv.find((argument) => argument.startsWith('--expect-console='))?.slice('--expect-console='.length)
+    let receivedExpectedConsole = false
+    page.on('console', (event) => {
+      if (event.text() === expectedConsole) receivedExpectedConsole = true
+      handleConsole(event)
+    })
     const testNames = await getPaths()
     for (const testName of testNames) {
       await testFile(page, testName)
     }
+    if (expectedConsole && !receivedExpectedConsole) throw new Error(`Missing test assertion: ${expectedConsole}`)
   } catch (error) {
     throw error
   } finally {

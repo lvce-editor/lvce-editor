@@ -64,7 +64,7 @@ export const setPath = async (path) => {
   await onWorkspaceChange()
 }
 
-export const setUri = async (uri, connectionOrPathSeparator, legacyConnection) => {
+export const setUri = async (uri, connectionOrPathSeparator, legacyConnection, openUri = '') => {
   const connection = legacyConnection || (typeof connectionOrPathSeparator === 'object' ? connectionOrPathSeparator : undefined)
   const protocol = GetProtocol.getProtocol(uri)
   const path = connection?.workspacePath || (protocol === 'file' ? decodeURIComponent(uri.slice('file://'.length)) : uri)
@@ -94,6 +94,9 @@ export const setUri = async (uri, connectionOrPathSeparator, legacyConnection) =
   }
   await FileSystemWorker.dispose()
   await onWorkspaceChange()
+  if (openUri) {
+    await Command.execute('Main.openUri', openUri)
+  }
 }
 
 const handleRemoteCliOpenRequest = async (request) => {

@@ -36,6 +36,14 @@ export const getMimeType = (fileExtension: string): string => {
       return MimeType.Markdown
     case '.mp3':
       return MimeType.AudioMpeg
+    case '.mp4':
+      return MimeType.VideoMp4
+    case '.oga':
+    case '.ogg':
+    case '.opus':
+      return MimeType.AudioOgg
+    case '.ogv':
+      return MimeType.VideoOgg
     case '.png':
       return MimeType.ImagePng
     case '.svg':
@@ -45,6 +53,8 @@ export const getMimeType = (fileExtension: string): string => {
       return MimeType.ImageTiff
     case '.ttf':
       return MimeType.FontTtf
+    case '.wav':
+      return MimeType.AudioWav
     case '.webm':
       return MimeType.VideoWebm
     case '.webp':

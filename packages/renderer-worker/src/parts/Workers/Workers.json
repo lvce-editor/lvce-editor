@@ -1,5 +1,18 @@
 [
   {
+    "id": "sessionReplayWorker",
+    "fileName": "sessionReplayWorkerMain.js",
+    "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/renderer-process/dist/sessionReplayWorkerMain.js",
+    "productionPath": "/packages/renderer-process/dist/sessionReplayWorkerMain.js",
+    "settingName": "develop.sessionReplayWorkerPath",
+    "hotReloadCommand": "",
+    "contentSecurityPolicy": [
+      "default-src 'none'",
+      "connect-src 'self' https: http://127.0.0.1:* http://localhost:*",
+      "script-src 'self'"
+    ]
+  },
+  {
     "id": "componentState",
     "fileName": "componentStateWorkerMain.js",
     "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/component-state-worker/dist/componentStateWorkerMain.js",
@@ -731,6 +744,10 @@
           "name": "ExtensionDetail.render2",
           "parameters": [{ "source": "state", "name": "uid" }, { "source": "result", "name": "diff" }]
         },
+        "resize": {
+          "name": "ExtensionDetail.resize",
+          "parameters": [{ "source": "state", "name": "uid" }, { "source": "argument", "name": "dimensions" }]
+        },
         "saveState": { "name": "ExtensionDetail.saveState", "parameters": [{ "source": "state", "name": "uid" }] },
         "terminate": { "name": "ExtensionDetail.terminate", "parameters": [] },
         "getCommandIds": { "name": "ExtensionDetail.getCommandIds", "parameters": [] },
@@ -1330,6 +1347,7 @@
     "hotReloadCommand": "",
     "viewlet": {
       "name": "Ports",
+      "extraCommands": [{ "name": "handleWorkspaceChange", "method": "loadContent" }, { "name": "refresh", "method": "loadContent" }],
       "css": ["/css/parts/ViewletPorts.css"],
       "state": {
         "idKey": "uid",
@@ -1347,7 +1365,7 @@
             { "source": "state", "name": "parentUid" }
           ]
         },
-        "loadContent": { "name": "Ports.loadContent", "parameters": [{ "source": "state", "name": "uid" }] },
+        "loadContent": { "name": "Ports.loadContent", "parameters": [{ "source": "state", "name": "uid" }, { "source": "context", "name": "workspaceUri" }] },
         "diff": { "name": "Ports.diff2", "parameters": [{ "source": "state", "name": "uid" }] },
         "render": { "name": "Ports.render2", "parameters": [{ "source": "state", "name": "uid" }, { "source": "result", "name": "diff" }] },
         "dispose": { "name": "Ports.dispose", "parameters": [{ "source": "state", "name": "uid" }] },
@@ -1390,6 +1408,7 @@
         "resize": { "name": "Problems.resize", "parameters": [{ "source": "state", "name": "uid" }, { "source": "argument", "name": "dimensions" }] },
         "saveState": { "name": "Problems.saveState", "parameters": [{ "source": "state", "name": "uid" }] },
         "getCommandIds": { "name": "Problems.getCommandIds", "parameters": [] },
+        "getComponentDom": { "name": "Problems.getComponentDom", "parameters": [{ "source": "state", "name": "uid" }] },
         "getComponentState": { "name": "Problems.getComponentState", "parameters": [{ "source": "state", "name": "uid" }] },
         "getMenuEntryIds": { "name": "Problems.getMenuIds", "parameters": [] },
         "getMenuEntries": { "name": "Problems.getMenuEntries2", "parameters": [{ "source": "argument", "name": "args", "spread": true }] },
@@ -1464,6 +1483,7 @@
         "dispose": { "name": "ProcessExplorer.dispose", "parameters": [{ "source": "state", "name": "uid" }] },
         "terminate": { "name": "ProcessExplorer.terminate", "parameters": [] },
         "getCommandIds": { "name": "ProcessExplorer.getCommandIds", "parameters": [] },
+        "getComponentDom": { "name": "ProcessExplorer.getComponentDom", "parameters": [{ "source": "state", "name": "uid" }] },
         "getComponentState": { "name": "ProcessExplorer.getComponentState", "parameters": [{ "source": "state", "name": "uid" }] },
         "setComponentState": { "name": "ProcessExplorer.setComponentState", "parameters": [{ "source": "state", "name": "uid" }, { "source": "argument", "name": "componentState" }] },
         "getKeyBindings": { "name": "ProcessExplorer.getKeyBindings", "parameters": [] },
@@ -1503,7 +1523,8 @@
           { "source": "state", "name": "uid" }, { "source": "state", "name": "uri" }, { "source": "literal", "value": 22 },
           { "source": "state", "name": "x" }, { "source": "state", "name": "y" }, { "source": "state", "name": "width" },
           { "source": "state", "name": "height" }, { "source": "state", "name": "platform" }, { "source": "state", "name": "args" },
-          { "source": "literal", "value": true }, { "source": "context", "name": "workspacePath" }, { "source": "state", "name": "assetDir" }
+          { "source": "literal", "value": true }, { "source": "context", "name": "workspacePath" }, { "source": "state", "name": "assetDir" },
+          { "source": "context", "name": "applicationId" }
         ] },
         "loadContent": { "name": "QuickPick.loadContent", "parameters": [{ "source": "state", "name": "uid" }] },
         "diff": { "name": "QuickPick.diff2", "parameters": [{ "source": "state", "name": "uid" }] },
@@ -1672,13 +1693,18 @@
         "saveState": { "name": "Settings.saveState", "parameters": [{ "source": "state", "name": "uid" }] },
         "terminate": { "name": "Settings.terminate", "parameters": [] },
         "getCommandIds": { "name": "Settings.getCommandIds", "parameters": [] },
+        "getComponentState": { "name": "Settings.getComponentState", "parameters": [{ "source": "state", "name": "uid" }] },
         "getKeyBindings": { "name": "Settings.getKeyBindings", "parameters": [] },
         "getMenuEntryIds": { "name": "Settings.getMenuIds", "parameters": [] },
         "getMenuEntries": {
           "name": "Settings.getMenuEntries",
           "parameters": [{ "source": "argument", "name": "args", "spread": true }]
         },
-        "renderEventListeners": { "name": "Settings.renderEventListeners", "parameters": [] }
+        "renderEventListeners": { "name": "Settings.renderEventListeners", "parameters": [] },
+        "setComponentState": {
+          "name": "Settings.setComponentState",
+          "parameters": [{ "source": "state", "name": "uid" }, { "source": "argument", "name": "componentState" }]
+        }
       },
       "outputs": [{ "stateField": "actionsDom", "hotReload": false, "method": { "name": "Settings.renderActions", "parameters": [{ "source": "state", "name": "uid" }] } }],
       "capabilities": { "directRender": true, "events": true, "render": true, "resize": true, "rootRender": true },

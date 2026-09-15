@@ -138,7 +138,7 @@ test('organizeExtensions', () => {
         ],
         name: 'Language Basics CSS',
         path: '/test/builtin.language-basics-css',
-        status: 'resolved',
+        status: ExtensionManifestStatus.Resolved,
       },
     ],
   })

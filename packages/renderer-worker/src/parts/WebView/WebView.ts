@@ -10,6 +10,7 @@ import * as Preferences from '../Preferences/Preferences.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as Scheme from '../Scheme/Scheme.ts'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
+import * as SimpleBrowserOverlay from '../SimpleBrowserOverlay/SimpleBrowserOverlay.js'
 
 export const setPort = async (uid: number, port: MessagePort, origin: string, portType: string): Promise<void> => {
   await RendererProcess.invokeAndTransfer('WebView.setPort', uid, port, origin, portType)
@@ -66,8 +67,13 @@ export const compat = {
   sharedProcessInvoke(...args) {
     return SharedProcess.invoke(...args)
   },
-  rendererProcessInvoke(...args) {
-    return RendererProcess.invoke(...args)
+  async rendererProcessInvoke(...args) {
+    const result = await RendererProcess.invoke(...args)
+    // Menu actions close the menu through this bridge instead of Menu.hide in the renderer worker.
+    if (args[0] === 'Menu.hide') {
+      await SimpleBrowserOverlay.hide('menu')
+    }
+    return result
   },
   rendererProcessInvokeAndTransfer(...args) {
     return RendererProcess.invokeAndTransfer(...args)
