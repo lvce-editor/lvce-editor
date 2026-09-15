@@ -82,6 +82,29 @@ test('bundleCss styles settings selects as native dropdown controls', async () =
   }
 }, 30_000)
 
+test('bundleCss keeps virtualized settings items within the content column', async () => {
+  const dir = await mkdtemp(join(tmpdir(), 'lvce-bundle-css-'))
+
+  try {
+    await bundleCss({
+      outDir: dir,
+      assetDir: '',
+    })
+
+    const css = await readFile(join(dir, 'parts', 'SettingsItems.css'), 'utf8')
+
+    expect(css).toContain(`.SettingsItems {
+  display: flex;
+  flex-direction: column;
+  contain: content;
+  flex: 1 1 0;
+  height: var(--SettingsItemsHeight);
+  min-width: 0;`)
+  } finally {
+    await rm(dir, { recursive: true, force: true })
+  }
+}, 30_000)
+
 test('bundleCss lets the simple browser fill the preview area height and use workbench theme colors', async () => {
   const dir = await mkdtemp(join(tmpdir(), 'lvce-bundle-css-'))
 
