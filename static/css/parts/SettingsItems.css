@@ -83,6 +83,65 @@
   border-color: var(--InputValidationErrorBorder, #be1100);
 }
 
+.Toggle {
+  appearance: none;
+  background-color: var(--InputBoxBackground, #313131);
+  border: 1px solid var(--InputBoxBorder, transparent);
+  border-radius: 999px;
+  box-sizing: border-box;
+  cursor: pointer;
+  display: block;
+  flex: 0 0 32px;
+  height: 18px;
+  margin: 0;
+  padding: 1px;
+  position: relative;
+  transition: background-color 120ms ease-in-out, border-color 120ms ease-in-out;
+  width: 32px;
+}
+
+.Toggle::before {
+  background-color: var(--WorkbenchForeground, #cccccc);
+  border-radius: 50%;
+  content: '';
+  display: block;
+  height: 14px;
+  transform: translateX(0);
+  transition: transform 120ms ease-in-out;
+  width: 14px;
+}
+
+.Toggle:checked {
+  background-color: var(--FocusBorder, #007fd4);
+  border-color: var(--FocusBorder, #007fd4);
+}
+
+.Toggle:checked::before {
+  background-color: var(--ButtonForeground, #ffffff);
+  transform: translateX(14px);
+}
+
+.Toggle:focus-visible {
+  outline: 1px solid var(--FocusOutline, var(--FocusBorder, #007fd4));
+  outline-offset: 2px;
+}
+
+.Toggle:disabled {
+  cursor: default;
+  opacity: 0.4;
+}
+
+.Toggle.InputBoxError {
+  border-color: var(--InputValidationErrorBorder, #be1100);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .Toggle,
+  .Toggle::before {
+    transition-duration: 0ms;
+  }
+}
+
 .SettingsItemCheckBox .Label {
   cursor: pointer;
 }
