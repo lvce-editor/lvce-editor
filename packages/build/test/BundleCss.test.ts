@@ -62,6 +62,26 @@ test('bundleCss styles settings checkboxes like compact editor controls', async 
   }
 }, 30_000)
 
+test('bundleCss styles settings selects as native dropdown controls', async () => {
+  const dir = await mkdtemp(join(tmpdir(), 'lvce-bundle-css-'))
+
+  try {
+    await bundleCss({
+      outDir: dir,
+      assetDir: '',
+    })
+
+    const css = await readFile(join(dir, 'parts', 'SettingsItems.css'), 'utf8')
+
+    expect(css).toContain(`.SettingsItem .Select {
+  appearance: auto;`)
+    expect(css).toContain('border: 1px solid var(--DropDownBorder, var(--InputBoxBorder, rgb(55, 65, 63)));')
+    expect(css).toContain('.SettingsItem .Select:focus-visible {')
+  } finally {
+    await rm(dir, { recursive: true, force: true })
+  }
+}, 30_000)
+
 test('bundleCss lets the simple browser fill the preview area height and use workbench theme colors', async () => {
   const dir = await mkdtemp(join(tmpdir(), 'lvce-bundle-css-'))
 
