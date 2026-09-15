@@ -22,7 +22,7 @@ The Codespaces suite already verifies the forwarded port number, URL, devcontain
 
 All Simple Browser regressions now live in [simple-browser-view](https://github.com/lvce-editor/simple-browser-view):
 
-- `packages/e2e/integration/test-simple-browser-*.mjs` retains tab overflow, new-tab suggestions, native visibility and window ownership, full application restart, address suggestions and themes, workflows, and workspace transitions. The owner workflow supplies a pinned LVCE application fixture.
+- `packages/e2e/integration/test-simple-browser-*.mjs` retains tab overflow, new-tab suggestions, native visibility and window ownership, full application restart, address suggestions and themes, workflows, workspace transitions, and history preview tabs. The owner workflow supplies a pinned LVCE application fixture.
 - `packages/e2e/electron/src/simple-browser.migrated-*.ts` covers history removal/clearing, selection on pointer-down, and toolbar menu actions in the existing Electron runner.
 - Existing `simple-browser.suggestions-*`, `simple-browser.appearance-tab-hover`, and the address integration scenario cover the formerly skipped inline/history suggestions and native hover tests.
 
