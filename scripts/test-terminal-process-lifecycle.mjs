@@ -4,11 +4,11 @@ import { createRequire } from 'node:module'
 import { tmpdir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { launchNativeElectron } from './launch-native-electron.mjs'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const requireTests = createRequire(join(root, 'packages/extension-host-worker-tests/package.json'))
 const { expect } = requireTests('@playwright/test')
+const { _electron } = requireTests('playwright')
 const { build } = createRequire(join(root, 'packages/build/package.json'))('esbuild')
 const profile = await mkdtemp(join(tmpdir(), 'lvce-terminal-process-lifecycle-'))
 const rendererPath = join(root, 'packages/renderer-worker/node_modules/@lvce-editor/renderer-process/dist/rendererProcessMain.js')
@@ -36,7 +36,7 @@ try {
   const env = { ...process.env, DEV: '1', LVCE_ROOT: root, LVCE_SHARED_PROCESS_PATH: join(root, 'packages/shared-process/src/sharedProcessMain.ts') }
   delete env.ELECTRON_RUN_AS_NODE
   for (const key of ['CONFIG', 'DATA', 'STATE', 'CACHE']) env[`XDG_${key}_HOME`] = join(profile, key.toLowerCase())
-  app = await launchNativeElectron({
+  app = await _electron.launch({
     executablePath:
       process.env.LVCE_TEST_ELECTRON ||
       createRequire(join(root, 'packages/main-process/node_modules/@lvce-editor/main-process/package.json'))('electron'),
@@ -44,6 +44,7 @@ try {
     cwd: join(root, 'packages/main-process'),
     env,
   })
+  app.process().stderr.on('data', (data) => process.stderr.write(data))
   const childEnv = await app.evaluate(() =>
     Object.fromEntries(['CONFIG', 'DATA', 'STATE', 'CACHE'].map((key) => [key, process.env[`XDG_${key}_HOME`]])),
   )
@@ -68,8 +69,9 @@ try {
   const checkOutput = async (page, text) => {
     const input = page.locator('.xterm-helper-textarea')
     const middle = Math.floor(text.length / 2)
-    await input.fill(`printf '%s%s\\n' '${text.slice(0, middle)}' '${text.slice(middle)}'`)
-    await input.press('Enter')
+    await input.focus()
+    await page.keyboard.type(`printf '%s%s\\n' '${text.slice(0, middle)}' '${text.slice(middle)}'`)
+    await page.keyboard.press('Enter')
     await expect(page.locator('.XtermTerminal')).toContainText(text)
   }
   const close = async (page) => {
