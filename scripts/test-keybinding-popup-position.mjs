@@ -20,16 +20,6 @@ let app
 
 const getCenter = (box) => box.x + box.width / 2
 
-const openCommandPalette = async (page, command) => {
-  await page.keyboard.press('Control+Shift+p')
-  const input = page.locator('#QuickPick input.InputBox')
-  await expect(input).toBeVisible()
-  await page.keyboard.type(command)
-  const option = page.getByRole('option', { name: command, exact: true })
-  await expect(option).toBeVisible()
-  await option.click()
-}
-
 const getIdeCenter = async (page) => {
   const workbench = await page.locator('#Workbench').boundingBox()
   const preview = await page.locator('.PreviewArea').boundingBox()
@@ -47,6 +37,7 @@ try {
     JSON.stringify([
       { source: 'User', key: parseKeyBindingString('Ctrl+Shift+K'), command: 'Main.openUri', args: ['app://keybindings'] },
       { source: 'User', key: parseKeyBindingString('Ctrl+Shift+B'), command: 'Layout.hideSideBar' },
+      { source: 'User', key: parseKeyBindingString('Ctrl+Alt+1'), command: 'Layout.showPreview', args: ['simple-browser://'] },
     ]),
   )
   await build({
@@ -65,7 +56,7 @@ try {
   for (const key of ['CONFIG', 'DATA', 'STATE', 'CACHE']) env[`XDG_${key}_HOME`] = join(profile, key.toLowerCase())
   app = await _electron.launch({
     executablePath: join(root, 'packages/main-process/node_modules/electron/dist/electron'),
-    args: ['--no-sandbox', '--disable-http-cache', '.', profile],
+    args: ['--no-sandbox', '--disable-http-cache', '--user-data-dir=' + join(profile, 'chromium'), '.', profile],
     cwd: join(root, 'packages/main-process'),
     env,
     timeout: 60000,
@@ -80,7 +71,7 @@ try {
   await expect(page.locator('.KeyBindings')).toBeVisible()
   await page.keyboard.press('Control+Shift+b')
   await expect(page.locator('.SideBar')).toHaveCount(0)
-  await openCommandPalette(page, 'Simple Browser: Open in Preview Area')
+  await page.keyboard.press('Control+Alt+1')
   await expect(page.locator('.PreviewArea .SimpleBrowser')).toBeVisible()
   await page.locator('.KeyBindings .TableBody .TableRow').first().dblclick()
 

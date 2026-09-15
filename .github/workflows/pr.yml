@@ -65,6 +65,8 @@ jobs:
       - name: Download Builtin Extensions
         run: node packages/build/src/parts/DownloadBuiltinExtensions/DownloadBuiltinExtensions.ts
         if: steps.builtin-extensions-cache.outputs.cache-hit != 'true'
+      - name: Check feature e2e ownership
+        run: node scripts/check-e2e-ownership.mjs
       - run: npm run lint
       - run: npm run type-check
       - name: Validate builtin setting declarations
@@ -99,37 +101,11 @@ jobs:
           npm run e2e:headless -- --test-name-prefix=session-replay.settings '--initial-settings={"sessionReplay.enabled":true}' '--expect-console=Session replay command recording verified'
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0
-      - name: Test Simple Browser tab overflow
-        run: node scripts/test-simple-browser-tabs.mjs
-        env:
-          PLAYWRIGHT_BROWSERS_PATH: 0
-      - name: Test Simple Browser suggestions and new-tab theme
-        if: matrix.os == 'ubuntu-24.04'
-        run: |
-          node packages/main-process/node_modules/electron/install.js
-          xvfb-run -a npm run test:simple-browser-address
-      - name: Test Simple Browser restoration after app restart
-        if: matrix.os == 'ubuntu-24.04'
-        run: xvfb-run -a npm run test:simple-browser-restore
-      - name: Test Simple Browser native visibility and window ownership
-        if: matrix.os == 'ubuntu-24.04'
-        run: xvfb-run -a npm run test:simple-browser-native-lifecycle
-      - name: Test Simple Browser new tab suggestions
-        if: matrix.os == 'ubuntu-24.04'
-        run: npm run test:simple-browser-new-tab
-        env:
-          PLAYWRIGHT_BROWSERS_PATH: 0
-      - name: Test Simple Browser workflows
-        if: matrix.os == 'ubuntu-24.04'
-        run: xvfb-run -a npm run test:simple-browser-workflows
       - name: Test keybinding popup position
         if: matrix.os == 'ubuntu-24.04'
-        run: xvfb-run -a node scripts/test-keybinding-popup-position.mjs
-      - name: Test Simple Browser workspace switching
-        if: matrix.os == 'ubuntu-24.04'
         run: |
           node packages/main-process/node_modules/electron/install.js
-          xvfb-run -a npm run test:simple-browser-workspace
+          xvfb-run -a node scripts/test-keybinding-popup-position.mjs
       - name: Test bundled font loading
         if: matrix.os == 'ubuntu-24.04'
         working-directory: ./packages/extension-host-worker-tests
