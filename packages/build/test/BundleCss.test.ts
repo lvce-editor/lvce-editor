@@ -255,6 +255,23 @@ test('bundleCss centers quick pick in the non-preview area', async () => {
   }
 }, 30_000)
 
+test('bundleCss centers define keybinding in the non-preview area', async () => {
+  const dir = await mkdtemp(join(tmpdir(), 'lvce-bundle-css-'))
+
+  try {
+    await bundleCss({
+      outDir: dir,
+      assetDir: '',
+    })
+
+    const css = await readFile(join(dir, 'parts', 'ViewletDefineKeyBinding.css'), 'utf8')
+
+    expect(css).toContain('inset: 0 var(--PreviewAreasWidth, 0px) 0 0;')
+  } finally {
+    await rm(dir, { recursive: true, force: true })
+  }
+}, 30_000)
+
 test('bundleCss preserves the locations flex growth', async () => {
   const dir = await mkdtemp(join(tmpdir(), 'lvce-bundle-css-'))
 
