@@ -38,6 +38,43 @@ test('bundleCss does not add filename comment to App.css', async () => {
   }
 }, 30_000)
 
+test('bundleCss scopes debug chat resizer styles', async () => {
+  const dir = await mkdtemp(join(tmpdir(), 'lvce-bundle-css-'))
+
+  try {
+    await bundleCss({
+      outDir: dir,
+      assetDir: '',
+    })
+
+    const css = await readFile(join(dir, 'App.css'), 'utf8')
+    const settingsCss = await readFile(join(dir, 'parts', 'ViewletSettings.css'), 'utf8')
+
+    expect(css).toContain('\n.ChatDebugView .Resizer {')
+    expect(css).not.toContain(`
+.Resizer {
+  background: transparent;
+  border: 0;
+  bottom: 0;
+  cursor: col-resize;
+  margin: 0;
+  padding: 0;
+  pointer-events: auto;
+  position: absolute;
+  top: 0;
+  transform: translateX(calc(-0.5 * var(--ChatDebugViewSashWidth)));
+  width: var(--ChatDebugViewSashWidth);
+}`)
+    expect(settingsCss).toContain(`.SettingsMain > .SettingsResizer {
+  background: var(--ExtensionDetailTabsBorder);
+  flex: 0 0 var(--SashSize);
+  position: relative;
+}`)
+  } finally {
+    await rm(dir, { recursive: true, force: true })
+  }
+}, 30_000)
+
 test('bundleCss styles settings checkboxes like compact editor controls', async () => {
   const dir = await mkdtemp(join(tmpdir(), 'lvce-bundle-css-'))
 
