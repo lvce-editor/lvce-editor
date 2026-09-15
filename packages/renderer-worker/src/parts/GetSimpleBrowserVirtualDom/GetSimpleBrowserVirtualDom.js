@@ -4,6 +4,7 @@ import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as HtmlInputType from '../HtmlInputType/HtmlInputType.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.js'
+import * as GetSimpleBrowserHistoryVirtualDom from '../GetSimpleBrowserHistoryVirtualDom/GetSimpleBrowserHistoryVirtualDom.js'
 import * as InputName from '../InputName/InputName.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
@@ -40,8 +41,12 @@ export const getSimpleBrowserVirtualDom = (
   fullWidth = false,
   chromeTheme = 'light',
   findState,
+  historyTab = false,
+  historyEntries = [],
+  historySearchValue = '',
 ) => {
   const inlineSuggestion = getInlineSuggestion(value, suggestions)
+  const historyDom = historyTab ? GetSimpleBrowserHistoryVirtualDom.getSimpleBrowserHistoryVirtualDom(historyEntries, historySearchValue) : []
   /** @type {any[]} */
   const dom = [
     {
@@ -54,6 +59,7 @@ export const getSimpleBrowserVirtualDom = (
         (tabsEnabled ? 1 : 0) +
         (snapshot ? 1 : 0) +
         (pageSnapshotDom.length > 0 ? 1 : 0) +
+        (historyDom.length > 0 ? 1 : 0) +
         (suggestions.length > 0 ? 1 : 0) +
         (tabHover ? 1 : 0),
     },
@@ -347,6 +353,9 @@ export const getSimpleBrowserVirtualDom = (
       },
       ...pageSnapshotDom,
     )
+  }
+  if (!snapshot && historyDom.length > 0) {
+    dom.push(...historyDom)
   }
   if (suggestions.length > 0) {
     dom.push({

@@ -59,6 +59,17 @@ export const readFile = async (uri) => {
   return content instanceof Blob ? content.text() : content
 }
 
+export const stat = (uri) => {
+  const { protocol, path, uri: providerUri } = getProviderProtocolPathAndUri(uri)
+  return executeProvider({
+    isolatedMethod: 'Extensions.executeFileSystemProviderStat',
+    isolatedParams: [providerUri],
+    legacyMethod: 'ExtensionHostFileSystem.stat',
+    legacyParams: [path],
+    protocol,
+  })
+}
+
 export const getBlob = async (uri, type = '') => {
   const content = await readProviderFile(uri)
   if (content instanceof Blob) {

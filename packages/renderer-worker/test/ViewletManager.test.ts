@@ -858,6 +858,34 @@ test('extension view render sends a title command while loading a new child', ()
   expect(ViewletStates.getState(2)).toBe(parentState)
 })
 
+test('extension view render ignores a title update when the parent cannot receive it', () => {
+  const parentState = {
+    childUid: 3,
+    title: 'Search',
+    uid: 2,
+  }
+  ViewletStates.set(2, {
+    factory: {},
+    renderedState: parentState,
+    state: parentState,
+  })
+  const oldState = {
+    commands: [],
+    dom: [],
+    kind: 'virtualDom',
+    patches: [],
+    title: 'Testing',
+  }
+  const newState = {
+    ...oldState,
+    title: 'Testing: Updated',
+  }
+
+  const commands = ViewletManager.render(ViewletExtensionViewRender, oldState, newState, 1, 2)
+
+  expect(commands).toEqual([])
+})
+
 test.skip('load', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})

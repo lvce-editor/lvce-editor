@@ -7,6 +7,7 @@ import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import express from 'express'
 import cors from 'cors'
+import { waitForServerReady } from '../scripts/wait-for-server-ready.mjs'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const root = join(__dirname, '..', '..', '..')
@@ -96,6 +97,12 @@ const launchServer = async ({ ci, configDir, cacheDir, dataDir }) => {
       XDG_DATA_HOME: dataDir,
     },
   })
+  try {
+    await waitForServerReady(server)
+  } catch (error) {
+    server.kill('SIGKILL')
+    throw error
+  }
   return {
     dispose() {
       server.kill('SIGKILL')
