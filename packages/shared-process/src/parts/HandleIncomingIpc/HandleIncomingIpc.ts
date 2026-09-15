@@ -40,11 +40,13 @@ export const handleIncomingIpc = async (ipcId: any, handle: any, message: any): 
   if (!ipcAndResponse) {
     return
   }
-  const { response, target } = ipcAndResponse
+  const { response, target, release, complete } = ipcAndResponse
   const error = await ApplyIncomingIpcResponse.applyIncomingIpcResponse(target, response, ipcId)
+  complete?.()
   if (!error) {
     return
   }
+  release?.()
   if (ipcId === IpcId.ProcessExplorer) {
     ProcessExplorer.decreaseRefCount()
   }

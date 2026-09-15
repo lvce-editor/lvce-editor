@@ -138,6 +138,13 @@ jobs:
         run: npm run e2e:notification-layout
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0
+      - name: Test terminal process lifecycle in Electron and browser
+        if: matrix.os == 'ubuntu-24.04'
+        run: |
+          xvfb-run -a node scripts/test-terminal-process-lifecycle.mjs
+          npm run e2e:headless --prefix packages/extension-host-worker-tests -- --test-name-prefix=viewlet.terminal-process-reopen
+        env:
+          PLAYWRIGHT_BROWSERS_PATH: 0
       - name: Test terminal theme backgrounds
         if: matrix.os == 'ubuntu-24.04'
         working-directory: ./packages/extension-host-worker-tests
