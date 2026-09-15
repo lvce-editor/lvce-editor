@@ -129,7 +129,7 @@ export const reload = async (id) => {
     if (instance.factory.dispose) {
       await instance.factory.dispose(oldState)
     }
-    const newState = await instance.factory.loadContent(oldState, savedState)
+    const newState = await instance.factory.loadContent(oldState, savedState, { preserveFocus: true })
     Assert.object(newState)
     if (ViewletStates.getInstance(id) !== instance) {
       return
