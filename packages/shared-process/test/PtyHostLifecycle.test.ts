@@ -40,11 +40,10 @@ test('release during launch cannot overwrite the replacement process', async () 
   const first = PtyHost.acquire(1)
   PtyHost.release(first.id)
   const second = PtyHost.acquire(1)
-  const replacement = await second.promise
   const old = { dispose: jest.fn() }
   ready.resolve(old)
   await first.promise
-  await Promise.resolve()
+  const replacement = await second.promise
   expect(PtyHost.getCurrentInstance()).toBe(replacement)
   expect(old.dispose).toHaveBeenCalledTimes(1)
   PtyHost.release(second.id)
@@ -86,4 +85,19 @@ test('a disconnect during forwarding waits for the acknowledgement before retiri
   connection.complete()
   await Promise.resolve()
   expect(connection.target.dispose).toHaveBeenCalledTimes(1)
+})
+
+test('replacement launch waits for the retiring process to exit', async () => {
+  const exited = Promise.withResolvers<void>()
+  launchPtyHost.mockResolvedValueOnce({ dispose: () => exited.promise })
+  const first = PtyHost.acquire(1)
+  await first.promise
+  PtyHost.release(first.id)
+  const second = PtyHost.acquire(1)
+  await Promise.resolve()
+  expect(launchPtyHost).toHaveBeenCalledTimes(1)
+  exited.resolve()
+  await second.promise
+  expect(launchPtyHost).toHaveBeenCalledTimes(2)
+  PtyHost.release(second.id)
 })

@@ -9,13 +9,14 @@ interface Generation {
 }
 let current: Generation | undefined
 let nextId = 0
+let retiring: Promise<void> | undefined
 const connections = new Map<number, Generation>()
 
 const getGeneration = (method: any): Generation => {
   if (current) return current
   const generation: Generation = {
     connections: new Set(),
-    promise: LaunchPtyHost.launchPtyHost(method),
+    promise: retiring ? retiring.then(() => LaunchPtyHost.launchPtyHost(method)) : LaunchPtyHost.launchPtyHost(method),
   }
   current = generation
   PtyHostState.state.ptyHostPromise = generation.promise
@@ -55,7 +56,9 @@ export const release = (id: number): void => {
   generation.connections.delete(id)
   if (generation.connections.size) return
   if (current === generation) detach()
-  void generation.promise.then((ipc) => ipc.dispose()).catch(() => {})
+  retiring = generation.promise.then((ipc) => ipc.dispose(), () => {})
+  // Preserve rejection for the next acquisition while avoiding an unhandled rejection.
+  void retiring.catch(() => {})
 }
 
 export const getCurrentInstance = (): any => PtyHostState.state.ipc
@@ -66,7 +69,9 @@ export const disposeAll = (): void => {
   if (!generation) return
   for (const id of generation.connections) connections.delete(id)
   generation.connections.clear()
-  void generation.promise.then((ipc) => ipc.dispose()).catch(() => {})
+  retiring = generation.promise.then((ipc) => ipc.dispose(), () => {})
+  // Preserve rejection for the next acquisition while avoiding an unhandled rejection.
+  void retiring.catch(() => {})
 }
 
 export const invoke = (method: any, ...params: any): any => {

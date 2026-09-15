@@ -19,7 +19,7 @@ export const targetMessagePort = (): any => {
 
 export const upgradeMessagePort = (port: any): any => {
   return {
-    method: 'HandleElectronMessagePort.handleElectronMessagePort',
+    method: 'HandleElectronMessagePort.handleTerminalMessagePort',
     params: [port],
     type: 'send',
   }
