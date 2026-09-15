@@ -68,7 +68,7 @@ test.skip('openSettingsJson', async () => {
   // @ts-ignore
   expect(Main.openUri).toHaveBeenCalledTimes(1)
   // @ts-ignore
-  expect(Main.openUri).toHaveBeenCalledWith('app://settings.json')
+  expect(Main.openUri).toHaveBeenCalledWith('app:///settings.json')
 })
 
 test('openKeyBindingsJson', async () => {
