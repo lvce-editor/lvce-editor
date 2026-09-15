@@ -34,6 +34,7 @@ import * as SashType from '../SashType/SashType.js'
 import * as SaveState from '../SaveState/SaveState.js'
 import * as SideBarLocationType from '../SideBarLocationType/SideBarLocationType.js'
 import * as SourceControlWorker from '../SourceControlWorker/SourceControlWorker.js'
+import * as StatusBarWorker from '../StatusBarWorker/StatusBarWorker.js'
 import { VError } from '../VError/VError.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
@@ -2764,9 +2765,14 @@ const callGlobalEventAndRefreshProblemsSummary = async (state: LayoutState, even
   }
 }
 
-export const handleActiveEditorChange = async (state: LayoutState, activeUri: string) => {
+export const handleActiveEditorChange = async (state: LayoutState, activeUri: string, activeIsTextEditor = true) => {
   const restored = state.browserFullWidth ? await BrowserFullWidth.leave(state) : { newState: state, commands: [] }
   const eventResult = await callGlobalEvent(restored.newState, 'handleActiveEditorChange', activeUri)
+  try {
+    await StatusBarWorker.invoke('StatusBar.handleEditorStatusVisibilityChanged', activeIsTextEditor)
+  } catch {
+    // Older status bar workers do not support active editor visibility updates.
+  }
   const summaryResult = activeUri ? await refreshProblemsSummary(eventResult.newState) : await clearProblemsSummary(eventResult.newState)
   return {
     newState: summaryResult.newState,
