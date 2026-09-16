@@ -218,7 +218,7 @@
         "/css/parts/ViewletList.css", "/css/parts/ViewletSearch.css"
       ],
       "state": {
-        "idKey": "uid", "fields": ["uri", "x", "y", "width", "height"], "contextFields": ["assetDir", "platform"],
+        "idKey": "uid", "fields": ["parentUid", "uri", "x", "y", "width", "height"], "contextFields": ["assetDir", "platform"],
         "defaults": { "actionsDom": [] }
       },
       "storageKeyField": "uri",
