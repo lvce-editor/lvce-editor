@@ -137,6 +137,14 @@ export const renderEventListeners = () => {
       stopPropagation: true,
     },
     {
+      name: DomEventListenerFunctions.HandlePointerOutSimpleBrowserTabs,
+      params: ['handleTabsPointerOut', 'event.clientX', 'event.clientY'],
+    },
+    {
+      name: DomEventListenerFunctions.HandlePointerOverSimpleBrowserTabs,
+      params: ['handleTabsPointerOver'],
+    },
+    {
       name: DomEventListenerFunctions.HandleClickSimpleBrowserNewTab,
       params: ['createNewTab'],
     },
@@ -222,6 +230,7 @@ const renderDom = {
       oldState.tabsEnabled === newState.tabsEnabled &&
       oldState.audioIndicatorEnabled === newState.audioIndicatorEnabled &&
       oldState.tabHover === newState.tabHover &&
+      oldState.tabWidth === newState.tabWidth &&
       oldState.history === newState.history &&
       oldState.historySearchValue === newState.historySearchValue &&
       oldState.tabDropIndex === newState.tabDropIndex &&

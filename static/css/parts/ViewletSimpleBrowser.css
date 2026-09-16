@@ -92,6 +92,10 @@
   padding: 0 5px 0 9px;
 }
 
+.SimpleBrowserTabsFrozen .SimpleBrowserTab {
+  flex: 0 0 var(--SimpleBrowserTabWidth);
+}
+
 .SimpleBrowserTab:hover {
   background: var(--TabHoverBackground, var(--ListHoverBackground));
   color: var(--TabHoverForeground, var(--WorkbenchForeground));

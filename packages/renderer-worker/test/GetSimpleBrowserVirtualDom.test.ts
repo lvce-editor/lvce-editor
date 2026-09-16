@@ -230,6 +230,35 @@ test('renders selectable tabs with favicon, title, close, and new tab controls',
   expect(dom).toContainEqual(expect.objectContaining({ className: 'SimpleBrowserNewTab', onClick: 'handleClickSimpleBrowserNewTab' }))
 })
 
+test('freezes tab sizing through the tab list style', () => {
+  const dom = GetSimpleBrowserVirtualDom.getSimpleBrowserVirtualDom(
+    false,
+    false,
+    false,
+    '',
+    '',
+    [],
+    -1,
+    [{ favicon: '', title: 'Example' }],
+    0,
+    true,
+    true,
+    [],
+    undefined,
+    -1,
+    false,
+    'light',
+    { tabWidth: 150 },
+  )
+
+  expect(dom.find((node) => node.role === 'tablist')).toMatchObject({
+    className: 'SimpleBrowserTabs SimpleBrowserTabsFrozen',
+    onPointerOut: 'handlePointerOutSimpleBrowserTabs',
+    onPointerOver: 'handlePointerOverSimpleBrowserTabs',
+    style: '--SimpleBrowserTabWidth: 150px;',
+  })
+})
+
 test('omits the audio icon for a silent tab', () => {
   const dom = GetSimpleBrowserVirtualDom.getSimpleBrowserVirtualDom(false, false, false, '', '', [], -1, [
     { favicon: '', isAudioPlaying: false, title: 'Example' },

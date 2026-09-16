@@ -265,6 +265,28 @@ test('routes tab pointer events to show and hide the rich hover', () => {
   )
 })
 
+test('routes tab list pointer events for freezing and restoring tab sizing', () => {
+  expect(ViewletSimpleBrowserRender.renderEventListeners()).toEqual(
+    expect.arrayContaining([
+      {
+        name: DomEventListenerFunctions.HandlePointerOverSimpleBrowserTabs,
+        params: ['handleTabsPointerOver'],
+      },
+      {
+        name: DomEventListenerFunctions.HandlePointerOutSimpleBrowserTabs,
+        params: ['handleTabsPointerOut', 'event.clientX', 'event.clientY'],
+      },
+    ]),
+  )
+})
+
+test('rerenders when the frozen tab width changes', () => {
+  const oldState = { ...state, tabWidth: 180 }
+  const newState = { ...state, tabWidth: 120 }
+
+  expect(ViewletSimpleBrowserRender.render[0].isEqual(oldState, newState)).toBe(false)
+})
+
 test('routes audio button clicks to mute the tab without selecting it', () => {
   expect(ViewletSimpleBrowserRender.renderEventListeners()).toContainEqual({
     name: DomEventListenerFunctions.HandleClickSimpleBrowserTabAudio,
