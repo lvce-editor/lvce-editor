@@ -1,5 +1,8 @@
-export const getQuickPickMenuEntries = () => {
+import * as ShellCommand from '../ShellCommand/ShellCommand.js'
+
+export const getQuickPickMenuEntries = async () => {
   return [
+    ...(await ShellCommand.getMenuEntries()),
     {
       id: 'Layout.signIn',
       label: 'Account: Sign In',

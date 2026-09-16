@@ -4,19 +4,18 @@ VS Code inspired text editor that mostly runs in a webworker.
 
 ## macOS command line
 
-After copying `lvce.app` to `/Applications`, add its bundled launcher to a directory
-on your PATH. For example, with Homebrew on Apple Silicon:
+After copying `lvce.app` to `/Applications`, open the Command Palette and run
+**Shell Command: Install 'lvce' command in PATH**. This links the bundled launcher
+into `/usr/local/bin`; macOS may request administrator permission. Open a new
+terminal, then run `lvce -v` to check the installed version.
 
-```sh
-ln -s /Applications/lvce.app/Contents/Resources/app/bin/lvce /opt/homebrew/bin/lvce
-lvce -v
-```
+The command preserves existing files and links belonging to other installations.
+Running it again with the same installation is harmless. The link continues to
+work when the app is replaced at the same location during an update.
 
-The launcher supports `-v` and `--version` without opening a window. It also accepts
-file paths and the other editor CLI arguments. The symlink continues to work after
-replacing the app with a newer version. If the app is installed elsewhere, use its
-actual path. For other setups, choose an existing writable directory on your PATH.
-This requires a release that includes the macOS launcher; older DMGs do not contain it.
+The launcher supports `-v` and `--version` without opening a window, plus file paths
+and the other editor CLI arguments. This requires a release containing the macOS
+launcher and installation command; older releases do not include them.
 
 ## Contributing
 

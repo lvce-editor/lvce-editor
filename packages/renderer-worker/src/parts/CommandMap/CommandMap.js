@@ -8,6 +8,7 @@ const lazy =
   }
 
 export const commandMap = {
+  'ShellCommand.install': async () => (await import('../ShellCommand/ShellCommand.js')).install(),
   'PortProvider.getPorts': async (workspaceUri) => (await import('../PortProvider/PortProvider.ts')).getPorts(workspaceUri),
   'Application.create': lazy('Application.create'),
   'Application.dispose': lazy('Application.dispose'),
