@@ -21,7 +21,7 @@ beforeEach(() => {
 
 test.each(['EACCES', 'EPERM'])('requests elevation on %s', async (code) => {
   mkdir.mockRejectedValueOnce(Object.assign(new Error('permission denied'), { code }))
-  const elevate = jest.fn(async () => {})
+  const elevate = jest.fn<(script: string) => Promise<void>>(async () => {})
   await installLink('/Applications/lvce.app/bin/lvce', '/usr/local/bin/lvce', elevate)
   expect(elevate).toHaveBeenCalledTimes(1)
   expect(elevate).toHaveBeenCalledWith(expect.stringContaining('/bin/ln -s'))
@@ -38,7 +38,7 @@ test('permission refusal propagates to the caller', async () => {
 
 test('does not elevate unrelated filesystem errors', async () => {
   symlink.mockRejectedValueOnce(Object.assign(new Error('disk full'), { code: 'ENOSPC' }))
-  const elevate = jest.fn(async () => {})
+  const elevate = jest.fn<(script: string) => Promise<void>>(async () => {})
   await expect(installLink('/app/bin/lvce', '/usr/local/bin/lvce', elevate)).rejects.toThrow('disk full')
   expect(elevate).not.toHaveBeenCalled()
 })

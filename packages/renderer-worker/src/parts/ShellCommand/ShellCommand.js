@@ -15,6 +15,6 @@ export const install = async () => {
     const path = await SharedProcess.invoke('ShellCommand.install')
     await Notification.create('info', `Shell command installed at ${path}. Open a new terminal to use it.`)
   } catch (error) {
-    await Notification.create('error', `Failed to install shell command: ${error.message || error}`)
+    await Notification.create('error', `Failed to install shell command: ${error instanceof Error ? error.message : String(error)}`)
   }
 }
