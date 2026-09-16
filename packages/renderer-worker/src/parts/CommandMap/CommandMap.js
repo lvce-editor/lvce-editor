@@ -352,6 +352,7 @@ export const commandMap = {
   'Process.getChromeVersion': lazy('Process.getChromeVersion'),
   'Process.getElectronVersion': lazy('Process.getElectronVersion'),
   'Process.getNodeVersion': lazy('Process.getNodeVersion'),
+  'Process.getVersion': lazy('Process.getVersion'),
   'Process.getV8Version': lazy('Process.getV8Version'),
   'Prompt.prompt': lazy('Prompt.prompt'),
   'QuickPick.executeCallback': lazy('QuickPick.executeCallback'),
