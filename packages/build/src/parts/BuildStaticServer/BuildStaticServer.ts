@@ -144,7 +144,7 @@ const copyStaticServerFiles = async ({ commitHash, product, version, date }) => 
     path: 'packages/build/.tmp/server/static-server/src/parts/ContentSecurityPolicyUpdateWorker/ContentSecurityPolicyUpdateWorker.ts',
     occurrence: `export const value = GetContentSecurityPolicy.getContentSecurityPolicy([
   \`default-src 'none'\`,
-  \`connect-src https://github.com https://release-assets.githubusercontent.com\`,
+  \`connect-src https://github.com https://api.github.com https://release-assets.githubusercontent.com\`,
 ])
 `,
     replacement: `export const value = GetContentSecurityPolicy.getContentSecurityPolicy([
