@@ -1544,3 +1544,40 @@ test.each(['command', 'lazy', 'targetUid', 'sideEffect', 'lazySideEffect', 'even
     expect(nativeVisible).toBe(true)
   },
 )
+
+test.each(['preferences', 'workspace'])('%s events consume focus context before sending render commands', async (eventKind) => {
+  const GlobalEventBus = await import('../src/parts/GlobalEventBus/GlobalEventBus.js')
+  const FocusState = await import('../src/parts/FocusState/FocusState.js')
+  const moduleId = `EventFocus${eventKind}`
+  const eventName = `test.${moduleId}`
+  const update = (state) => ({ ...state, updated: true })
+  const factory = {
+    name: moduleId,
+    hasFunctionalEvents: true,
+    create: () => ({ uid: 93, updated: false }),
+    loadContent: (state) => state,
+    ...(eventKind === 'preferences'
+      ? { Events: { [eventName]: update } }
+      : { Commands: { handleWorkspaceChange: update }, workspaceChangeEvent: eventName }),
+    render: [
+      {
+        isEqual: (_oldState, newState) => !newState.updated,
+        apply: () => [
+          ['Viewlet.setFocusContext', 93, 123],
+          ['Viewlet.setDom2', 93, []],
+        ],
+        multiple: true,
+      },
+    ],
+  }
+  jest.mocked(RendererProcess.invoke).mockResolvedValue(undefined)
+  await ViewletManager.load({ getModule: async () => factory, id: moduleId, uid: 93, type: 0 })
+  jest.mocked(RendererProcess.invoke).mockClear()
+  try {
+    await GlobalEventBus.emitEvent(eventName)
+    expect(RendererProcess.invoke).toHaveBeenLastCalledWith('Viewlet.sendMultiple', [['Viewlet.setDom2', 93, []]])
+    expect(FocusState.get()).toBe(123)
+  } finally {
+    delete GlobalEventBus.state.listenerMap[eventName]
+  }
+})
