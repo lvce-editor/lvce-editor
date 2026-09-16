@@ -1,4 +1,5 @@
 import * as GetLatestVersion from '../GetLatestVersion/GetLatestVersion.js'
+import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as Notification from '../Notification/Notification.js'
 import * as UpdateWorker from '../UpdateWorker/UpdateWorker.js'
 
@@ -34,7 +35,16 @@ export const checkForUpdates = async (updateSetting, silent = Boolean(updateSett
     getLatestVersion: GetLatestVersion.getLatestVersion,
     notify: Notification.create,
     startUpdate: async (setting, repository) => {
-      await UpdateWorker.invoke('Update.checkForUpdates', setting, repository)
+      const result = await UpdateWorker.invoke('Update.checkForUpdates', setting, repository)
+      if (result?.error) {
+        await Notification.create('error', `Failed to install update: ${result.error}`)
+      }
     },
   })
 }
+
+export const getPlatform = () => SharedProcess.invoke('AutoUpdater.getPlatform')
+
+export const stageMacUpdate = (diskPath, version) => SharedProcess.invoke('AutoUpdater.stageMacUpdate', diskPath, version)
+
+export const restartMacUpdate = () => SharedProcess.invoke('AutoUpdater.restartMacUpdate')
