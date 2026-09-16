@@ -352,7 +352,6 @@ export const commandMap = {
   'Preferences.toggleAutoSave': lazy('Preferences.toggleAutoSave'),
   'Preferences.update': lazy('Preferences.update'),
   'Process.getArch': lazy('Process.getArch'),
-  'Process.getArch': lazy('Process.getArch'),
   'Process.getChromeVersion': lazy('Process.getChromeVersion'),
   'Process.getElectronVersion': lazy('Process.getElectronVersion'),
   'Process.getNodeVersion': lazy('Process.getNodeVersion'),
