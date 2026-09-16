@@ -287,7 +287,9 @@ export const textSearch = {
             return state
           }
           const commands = await worker.invoke('TextSearch.render2', state.uid, diff)
-          return { ...state, commands }
+          const actionsDom = await worker.invoke('TextSearch.renderActions', state.uid)
+          const latestState = ViewletStates.getByUid(state.uid)?.state || state
+          return { ...latestState, actionsDom, commands }
         } finally {
           invocation.finish()
         }
