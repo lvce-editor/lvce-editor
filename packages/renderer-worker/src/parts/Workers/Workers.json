@@ -1920,7 +1920,7 @@
   {
     "id": "updateWorker",
     "fileName": "updateWorkerMain.js",
-    "contentSecurityPolicy": ["default-src 'none'", "connect-src https://github.com https://release-assets.githubusercontent.com"],
+    "contentSecurityPolicy": ["default-src 'none'", "connect-src https://github.com https://api.github.com https://release-assets.githubusercontent.com"],
     "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/update-worker/dist/updateWorkerMain.js",
     "productionPath": "/packages/update-worker/dist/updateWorkerMain.js",
     "settingName": "develop.updateWorkerPath",
