@@ -2,5 +2,5 @@ import * as GetContentSecurityPolicy from '../GetContentSecurityPolicy/GetConten
 
 export const value = GetContentSecurityPolicy.getContentSecurityPolicy([
   `default-src 'none'`,
-  `connect-src https://github.com https://release-assets.githubusercontent.com`,
+  `connect-src https://github.com https://api.github.com https://release-assets.githubusercontent.com`,
 ])

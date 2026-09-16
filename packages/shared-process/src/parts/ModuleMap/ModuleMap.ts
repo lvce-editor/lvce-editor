@@ -9,6 +9,9 @@ export const getModuleId = (commandId: any): any => {
       return ModuleId.AttachDebugger
     case 'AutoUpdater.getAutoUpdateType':
     case 'AutoUpdater.getLatestVersion':
+    case 'AutoUpdater.getPlatform':
+    case 'AutoUpdater.restartMacUpdate':
+    case 'AutoUpdater.stageMacUpdate':
       return ModuleId.AutoUpdater
     case 'AutoUpdaterAppImage.downloadUpdate':
     case 'AutoUpdaterAppImage.installAndRestart':

@@ -1,7 +1,9 @@
+import { fileURLToPath } from 'node:url'
 import * as AutoUpdateType from '../AutoUpdateType/AutoUpdateType.ts'
 import * as CompareVersion from '../CompareVersion/CompareVersion.ts'
 import * as GetLatestReleaseVersion from '../GetLatestReleaseVersion/GetLatestReleaseVersion.ts'
 import * as IsAppImage from '../IsAppImage/IsAppImage.ts'
+import * as MainProcess from '../MainProcess/MainProcess.ts'
 import * as Platform from '../Platform/Platform.ts'
 import { VError } from '../VError/VError.ts'
 
@@ -34,3 +36,12 @@ export const getLatestVersion = async (): Promise<any> => {
     console.log('not update is available')
   }
 }
+
+export const getPlatform = (): string => process.platform
+
+export const stageMacUpdate = (diskPath: string, version: string): Promise<void> => {
+  const path = fileURLToPath(diskPath)
+  return MainProcess.invoke('ElectronMacUpdater.stage', path, version)
+}
+
+export const restartMacUpdate = (): Promise<void> => MainProcess.invoke('ElectronMacUpdater.restart')
