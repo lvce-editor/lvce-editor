@@ -9,6 +9,14 @@
   },
   {
     "category": "applications",
+    "description": "Emulates the current application version for update checks. Use numeric major.minor.patch format, or leave empty to use the installed version.",
+    "heading": "Emulate Current Version",
+    "id": "update.emulateCurrentVersion",
+    "type": "string",
+    "value": ""
+  },
+  {
+    "category": "applications",
     "description": "Loads and executes commands from config/onLoadCommands.json on web startup",
     "heading": "Use On Load JSON",
     "id": "application.useOnLoadJson",
