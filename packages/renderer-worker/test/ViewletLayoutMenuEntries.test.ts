@@ -1,8 +1,8 @@
 import { expect, test } from '@jest/globals'
 import * as ViewletLayoutMenuEntries from '../src/parts/ViewletLayout/ViewletLayoutMenuEntries.js'
 
-test('getQuickPickMenuEntries includes chat commands', () => {
-  const entries = ViewletLayoutMenuEntries.getQuickPickMenuEntries()
+test('getQuickPickMenuEntries includes chat commands', async () => {
+  const entries = await ViewletLayoutMenuEntries.getQuickPickMenuEntries()
 
   expect(entries).toEqual(
     expect.arrayContaining([
@@ -30,8 +30,8 @@ test('getQuickPickMenuEntries includes chat commands', () => {
   )
 })
 
-test('getQuickPickMenuEntries includes reset view locations command', () => {
-  const entries = ViewletLayoutMenuEntries.getQuickPickMenuEntries()
+test('getQuickPickMenuEntries includes reset view locations command', async () => {
+  const entries = await ViewletLayoutMenuEntries.getQuickPickMenuEntries()
 
   expect(entries).toContainEqual({
     id: 'Layout.resetViewLocations',
@@ -40,8 +40,8 @@ test('getQuickPickMenuEntries includes reset view locations command', () => {
   })
 })
 
-test('getQuickPickMenuEntries includes executable keybindings commands', () => {
-  const entries = ViewletLayoutMenuEntries.getQuickPickMenuEntries()
+test('getQuickPickMenuEntries includes executable keybindings commands', async () => {
+  const entries = await ViewletLayoutMenuEntries.getQuickPickMenuEntries()
 
   expect(entries).toEqual(
     expect.arrayContaining([
@@ -59,8 +59,8 @@ test('getQuickPickMenuEntries includes executable keybindings commands', () => {
   )
 })
 
-test('getQuickPickMenuEntries includes preview orientation command', () => {
-  const entries = ViewletLayoutMenuEntries.getQuickPickMenuEntries()
+test('getQuickPickMenuEntries includes preview orientation command', async () => {
+  const entries = await ViewletLayoutMenuEntries.getQuickPickMenuEntries()
 
   expect(entries).toContainEqual({
     id: 'Layout.togglePreviewOrientation',
@@ -69,8 +69,8 @@ test('getQuickPickMenuEntries includes preview orientation command', () => {
   })
 })
 
-test('getQuickPickMenuEntries includes GPU info command', () => {
-  const entries = ViewletLayoutMenuEntries.getQuickPickMenuEntries()
+test('getQuickPickMenuEntries includes GPU info command', async () => {
+  const entries = await ViewletLayoutMenuEntries.getQuickPickMenuEntries()
 
   expect(entries).toContainEqual({
     id: 'Developer.showGpuInfo',
@@ -78,8 +78,8 @@ test('getQuickPickMenuEntries includes GPU info command', () => {
   })
 })
 
-test('getQuickPickMenuEntries includes running extensions command', () => {
-  const entries = ViewletLayoutMenuEntries.getQuickPickMenuEntries()
+test('getQuickPickMenuEntries includes running extensions command', async () => {
+  const entries = await ViewletLayoutMenuEntries.getQuickPickMenuEntries()
 
   expect(entries).toContainEqual({
     id: 'Main.openUri',
@@ -88,8 +88,8 @@ test('getQuickPickMenuEntries includes running extensions command', () => {
   })
 })
 
-test('getQuickPickMenuEntries includes secrets command', () => {
-  const entries = ViewletLayoutMenuEntries.getQuickPickMenuEntries()
+test('getQuickPickMenuEntries includes secrets command', async () => {
+  const entries = await ViewletLayoutMenuEntries.getQuickPickMenuEntries()
 
   expect(entries).toContainEqual({
     id: 'Main.openUri',
@@ -99,8 +99,8 @@ test('getQuickPickMenuEntries includes secrets command', () => {
   })
 })
 
-test('getQuickPickMenuEntries includes extension management worker latency command', () => {
-  const entries = ViewletLayoutMenuEntries.getQuickPickMenuEntries()
+test('getQuickPickMenuEntries includes extension management worker latency command', async () => {
+  const entries = await ViewletLayoutMenuEntries.getQuickPickMenuEntries()
 
   expect(entries).toContainEqual({
     id: 'Developer.measureExtensionManagementWorkerLatency',
@@ -108,8 +108,8 @@ test('getQuickPickMenuEntries includes extension management worker latency comma
   })
 })
 
-test('getQuickPickMenuEntries includes simple browser preview command', () => {
-  const entries = ViewletLayoutMenuEntries.getQuickPickMenuEntries()
+test('getQuickPickMenuEntries includes simple browser preview command', async () => {
+  const entries = await ViewletLayoutMenuEntries.getQuickPickMenuEntries()
 
   expect(entries).toContainEqual({
     id: 'Layout.showPreview',
@@ -118,8 +118,8 @@ test('getQuickPickMenuEntries includes simple browser preview command', () => {
   })
 })
 
-test('getQuickPickMenuEntries includes simple browser history command', () => {
-  const entries = ViewletLayoutMenuEntries.getQuickPickMenuEntries()
+test('getQuickPickMenuEntries includes simple browser history command', async () => {
+  const entries = await ViewletLayoutMenuEntries.getQuickPickMenuEntries()
 
   expect(entries).toContainEqual({
     id: 'SimpleBrowser.openHistory',
@@ -128,8 +128,8 @@ test('getQuickPickMenuEntries includes simple browser history command', () => {
   })
 })
 
-test('getQuickPickMenuEntries includes Firefox cookie import command', () => {
-  const entries = ViewletLayoutMenuEntries.getQuickPickMenuEntries()
+test('getQuickPickMenuEntries includes Firefox cookie import command', async () => {
+  const entries = await ViewletLayoutMenuEntries.getQuickPickMenuEntries()
 
   expect(entries).toContainEqual({
     id: 'Main.openUri',
@@ -139,8 +139,8 @@ test('getQuickPickMenuEntries includes Firefox cookie import command', () => {
   })
 })
 
-test('getQuickPickMenuEntries includes close all editors command', () => {
-  const entries = ViewletLayoutMenuEntries.getQuickPickMenuEntries()
+test('getQuickPickMenuEntries includes close all editors command', async () => {
+  const entries = await ViewletLayoutMenuEntries.getQuickPickMenuEntries()
 
   expect(entries).toContainEqual({
     id: 'Main.closeAllEditors',
@@ -148,8 +148,8 @@ test('getQuickPickMenuEntries includes close all editors command', () => {
   })
 })
 
-test('getQuickPickMenuEntries includes executable open recent command', () => {
-  const entries = ViewletLayoutMenuEntries.getQuickPickMenuEntries()
+test('getQuickPickMenuEntries includes executable open recent command', async () => {
+  const entries = await ViewletLayoutMenuEntries.getQuickPickMenuEntries()
 
   expect(entries).toContainEqual({
     id: 'QuickPick.showRecent',

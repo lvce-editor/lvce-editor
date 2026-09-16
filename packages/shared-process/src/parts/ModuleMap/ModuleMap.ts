@@ -3,6 +3,9 @@ import * as ModuleId from '../ModuleId/ModuleId.ts'
 
 export const getModuleId = (commandId: any): any => {
   switch (commandId) {
+    case 'ShellCommand.getMenuEntries':
+    case 'ShellCommand.install':
+      return ModuleId.ShellCommand
     case 4820:
       return ModuleId.TextDocument
     case 'AttachDebugger.attachDebugger':

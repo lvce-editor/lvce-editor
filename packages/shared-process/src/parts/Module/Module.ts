@@ -2,6 +2,8 @@ import * as ModuleId from '../ModuleId/ModuleId.ts'
 
 export const load = (moduleId: any): any => {
   switch (moduleId) {
+    case ModuleId.ShellCommand:
+      return import('../ShellCommand/ShellCommand.ipc.ts')
     case ModuleId.AttachDebugger:
       return import('../AttachDebugger/AttachDebugger.ipc.ts')
     case ModuleId.AutoUpdater:
