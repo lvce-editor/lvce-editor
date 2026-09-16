@@ -535,6 +535,7 @@ const maybeRegisterEvents = (module) => {
       const commands = render(instance.factory, instance.renderedState, newState, uid, newState.parentUid)
       instance.state = newState
       instance.renderedState = newState
+      updateDynamicFocusContext(commands)
       await RendererProcess.invoke(/* Viewlet.sendMultiple */ kSendMultiple, /* commands */ commands)
     }
     GlobalEventBus.addListener(module.workspaceChangeEvent || 'workspace.change', handleUpdate, { prepend: module.workspaceChangeEventPrepend })
@@ -563,6 +564,7 @@ const maybeRegisterEvents = (module) => {
           const commands = render(instance.factory, instance.renderedState, newState, uid, newState.parentUid)
           instance.state = newState
           instance.renderedState = newState
+          updateDynamicFocusContext(commands)
           await RendererProcess.invoke(/* Viewlet.sendMultiple */ kSendMultiple, /* commands */ commands)
         })
       }
