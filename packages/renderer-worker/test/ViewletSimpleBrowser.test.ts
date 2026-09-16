@@ -2191,6 +2191,33 @@ test.each([1, 2])('does not select a tab on pointer down with button %s', async 
   expect(ElectronWebContentsViewFunctions.show).not.toHaveBeenCalled()
 })
 
+test('freezes tab width while the pointer is over the tab list', () => {
+  const state = { ...createTwoTabState(), width: 400 }
+
+  const frozen = ViewletSimpleBrowser.handleTabsPointerOver(state)
+
+  expect(frozen.tabWidth).toBe(173)
+  expect(ViewletSimpleBrowser.handleTabsPointerOver(frozen)).toBe(frozen)
+})
+
+test('restores tab sizing only after the pointer leaves the tab list', () => {
+  const state = { ...createTwoTabState(), tabWidth: 150, width: 500, x: 10, y: 20 }
+
+  expect(ViewletSimpleBrowser.handleTabsPointerOut(state, 100, 30)).toBe(state)
+  expect(ViewletSimpleBrowser.handleTabsPointerOut(state, 100, 60)).toMatchObject({ tabWidth: undefined })
+})
+
+test('closing a tab preserves the frozen tab width', async () => {
+  // @ts-ignore
+  ElectronWebContentsView.disposeWebContentsView.mockResolvedValue(undefined)
+  const state = { ...createTwoTabState(), tabWidth: 150 }
+
+  const newState = await ViewletSimpleBrowser.closeTab(state, 1)
+
+  expect(newState.tabs).toHaveLength(1)
+  expect(newState.tabWidth).toBe(150)
+})
+
 test('pointer down dismisses the hover even when the tab is already selected', async () => {
   const state = { ...createTwoTabState(), tabHover: { index: 0 }, overlayIds: ['tab-hover'] }
 

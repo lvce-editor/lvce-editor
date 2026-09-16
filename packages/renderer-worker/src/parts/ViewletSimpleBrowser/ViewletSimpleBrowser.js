@@ -42,6 +42,10 @@ export const serializeCommands = true
 
 const navigationHeaderHeight = 30
 const tabsHeaderHeight = 35
+const newTabButtonWidth = 24
+const tabHorizontalBoxSize = 15
+const minimumTabWidth = 90
+const maximumTabWidth = 180
 const closeTabKeyBinding = KeyModifier.CtrlCmd | KeyCode.KeyW
 const reopenClosedTabKeyBinding = KeyModifier.CtrlCmd | KeyModifier.Shift | KeyCode.KeyT
 const createNewTabKeyBinding = KeyModifier.CtrlCmd | KeyCode.KeyT
@@ -209,6 +213,7 @@ export const create = (id, uri, x, y, width, height) => {
     tabDropIndex: -1,
     tabHover: undefined,
     tabHoverEnabled: false,
+    tabWidth: undefined,
     zoomLevel: 0,
     visitedSites: [],
     history: [],
@@ -787,6 +792,42 @@ export const reopenClosedTab = async (state) => {
 
 export const closeCurrentTab = (state) => {
   return closeTab(state, state.selectedTabIndex)
+}
+
+const getTabWidth = (state) => {
+  const { tabs, width } = state
+  if (tabs.length === 0 || !Number.isFinite(width)) {
+    return maximumTabWidth
+  }
+  const availableTabWidth = (width - newTabButtonWidth) / tabs.length - tabHorizontalBoxSize
+  return Math.max(minimumTabWidth, Math.min(maximumTabWidth, availableTabWidth))
+}
+
+export const handleTabsPointerOver = (state) => {
+  if (state.tabWidth !== undefined || state.tabs.length === 0) {
+    return state
+  }
+  return {
+    ...state,
+    tabWidth: getTabWidth(state),
+  }
+}
+
+export const handleTabsPointerOut = (state, eventX, eventY) => {
+  const { x, y, width } = state
+  if (!Number.isFinite(eventX) || !Number.isFinite(eventY) || !Number.isFinite(x) || !Number.isFinite(y) || !Number.isFinite(width)) {
+    return state
+  }
+  if (eventX >= x && eventX < x + width && eventY >= y && eventY < y + tabsHeaderHeight) {
+    return state
+  }
+  if (state.tabWidth === undefined) {
+    return state
+  }
+  return {
+    ...state,
+    tabWidth: undefined,
+  }
 }
 
 const closeTabsByIndex = async (state, indexes, preferredTabIndex) => {

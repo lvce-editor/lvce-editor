@@ -65,9 +65,10 @@ export const getSimpleBrowserVirtualDom = (
     },
   ]
   if (tabsEnabled) {
+    const tabsClassName = findState?.tabWidth === undefined ? 'SimpleBrowserTabs' : 'SimpleBrowserTabs SimpleBrowserTabsFrozen'
     dom.push({
       type: VirtualDomElements.Div,
-      className: 'SimpleBrowserTabs',
+      className: tabsClassName,
       role: AriaRoles.TabList,
       ariaLabel: 'Browser tabs',
       childCount: 2,
@@ -75,6 +76,9 @@ export const getSimpleBrowserVirtualDom = (
       onDragLeave: DomEventListenerFunctions.HandleDragLeaveSimpleBrowserTab,
       onDrop: DomEventListenerFunctions.HandleDropSimpleBrowserTab,
       onPointerUp: DomEventListenerFunctions.HandlePointerUpSimpleBrowserTab,
+      onPointerOut: DomEventListenerFunctions.HandlePointerOutSimpleBrowserTabs,
+      onPointerOver: DomEventListenerFunctions.HandlePointerOverSimpleBrowserTabs,
+      ...(findState?.tabWidth === undefined ? {} : { style: `--SimpleBrowserTabWidth: ${findState.tabWidth}px;` }),
     })
     dom.push({
       type: VirtualDomElements.Div,
