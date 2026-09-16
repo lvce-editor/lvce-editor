@@ -23,6 +23,12 @@ app_path="$(find "$mount_point" -maxdepth 2 -name '*.app' -print -quit)"
 readonly app_path
 test -n "$app_path"
 
+expected_version="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$app_path/Contents/Info.plist")"
+cli_path="$app_path/Contents/Resources/app/bin/lvce"
+test -x "$cli_path"
+test "$("$cli_path" -v)" = "$expected_version"
+test "$("$cli_path" --version)" = "$expected_version"
+
 signed_resources="$(find "$app_path" -type f -exec sh -c '
   for resource_path do
     if xattr -p com.apple.cs.CodeSignature "$resource_path" >/dev/null 2>&1; then

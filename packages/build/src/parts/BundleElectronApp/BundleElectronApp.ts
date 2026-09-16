@@ -27,6 +27,7 @@ import * as Remove from '../Remove/Remove.ts'
 import * as RemoveUnusedLocales from '../RemoveUnusedLocales/RemoveUnusedLocales.ts'
 import * as Replace from '../Replace/Replace.ts'
 import * as Root from '../Root/Root.ts'
+import * as Template from '../Template/Template.ts'
 import * as WriteFile from '../WriteFile/WriteFile.ts'
 import { generateConfigJson } from '../GenerateConfigJson/GenerateConfigJson.ts'
 
@@ -238,6 +239,13 @@ export const build = async ({
     version,
   })
   console.timeEnd('copyElectron')
+
+  if (isMacos) {
+    await Template.write('macos_cli', `${resourcesPath}/app/bin/${product.applicationName}`, {}, 755)
+    await Template.write('linux_cli_js', `${resourcesPath}/app/bin/cli.js`, {
+      '@@APPLICATION_NAME@@': product.applicationName,
+    })
+  }
 
   console.time('copyLicense')
   await CopyElectronLicense.copyElectronLicense({ resourcesPath })
