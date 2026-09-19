@@ -1,7 +1,7 @@
-param([string]$Installer)
+param([string]$Installer, [ValidateSet('x64', 'arm64')][string]$Architecture = 'x64')
 $ErrorActionPreference = 'Stop'
 if (!$Installer) {
-  $candidates = @(Get-ChildItem 'packages/build/.tmp/releases' -Filter '*.exe')
+  $candidates = @(Get-ChildItem 'packages/build/.tmp/releases' -Filter "*-$Architecture.exe")
   if ($candidates.Count -ne 1) { throw 'Expected one built Windows installer' }
   $Installer = $candidates[0].FullName
 }

@@ -24,6 +24,10 @@ that a second preparation cannot overwrite an existing directory.
 All application files are included in the embedded archive. Electron-builder's
 separate precompressed-media handling is disabled so staging cannot omit those
 files. CI compares every prepared file with the original payload by SHA256.
+Both x64 and ARM64 installers are checked before merge. Windows packaging forces
+the BCJ compression filter because the bundled NSIS decoder can silently skip
+binaries compressed with newer automatically selected 7-Zip filters. The build
+restores the previous filter setting afterward; other platforms are unaffected.
 
 On Restart, an independent Windows PowerShell helper acknowledges startup before the
 editor exits. It waits for the main process to exit, renames the old directory to a

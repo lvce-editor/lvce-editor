@@ -129,6 +129,7 @@ const getElectronBuilderTargets = ({ config, arch }) => {
 }
 
 const runElectronBuilder = async ({ config, product, arch }) => {
+  const previousFilter = process.env.ELECTRON_BUILDER_7Z_FILTER
   try {
     const options: ElectronBuilder.CliOptions = {
       projectDir: Path.absolute('packages/build/.tmp/electron-builder'),
@@ -139,14 +140,23 @@ const runElectronBuilder = async ({ config, product, arch }) => {
       // win: ['portable'],
     }
 
-    // if (process.env.HIGHEST_COMPRESSION) {
-    //   Logger.info('[info] using highest compression, this may take some time')
-    //   process.env.ELECTRON_BUILDER_7Z_FILTER = 'bcj2'
-    //   process.env.ELECTRON_BUILDER_COMPRESSION_LEVEL = '5'
-    // }
+    if (config === ElectronBuilderConfigType.WindowsExe) {
+      // Modern 7-Zip can select filters the bundled Nsis7z decoder silently
+      // skips. BCJ is supported for both x64 and ARM64 installer payloads.
+      // https://github.com/electron-userland/electron-builder/issues/9983
+      process.env.ELECTRON_BUILDER_7Z_FILTER = 'BCJ'
+    }
     await ElectronBuilder.build(options)
   } catch (error) {
     throw new VError(error, `Electron builder failed to execute`)
+  } finally {
+    if (config === ElectronBuilderConfigType.WindowsExe) {
+      if (previousFilter === undefined) {
+        delete process.env.ELECTRON_BUILDER_7Z_FILTER
+      } else {
+        process.env.ELECTRON_BUILDER_7Z_FILTER = previousFilter
+      }
+    }
   }
 }
 
