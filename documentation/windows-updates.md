@@ -7,6 +7,8 @@ the application payload. The desktop checks the actual installed version, downlo
 the matching release asset, verifies its GitHub SHA256 digest, and extracts directly
 into a unique sibling of the installation directory. The editor stays open during
 preparation. Older releases without this asset retain the existing NSIS update path.
+Extraction uses the Windows inbox `tar.exe` so deeply nested extension paths work
+beyond `MAX_PATH`; backup cleanup uses extended-length paths for the same reason.
 
 On Restart, a detached Windows PowerShell helper acknowledges startup before the
 editor exits. It waits for the main process to exit, renames the old directory to a
