@@ -17,7 +17,8 @@ export const run = async (method, callback, writeLog = write) => {
     await writeLog(`Update worker: ${method} ${outcome}`)
     return result
   } catch (error) {
-    await writeLog(`Update worker: ${method} failed: ${error?.stack || error}`)
+    const message = error instanceof Error ? error.stack || error.message : String(error)
+    await writeLog(`Update worker: ${method} failed: ${message}`)
     throw error
   }
 }
