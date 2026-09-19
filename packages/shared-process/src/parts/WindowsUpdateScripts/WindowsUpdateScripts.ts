@@ -84,7 +84,11 @@ try {
   if ($newProcess.HasExited) { throw 'Updated application exited during startup' }
   Journal 'cleanup-started'
   try {
-    Remove-Item -LiteralPath $backup -Recurse -Force
+    # The backup prefix lengthens already-deep extension paths. PowerShell's
+    # filesystem provider needs an extended path for recursive cleanup.
+    $longBackup = '\\?\' + $backup
+    if ($backup.StartsWith('\\')) { $longBackup = '\\?\UNC\' + $backup.Substring(2) }
+    Remove-Item -LiteralPath $longBackup -Recurse -Force
     if ($plan.archive -eq (Join-Path ($install + '.updates') ($plan.token + '.zip'))) {
       Remove-Item -LiteralPath $plan.archive -Force -ErrorAction SilentlyContinue
     }
@@ -115,9 +119,12 @@ try {
 
 export const extract = String.raw`
 $ErrorActionPreference = 'Stop'
-Add-Type -AssemblyName System.IO.Compression.FileSystem
 $plan = Get-Content -LiteralPath $env:LVCE_UPDATE_PLAN -Raw | ConvertFrom-Json
-# ExtractToDirectory rejects entries outside the destination and does not
-# overwrite existing files. Preparation never modifies the running app.
-[IO.Compression.ZipFile]::ExtractToDirectory($plan.archive, $plan.stage)
+# Windows PowerShell's .NET Framework ZIP extraction fails on deeply nested
+# extension paths. The Windows inbox bsdtar supports these long paths and
+# rejects parent-directory traversal by default. Never reuse a partial stage.
+if (Test-Path -LiteralPath $plan.stage) { throw 'Staging directory already exists' }
+[IO.Directory]::CreateDirectory($plan.stage) | Out-Null
+& (Join-Path $env:SystemRoot 'System32\tar.exe') -xf $plan.archive -C $plan.stage
+if ($LASTEXITCODE -ne 0) { throw "Windows update extraction failed ($LASTEXITCODE)" }
 `
