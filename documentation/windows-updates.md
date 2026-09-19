@@ -19,6 +19,9 @@ fall back to normal installation. NSIS handles deep extension paths; backup clea
 uses extended-length paths for the same reason. Windows CI tests the actual built
 installer in a path containing spaces, checks registration is unchanged, and checks
 that a second preparation cannot overwrite an existing directory.
+All application files are included in the embedded archive. Electron-builder's
+separate precompressed-media handling is disabled so staging cannot omit those
+files. CI compares every prepared file with the original payload by SHA256.
 
 On Restart, an independent Windows PowerShell helper acknowledges startup before the
 editor exits. It waits for the main process to exit, renames the old directory to a

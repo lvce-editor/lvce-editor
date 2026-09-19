@@ -24,7 +24,10 @@ if (!$config.version -or !(Test-Path -LiteralPath (Join-Path $stage ($builder.pr
 $payload = Join-Path (Get-Location).Path 'packages/build/.tmp/linux/snap/amd64/app'
 $expectedFiles = @(Get-ChildItem -LiteralPath $payload -File -Recurse -Force)
 $actualFiles = @(Get-ChildItem -LiteralPath $stage -File -Recurse -Force)
-if ($actualFiles.Count -ne ($expectedFiles.Count + 1)) { throw 'Prepared payload has missing or unexpected files' }
+$expectedPaths = @($expectedFiles | ForEach-Object { [IO.Path]::GetRelativePath($payload, $_.FullName) })
+$actualPaths = @($actualFiles | ForEach-Object { [IO.Path]::GetRelativePath($stage, $_.FullName) } | Where-Object { $_ -ne '.lvce-stage-complete' })
+$differences = @(Compare-Object $expectedPaths $actualPaths)
+if ($differences.Count) { throw ('Prepared payload differs: ' + ($differences | ConvertTo-Json -Compress)) }
 foreach ($file in $expectedFiles) {
   $relative = [IO.Path]::GetRelativePath($payload, $file.FullName)
   $actual = Join-Path $stage $relative
