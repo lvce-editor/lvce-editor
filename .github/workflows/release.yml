@@ -281,6 +281,24 @@ jobs:
           asset_path: ${{ env.ASSET_WINDOWS_EXE_ARM64 }}
           asset_name: ${{ env.ASSET_WINDOWS_EXE_ARM64 }}
           asset_content_type: application/octet-stream
+      - name: Package staged Windows update
+        if: matrix.versions.os == 'windows-2025'
+        shell: pwsh
+        run: |
+          $archive = Join-Path $env:GITHUB_WORKSPACE 'Lvce-Update-${{ needs.create-release.outputs.rg_version }}-${{ matrix.versions.arch }}.zip'
+          $app = Join-Path $env:GITHUB_WORKSPACE 'packages/build/.tmp/linux/snap/amd64/app'
+          if (!(Test-Path -LiteralPath (Join-Path $app 'resources/app/config.json'))) { throw 'Missing Windows application payload' }
+          Push-Location $app
+          try {
+            & 7z a -tzip -mx=1 $archive '.\*'
+            if ($LASTEXITCODE -ne 0) { throw 'Update archive creation failed' }
+          } finally { Pop-Location }
+          "ASSET_WINDOWS_UPDATE=$archive" >> $env:GITHUB_ENV
+      - name: Release staged Windows update
+        if: matrix.versions.os == 'windows-2025'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh release upload '${{ needs.create-release.outputs.rg_version }}' '${{ env.ASSET_WINDOWS_UPDATE }}'
       - name: Build Electron App (AppImage, x64)
         if: matrix.versions.os == 'ubuntu-24.04' && matrix.versions.arch == 'x64'
         run: npm run build:electron:app-image:x64 -- --product=lvce
