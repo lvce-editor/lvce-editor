@@ -1376,8 +1376,10 @@
         "resize": { "name": "Ports.resize", "parameters": [{ "source": "state", "name": "uid" }, { "source": "argument", "name": "dimensions" }] },
         "terminate": { "name": "Ports.terminate", "parameters": [] },
         "getCommandIds": { "name": "Ports.getCommandIds", "parameters": [] },
+        "getComponentState": { "name": "Ports.getComponentState", "parameters": [{ "source": "state", "name": "uid" }] },
         "getKeyBindings": { "name": "Ports.getKeyBindings", "parameters": [], "fallback": [] },
-        "renderEventListeners": { "name": "Ports.renderEventListeners", "parameters": [] }
+        "renderEventListeners": { "name": "Ports.renderEventListeners", "parameters": [] },
+        "setComponentState": { "name": "Ports.setComponentState", "parameters": [{ "source": "state", "name": "uid" }, { "source": "argument", "name": "componentState" }] }
       },
       "renderComparison": "emptyCommands",
       "capabilities": { "events": true, "render": true, "resize": true, "rootRender": true }
