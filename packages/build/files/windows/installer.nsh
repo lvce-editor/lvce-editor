@@ -17,12 +17,19 @@
   IfErrors lvceStageFailed
   InitPluginsDir
   SetOutPath "$lvceStage"
+  ; The application archive is already compressed, as in the normal NSIS path.
+  !ifdef COMPRESS
+    SetCompress off
+  !endif
   !ifdef APP_ARM64
     File /oname=$PLUGINSDIR\lvce-stage.7z "${APP_ARM64}"
   !else ifdef APP_64
     File /oname=$PLUGINSDIR\lvce-stage.7z "${APP_64}"
   !else
     !error "Staged updates require x64 or arm64"
+  !endif
+  !ifdef COMPRESS
+    SetCompress "${COMPRESS}"
   !endif
   ClearErrors
   Nsis7z::Extract "$PLUGINSDIR\lvce-stage.7z"
