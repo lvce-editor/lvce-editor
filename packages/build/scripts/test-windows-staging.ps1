@@ -14,7 +14,7 @@ function InstalledEntries {
 }
 $before = InstalledEntries
 $timer = [Diagnostics.Stopwatch]::StartNew()
-$process = Start-Process -FilePath $Installer -ArgumentList @('/S', ('"/LVCESTAGE=' + $stage + '"')) -WindowStyle Hidden -PassThru
+$process = Start-Process -FilePath $Installer -ArgumentList @('/S', '/LVCESTAGE') -Environment @{ LVCE_UPDATE_STAGE = $stage } -WindowStyle Hidden -PassThru
 if (!$process.WaitForExit(300000)) { throw 'Installer preparation timed out' }
 if ($process.ExitCode -ne 0) { throw "Preparation failed: $($process.ExitCode)" }
 if ((Get-Content -LiteralPath (Join-Path $stage '.lvce-stage-complete') -Raw) -ne 'complete') { throw 'Missing preparation acknowledgment' }
@@ -23,7 +23,7 @@ if (!$config.version -or !(Test-Path -LiteralPath (Join-Path $stage ($config.pro
 if ((InstalledEntries) -ne $before) { throw 'Preparation changed registered installations' }
 $sentinel = Join-Path $stage 'preserve-existing.txt'
 Set-Content -LiteralPath $sentinel 'preserved'
-$retry = Start-Process -FilePath $Installer -ArgumentList @('/S', ('"/LVCESTAGE=' + $stage + '"')) -WindowStyle Hidden -PassThru
+$retry = Start-Process -FilePath $Installer -ArgumentList @('/S', '/LVCESTAGE') -Environment @{ LVCE_UPDATE_STAGE = $stage } -WindowStyle Hidden -PassThru
 if (!$retry.WaitForExit(30000) -or $retry.ExitCode -eq 0) { throw 'Installer accepted an existing staging directory' }
 if ((Get-Content -LiteralPath $sentinel -Raw).Trim() -ne 'preserved') { throw 'Existing stage changed' }
 Write-Output "Staged installer validated in $($timer.Elapsed.TotalSeconds) seconds, version $($config.version)"

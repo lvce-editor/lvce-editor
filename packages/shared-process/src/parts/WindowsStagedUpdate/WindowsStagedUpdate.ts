@@ -91,7 +91,8 @@ const prepare = async (asset: any, version: string): Promise<{ plan: Plan; path:
   await pipeline(Readable.fromWeb(response.body as any), createWriteStream(plan.archive, { flags: 'wx' }))
   await verifyDigest(plan.archive, asset.digest)
   UpdateLog.write(`Staged update download verified version=${version}; extraction started`)
-  await promisify(execFile)(plan.archive, ['/S', `/LVCESTAGE=${stage}`], {
+  await promisify(execFile)(plan.archive, ['/S', '/LVCESTAGE'], {
+    env: { ...process.env, LVCE_UPDATE_STAGE: stage },
     timeout: 600_000,
     windowsHide: true,
   })

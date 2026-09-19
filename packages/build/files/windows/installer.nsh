@@ -7,8 +7,9 @@
   Var /GLOBAL lvceStage
   ${GetParameters} $R0
   ClearErrors
-  ${GetOptions} $R0 "/LVCESTAGE=" $lvceStage
-  IfErrors lvceStageNormal
+  ${GetOptions} $R0 "/LVCESTAGE" $R1
+  IfErrors lvceStageNoFlag
+  ReadEnvStr $lvceStage "LVCE_UPDATE_STAGE"
   StrCmp $lvceStage "" lvceStageFailed
   IfFileExists "$lvceStage" lvceStageFailed
   ClearErrors
@@ -34,6 +35,10 @@
   IfErrors lvceStageFailed
   SetErrorLevel 0
   Quit
+  lvceStageNoFlag:
+  ; Fail closed if a caller requested staging but malformed the switch.
+  ReadEnvStr $R0 "LVCE_UPDATE_STAGE"
+  StrCmp $R0 "" lvceStageNormal lvceStageFailed
   lvceStageFailed:
   SetErrorLevel 2
   Quit
