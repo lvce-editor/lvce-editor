@@ -13,6 +13,7 @@ import { renderActions as renderExtensionActions } from '../ViewletExtensions/Vi
 import { getKeyBindings as getProblemsKeyBindings } from '../ViewletProblems/ViewletProblemsKeyBindings.js'
 import { menus as processExplorerMenus } from '../ViewletProcessExplorer/ViewletProcessExplorerMenuEntries.js'
 import { resize as resizeTitleBar } from '../ViewletTitleBar/ViewletTitleBarResize.js'
+import * as TitleBarMenuOverlay from '../ViewletTitleBar/TitleBarMenuOverlay.js'
 import { wrapTitleBarCommand } from '../ViewletTitleBar/WrapTitleBarCommand.js'
 import { wrapActivityBarCommand } from '../WrapActivityBarCommand/WrapActivityBarCommand.ts'
 import { wrapDiffViewCommand } from '../WrapDiffViewCommand/WrapDiffViewCommand.ts'
@@ -301,6 +302,7 @@ export const textSearch = {
 export const titleBar = {
   extendModule() {
     return {
+      afterRender: TitleBarMenuOverlay.afterRender,
       handleFocusChange(state, isFocused) {
         return { ...state, isFocused }
       },
