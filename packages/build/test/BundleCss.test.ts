@@ -196,10 +196,13 @@ test('bundleCss keeps extra space between the simple browser favicon and tab tit
 
     const css = await readFile(join(dir, 'parts', 'ViewletSimpleBrowser.css'), 'utf8')
 
+    expect(css).toContain(`.SimpleBrowserTabFaviconWrapper {
+  align-items: center;
+  display: flex;
+  flex: 0 0 18px;
+}`)
     expect(css).toContain(`.SimpleBrowserTabFavicon {
-  flex: 0 0 16px;
   height: 16px;
-  margin-inline-end: 2px;
   object-fit: contain;
   width: 16px;
 }`)

@@ -106,10 +106,14 @@
   color: var(--TabActiveForeground, var(--WorkbenchForeground));
 }
 
+.SimpleBrowserTabFaviconWrapper {
+  align-items: center;
+  display: flex;
+  flex: 0 0 18px;
+}
+
 .SimpleBrowserTabFavicon {
-  flex: 0 0 16px;
   height: 16px;
-  margin-inline-end: 2px;
   object-fit: contain;
   width: 16px;
 }

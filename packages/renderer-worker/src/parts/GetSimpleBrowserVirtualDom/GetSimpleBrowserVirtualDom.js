@@ -117,19 +117,27 @@ export const getSimpleBrowserVirtualDom = (
         childCount: 3 + (showAudioIndicator ? 1 : 0),
       })
       if (tab.favicon) {
-        dom.push({
-          type: VirtualDomElements.Img,
-          className: 'SimpleBrowserTabFavicon',
-          alt: '',
-          'data-index': index,
-          onError: DomEventListenerFunctions.HandleErrorSimpleBrowserFavicon,
-          crossOrigin: 'anonymous',
-          src: tab.favicon,
-          draggable: false,
-          childCount: 0,
-        })
+        dom.push(
+          {
+            type: VirtualDomElements.Div,
+            className: 'SimpleBrowserTabFaviconWrapper',
+            childCount: 1,
+          },
+          {
+            type: VirtualDomElements.Img,
+            className: 'SimpleBrowserTabFavicon',
+            alt: '',
+            'data-index': index,
+            onError: DomEventListenerFunctions.HandleErrorSimpleBrowserFavicon,
+            crossOrigin: 'anonymous',
+            src: tab.favicon,
+            draggable: false,
+            childCount: 0,
+          },
+        )
       } else {
         dom.push(
+          { type: VirtualDomElements.Div, className: 'SimpleBrowserTabFaviconWrapper', childCount: 1 },
           { type: VirtualDomElements.Span, className: 'SimpleBrowserTabFavicon SimpleBrowserTabFaviconFallback', ariaHidden: true, childCount: 1 },
           text('◉'),
         )
