@@ -27,13 +27,13 @@ test.each([1, undefined])('cancel/dismiss response %s never starts preparing an 
 
 test('older staging protocol falls back to the normal installer', async () => {
   showMessageBox.mockClear()
-  globalThis.fetch = (async () =>
+  globalThis.fetch = async (): Promise<Response> =>
     new Response(
       JSON.stringify({
         assets: [{ name: `Lvce-Stage-v1.2.3-${process.arch}.json` }, { name: `Lvce-Setup-v1.2.3-${process.arch}.exe` }],
         tag_name: 'v1.2.3',
       }),
-    )) as typeof fetch
+    )
   await expect(check(false, 42)).resolves.toBe(false)
   expect(showMessageBox).not.toHaveBeenCalled()
 })
