@@ -2,7 +2,7 @@
 
 ## Staged Windows updates
 
-New Windows releases publish `Lvce-Stage-v<version>-<arch>.json` to declare that
+New Windows releases publish `Lvce-Stage-v<version>-<arch>-v2.json` to declare that
 their official NSIS installer supports preparation without installation. The desktop
 checks the actual installed version, downloads the installer, verifies its GitHub
 SHA256 digest, and invokes `/S /LVCESTAGE` with `LVCE_UPDATE_STAGE` set to a fresh
@@ -32,7 +32,12 @@ restores the previous filter setting afterward; other platforms are unaffected.
 On Restart, an independent Windows PowerShell helper acknowledges startup before the
 editor exits. It waits for the main process to exit, renames the old directory to a
 unique backup, renames the prepared directory into place, and starts the new app.
-The new shared process acknowledges its version after creating the app window.
+The new shared process atomically acknowledges its token, version and actual main
+process ID after creating the app window. The helper waits for this acknowledgment
+even if the initial launcher exits, validates the acknowledged executable path,
+and uses that process for the stability check. The v2 capability filename makes
+older helpers fall back to normal NSIS installation instead of using their
+incompatible startup protocol.
 Startup failure restores the backup; cleanup occurs only after acknowledgment and
 a short stability check. Normal NSIS installation and uninstall remain available.
 The existing uninstaller is retained, and the registered installation path does not

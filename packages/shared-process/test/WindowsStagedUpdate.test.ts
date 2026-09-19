@@ -38,9 +38,9 @@ test('rejects corrupted downloaded payloads', async () => {
 
 const windowsTest = process.platform === 'win32' ? test : test.skip
 
-windowsTest(
-  'successful folder swap relaunches, waits for acknowledgment, and cleans backup',
-  async () => {
+windowsTest.each([false, true])(
+  'successful folder swap waits for the real editor and cleans backup (launcher handoff: %s)',
+  async (handoff) => {
     const root = await mkdtemp(join(tmpdir(), 'lvce-swap-success-'))
     const install = join(root, 'app')
     const token = 'b'.repeat(32)
@@ -57,7 +57,17 @@ windowsTest(
       await writeFile(join(oldNested, 'long-path.txt'), 'old extension')
       await mkdir(join(stage, 'resources', 'app'), { recursive: true })
       await writeFile(join(stage, 'resources', 'app', 'config.json'), JSON.stringify({ version: '1.2.3' }))
-      const source = `public class App { public static void Main() { System.IO.File.WriteAllText(${JSON.stringify(ready)}, ${JSON.stringify(token)}); System.Threading.Thread.Sleep(8000); } }`
+      const acknowledgment = JSON.stringify({ token, version: '1.2.3' }).slice(0, -1) + ',"pid":'
+      const source = `public class App { public static void Main(string[] args) {
+        if (${handoff} && (args.Length == 0 || args[0] != "--child")) {
+          System.Diagnostics.Process.Start(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName, "--child");
+          return;
+        }
+        System.Threading.Thread.Sleep(700);
+        System.IO.File.WriteAllText(${JSON.stringify(`${ready}.tmp`)}, ${JSON.stringify(acknowledgment)} + System.Diagnostics.Process.GetCurrentProcess().Id + "}");
+        System.IO.File.Move(${JSON.stringify(`${ready}.tmp`)}, ${JSON.stringify(ready)});
+        System.Threading.Thread.Sleep(8000);
+      } }`
       const compile = `Add-Type -TypeDefinition '${source.replaceAll("'", "''")}' -OutputAssembly '${join(stage, 'app.exe').replaceAll("'", "''")}' -OutputType ConsoleApplication`
       await promisify(execFile)(
         'powershell.exe',

@@ -289,8 +289,8 @@ jobs:
         if: matrix.versions.os == 'windows-2025'
         shell: pwsh
         run: |
-          $marker = Join-Path $env:GITHUB_WORKSPACE 'Lvce-Stage-${{ needs.create-release.outputs.rg_version }}-${{ matrix.versions.arch }}.json'
-          '{"schema":1,"preparation":"nsis","version":"${{ needs.create-release.outputs.rg_version }}"}' | Set-Content -LiteralPath $marker
+          $marker = Join-Path $env:GITHUB_WORKSPACE 'Lvce-Stage-${{ needs.create-release.outputs.rg_version }}-${{ matrix.versions.arch }}-v2.json'
+          '{"schema":2,"preparation":"nsis","version":"${{ needs.create-release.outputs.rg_version }}"}' | Set-Content -LiteralPath $marker
           "ASSET_WINDOWS_UPDATE=$marker" >> $env:GITHUB_ENV
       - name: Release staged Windows update
         if: matrix.versions.os == 'windows-2025'
