@@ -61,14 +61,20 @@ try {
   $movedNew = $true
   Journal 'launching-new'
   $newProcess = Start-Process -FilePath (Join-Path $install $plan.exe) -ArgumentList '--updated' -WorkingDirectory $install -PassThru -WindowStyle Hidden
+  Log ('Launcher process id=' + $newProcess.Id)
   $deadline = [DateTime]::UtcNow.AddSeconds(60)
   while (!(Test-Path -LiteralPath $plan.ready)) {
-    $newProcess.Refresh()
-    if ($newProcess.HasExited) { throw 'Updated application exited before confirming startup' }
+    # ShellExecute can return a launcher that exits before the actual editor
+    # acknowledges startup. The acknowledgment identifies the real main process.
     if ([DateTime]::UtcNow -gt $deadline) { throw 'Updated application did not confirm startup' }
     Start-Sleep -Milliseconds 100
   }
-  if ((Get-Content -LiteralPath $plan.ready -Raw) -ne $plan.token) { throw 'Invalid startup acknowledgment' }
+  $ack = Get-Content -LiteralPath $plan.ready -Raw | ConvertFrom-Json
+  if ($ack.token -ne $plan.token -or $ack.version -ne $plan.version -or $ack.pid -le 0) { throw 'Invalid startup acknowledgment' }
+  $confirmedProcess = Get-Process -Id $ack.pid -ErrorAction Stop
+  if ($confirmedProcess.Path -ne (Join-Path $install $plan.exe)) { throw 'Startup acknowledgment belongs to another executable' }
+  $newProcess = $confirmedProcess
+  Log ('Confirmed editor process id=' + $newProcess.Id)
   Journal 'startup-confirmed'
   try {
     Get-ChildItem 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall' | ForEach-Object {

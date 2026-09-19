@@ -1,7 +1,7 @@
 import { execFile } from 'node:child_process'
 import { createHash, randomBytes } from 'node:crypto'
 import { createReadStream, createWriteStream } from 'node:fs'
-import { access, copyFile, mkdir, readFile, rm, writeFile } from 'node:fs/promises'
+import { access, copyFile, mkdir, readFile, rename, rm, writeFile } from 'node:fs/promises'
 import { basename, dirname, join, toNamespacedPath } from 'node:path'
 import { Readable } from 'node:stream'
 import { pipeline } from 'node:stream/promises'
@@ -161,7 +161,7 @@ export const check = async (silent: boolean, windowId: number): Promise<boolean>
       }
       return true
     }
-    const capability = release.assets.some((item: any) => item.name === `Lvce-Stage-v${version}-${process.arch}.json`)
+    const capability = release.assets.some((item: any) => item.name === `Lvce-Stage-v${version}-${process.arch}-v2.json`)
     const asset = release.assets.find((item: any) => item.name === `Lvce-Setup-v${version}-${process.arch}.exe`)
     if (!capability || !asset) {
       return false
@@ -211,6 +211,8 @@ export const confirmStartup = async (): Promise<void> => {
   if (!RE_TOKEN.test(token) || version !== Platform.version) {
     throw new Error('Invalid staged update startup marker')
   }
-  await writeFile(join(`${install}.updates`, `${token}.ready`), token)
+  const ready = join(`${install}.updates`, `${token}.ready`)
+  await writeFile(`${ready}.tmp`, JSON.stringify({ pid: process.ppid, token, version }))
+  await rename(`${ready}.tmp`, ready)
   UpdateLog.write(`Staged update startup confirmed version=${version}`)
 }

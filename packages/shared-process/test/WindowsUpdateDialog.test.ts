@@ -14,7 +14,7 @@ test.each([1, undefined])('cancel/dismiss response %s never starts preparing an 
     requests.push(String(url))
     return new Response(
       JSON.stringify({
-        assets: [{ name: `Lvce-Stage-v1.2.3-${process.arch}.json` }, { name: `Lvce-Setup-v1.2.3-${process.arch}.exe` }],
+        assets: [{ name: `Lvce-Stage-v1.2.3-${process.arch}-v2.json` }, { name: `Lvce-Setup-v1.2.3-${process.arch}.exe` }],
         tag_name: 'v1.2.3',
       }),
     )
@@ -23,4 +23,17 @@ test.each([1, undefined])('cancel/dismiss response %s never starts preparing an 
   await expect(check(false, 42)).resolves.toBe(true)
   expect(requests).toEqual(['https://api.github.com/repos/lvce-editor/lvce-editor/releases/latest'])
   expect(showMessageBox).toHaveBeenLastCalledWith(expect.objectContaining({ buttons: ['Prepare Update', 'Cancel'], windowId: 42 }))
+})
+
+test('older staging protocol falls back to the normal installer', async () => {
+  showMessageBox.mockClear()
+  globalThis.fetch = async (): Promise<Response> =>
+    new Response(
+      JSON.stringify({
+        assets: [{ name: `Lvce-Stage-v1.2.3-${process.arch}.json` }, { name: `Lvce-Setup-v1.2.3-${process.arch}.exe` }],
+        tag_name: 'v1.2.3',
+      }),
+    )
+  await expect(check(false, 42)).resolves.toBe(false)
+  expect(showMessageBox).not.toHaveBeenCalled()
 })
