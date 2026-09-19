@@ -1,6 +1,7 @@
 .Ports {
   box-sizing: border-box;
-  display: grid;
+  display: flex;
+  flex-direction: column;
   height: 100%;
   min-height: 0;
   outline: none;
@@ -11,7 +12,9 @@
 }
 
 .PortsTable {
-  display: grid;
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
   min-height: 0;
   overflow: hidden;
 }
@@ -19,8 +22,7 @@
 .PortsTableHeader,
 .PortsTableRow {
   box-sizing: border-box;
-  display: grid;
-  grid-template-columns: 42px minmax(72px, 0.65fr) minmax(160px, 1.25fr) minmax(120px, 1.7fr) minmax(110px, 1fr);
+  display: flex;
   min-width: 620px;
 }
 
@@ -32,6 +34,7 @@
 }
 
 .PortsTableBody {
+  flex: 1 1 auto;
   min-height: 0;
   overflow: hidden;
 }
@@ -68,8 +71,30 @@
 }
 
 .PortsStatusColumn {
+  flex: 0 0 42px;
+  min-width: 42px;
   justify-content: center;
   padding: 0;
+}
+
+.PortsPortColumn {
+  flex: 0.65 1 72px;
+  min-width: 72px;
+}
+
+.PortsAddressColumn {
+  flex: 1.25 1 160px;
+  min-width: 160px;
+}
+
+.PortsProcessColumn {
+  flex: 1.7 1 120px;
+  min-width: 120px;
+}
+
+.PortsOriginColumn {
+  flex: 1 1 110px;
+  min-width: 110px;
 }
 
 .PortsStatusButton {
