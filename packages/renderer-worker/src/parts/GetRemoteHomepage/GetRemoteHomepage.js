@@ -20,8 +20,10 @@ export const getRemoteHomepage = (remote, hosts = { 'github.com': 'https://githu
       return ''
     }
   }
-  if (!hosts || typeof hosts !== 'object' || !Object.hasOwn(hosts, host)) return ''
-  const base = hosts[host]
+  if (!hosts || typeof hosts !== 'object') return ''
+  const configuredHost = Object.hasOwn(hosts, host) ? host : host.match(/^[^.]+\.github\.com$/) && Object.hasOwn(hosts, 'github.com') ? 'github.com' : ''
+  if (!configuredHost) return ''
+  const base = hosts[configuredHost]
   if (typeof base !== 'string') return ''
   try {
     const url = new URL(base)
