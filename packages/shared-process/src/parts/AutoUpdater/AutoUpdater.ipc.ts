@@ -1,3 +1,4 @@
+import * as UpdateLog from '../UpdateLog/UpdateLog.ts'
 import * as AutoUpdater from './AutoUpdater.ts'
 
 export const Commands = {
@@ -6,4 +7,5 @@ export const Commands = {
   'AutoUpdater.getPlatform': AutoUpdater.getPlatform,
   'AutoUpdater.restartMacUpdate': AutoUpdater.restartMacUpdate,
   'AutoUpdater.stageMacUpdate': AutoUpdater.stageMacUpdate,
+  'AutoUpdater.writeLog': UpdateLog.write,
 }
