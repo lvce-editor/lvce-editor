@@ -53,3 +53,7 @@ export const getEnabledProviderIds = (scheme, root) => {
 }
 
 export const getIconDefinitions = () => []
+
+export const getProgress = (providerId) => {
+  return executeProvider(providerId, 'executeSourceControlGetProgress')
+}
