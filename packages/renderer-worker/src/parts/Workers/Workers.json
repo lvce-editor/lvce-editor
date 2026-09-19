@@ -663,6 +663,7 @@
         "contextFields": ["platform", "assetDir"], "defaults": { "title": "" }
       },
       "commandPrefix": "Explorer",
+      "workspaceProgressEvent": "workspace.progress",
       "methods": {
         "create": { "name": "Explorer.create", "parameters": [
           { "source": "state", "name": "uid" }, { "source": "state", "name": "uri" }, { "source": "state", "name": "x" },
