@@ -7,6 +7,7 @@ export const getModuleId = (commandId: any): any => {
       return ModuleId.TextDocument
     case 'AttachDebugger.attachDebugger':
       return ModuleId.AttachDebugger
+    case 'AutoUpdater.checkWindowsUpdate':
     case 'AutoUpdater.getAutoUpdateType':
     case 'AutoUpdater.getLatestVersion':
     case 'AutoUpdater.getPlatform':

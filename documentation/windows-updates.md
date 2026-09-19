@@ -1,5 +1,37 @@
 # Windows update diagnostics
 
+## Staged Windows updates
+
+New Windows releases also publish `Lvce-Update-v<version>-<arch>.zip` containing
+the application payload. The desktop checks the actual installed version, downloads
+the matching release asset, verifies its GitHub SHA256 digest, and extracts directly
+into a unique sibling of the installation directory. The editor stays open during
+preparation. Older releases without this asset retain the existing NSIS update path.
+
+On Restart, a detached Windows PowerShell helper acknowledges startup before the
+editor exits. It waits for the main process to exit, renames the old directory to a
+unique backup, renames the prepared directory into place, and starts the new app.
+The new shared process acknowledges its version after creating the app window.
+Startup failure restores the backup; cleanup occurs only after acknowledgment and
+a short stability check. Normal NSIS installation and uninstall remain available.
+The existing uninstaller is retained, and the registered installation path does not
+change. User settings live outside the swapped tree.
+
+Each phase is timestamped in `log-updates.txt`. Plans, helper scripts and state
+journals are stored in the sibling `<installation>.updates` directory. After a
+power loss between the two renames, the preserved backup may need recovery by
+rerunning the saved helper with its plan, or by renaming the backup into the missing
+installation path. The pair of renames is not a single atomic transaction. A locked
+folder aborts after bounded retries. Preparation needs writable sibling storage on
+the installation volume; restricted/machine-wide installations can fail preparation
+without modifying the running application. Failed preparations are retained for
+diagnosis, rather than recursively deleting an uncertain path.
+
+Windows integration tests exercise successful acknowledgment/cleanup, rollback
+after launch failure, and rejection of out-of-tree staging paths. Digest tests
+reject corrupted payloads. Release validation must still verify a real newer
+installed version and measure preparation separately from restart interruption.
+
 Update-worker requests and their host RPC actions are recorded in `log-updates.txt`.
 Entries include timestamps, the shared-process PID, installer path and arguments,
 launch errors, and exit status while the shared process remains alive. Installer
