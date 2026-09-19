@@ -158,7 +158,7 @@ const restart = async ({ path, plan }: { path: string; plan: Plan }): Promise<vo
 
 // Returns false only when the release predates staged-update artifacts, allowing
 // the caller to retain the existing NSIS update path for those releases.
-export const check = async (silent: boolean): Promise<boolean> => {
+export const check = async (silent: boolean, windowId: number): Promise<boolean> => {
   if (running) {
     return true
   }
@@ -172,7 +172,7 @@ export const check = async (silent: boolean): Promise<boolean> => {
     const version = release.tag_name.replace(RE_TAG, '')
     if (!CompareVersion.isGreater(version, Platform.version)) {
       if (!silent) {
-        await ElectronDialog.showMessageBox({ buttons: ['OK'], message: 'No update available.' })
+        await ElectronDialog.showMessageBox({ buttons: ['OK'], message: 'No update available.', type: 'info', windowId })
       }
       return true
     }
@@ -182,23 +182,25 @@ export const check = async (silent: boolean): Promise<boolean> => {
     }
     if (!silent) {
       const answer = await ElectronDialog.showMessageBox({
-        buttons: ['Cancel', 'Prepare Update'],
-        cancelId: 0,
-        defaultId: 1,
+        buttons: ['Prepare Update', 'Cancel'],
+        defaultId: 0,
         message: `Download and prepare update ${version}?`,
+        type: 'question',
+        windowId,
       })
-      if (answer.response !== 1) {
+      if (answer !== 0) {
         return true
       }
     }
     const update = await prepare(asset, version)
     const answer = await ElectronDialog.showMessageBox({
-      buttons: ['Later', 'Restart'],
-      cancelId: 0,
-      defaultId: 1,
+      buttons: ['Restart', 'Later'],
+      defaultId: 0,
       message: `Update ${version} is ready. Restart now?`,
+      type: 'question',
+      windowId,
     })
-    if (answer.response === 1) {
+    if (answer === 0) {
       await restart(update)
     }
     return true

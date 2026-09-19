@@ -1,4 +1,5 @@
 import * as GetLatestVersion from '../GetLatestVersion/GetLatestVersion.js'
+import * as GetWindowId from '../GetWindowId/GetWindowId.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as Notification from '../Notification/Notification.js'
 import * as UpdateWorker from '../UpdateWorker/UpdateWorker.js'
@@ -38,7 +39,8 @@ export const checkForUpdates = async (updateSetting, silent = Boolean(updateSett
       return
     }
     try {
-      const handled = await SharedProcess.invoke('AutoUpdater.checkWindowsUpdate', silent)
+      const windowId = await GetWindowId.getWindowId()
+      const handled = await SharedProcess.invoke('AutoUpdater.checkWindowsUpdate', silent, windowId)
       if (handled) {
         return
       }
