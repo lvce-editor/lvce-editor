@@ -191,6 +191,8 @@
         "diff": { "name": "ActivityBar.diff2", "parameters": [{ "source": "state", "name": "uid" }] },
         "render": { "name": "ActivityBar.render2", "parameters": [{ "source": "state", "name": "uid" }, { "source": "result", "name": "diff" }] },
         "saveState": { "name": "ActivityBar.saveState", "parameters": [{ "source": "state", "name": "uid" }] },
+        "getComponentState": { "name": "ActivityBar.getComponentState", "parameters": [{ "source": "state", "name": "uid" }] },
+        "setComponentState": { "name": "ActivityBar.setComponentState", "parameters": [{ "source": "state", "name": "uid" }, { "source": "argument", "name": "componentState" }] },
         "terminate": { "name": "ActivityBar.terminate", "parameters": [] },
         "getCommandIds": { "name": "ActivityBar.getCommandIds", "parameters": [] },
         "getMenuEntryIds": { "name": "ActivityBar.getMenuEntryIds", "parameters": [] },
