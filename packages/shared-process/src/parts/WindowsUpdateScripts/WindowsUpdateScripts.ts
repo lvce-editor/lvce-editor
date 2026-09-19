@@ -89,7 +89,7 @@ try {
     $longBackup = '\\?\' + $backup
     if ($backup.StartsWith('\\')) { $longBackup = '\\?\UNC\' + $backup.Substring(2) }
     Remove-Item -LiteralPath $longBackup -Recurse -Force
-    if ($plan.archive -eq (Join-Path ($install + '.updates') ($plan.token + '.zip'))) {
+    if ($plan.archive -eq (Join-Path ($install + '.updates') ($plan.token + '.exe'))) {
       Remove-Item -LiteralPath $plan.archive -Force -ErrorAction SilentlyContinue
     }
     Journal 'complete'
@@ -115,16 +115,4 @@ try {
   }
   exit 1
 }
-`
-
-export const extract = String.raw`
-$ErrorActionPreference = 'Stop'
-$plan = Get-Content -LiteralPath $env:LVCE_UPDATE_PLAN -Raw | ConvertFrom-Json
-# Windows PowerShell's .NET Framework ZIP extraction fails on deeply nested
-# extension paths. The Windows inbox bsdtar supports these long paths and
-# rejects parent-directory traversal by default. Never reuse a partial stage.
-if (Test-Path -LiteralPath $plan.stage) { throw 'Staging directory already exists' }
-[IO.Directory]::CreateDirectory($plan.stage) | Out-Null
-& (Join-Path $env:SystemRoot 'System32\tar.exe') -xf $plan.archive -C $plan.stage
-if ($LASTEXITCODE -ne 0) { throw "Windows update extraction failed ($LASTEXITCODE)" }
 `

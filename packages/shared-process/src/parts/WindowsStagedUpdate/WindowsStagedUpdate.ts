@@ -1,6 +1,6 @@
-import { execFile, spawn } from 'node:child_process'
+import { execFile } from 'node:child_process'
 import { createHash, randomBytes } from 'node:crypto'
-import { closeSync, createReadStream, createWriteStream } from 'node:fs'
+import { createReadStream, createWriteStream } from 'node:fs'
 import { access, copyFile, mkdir, readFile, rm, writeFile } from 'node:fs/promises'
 import { basename, dirname, join } from 'node:path'
 import { Readable } from 'node:stream'
@@ -11,6 +11,7 @@ import * as ElectronDialog from '../ElectronDialog/ElectronDialog.ts'
 import * as Exit from '../Exit/Exit.ts'
 import * as Platform from '../Platform/Platform.ts'
 import * as UpdateLog from '../UpdateLog/UpdateLog.ts'
+import * as WindowsUpdateHelper from '../WindowsUpdateHelper/WindowsUpdateHelper.ts'
 import * as WindowsUpdateScripts from '../WindowsUpdateScripts/WindowsUpdateScripts.ts'
 
 interface Plan {
@@ -33,19 +34,11 @@ const RE_DIGEST = /^sha256:[a-f0-9]{64}$/
 const RE_TAG = /^v/
 const RE_TOKEN = /^[a-f0-9]{32}$/
 
-const powershell = (): string => join(process.env.SystemRoot || 'C:\\Windows', 'System32', 'WindowsPowerShell', 'v1.0', 'powershell.exe')
-const argumentsFor = (script: string): string[] => [
-  '-NoProfile',
-  '-NonInteractive',
-  '-EncodedCommand',
-  Buffer.from(script, 'utf16le').toString('base64'),
-]
-
 export const validateAsset = (asset: { name: string; browser_download_url: string; digest: string }, version: string, arch: string): void => {
   if (!RE_VERSION.test(version) || !['x64', 'arm64'].includes(arch)) {
     throw new Error('Unsupported Windows update version or architecture')
   }
-  const name = `Lvce-Update-v${version}-${arch}.zip`
+  const name = `Lvce-Setup-v${version}-${arch}.exe`
   if (asset.name !== name || asset.browser_download_url !== `https://github.com/lvce-editor/lvce-editor/releases/download/v${version}/${name}`) {
     throw new Error('Unexpected Windows update asset')
   }
@@ -78,7 +71,7 @@ const prepare = async (asset: any, version: string): Promise<{ plan: Plan; path:
   await mkdir(work, { recursive: true })
   const path = join(work, `${token}.json`)
   const plan: Plan = {
-    archive: join(work, `${token}.zip`),
+    archive: join(work, `${token}.exe`),
     backup: `${install}.backup-${token}`,
     exe: basename(process.execPath),
     install,
@@ -98,11 +91,13 @@ const prepare = async (asset: any, version: string): Promise<{ plan: Plan; path:
   await pipeline(Readable.fromWeb(response.body as any), createWriteStream(plan.archive, { flags: 'wx' }))
   await verifyDigest(plan.archive, asset.digest)
   UpdateLog.write(`Staged update download verified version=${version}; extraction started`)
-  await promisify(execFile)(powershell(), argumentsFor(WindowsUpdateScripts.extract), {
-    env: { ...process.env, LVCE_UPDATE_PLAN: path },
+  await promisify(execFile)(plan.archive, ['/S', `/LVCESTAGE=${stage}`], {
     timeout: 600_000,
     windowsHide: true,
   })
+  if ((await readFile(join(stage, '.lvce-stage-complete'), 'utf8')) !== 'complete') {
+    throw new Error('Installer did not confirm update preparation')
+  }
   const config = JSON.parse(await readFile(join(stage, 'resources', 'app', 'config.json'), 'utf8'))
   if (config.version !== version) {
     throw new Error('Extracted application version does not match release')
@@ -126,20 +121,7 @@ const restart = async ({ path, plan }: { path: string; plan: Plan }): Promise<vo
   await writeFile(path, JSON.stringify({ ...plan, parentPid: process.ppid }))
   await rm(`${path}.started`, { force: true })
   await writeFile(`${path}.helper.ps1`, WindowsUpdateScripts.activate)
-  const output = UpdateLog.openOutput()
-  const child = spawn(powershell(), argumentsFor(WindowsUpdateScripts.activate), {
-    cwd: dirname(plan.install),
-    detached: true,
-    env: { ...process.env, LVCE_UPDATE_PLAN: path },
-    stdio: ['ignore', output, output],
-    windowsHide: true,
-  })
-  closeSync(output)
-  await new Promise<void>((resolve, reject) => {
-    child.once('spawn', resolve)
-    child.once('error', reject)
-  })
-  child.unref()
+  const helperPid = await WindowsUpdateHelper.launch(WindowsUpdateScripts.activate, path, dirname(plan.install))
   // Do not exit if PowerShell is blocked or the helper cannot initialize.
   for (let attempt = 0; attempt < 300; attempt++) {
     if ((await readFile(`${path}.started`, 'utf8').catch(() => '')) === 'ready') {
@@ -147,12 +129,14 @@ const restart = async ({ path, plan }: { path: string; plan: Plan }): Promise<vo
       await Exit.exit()
       return
     }
-    if (child.exitCode !== null) {
-      throw new Error(`Update helper exited before startup (${child.exitCode})`)
+    if (!WindowsUpdateHelper.isRunning(helperPid)) {
+      throw new Error(`Update helper exited before startup; see ${path}.output.log`)
     }
     await new Promise((resolve) => setTimeout(resolve, 100))
   }
-  child.kill()
+  if (WindowsUpdateHelper.isRunning(helperPid)) {
+    process.kill(helperPid)
+  }
   throw new Error('Update helper did not acknowledge startup; editor left running')
 }
 
@@ -176,8 +160,9 @@ export const check = async (silent: boolean, windowId: number): Promise<boolean>
       }
       return true
     }
-    const asset = release.assets.find((item: any) => item.name === `Lvce-Update-v${version}-${process.arch}.zip`)
-    if (!asset) {
+    const capability = release.assets.some((item: any) => item.name === `Lvce-Stage-v${version}-${process.arch}.json`)
+    const asset = release.assets.find((item: any) => item.name === `Lvce-Setup-v${version}-${process.arch}.exe`)
+    if (!capability || !asset) {
       return false
     }
     if (!silent) {

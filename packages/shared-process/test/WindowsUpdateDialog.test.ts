@@ -12,7 +12,12 @@ test.each([1, undefined])('cancel/dismiss response %s never starts preparing an 
   const requests: string[] = []
   globalThis.fetch = (async (url: any) => {
     requests.push(String(url))
-    return new Response(JSON.stringify({ assets: [{ name: `Lvce-Update-v1.2.3-${process.arch}.zip` }], tag_name: 'v1.2.3' }))
+    return new Response(
+      JSON.stringify({
+        assets: [{ name: `Lvce-Stage-v1.2.3-${process.arch}.json` }, { name: `Lvce-Setup-v1.2.3-${process.arch}.exe` }],
+        tag_name: 'v1.2.3',
+      }),
+    )
   }) as typeof fetch
   showMessageBox.mockResolvedValueOnce(answer)
   await expect(check(false, 42)).resolves.toBe(true)

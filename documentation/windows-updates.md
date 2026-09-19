@@ -2,15 +2,23 @@
 
 ## Staged Windows updates
 
-New Windows releases also publish `Lvce-Update-v<version>-<arch>.zip` containing
-the application payload. The desktop checks the actual installed version, downloads
-the matching release asset, verifies its GitHub SHA256 digest, and extracts directly
-into a unique sibling of the installation directory. The editor stays open during
-preparation. Older releases without this asset retain the existing NSIS update path.
-Extraction uses the Windows inbox `tar.exe` so deeply nested extension paths work
-beyond `MAX_PATH`; backup cleanup uses extended-length paths for the same reason.
+New Windows releases publish `Lvce-Stage-v<version>-<arch>.json` to declare that
+their official NSIS installer supports preparation without installation. The desktop
+checks the actual installed version, downloads the installer, verifies its GitHub
+SHA256 digest, and invokes `/S /LVCESTAGE=<fresh sibling directory>`. This mode
+extracts directly into that directory and writes a completion marker. It does not
+close the editor, uninstall files, or register another installation. Existing
+destination directories are rejected. This uses the normal installer extraction
+path; it does not change Windows application-control policy or trust metadata.
 
-On Restart, a detached Windows PowerShell helper acknowledges startup before the
+Releases without this capability retain the existing NSIS update path. New releases
+do not publish the earlier ZIP payload, so clients with the old ZIP updater also
+fall back to normal installation. NSIS handles deep extension paths; backup cleanup
+uses extended-length paths for the same reason. Windows CI tests the actual built
+installer in a path containing spaces, checks registration is unchanged, and checks
+that a second preparation cannot overwrite an existing directory.
+
+On Restart, an independent Windows PowerShell helper acknowledges startup before the
 editor exits. It waits for the main process to exit, renames the old directory to a
 unique backup, renames the prepared directory into place, and starts the new app.
 The new shared process acknowledges its version after creating the app window.
@@ -18,6 +26,13 @@ Startup failure restores the backup; cleanup occurs only after acknowledgment an
 a short stability check. Normal NSIS installation and uninstall remain available.
 The existing uninstaller is retained, and the registered installation path does not
 change. User settings live outside the swapped tree.
+
+The helper is launched with `Start-Process -WindowStyle Hidden` through a short
+bootstrap. This gives Windows PowerShell its own console without using Node's
+`DETACHED_PROCESS` flag, which can make hidden PowerShell exit without executing.
+Helper output goes to the plan's `.output.log`, separate from `log-updates.txt`,
+so Windows file sharing does not prevent phase logging. A process test verifies
+that the helper executes and logs after its launcher has exited.
 
 Each phase is timestamped in `log-updates.txt`. Plans, helper scripts and state
 journals are stored in the sibling `<installation>.updates` directory. After a
