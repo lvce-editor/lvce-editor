@@ -31,6 +31,7 @@ function MoveFolder($from, $to) {
 }
 $movedOld = $false
 $movedNew = $false
+$editorExited = $false
 $newProcess = $null
 try {
   Journal 'helper-ready'
@@ -43,6 +44,7 @@ try {
     Start-Sleep -Milliseconds 100
   }
   Journal 'editor-exited'
+  $editorExited = $true
   # Rerunning the saved helper after interruption restores a missing install.
   if (!(Test-Path -LiteralPath $install) -and (Test-Path -LiteralPath $backup)) {
     MoveFolder $backup $install
@@ -101,6 +103,11 @@ try {
       Journal 'rolled-back'
       Start-Process -FilePath (Join-Path $install $plan.exe) -WorkingDirectory $install -WindowStyle Hidden
     } catch { Log ('Recovery required; previous installation preserved at ' + $backup + ': ' + $_.Exception.Message) }
+  } elseif ($editorExited -and (Test-Path -LiteralPath (Join-Path $install $plan.exe))) {
+    # A locked old folder or rejected plan must not leave the user without the
+    # still-intact editor after the requested shutdown.
+    try { Start-Process -FilePath (Join-Path $install $plan.exe) -WorkingDirectory $install -WindowStyle Hidden }
+    catch { Log ('Could not relaunch previous installation: ' + $_.Exception.Message) }
   }
   exit 1
 }
