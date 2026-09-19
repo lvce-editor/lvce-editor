@@ -6,4 +6,5 @@ export const UnprocessableContent = 422
 export const ServerError = 500
 export const NotModifed = 304
 export const MultipleChoices = 300
+export const PermanentRedirect = 308
 export const RangeNotSatisfiable = 416
