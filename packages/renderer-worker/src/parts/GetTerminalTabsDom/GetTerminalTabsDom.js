@@ -38,7 +38,7 @@ const createTabDom = (tab, index, terminalUid, splitIndex, splitCount, isSelecte
     div(
       {
         'data-index': index,
-        'data-terminal-uid': terminalUid,
+        'data-terminalUid': terminalUid,
         className,
         onClick: DomEventListenerFunctions.HandleClickTab,
         role: AriaRoles.ListItem,
@@ -64,7 +64,7 @@ const createTabDom = (tab, index, terminalUid, splitIndex, splitCount, isSelecte
         ariaLabel: TerminalStrings.killTerminal(),
         'data-command': isSplit ? 'killTerminalSplit' : 'killTerminalTab',
         'data-index': index,
-        'data-terminal-uid': terminalUid,
+        'data-terminalUid': terminalUid,
         className: ClassNames.TerminalTabKill,
         onClick: DomEventListenerFunctions.HandleClickTerminalTabAction,
         title: TerminalStrings.killTerminal(),

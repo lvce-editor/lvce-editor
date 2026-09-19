@@ -100,22 +100,22 @@ test('renders split terminal tabs as connected rows and selects the focused spli
     expect.objectContaining({
       className: 'TerminalTab TerminalTabSplit TerminalTabSplitFirst',
       'data-index': 0,
-      'data-terminal-uid': 41,
+      'data-terminalUid': 41,
     }),
     expect.objectContaining({
       className: 'TerminalTab TerminalTabSelected TerminalTabSplit TerminalTabSplitMiddle',
       'data-index': 0,
-      'data-terminal-uid': 42,
+      'data-terminalUid': 42,
     }),
     expect.objectContaining({
       className: 'TerminalTab TerminalTabSplit TerminalTabSplitLast',
       'data-index': 0,
-      'data-terminal-uid': 43,
+      'data-terminalUid': 43,
     }),
     expect.objectContaining({
       className: 'TerminalTab TerminalTabGroupStart',
       'data-index': 1,
-      'data-terminal-uid': 44,
+      'data-terminalUid': 44,
     }),
   ])
 })
