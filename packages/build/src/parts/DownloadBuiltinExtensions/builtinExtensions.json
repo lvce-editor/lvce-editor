@@ -370,8 +370,8 @@
   {
     "name": "builtin.language-basics-python",
     "repository": "github.com/lvce-editor/language-basics-python",
-    "version": "0.16.0",
-    "sha256": "22f3382ac4e27a15680154d21c8c292ca6e55c5758076a5f4d8aee398bbe9fb0",
+    "version": "0.16.1",
+    "sha256": "1c4f3a10c89447c43e0d029d098b35443c8c676d7d7111512251b98044d6ea8a",
     "created": "2022-06-16"
   },
   {
