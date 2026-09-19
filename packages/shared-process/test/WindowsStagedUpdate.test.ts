@@ -59,7 +59,8 @@ windowsTest.each([false, true])(
       await writeFile(join(stage, 'resources', 'app', 'config.json'), JSON.stringify({ version: '1.2.3' }))
       const acknowledgment = JSON.stringify({ token, version: '1.2.3' }).slice(0, -1) + ',"pid":'
       const source = `public class App { public static void Main(string[] args) {
-        if (${handoff} && (args.Length == 0 || args[0] != "--child")) {
+        bool handoff = ${handoff};
+        if (handoff && (args.Length == 0 || args[0] != "--child")) {
           System.Diagnostics.Process.Start(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName, "--child");
           return;
         }
