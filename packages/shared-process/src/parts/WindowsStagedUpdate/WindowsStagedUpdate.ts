@@ -2,7 +2,7 @@ import { execFile } from 'node:child_process'
 import { createHash, randomBytes } from 'node:crypto'
 import { createReadStream, createWriteStream } from 'node:fs'
 import { access, copyFile, mkdir, readFile, rm, writeFile } from 'node:fs/promises'
-import { basename, dirname, join } from 'node:path'
+import { basename, dirname, join, toNamespacedPath } from 'node:path'
 import { Readable } from 'node:stream'
 import { pipeline } from 'node:stream/promises'
 import { promisify } from 'node:util'
@@ -92,7 +92,7 @@ const prepare = async (asset: any, version: string): Promise<{ plan: Plan; path:
   await verifyDigest(plan.archive, asset.digest)
   UpdateLog.write(`Staged update download verified version=${version}; extraction started`)
   await promisify(execFile)(plan.archive, ['/S', '/LVCESTAGE'], {
-    env: { ...process.env, LVCE_UPDATE_STAGE: stage },
+    env: { ...process.env, LVCE_UPDATE_STAGE: toNamespacedPath(stage) },
     timeout: 600_000,
     windowsHide: true,
   })

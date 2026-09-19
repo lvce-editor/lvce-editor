@@ -11,6 +11,9 @@
   IfErrors lvceStageNoFlag
   ReadEnvStr $lvceStage "LVCE_UPDATE_STAGE"
   StrCmp $lvceStage "" lvceStageFailed
+  ; Nsis7z silently skips long filenames without the extended path namespace.
+  StrCpy $R0 $lvceStage 4
+  StrCmp $R0 "\\?\" 0 lvceStageFailed
   IfFileExists "$lvceStage" lvceStageFailed
   ClearErrors
   CreateDirectory "$lvceStage"

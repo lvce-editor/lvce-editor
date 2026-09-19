@@ -7,6 +7,7 @@ if (!$Installer) {
 }
 $Installer = (Resolve-Path -LiteralPath $Installer).Path
 $stage = Join-Path (Get-Location).Path ('packages/build/.tmp/staged installer test ' + [Guid]::NewGuid().ToString('N'))
+$nativeStage = if ($stage.StartsWith('\\')) { '\\?\UNC\' + $stage.Substring(2) } else { '\\?\' + $stage }
 function InstalledEntries {
   @(Get-ChildItem 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall' -ErrorAction SilentlyContinue |
     Get-ItemProperty | Where-Object DisplayName -like '*Lvce*' |
@@ -14,7 +15,7 @@ function InstalledEntries {
 }
 $before = InstalledEntries
 $timer = [Diagnostics.Stopwatch]::StartNew()
-$process = Start-Process -FilePath $Installer -ArgumentList @('/S', '/LVCESTAGE') -Environment @{ LVCE_UPDATE_STAGE = $stage } -WindowStyle Hidden -PassThru
+$process = Start-Process -FilePath $Installer -ArgumentList @('/S', '/LVCESTAGE') -Environment @{ LVCE_UPDATE_STAGE = $nativeStage } -WindowStyle Hidden -PassThru
 if (!$process.WaitForExit(300000)) { throw 'Installer preparation timed out' }
 if ($process.ExitCode -ne 0) { throw "Preparation failed: $($process.ExitCode)" }
 if ((Get-Content -LiteralPath (Join-Path $stage '.lvce-stage-complete') -Raw) -ne 'complete') { throw 'Missing preparation acknowledgment' }
@@ -38,13 +39,15 @@ foreach ($file in $expectedFiles) {
 if ((InstalledEntries) -ne $before) { throw 'Preparation changed registered installations' }
 $sentinel = Join-Path $stage 'preserve-existing.txt'
 Set-Content -LiteralPath $sentinel 'preserved'
-$retry = Start-Process -FilePath $Installer -ArgumentList @('/S', '/LVCESTAGE') -Environment @{ LVCE_UPDATE_STAGE = $stage } -WindowStyle Hidden -PassThru
+$retry = Start-Process -FilePath $Installer -ArgumentList @('/S', '/LVCESTAGE') -Environment @{ LVCE_UPDATE_STAGE = $nativeStage } -WindowStyle Hidden -PassThru
 if (!$retry.WaitForExit(30000) -or $retry.ExitCode -eq 0) { throw 'Installer accepted an existing staging directory' }
 if ((Get-Content -LiteralPath $sentinel -Raw).Trim() -ne 'preserved') { throw 'Existing stage changed' }
 foreach ($arguments in @(@('/S', '/LVCESTAGE'), @('/S', '/INVALIDSTAGE'))) {
-  $destination = if ($arguments[1] -eq '/LVCESTAGE') { '' } else { $stage + '-invalid' }
+  $destination = if ($arguments[1] -eq '/LVCESTAGE') { '' } else { $nativeStage + '-invalid' }
   $invalid = Start-Process -FilePath $Installer -ArgumentList $arguments -Environment @{ LVCE_UPDATE_STAGE = $destination } -WindowStyle Hidden -PassThru
   if (!$invalid.WaitForExit(30000) -or $invalid.ExitCode -eq 0) { throw 'Installer accepted malformed staging request' }
 }
+$invalid = Start-Process -FilePath $Installer -ArgumentList @('/S', '/LVCESTAGE') -Environment @{ LVCE_UPDATE_STAGE = ($stage + '-plain') } -WindowStyle Hidden -PassThru
+if (!$invalid.WaitForExit(30000) -or $invalid.ExitCode -eq 0) { throw 'Installer accepted a destination without long-path support' }
 if ((InstalledEntries) -ne $before) { throw 'Rejected request changed registered installations' }
 Write-Output "Staged installer validated in $($timer.Elapsed.TotalSeconds) seconds, version $($config.version)"

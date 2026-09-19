@@ -6,7 +6,9 @@ New Windows releases publish `Lvce-Stage-v<version>-<arch>.json` to declare that
 their official NSIS installer supports preparation without installation. The desktop
 checks the actual installed version, downloads the installer, verifies its GitHub
 SHA256 digest, and invokes `/S /LVCESTAGE` with `LVCE_UPDATE_STAGE` set to a fresh
-sibling directory in the child environment. Keeping the path out of the command
+sibling directory using the Windows extended-length path namespace in the child
+environment. NSIS's extraction plugin otherwise silently omits files beyond
+`MAX_PATH` even when it returns success. Keeping the path out of the command
 line avoids NSIS option-parsing differences for paths containing spaces. This mode
 extracts directly into that directory and writes a completion marker. It does not
 close the editor, uninstall files, or register another installation. Existing
