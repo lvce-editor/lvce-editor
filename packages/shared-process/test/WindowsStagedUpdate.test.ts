@@ -7,13 +7,14 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { promisify } from 'node:util'
 import { validateAsset, verifyDigest } from '../src/parts/WindowsStagedUpdate/WindowsStagedUpdate.ts'
-import { activate, extract } from '../src/parts/WindowsUpdateScripts/WindowsUpdateScripts.ts'
+import * as WindowsUpdateHelper from '../src/parts/WindowsUpdateHelper/WindowsUpdateHelper.ts'
+import { activate } from '../src/parts/WindowsUpdateScripts/WindowsUpdateScripts.ts'
 
 test('only accepts the expected release asset and a SHA256 digest', () => {
   const asset = {
-    browser_download_url: 'https://github.com/lvce-editor/lvce-editor/releases/download/v1.2.3/Lvce-Update-v1.2.3-x64.zip',
+    browser_download_url: 'https://github.com/lvce-editor/lvce-editor/releases/download/v1.2.3/Lvce-Setup-v1.2.3-x64.exe',
     digest: `sha256:${'a'.repeat(64)}`,
-    name: 'Lvce-Update-v1.2.3-x64.zip',
+    name: 'Lvce-Setup-v1.2.3-x64.exe',
   }
   expect(() => validateAsset(asset, '1.2.3', 'x64')).not.toThrow()
   expect(() => validateAsset({ ...asset, digest: '' }, '1.2.3', 'x64')).toThrow('SHA256')
@@ -36,63 +37,6 @@ test('rejects corrupted downloaded payloads', async () => {
 })
 
 const windowsTest = process.platform === 'win32' ? test : test.skip
-
-const runPowerShell = (script: string, plan: string): Promise<unknown> =>
-  promisify(execFile)('powershell.exe', ['-NoProfile', '-NonInteractive', '-EncodedCommand', Buffer.from(script, 'utf16le').toString('base64')], {
-    env: { ...process.env, LVCE_UPDATE_PLAN: plan },
-    timeout: 30000,
-    windowsHide: true,
-  })
-
-const createArchive = String.raw`
-$ErrorActionPreference = 'Stop'
-Add-Type -AssemblyName System.IO.Compression.FileSystem
-$plan = Get-Content -LiteralPath $env:LVCE_UPDATE_PLAN -Raw | ConvertFrom-Json
-$zip = [IO.Compression.ZipFile]::Open($plan.archive, 'Create')
-try {
-  $entry = $zip.CreateEntry($plan.entry)
-  $writer = New-Object IO.StreamWriter($entry.Open())
-  try { $writer.Write('extension payload') } finally { $writer.Dispose() }
-} finally { $zip.Dispose() }
-`
-
-windowsTest(
-  'extracts extension paths longer than MAX_PATH and refuses an existing stage',
-  async () => {
-    const root = await mkdtemp(join(tmpdir(), 'lvce-extract-'))
-    const stage = join(root, 'app.stage-' + 'a'.repeat(32))
-    const entry = `extensions/${'nested-directory-'.repeat(10)}/${'nested-directory-'.repeat(5)}/file.txt`
-    const path = join(root, 'plan.json')
-    try {
-      await writeFile(path, JSON.stringify({ archive: join(root, 'update.zip'), entry, stage }))
-      await runPowerShell(createArchive, path)
-      await runPowerShell(extract, path)
-      expect(join(stage, entry).length).toBeGreaterThan(260)
-      expect(await readFile(join(stage, entry), 'utf8')).toBe('extension payload')
-      await expect(runPowerShell(extract, path)).rejects.toThrow('Staging directory already exists')
-    } finally {
-      await rm(root, { force: true, recursive: true })
-    }
-  },
-  45000,
-)
-
-windowsTest(
-  'extraction rejects parent traversal without writing outside the stage',
-  async () => {
-    const root = await mkdtemp(join(tmpdir(), 'lvce-extract-'))
-    const path = join(root, 'plan.json')
-    try {
-      await writeFile(path, JSON.stringify({ archive: join(root, 'update.zip'), entry: '../outside.txt', stage: join(root, 'stage') }))
-      await runPowerShell(createArchive, path)
-      await expect(runPowerShell(extract, path)).rejects.toThrow()
-      expect(existsSync(join(root, 'outside.txt'))).toBe(false)
-    } finally {
-      await rm(root, { force: true, recursive: true })
-    }
-  },
-  45000,
-)
 
 windowsTest(
   'successful folder swap relaunches, waits for acknowledgment, and cleans backup',
@@ -121,15 +65,14 @@ windowsTest(
         { windowsHide: true },
       )
       await writeFile(path, JSON.stringify({ backup, exe: 'app.exe', install, log, parentPid: 2147483647, ready, stage, token, version: '1.2.3' }))
-      await promisify(execFile)(
-        'powershell.exe',
-        ['-NoProfile', '-NonInteractive', '-EncodedCommand', Buffer.from(activate, 'utf16le').toString('base64')],
-        {
-          env: { ...process.env, LVCE_UPDATE_PLAN: path },
-          timeout: 30000,
-          windowsHide: true,
-        },
-      )
+      const helperPid = await WindowsUpdateHelper.launch(activate, path, root)
+      const deadline = Date.now() + 30000
+      while (WindowsUpdateHelper.isRunning(helperPid)) {
+        if (Date.now() > deadline) {
+          throw new Error('Update helper did not finish')
+        }
+        await new Promise((resolve) => setTimeout(resolve, 100))
+      }
       expect(existsSync(join(install, 'app.exe'))).toBe(true)
       expect(existsSync(backup)).toBe(false)
       expect(existsSync(stage)).toBe(false)

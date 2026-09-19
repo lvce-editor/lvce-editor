@@ -281,19 +281,17 @@ jobs:
           asset_path: ${{ env.ASSET_WINDOWS_EXE_ARM64 }}
           asset_name: ${{ env.ASSET_WINDOWS_EXE_ARM64 }}
           asset_content_type: application/octet-stream
-      - name: Package staged Windows update
+      - name: Test staged Windows installer
+        if: matrix.versions.os == 'windows-2025'
+        shell: pwsh
+        run: ./packages/build/scripts/test-windows-staging.ps1 -Installer '${{ env.ASSET_WINDOWS_EXE_X64 || env.ASSET_WINDOWS_EXE_ARM64 }}'
+      - name: Declare staged Windows installer support
         if: matrix.versions.os == 'windows-2025'
         shell: pwsh
         run: |
-          $archive = Join-Path $env:GITHUB_WORKSPACE 'Lvce-Update-${{ needs.create-release.outputs.rg_version }}-${{ matrix.versions.arch }}.zip'
-          $app = Join-Path $env:GITHUB_WORKSPACE 'packages/build/.tmp/linux/snap/amd64/app'
-          if (!(Test-Path -LiteralPath (Join-Path $app 'resources/app/config.json'))) { throw 'Missing Windows application payload' }
-          Push-Location $app
-          try {
-            & 7z a -tzip -mx=1 $archive '.\*'
-            if ($LASTEXITCODE -ne 0) { throw 'Update archive creation failed' }
-          } finally { Pop-Location }
-          "ASSET_WINDOWS_UPDATE=$archive" >> $env:GITHUB_ENV
+          $marker = Join-Path $env:GITHUB_WORKSPACE 'Lvce-Stage-${{ needs.create-release.outputs.rg_version }}-${{ matrix.versions.arch }}.json'
+          '{"schema":1,"preparation":"nsis","version":"${{ needs.create-release.outputs.rg_version }}"}' | Set-Content -LiteralPath $marker
+          "ASSET_WINDOWS_UPDATE=$marker" >> $env:GITHUB_ENV
       - name: Release staged Windows update
         if: matrix.versions.os == 'windows-2025'
         env:
