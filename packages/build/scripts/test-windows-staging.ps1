@@ -19,7 +19,8 @@ if (!$process.WaitForExit(300000)) { throw 'Installer preparation timed out' }
 if ($process.ExitCode -ne 0) { throw "Preparation failed: $($process.ExitCode)" }
 if ((Get-Content -LiteralPath (Join-Path $stage '.lvce-stage-complete') -Raw) -ne 'complete') { throw 'Missing preparation acknowledgment' }
 $config = Get-Content -LiteralPath (Join-Path $stage 'resources/app/config.json') -Raw | ConvertFrom-Json
-if (!$config.version -or !(Test-Path -LiteralPath (Join-Path $stage ($config.productName + '.exe')))) { throw 'Invalid prepared application' }
+$builder = Get-Content -LiteralPath 'packages/build/.tmp/electron-builder/package.json' -Raw | ConvertFrom-Json
+if (!$config.version -or !(Test-Path -LiteralPath (Join-Path $stage ($builder.productName + '.exe')))) { throw 'Invalid prepared application' }
 $payload = Join-Path (Get-Location).Path 'packages/build/.tmp/linux/snap/amd64/app'
 $expectedFiles = @(Get-ChildItem -LiteralPath $payload -File -Recurse -Force)
 $actualFiles = @(Get-ChildItem -LiteralPath $stage -File -Recurse -Force)
