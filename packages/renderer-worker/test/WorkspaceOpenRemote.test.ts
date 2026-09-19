@@ -1,14 +1,14 @@
 import { beforeEach, expect, jest, test } from '@jest/globals'
 
-const execute = jest.fn()
-const getRemoteHomepage = jest.fn()
-const create = jest.fn()
-const getPreference = jest.fn()
-const invoke = jest.fn()
-const executeViewletCommand = jest.fn()
-const getInstance = jest.fn()
-const getPath = jest.fn()
-const isActive = jest.fn()
+const execute = jest.fn<(...args: unknown[]) => Promise<unknown>>()
+const getRemoteHomepage = jest.fn<(remote: string, hosts?: unknown) => string>()
+const create = jest.fn<(...args: unknown[]) => Promise<unknown>>()
+const getPreference = jest.fn<(key: string) => unknown>()
+const invoke = jest.fn<(...args: unknown[]) => Promise<unknown>>()
+const executeViewletCommand = jest.fn<(...args: unknown[]) => Promise<unknown>>()
+const getInstance = jest.fn<() => { state: Record<string, unknown> } | undefined>()
+const getPath = jest.fn<() => string>()
+const isActive = jest.fn<() => boolean>()
 
 jest.unstable_mockModule('../src/parts/Command/Command.js', () => ({ execute }))
 jest.unstable_mockModule('../src/parts/GetRemoteHomepage/GetRemoteHomepage.js', () => ({ getRemoteHomepage }))
