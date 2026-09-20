@@ -3,6 +3,7 @@
 set -euo pipefail
 
 readonly dmg_path="${1:-packages/build/.tmp/releases/lvce-arm64.dmg}"
+readonly application_name="${2:-lvce}"
 
 if [[ ! -f "$dmg_path" ]]; then
   echo "macOS DMG not found: $dmg_path" >&2
@@ -24,8 +25,11 @@ readonly app_path
 test -n "$app_path"
 
 expected_version="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$app_path/Contents/Info.plist")"
-cli_path="$app_path/Contents/Resources/app/bin/lvce"
-test -x "$cli_path"
+cli_path="$app_path/Contents/Resources/app/bin/$application_name"
+if [[ ! -x "$cli_path" ]]; then
+  echo "macOS CLI not found or not executable: $cli_path" >&2
+  exit 1
+fi
 test "$("$cli_path" -v)" = "$expected_version"
 test "$("$cli_path" --version)" = "$expected_version"
 

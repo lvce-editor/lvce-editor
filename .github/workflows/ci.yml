@@ -144,7 +144,7 @@ jobs:
       - name: Verify signed and notarized macOS installer
         if: matrix.versions.os == 'macos-26' && matrix.versions.arch == 'arm64' && steps.macos-signing.outputs.enabled == 'true'
         shell: bash
-        run: bash packages/build/scripts/github-actions/verify-macos-dmg.sh packages/build/.tmp/releases/lvce-oss-arm64.dmg
+        run: bash packages/build/scripts/github-actions/verify-macos-dmg.sh packages/build/.tmp/releases/lvce-oss-arm64.dmg lvce-oss
       - name: Upload signed macOS installer
         if: matrix.versions.os == 'macos-26' && matrix.versions.arch == 'arm64' && steps.macos-signing.outputs.enabled == 'true'
         uses: actions/upload-artifact@v7

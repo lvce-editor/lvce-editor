@@ -7,6 +7,6 @@ test('macOS signing steps use the lvce-oss CI artifact', async () => {
   const dmgPath = 'packages/build/.tmp/releases/lvce-oss-arm64.dmg'
 
   expect(ciWorkflow).toContain(`notarize-macos-dmg.sh ${dmgPath}`)
-  expect(ciWorkflow).toContain(`verify-macos-dmg.sh ${dmgPath}`)
+  expect(ciWorkflow).toContain(`verify-macos-dmg.sh ${dmgPath} lvce-oss`)
   expect(ciWorkflow).toContain(`path: ${dmgPath}`)
 })
