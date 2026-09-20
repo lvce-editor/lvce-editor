@@ -281,6 +281,22 @@ jobs:
           asset_path: ${{ env.ASSET_WINDOWS_EXE_ARM64 }}
           asset_name: ${{ env.ASSET_WINDOWS_EXE_ARM64 }}
           asset_content_type: application/octet-stream
+      - name: Test staged Windows installer
+        if: matrix.versions.os == 'windows-2025'
+        shell: pwsh
+        run: ./packages/build/scripts/test-windows-staging.ps1 -Installer '${{ env.ASSET_WINDOWS_EXE_X64 || env.ASSET_WINDOWS_EXE_ARM64 }}'
+      - name: Declare staged Windows installer support
+        if: matrix.versions.os == 'windows-2025'
+        shell: pwsh
+        run: |
+          $marker = Join-Path $env:GITHUB_WORKSPACE 'Lvce-Stage-${{ needs.create-release.outputs.rg_version }}-${{ matrix.versions.arch }}-v2.json'
+          '{"schema":2,"preparation":"nsis","version":"${{ needs.create-release.outputs.rg_version }}"}' | Set-Content -LiteralPath $marker
+          "ASSET_WINDOWS_UPDATE=$marker" >> $env:GITHUB_ENV
+      - name: Release staged Windows update
+        if: matrix.versions.os == 'windows-2025'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh release upload '${{ needs.create-release.outputs.rg_version }}' '${{ env.ASSET_WINDOWS_UPDATE }}'
       - name: Build Electron App (AppImage, x64)
         if: matrix.versions.os == 'ubuntu-24.04' && matrix.versions.arch == 'x64'
         run: npm run build:electron:app-image:x64 -- --product=lvce

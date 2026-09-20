@@ -88,6 +88,46 @@ beforeEach(() => {
   Workspace.state.workspaceUri = ''
 })
 
+test('delays workspace progress and clears it when the operation finishes', async () => {
+  jest.useFakeTimers()
+  const listener = jest.fn()
+  GlobalEventBus.addListener('workspace.progress', listener)
+
+  const id = Workspace.startProgress('Opening Remote Workspace…')
+  jest.advanceTimersByTime(199)
+  await Promise.resolve()
+  expect(listener).not.toHaveBeenCalled()
+
+  jest.advanceTimersByTime(1)
+  await Promise.resolve()
+  expect(listener).toHaveBeenCalledWith('Opening Remote Workspace…')
+
+  Workspace.endProgress(id)
+  await Promise.resolve()
+  expect(listener).toHaveBeenLastCalledWith('')
+  jest.useRealTimers()
+})
+
+test('ignores completion from a superseded workspace operation', async () => {
+  jest.useFakeTimers()
+  const listener = jest.fn()
+  GlobalEventBus.addListener('workspace.progress', listener)
+
+  const firstId = Workspace.startProgress('First')
+  jest.advanceTimersByTime(200)
+  await Promise.resolve()
+  const secondId = Workspace.startProgress('Second')
+  Workspace.endProgress(firstId)
+  jest.advanceTimersByTime(200)
+  await Promise.resolve()
+
+  expect(listener.mock.calls).toEqual([['First'], [''], ['Second']])
+  Workspace.endProgress(secondId)
+  await Promise.resolve()
+  expect(listener).toHaveBeenLastCalledWith('')
+  jest.useRealTimers()
+})
+
 test('setPath uses the product name for an empty workspace', async () => {
   await Workspace.setPath('')
 

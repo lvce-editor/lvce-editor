@@ -9,6 +9,8 @@ export const Commands = {
   getPath: Workspace.getPath,
   getUri: Workspace.getUri,
   hydrate: Workspace.hydrate,
+  startProgress: Workspace.startProgress,
+  endProgress: Workspace.endProgress,
   setPath: Workspace.setPath,
   setUri: Workspace.setUri,
   supportsConnectionCommand: Workspace.supportsConnectionCommand,

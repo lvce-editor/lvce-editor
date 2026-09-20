@@ -32,6 +32,7 @@ test('file watcher explorer uses worker-backed module', async () => {
 })
 
 const componentStateViewlets = [
+  ViewletModuleId.ActivityBar,
   ViewletModuleId.Explorer,
   ViewletModuleId.ExtensionDetail,
   ViewletModuleId.Extensions,
