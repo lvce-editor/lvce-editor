@@ -7,5 +7,6 @@ export const Commands = {
   hydrate: ColorTheme.hydrate,
   reload: ColorTheme.reload,
   setColorTheme: ColorTheme.setColorTheme,
+  getColorTheme: ColorTheme.getColorTheme,
   getColorThemeNames: GetColorThemeNames.getColorThemeNames,
 }
