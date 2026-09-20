@@ -238,7 +238,11 @@
         },
         "loadContent": {
           "name": "TextSearch.loadContent",
-          "parameters": [{ "source": "state", "name": "uid" }, { "source": "argument", "name": "savedState" }]
+          "parameters": [
+            { "source": "state", "name": "uid" },
+            { "source": "argument", "name": "savedState" },
+            { "source": "argument", "name": "args", "index": 0 }
+          ]
         },
         "diff": { "name": "TextSearch.diff2", "parameters": [{ "source": "state", "name": "uid" }] },
         "render": {
