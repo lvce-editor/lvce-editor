@@ -81,6 +81,7 @@
   "virtualDom.recycling.size": 100,
 
   "workbench.colorTheme": "slime",
+  "workbench.experimental.modernUI": false,
   "workbench.iconTheme": "vscode-icons",
   "workbench.activityBar.visible": true,
   "workbench.editor.showTabsWhileLoading": false,
