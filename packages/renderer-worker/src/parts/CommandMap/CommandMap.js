@@ -371,6 +371,7 @@ export const commandMap = {
   'RecentlyOpened.addToRecentlyOpened': lazy('RecentlyOpened.addToRecentlyOpened'),
   'RecentlyOpened.clearRecentlyOpened': lazy('RecentlyOpened.clearRecentlyOpened'),
   'RecentlyOpened.getRecentlyOpened': lazy('RecentlyOpened.getRecentlyOpened'),
+  'RecentlyOpened.removeRecentlyOpened': lazy('RecentlyOpened.removeRecentlyOpened'),
   'RecentlyOpened.hydrate': lazy('RecentlyOpened.hydrate'),
   'Reload.reload': lazy('Reload.reload'),
   'RevealInExplorer.reveal': lazy('RevealInExplorer.reveal'),
