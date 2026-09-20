@@ -5,7 +5,7 @@
     ".": {
       "entry": ["scripts/**/*.js"],
       "project": ["eslint.config.js", "scripts/**/*.js"],
-      "ignoreDependencies": ["@lerna/legacy-package-management", "prettier"],
+      "ignoreDependencies": ["prettier"],
       "ignoreUnresolved": ["../build/src/parts/Format/Format.js"]
     },
     "packages/build": {

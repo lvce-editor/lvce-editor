@@ -3,7 +3,7 @@ import { fileURLToPath } from 'node:url'
 import * as ExitCode from '../ExitCode/ExitCode.ts'
 import * as Process from '../Process/Process.ts'
 
-const installCommands = ['npm ci --ignore-scripts', 'npm run postinstall']
+const installCommands = ['npm ci --ignore-scripts', 'npm rebuild --workspaces']
 
 /**
  * @typedef {{stdio: 'inherit'}} InstallCommandOptions
@@ -35,7 +35,7 @@ export const installDependenciesWithRetry = (execSyncFn, log = console.log, maxA
         throw error
       }
 
-      log(`npm ci failed on attempt ${attempt}, retrying...`)
+      log(`npm install failed on attempt ${attempt}, retrying...`)
     }
   }
 
