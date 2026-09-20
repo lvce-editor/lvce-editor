@@ -1,3 +1,21 @@
+import { existsSync } from 'node:fs'
+import { dirname, join } from 'node:path'
+
+const getHiddenDependencyPath = (path, dependency) => {
+  let currentPath = path
+  while (true) {
+    const candidatePath = join(currentPath, 'node_modules', dependency)
+    if (existsSync(candidatePath)) {
+      return candidatePath
+    }
+    const parentPath = dirname(currentPath)
+    if (parentPath === currentPath) {
+      return candidatePath
+    }
+    currentPath = parentPath
+  }
+}
+
 export const walkDependencies = (object, fn) => {
   const shouldContinue = fn(object)
   if (!shouldContinue) {
@@ -11,7 +29,7 @@ export const walkDependencies = (object, fn) => {
     for (const hiddenDependency of hiddenDependencies) {
       walkDependencies(
         {
-          path: object.path.slice(0, -object.name.length) + hiddenDependency,
+          path: getHiddenDependencyPath(object.path, hiddenDependency),
           name: hiddenDependency,
         },
         fn,

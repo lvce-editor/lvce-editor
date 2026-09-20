@@ -67,7 +67,7 @@ const copyServerFiles = async ({ commitHash, product }) => {
   await Replace.replace({
     path: 'packages/build/.tmp/server/server/src/server.js',
     occurrence: `const sharedProcessPath = join(ROOT, 'packages', 'shared-process', 'src', 'sharedProcessMain.ts')`,
-    replacement: `const sharedProcessUrl = new URL('../shared-process/src/sharedProcessMain.js', import.meta.url).toString()
+    replacement: `const sharedProcessUrl = new URL('../../shared-process/src/sharedProcessMain.js', import.meta.url).toString()
   const sharedProcessPath = fileURLToPath(sharedProcessUrl)`,
   })
   await Replace.replace({
@@ -122,7 +122,7 @@ const copyServerFiles = async ({ commitHash, product }) => {
   await Replace.replace({
     path: 'packages/build/.tmp/server/server/src/server.js',
     occurrence: `const staticServerPath = join(ROOT, 'packages', 'static-server', 'src', 'static-server.ts')`,
-    replacement: `const staticServerPath = fileURLToPath(new URL('../static-server/dist/static-server.js', import.meta.url))`,
+    replacement: `const staticServerPath = fileURLToPath(new URL('../../static-server/dist/static-server.js', import.meta.url))`,
   })
 
   const content = getThirdPartyNoticesContent({ commitHash })
