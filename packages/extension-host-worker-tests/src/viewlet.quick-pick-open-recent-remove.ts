@@ -13,27 +13,26 @@ export const test: Test = async ({ Command, expect, Locator }) => {
   const firstRemoveButton = firstItem.locator('.QuickPickItemRemove')
   const secondItem = items.nth(1)
   const secondRemoveButton = secondItem.locator('.QuickPickItemRemove')
-  const input = Locator('#QuickPick .InputBox')
 
-  // eslint-disable-next-line @typescript-eslint/no-deprecated -- verify hover-only visibility
-  await input.hover()
-  await expect(firstRemoveButton).toBeHidden()
-  // eslint-disable-next-line @typescript-eslint/no-deprecated -- verify hover-only visibility
-  await firstItem.hover()
-  await expect(firstRemoveButton).toBeVisible()
-  // eslint-disable-next-line @typescript-eslint/no-deprecated -- verify hover-only visibility
-  await secondItem.hover()
-  await expect(firstRemoveButton).toBeHidden()
-  await expect(secondRemoveButton).toBeVisible()
+  await expect(firstRemoveButton).toHaveCSS('display', 'none')
+  await expect(firstRemoveButton).toHaveAttribute('aria-label', 'Remove from Recently Opened')
+  await expect(firstRemoveButton).toHaveAttribute('data-uri', 'remote-ssh://two.example/test/two')
+  await expect(secondRemoveButton).toHaveAttribute('data-uri', 'remote-ssh://one.example/test/one')
 
-  await Command.execute('QuickPick.handleClickAt', 0, 0, 'remote-ssh://one.example/test/one')
+  // The test harness cannot synthesize native CSS :hover, so dispatch the real pointer event to the remove control.
+  // eslint-disable-next-line @typescript-eslint/no-deprecated -- exercise the DOM event listener
+  await firstRemoveButton.dispatchEvent('pointerdown', {
+    bubbles: true,
+    clientX: 0,
+    clientY: 0,
+  } as unknown as string)
 
   await expect(items).toHaveCount(1)
   const remainingItem = items.nth(0)
   const remainingLabel = remainingItem.locator('.QuickPickItemLabel')
-  await expect(remainingLabel).toHaveText('two')
+  await expect(remainingLabel).toHaveText('one [SSH: one.example]')
   const recentlyOpened = await Command.execute('RecentlyOpened.getRecentlyOpened')
-  if (JSON.stringify(recentlyOpened) !== JSON.stringify(['remote-ssh://two.example/test/two'])) {
+  if (JSON.stringify(recentlyOpened) !== JSON.stringify(['remote-ssh://one.example/test/one'])) {
     throw new Error(`Unexpected recently opened entries: ${JSON.stringify(recentlyOpened)}`)
   }
 }
