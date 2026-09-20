@@ -187,6 +187,14 @@
   },
   {
     "category": "workbench",
+    "description": "Enables the experimental modern UI styling",
+    "heading": "Modern UI",
+    "id": "workbench.experimental.modernUI",
+    "type": "boolean",
+    "value": false
+  },
+  {
+    "category": "workbench",
     "description": "Specifies the workbench color theme",
     "heading": "Color Theme",
     "id": "workbench.colorTheme",
