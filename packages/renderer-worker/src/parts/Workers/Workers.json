@@ -1232,6 +1232,8 @@
     "contentSecurityPolicy": ["default-src 'none'"],
     "viewlet": {
       "name": "Panel",
+      "extraCommands": [{ "name": "handleWorkspaceChange", "method": "loadContent" }],
+      "workspaceChangeEvent": "workspace.change",
       "css": ["/css/parts/ViewletPanel.css", "/css/parts/IconButton.css", "/css/parts/Actions.css", "/css/parts/ViewletPanelTabs.css"],
       "variables": ["PanelBackground"],
       "state": {
@@ -1257,11 +1259,19 @@
         },
         "loadContent": {
           "name": "Panel.loadContent",
-          "parameters": [{ "source": "state", "name": "uid" }, { "source": "literal", "value": {} }]
+          "parameters": [
+            { "source": "state", "name": "uid" },
+            { "source": "literal", "value": {} },
+            { "source": "context", "name": "workspaceUri" }
+          ]
         },
         "hotReloadLoadContent": {
           "name": "Panel.loadContent",
-          "parameters": [{ "source": "state", "name": "uid" }, { "source": "argument", "name": "savedState" }]
+          "parameters": [
+            { "source": "state", "name": "uid" },
+            { "source": "argument", "name": "savedState" },
+            { "source": "context", "name": "workspaceUri" }
+          ]
         },
         "diff": { "name": "Panel.diff2", "parameters": [{ "source": "state", "name": "uid" }] },
         "render": {

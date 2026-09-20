@@ -27,4 +27,5 @@ export const {
   renderEventListeners,
   resize,
   saveState,
+  workspaceChangeEvent,
 } = createWorkerViewlet({ workerId: 'panel' })
