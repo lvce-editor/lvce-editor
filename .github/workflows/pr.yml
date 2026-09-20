@@ -74,7 +74,7 @@ jobs:
       - name: Validate builtin setting declarations
         working-directory: ./packages/build
         run: npm test -- --runTestsByPath test/BundleBuiltinSettings.test.ts
-      - run: npx lerna run test --since origin/main
+      - run: npm test
       - name: install playwright dependencies (extension host worker tests)
         working-directory: ./packages/extension-host-worker-tests
         run: npx playwright install chromium
@@ -183,7 +183,7 @@ jobs:
         if: matrix.os == 'windows-2025'
         with:
           path: '~\AppData\Local\electron-builder'
-          key: ${{ runner.os }}-electron-builder-${{ hashFiles('packages/build/package-lock.json') }}
+          key: ${{ runner.os }}-electron-builder-${{ hashFiles('package-lock.json') }}
       - name: Build Electron App (exe)
         if: matrix.os == 'windows-2025'
         run: npm run build:electron:windows:exe

@@ -48,6 +48,7 @@ const copyServerFiles = async ({ commitHash, product }) => {
     from: 'packages/server',
     to: 'packages/build/.tmp/server/server',
     ignore: ['tsconfig.json', 'package-lock.json'],
+    dereference: true,
   })
   await Copy.copyFile({
     from: 'LICENSE',
@@ -66,7 +67,7 @@ const copyServerFiles = async ({ commitHash, product }) => {
   await Replace.replace({
     path: 'packages/build/.tmp/server/server/src/server.js',
     occurrence: `const sharedProcessPath = join(ROOT, 'packages', 'shared-process', 'src', 'sharedProcessMain.ts')`,
-    replacement: `const sharedProcessUrl = new URL('src/sharedProcessMain.js', import.meta.resolve('@lvce-editor/shared-process')).toString()
+    replacement: `const sharedProcessUrl = new URL('../shared-process/src/sharedProcessMain.js', import.meta.url).toString()
   const sharedProcessPath = fileURLToPath(sharedProcessUrl)`,
   })
   await Replace.replace({
@@ -121,7 +122,7 @@ const copyServerFiles = async ({ commitHash, product }) => {
   await Replace.replace({
     path: 'packages/build/.tmp/server/server/src/server.js',
     occurrence: `const staticServerPath = join(ROOT, 'packages', 'static-server', 'src', 'static-server.ts')`,
-    replacement: `const staticServerPath = fileURLToPath(import.meta.resolve('@lvce-editor/static-server'))`,
+    replacement: `const staticServerPath = fileURLToPath(new URL('../static-server/dist/static-server.js', import.meta.url))`,
   })
 
   const content = getThirdPartyNoticesContent({ commitHash })
