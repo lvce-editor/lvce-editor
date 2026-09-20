@@ -36,6 +36,16 @@ test('rejects corrupted downloaded payloads', async () => {
   }
 })
 
+const waitForTestEditorExit = async (pid: number): Promise<void> => {
+  const deadline = Date.now() + 10000
+  while (WindowsUpdateHelper.isRunning(pid)) {
+    if (Date.now() > deadline) {
+      throw new Error('Test editor did not exit during cleanup')
+    }
+    await new Promise((resolve) => setTimeout(resolve, 100))
+  }
+}
+
 const windowsTest = process.platform === 'win32' ? test : test.skip
 
 windowsTest.each([false, true])(
@@ -99,13 +109,7 @@ windowsTest.each([false, true])(
       const acknowledgment = await readFile(ready, 'utf8').catch(() => '')
       if (acknowledgment) {
         const { pid } = JSON.parse(acknowledgment)
-        const deadline = Date.now() + 10000
-        while (WindowsUpdateHelper.isRunning(pid)) {
-          if (Date.now() > deadline) {
-            throw new Error('Test editor did not exit during cleanup')
-          }
-          await new Promise((resolve) => setTimeout(resolve, 100))
-        }
+        await waitForTestEditorExit(pid)
       }
       await rm(root, { force: true, maxRetries: 5, recursive: true, retryDelay: 200 })
     }
