@@ -1,4 +1,4 @@
-FROM node:24.11.0-alpine
+FROM node:26.9.0-alpine
 
 RUN npm install --global @lvce-editor/server@0.96.12
 
