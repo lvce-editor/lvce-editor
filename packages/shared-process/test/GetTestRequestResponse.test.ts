@@ -67,6 +67,26 @@ test('getTestRequestResponse', async () => {
   expect(CreateTestOverview.createTestOverview).toHaveBeenCalledWith(join('/test', 'src'))
 })
 
+test('getTestRequestResponse - redirects the test overview without a trailing slash', async () => {
+  const request = {
+    url: '/tests?filter=chat',
+  }
+  jest.spyOn(GetPathName, 'getPathName').mockReturnValue('/tests')
+
+  const result = await GetTestRequestResponse.getTestRequestResponse(request, '/test/index.html')
+
+  expect(result).toEqual({
+    body: '',
+    init: {
+      headers: {
+        Location: '/tests/?filter=chat',
+      },
+      status: 308,
+    },
+  })
+  expect(CreateTestOverview.createTestOverview).not.toHaveBeenCalled()
+})
+
 test('getTestRequestResponse - _all.html serves index html', async () => {
   const tmpDir = await mkdtemp(join(tmpdir(), 'lvce-test-request-'))
   temporaryDirectories.push(tmpDir)

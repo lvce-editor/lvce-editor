@@ -156,7 +156,7 @@ const createRenderTitle = (title) => {
 }
 
 const createWorkerViewletInternal = ({ adapter, config, context, worker }) => {
-  const { capabilities = {}, css = [], methods, name, state, variables = [], workspaceChangeEvent, workspaceChangeEventPrepend } = config
+  const { capabilities = {}, css = [], methods, name, state, variables = [], workspaceChangeEvent, workspaceChangeEventPrepend, workspaceProgressEvent } = config
   const Commands = {}
   const Events = {}
   const { idKey } = state
@@ -493,6 +493,7 @@ const createWorkerViewletInternal = ({ adapter, config, context, worker }) => {
     setComponentState,
     workspaceChangeEvent,
     workspaceChangeEventPrepend,
+    workspaceProgressEvent,
   }
   workerViewlet.renderContent = workerViewlet.render[0]
   workerViewlet.renderDialog = workerViewlet.render[0]

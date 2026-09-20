@@ -74,7 +74,7 @@ jobs:
       - name: Validate builtin setting declarations
         working-directory: ./packages/build
         run: npm test -- --runTestsByPath test/BundleBuiltinSettings.test.ts
-      - run: npx lerna run test --since origin/main
+      - run: npm test
       - name: install playwright dependencies (extension host worker tests)
         working-directory: ./packages/extension-host-worker-tests
         run: npx playwright install chromium
@@ -171,6 +171,12 @@ jobs:
         run: npm run e2e:headless -- --test-name-prefix=viewlet.extension-detail-canonical-uri
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0
+      - name: Test extension detail size
+        if: matrix.os == 'ubuntu-24.04'
+        working-directory: ./packages/extension-host-worker-tests
+        run: npm run e2e:headless -- --test-name-prefix=viewlet.extension-detail-size
+        env:
+          PLAYWRIGHT_BROWSERS_PATH: 0
       - name: Build Electron App (deb)
         if: matrix.os == 'ubuntu-24.04'
         run: npm run build:electron:deb
@@ -183,10 +189,21 @@ jobs:
         if: matrix.os == 'windows-2025'
         with:
           path: '~\AppData\Local\electron-builder'
-          key: ${{ runner.os }}-electron-builder-${{ hashFiles('packages/build/package-lock.json') }}
+          key: ${{ runner.os }}-electron-builder-${{ hashFiles('package-lock.json') }}
       - name: Build Electron App (exe)
         if: matrix.os == 'windows-2025'
         run: npm run build:electron:windows:exe
+      - name: Test staged Windows installer
+        if: matrix.os == 'windows-2025'
+        shell: pwsh
+        run: ./packages/build/scripts/test-windows-staging.ps1
+      - name: Build Electron App (exe, arm64)
+        if: matrix.os == 'windows-2025'
+        run: npm run build:electron:windows:exe:arm64
+      - name: Test staged Windows ARM64 installer
+        if: matrix.os == 'windows-2025'
+        shell: pwsh
+        run: ./packages/build/scripts/test-windows-staging.ps1 -Architecture arm64
       - name: Build Electron App (AppImage)
         if: matrix.os == 'ubuntu-24.04'
         run: npm run build:electron:app-image

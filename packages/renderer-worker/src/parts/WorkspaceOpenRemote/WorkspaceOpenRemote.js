@@ -8,7 +8,12 @@ import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as Workspace from '../Workspace/Workspace.js'
 import * as WorkspaceConnection from '../WorkspaceConnection/WorkspaceConnection.js'
 
-export const openRemote = async () => {
+const getErrorMessage = (error) => {
+  const message = error instanceof Error ? error.message : String(error)
+  return message.replace(/:\/\/[^/\s@]+@/g, '://<redacted>@')
+}
+
+const openRemoteInternal = async () => {
   const cwd = Workspace.getPath()
   if (!cwd) {
     await Notification.create('info', 'Open a workspace folder to view its Git remote.')
@@ -31,4 +36,12 @@ export const openRemote = async () => {
   }
   await Command.execute('Layout.showPreview', 'simple-browser://')
   await Command.execute('SimpleBrowser.openOrRevealTab', url)
+}
+
+export const openRemote = async () => {
+  try {
+    await openRemoteInternal()
+  } catch (error) {
+    await Notification.create('error', `Failed to open Git remote: ${getErrorMessage(error)}`)
+  }
 }

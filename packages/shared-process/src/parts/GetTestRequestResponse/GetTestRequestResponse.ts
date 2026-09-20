@@ -41,7 +41,16 @@ export const getTestRequestResponse = async (request: any, indexHtmlPath: any): 
       }
       return GetContentResponse.getContentResponse(content, headers)
     }
-    if (pathName === '/tests/' || pathName === '/tests') {
+    if (pathName === '/tests') {
+      const requestUrl = request.url || ''
+      const queryIndex = requestUrl.indexOf('?')
+      const search = queryIndex === -1 ? '' : requestUrl.slice(queryIndex)
+      const headers = {
+        [HttpHeader.Location]: `/tests/${search}`,
+      }
+      return GetContentResponse.getContentResponse('', headers, HttpStatusCode.PermanentRedirect)
+    }
+    if (pathName === '/tests/') {
       const testPath = GetTestPath.getTestPath()
       const testPathSrc = join(testPath, 'src')
       const body = await CreateTestOverview.createTestOverview(testPathSrc)

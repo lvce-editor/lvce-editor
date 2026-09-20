@@ -4,15 +4,18 @@
   "description": "",
   "main": "index.js",
   "type": "module",
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
-    "postinstall": "lerna bootstrap --ci && node scripts/postinstall.js",
-    "test": "lerna run test",
+    "postinstall": "node scripts/postinstall.js",
+    "test": "npm test --workspaces --if-present",
     "dev": "nodemon",
     "diagnose:gpu": "node scripts/diagnose-gpu-process.mjs",
-    "e2e": "lerna run e2e",
+    "e2e": "npm run e2e --workspaces --if-present",
     "lint": "eslint \"packages/shared-process/**/*.{ts,js}\" && knip --no-config-hints",
     "electron": "node packages/build/src/parts/RunElectron/RunElectron.ts",
-    "type-check": "lerna run type-check",
+    "type-check": "npm run type-check --workspaces --if-present",
     "build:static": "node packages/build/bin/build.ts --target=static",
     "build:static:ignore-icon-theme": "node packages/build/bin/build.ts --target=static --ignore-icon-theme",
     "build:server": "node packages/build/bin/build.ts --target=server",
@@ -44,7 +47,6 @@
     "node": ">=24"
   },
   "devDependencies": {
-    "@lerna/legacy-package-management": "^8.2.4",
     "@lvce-editor/eslint-config": "^18.13.0",
     "@types/jest": "^30.0.0",
     "@types/node": "^25.0.1",
@@ -52,7 +54,6 @@
     "jest": "^30.2.0",
     "jest-environment-jsdom": "^30.2.0",
     "knip": "^6.35.1",
-    "lerna": "^8.2.4",
     "nodemon": "^3.1.14",
     "prettier": "^3.9.6",
     "ts-jest": "^29.4.12",

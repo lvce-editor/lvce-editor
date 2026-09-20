@@ -1,7 +1,10 @@
 import * as GetLatestVersion from '../GetLatestVersion/GetLatestVersion.js'
+import * as GetWindowId from '../GetWindowId/GetWindowId.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as Notification from '../Notification/Notification.js'
 import * as UpdateWorker from '../UpdateWorker/UpdateWorker.js'
+import * as Platform from '../Platform/Platform.js'
+import * as PlatformType from '../PlatformType/PlatformType.js'
 
 const getErrorMessage = (error) => {
   if (error && error.message) {
@@ -31,6 +34,21 @@ export const checkForUpdatesWithDependencies = async (updateSetting, silent, dep
 }
 
 export const checkForUpdates = async (updateSetting, silent = Boolean(updateSetting)) => {
+  if (Platform.getPlatform() === PlatformType.Electron && (await SharedProcess.invoke('AutoUpdater.getPlatform')) === 'win32') {
+    if (silent && updateSetting === 'none') {
+      return
+    }
+    try {
+      const windowId = await GetWindowId.getWindowId()
+      const handled = await SharedProcess.invoke('AutoUpdater.checkWindowsUpdate', silent, windowId)
+      if (handled) {
+        return
+      }
+    } catch (error) {
+      await Notification.create('error', `Failed to prepare update: ${getErrorMessage(error)}`)
+      return
+    }
+  }
   await checkForUpdatesWithDependencies(updateSetting, silent, {
     getLatestVersion: GetLatestVersion.getLatestVersion,
     notify: Notification.create,

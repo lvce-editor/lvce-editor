@@ -158,7 +158,7 @@ jobs:
         if: matrix.versions.os == 'windows-2025'
         with:
           path: '~\AppData\Local\electron-builder'
-          key: ${{ runner.os }}-electron-builder-${{ hashFiles('packages/build/package-lock.json') }}
+          key: ${{ runner.os }}-electron-builder-${{ hashFiles('package-lock.json') }}
       - name: Build Electron App (exe, x64)
         if: matrix.versions.os == 'windows-2025' && matrix.versions.arch == 'x64'
         run: npm run build:electron:windows:exe:x64
