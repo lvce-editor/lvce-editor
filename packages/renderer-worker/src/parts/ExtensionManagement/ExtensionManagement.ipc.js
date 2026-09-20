@@ -11,6 +11,7 @@ export const Commands = {
   'ExtensionHostSourceControl.generateCommitMessage': ExtensionHostSourceControl.generateCommitMessage,
   'ExtensionHostSourceControl.getBadgeCount': ExtensionHostSourceControl.getBadgeCount,
   'ExtensionHostSourceControl.getChangedFiles': ExtensionHostSourceControl.getChangedFiles,
+  'ExtensionHostSourceControl.getCurrentBranch': ExtensionHostSourceControl.getCurrentBranch,
   'ExtensionHostSourceControl.getEnabledProviderIds': ExtensionHostSourceControl.getEnabledProviderIds,
   'ExtensionHostSourceControl.getProgress': ExtensionHostSourceControl.getProgress,
   'ExtensionHostSourceControl.getFeatures': ExtensionHostSourceControl.getFeatures,
