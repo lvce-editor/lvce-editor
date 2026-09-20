@@ -96,6 +96,17 @@ windowsTest.each([false, true])(
       throw new Error(await readFile(log, 'utf8').catch(() => String(error)))
     } finally {
       await writeFile(stop, '')
+      const acknowledgment = await readFile(ready, 'utf8').catch(() => '')
+      if (acknowledgment) {
+        const { pid } = JSON.parse(acknowledgment)
+        const deadline = Date.now() + 10000
+        while (WindowsUpdateHelper.isRunning(pid)) {
+          if (Date.now() > deadline) {
+            throw new Error('Test editor did not exit during cleanup')
+          }
+          await new Promise((resolve) => setTimeout(resolve, 100))
+        }
+      }
       await rm(root, { force: true, maxRetries: 5, recursive: true, retryDelay: 200 })
     }
   },
