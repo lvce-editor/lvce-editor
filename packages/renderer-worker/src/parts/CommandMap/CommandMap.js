@@ -559,6 +559,7 @@ export const commandMap = {
   'WindowTitle.set': lazy('WindowTitle.set'),
   'Workspace.openRemote': lazy('Workspace.openRemote'),
   'Workspace.close': lazy('Workspace.close'),
+  'Workspace.getHomeDir': lazy('Workspace.getHomeDir'),
   'Workspace.getPath': lazy('Workspace.getPath'),
   'Workspace.getUri': lazy('Workspace.getUri'),
   'Workspace.hydrate': lazy('Workspace.hydrate'),
