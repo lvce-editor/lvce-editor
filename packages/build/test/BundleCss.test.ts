@@ -185,6 +185,30 @@ test('bundleCss strictly contains the simple browser snapshot wrapper', async ()
   }
 }, 30_000)
 
+test('bundleCss preserves the simple browser snapshot aspect ratio', async () => {
+  const dir = await mkdtemp(join(tmpdir(), 'lvce-bundle-css-'))
+
+  try {
+    await bundleCss({
+      outDir: dir,
+      assetDir: '',
+    })
+
+    const css = await readFile(join(dir, 'parts', 'ViewletSimpleBrowser.css'), 'utf8')
+
+    expect(css).toContain(`.SimpleBrowserSnapshot {
+  display: block;
+  filter: brightness(0.8);
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+  width: 100%;
+}`)
+  } finally {
+    await rm(dir, { recursive: true, force: true })
+  }
+}, 30_000)
+
 test('bundleCss keeps extra space between the simple browser favicon and tab title', async () => {
   const dir = await mkdtemp(join(tmpdir(), 'lvce-bundle-css-'))
 
