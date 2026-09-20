@@ -22,12 +22,15 @@
   gap: 10px;
   contain: content;
   white-space: nowrap;
-  background: transparent;
+  background: var(--PanelTabBackground, transparent);
   border: none;
+  border-radius: var(--PanelTabBorderRadius, 0);
+  padding: var(--PanelTabPadding, 0);
 }
 
 .PanelTabSelected {
   color: var(--PanelTabActiveForeground);
+  background: var(--PanelTabSelectedBackground, transparent);
   border-bottom-color: rgb(231, 231, 231);
   border-bottom: 1px solid;
 }
