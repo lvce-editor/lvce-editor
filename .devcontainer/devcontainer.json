@@ -1,6 +1,6 @@
 {
   "name": "Node.js",
-  "image": "mcr.microsoft.com/devcontainers/javascript-node:24",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:26",
 
   // Features to add to the dev container. More info: https://containers.dev/implementors/features.
   "features": {
