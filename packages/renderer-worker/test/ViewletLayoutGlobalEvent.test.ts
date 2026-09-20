@@ -343,3 +343,12 @@ test('handleSettingsChanged hydrates preferences and updates viewlet state', asy
     },
   })
 })
+
+test('source control progress notifies the view without refreshing workspace files', async () => {
+  const progress = jest.fn(async (state: { uid: number }) => ({ ...state, progress: true }))
+  ViewletStates.set('source-control', createInstance(1, 'handleSourceControlProgressChange', progress))
+  const result = await ViewletLayout.handleSourceControlProgressChange(ViewletLayout.create(1))
+  expect(progress).toHaveBeenCalledTimes(1)
+  expect(result.commands).toEqual([['render.1']])
+  expect(extensionManagementInvoke).not.toHaveBeenCalled()
+})

@@ -2736,6 +2736,10 @@ export const handleWorkspaceRefresh = async (state: LayoutState, refresh: Worksp
   return result
 }
 
+export const handleSourceControlProgressChange = async (state: LayoutState): Promise<LayoutStateResult> => {
+  return callGlobalEvent(state, 'handleSourceControlProgressChange')
+}
+
 export const refreshProblemsSummary = async (state: LayoutState): Promise<LayoutStateResult> => {
   try {
     const summary = await ProblemsWorker.invoke('Problems.getProblemsSummary')

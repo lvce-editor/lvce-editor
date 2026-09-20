@@ -52,3 +52,9 @@ test('getEnabledProviderIds', async () => {
 // TODO test getChangedFiles
 
 // TODO test getFileBefore
+
+test('getProgress forwards the query to the isolated provider', async () => {
+  extensionManagementInvoke.mockResolvedValue({ found: true, result: true })
+  await expect(ExtensionHostSourceControl.getProgress('git')).resolves.toBe(true)
+  expect(ExtensionManagementWorker.invoke).toHaveBeenCalledWith('Extensions.executeSourceControlProvider', 'git', 'executeSourceControlGetProgress')
+})
