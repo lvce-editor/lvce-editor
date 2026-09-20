@@ -57,6 +57,7 @@
   "simpleBrowser.chromeTheme": "light",
   "simpleBrowser.fullWidth.doubleControlEnabled": true,
   "simpleBrowser.fullWidth.hideTitleBar": false,
+  "simpleBrowser.nativeContextMenu": false,
   "simpleBrowser.suggestions": false,
   "simpleBrowser.shortcuts": [],
   "simpleBrowser.tabHover.enabled": false,

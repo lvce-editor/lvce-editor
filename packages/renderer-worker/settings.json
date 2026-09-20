@@ -219,6 +219,14 @@
   },
   {
     "category": "workbench",
+    "description": "Uses native Electron context menus for Simple Browser tabs and toolbar actions when available",
+    "heading": "Simple Browser Native Context Menu",
+    "id": "simpleBrowser.nativeContextMenu",
+    "type": "boolean",
+    "value": false
+  },
+  {
+    "category": "workbench",
     "description": "Shows editor tabs while their content is loading",
     "heading": "Show Tabs While Loading",
     "id": "workbench.editor.showTabsWhileLoading",
