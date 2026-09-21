@@ -4,7 +4,17 @@ import * as GetSimpleBrowserVirtualDom from '../src/parts/GetSimpleBrowserVirtua
 afterEach(() => {
   BrowserSuggestionRequests.cancel(7)
   jest.useRealTimers()
-  delete Preferences.state['simpleBrowser.chromeTheme']
+  for (const key of [
+    'simpleBrowser.audioIndicator.enabled',
+    'simpleBrowser.chromeTheme',
+    'simpleBrowser.shortcuts',
+    'simpleBrowser.suggestions',
+    'simpleBrowser.tabHover.enabled',
+    'simpleBrowser.tabs.enabled',
+    'simpleBrowser.unloadTabs',
+  ]) {
+    delete Preferences.state[key]
+  }
 })
 
 const getFaviconSource = (favicon: unknown): string => {
@@ -650,6 +660,87 @@ test.each(['light', 'inherit'])('updates open new tab pages when browser chrome 
   expect(newState.chromeTheme).toBe(chromeTheme)
   expect(ElectronWebContentsViewFunctions.setIframeSrc).toHaveBeenCalledTimes(1)
   expect(ElectronWebContentsViewFunctions.setIframeSrc).toHaveBeenCalledWith(12, SimpleBrowserNewTabPage.getUrl(undefined, false, chromeTheme))
+})
+
+test('updates cached settings without recreating browser tabs', async () => {
+  Preferences.state['simpleBrowser.audioIndicator.enabled'] = false
+  Preferences.state['simpleBrowser.chromeTheme'] = 'light'
+  Preferences.state['simpleBrowser.shortcuts'] = [{ prefix: 'docs', url: 'https://docs.example/{query}' }]
+  Preferences.state['simpleBrowser.suggestions'] = false
+  Preferences.state['simpleBrowser.tabHover.enabled'] = true
+  Preferences.state['simpleBrowser.tabs.enabled'] = false
+  Preferences.state['simpleBrowser.unloadTabs'] = true
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.resizeWebContentsView.mockResolvedValue(undefined)
+  const state = {
+    ...createTwoTabState(),
+    headerHeight: 65,
+    height: 200,
+    width: 300,
+    x: 0,
+    y: 0,
+    suggestionsEnabled: true,
+  }
+
+  const newState = await ViewletSimpleBrowser.handleSettingsChanged(state)
+
+  expect(newState).toMatchObject({
+    audioIndicatorEnabled: false,
+    chromeTheme: 'light',
+    shortcuts: [{ prefix: 'docs', url: 'https://docs.example/{query}' }],
+    suggestionsEnabled: false,
+    tabHoverEnabled: true,
+    tabsEnabled: false,
+    unloadTabs: true,
+    headerHeight: 30,
+  })
+  expect(newState.tabs).toBe(state.tabs)
+  expect(ElectronWebContentsView.disposeWebContentsView).not.toHaveBeenCalled()
+  expect(ElectronWebContentsViewFunctions.resizeWebContentsView).toHaveBeenCalledTimes(2)
+  expect(ElectronWebContentsViewFunctions.resizeWebContentsView).toHaveBeenNthCalledWith(1, 12, 0, 30, 300, 170)
+  expect(ElectronWebContentsViewFunctions.resizeWebContentsView).toHaveBeenNthCalledWith(2, 13, 0, 30, 300, 170)
+})
+
+test('disabling suggestions closes the popup and rejects pending provider results', async () => {
+  Preferences.state['simpleBrowser.suggestions'] = false
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.show.mockResolvedValue(undefined)
+  const state = {
+    ...ViewletSimpleBrowser.create(7),
+    browserViewId: 12,
+    hasSuggestionsOverlay: true,
+    inputValue: 'what is',
+    overlayIds: ['search-suggestions'],
+    snapshot: 'blob:https://example.com/snapshot',
+    suggestions: [{ favicon: '', type: 'search', value: 'what is' }],
+    suggestionsEnabled: true,
+  }
+  const sessionId = BrowserSuggestionRequests.begin(7, 12, 'what is', undefined, undefined)
+
+  const disabled = await ViewletSimpleBrowser.handleSettingsChanged(state)
+  const lateResult = await ViewletSimpleBrowser.applySuggestions(disabled, 7, 'what is', ['what is love'], undefined, sessionId)
+
+  expect(disabled).toMatchObject({ hasSuggestionsOverlay: false, selectedSuggestionIndex: -1, suggestions: [], suggestionsEnabled: false })
+  expect(disabled.overlayIds).toEqual([])
+  expect(lateResult).toBe(disabled)
+  expect(ElectronWebContentsViewFunctions.show).toHaveBeenCalledWith(12)
+})
+
+test('toggling suggestions refreshes generated new-tab pages', async () => {
+  Preferences.state['simpleBrowser.suggestions'] = true
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.setIframeSrc.mockResolvedValue(undefined)
+  const state = {
+    ...ViewletSimpleBrowser.create(7),
+    browserViewId: 12,
+    suggestionsEnabled: false,
+    tabs: [{ browserViewId: 12, iframeSrc: '', inputValue: '', title: 'New Tab' }],
+  }
+
+  const enabled = await ViewletSimpleBrowser.handleSettingsChanged(state)
+
+  expect(enabled.suggestionsEnabled).toBe(true)
+  expect(ElectronWebContentsViewFunctions.setIframeSrc).toHaveBeenCalledWith(12, SimpleBrowserNewTabPage.getUrl(undefined, true, 'light'))
 })
 
 test('does not reload new tab pages for unrelated settings changes', async () => {
