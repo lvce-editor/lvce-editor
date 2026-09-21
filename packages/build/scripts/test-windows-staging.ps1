@@ -72,6 +72,7 @@ terminal.onExit(({ exitCode }) => {
     console.error(`PTY smoke test failed: exitCode=${exitCode}, output=${JSON.stringify(output)}`)
     process.exit(1)
   }
+  process.exit(0)
 })
 '@ | Set-Content -LiteralPath $probe
   $electron = Join-Path $stage ($builder.productName + '.exe')
