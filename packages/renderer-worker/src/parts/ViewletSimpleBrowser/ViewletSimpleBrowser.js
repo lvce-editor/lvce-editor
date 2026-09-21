@@ -88,7 +88,7 @@ export const escapeAddress = (state) => (state.findVisible ? closeFind(state) : 
 const getHeaderHeight = (tabsEnabled) => navigationHeaderHeight + (tabsEnabled ? tabsHeaderHeight : 0)
 
 const createTab = ({
-  browserViewId,
+  browserViewId = 0,
   canGoBack = false,
   canGoForward = false,
   favicon = '',
@@ -451,13 +451,8 @@ const createUnloadedTab = async (state) => {
   return createTab({ browserViewId })
 }
 
-const createEmptyTab = async (state) => {
-  const tab = await createUnloadedTab(state)
-  await ElectronWebContentsViewFunctions.setIframeSrc(
-    tab.browserViewId,
-    SimpleBrowserNewTabPage.getUrl(undefined, state.suggestionsEnabled, state.chromeTheme),
-  )
-  return tab
+const createEmptyTab = async () => {
+  return createTab({})
 }
 
 const updateNewTabPages = async (state) => {
@@ -477,7 +472,10 @@ const materializeTab = async (state, tab) => {
   if (isHistoryTab(tab)) {
     return tab
   }
-  const createdTab = tab.iframeSrc ? await createUnloadedTab(state) : await createEmptyTab(state)
+  if (!tab.iframeSrc) {
+    return tab
+  }
+  const createdTab = await createUnloadedTab(state)
   if (tab.iframeSrc) {
     void ElectronWebContentsViewFunctions.setIframeSrc(createdTab.browserViewId, tab.iframeSrc)
   }
@@ -517,7 +515,7 @@ const switchToTab = async (state, initialTabs, selectedTabIndex) => {
     selectedTab = await materializeTab(state, selectedTab)
     tabs = tabs.with(selectedTabIndex, selectedTab)
   }
-  if (!selectedTab.pageSnapshot && !isHistoryTab(selectedTab)) {
+  if (selectedTab.browserViewId && !selectedTab.pageSnapshot && !isHistoryTab(selectedTab)) {
     await ElectronWebContentsViewFunctions.show(selectedTab.browserViewId)
   }
   const deactivation = await deactivationPromise
@@ -534,7 +532,7 @@ const switchToTab = async (state, initialTabs, selectedTabIndex) => {
       await ElectronWebContentsViewFunctions.hide(oldBrowserViewId)
     }
   }
-  if (!selectedTab.pageSnapshot && !isHistoryTab(selectedTab)) {
+  if (selectedTab.browserViewId && !selectedTab.pageSnapshot && !isHistoryTab(selectedTab)) {
     await ElectronWebContentsViewFunctions.focus(selectedTab.browserViewId)
   }
   return activateTab(state, tabs, selectedTabIndex)
@@ -545,7 +543,7 @@ export const createNewTab = async (state, focusAddress = true) => {
     return state
   }
   const currentState = state.hasSuggestionsOverlay ? await closeSuggestions(state) : state
-  const tab = await createEmptyTab(currentState)
+  const tab = await createEmptyTab()
   const newState = await switchToTab(currentState, [...currentState.tabs, tab], currentState.tabs.length)
   if (!focusAddress) {
     return newState
@@ -565,7 +563,7 @@ export const duplicateTab = async (state, index) => {
   }
   const currentState = hasSuggestionsOverlay ? await closeSuggestions(state) : state
   const sourceTab = currentState.tabs[tabIndex]
-  const emptyTab = isHistoryTab(sourceTab) ? createHistoryTab() : sourceTab.iframeSrc ? await createUnloadedTab(currentState) : await createEmptyTab(currentState)
+  const emptyTab = isHistoryTab(sourceTab) ? createHistoryTab() : sourceTab.iframeSrc ? await createUnloadedTab(currentState) : await createEmptyTab()
   const tab = {
     ...emptyTab,
     iframeSrc: sourceTab.iframeSrc,
@@ -730,12 +728,14 @@ const closeTabInternal = async (state, index, disposeWebContentsView) => {
   const closedTabs = [...currentState.closedTabs, { iframeSrc: tab.iframeSrc, title: tab.title, index: tabIndex }]
   const closedState = { ...currentState, closedTabs }
   if (currentState.tabs.length === 1) {
-    const replacement = await createEmptyTab(currentState)
+    const replacement = await createEmptyTab()
     if (disposeWebContentsView && tab.browserViewId) {
       await ElectronWebContentsView.disposeWebContentsView(tab.browserViewId)
     }
     SimpleBrowserFavicon.dispose(tab.favicon)
-    await ElectronWebContentsViewFunctions.show(replacement.browserViewId)
+    if (replacement.browserViewId) {
+      await ElectronWebContentsViewFunctions.show(replacement.browserViewId)
+    }
     const newState = activateTab(closedState, [replacement], 0)
     return { ...newState, focusAddressVersion: newState.focusAddressVersion + 1 }
   }
@@ -759,7 +759,7 @@ const closeTabInternal = async (state, index, disposeWebContentsView) => {
     selectedTab = await materializeTab(currentState, selectedTab)
     tabs = tabs.with(selectedTabIndex, selectedTab)
   }
-  if (!selectedTab.pageSnapshot && !isHistoryTab(selectedTab)) {
+  if (selectedTab.browserViewId && !selectedTab.pageSnapshot && !isHistoryTab(selectedTab)) {
     await ElectronWebContentsViewFunctions.show(selectedTab.browserViewId)
     await ElectronWebContentsViewFunctions.focus(selectedTab.browserViewId)
   }
@@ -871,7 +871,7 @@ const closeTabsByIndex = async (state, indexes, preferredTabIndex) => {
     selectedTab = await materializeTab(currentState, selectedTab)
     remainingTabs = remainingTabs.with(selectedTabIndex, selectedTab)
   }
-  if (!selectedTab.pageSnapshot && !isHistoryTab(selectedTab)) {
+  if (selectedTab.browserViewId && !selectedTab.pageSnapshot && !isHistoryTab(selectedTab)) {
     await ElectronWebContentsViewFunctions.show(selectedTab.browserViewId)
     await ElectronWebContentsViewFunctions.focus(selectedTab.browserViewId)
   }
@@ -955,7 +955,7 @@ export const afterRender = async (oldState, newState) => {
   const { browserViewId, overlayIds, selectedTabIndex, tabs } = newState
   const didShowFirstOverlay = oldOverlayIds.length === 0 && overlayIds.length > 0
   const selectedTab = tabs[selectedTabIndex]
-  if (didShowFirstOverlay && !selectedTab?.pageSnapshot && !isHistoryTab(selectedTab)) {
+  if (didShowFirstOverlay && browserViewId && !selectedTab?.pageSnapshot && !isHistoryTab(selectedTab)) {
     try {
       await ElectronWebContentsViewFunctions.hide(browserViewId)
     } catch (error) {
@@ -1282,6 +1282,25 @@ const navigate = async (state, value) => {
       isLoading: true,
     })
   }
+  if (!state.browserViewId) {
+    const tab = await createUnloadedTab(state)
+    const nextTab = {
+      ...selectedTab,
+      ...tab,
+      iframeSrc,
+      inputValue: value,
+      isLoading: true,
+    }
+    void ElectronWebContentsViewFunctions.setIframeSrc(tab.browserViewId, iframeSrc)
+    const tabs = state.tabs.with(state.selectedTabIndex, nextTab)
+    const newState = await switchToTab(state, tabs, state.selectedTabIndex)
+    const stateWithSearchHistory = addToSearchHistory(newState, value)
+    return updateTab({ ...stateWithSearchHistory, addressValueVersion: state.addressValueVersion + 1 }, tab.browserViewId, {
+      iframeSrc,
+      inputValue: value,
+      isLoading: true,
+    })
+  }
   void ElectronWebContentsViewFunctions.setIframeSrc(state.browserViewId, iframeSrc)
   void ElectronWebContentsViewFunctions.focus(state.browserViewId)
   const stateWithSearchHistory = addToSearchHistory(state, value)
@@ -1330,7 +1349,7 @@ export const handleFocusIn = (state, name) => {
       ? WhenExpression.FocusSimpleBrowserFindInput
       : name?.startsWith('simple-browser-find')
         ? WhenExpression.FocusSimpleBrowserFind
-        : name === InputName.SimpleBrowserAddress
+        : name === InputName.SimpleBrowserAddress || name === InputName.SimpleBrowserNewTabSearch
           ? WhenExpression.FocusSimpleBrowserInput
           : WhenExpression.FocusSimpleBrowser
   Focus.setFocus(focusKey, undefined, state.uid, ViewletModuleId.SimpleBrowser)
@@ -1344,6 +1363,9 @@ export const handleKeyBinding = async (state, browserViewId, keyBinding) => {
   if (keyBinding === findKeyBinding) return toggleFind(state)
   if (keyBinding === KeyCode.Escape && state.findVisible) return closeFind(state)
   if (keyBinding === toggleDevToolsKeyBinding) {
+    if (!state.browserViewId) {
+      return state
+    }
     await ElectronWebContentsViewFunctions.toggleDevTools(state.browserViewId)
     return state
   }

@@ -581,7 +581,7 @@ test('handleTitleUpdated', async () => {
   })
 })
 
-test('creates and selects an empty tab while keeping the original view alive', async () => {
+test('creates and selects an empty tab without allocating native content', async () => {
   // @ts-ignore
   ElectronWebContentsView.createWebContentsView.mockResolvedValue(13)
   // @ts-ignore
@@ -610,12 +610,13 @@ test('creates and selects an empty tab while keeping the original view alive', a
 
   const newState = await ViewletSimpleBrowser.createNewTab(state)
 
-  expect(newState).toMatchObject({ browserViewId: 13, inputValue: '', selectedTabIndex: 1, title: 'New Tab' })
+  expect(newState).toMatchObject({ browserViewId: 0, inputValue: '', selectedTabIndex: 1, title: 'New Tab' })
   expect(newState.tabs).toHaveLength(2)
   expect(ElectronWebContentsView.disposeWebContentsView).not.toHaveBeenCalled()
   expect(ElectronWebContentsViewFunctions.hide).toHaveBeenCalledWith(12)
-  expect(ElectronWebContentsViewFunctions.show).toHaveBeenCalledWith(13)
-  expect(ElectronWebContentsViewFunctions.setIframeSrc).toHaveBeenCalledWith(13, SimpleBrowserNewTabPage.getUrl(undefined, true))
+  expect(ElectronWebContentsViewFunctions.show).not.toHaveBeenCalled()
+  expect(ElectronWebContentsViewFunctions.setIframeSrc).not.toHaveBeenCalled()
+  expect(ElectronWebContentsView.createWebContentsView).not.toHaveBeenCalled()
   expect(ElectronWindow.focus).toHaveBeenCalledTimes(1)
 })
 
@@ -630,7 +631,7 @@ test('workflow tab creation preserves page focus without scheduling address focu
 
   expect(newState.focusAddressVersion).toBe(3)
   expect(ElectronWindow.focus).not.toHaveBeenCalled()
-  expect(ElectronWebContentsViewFunctions.focus).toHaveBeenCalledWith(13)
+  expect(ElectronWebContentsViewFunctions.focus).not.toHaveBeenCalled()
 })
 
 test('updates open new tab pages when the color theme changes', async () => {
@@ -1185,10 +1186,10 @@ test('Ctrl+T from the focused web contents creates a new browser tab', async () 
 
   const newState = await ViewletSimpleBrowser.handleKeyBinding(state, 12, KeyModifier.CtrlCmd | KeyCode.KeyT)
 
-  expect(newState).toMatchObject({ browserViewId: 14, focusAddressVersion: 1, selectedTabIndex: 2, title: 'New Tab' })
+  expect(newState).toMatchObject({ browserViewId: 0, focusAddressVersion: 1, selectedTabIndex: 2, title: 'New Tab' })
   expect(newState.tabs).toHaveLength(3)
   expect(ElectronWebContentsViewFunctions.hide).toHaveBeenCalledWith(12)
-  expect(ElectronWebContentsViewFunctions.show).toHaveBeenCalledWith(14)
+  expect(ElectronWebContentsViewFunctions.show).not.toHaveBeenCalledWith(14)
   expect(ElectronWindow.focus).toHaveBeenCalledTimes(1)
 })
 
@@ -1578,6 +1579,31 @@ test('setUrl applies the loading state before navigation completes', async () =>
   await expect(ViewletSimpleBrowser.handleDidNavigate(loadingState, 'https://example.com')).resolves.toMatchObject({
     isLoading: false,
   })
+})
+
+test('setUrl materializes native content when an empty tab navigates', async () => {
+  // @ts-ignore
+  ElectronWebContentsView.createWebContentsView.mockResolvedValue(13)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.setFallthroughKeyBindings.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.resizeWebContentsView.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.setIframeSrc.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.show.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.focus.mockResolvedValue(undefined)
+  const state = {
+    ...ViewletSimpleBrowser.create(7, '', 10, 20, 300, 200),
+    tabs: [{ browserViewId: 0, iframeSrc: '', inputValue: '', title: 'New Tab' }],
+  }
+
+  const loadingState = await ViewletSimpleBrowser.setUrl(state, 'https://example.com')
+
+  expect(ElectronWebContentsView.createWebContentsView).toHaveBeenCalledTimes(1)
+  expect(ElectronWebContentsViewFunctions.setIframeSrc).toHaveBeenCalledWith(13, 'https://example.com')
+  expect(loadingState).toMatchObject({ browserViewId: 13, iframeSrc: 'https://example.com', isLoading: true })
 })
 
 test('setUrl opens cookie import urls as a main-area view', async () => {
@@ -2525,7 +2551,7 @@ test('reopens the last closed tab alongside the replacement new tab', async () =
   const closed = await ViewletSimpleBrowser.closeTab(state, 0)
   const reopened = await ViewletSimpleBrowser.reopenClosedTab(closed)
   expect(reopened.tabs).toHaveLength(2)
-  expect(reopened).toMatchObject({ browserViewId: 41, iframeSrc: 'https://one.example', selectedTabIndex: 0, closedTabs: [] })
+  expect(reopened).toMatchObject({ browserViewId: 40, iframeSrc: 'https://one.example', selectedTabIndex: 0, closedTabs: [] })
 })
 
 test('openOrRevealTab selects an existing background tab without navigation', async () => {

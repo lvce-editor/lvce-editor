@@ -2,6 +2,9 @@ import * as ElectronBrowserViewFunctions from '../ElectronBrowserViewFunctions/E
 
 export const reload = async (state) => {
   const { browserViewId } = state
+  if (!browserViewId) {
+    return state
+  }
   await ElectronBrowserViewFunctions.reload(browserViewId)
   return {
     ...state,

@@ -19,8 +19,8 @@ const ElectronBrowserViewFunctions = await import('../src/parts/ElectronBrowserV
 test('reload', async () => {
   // @ts-ignore
   ElectronBrowserViewFunctions.reload.mockImplementation(() => {})
-  const state = ViewletSimpleBrowser.create()
+  const state = { ...ViewletSimpleBrowser.create(), browserViewId: 1 }
   await ViewletSimpleBrowserReload.reload(state)
   expect(ElectronBrowserViewFunctions.reload).toHaveBeenCalledTimes(1)
-  expect(ElectronBrowserViewFunctions.reload).toHaveBeenCalledWith(0)
+  expect(ElectronBrowserViewFunctions.reload).toHaveBeenCalledWith(1)
 })
