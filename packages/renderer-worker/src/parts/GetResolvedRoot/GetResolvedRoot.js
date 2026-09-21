@@ -32,14 +32,13 @@ const getResolveRootFromSessionStorage = async () => {
   return resolvedRoot
 }
 
-const getResolvedRootFromRendererProcess = async (href) => {
+const getResolvedRootFromRendererProcess = async (href, resolvedRootFromSharedProcess) => {
   const url = new URL(href)
   if (href.includes('tests/')) {
     state.isTest = true
-    const resolvedRoot = await getResolvedRootFromSharedProcess(href)
     return {
       path: href,
-      homeDir: resolvedRoot?.homeDir || '',
+      homeDir: resolvedRootFromSharedProcess?.homeDir || '',
       pathSeparator: PathSeparatorType.Slash,
       source: 'test',
     }
@@ -77,7 +76,7 @@ const getResolvedRootRemote = async (href) => {
   if (resolvedRootFromSharedProcess?.source === SharedProcessCliArgSource) {
     return resolvedRootFromSharedProcess
   }
-  const resolvedRootFromRendererProcess = await getResolvedRootFromRendererProcess(href)
+  const resolvedRootFromRendererProcess = await getResolvedRootFromRendererProcess(href, resolvedRootFromSharedProcess)
   if (resolvedRootFromRendererProcess) {
     return resolvedRootFromRendererProcess
   }
