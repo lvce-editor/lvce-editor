@@ -36,9 +36,10 @@ const getResolvedRootFromRendererProcess = async (href) => {
   const url = new URL(href)
   if (href.includes('tests/')) {
     state.isTest = true
+    const resolvedRoot = await getResolvedRootFromSharedProcess(href)
     return {
       path: href,
-      homeDir: '',
+      homeDir: resolvedRoot?.homeDir || '',
       pathSeparator: PathSeparatorType.Slash,
       source: 'test',
     }
