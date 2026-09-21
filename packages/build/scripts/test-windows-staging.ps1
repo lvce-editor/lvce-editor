@@ -36,6 +36,52 @@ foreach ($file in $expectedFiles) {
     throw "Prepared file differs: $relative"
   }
 }
+$ptyHost = Join-Path $stage 'resources/app/packages/shared-process/node_modules/@lvce-editor/pty-host'
+$nodePty = Join-Path $stage 'resources/app/packages/shared-process/node_modules/node-pty'
+foreach ($path in @(
+  (Join-Path $ptyHost 'dist/ptyHostMain.js'),
+  (Join-Path $ptyHost 'package.json'),
+  (Join-Path $nodePty 'package.json'),
+  (Join-Path $nodePty 'lib/index.js'),
+  (Join-Path $nodePty 'build/Release/pty.node')
+)) {
+  if (!(Test-Path -LiteralPath $path -PathType Leaf)) { throw "Missing packaged node-pty runtime file: $path" }
+}
+if ($Architecture -eq 'x64') {
+  $probe = Join-Path $ptyHost 'dist/pty-staging-smoke.mjs'
+  @'
+import { spawn } from 'node-pty'
+
+const marker = 'LVCE_PTY_SMOKE'
+const terminal = spawn(process.env.ComSpec, ['/d', '/c', `echo ${marker}`], {
+  cols: 80,
+  rows: 24,
+})
+let output = ''
+const timeout = setTimeout(() => {
+  console.error('PTY smoke test timed out')
+  terminal.kill()
+  process.exit(1)
+}, 30000)
+terminal.onData((data) => {
+  output += data
+})
+terminal.onExit(({ exitCode }) => {
+  clearTimeout(timeout)
+  if (exitCode !== 0 || !output.includes(marker)) {
+    console.error(`PTY smoke test failed: exitCode=${exitCode}, output=${JSON.stringify(output)}`)
+    process.exit(1)
+  }
+})
+'@ | Set-Content -LiteralPath $probe
+  $electron = Join-Path $stage ($builder.productName + '.exe')
+  $stdout = Join-Path $stage 'pty-staging-smoke.stdout'
+  $stderr = Join-Path $stage 'pty-staging-smoke.stderr'
+  $smoke = Start-Process -FilePath $electron -ArgumentList @('--run-as-node', $probe) -Environment @{ ELECTRON_RUN_AS_NODE = '1' } -WorkingDirectory $stage -WindowStyle Hidden -Wait -PassThru -RedirectStandardOutput $stdout -RedirectStandardError $stderr
+  if ($smoke.ExitCode -ne 0) {
+    throw "Packaged node-pty smoke test failed: $((Get-Content -LiteralPath $stderr -Raw).Trim())"
+  }
+}
 if ((InstalledEntries) -ne $before) { throw 'Preparation changed registered installations' }
 $sentinel = Join-Path $stage 'preserve-existing.txt'
 Set-Content -LiteralPath $sentinel 'preserved'
