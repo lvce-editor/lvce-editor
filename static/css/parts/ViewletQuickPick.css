@@ -88,6 +88,10 @@
   font-size: 0.9em;
   pointer-events: none;
   contain: content;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   /* TODO compute mixed color in javascript once for effiency */
   color: color-mix(in oklab, var(--ListForeground), var(--QuickPickBackground) 30%);
 }
@@ -144,5 +148,6 @@
   contain: strict;
   width: 20px;
   height: 20px;
+  flex-shrink: 0;
   mask-size: 70%;
 }
