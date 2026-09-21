@@ -228,6 +228,7 @@ export const hydrate = async ({ href }) => {
   }
   const resolvedRoot = await GetResolvedRoot.getResolvedRoot(href)
   if (state.isTest) {
+    state.homeDir = resolvedRoot.homeDir
     return
   }
   if (state.workspacePath) {
