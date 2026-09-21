@@ -39,6 +39,7 @@ import { VError } from '../VError/VError.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletMap from '../ViewletMap/ViewletMap.js'
+import * as ViewletManagerVisitor from '../ViewletManagerVisitor/ViewletManagerVisitor.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
@@ -2735,6 +2736,10 @@ export const handleWorkspaceRefresh = async (state: LayoutState, refresh: Worksp
   return result
 }
 
+export const handleSourceControlProgressChange = async (state: LayoutState): Promise<LayoutStateResult> => {
+  return callGlobalEvent(state, 'handleSourceControlProgressChange')
+}
+
 export const refreshProblemsSummary = async (state: LayoutState): Promise<LayoutStateResult> => {
   try {
     const summary = await ProblemsWorker.invoke('Problems.getProblemsSummary')
@@ -2786,6 +2791,7 @@ export const handleDiagnosticsChange = async (state: LayoutState, uri: string) =
 
 export const handleSettingsChanged = async (state: LayoutState) => {
   await Preferences.hydrate()
+  await ViewletManagerVisitor.reloadDynamicCss()
   await BrowserFullWidth.configureGesture()
   return callGlobalEvent(state, 'handleSettingsChanged')
 }

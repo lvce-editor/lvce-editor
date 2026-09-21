@@ -101,6 +101,31 @@ test('names the address input so focus can be restored after rendering', () => {
   )
 })
 
+test('renders the empty tab landing page in the view dom', () => {
+  const dom = GetSimpleBrowserVirtualDom.getSimpleBrowserVirtualDom(
+    false,
+    false,
+    false,
+    '',
+    '',
+    [],
+    -1,
+    [{ browserViewId: 0, iframeSrc: '', title: 'New Tab' }],
+    0,
+  )
+
+  expect(dom).toContainEqual(expect.objectContaining({ className: 'SimpleBrowserNewTabPage', type: VirtualDomElements.Main }))
+  expect(dom).toContainEqual(expect.objectContaining({ className: 'SimpleBrowserNewTabBrand' }))
+  expect(dom).toContainEqual(
+    expect.objectContaining({
+      ariaLabel: 'Search with Google',
+      className: 'SimpleBrowserNewTabSearchInput',
+      name: 'simple-browser-new-tab-search',
+      type: VirtualDomElements.Input,
+    }),
+  )
+})
+
 test('disables unavailable navigation buttons', () => {
   const dom = GetSimpleBrowserVirtualDom.getSimpleBrowserVirtualDom(false, true, false, 'https://example.com')
 

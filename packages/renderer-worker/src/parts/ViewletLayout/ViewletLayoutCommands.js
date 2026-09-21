@@ -52,6 +52,7 @@ export const CommandsWithSideEffects = {
   handleSashPointerMove: ViewletLayout.handleSashPointerMove,
   handleSashPointerUp: ViewletLayout.handleSashPointerUp,
   handleSettingsChanged: ViewletLayout.handleSettingsChanged,
+  handleSourceControlProgressChange: ViewletLayout.handleSourceControlProgressChange,
   handleWorkspaceRefresh: ViewletLayout.handleWorkspaceRefresh,
   refreshProblemsSummary: ViewletLayout.refreshProblemsSummary,
   refreshSourceControlBadgeCount: ViewletLayout.refreshSourceControlBadgeCount,

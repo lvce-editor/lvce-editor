@@ -2,6 +2,9 @@ import * as ElectronBrowserViewFunctions from '../ElectronBrowserViewFunctions/E
 
 export const backward = async (state) => {
   const { browserViewId } = state
+  if (!browserViewId) {
+    return state
+  }
   await ElectronBrowserViewFunctions.backward(browserViewId)
   const { url, canGoBack, canGoForward } = await ElectronBrowserViewFunctions.getStats(browserViewId)
   return {
