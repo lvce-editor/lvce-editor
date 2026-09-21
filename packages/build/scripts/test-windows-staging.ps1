@@ -77,7 +77,7 @@ terminal.onExit(({ exitCode }) => {
   $electron = Join-Path $stage ($builder.productName + '.exe')
   $stdout = Join-Path $stage 'pty-staging-smoke.stdout'
   $stderr = Join-Path $stage 'pty-staging-smoke.stderr'
-  $smoke = Start-Process -FilePath $electron -ArgumentList @('--run-as-node', $probe) -Environment @{ ELECTRON_RUN_AS_NODE = '1' } -WorkingDirectory $stage -WindowStyle Hidden -Wait -PassThru -RedirectStandardOutput $stdout -RedirectStandardError $stderr
+  $smoke = Start-Process -FilePath $electron -ArgumentList @($probe) -Environment @{ ELECTRON_RUN_AS_NODE = '1' } -WorkingDirectory $stage -WindowStyle Hidden -Wait -PassThru -RedirectStandardOutput $stdout -RedirectStandardError $stderr
   if ($smoke.ExitCode -ne 0) {
     throw "Packaged node-pty smoke test failed: $((Get-Content -LiteralPath $stderr -Raw).Trim())"
   }
