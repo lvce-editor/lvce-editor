@@ -28,6 +28,11 @@ const runTitleBarCommand = async (key, state, args) => {
 
 export const wrapTitleBarCommand = (key) => {
   return async (state, ...args) => {
+    // Workspace actions await this notification while their menu command owns the queue.
+    // Let the notification complete so the action can finish and release the queue.
+    if (key === 'handleWorkspaceChange') {
+      return runTitleBarCommand(key, state, args)
+    }
     const previous = commandQueues.get(state.uid)
     const { promise: next, resolve } = Promise.withResolvers()
     commandQueues.set(state.uid, next)
