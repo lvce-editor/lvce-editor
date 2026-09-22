@@ -125,6 +125,7 @@ const clean = async (root: any): Promise<any> => {
  */
 const copyStaticFiles = async (root: any, serverStaticPath: any): Promise<any> => {
   await FileSystem.copy(serverStaticPath, Path.join(root, 'dist'))
+  await FileSystem.copy(Path.join(serverStaticPath, '..', 'config.json'), Path.join(root, 'dist', 'config.json'))
 }
 
 export const validateRendererProcessArtifacts = ({ commitHash, root }: any): any => {
