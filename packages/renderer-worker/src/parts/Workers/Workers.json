@@ -1394,6 +1394,8 @@
         "getCommandIds": { "name": "Ports.getCommandIds", "parameters": [] },
         "getComponentState": { "name": "Ports.getComponentState", "parameters": [{ "source": "state", "name": "uid" }] },
         "getKeyBindings": { "name": "Ports.getKeyBindings", "parameters": [], "fallback": [] },
+        "getMenuEntryIds": { "name": "Ports.getMenuIds", "parameters": [] },
+        "getMenuEntries": { "name": "Ports.getMenuEntries2", "parameters": [{ "source": "argument", "name": "args", "spread": true }] },
         "renderEventListeners": { "name": "Ports.renderEventListeners", "parameters": [] },
         "setComponentState": { "name": "Ports.setComponentState", "parameters": [{ "source": "state", "name": "uid" }, { "source": "argument", "name": "componentState" }] }
       },
