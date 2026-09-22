@@ -106,7 +106,7 @@ export const update = async (settings) => {
 
 export const toggleAutoSave = async () => {
   const autoSave = PreferencesState.get('files.autoSave')
-  const nextAutoSave = autoSave === 'off' ? 'afterDelay' : 'off'
+  const nextAutoSave = autoSave === 'off' ? 'onFocusChange' : 'off'
   await update({ 'files.autoSave': nextAutoSave })
 }
 
