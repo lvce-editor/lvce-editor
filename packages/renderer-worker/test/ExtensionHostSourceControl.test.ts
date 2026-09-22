@@ -1,3 +1,4 @@
+/* eslint-disable jest/no-restricted-jest-methods */
 import { beforeEach, expect, jest, test } from '@jest/globals'
 
 beforeEach(() => {
@@ -47,6 +48,17 @@ test('getEnabledProviderIds', async () => {
   extensionManagementInvoke.mockResolvedValue(['git'])
   await expect(ExtensionHostSourceControl.getEnabledProviderIds('file', '/workspace')).resolves.toEqual(['git'])
   expect(ExtensionManagementWorker.invoke).toHaveBeenCalledWith('Extensions.getEnabledSourceControlProviderIds', 'file', '/workspace')
+})
+
+test('getDefaultCommitMessage forwards the workspace path', async () => {
+  extensionManagementInvoke.mockResolvedValue({ found: true, result: "Merge branch 'feature'" })
+  await expect(ExtensionHostSourceControl.getDefaultCommitMessage('git', '/workspace')).resolves.toBe("Merge branch 'feature'")
+  expect(ExtensionManagementWorker.invoke).toHaveBeenCalledWith(
+    'Extensions.executeSourceControlProvider',
+    'git',
+    'executeSourceControlGetDefaultCommitMessage',
+    '/workspace',
+  )
 })
 
 // TODO test getChangedFiles
