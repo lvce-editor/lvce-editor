@@ -1,6 +1,7 @@
 import * as Assert from '../Assert/Assert.ts'
 import * as Command from '../Command/Command.js'
 import * as Focus from '../Focus/Focus.js'
+import * as GetTerminalTabsDom from '../GetTerminalTabsDom/GetTerminalTabsDom.js'
 import * as GetTerminalSpawnOptions from '../GetTerminalSpawnOptions/GetTerminalSpawnOptions.js'
 import * as Id from '../Id/Id.js'
 import * as Preferences from '../Preferences/Preferences.js'
@@ -73,7 +74,7 @@ export const getOwnedViewletIds = (state) => {
 
 const getContentWidth = (state) => {
   const { tabs, width, tabsWidth, terminalTabsEnabled } = state
-  return terminalTabsEnabled && tabs.length > 1 ? width - tabsWidth : width
+  return terminalTabsEnabled && GetTerminalTabsDom.hasVisibleTabs(tabs) ? width - tabsWidth : width
 }
 
 const getChildBounds = (state, index = 0, count = 1) => {
@@ -169,7 +170,7 @@ export const addTerminal = async (state, cwd = '') => {
   return newState
 }
 
-export const focusIndex = async (state, index) => {
+export const focusIndex = async (state, index, terminalUid) => {
   Assert.object(state)
   Assert.number(index)
   const { activeTerminalUids, focusVersion, tabs } = state
@@ -177,10 +178,12 @@ export const focusIndex = async (state, index) => {
     return state
   }
   const childUids = getTerminalUids(tabs[index])
-  const childUid = activeTerminalUids[index] || childUids[0]
+  const requestedTerminalUid = Number(terminalUid)
+  const childUid = childUids.includes(requestedTerminalUid) ? requestedTerminalUid : activeTerminalUids[index] || childUids[0]
   await sendCommands(await resizeTerminals(state, childUids))
   return {
     ...state,
+    activeTerminalUids: activeTerminalUids.with(index, childUid),
     childUid,
     childUids,
     focusVersion: focusVersion + 1,
@@ -319,8 +322,8 @@ export const afterRender = async (oldState, newState) => {
   }
 }
 
-export const handleClickTab = (state, index) => {
-  return focusIndex(state, Number(index))
+export const handleClickTab = (state, index, terminalUid) => {
+  return focusIndex(state, Number(index), terminalUid)
 }
 
 export const killTerminalTab = async (state, index) => {
@@ -354,11 +357,13 @@ export const killTerminalTab = async (state, index) => {
   return newState
 }
 
-export const handleClickTerminalTabAction = (state, index, command) => {
+export const handleClickTerminalTabAction = (state, index, command, terminalUid) => {
   Assert.string(command)
   switch (command) {
     case 'killTerminalTab':
       return killTerminalTab(state, Number(index))
+    case 'killTerminalSplit':
+      return removeTerminal(state, Number(terminalUid))
     default:
       throw new Error(`Unknown terminal tab action: ${command}`)
   }

@@ -4,15 +4,18 @@
   "description": "",
   "main": "index.js",
   "type": "module",
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
-    "postinstall": "lerna bootstrap --ci && node scripts/postinstall.js",
-    "test": "lerna run test",
+    "postinstall": "node scripts/postinstall.js",
+    "test": "npm test --workspaces --if-present",
     "dev": "nodemon",
     "diagnose:gpu": "node scripts/diagnose-gpu-process.mjs",
-    "e2e": "lerna run e2e",
+    "e2e": "npm run e2e --workspaces --if-present",
     "lint": "eslint \"packages/shared-process/**/*.{ts,js}\" && knip --no-config-hints",
     "electron": "node packages/build/src/parts/RunElectron/RunElectron.ts",
-    "type-check": "lerna run type-check",
+    "type-check": "npm run type-check --workspaces --if-present",
     "build:static": "node packages/build/bin/build.ts --target=static",
     "build:static:ignore-icon-theme": "node packages/build/bin/build.ts --target=static --ignore-icon-theme",
     "build:server": "node packages/build/bin/build.ts --target=server",
@@ -31,11 +34,8 @@
     "test-static-export": "node packages/build/src/parts/TestStaticExport/TestStaticExport.ts",
     "test:gpu-diagnostics": "node --test scripts/test/diagnose-gpu-process.test.mjs",
     "e2e:ci": "node packages/extension-host-worker-tests/src/_all.js --ci",
-    "test:simple-browser-new-tab": "node scripts/test-simple-browser-new-tab.mjs",
     "test:component-heap-snapshot": "node scripts/test-component-heap-snapshot.mjs",
-    "test:simple-browser-workspace": "node scripts/test-simple-browser-workspace.mjs",
-    "test:simple-browser-address": "node scripts/test-simple-browser-address.mjs",
-    "test:simple-browser-workflows": "node scripts/test-simple-browser-workflows.mjs"
+    "test:process-explorer-renderer-heap-snapshot": "node scripts/test-process-explorer-renderer-heap-snapshot.mjs"
   },
   "keywords": [],
   "author": "",
@@ -48,17 +48,15 @@
     "node": ">=24"
   },
   "devDependencies": {
-    "@lerna/legacy-package-management": "^8.2.4",
-    "@lvce-editor/eslint-config": "^18.11.0",
+    "@lvce-editor/eslint-config": "^18.14.0",
     "@types/jest": "^30.0.0",
     "@types/node": "^25.0.1",
-    "eslint": "^10.10.0",
+    "eslint": "^10.11.0",
     "jest": "^30.2.0",
     "jest-environment-jsdom": "^30.2.0",
-    "knip": "^6.35.1",
-    "lerna": "^8.2.4",
+    "knip": "^6.37.0",
     "nodemon": "^3.1.14",
-    "prettier": "^3.9.6",
+    "prettier": "^3.9.8",
     "ts-jest": "^29.4.12",
     "typescript": "^6.0.3"
   },
@@ -92,5 +90,8 @@
     "@parcel/watcher@2.6.0": true,
     "unrs-resolver@1.12.2": true,
     "fsevents@2.3.3": true
+  },
+  "overrides": {
+    "yauzl": "^3.4.0"
   }
 }

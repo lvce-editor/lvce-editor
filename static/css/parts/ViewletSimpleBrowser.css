@@ -47,7 +47,7 @@
   height: 24px;
   inset: 0;
   overflow: hidden;
-  padding: 5px 7px;
+  padding: 4px 7px;
   pointer-events: none;
   position: absolute;
   white-space: pre;
@@ -92,6 +92,10 @@
   padding: 0 5px 0 9px;
 }
 
+.SimpleBrowserTabsFrozen .SimpleBrowserTab {
+  flex: 0 0 var(--SimpleBrowserTabWidth);
+}
+
 .SimpleBrowserTab:hover {
   background: var(--TabHoverBackground, var(--ListHoverBackground));
   color: var(--TabHoverForeground, var(--WorkbenchForeground));
@@ -102,10 +106,14 @@
   color: var(--TabActiveForeground, var(--WorkbenchForeground));
 }
 
+.SimpleBrowserTabFaviconWrapper {
+  align-items: center;
+  display: flex;
+  flex: 0 0 18px;
+}
+
 .SimpleBrowserTabFavicon {
-  flex: 0 0 16px;
   height: 16px;
-  margin-inline-end: 2px;
   object-fit: contain;
   width: 16px;
 }
@@ -201,6 +209,94 @@
   contain: strict;
 }
 
+.SimpleBrowserNewTabPage {
+  align-items: center;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 48px;
+  justify-content: flex-start;
+  min-height: 0;
+  padding: clamp(88px, 21vh, 220px) 24px 24px;
+}
+
+.SimpleBrowserNewTabBrand {
+  align-items: center;
+  display: flex;
+  font-size: 28px;
+  font-weight: 650;
+  gap: 14px;
+  letter-spacing: -0.6px;
+}
+
+.SimpleBrowserNewTabBrandMark {
+  background: linear-gradient(145deg, color-mix(in srgb, var(--FocusBorder, #1769ba) 30%, var(--WidgetBackground, #fff)), var(--WidgetBackground, #fff));
+  border: 1px solid color-mix(in srgb, var(--WorkbenchForeground) 8%, transparent);
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgb(0 0 0 / 24%);
+  height: 52px;
+  position: relative;
+  width: 52px;
+}
+
+.SimpleBrowserNewTabBrandMark::after {
+  background: var(--FocusBorder, #1769ba);
+  clip-path: polygon(45% 0, 83% 88%, 38% 100%, 12% 87%);
+  content: '';
+  inset: 9px;
+  position: absolute;
+}
+
+.SimpleBrowserNewTabSearch {
+  max-width: 680px;
+  position: relative;
+  width: min(680px, 100%);
+}
+
+.SimpleBrowserNewTabSearchBox {
+  align-items: center;
+  background: var(--InputBoxBackground, var(--MainBackground));
+  border: 1px solid var(--InputBoxBorder, var(--PanelBorder, transparent));
+  border-radius: 15px;
+  box-shadow: 0 8px 24px rgb(0 0 0 / 20%);
+  box-sizing: border-box;
+  display: flex;
+  gap: 12px;
+  height: 52px;
+  padding: 0 18px;
+  width: 100%;
+}
+
+.SimpleBrowserNewTabSearchBox:focus-within {
+  border-color: var(--FocusBorder, var(--FocusOutline));
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--FocusBorder, #1769ba) 18%, transparent), 0 10px 28px rgb(0 0 0 / 24%);
+}
+
+.SimpleBrowserNewTabSearchIcon {
+  color: var(--InputBoxPlaceholderForeground, var(--DescriptionForeground));
+  flex: none;
+  height: 19px;
+  width: 19px;
+}
+
+.SimpleBrowserNewTabSearchInput {
+  background: transparent;
+  border: 0;
+  color: var(--InputBoxForeground, var(--WorkbenchForeground));
+  flex: 1;
+  font: inherit;
+  font-size: 15px;
+  min-width: 0;
+  outline: 0;
+  padding: 0;
+  user-select: none;
+}
+
+.SimpleBrowserNewTabSearchInput::placeholder {
+  color: var(--InputBoxPlaceholderForeground, var(--DescriptionForeground));
+  opacity: 1;
+}
+
 .SimpleBrowserSnapshotWrapper {
   contain: strict;
   flex: 1;
@@ -212,7 +308,7 @@
   display: block;
   filter: brightness(0.8);
   height: 100%;
-  object-fit: fill;
+  object-fit: contain;
   pointer-events: none;
   width: 100%;
 }
@@ -248,6 +344,14 @@
   right: 30px;
   top: 30px;
   z-index: 2;
+}
+
+.SimpleBrowserNewTabPage ~ .SimpleBrowserSuggestions {
+  left: 50%;
+  right: auto;
+  top: calc(65px + clamp(88px, 21vh, 220px) + 52px + 48px + 52px + 8px);
+  transform: translateX(-50%);
+  width: min(644px, calc(100% - 48px));
 }
 
 .SimpleBrowserTabsEnabled .SimpleBrowserSuggestions {

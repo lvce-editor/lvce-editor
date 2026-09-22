@@ -4,6 +4,7 @@ import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as HtmlInputType from '../HtmlInputType/HtmlInputType.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.js'
+import * as GetSimpleBrowserHistoryVirtualDom from '../GetSimpleBrowserHistoryVirtualDom/GetSimpleBrowserHistoryVirtualDom.js'
 import * as InputName from '../InputName/InputName.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
@@ -20,6 +21,65 @@ const getInlineSuggestion = (value, suggestions) => {
     }
   }
   return ''
+}
+
+const getNewTabVirtualDom = (value) => {
+  return [
+    {
+      type: VirtualDomElements.Main,
+      className: 'SimpleBrowserNewTabPage',
+      childCount: 2,
+    },
+    {
+      type: VirtualDomElements.Div,
+      className: 'SimpleBrowserNewTabBrand',
+      childCount: 2,
+    },
+    {
+      type: VirtualDomElements.Div,
+      className: 'SimpleBrowserNewTabBrandMark',
+      ariaHidden: true,
+      childCount: 0,
+    },
+    {
+      type: VirtualDomElements.Span,
+      childCount: 1,
+    },
+    text('LVCE'),
+    {
+      type: VirtualDomElements.Form,
+      className: 'SimpleBrowserNewTabSearch',
+      role: AriaRoles.Search,
+      noValidate: true,
+      onSubmit: DomEventListenerFunctions.HandleSubmitSimpleBrowserAddress,
+      childCount: 1,
+    },
+    {
+      type: VirtualDomElements.Label,
+      className: 'SimpleBrowserNewTabSearchBox',
+      childCount: 2,
+    },
+    {
+      type: VirtualDomElements.Div,
+      className: 'MaskIcon MaskIconSearch SimpleBrowserNewTabSearchIcon',
+      ariaHidden: true,
+      childCount: 0,
+    },
+    {
+      type: VirtualDomElements.Input,
+      className: 'SimpleBrowserNewTabSearchInput',
+      inputType: HtmlInputType.Search,
+      name: InputName.SimpleBrowserNewTabSearch,
+      ariaLabel: 'Search with Google',
+      placeholder: 'Search with Google',
+      autocomplete: 'off',
+      spellcheck: false,
+      onInput: DomEventListenerFunctions.HandleInput,
+      onFocus: DomEventListenerFunctions.HandleFocus,
+      onBlur: DomEventListenerFunctions.HandleBlurSimpleBrowserAddress,
+      value,
+    },
+  ]
 }
 
 export const getSimpleBrowserVirtualDom = (
@@ -40,8 +100,14 @@ export const getSimpleBrowserVirtualDom = (
   fullWidth = false,
   chromeTheme = 'light',
   findState,
+  historyTab = false,
+  historyEntries = [],
+  historySearchValue = '',
 ) => {
   const inlineSuggestion = getInlineSuggestion(value, suggestions)
+  const historyDom = historyTab ? GetSimpleBrowserHistoryVirtualDom.getSimpleBrowserHistoryVirtualDom(historyEntries, historySearchValue) : []
+  const selectedTab = tabs[selectedTabIndex]
+  const isNewTab = Boolean(selectedTab && !selectedTab.browserViewId && !selectedTab.iframeSrc && !historyTab)
   /** @type {any[]} */
   const dom = [
     {
@@ -54,14 +120,17 @@ export const getSimpleBrowserVirtualDom = (
         (tabsEnabled ? 1 : 0) +
         (snapshot ? 1 : 0) +
         (pageSnapshotDom.length > 0 ? 1 : 0) +
+        (historyDom.length > 0 ? 1 : 0) +
+        (isNewTab ? 1 : 0) +
         (suggestions.length > 0 ? 1 : 0) +
         (tabHover ? 1 : 0),
     },
   ]
   if (tabsEnabled) {
+    const tabsClassName = findState?.tabWidth === undefined ? 'SimpleBrowserTabs' : 'SimpleBrowserTabs SimpleBrowserTabsFrozen'
     dom.push({
       type: VirtualDomElements.Div,
-      className: 'SimpleBrowserTabs',
+      className: tabsClassName,
       role: AriaRoles.TabList,
       ariaLabel: 'Browser tabs',
       childCount: 2,
@@ -69,6 +138,9 @@ export const getSimpleBrowserVirtualDom = (
       onDragLeave: DomEventListenerFunctions.HandleDragLeaveSimpleBrowserTab,
       onDrop: DomEventListenerFunctions.HandleDropSimpleBrowserTab,
       onPointerUp: DomEventListenerFunctions.HandlePointerUpSimpleBrowserTab,
+      onPointerOut: DomEventListenerFunctions.HandlePointerOutSimpleBrowserTabs,
+      onPointerOver: DomEventListenerFunctions.HandlePointerOverSimpleBrowserTabs,
+      ...(findState?.tabWidth === undefined ? {} : { style: `--SimpleBrowserTabWidth: ${findState.tabWidth}px;` }),
     })
     dom.push({
       type: VirtualDomElements.Div,
@@ -107,19 +179,27 @@ export const getSimpleBrowserVirtualDom = (
         childCount: 3 + (showAudioIndicator ? 1 : 0),
       })
       if (tab.favicon) {
-        dom.push({
-          type: VirtualDomElements.Img,
-          className: 'SimpleBrowserTabFavicon',
-          alt: '',
-          'data-index': index,
-          onError: DomEventListenerFunctions.HandleErrorSimpleBrowserFavicon,
-          crossOrigin: 'anonymous',
-          src: tab.favicon,
-          draggable: false,
-          childCount: 0,
-        })
+        dom.push(
+          {
+            type: VirtualDomElements.Div,
+            className: 'SimpleBrowserTabFaviconWrapper',
+            childCount: 1,
+          },
+          {
+            type: VirtualDomElements.Img,
+            className: 'SimpleBrowserTabFavicon',
+            alt: '',
+            'data-index': index,
+            onError: DomEventListenerFunctions.HandleErrorSimpleBrowserFavicon,
+            crossOrigin: 'anonymous',
+            src: tab.favicon,
+            draggable: false,
+            childCount: 0,
+          },
+        )
       } else {
         dom.push(
+          { type: VirtualDomElements.Div, className: 'SimpleBrowserTabFaviconWrapper', childCount: 1 },
           { type: VirtualDomElements.Span, className: 'SimpleBrowserTabFavicon SimpleBrowserTabFaviconFallback', ariaHidden: true, childCount: 1 },
           text('◉'),
         )
@@ -319,6 +399,9 @@ export const getSimpleBrowserVirtualDom = (
       childCount: 0,
     },
   )
+  if (isNewTab) {
+    dom.push(...getNewTabVirtualDom(value))
+  }
   if (findState?.findVisible) dom.push(...BrowserFind.getBrowserFindVirtualDom(findState))
   if (snapshot) {
     dom.push(
@@ -347,6 +430,9 @@ export const getSimpleBrowserVirtualDom = (
       },
       ...pageSnapshotDom,
     )
+  }
+  if (!snapshot && historyDom.length > 0) {
+    dom.push(...historyDom)
   }
   if (suggestions.length > 0) {
     dom.push({

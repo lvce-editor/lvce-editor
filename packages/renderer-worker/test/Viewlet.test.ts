@@ -314,8 +314,13 @@ test('reload restores a viewlet from its current saved state and rerenders it', 
   const savedState = { selection: 3 } as const
   const saveState = jest.fn(async (_state: typeof oldState) => savedState)
   const dispose = jest.fn(async (_state: typeof oldState) => {})
-  const loadContent = jest.fn(async (_state: typeof oldState, _savedState: typeof savedState) => newState)
-  const contentLoaded = jest.fn(async (_state: typeof newState) => [['Viewlet.afterLoad', 2], ['Viewlet.focus', 2]])
+  const loadContent = jest.fn(
+    async (_state: typeof oldState, _savedState: typeof savedState, _context: { readonly preserveFocus: boolean }) => newState,
+  )
+  const contentLoaded = jest.fn(async (_state: typeof newState) => [
+    ['Viewlet.afterLoad', 2],
+    ['Viewlet.focus', 2],
+  ])
   const contentLoadedEffects = jest.fn(async (_state: typeof newState) => {})
   ViewletStates.set(2, {
     factory: { contentLoaded, contentLoadedEffects, dispose, loadContent, saveState },
@@ -334,7 +339,7 @@ test('reload restores a viewlet from its current saved state and rerenders it', 
 
   expect(saveState).toHaveBeenCalledWith(oldState)
   expect(dispose).toHaveBeenCalledWith(oldState)
-  expect(loadContent).toHaveBeenCalledWith(oldState, savedState)
+  expect(loadContent).toHaveBeenCalledWith(oldState, savedState, { preserveFocus: true })
   expect(ViewletManager.render).toHaveBeenCalledWith(expect.anything(), oldState, newState)
   expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.sendMultiple', [
     ['Viewlet.setDom2', 2, []],
@@ -620,7 +625,7 @@ test('openWidget - once', async () => {
     return []
   })
   await Viewlet.openWidget('QuickPick', ['everything'])
-  expect(SimpleBrowserOverlay.show).toHaveBeenCalledWith('quick-pick')
+  expect(SimpleBrowserOverlay.show).not.toHaveBeenCalled()
   expect(ViewletManager.load).toHaveBeenCalledTimes(1)
   expect(ViewletManager.load).toHaveBeenCalledWith({
     // @ts-ignore
@@ -684,7 +689,7 @@ test('openWidget - declares DefineKeyBinding as an owned widget', async () => {
   expect(ViewletStates.getState('Layout').widgetReferences).toEqual([{ parentUid: 7, uid: 2 }])
 })
 
-test('closeWidget restores Simple Browser after closing Quick Pick', async () => {
+test('closeWidget restores focus after closing Quick Pick', async () => {
   const focus = jest.fn((state: Readonly<{ readonly uid: number }>): Readonly<{ readonly uid: number }> => state)
   ViewletStates.set(2, {
     factory: {},
@@ -707,7 +712,7 @@ test('closeWidget restores Simple Browser after closing Quick Pick', async () =>
 
   await Viewlet.closeWidget(2)
 
-  expect(SimpleBrowserOverlay.hide).toHaveBeenCalledWith('quick-pick')
+  expect(SimpleBrowserOverlay.hide).not.toHaveBeenCalled()
   expect(focus).toHaveBeenCalledWith({ uid: 3 })
 })
 

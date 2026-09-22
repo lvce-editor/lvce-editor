@@ -14,3 +14,7 @@ test('saveState lets the panel worker save its active child', async () => {
   expect(PanelWorker.invoke).toHaveBeenCalledWith('Panel.saveState', 13)
   expect(result).toEqual({ currentViewletId: 'Problems' })
 })
+
+test('panel listens for workspace changes', () => {
+  expect(ViewletPanel.workspaceChangeEvent).toBe('workspace.change')
+})

@@ -42,6 +42,18 @@ export const renderEventListeners = () => {
       params: ['handleInput', 'event.target.value'],
     },
     {
+      name: DomEventListenerFunctions.HandleInputSimpleBrowserHistory,
+      params: ['handleHistoryInput', 'event.target.value'],
+    },
+    {
+      name: DomEventListenerFunctions.HandleClickSimpleBrowserHistoryClear,
+      params: ['clearHistory'],
+    },
+    {
+      name: DomEventListenerFunctions.HandleClickSimpleBrowserHistoryRemove,
+      params: ['removeHistoryEntry', 'event.currentTarget.dataset.index'],
+    },
+    {
       name: DomEventListenerFunctions.HandleFocusInSimpleBrowser,
       params: ['handleFocusIn', 'event.target.name'],
     },
@@ -125,6 +137,14 @@ export const renderEventListeners = () => {
       stopPropagation: true,
     },
     {
+      name: DomEventListenerFunctions.HandlePointerOutSimpleBrowserTabs,
+      params: ['handleTabsPointerOut', 'event.clientX', 'event.clientY'],
+    },
+    {
+      name: DomEventListenerFunctions.HandlePointerOverSimpleBrowserTabs,
+      params: ['handleTabsPointerOver'],
+    },
+    {
       name: DomEventListenerFunctions.HandleClickSimpleBrowserNewTab,
       params: ['createNewTab'],
     },
@@ -163,6 +183,7 @@ const areTabsEqual = (oldTabs, newTabs) => {
 
 const getDom = (state) => {
   const pageSnapshot = state.tabs?.[state.selectedTabIndex]?.pageSnapshot
+  const historyTab = state.tabs?.[state.selectedTabIndex]?.iframeSrc?.startsWith('simple-browser-history://')
   return GetSimpleBrowserVirtualDom.getSimpleBrowserVirtualDom(
     state.canGoBack,
     state.canGoForward,
@@ -181,6 +202,9 @@ const getDom = (state) => {
     state.fullWidth,
     state.chromeTheme,
     state,
+    historyTab,
+    state.history,
+    state.historySearchValue,
   )
 }
 
@@ -206,6 +230,9 @@ const renderDom = {
       oldState.tabsEnabled === newState.tabsEnabled &&
       oldState.audioIndicatorEnabled === newState.audioIndicatorEnabled &&
       oldState.tabHover === newState.tabHover &&
+      oldState.tabWidth === newState.tabWidth &&
+      oldState.history === newState.history &&
+      oldState.historySearchValue === newState.historySearchValue &&
       oldState.tabDropIndex === newState.tabDropIndex &&
       areTabsEqual(oldState.tabs, newState.tabs)
     )

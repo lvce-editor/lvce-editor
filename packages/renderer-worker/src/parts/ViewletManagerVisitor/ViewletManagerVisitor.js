@@ -16,3 +16,7 @@ export const loadInstance = (id, module) => {
 export const disposeInstance = (id, module) => {
   return ViewletManagerVisitorCss.disposeInstance(id, module)
 }
+
+export const reloadDynamicCss = () => {
+  return ViewletManagerVisitorCss.reloadDynamicCss()
+}

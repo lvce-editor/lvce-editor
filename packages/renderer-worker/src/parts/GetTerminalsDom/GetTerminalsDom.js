@@ -4,16 +4,16 @@ import * as MergeClassNames from '../MergeClassNames/MergeClassNames.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 
 const getTabsDom = (state) => {
-  const { y, width, height, tabsWidth, tabs, selectedIndex, terminalTabsEnabled } = state
-  if (!terminalTabsEnabled || tabs.length < 2) {
+  const { y, width, height, tabsWidth, tabs, selectedIndex, terminalTabsEnabled, activeTerminalUids } = state
+  if (!terminalTabsEnabled || !GetTerminalTabsDom.hasVisibleTabs(tabs)) {
     return []
   }
-  return GetTerminalTabsDom.getTerminalTabsDom(tabs, width - tabsWidth, y, tabsWidth, height, selectedIndex)
+  return GetTerminalTabsDom.getTerminalTabsDom(tabs, width - tabsWidth, y, tabsWidth, height, selectedIndex, activeTerminalUids)
 }
 
 export const getTerminalsDom = (state) => {
   const { childUids, tabs, terminalTabsEnabled } = state
-  const terminalTabsVisible = terminalTabsEnabled && tabs.length > 1
+  const terminalTabsVisible = terminalTabsEnabled && GetTerminalTabsDom.hasVisibleTabs(tabs)
   return [
     {
       type: VirtualDomElements.Div,

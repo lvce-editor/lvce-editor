@@ -1,5 +1,5 @@
 export const name = 'SimpleBrowser'
 
-import { executeWorkflow } from './SimpleBrowserWorkflow.js'
+import { executeWorkflow, openHistory } from './SimpleBrowserWorkflow.js'
 
-export const Commands = { executeWorkflow }
+export const Commands = { executeWorkflow, openHistory }

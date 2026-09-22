@@ -88,8 +88,36 @@
   font-size: 0.9em;
   pointer-events: none;
   contain: content;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   /* TODO compute mixed color in javascript once for effiency */
   color: color-mix(in oklab, var(--ListForeground), var(--QuickPickBackground) 30%);
+}
+
+.QuickPickItemRemove {
+  display: none;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  margin-left: auto;
+  padding: 0;
+  border: 0;
+  color: inherit;
+  background: transparent;
+  font: inherit;
+  line-height: 1;
+}
+
+.QuickPickItem:where(:hover) .QuickPickItemRemove {
+  display: flex;
+}
+
+.QuickPickItemRemove:where(:hover) {
+  background: var(--ListActiveSelectionBackground);
 }
 
 /* TODO use aria annouce for this */
@@ -120,5 +148,6 @@
   contain: strict;
   width: 20px;
   height: 20px;
+  flex-shrink: 0;
   mask-size: 70%;
 }

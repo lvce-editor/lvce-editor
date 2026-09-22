@@ -5,21 +5,40 @@ import * as ClassNames from '../ClassNames/ClassNames.js'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.js'
 import * as TerminalStrings from '../TerminalStrings/TerminalStrings.js'
 
-const getTabClassName = (isSelected) => {
+const getTabClassName = (isSelected, splitIndex, splitCount, isGroupStart) => {
   let className = ClassNames.TerminalTab
   if (isSelected) {
     className += ' ' + ClassNames.TerminalTabSelected
   }
+  if (splitCount > 1) {
+    className += ' ' + ClassNames.TerminalTabSplit
+    if (splitIndex === 0) {
+      className += ' ' + ClassNames.TerminalTabSplitFirst
+    } else if (splitIndex === splitCount - 1) {
+      className += ' ' + ClassNames.TerminalTabSplitLast
+    } else {
+      className += ' ' + ClassNames.TerminalTabSplitMiddle
+    }
+  }
+  if (isGroupStart) {
+    className += ' ' + ClassNames.TerminalTabGroupStart
+  }
   return className
 }
 
-const createTabDom = (tab, index, isSelected) => {
+const getTerminalUids = (tab) => {
+  return tab.terminalUids || [tab.uid]
+}
+
+const createTabDom = (tab, index, terminalUid, splitIndex, splitCount, isSelected, isGroupStart) => {
   const { label, icon } = tab
-  const className = getTabClassName(isSelected)
+  const isSplit = splitCount > 1
+  const className = getTabClassName(isSelected, splitIndex, splitCount, isGroupStart)
   return [
     div(
       {
         'data-index': index,
+        'data-terminalUid': terminalUid,
         className,
         onClick: DomEventListenerFunctions.HandleClickTab,
         role: AriaRoles.ListItem,
@@ -29,7 +48,7 @@ const createTabDom = (tab, index, isSelected) => {
     div(
       {
         className: ClassNames.TerminalTabIcon,
-        maskImage: `url(/icons/${icon}.svg)`,
+        maskImage: `/icons/${icon}.svg`,
       },
       0,
     ),
@@ -43,8 +62,9 @@ const createTabDom = (tab, index, isSelected) => {
     button(
       {
         ariaLabel: TerminalStrings.killTerminal(),
-        'data-command': 'killTerminalTab',
+        'data-command': isSplit ? 'killTerminalSplit' : 'killTerminalTab',
         'data-index': index,
+        'data-terminalUid': terminalUid,
         className: ClassNames.TerminalTabKill,
         onClick: DomEventListenerFunctions.HandleClickTerminalTabAction,
         title: TerminalStrings.killTerminal(),
@@ -60,7 +80,11 @@ const createTabDom = (tab, index, isSelected) => {
   ]
 }
 
-export const getTerminalTabsDom = (tabs, x, y, width, height, selectedIndex) => {
+export const hasVisibleTabs = (tabs) => {
+  return tabs.length > 1 || tabs.some((tab) => getTerminalUids(tab).length > 1)
+}
+
+export const getTerminalTabsDom = (tabs, x, y, width, height, selectedIndex, activeTerminalUids = []) => {
   Assert.number(x)
   Assert.number(y)
   Assert.number(width)
@@ -76,13 +100,19 @@ export const getTerminalTabsDom = (tabs, x, y, width, height, selectedIndex) => 
         role: AriaRoles.List,
         ariaLabel: 'Terminal tabs',
       },
-      tabs.length,
+      tabs.reduce((count, tab) => count + getTerminalUids(tab).length, 0),
     ),
   ]
   for (let i = 0; i < tabs.length; i++) {
-    const isSelected = i === selectedIndex
     const tab = tabs[i]
-    dom.push(...createTabDom(tab, i, isSelected))
+    const terminalUids = getTerminalUids(tab)
+    const activeTerminalUid = activeTerminalUids[i] || terminalUids[0]
+    for (let j = 0; j < terminalUids.length; j++) {
+      const terminalUid = terminalUids[j]
+      const isSelected = i === selectedIndex && terminalUid === activeTerminalUid
+      const isGroupStart = i > 0 && j === 0
+      dom.push(...createTabDom(tab, i, terminalUid, j, terminalUids.length, isSelected, isGroupStart))
+    }
   }
   return dom
 }

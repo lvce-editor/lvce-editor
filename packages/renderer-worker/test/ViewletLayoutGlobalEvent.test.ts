@@ -8,6 +8,8 @@ const problemsInvoke = jest.fn<(method: string, ...params: readonly unknown[]) =
   problemCount: 0,
   warningCount: 0,
 }))
+const statusBarInvoke = jest.fn<(method: string, ...params: readonly unknown[]) => Promise<unknown>>(async () => undefined)
+const reloadDynamicCss = jest.fn(async () => undefined)
 
 jest.unstable_mockModule('../src/parts/Preferences/Preferences.js', () => {
   return {
@@ -29,6 +31,12 @@ jest.unstable_mockModule('../src/parts/ProblemsWorker/ProblemsWorker.ts', () => 
   }
 })
 
+jest.unstable_mockModule('../src/parts/StatusBarWorker/StatusBarWorker.js', () => {
+  return {
+    invoke: statusBarInvoke,
+  }
+})
+
 jest.unstable_mockModule('../src/parts/ViewletManager/ViewletManager.js', () => {
   return {
     render: jest.fn((factory, renderedState, newState) => {
@@ -37,6 +45,10 @@ jest.unstable_mockModule('../src/parts/ViewletManager/ViewletManager.js', () => 
     }),
   }
 })
+
+jest.unstable_mockModule('../src/parts/ViewletManagerVisitor/ViewletManagerVisitor.js', () => ({
+  reloadDynamicCss,
+}))
 
 const ViewletLayout = await import('../src/parts/ViewletLayout/ViewletLayout.ts')
 const ViewletManager = await import('../src/parts/ViewletManager/ViewletManager.js')
@@ -166,6 +178,7 @@ test('handleActiveEditorChange forwards the active uri to loaded viewlets', asyn
   const result = await ViewletLayout.handleActiveEditorChange(state, 'file:///test.ts')
 
   expect(handler).toHaveBeenCalledWith({ uid: 1 }, 'file:///test.ts')
+  expect(statusBarInvoke).toHaveBeenCalledWith('StatusBar.handleEditorStatusVisibilityChanged', true)
   expect(ViewletManager.render).toHaveBeenCalledTimes(1)
   expect(result).toEqual({
     commands: [['render.1']],
@@ -173,6 +186,14 @@ test('handleActiveEditorChange forwards the active uri to loaded viewlets', asyn
       ...state,
     },
   })
+})
+
+test('handleActiveEditorChange hides editor status for non-text editors', async () => {
+  const state = ViewletLayout.create(1)
+
+  await ViewletLayout.handleActiveEditorChange(state, 'file:///test.png', false)
+
+  expect(statusBarInvoke).toHaveBeenCalledWith('StatusBar.handleEditorStatusVisibilityChanged', false)
 })
 
 test('handleActiveEditorChange ignores viewlets that are not loaded', async () => {
@@ -310,6 +331,7 @@ test('handleSettingsChanged hydrates preferences and updates viewlet state', asy
   const result = await ViewletLayout.handleSettingsChanged(state)
 
   expect(calls).toEqual(['hydrate', 'handleSettingsChanged'])
+  expect(reloadDynamicCss).toHaveBeenCalledTimes(1)
   expect(ViewletStates.getInstance('editor').state).toEqual({
     lineNumbers: false,
     uid: 1,
@@ -320,4 +342,13 @@ test('handleSettingsChanged hydrates preferences and updates viewlet state', asy
       ...state,
     },
   })
+})
+
+test('source control progress notifies the view without refreshing workspace files', async () => {
+  const progress = jest.fn(async (state: { uid: number }) => ({ ...state, progress: true }))
+  ViewletStates.set('source-control', createInstance(1, 'handleSourceControlProgressChange', progress))
+  const result = await ViewletLayout.handleSourceControlProgressChange(ViewletLayout.create(1))
+  expect(progress).toHaveBeenCalledTimes(1)
+  expect(result.commands).toEqual([['render.1']])
+  expect(extensionManagementInvoke).not.toHaveBeenCalled()
 })

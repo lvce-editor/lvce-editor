@@ -398,7 +398,7 @@ const getRenderCommands = (module, oldState, newState, uid = newState.uid || mod
             newParentRenderedState.parentUid,
           ),
         )
-      } else {
+      } else if (!parentInstance || parentInstance.factory?.setTitle) {
         commands.push(['Viewlet.send', parentId, 'setTitle', title])
       }
     }
@@ -535,9 +535,36 @@ const maybeRegisterEvents = (module) => {
       const commands = render(instance.factory, instance.renderedState, newState, uid, newState.parentUid)
       instance.state = newState
       instance.renderedState = newState
+      updateDynamicFocusContext(commands)
       await RendererProcess.invoke(/* Viewlet.sendMultiple */ kSendMultiple, /* commands */ commands)
     }
     GlobalEventBus.addListener(module.workspaceChangeEvent || 'workspace.change', handleUpdate, { prepend: module.workspaceChangeEventPrepend })
+  }
+
+  if (module.Commands && module.Commands.handleWorkspaceProgress && module.workspaceProgressEvent) {
+    const value = module.Commands.handleWorkspaceProgress
+    const handleUpdate = async (...params) => {
+      const instance = ViewletStates.getInstance(module.name)
+      if (!instance) {
+        return
+      }
+      const newState = await InvokeViewletEvent.invokeViewletEvent(module.name, instance, value, ...params)
+      if (!newState) {
+        return
+      }
+      if (module.shouldApplyNewstate && !module.shouldApplyNewState(newState)) {
+        console.log('[viewlet manager] return', newState)
+        return
+      }
+      const uid = instance.uid || instance.state.uid
+      Assert.number(uid)
+      const commands = render(instance.factory, instance.renderedState, newState, uid, newState.parentUid)
+      instance.state = newState
+      instance.renderedState = newState
+      updateDynamicFocusContext(commands)
+      await RendererProcess.invoke(/* Viewlet.sendMultiple */ kSendMultiple, /* commands */ commands)
+    }
+    GlobalEventBus.addListener(module.workspaceProgressEvent, handleUpdate)
   }
 
   // deprecated, use commands instead
@@ -563,6 +590,7 @@ const maybeRegisterEvents = (module) => {
           const commands = render(instance.factory, instance.renderedState, newState, uid, newState.parentUid)
           instance.state = newState
           instance.renderedState = newState
+          updateDynamicFocusContext(commands)
           await RendererProcess.invoke(/* Viewlet.sendMultiple */ kSendMultiple, /* commands */ commands)
         })
       }

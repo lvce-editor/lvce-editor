@@ -118,3 +118,32 @@ test('updates the icon theme when the workbench icon theme setting changes', asy
   expect(IconThemeWorker.invoke).toHaveBeenCalledWith('IconTheme.getIconThemeJson', [], null, '/static', PlatformType.Remote, true, '')
   expect(HandleIconThemeChange.handleIconThemeChange).toHaveBeenCalledTimes(1)
 })
+
+test('setIconTheme serializes rapid icon theme changes', async () => {
+  let resolveFirst
+  const firstLoad = new Promise((resolve) => {
+    resolveFirst = resolve
+  })
+  const loadedThemes = []
+  IconThemeWorker.invoke.mockImplementation((command, ...args) => {
+    if (command === 'IconTheme.getIconThemeJson') {
+      loadedThemes.push(args[1])
+      if (loadedThemes.length === 1) {
+        return firstLoad
+      }
+    }
+    return Promise.resolve()
+  })
+
+  const first = IconTheme.setIconTheme('first-icons', PlatformType.Remote, '/static')
+  const second = IconTheme.setIconTheme('second-icons', PlatformType.Remote, '/static')
+
+  await Promise.resolve()
+  await Promise.resolve()
+  expect(loadedThemes).toEqual(['first-icons'])
+
+  resolveFirst()
+  await Promise.all([first, second])
+
+  expect(loadedThemes).toEqual(['first-icons', 'second-icons'])
+})

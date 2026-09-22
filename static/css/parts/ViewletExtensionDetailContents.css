@@ -1,0 +1,52 @@
+.ExtensionDetailContents {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.ExtensionDetailContentTree {
+  border-right: 1px solid var(--PanelBorder, color-mix(in srgb, var(--WorkbenchForeground) 20%, transparent));
+  flex: 0 0 240px;
+  overflow: auto;
+  padding: 8px 0;
+}
+
+.ExtensionDetailContentTreeItem {
+  align-items: center;
+  background: transparent;
+  border: 0;
+  color: var(--TreeItemForeground, var(--WorkbenchForeground));
+  cursor: pointer;
+  display: flex;
+  font: inherit;
+  min-height: 24px;
+  overflow: hidden;
+  padding-bottom: 2px;
+  padding-right: 8px;
+  padding-top: 2px;
+  text-align: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 100%;
+}
+
+.ExtensionDetailContentTreeItem:hover {
+  background: var(--ListHoverBackground, color-mix(in srgb, var(--WorkbenchForeground) 8%, transparent));
+}
+
+.ExtensionDetailContentTreeItemSelected {
+  background: var(--ListActiveSelectionBackground, color-mix(in srgb, var(--FocusBorder, var(--WorkbenchForeground)) 34%, transparent));
+  color: var(--ListActiveSelectionForeground, var(--WorkbenchForeground));
+}
+
+.ExtensionDetailContentViewer {
+  flex: 1;
+  min-width: 0;
+  overflow: auto;
+  padding: 16px 24px;
+}
+
+.ExtensionDetailContentFile {
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+}

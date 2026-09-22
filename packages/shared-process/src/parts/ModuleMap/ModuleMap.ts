@@ -7,8 +7,13 @@ export const getModuleId = (commandId: any): any => {
       return ModuleId.TextDocument
     case 'AttachDebugger.attachDebugger':
       return ModuleId.AttachDebugger
+    case 'AutoUpdater.checkWindowsUpdate':
     case 'AutoUpdater.getAutoUpdateType':
     case 'AutoUpdater.getLatestVersion':
+    case 'AutoUpdater.getPlatform':
+    case 'AutoUpdater.restartMacUpdate':
+    case 'AutoUpdater.stageMacUpdate':
+    case 'AutoUpdater.writeLog':
       return ModuleId.AutoUpdater
     case 'AutoUpdaterAppImage.downloadUpdate':
     case 'AutoUpdaterAppImage.installAndRestart':
@@ -294,6 +299,9 @@ export const getModuleId = (commandId: any): any => {
       return ModuleId.Screen
     case 'SendMessagePortToMainProcess.sendMessagePortToMainProcess':
       return ModuleId.SendMessagePortToMainProcess
+    case 'ShellCommand.getMenuEntries':
+    case 'ShellCommand.install':
+      return ModuleId.ShellCommand
     case 'TemporaryMessagePort.getPortTuple2':
     case 'TemporaryMessagePort.getPortTuple3':
     case 'TemporaryMessagePort.handlePorts':
@@ -314,6 +322,7 @@ export const getModuleId = (commandId: any): any => {
     case 'WebViewServer.setInfo2':
     case 'WebViewServer.start':
       return ModuleId.WebViewServer
+    case 'Workspace.getGitRemote':
     case 'Workspace.getHomeDir':
     case 'Workspace.resolveRoot':
       return ModuleId.Workspace

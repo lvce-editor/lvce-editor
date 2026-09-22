@@ -11,7 +11,6 @@ import * as Logger from '../Logger/Logger.js'
 import * as RebaseState from '../RebaseState/RebaseState.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SaveState from '../SaveState/SaveState.js'
-import * as SimpleBrowserOverlay from '../SimpleBrowserOverlay/SimpleBrowserOverlay.js'
 import * as UpdateDynamicFocusContext from '../UpdateDynamicFocusContext/UpdateDynamicFocusContext.js'
 import { VError } from '../VError/VError.js'
 import * as ViewletCommandQueue from '../ViewletCommandQueue/ViewletCommandQueue.js'
@@ -129,7 +128,7 @@ export const reload = async (id) => {
     if (instance.factory.dispose) {
       await instance.factory.dispose(oldState)
     }
-    const newState = await instance.factory.loadContent(oldState, savedState)
+    const newState = await instance.factory.loadContent(oldState, savedState, { preserveFocus: true })
     Assert.object(newState)
     if (ViewletStates.getInstance(id) !== instance) {
       return
@@ -507,18 +506,7 @@ const openWidgetWithLayout = async (layout, moduleId, ...args) => {
   // TODO send focus changes to renderer process together with other message
   UpdateDynamicFocusContext.updateDynamicFocusContext(commands)
   commands.push(['Viewlet.focus', childUid])
-  const hasSimpleBrowserOverlay = moduleId === ViewletModuleId.QuickPick
-  if (hasSimpleBrowserOverlay) {
-    await SimpleBrowserOverlay.show('quick-pick')
-  }
-  try {
-    await RendererProcess.invoke('Viewlet.executeCommands', commands)
-  } catch (error) {
-    if (hasSimpleBrowserOverlay) {
-      await SimpleBrowserOverlay.hide('quick-pick')
-    }
-    throw error
-  }
+  await RendererProcess.invoke('Viewlet.executeCommands', commands)
 }
 
 export const closeWidget = async (id) => {
@@ -530,18 +518,11 @@ export const closeWidget = async (id) => {
     if (!childInstance) {
       return
     }
-    const hasSimpleBrowserOverlay = childInstance.moduleId === ViewletModuleId.QuickPick
     const child = childInstance.state
     const childUid = child.uid
     const commands = disposeFunctional(childUid)
-    try {
-      await RendererProcess.invoke(/* Viewlet.dispose */ 'Viewlet.sendMultiple', commands)
-    } finally {
-      if (hasSimpleBrowserOverlay) {
-        await SimpleBrowserOverlay.hide('quick-pick')
-      }
-    }
-    if (hasSimpleBrowserOverlay) {
+    await RendererProcess.invoke(/* Viewlet.dispose */ 'Viewlet.sendMultiple', commands)
+    if (childInstance.moduleId === ViewletModuleId.QuickPick) {
       const mainInstance = ViewletStates.getInstance(ViewletModuleId.Main)
       if (mainInstance) {
         await executeViewletCommand(mainInstance.state.uid, 'focus')
@@ -610,7 +591,7 @@ const executeViewletCommandInternal = async (uid, fnName, ...args) => {
   const instance = ViewletStates.getInstance(uid)
   if (!instance) {
     // Worker render notifications can arrive or leave the command queue after disposal.
-    if (fnName !== DomEventListenerFunctions.HandleBlur && fnName !== '__renderPending') {
+    if (fnName !== DomEventListenerFunctions.HandleBlur && fnName !== '__renderPending' && fnName !== 'updateGitIgnoredUris') {
       Logger.warn(`cannot execute ${fnName} instance not found ${uid}`)
     }
     return
