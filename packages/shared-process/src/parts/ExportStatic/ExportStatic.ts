@@ -123,9 +123,11 @@ const clean = async (root: any): Promise<any> => {
 /**
  * @param {string} root
  */
-const copyStaticFiles = async (root: any, serverStaticPath: any): Promise<any> => {
+const copyStaticFiles = async (root: any, serverStaticPath: any, commitHash: any): Promise<any> => {
   await FileSystem.copy(serverStaticPath, Path.join(root, 'dist'))
-  await FileSystem.copy(Path.join(serverStaticPath, '..', 'config.json'), Path.join(root, 'dist', 'config.json'))
+  const configPath = Path.join(serverStaticPath, '..', 'config.json')
+  await FileSystem.copy(configPath, Path.join(root, 'dist', 'config.json'))
+  await FileSystem.copy(configPath, Path.join(root, 'dist', commitHash, 'config.json'))
 }
 
 export const validateRendererProcessArtifacts = ({ commitHash, root }: any): any => {
@@ -717,7 +719,7 @@ export const exportStatic = async ({
   console.timeEnd('clean')
 
   console.time('copyStaticFiles')
-  await copyStaticFiles(root, serverStaticPath)
+  await copyStaticFiles(root, serverStaticPath, commitHash)
   console.timeEnd('copyStaticFiles')
   validateRendererProcessArtifacts({ commitHash, root })
 
