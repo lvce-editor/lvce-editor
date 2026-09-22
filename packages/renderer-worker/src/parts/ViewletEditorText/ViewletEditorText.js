@@ -116,6 +116,7 @@ export const loadContent = async (state, savedState, context) => {
   const rowHeight = EditorPreferences.getRowHeight()
   const fontSize = EditorPreferences.getFontSize()
   const hoverEnabled = EditorPreferences.getHoverEnabled()
+  const hoverDelay = EditorPreferences.getHoverDelay()
   const fontFamily = EditorPreferences.getFontFamily()
   const letterSpacing = EditorPreferences.getLetterSpacing()
   const tabSize = EditorPreferences.getTabSize()
@@ -192,6 +193,7 @@ export const loadContent = async (state, savedState, context) => {
       formatOnSave,
       height,
       hoverEnabled,
+      hoverDelay,
       id,
       isAutoClosingBracketsEnabled,
       isAutoClosingQuotesEnabled,
