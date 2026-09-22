@@ -5,6 +5,7 @@ import * as IpcParentType from '../IpcParentType/IpcParentType.js'
 import * as IsProduction from '../IsProduction/IsProduction.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as JsonRpc from '../JsonRpc/JsonRpc.js'
+import * as GetWindowId from '../GetWindowId/GetWindowId.js'
 
 const getConfiguredWorkerUrl = () => {
   let configuredWorkerUrl = Preferences.get('develop.embedsWorkerPath') || ''
@@ -26,6 +27,7 @@ export const launchEmbedsWorker = async () => {
     name: 'Embeds Worker',
   })
   HandleIpc.handleIpc(ipc)
-  await JsonRpc.invoke(ipc, 'Initialize.initialize')
+  const windowId = await GetWindowId.getWindowId()
+  await JsonRpc.invoke(ipc, 'Initialize.initialize', windowId)
   return ipc
 }
