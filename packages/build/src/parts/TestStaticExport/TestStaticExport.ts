@@ -59,6 +59,8 @@ const main = async () => {
   assert.equal(typeof config.commit, 'string')
   assert.equal(typeof config.productName, 'string')
   assert.equal(typeof config.version, 'string')
+  const commitConfig = JSON.parse(await ReadFile.readFile(join(tmpDir, 'dist', commitHash, 'config.json')))
+  assert.deepEqual(commitConfig, config)
   // Static e2e pages must start without an optional on-load commands file.
   await Remove.remove(join(tmpDir, 'dist', commitHash, 'config', 'onLoadCommands.json'))
   const testOverview = await ReadFile.readFile(join(tmpDir, 'dist', commitHash, 'tests', 'index.html'))
