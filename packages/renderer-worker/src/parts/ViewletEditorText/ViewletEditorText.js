@@ -129,9 +129,11 @@ export const loadContent = async (state, savedState, context) => {
   const completionTriggerCharacters = EditorPreferences.getCompletionTriggerCharacters()
   const diagnosticsEnabled = EditorPreferences.diagnosticsEnabled()
   const content =
-    state.applicationId === undefined
-      ? await GetTextEditorContent.getTextEditorContent(uri)
-      : await ApplicationFileSystem.execute(state.applicationId, 'readFile', uri)
+    useFunctionalRendering && context?.largeFile === true
+      ? ''
+      : state.applicationId === undefined
+        ? await GetTextEditorContent.getTextEditorContent(uri)
+        : await ApplicationFileSystem.execute(state.applicationId, 'readFile', uri)
   const languageId = context?.languageId || getLanguageId(state, content)
   const tokenizer = Tokenizer.getTokenizer(languageId)
   const tokenizerId = Id.create()
@@ -169,7 +171,7 @@ export const loadContent = async (state, savedState, context) => {
       useCache,
       ...(state.applicationId === undefined ? [] : [state.applicationId]),
     )
-    await EditorWorker.invoke('Editor.loadContent', id, savedState?.editorState)
+    await EditorWorker.invoke('Editor.loadContent', id, savedState?.editorState, context?.largeFile === true)
     const initialRender = await rerender(newState2)
     await EditorWorker.invoke('Editor.setSelections2', id, savedSelections)
     const selectionRender = await rerender(newState2)
