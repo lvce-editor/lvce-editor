@@ -184,9 +184,6 @@ export const getModuleId = (commandId: any): any => {
       return ModuleId.HandleMessagePortForClipBoardProcess
     case 'HandleMessagePortForCookieImportProcess.handleMessagePortForCookieImportProcess':
       return ModuleId.HandleMessagePortForCookieImportProcess
-    case 'HandleMessagePortForEmbedsProcess.handleEmbedsProcessIpcClosed':
-    case 'HandleMessagePortForEmbedsProcess.handleMessagePortForEmbedsProcess':
-      return ModuleId.HandleMessagePortForEmbedsProcess
     case 'HandleMessagePortForExtensionNodeProcess.handleMessagePortForExtensionNodeProcess':
       return ModuleId.HandleMessagePortForExtensionNodeProcess
     case 'HandleMessagePortForFileSystemProcess.handleMessagePortForFileSystemProcess':
