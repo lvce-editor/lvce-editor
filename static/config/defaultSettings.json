@@ -21,7 +21,8 @@
   "editor.links": true,
   "editor.minimap.enabled": false,
   "editor.tabSize": 2,
-  "editor.hover": true,
+  "editor.hover": false,
+  "editor.hoverDelay": 200,
 
   "editor.autoClosingBrackets": true,
   "editor.autoClosingQuotes": true,

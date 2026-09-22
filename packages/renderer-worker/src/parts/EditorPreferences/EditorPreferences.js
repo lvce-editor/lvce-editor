@@ -15,6 +15,7 @@ const kAutoClosingQuotes = 'editor.autoClosingQuotes'
 const kAutoClosingBrackets = 'editor.autoClosingBrackets'
 const kFontWeight = 'editor.fontWeight'
 const kHover = 'editor.hover'
+const kHoverDelay = 'editor.hoverDelay'
 
 export const isAutoClosingBracketsEnabled = () => {
   return Boolean(Preferences.get(kAutoClosingBrackets))
@@ -41,7 +42,11 @@ export const getFontSize = () => {
 }
 
 export const getHoverEnabled = () => {
-  return Preferences.get(kHover) ?? true
+  return Preferences.get(kHover) ?? false
+}
+
+export const getHoverDelay = () => {
+  return Preferences.get(kHoverDelay) ?? 200
 }
 
 export const getFontFamily = () => {
