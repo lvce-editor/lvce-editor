@@ -658,6 +658,7 @@ export const commandMap = {
   'Layout.showTitleBar': lazy('Layout.showTitleBar'),
   'Layout.toggleActivityBar': lazy('Layout.toggleActivityBar'),
   'Layout.toggleMain': lazy('Layout.toggleMain'),
+  'Layout.toggleMenuBar': lazy('Layout.toggleMenuBar'),
   'Layout.togglePanel': lazy('Layout.togglePanel'),
   'Layout.togglePreview': lazy('Layout.togglePreview'),
   'Layout.toggleSecondaryPreview': lazy('Layout.toggleSecondaryPreview'),

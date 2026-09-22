@@ -35,6 +35,7 @@ import * as SaveState from '../SaveState/SaveState.js'
 import * as SideBarLocationType from '../SideBarLocationType/SideBarLocationType.js'
 import * as SourceControlWorker from '../SourceControlWorker/SourceControlWorker.js'
 import * as StatusBarWorker from '../StatusBarWorker/StatusBarWorker.js'
+import * as TitleBarWorker from '../TitleBarWorker/TitleBarWorker.js'
 import { VError } from '../VError/VError.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
@@ -1143,6 +1144,19 @@ export const hideActivityBar = (state: LayoutState) => {
 export const toggleActivityBar = (state: LayoutState) => {
   // @ts-ignore
   return toggle(state, LayoutModules.ActivityBar)
+}
+
+export const toggleMenuBar = async (state: LayoutState): Promise<LayoutStateResult> => {
+  const titleBar = ViewletStates.getInstance(LayoutModules.TitleBar.moduleId, state.applicationId)
+  if (titleBar) {
+    const titleBarState = await TitleBarWorker.invoke('TitleBar.getComponentState', titleBar.state.uid)
+    const command = titleBarState.titleBarMenuBarEnabled ? 'hideMenuBar' : 'showMenuBar'
+    await Viewlet.executeViewletCommand(titleBar.state.uid, command)
+  }
+  return {
+    newState: state,
+    commands: [],
+  }
 }
 
 const getPreferredViewLocation = async (viewId: string): Promise<'preview' | 'secondaryPreview' | 'sideBar'> => {

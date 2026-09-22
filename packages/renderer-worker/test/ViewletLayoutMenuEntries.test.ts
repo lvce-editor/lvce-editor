@@ -40,6 +40,15 @@ test('getQuickPickMenuEntries includes reset view locations command', async () =
   })
 })
 
+test('getQuickPickMenuEntries includes toggle menu bar command', async () => {
+  const entries = await ViewletLayoutMenuEntries.getQuickPickMenuEntries()
+
+  expect(entries).toContainEqual({
+    id: 'Layout.toggleMenuBar',
+    label: 'View: Toggle Menu Bar',
+  })
+})
+
 test('getQuickPickMenuEntries includes executable keybindings commands', async () => {
   const entries = await ViewletLayoutMenuEntries.getQuickPickMenuEntries()
 
