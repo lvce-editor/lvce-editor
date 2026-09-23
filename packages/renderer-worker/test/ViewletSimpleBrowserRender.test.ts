@@ -222,6 +222,14 @@ test('routes address input changes to the simple browser state', () => {
   })
 })
 
+test('routes history link clicks to navigation without following the anchor', () => {
+  expect(ViewletSimpleBrowserRender.renderEventListeners()).toContainEqual({
+    name: DomEventListenerFunctions.HandleClickSimpleBrowserHistoryUrl,
+    params: ['setUrl', 'event.currentTarget.dataset.url'],
+    preventDefault: true,
+  })
+})
+
 test('routes browser chrome focus with the focused element name', () => {
   expect(ViewletSimpleBrowserRender.renderEventListeners()).toContainEqual({
     name: DomEventListenerFunctions.HandleFocusInSimpleBrowser,

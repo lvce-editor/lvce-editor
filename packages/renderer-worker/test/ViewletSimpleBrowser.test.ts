@@ -1606,6 +1606,34 @@ test('setUrl materializes native content when an empty tab navigates', async () 
   expect(loadingState).toMatchObject({ browserViewId: 13, iframeSrc: 'https://example.com', isLoading: true })
 })
 
+test('setUrl replaces the history tab with the exact selected history destination', async () => {
+  // @ts-ignore
+  ElectronWebContentsView.createWebContentsView.mockResolvedValue(13)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.hide.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.resizeWebContentsView.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.show.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.setIframeSrc.mockResolvedValue(undefined)
+  const state = {
+    ...ViewletSimpleBrowser.create(7, 'simple-browser-history://', 10, 20, 300, 200),
+    tabs: [{ browserViewId: 0, iframeSrc: 'simple-browser-history://', inputValue: 'simple-browser-history://', title: 'History' }],
+  }
+  const destination = 'https://history.example.test/path?exact=value'
+
+  const newState = await ViewletSimpleBrowser.setUrl(state, destination)
+
+  expect(ElectronWebContentsViewFunctions.setIframeSrc).toHaveBeenCalledWith(13, destination)
+  expect(newState).toMatchObject({
+    browserViewId: 13,
+    iframeSrc: destination,
+    inputValue: destination,
+    tabs: [{ browserViewId: 13, iframeSrc: destination, inputValue: destination }],
+  })
+})
+
 test('setUrl opens cookie import urls as a main-area view', async () => {
   const state = { ...ViewletSimpleBrowser.create(), browserViewId: 12 }
 
