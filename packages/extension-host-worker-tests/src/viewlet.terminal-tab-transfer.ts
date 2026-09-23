@@ -1,8 +1,6 @@
 import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'viewlet.terminal-tab-transfer'
-// Enable after integrating the main-area-worker release containing PR #802.
-export const skip = 1
 
 export const test: Test = async (api) => {
   const { Command, ComponentState, KeyBoard, Locator, Settings, expect } = api
@@ -38,7 +36,9 @@ export const test: Test = async (api) => {
   await Command.execute('Terminals.handleTabPointerDown', String(terminal.uid))
   await Command.execute('Layout.showSideBar', 'Explorer')
   const rejectedDrop = await DragAndDrop.createDropSessionFromDragData()
-  await Command.execute('Explorer.handleDrop', 0, 0, rejectedDrop)
+  const explorer = await ComponentState.getComponent('Explorer')
+  const explorerState = await Command.execute('ComponentState.getState', explorer.uid)
+  await Command.execute('Explorer.handleDrop', explorerState.x + 10, explorerState.y + explorerState.height - 10, rejectedDrop)
   await expect(panelTerminal).toBeVisible()
   await expect(Locator('.MainTab')).toHaveCount(0)
   await Command.execute('Terminals.handleTabPointerDown', String(terminal.uid))
