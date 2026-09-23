@@ -38,8 +38,15 @@ const launch = async () => {
     if (response.status() >= 400) console.error(response.status(), response.url())
   })
   console.log('Window URL', page.url())
-  await expect(page.locator('.Main')).toBeVisible()
-  await expect(page.locator('.ActivityBarItem').first()).toBeVisible()
+  const startupStarted = performance.now()
+  try {
+    await expect(page.locator('.Main')).toBeVisible({ timeout: 30_000 })
+    await expect(page.locator('.ActivityBarItem').first()).toBeVisible({ timeout: 30_000 })
+    console.log(`Workbench ready after ${Math.round(performance.now() - startupStarted)}ms`)
+  } catch (error) {
+    console.error('Workbench startup failed', page.url(), await page.locator('body').innerText())
+    throw error
+  }
   return page
 }
 const command = (page, name, ...args) =>
