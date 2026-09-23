@@ -52,7 +52,7 @@ export const takePanelTerminal = async (mainUid, panelUid, terminalUid) => {
       await rollback(terminalUid)
       return undefined
     }
-    return descriptor
+    return { ...descriptor, icon: `/icons/${descriptor.icon}.svg` }
   } catch (error) {
     await rollback(terminalUid)
     throw error
@@ -108,7 +108,7 @@ export const attachPanelTerminal = async (mainUid, panelUid, terminalUid, label,
   }
   try {
     if (!transfer.exited && isLive(terminalUid)) {
-      await Viewlet.executeViewletCommand(panelUid, 'attachTerminal', { uid: terminalUid, label, icon })
+      await Viewlet.executeViewletCommand(panelUid, 'attachTerminal', { uid: terminalUid, label, icon: icon.replace(/^\/icons\/(.*)\.svg$/, '$1') })
     }
     if (transfer.exited) {
       await Viewlet.executeViewletCommand(panelUid, 'handleTerminalExit', terminalUid)

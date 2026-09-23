@@ -71,8 +71,8 @@ export const test: Test = async (api) => {
   await Command.execute('Terminals.splitTerminal')
   await Command.execute('Terminals.addTerminal')
   await Command.execute('Terminals.handleClickTab', '0')
-  const state = await Command.execute('ComponentState.getState', panel.uid)
-  const splitUid = state.tabs[0].terminalUids[0]
+  const splitTerminals = (await ComponentState.getComponents()).filter((component) => component.moduleId === 'Terminal2')
+  const splitUid = Math.min(...splitTerminals.map((component) => component.uid))
   await Command.execute('Terminals.handleTabPointerDown', String(splitUid))
   await Command.execute('Main.handleDrop', await DragAndDrop.createDropSessionFromDragData())
   await expect(Locator('.TerminalTab')).toHaveCount(2)

@@ -29,12 +29,12 @@ beforeEach(() => {
 })
 
 test('round trip preserves the same live terminal and rejects duplicate ownership claims', async () => {
-  expect(await Transfer.takePanelTerminal(100, 200, 300)).toMatchObject({ uid: 300, label: 'bash' })
+  expect(await Transfer.takePanelTerminal(100, 200, 300)).toMatchObject({ uid: 300, label: 'bash', icon: '/icons/terminal-bash.svg' })
   expect(await Transfer.takePanelTerminal(100, 200, 300)).toBeUndefined()
   Transfer.commit(300, 100)
   expect(await Transfer.takePanelTerminal(100, 200, 300)).toBeUndefined()
   expect(Transfer.beginPanelTransfer(100, 200, 300)).toBe(true)
-  await Transfer.attachPanelTerminal(100, 200, 300, 'bash', 'terminal-bash')
+  await Transfer.attachPanelTerminal(100, 200, 300, 'bash', '/icons/terminal-bash.svg')
   expect(execute.mock.calls).toEqual([
     [200, 'detachTerminal', 300],
     [200, 'attachTerminal', { uid: 300, label: 'bash', icon: 'terminal-bash' }],
@@ -65,7 +65,7 @@ test('exit while moving back removes the new panel entry before releasing the ma
     await Transfer.handleExit(300)
   })
   expect(Transfer.beginPanelTransfer(100, 200, 300)).toBe(true)
-  await Transfer.attachPanelTerminal(100, 200, 300, 'bash', 'terminal-bash')
+  await Transfer.attachPanelTerminal(100, 200, 300, 'bash', '/icons/terminal-bash.svg')
   expect(execute).toHaveBeenLastCalledWith(200, 'handleTerminalExit', 300)
   expect(invoke).not.toHaveBeenCalled()
 })

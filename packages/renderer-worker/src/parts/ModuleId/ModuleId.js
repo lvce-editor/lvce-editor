@@ -121,3 +121,5 @@ export const ComponentState = 156
 export const Application = 157
 
 export const SimpleBrowserWorkflow = 158
+
+export const TerminalTransfer = 159

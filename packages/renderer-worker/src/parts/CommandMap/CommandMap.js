@@ -8,14 +8,14 @@ const lazy =
   }
 
 export const commandMap = {
-  'TerminalTransfer.beginPanelTransfer': async (...args) => (await import('../TerminalTransfer/TerminalTransfer.js')).beginPanelTransfer(...args),
-  'TerminalTransfer.cancelPanelTransfer': async (...args) => (await import('../TerminalTransfer/TerminalTransfer.js')).cancelPanelTransfer(...args),
+  'TerminalTransfer.beginPanelTransfer': lazy('TerminalTransfer.beginPanelTransfer'),
+  'TerminalTransfer.cancelPanelTransfer': lazy('TerminalTransfer.cancelPanelTransfer'),
 
-  'TerminalTransfer.takePanelTerminal': async (...args) => (await import('../TerminalTransfer/TerminalTransfer.js')).takePanelTerminal(...args),
-  'TerminalTransfer.resize': async (...args) => (await import('../TerminalTransfer/TerminalTransfer.js')).resize(...args),
-  'TerminalTransfer.commit': async (...args) => (await import('../TerminalTransfer/TerminalTransfer.js')).commit(...args),
-  'TerminalTransfer.rollback': async (...args) => (await import('../TerminalTransfer/TerminalTransfer.js')).rollback(...args),
-  'TerminalTransfer.attachPanelTerminal': async (...args) => (await import('../TerminalTransfer/TerminalTransfer.js')).attachPanelTerminal(...args),
+  'TerminalTransfer.takePanelTerminal': lazy('TerminalTransfer.takePanelTerminal'),
+  'TerminalTransfer.resize': lazy('TerminalTransfer.resize'),
+  'TerminalTransfer.commit': lazy('TerminalTransfer.commit'),
+  'TerminalTransfer.rollback': lazy('TerminalTransfer.rollback'),
+  'TerminalTransfer.attachPanelTerminal': lazy('TerminalTransfer.attachPanelTerminal'),
 
   'Preview.clearOutput': async () => {
     const { clearOutput } = await import('../PreviewSandboxOutput/PreviewSandboxOutput.js')
