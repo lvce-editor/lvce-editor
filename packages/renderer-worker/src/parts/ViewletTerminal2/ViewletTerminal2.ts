@@ -1,3 +1,4 @@
+import * as TerminalTransfer from '../TerminalTransfer/TerminalTransfer.js'
 import * as Assert from '../Assert/Assert.ts'
 import * as Command from '../Command/Command.js'
 import * as Focus from '../Focus/Focus.js'
@@ -74,7 +75,9 @@ export const handleData = async (state, data) => {
 }
 
 export const handleExit = async (state) => {
-  await Command.execute('Terminals.handleTerminalExit', state.uid)
+  if (!(await TerminalTransfer.handleExit(state.uid))) {
+    await Command.execute('Terminals.handleTerminalExit', state.uid)
+  }
   return state
 }
 
@@ -83,6 +86,7 @@ export const handleBlur = (state) => {
 }
 
 export const dispose = async (state) => {
+  TerminalTransfer.forget(state.uid)
   await TerminalWorker.invoke('Terminal.dispose', state.uid)
   return {
     ...state,

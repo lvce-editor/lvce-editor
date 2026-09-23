@@ -239,7 +239,7 @@ export const handleMouseDown = (state, childUid) => {
   }
 }
 
-const removeTerminal = async (state, terminalUid) => {
+const removeTerminal = async (state, terminalUid, dispose = true) => {
   const { activeTerminalUids: oldActiveTerminalUids, childUid: oldChildUid, focusVersion, selectedIndex: oldSelectedIndex, tabs: oldTabs } = state
   if (terminalUid === -1) {
     return state
@@ -291,7 +291,7 @@ const removeTerminal = async (state, terminalUid) => {
     selectedIndex,
     tabs,
   }
-  const commands = Viewlet.disposeFunctional(terminalUid)
+  const commands = dispose ? Viewlet.disposeFunctional(terminalUid) : []
   const terminalUidsToResize = remainingTerminalUids.length > 0 ? remainingTerminalUids : childUids
   if (terminalUidsToResize.length > 0) {
     commands.push(...(await resizeTerminals(newState, terminalUidsToResize)))
@@ -416,4 +416,89 @@ export const resize = async (state, dimensions) => {
     newState: resizedState,
     commands,
   }
+}
+
+export const serializeCommands = true
+export const concurrentCommands = ['handleDrop']
+
+export const detachTerminal = (state, terminalUid) => removeTerminal(state, terminalUid, false)
+
+export const attachTerminal = async (state, tab, sourceIndex = state.tabs.length, splitIndex = -1) => {
+  const terminalUid = tab.uid
+  if (getOwnedViewletIds(state).includes(terminalUid)) {
+    return state
+  }
+  let tabs = [...state.tabs]
+  let activeTerminalUids = [...state.activeTerminalUids]
+  let selectedIndex = Math.min(sourceIndex, tabs.length)
+  const groupIndex = splitIndex === -1 ? -1 : tabs.findIndex((item) => item.uid === tab.groupUid)
+  if (groupIndex !== -1) {
+    selectedIndex = groupIndex
+    const group = tabs[groupIndex]
+    tabs[groupIndex] = { ...group, terminalUids: getTerminalUids(group).toSpliced(splitIndex, 0, terminalUid) }
+    activeTerminalUids[groupIndex] = terminalUid
+  } else {
+    tabs.splice(selectedIndex, 0, { uid: terminalUid, terminalUids: [terminalUid], label: tab.label, icon: tab.icon })
+    activeTerminalUids.splice(selectedIndex, 0, terminalUid)
+  }
+  const next = {
+    ...state,
+    tabs,
+    activeTerminalUids,
+    selectedIndex,
+    childUid: terminalUid,
+    childUids: getTerminalUids(tabs[selectedIndex]),
+    focusVersion: state.focusVersion + 1,
+  }
+  await sendCommands(await resizeTerminals(next, next.childUids))
+  return next
+}
+
+export const handleTabPointerDown = async (state, rawUid) => {
+  const terminalUid = Number(rawUid)
+  const tab = state.tabs.find((item) => getTerminalUids(item).includes(terminalUid))
+  if (!tab) {
+    return state
+  }
+  await RendererProcess.invoke('Viewlet.sendMultiple', [
+    [
+      'Viewlet.setDragData',
+      state.uid,
+      {
+        items: [{ type: 'application/x-lvce-terminal', data: `lvce-terminal:${JSON.stringify({ sourceUid: state.uid, terminalUid })}` }],
+        label: tab.label,
+      },
+    ],
+  ])
+  return state
+}
+
+export const handleDragEnd = async (state) => {
+  await RendererProcess.invoke('Viewlet.sendMultiple', [['Viewlet.setDragData', state.uid, { items: [], label: '' }]])
+  return state
+}
+
+export const handleDragStart = (state) => state
+export const handleDragOver = (state) => state
+
+// Do not run this callback on the panel command queue: the main-area transfer
+// calls back into attachTerminal on that queue before completing.
+export const dropTerminal = async (panelUid, dropId) => {
+  const MainAreaWorker = await import('../MainAreaWorker/MainAreaWorker.js')
+  const { renderMainAreaPending } = await import('../RenderMainAreaPending/RenderMainAreaPending.ts')
+  const panel = ViewletStates.getInstance(panelUid)
+  if (!panel) {
+    return
+  }
+  const main = ViewletStates.getInstance(ViewletModuleId.Main, panel.state.applicationId)
+  if (!main) {
+    return
+  }
+  await MainAreaWorker.invoke('MainArea.handlePanelDrop', main.state.uid, panelUid, dropId)
+  await renderMainAreaPending(main.state.uid)
+}
+
+export const handleDrop = async (state, dropId) => {
+  await dropTerminal(state.uid, dropId)
+  return state
 }

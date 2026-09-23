@@ -18,7 +18,7 @@ export const test: Test = async (api) => {
   await api.Locator('.PanelTab[name="Terminals"]').click()
   const terminals = api.Locator('.XtermTerminal')
   await api.expect(terminals).toHaveCount(1)
-  await api.expect(api.Locator('.TerminalTabs')).toHaveCount(0)
+  await api.expect(api.Locator('.TerminalTabs')).toHaveCount(1)
   await api.expect(terminals.locator('.xterm-helper-textarea')).toBeFocused()
   await runCommand('echo first-terminal')
   await api.expect(terminals).toContainText('first-terminal')

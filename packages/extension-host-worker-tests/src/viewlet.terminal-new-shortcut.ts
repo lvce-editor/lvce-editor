@@ -12,7 +12,7 @@ export const test: Test = async ({ Command, KeyBoard, Locator, Settings, expect 
   await KeyBoard.press('Control+Shift+Backquote')
   await expect(terminal).toBeVisible()
   await expect(input).toBeFocused()
-  await expect(tabs).toHaveCount(0)
+  await expect(tabs).toHaveCount(1)
 
   await KeyBoard.press('Control+Shift+Backquote')
   await expect(tabs).toHaveCount(2)

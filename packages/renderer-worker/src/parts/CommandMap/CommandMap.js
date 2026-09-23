@@ -8,6 +8,15 @@ const lazy =
   }
 
 export const commandMap = {
+  'TerminalTransfer.beginPanelTransfer': async (...args) => (await import('../TerminalTransfer/TerminalTransfer.js')).beginPanelTransfer(...args),
+  'TerminalTransfer.cancelPanelTransfer': async (...args) => (await import('../TerminalTransfer/TerminalTransfer.js')).cancelPanelTransfer(...args),
+
+  'TerminalTransfer.takePanelTerminal': async (...args) => (await import('../TerminalTransfer/TerminalTransfer.js')).takePanelTerminal(...args),
+  'TerminalTransfer.resize': async (...args) => (await import('../TerminalTransfer/TerminalTransfer.js')).resize(...args),
+  'TerminalTransfer.commit': async (...args) => (await import('../TerminalTransfer/TerminalTransfer.js')).commit(...args),
+  'TerminalTransfer.rollback': async (...args) => (await import('../TerminalTransfer/TerminalTransfer.js')).rollback(...args),
+  'TerminalTransfer.attachPanelTerminal': async (...args) => (await import('../TerminalTransfer/TerminalTransfer.js')).attachPanelTerminal(...args),
+
   'Preview.clearOutput': async () => {
     const { clearOutput } = await import('../PreviewSandboxOutput/PreviewSandboxOutput.js')
     await clearOutput()
