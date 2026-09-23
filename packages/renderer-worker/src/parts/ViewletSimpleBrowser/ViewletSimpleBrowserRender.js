@@ -54,6 +54,11 @@ export const renderEventListeners = () => {
       params: ['removeHistoryEntry', 'event.currentTarget.dataset.index'],
     },
     {
+      name: DomEventListenerFunctions.HandleClickSimpleBrowserHistoryUrl,
+      params: ['setUrl', 'event.currentTarget.dataset.url'],
+      preventDefault: true,
+    },
+    {
       name: DomEventListenerFunctions.HandleFocusInSimpleBrowser,
       params: ['handleFocusIn', 'event.target.name'],
     },

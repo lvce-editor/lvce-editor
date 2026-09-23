@@ -111,7 +111,7 @@ jobs:
         if: matrix.versions.os == 'windows-2025'
         with:
           path: '~\AppData\Local\electron-builder'
-          key: ${{ runner.os }}-electron-builder-${{ hashFiles('packages/build/package-lock.json') }}
+          key: ${{ runner.os }}-electron-builder-${{ hashFiles('package-lock.json') }}
       - name: Install Cloudsmith CLI
         if: matrix.versions.os == 'ubuntu-24.04'
         uses: cloudsmith-io/cloudsmith-cli-action@159f1619275d5d3147f059c3cc110938ec221d16
@@ -284,7 +284,7 @@ jobs:
       - name: Test staged Windows installer
         if: matrix.versions.os == 'windows-2025'
         shell: pwsh
-        run: ./packages/build/scripts/test-windows-staging.ps1 -Installer '${{ env.ASSET_WINDOWS_EXE_X64 || env.ASSET_WINDOWS_EXE_ARM64 }}'
+        run: ./packages/build/scripts/test-windows-staging.ps1 -Installer '${{ env.ASSET_WINDOWS_EXE_X64 || env.ASSET_WINDOWS_EXE_ARM64 }}' -Architecture '${{ matrix.versions.arch }}'
       - name: Declare staged Windows installer support
         if: matrix.versions.os == 'windows-2025'
         shell: pwsh

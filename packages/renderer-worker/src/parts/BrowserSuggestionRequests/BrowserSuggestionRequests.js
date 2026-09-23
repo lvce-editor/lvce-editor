@@ -31,6 +31,7 @@ export const isCurrentUpdate = (uid, id, updateId) => {
 
 export const begin = (uid, tabId, query, request, apply) => {
   cancel(uid)
+  /** @type {{active: boolean, id: number, tabId: any, timer: number | ReturnType<typeof setTimeout>, updateId: number, providerStarted: boolean}} */
   const session = { active: true, id: ++sequence.value, tabId, timer: 0, updateId: 0, providerStarted: false }
   sessions.set(uid, session)
   if (request) {

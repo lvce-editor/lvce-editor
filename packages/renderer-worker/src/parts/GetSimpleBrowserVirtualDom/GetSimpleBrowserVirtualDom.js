@@ -23,6 +23,65 @@ const getInlineSuggestion = (value, suggestions) => {
   return ''
 }
 
+const getNewTabVirtualDom = (value) => {
+  return [
+    {
+      type: VirtualDomElements.Main,
+      className: 'SimpleBrowserNewTabPage',
+      childCount: 2,
+    },
+    {
+      type: VirtualDomElements.Div,
+      className: 'SimpleBrowserNewTabBrand',
+      childCount: 2,
+    },
+    {
+      type: VirtualDomElements.Div,
+      className: 'SimpleBrowserNewTabBrandMark',
+      ariaHidden: true,
+      childCount: 0,
+    },
+    {
+      type: VirtualDomElements.Span,
+      childCount: 1,
+    },
+    text('LVCE'),
+    {
+      type: VirtualDomElements.Form,
+      className: 'SimpleBrowserNewTabSearch',
+      role: AriaRoles.Search,
+      noValidate: true,
+      onSubmit: DomEventListenerFunctions.HandleSubmitSimpleBrowserAddress,
+      childCount: 1,
+    },
+    {
+      type: VirtualDomElements.Label,
+      className: 'SimpleBrowserNewTabSearchBox',
+      childCount: 2,
+    },
+    {
+      type: VirtualDomElements.Div,
+      className: 'MaskIcon MaskIconSearch SimpleBrowserNewTabSearchIcon',
+      ariaHidden: true,
+      childCount: 0,
+    },
+    {
+      type: VirtualDomElements.Input,
+      className: 'SimpleBrowserNewTabSearchInput',
+      inputType: HtmlInputType.Search,
+      name: InputName.SimpleBrowserNewTabSearch,
+      ariaLabel: 'Search with Google',
+      placeholder: 'Search with Google',
+      autocomplete: 'off',
+      spellcheck: false,
+      onInput: DomEventListenerFunctions.HandleInput,
+      onFocus: DomEventListenerFunctions.HandleFocus,
+      onBlur: DomEventListenerFunctions.HandleBlurSimpleBrowserAddress,
+      value,
+    },
+  ]
+}
+
 export const getSimpleBrowserVirtualDom = (
   canGoBack,
   canGoForward,
@@ -47,6 +106,8 @@ export const getSimpleBrowserVirtualDom = (
 ) => {
   const inlineSuggestion = getInlineSuggestion(value, suggestions)
   const historyDom = historyTab ? GetSimpleBrowserHistoryVirtualDom.getSimpleBrowserHistoryVirtualDom(historyEntries, historySearchValue) : []
+  const selectedTab = tabs[selectedTabIndex]
+  const isNewTab = Boolean(selectedTab && !selectedTab.browserViewId && !selectedTab.iframeSrc && !historyTab)
   /** @type {any[]} */
   const dom = [
     {
@@ -60,6 +121,7 @@ export const getSimpleBrowserVirtualDom = (
         (snapshot ? 1 : 0) +
         (pageSnapshotDom.length > 0 ? 1 : 0) +
         (historyDom.length > 0 ? 1 : 0) +
+        (isNewTab ? 1 : 0) +
         (suggestions.length > 0 ? 1 : 0) +
         (tabHover ? 1 : 0),
     },
@@ -337,6 +399,9 @@ export const getSimpleBrowserVirtualDom = (
       childCount: 0,
     },
   )
+  if (isNewTab) {
+    dom.push(...getNewTabVirtualDom(value))
+  }
   if (findState?.findVisible) dom.push(...BrowserFind.getBrowserFindVirtualDom(findState))
   if (snapshot) {
     dom.push(

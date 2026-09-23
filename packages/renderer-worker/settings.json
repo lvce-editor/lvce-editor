@@ -1,5 +1,13 @@
 [
   {
+    "category": "window",
+    "description": "Places Linux window controls above the primary sidebar so the main and secondary sidebar extend to the top. With the primary sidebar hidden, reserves a full-width control strip. Restart the app to apply changes.",
+    "heading": "Titlebarless Layout",
+    "id": "window.titleBarless.enabled",
+    "type": "boolean",
+    "value": false
+  },
+  {
     "category": "applications",
     "description": "Controls how application updates are installed",
     "heading": "Update Mode",
@@ -187,6 +195,14 @@
   },
   {
     "category": "workbench",
+    "description": "Enables the experimental modern UI styling",
+    "heading": "Modern UI",
+    "id": "workbench.experimental.modernUI",
+    "type": "boolean",
+    "value": false
+  },
+  {
+    "category": "workbench",
     "description": "Specifies the workbench color theme",
     "heading": "Color Theme",
     "id": "workbench.colorTheme",
@@ -214,6 +230,14 @@
     "description": "Hides the editor title bar while Simple Browser is full width",
     "heading": "Simple Browser Full Width Title Bar",
     "id": "simpleBrowser.fullWidth.hideTitleBar",
+    "type": "boolean",
+    "value": false
+  },
+  {
+    "category": "workbench",
+    "description": "Uses native Electron context menus for Simple Browser tabs and toolbar actions when available",
+    "heading": "Simple Browser Native Context Menu",
+    "id": "simpleBrowser.nativeContextMenu",
     "type": "boolean",
     "value": false
   },

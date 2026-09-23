@@ -11,6 +11,12 @@ jest.unstable_mockModule('../src/parts/PortsViewWorker/PortsViewWorker.ts', () =
     if (command === 'Ports.getComponentState') {
       return { uid: 1 }
     }
+    if (command === 'Ports.getMenuIds') {
+      return [28]
+    }
+    if (command === 'Ports.getMenuEntries2') {
+      return []
+    }
     return undefined
   }),
 }))
@@ -52,6 +58,14 @@ test('registers ports view commands', async () => {
 test('exposes component state commands', () => {
   expect(typeof ViewletPorts.getComponentState).toBe('function')
   expect(typeof ViewletPorts.setComponentState).toBe('function')
+})
+
+test('registers ports view menus', async () => {
+  await expect(ViewletPorts.getMenus()).resolves.toEqual([
+    expect.objectContaining({
+      id: 28,
+    }),
+  ])
 })
 
 test('routes component state operations through the ports worker', async () => {

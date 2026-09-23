@@ -22,6 +22,17 @@ test('renders each history entry with its date, url, and remove button', () => {
     dateTime: new Date(date).toISOString(),
   })
   expect(dom).toContainEqual({ type: VirtualDomElements.Text, text: new Date(date).toLocaleString(), childCount: 0 })
+  expect(dom).toContainEqual({
+    childCount: 1,
+    className: 'SimpleBrowserHistoryUrl',
+    'data-url': 'https://newer.example/docs',
+    href: 'https://newer.example/docs',
+    onClick: DomEventListenerFunctions.HandleClickSimpleBrowserHistoryUrl,
+    rel: 'noopener noreferrer',
+    target: '_blank',
+    title: 'https://newer.example/docs',
+    type: VirtualDomElements.A,
+  })
   expect(dom).toContainEqual({ type: VirtualDomElements.Text, text: 'https://newer.example/docs', childCount: 0 })
   expect(getNodesByClassName(dom, 'Button ButtonSecondary SimpleBrowserHistoryRemove')[0]).toMatchObject({
     'data-index': 0,
@@ -40,6 +51,14 @@ test('filters entries by url while retaining their original removal index', () =
 
   expect(getNodesByClassName(dom, 'SimpleBrowserHistoryEntry')).toHaveLength(1)
   expect(getNodesByClassName(dom, 'Button ButtonSecondary SimpleBrowserHistoryRemove')[0]).toMatchObject({ 'data-index': 1 })
+  expect(getNodesByClassName(dom, 'SimpleBrowserHistoryUrl')[0]).toMatchObject({
+    childCount: 1,
+    'data-url': 'https://matching.example',
+    href: 'https://matching.example',
+    rel: 'noopener noreferrer',
+    target: '_blank',
+    type: VirtualDomElements.A,
+  })
   expect(dom).toContainEqual({ type: VirtualDomElements.Text, text: 'https://matching.example', childCount: 0 })
 })
 

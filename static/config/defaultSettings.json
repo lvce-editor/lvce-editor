@@ -21,7 +21,8 @@
   "editor.links": true,
   "editor.minimap.enabled": false,
   "editor.tabSize": 2,
-  "editor.hover": true,
+  "editor.hover": false,
+  "editor.hoverDelay": 200,
 
   "editor.autoClosingBrackets": true,
   "editor.autoClosingQuotes": true,
@@ -57,6 +58,7 @@
   "simpleBrowser.chromeTheme": "light",
   "simpleBrowser.fullWidth.doubleControlEnabled": true,
   "simpleBrowser.fullWidth.hideTitleBar": false,
+  "simpleBrowser.nativeContextMenu": false,
   "simpleBrowser.suggestions": false,
   "simpleBrowser.shortcuts": [],
   "simpleBrowser.tabHover.enabled": false,
@@ -80,6 +82,7 @@
   "virtualDom.recycling.size": 100,
 
   "workbench.colorTheme": "slime",
+  "workbench.experimental.modernUI": false,
   "workbench.iconTheme": "vscode-icons",
   "workbench.activityBar.visible": true,
   "workbench.editor.showTabsWhileLoading": false,

@@ -1,9 +1,11 @@
+import * as ComponentWorkerNames from '../ComponentWorkerNames/ComponentWorkerNames.js'
 import * as IpcParentModule from '../IpcParentModule/IpcParentModule.js'
 
 export const create = async ({ method, ...options }) => {
   const module = await IpcParentModule.getModule(method)
   // @ts-ignore
   const rawIpc = await module.create(options)
+  ComponentWorkerNames.registerWorker(options.url, options.name)
   if (options.noReturn) {
     return undefined
   }

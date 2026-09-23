@@ -8,7 +8,11 @@ permissions:
 
 jobs:
   macos-signing-smoke:
-    name: macos-signing-smoke
+    strategy:
+      fail-fast: false
+      matrix:
+        product: [lvce, lvce-oss]
+    name: macos-signing-smoke (${{ matrix.product }})
     runs-on: macos-26
     timeout-minutes: 80
     steps:
@@ -72,7 +76,7 @@ jobs:
           CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
         run: bash packages/build/scripts/github-actions/prepare-macos-signing.sh required
       - name: Build signed macOS DMG
-        run: npm run build:electron:mac:arm64 -- --product=lvce
+        run: npm run build:electron:mac:arm64 -- --product=${{ matrix.product }}
         env:
           CSC_KEYCHAIN: ${{ env.CSC_KEYCHAIN_PATH }}
           APPLE_API_KEY: ${{ env.APPLE_API_KEY_PATH }}
@@ -85,7 +89,7 @@ jobs:
           APPLE_API_KEY: ${{ env.APPLE_API_KEY_PATH }}
           APPLE_API_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
           APPLE_API_ISSUER: ${{ secrets.APPLE_API_ISSUER }}
-        run: bash packages/build/scripts/github-actions/notarize-macos-dmg.sh
+        run: bash packages/build/scripts/github-actions/notarize-macos-dmg.sh packages/build/.tmp/releases/${{ matrix.product }}-arm64.dmg
       - name: Verify signing and notarization
         shell: bash
-        run: bash packages/build/scripts/github-actions/verify-macos-dmg.sh
+        run: bash packages/build/scripts/github-actions/verify-macos-dmg.sh packages/build/.tmp/releases/${{ matrix.product }}-arm64.dmg ${{ matrix.product }}

@@ -325,8 +325,8 @@ export const titleBar = {
   transformState(state) {
     return {
       ...state,
-      controlsOverlayEnabled: Preferences.get('window.controlsOverlay.enabled') === true,
-      titleBarStyleCustom: Preferences.get('window.titleBarStyle') === 'custom',
+      controlsOverlayEnabled: Preferences.get('window.controlsOverlay.enabled') === true && Preferences.get('window.titleBarless.enabled') !== true,
+      titleBarStyleCustom: Preferences.get('window.titleBarStyle') === 'custom' || Preferences.get('window.titleBarless.enabled') === true,
     }
   },
   wrapCommand: wrapTitleBarCommand,
