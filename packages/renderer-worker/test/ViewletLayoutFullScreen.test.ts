@@ -6,6 +6,7 @@ jest.unstable_mockModule('../src/parts/SaveState/SaveState.js', () => ({
 
 jest.unstable_mockModule('../src/parts/Viewlet/Viewlet.js', () => ({
   disposeFunctional: jest.fn(() => []),
+  resize: jest.fn(async () => []),
 }))
 
 jest.unstable_mockModule('../src/parts/ViewletManager/ViewletManager.js', () => ({
@@ -99,4 +100,47 @@ test('showing or toggling the title bar is ignored in full screen', async () => 
 
   expect(await ViewletLayout.showTitleBar(state)).toEqual({ newState: state, commands: [] })
   expect(await ViewletLayout.toggleTitleBar(state)).toEqual({ newState: state, commands: [] })
+})
+
+test('leaving fullscreen recreates the title bar after restoring the full-width browser layout', async () => {
+  const ViewletManager = await import('../src/parts/ViewletManager/ViewletManager.js')
+  const Viewlet = await import('../src/parts/Viewlet/Viewlet.js')
+  let state = {
+    ...ViewletLayout.create(1),
+    titleBarHeight: 35,
+    titleBarId: 77,
+    titleBarVisible: true,
+    windowHeight: 800,
+    windowWidth: 1200,
+  }
+  for (let iteration = 0; iteration < 3; iteration++) {
+    const previousId = state.titleBarId
+    const expanded = {
+      ...state,
+      browserFullWidth: {
+        browserUid: 88,
+        layout: { titleBarVisible: true, titleBarHeight: 35, mainVisible: true, panelHeight: 200, panelHeightBeforeMaximize: 200 },
+        browserWasVisible: true,
+        browserBounds: { x: 600, y: 35, width: 600, height: 765 },
+        ideFocusUid: 1,
+        addressFocused: false,
+        hiddenBrowserUids: [],
+      },
+    }
+    const entered = await ViewletLayout.handleFullScreenChange(expanded, true)
+    expect(Viewlet.disposeFunctional).toHaveBeenLastCalledWith('TitleBar')
+    expect(entered.newState.titleBarVisible).toBe(false)
+    jest.mocked(ViewletManager.load).mockClear()
+    const exited = await ViewletLayout.handleFullScreenChange(entered.newState, false)
+    expect(ViewletManager.load).toHaveBeenCalledTimes(1)
+    expect(exited.newState.titleBarId).not.toBe(previousId)
+    expect(ViewletManager.load).toHaveBeenCalledWith(
+      expect.objectContaining({ id: 'TitleBar', uid: exited.newState.titleBarId }),
+      false,
+      true,
+      undefined,
+    )
+    expect(exited.newState).toMatchObject({ titleBarVisible: true, fullScreen: false, browserFullWidth: undefined })
+    state = exited.newState
+  }
 })

@@ -74,6 +74,9 @@ export const leave = async (state) => {
   const newState = LayoutPoints.getPoints({
     ...state,
     ...layout,
+    // Fullscreen may have disposed the title bar while the browser was expanded.
+    // Keep its live visibility so showing it recreates the viewlet before referencing it.
+    titleBarVisible: state.titleBarVisible,
     panelMinHeight: Math.min(state.panelMinHeight, panelLimit),
     browserFullWidth: undefined,
   })
