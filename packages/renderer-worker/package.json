@@ -87,7 +87,7 @@
     "@lvce-editor/output-view": "^2.24.0",
     "@lvce-editor/panel-worker": "^2.12.1",
     "@lvce-editor/ports-view": "^0.7.2",
-    "@lvce-editor/preview-sandbox-worker": "^4.15.0",
+    "@lvce-editor/preview-sandbox-worker": "^4.15.1",
     "@lvce-editor/preview-worker": "^6.18.0",
     "@lvce-editor/problems-view": "^1.39.0",
     "@lvce-editor/process-explorer-worker": "^3.30.3",
