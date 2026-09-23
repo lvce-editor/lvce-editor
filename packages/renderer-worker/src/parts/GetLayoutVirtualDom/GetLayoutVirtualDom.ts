@@ -389,7 +389,7 @@ const getPanelDom = (panelId: number) => {
   if (panelId === -1) {
     return {
       type: VirtualDomElements.Div,
-      className: 'Viewlet StatusBar',
+      className: 'Viewlet Panel',
       childCount: 0,
     }
   } else {
