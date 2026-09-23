@@ -6,6 +6,7 @@ export const Commands = {
   getComponents: ComponentState.getComponents,
   getDom: ComponentState.getDom,
   getState: ComponentState.getState,
+  getWorkerName: ComponentState.getWorkerName,
   setDom: ComponentState.setDom,
   setState: ComponentState.setState,
 }

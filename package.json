@@ -34,6 +34,7 @@
     "test-static-export": "node packages/build/src/parts/TestStaticExport/TestStaticExport.ts",
     "test:gpu-diagnostics": "node --test scripts/test/diagnose-gpu-process.test.mjs",
     "e2e:ci": "node packages/extension-host-worker-tests/src/_all.js --ci",
+    "test:component-heap-snapshot": "node scripts/test-component-heap-snapshot.mjs",
     "test:process-explorer-renderer-heap-snapshot": "node scripts/test-process-explorer-renderer-heap-snapshot.mjs"
   },
   "keywords": [],

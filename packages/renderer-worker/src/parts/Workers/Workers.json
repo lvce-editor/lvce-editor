@@ -191,6 +191,7 @@
         "diff": { "name": "ActivityBar.diff2", "parameters": [{ "source": "state", "name": "uid" }] },
         "render": { "name": "ActivityBar.render2", "parameters": [{ "source": "state", "name": "uid" }, { "source": "result", "name": "diff" }] },
         "saveState": { "name": "ActivityBar.saveState", "parameters": [{ "source": "state", "name": "uid" }] },
+        "getComponentDom": { "name": "ActivityBar.getComponentDom", "parameters": [{ "source": "state", "name": "uid" }] },
         "getComponentState": { "name": "ActivityBar.getComponentState", "parameters": [{ "source": "state", "name": "uid" }] },
         "setComponentState": { "name": "ActivityBar.setComponentState", "parameters": [{ "source": "state", "name": "uid" }, { "source": "argument", "name": "componentState" }] },
         "terminate": { "name": "ActivityBar.terminate", "parameters": [] },
@@ -238,7 +239,11 @@
         },
         "loadContent": {
           "name": "TextSearch.loadContent",
-          "parameters": [{ "source": "state", "name": "uid" }, { "source": "argument", "name": "savedState" }]
+          "parameters": [
+            { "source": "state", "name": "uid" },
+            { "source": "argument", "name": "savedState" },
+            { "source": "argument", "name": "args", "index": 0 }
+          ]
         },
         "diff": { "name": "TextSearch.diff2", "parameters": [{ "source": "state", "name": "uid" }] },
         "render": {
@@ -718,6 +723,7 @@
         "/css/parts/AdditionalDetails.css", "/css/parts/BrowserScrollBar.css", "/css/parts/Button.css", "/css/parts/Category.css",
         "/css/parts/Changelog.css", "/css/parts/FeatureContent.css", "/css/parts/Features.css", "/css/parts/Markdown.css",
         "/css/parts/Message.css", "/css/parts/ScrollToTop.css", "/css/parts/Table.css", "/css/parts/ViewletExtensionDetail.css",
+        "/css/parts/ViewletExtensionDetailContents.css",
         "/css/parts/ViewletExtensionDetailHeader.css", "/css/parts/ViewletExtensionDetailTabs.css"
       ],
       "state": { "idKey": "uid", "fields": ["uri", "x", "y", "width", "height"], "defaults": { "name": "" } },
@@ -1388,6 +1394,8 @@
         "getCommandIds": { "name": "Ports.getCommandIds", "parameters": [] },
         "getComponentState": { "name": "Ports.getComponentState", "parameters": [{ "source": "state", "name": "uid" }] },
         "getKeyBindings": { "name": "Ports.getKeyBindings", "parameters": [], "fallback": [] },
+        "getMenuEntryIds": { "name": "Ports.getMenuIds", "parameters": [] },
+        "getMenuEntries": { "name": "Ports.getMenuEntries2", "parameters": [{ "source": "argument", "name": "args", "spread": true }] },
         "renderEventListeners": { "name": "Ports.renderEventListeners", "parameters": [] },
         "setComponentState": { "name": "Ports.setComponentState", "parameters": [{ "source": "state", "name": "uid" }, { "source": "argument", "name": "componentState" }] }
       },
