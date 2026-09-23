@@ -50,23 +50,31 @@ const command = (page, name, ...args) =>
     },
     { name, args },
   )
-const top = async (page, selector) => (await page.locator(selector).boundingBox()).y
+const top = async (page, selector) => (await page.locator(selector).boundingBox())?.y
 const checkCompact = async (page) => {
   await expect(page.locator('.Workbench')).toHaveClass(/CompactTitleBar/)
   await expect.poll(() => top(page, '.Main')).toBe(0)
   await expect.poll(() => top(page, '.SideBar:not(.SecondarySideBar)')).toBe(29)
   await expect.poll(() => top(page, '.ActivityBar')).toBe(29)
-  const bar = await page.locator('.TitleBar').boundingBox()
-  const sidebar = await page.locator('.SideBar:not(.SecondarySideBar)').boundingBox()
-  const main = await page.locator('.Main').boundingBox()
-  assert.ok(bar.x + bar.width <= main.x || bar.x >= main.x + main.width)
-  assert.ok(bar.x <= sidebar.x && bar.x + bar.width >= sidebar.x + sidebar.width)
+  // Reload can replace placeholder viewlets after the workbench class is applied.
+  await expect(async () => {
+    const bar = await page.locator('.TitleBar').boundingBox()
+    const sidebar = await page.locator('.SideBar:not(.SecondarySideBar)').boundingBox()
+    const main = await page.locator('.Main').boundingBox()
+    assert.ok(bar && sidebar && main)
+    assert.ok(bar.x + bar.width <= main.x || bar.x >= main.x + main.width)
+    assert.ok(bar.x <= sidebar.x && bar.x + bar.width >= sidebar.x + sidebar.width)
+  }).toPass({ timeout: 5000 })
   for (const label of ['Minimize', 'Maximize', 'Close']) {
     const button = page.getByRole('button', { name: label, exact: true })
     await expect(button).toBeVisible()
     await expect(button).toHaveCSS('app-region', 'no-drag')
-    const bounds = await button.boundingBox()
-    assert.ok(bounds.y + bounds.height <= sidebar.y)
+    await expect(async () => {
+      const bounds = await button.boundingBox()
+      const sidebar = await page.locator('.SideBar:not(.SecondarySideBar)').boundingBox()
+      assert.ok(bounds && sidebar)
+      assert.ok(bounds.y + bounds.height <= sidebar.y)
+    }).toPass({ timeout: 5000 })
   }
   await expect(page.locator('.TitleBar')).toHaveCSS('app-region', 'drag')
 }
