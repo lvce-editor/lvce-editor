@@ -8,6 +8,14 @@ const lazy =
   }
 
 export const commandMap = {
+  'Preview.clearOutput': async () => {
+    const { clearOutput } = await import('../PreviewSandboxOutput/PreviewSandboxOutput.js')
+    await clearOutput()
+  },
+  'Preview.logWarning': async (message) => {
+    const { logWarning } = await import('../PreviewSandboxOutput/PreviewSandboxOutput.js')
+    await logWarning(message)
+  },
   'ShellCommand.install': async () => (await import('../ShellCommand/ShellCommand.js')).install(),
   'PortProvider.getPorts': async (workspaceUri) => (await import('../PortProvider/PortProvider.ts')).getPorts(workspaceUri),
   'Application.create': lazy('Application.create'),
