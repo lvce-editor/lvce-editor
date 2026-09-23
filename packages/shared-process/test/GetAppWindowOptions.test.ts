@@ -4,6 +4,12 @@ jest.unstable_mockModule('../src/parts/ExtensionManagement/ExtensionManagementCo
   getColorThemeJson: jest.fn(),
 }))
 
+jest.unstable_mockModule('../src/parts/Platform/Platform.ts', () => ({
+  isLinux: true,
+  isMacOs: false,
+  isWindows: false,
+}))
+
 const ExtensionManagementColorTheme = await import('../src/parts/ExtensionManagement/ExtensionManagementColorTheme.js')
 const GetAppWindowOptions = await import('../src/parts/GetAppWindowOptions/GetAppWindowOptions.js')
 
