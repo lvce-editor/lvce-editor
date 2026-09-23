@@ -37,7 +37,7 @@ const launch = async () => {
 const command = (page, name, ...args) =>
   page.evaluate(
     async ({ name, args }) => {
-      const { executeCommand } = await import(document.scripts[0].src)
+      const { executeCommand } = await import(document.querySelector('script[src*="rendererProcessMain"]').src)
       await executeCommand(name, ...args)
     },
     { name, args },
@@ -107,16 +107,25 @@ try {
   const dragArea = await page.locator('.TitleBar').boundingBox()
   execFileSync('xdotool', [
     'mousemove',
+    '--sync',
     String(windowBounds.x + dragArea.x + 10),
     String(windowBounds.y + 12),
+    'sleep',
+    '0.2',
     'mousedown',
     '1',
     'sleep',
     '0.1',
     'mousemove_relative',
     '--',
-    '50',
+    '10',
+    '10',
+    'sleep',
+    '0.2',
+    'mousemove_relative',
+    '--',
     '40',
+    '30',
     'sleep',
     '0.1',
     'mouseup',
@@ -140,7 +149,10 @@ try {
   await page.getByRole('button', { name: 'Close', exact: true }).click()
   await enabledClosed
   app = undefined
-  await writeFile(settings, JSON.stringify({ 'window.titleBarless.enabled': false, 'window.titleBarStyle': 'custom', 'window.controlsOverlay.enabled': false }))
+  await writeFile(
+    settings,
+    JSON.stringify({ 'window.titleBarless.enabled': false, 'window.titleBarStyle': 'custom', 'window.controlsOverlay.enabled': false }),
+  )
   page = await launch()
   await expect(page.locator('.Workbench')).not.toHaveClass(/TitleBarless/)
   await expect.poll(() => top(page, '.Main')).toBe(29)

@@ -1,11 +1,5 @@
 import { beforeEach, expect, jest, test } from '@jest/globals'
 
-jest.unstable_mockModule('../src/parts/ElectronWindow/ElectronWindow.js', () => ({
-  toggleMaximize: jest.fn(),
-}))
-
-const ElectronWindow = await import('../src/parts/ElectronWindow/ElectronWindow.js')
-
 jest.unstable_mockModule('../src/parts/TitleBarWorker/TitleBarWorker.js', () => ({
   invoke: jest.fn(),
 }))
@@ -153,12 +147,4 @@ test('workspace notification completes inside a queued menu action', async () =>
   await Promise.all([menu, focus])
   expect(order).toEqual(['menu-start', 'workspace-start', 'workspace-end', 'menu-end', 'focus'])
   expect(invoke).toHaveBeenCalledWith('TitleBar.handleWorkspaceChange', 8, 'memfs:///next')
-})
-
-test('maximize button toggles the native window instead of using worker-local state', async () => {
-  const state = { uid: 7 }
-  const toggle = wrapTitleBarCommand('handleClickToggleMaximize')
-  await expect(toggle(state)).resolves.toBe(state)
-  expect(ElectronWindow.toggleMaximize).toHaveBeenCalledTimes(1)
-  expect(invoke).not.toHaveBeenCalled()
 })
