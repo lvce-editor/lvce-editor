@@ -98,6 +98,7 @@ const renderDom = {
       oldState.mainVisible === newState.mainVisible &&
       oldState.mainId === newState.mainId &&
       oldState.titleBarVisible === newState.titleBarVisible &&
+      oldState.titleBarless === newState.titleBarless &&
       oldState.titleBarId === newState.titleBarId &&
       oldState.activityBarVisible === newState.activityBarVisible &&
       oldState.activityBarId === newState.activityBarId &&
@@ -197,6 +198,8 @@ const getCss = (newState: LayoutState) => {
   --SideBarWidth: ${getRoundedPixelValue(sideBarWidth)};
   --SecondarySideBarWidth: ${getRoundedPixelValue(secondarySideBarWidth)};
   --TitleBarHeight: ${getPixelValue(titleBarHeight)};
+  --TitleBarLeft: ${getPixelValue(newState.titleBarLeft)};
+  --TitleBarWidth: ${getPixelValue(newState.titleBarWidth)};
   --SashPreviewLeft: ${getRoundedPixelValue(previewLeft)};
   --PreviewAreasWidth: ${getPixelValue(previewAreasWidth)};
   --PreviewHeight: ${getPixelValue(previewHeight)};

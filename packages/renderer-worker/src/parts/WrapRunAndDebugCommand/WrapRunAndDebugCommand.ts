@@ -3,9 +3,10 @@ import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as NameAnonymousFunction from '../NameAnonymousFunction/NameAnonymousFunction.js'
 
-export const wrapRunAndDebugCommand = (key: string) => {
+export const wrapRunAndDebugCommand = (key: string, getExtraArgs?: () => readonly unknown[]) => {
   const fn = async (state, ...args) => {
-    await DebugWorker.invoke(`RunAndDebug.${key}`, state.uid, ...args)
+    const extraArgs = getExtraArgs?.() || []
+    await DebugWorker.invoke(`RunAndDebug.${key}`, state.uid, ...extraArgs, ...args)
     const diffResult = await DebugWorker.invoke('RunAndDebug.diff2', state.uid)
     if (diffResult.length === 0) {
       return state

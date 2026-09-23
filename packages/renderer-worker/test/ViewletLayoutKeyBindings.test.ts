@@ -49,3 +49,12 @@ test('getKeyBindings - open text search', () => {
     ]),
   )
 })
+
+test('getKeyBindings - open remote from any non-editable surface', () => {
+  const keyBindings = ViewletLayoutKeyBindings.getKeyBindings()
+
+  expect(keyBindings).toContainEqual({
+    command: 'Workspace.openRemote',
+    key: KeyCode.Period,
+  })
+})

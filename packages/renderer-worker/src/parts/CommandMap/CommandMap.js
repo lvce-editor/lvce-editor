@@ -8,6 +8,15 @@ const lazy =
   }
 
 export const commandMap = {
+  'Preview.clearOutput': async () => {
+    const { clearOutput } = await import('../PreviewSandboxOutput/PreviewSandboxOutput.js')
+    await clearOutput()
+  },
+  'Preview.logWarning': async (message) => {
+    const { logWarning } = await import('../PreviewSandboxOutput/PreviewSandboxOutput.js')
+    await logWarning(message)
+  },
+  'ShellCommand.install': async () => (await import('../ShellCommand/ShellCommand.js')).install(),
   'PortProvider.getPorts': async (workspaceUri) => (await import('../PortProvider/PortProvider.ts')).getPorts(workspaceUri),
   'Application.create': lazy('Application.create'),
   'Application.dispose': lazy('Application.dispose'),
@@ -22,6 +31,9 @@ export const commandMap = {
   'Audio.handleAudioError': lazy('Audio.handleAudioError'),
   'Audio.playBell': lazy('Audio.playBell'),
   'Audio.play': lazy('Audio.play'),
+  'AutoUpdater.getPlatform': lazy('AutoUpdater.getPlatform'),
+  'AutoUpdater.stageMacUpdate': lazy('AutoUpdater.stageMacUpdate'),
+  'AutoUpdater.restartMacUpdate': lazy('AutoUpdater.restartMacUpdate'),
   'AutoUpdater.checkForUpdates': lazy('AutoUpdater.checkForUpdates'),
   'Blob.base64StringToBlob': lazy('Blob.base64StringToBlob'),
   'Blob.binaryStringToBlob': lazy('Blob.binaryStringToBlob'),
@@ -52,6 +64,7 @@ export const commandMap = {
   'ClipBoard.getSelectionText': lazy('ClipBoard.getSelectionText'),
   'ComponentState.getComponents': lazy('ComponentState.getComponents'),
   'ComponentState.getState': lazy('ComponentState.getState'),
+  'ComponentState.getWorkerName': lazy('ComponentState.getWorkerName'),
   'ComponentState.setState': lazy('ComponentState.setState'),
   'ColorTheme.getColorThemeNames': lazy('ColorTheme.getColorThemeNames'),
   'ColorTheme.hydrate': lazy('ColorTheme.hydrate'),
@@ -129,6 +142,7 @@ export const commandMap = {
   'ElectronWindow.minimize': lazy('ElectronWindow.minimize'),
   'ElectronWindow.openNew': lazy('ElectronWindow.openNew'),
   'ElectronWindow.toggleDevtools': lazy('ElectronWindow.toggleDevtools'),
+  'ElectronWindow.toggleMaximize': lazy('ElectronWindow.toggleMaximize'),
   'ElectronWindow.unmaximize': lazy('ElectronWindow.unmaximize'),
   'ElectronWindow.zoomIn': lazy('ElectronWindow.zoomIn'),
   'ElectronWindow.zoomOut': lazy('ElectronWindow.zoomOut'),
@@ -351,6 +365,7 @@ export const commandMap = {
   'Process.getChromeVersion': lazy('Process.getChromeVersion'),
   'Process.getElectronVersion': lazy('Process.getElectronVersion'),
   'Process.getNodeVersion': lazy('Process.getNodeVersion'),
+  'Process.getVersion': lazy('Process.getVersion'),
   'Process.getV8Version': lazy('Process.getV8Version'),
   'Prompt.prompt': lazy('Prompt.prompt'),
   'QuickPick.executeCallback': lazy('QuickPick.executeCallback'),
@@ -366,6 +381,7 @@ export const commandMap = {
   'RecentlyOpened.addToRecentlyOpened': lazy('RecentlyOpened.addToRecentlyOpened'),
   'RecentlyOpened.clearRecentlyOpened': lazy('RecentlyOpened.clearRecentlyOpened'),
   'RecentlyOpened.getRecentlyOpened': lazy('RecentlyOpened.getRecentlyOpened'),
+  'RecentlyOpened.removeRecentlyOpened': lazy('RecentlyOpened.removeRecentlyOpened'),
   'RecentlyOpened.hydrate': lazy('RecentlyOpened.hydrate'),
   'Reload.reload': lazy('Reload.reload'),
   'RevealInExplorer.reveal': lazy('RevealInExplorer.reveal'),
@@ -553,6 +569,7 @@ export const commandMap = {
   'WindowTitle.set': lazy('WindowTitle.set'),
   'Workspace.openRemote': lazy('Workspace.openRemote'),
   'Workspace.close': lazy('Workspace.close'),
+  'Workspace.getHomeDir': lazy('Workspace.getHomeDir'),
   'Workspace.getPath': lazy('Workspace.getPath'),
   'Workspace.getUri': lazy('Workspace.getUri'),
   'Workspace.hydrate': lazy('Workspace.hydrate'),
@@ -597,6 +614,7 @@ export const commandMap = {
   'Layout.handleSashPointerMove': lazy('Layout.handleSashPointerMove'),
   'Layout.handleSashPointerUp': lazy('Layout.handleSashPointerUp'),
   'Layout.handleSettingsChanged': lazy('Layout.handleSettingsChanged'),
+  'Layout.handleSourceControlProgressChange': lazy('Layout.handleSourceControlProgressChange'),
   'Layout.handleWorkspaceRefresh': lazy('Layout.handleWorkspaceRefresh'),
   'Layout.refreshSourceControlBadgeCount': lazy('Layout.refreshSourceControlBadgeCount'),
   'Layout.reset': lazy('Layout.reset'),
@@ -650,6 +668,7 @@ export const commandMap = {
   'Layout.showTitleBar': lazy('Layout.showTitleBar'),
   'Layout.toggleActivityBar': lazy('Layout.toggleActivityBar'),
   'Layout.toggleMain': lazy('Layout.toggleMain'),
+  'Layout.toggleMenuBar': lazy('Layout.toggleMenuBar'),
   'Layout.togglePanel': lazy('Layout.togglePanel'),
   'Layout.togglePreview': lazy('Layout.togglePreview'),
   'Layout.toggleSecondaryPreview': lazy('Layout.toggleSecondaryPreview'),

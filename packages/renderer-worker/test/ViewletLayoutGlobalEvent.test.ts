@@ -9,6 +9,7 @@ const problemsInvoke = jest.fn<(method: string, ...params: readonly unknown[]) =
   warningCount: 0,
 }))
 const statusBarInvoke = jest.fn<(method: string, ...params: readonly unknown[]) => Promise<unknown>>(async () => undefined)
+const reloadDynamicCss = jest.fn(async () => undefined)
 
 jest.unstable_mockModule('../src/parts/Preferences/Preferences.js', () => {
   return {
@@ -44,6 +45,10 @@ jest.unstable_mockModule('../src/parts/ViewletManager/ViewletManager.js', () => 
     }),
   }
 })
+
+jest.unstable_mockModule('../src/parts/ViewletManagerVisitor/ViewletManagerVisitor.js', () => ({
+  reloadDynamicCss,
+}))
 
 const ViewletLayout = await import('../src/parts/ViewletLayout/ViewletLayout.ts')
 const ViewletManager = await import('../src/parts/ViewletManager/ViewletManager.js')
@@ -326,6 +331,7 @@ test('handleSettingsChanged hydrates preferences and updates viewlet state', asy
   const result = await ViewletLayout.handleSettingsChanged(state)
 
   expect(calls).toEqual(['hydrate', 'handleSettingsChanged'])
+  expect(reloadDynamicCss).toHaveBeenCalledTimes(1)
   expect(ViewletStates.getInstance('editor').state).toEqual({
     lineNumbers: false,
     uid: 1,
@@ -336,4 +342,13 @@ test('handleSettingsChanged hydrates preferences and updates viewlet state', asy
       ...state,
     },
   })
+})
+
+test('source control progress notifies the view without refreshing workspace files', async () => {
+  const progress = jest.fn(async (state: { uid: number }) => ({ ...state, progress: true }))
+  ViewletStates.set('source-control', createInstance(1, 'handleSourceControlProgressChange', progress))
+  const result = await ViewletLayout.handleSourceControlProgressChange(ViewletLayout.create(1))
+  expect(progress).toHaveBeenCalledTimes(1)
+  expect(result.commands).toEqual([['render.1']])
+  expect(extensionManagementInvoke).not.toHaveBeenCalled()
 })

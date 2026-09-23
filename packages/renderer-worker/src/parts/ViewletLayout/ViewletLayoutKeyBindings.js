@@ -7,7 +7,6 @@ export const getKeyBindings = () => {
     {
       key: KeyCode.Period,
       command: 'Workspace.openRemote',
-      when: WhenExpression.FocusExplorer,
     },
     {
       key: KeyCode.Escape,

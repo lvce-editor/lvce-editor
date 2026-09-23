@@ -7,8 +7,13 @@ export const getModuleId = (commandId: any): any => {
       return ModuleId.TextDocument
     case 'AttachDebugger.attachDebugger':
       return ModuleId.AttachDebugger
+    case 'AutoUpdater.checkWindowsUpdate':
     case 'AutoUpdater.getAutoUpdateType':
     case 'AutoUpdater.getLatestVersion':
+    case 'AutoUpdater.getPlatform':
+    case 'AutoUpdater.restartMacUpdate':
+    case 'AutoUpdater.stageMacUpdate':
+    case 'AutoUpdater.writeLog':
       return ModuleId.AutoUpdater
     case 'AutoUpdaterAppImage.downloadUpdate':
     case 'AutoUpdaterAppImage.installAndRestart':
@@ -88,6 +93,7 @@ export const getModuleId = (commandId: any): any => {
     case 'ElectronWindow.setBrowserFullWidthGestureEnabled':
     case 'ElectronWindow.toggleDevtools':
     case 'ElectronWindow.toggleFullScreen':
+    case 'ElectronWindow.toggleMaximize':
     case 'ElectronWindow.unmaximize':
     case 'ElectronWindow.zoomIn':
     case 'ElectronWindow.zoomOut':
@@ -294,6 +300,9 @@ export const getModuleId = (commandId: any): any => {
       return ModuleId.Screen
     case 'SendMessagePortToMainProcess.sendMessagePortToMainProcess':
       return ModuleId.SendMessagePortToMainProcess
+    case 'ShellCommand.getMenuEntries':
+    case 'ShellCommand.install':
+      return ModuleId.ShellCommand
     case 'TemporaryMessagePort.getPortTuple2':
     case 'TemporaryMessagePort.getPortTuple3':
     case 'TemporaryMessagePort.handlePorts':

@@ -101,6 +101,31 @@ test('names the address input so focus can be restored after rendering', () => {
   )
 })
 
+test('renders the empty tab landing page in the view dom', () => {
+  const dom = GetSimpleBrowserVirtualDom.getSimpleBrowserVirtualDom(
+    false,
+    false,
+    false,
+    '',
+    '',
+    [],
+    -1,
+    [{ browserViewId: 0, iframeSrc: '', title: 'New Tab' }],
+    0,
+  )
+
+  expect(dom).toContainEqual(expect.objectContaining({ className: 'SimpleBrowserNewTabPage', type: VirtualDomElements.Main }))
+  expect(dom).toContainEqual(expect.objectContaining({ className: 'SimpleBrowserNewTabBrand' }))
+  expect(dom).toContainEqual(
+    expect.objectContaining({
+      ariaLabel: 'Search with Google',
+      className: 'SimpleBrowserNewTabSearchInput',
+      name: 'simple-browser-new-tab-search',
+      type: VirtualDomElements.Input,
+    }),
+  )
+})
+
 test('disables unavailable navigation buttons', () => {
   const dom = GetSimpleBrowserVirtualDom.getSimpleBrowserVirtualDom(false, true, false, 'https://example.com')
 
@@ -204,9 +229,25 @@ test('renders selectable tabs with favicon, title, close, and new tab controls',
       role: 'tab',
     }),
   )
-  expect(dom).toContainEqual(
-    expect.objectContaining({ className: 'SimpleBrowserTabFavicon', crossOrigin: 'anonymous', src: 'https://example.com/favicon.png' }),
-  )
+  const tabIndex = dom.findIndex((node) => node.className === 'SimpleBrowserTab SimpleBrowserTabSelected')
+  expect(dom.slice(tabIndex, tabIndex + 6)).toEqual([
+    expect.objectContaining({ className: 'SimpleBrowserTab SimpleBrowserTabSelected', childCount: 4 }),
+    { type: VirtualDomElements.Div, className: 'SimpleBrowserTabFaviconWrapper', childCount: 1 },
+    {
+      type: VirtualDomElements.Img,
+      className: 'SimpleBrowserTabFavicon',
+      alt: '',
+      'data-index': 0,
+      onError: 'HandleErrorSimpleBrowserFavicon',
+      crossOrigin: 'anonymous',
+      src: 'https://example.com/favicon.png',
+      draggable: false,
+      childCount: 0,
+    },
+    { type: VirtualDomElements.Span, className: 'SimpleBrowserTabTitle', childCount: 1 },
+    { type: VirtualDomElements.Text, text: 'Example', childCount: 0 },
+    expect.objectContaining({ className: 'SimpleBrowserTabAudio' }),
+  ])
   expect(dom).toContainEqual(
     expect.objectContaining({
       ariaLabel: 'Mute tab',
@@ -230,12 +271,54 @@ test('renders selectable tabs with favicon, title, close, and new tab controls',
   expect(dom).toContainEqual(expect.objectContaining({ className: 'SimpleBrowserNewTab', onClick: 'handleClickSimpleBrowserNewTab' }))
 })
 
+test('freezes tab sizing through the tab list style', () => {
+  const dom = GetSimpleBrowserVirtualDom.getSimpleBrowserVirtualDom(
+    false,
+    false,
+    false,
+    '',
+    '',
+    [],
+    -1,
+    [{ favicon: '', title: 'Example' }],
+    0,
+    true,
+    true,
+    [],
+    undefined,
+    -1,
+    false,
+    'light',
+    { tabWidth: 150 },
+  )
+
+  expect(dom.find((node) => node.role === 'tablist')).toMatchObject({
+    className: 'SimpleBrowserTabs SimpleBrowserTabsFrozen',
+    onPointerOut: 'handlePointerOutSimpleBrowserTabs',
+    onPointerOver: 'handlePointerOverSimpleBrowserTabs',
+    style: '--SimpleBrowserTabWidth: 150px;',
+  })
+})
+
 test('omits the audio icon for a silent tab', () => {
   const dom = GetSimpleBrowserVirtualDom.getSimpleBrowserVirtualDom(false, false, false, '', '', [], -1, [
     { favicon: '', isAudioPlaying: false, title: 'Example' },
   ])
 
   expect(dom).not.toContainEqual(expect.objectContaining({ className: 'SimpleBrowserTabAudio' }))
+})
+
+test('wraps the fallback favicon in the same fixed-size container', () => {
+  const dom = GetSimpleBrowserVirtualDom.getSimpleBrowserVirtualDom(false, false, false, '', '', [], -1, [{ favicon: '', title: 'Example' }])
+
+  const tabIndex = dom.findIndex((node) => node.className === 'SimpleBrowserTab SimpleBrowserTabSelected')
+  expect(dom.slice(tabIndex, tabIndex + 5)).toEqual([
+    expect.objectContaining({ className: 'SimpleBrowserTab SimpleBrowserTabSelected', childCount: 3 }),
+    { type: VirtualDomElements.Div, className: 'SimpleBrowserTabFaviconWrapper', childCount: 1 },
+    { type: VirtualDomElements.Span, className: 'SimpleBrowserTabFavicon SimpleBrowserTabFaviconFallback', ariaHidden: true, childCount: 1 },
+    { type: VirtualDomElements.Text, text: '◉', childCount: 0 },
+    { type: VirtualDomElements.Span, className: 'SimpleBrowserTabTitle', childCount: 1 },
+  ])
 })
 
 test('renders a muted audio button for a muted tab', () => {

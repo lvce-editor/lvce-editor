@@ -4,6 +4,12 @@ jest.unstable_mockModule('../src/parts/ExtensionManagement/ExtensionManagementCo
   getColorThemeJson: jest.fn(),
 }))
 
+jest.unstable_mockModule('../src/parts/Platform/Platform.ts', () => ({
+  isLinux: true,
+  isMacOs: false,
+  isWindows: false,
+}))
+
 const ExtensionManagementColorTheme = await import('../src/parts/ExtensionManagement/ExtensionManagementColorTheme.js')
 const GetAppWindowOptions = await import('../src/parts/GetAppWindowOptions/GetAppWindowOptions.js')
 
@@ -73,5 +79,15 @@ test('getAppWindowOptions - supports older title bar color keys', async () => {
       color: '#222222',
       symbolColor: '#dddddd',
     },
+  })
+})
+
+test('getAppWindowOptions - uses custom controls for the Linux titlebarless layout', async () => {
+  await expect(
+    getOptions({ 'window.controlsOverlay.enabled': true, 'window.titleBarless.enabled': true, 'window.titleBarStyle': 'native' }),
+  ).resolves.toMatchObject({
+    frame: false,
+    titleBarOverlay: undefined,
+    titleBarStyle: 'hidden',
   })
 })

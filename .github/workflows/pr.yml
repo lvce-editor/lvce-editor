@@ -74,13 +74,19 @@ jobs:
       - name: Validate builtin setting declarations
         working-directory: ./packages/build
         run: npm test -- --runTestsByPath test/BundleBuiltinSettings.test.ts
-      - run: npx lerna run test --since origin/main
+      - run: npm test
       - name: install playwright dependencies (extension host worker tests)
         working-directory: ./packages/extension-host-worker-tests
         run: npx playwright install chromium
         if: steps.npm-cache.outputs.cache-hit != 'true'
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0
+      - name: Test Linux titlebarless Electron layout
+        if: matrix.os == 'ubuntu-24.04'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y openbox xvfb xdotool
+          xvfb-run -a sh -c 'openbox & node packages/extension-host-worker-tests/scripts/test-titlebarless.mjs'
       - name: Test local services in remote workspaces
         run: |
           node --experimental-vm-modules node_modules/jest/bin/jest.js --config packages/renderer-worker/package.json --runInBand --coverage=false --testPathPatterns='(IpcParentWithNodeAlternate|LaunchFileSystemWorker|WebSocketCapability|ExtensionNodeRpc|WorkspaceConnection|WorkspaceSetUri|LoadProcessExplorerViewletModule|GetTerminalSpawnOptions).test'
@@ -108,6 +114,9 @@ jobs:
         run: |
           node packages/main-process/node_modules/electron/install.js
           xvfb-run -a node scripts/test-keybinding-popup-position.mjs
+      - name: Test component worker heap snapshot
+        if: matrix.os == 'ubuntu-24.04'
+        run: xvfb-run -a npm run test:component-heap-snapshot
       - name: Test bundled font loading
         if: matrix.os == 'ubuntu-24.04'
         working-directory: ./packages/extension-host-worker-tests
@@ -130,6 +139,12 @@ jobs:
         if: matrix.os == 'ubuntu-24.04'
         working-directory: ./packages/extension-host-worker-tests
         run: npm run e2e:headless -- --test-name-prefix=viewlet.source-control-shortcut-focus
+        env:
+          PLAYWRIGHT_BROWSERS_PATH: 0
+      - name: Test Source Control provider progress
+        if: matrix.os == 'ubuntu-24.04'
+        working-directory: ./packages/extension-host-worker-tests
+        run: npm run e2e:headless -- --test-name-prefix=viewlet.source-control-progress
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0
       - name: Test integrated terminal rendering
@@ -160,6 +175,24 @@ jobs:
         run: node src/_all.js --ci --headless --test-name-prefix=viewlet.quick-pick-builtin-commands
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0
+      - name: Test Open Recent removal
+        if: matrix.os == 'ubuntu-24.04'
+        working-directory: ./packages/extension-host-worker-tests
+        run: node src/_all.js --ci --headless --test-name-prefix=viewlet.quick-pick-open-recent-remove
+        env:
+          PLAYWRIGHT_BROWSERS_PATH: 0
+      - name: Test Open Recent home display
+        if: matrix.os == 'ubuntu-24.04'
+        working-directory: ./packages/extension-host-worker-tests
+        run: node src/_all.js --ci --headless --test-name-prefix=viewlet.quick-pick-open-recent-home
+        env:
+          PLAYWRIGHT_BROWSERS_PATH: 0
+      - name: Test panel drag reveal
+        if: matrix.os == 'ubuntu-24.04'
+        working-directory: ./packages/extension-host-worker-tests
+        run: node src/_all.js --ci --headless --test-name-prefix=viewlet.panel-drag-reveal
+        env:
+          PLAYWRIGHT_BROWSERS_PATH: 0
       - name: Run extension host worker tests
         working-directory: ./packages/extension-host-worker-tests
         run: npm run e2e:headless:ci
@@ -183,10 +216,21 @@ jobs:
         if: matrix.os == 'windows-2025'
         with:
           path: '~\AppData\Local\electron-builder'
-          key: ${{ runner.os }}-electron-builder-${{ hashFiles('packages/build/package-lock.json') }}
+          key: ${{ runner.os }}-electron-builder-${{ hashFiles('package-lock.json') }}
       - name: Build Electron App (exe)
         if: matrix.os == 'windows-2025'
         run: npm run build:electron:windows:exe
+      - name: Test staged Windows installer
+        if: matrix.os == 'windows-2025'
+        shell: pwsh
+        run: ./packages/build/scripts/test-windows-staging.ps1
+      - name: Build Electron App (exe, arm64)
+        if: matrix.os == 'windows-2025'
+        run: npm run build:electron:windows:exe:arm64
+      - name: Test staged Windows ARM64 installer
+        if: matrix.os == 'windows-2025'
+        shell: pwsh
+        run: ./packages/build/scripts/test-windows-staging.ps1 -Architecture arm64
       - name: Build Electron App (AppImage)
         if: matrix.os == 'ubuntu-24.04'
         run: npm run build:electron:app-image

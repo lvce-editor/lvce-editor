@@ -4,6 +4,17 @@
   font-display: block;
 }
 
+.App.ModernUi {
+  --MainTabActiveBackground: color-mix(in srgb, var(--TabActiveBackground) 88%, var(--TabsBackground));
+  --MainTabBorderRadius: 6px;
+  --ModernUiPanelBackground: color-mix(in srgb, var(--PanelBackground) 94%, var(--WorkbenchForeground) 6%);
+  --PanelTabBorderRadius: 20px;
+  --PanelTabPadding: 0 12px;
+  --PanelTabSelectedBackground: color-mix(in srgb, var(--PanelTabActiveForeground) 10%, var(--PanelBackground));
+  --SideBarTitleFontWeight: 600;
+  --SideBarTitlePaddingLeft: 16px;
+}
+
 /* TODO check if contain strict also makes sense for html and body */
 
 html,

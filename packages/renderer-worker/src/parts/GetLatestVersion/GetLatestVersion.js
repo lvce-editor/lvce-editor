@@ -1,5 +1,5 @@
-import * as SharedProcess from '../SharedProcess/SharedProcess.js'
+import * as UpdateWorker from '../UpdateWorker/UpdateWorker.js'
 
 export const getLatestVersion = () => {
-  return SharedProcess.invoke('AutoUpdater.getLatestVersion')
+  return UpdateWorker.invoke('Update.getLatestVersion', 'lvce-editor/lvce-editor')
 }

@@ -8,6 +8,7 @@ import * as SharedProcessCommandType from '../SharedProcessCommandType/SharedPro
 import { state } from '../IsTest/IsTest.js'
 
 const SharedProcessCliArgSource = 'shared-process-cli-arg'
+const TestHomeDir = '/home/test'
 
 const getResolvedRootFromSharedProcess = async (href) => {
   const resolvedRoot = await SharedProcess.invoke(/* Workspace.resolveRoot */ SharedProcessCommandType.WorkspaceResolveRoot, href)
@@ -32,13 +33,13 @@ const getResolveRootFromSessionStorage = async () => {
   return resolvedRoot
 }
 
-const getResolvedRootFromRendererProcess = async (href) => {
+const getResolvedRootFromRendererProcess = async (href, resolvedRootFromSharedProcess) => {
   const url = new URL(href)
   if (href.includes('tests/')) {
     state.isTest = true
     return {
       path: href,
-      homeDir: '',
+      homeDir: resolvedRootFromSharedProcess?.homeDir || TestHomeDir,
       pathSeparator: PathSeparatorType.Slash,
       source: 'test',
     }
@@ -76,7 +77,7 @@ const getResolvedRootRemote = async (href) => {
   if (resolvedRootFromSharedProcess?.source === SharedProcessCliArgSource) {
     return resolvedRootFromSharedProcess
   }
-  const resolvedRootFromRendererProcess = await getResolvedRootFromRendererProcess(href)
+  const resolvedRootFromRendererProcess = await getResolvedRootFromRendererProcess(href, resolvedRootFromSharedProcess)
   if (resolvedRootFromRendererProcess) {
     return resolvedRootFromRendererProcess
   }

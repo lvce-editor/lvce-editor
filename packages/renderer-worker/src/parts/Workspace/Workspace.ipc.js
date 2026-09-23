@@ -6,9 +6,12 @@ export const name = 'Workspace'
 export const Commands = {
   openRemote,
   close: Workspace.close,
+  getHomeDir: Workspace.getHomeDir,
   getPath: Workspace.getPath,
   getUri: Workspace.getUri,
   hydrate: Workspace.hydrate,
+  startProgress: Workspace.startProgress,
+  endProgress: Workspace.endProgress,
   setPath: Workspace.setPath,
   setUri: Workspace.setUri,
   supportsConnectionCommand: Workspace.supportsConnectionCommand,

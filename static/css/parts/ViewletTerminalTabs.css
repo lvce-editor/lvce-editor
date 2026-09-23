@@ -6,12 +6,52 @@
 }
 
 .TerminalTab {
+  position: relative;
   padding: 0 3px 0 10px;
   contain: strict;
   height: 20px;
   display: flex;
   align-items: center;
   gap: 4px;
+}
+
+.TerminalTabGroupStart {
+  border-top: 1px solid color-mix(in srgb, currentColor 12%, transparent);
+  margin-top: 2px;
+}
+
+.TerminalTabSplit {
+  padding-left: 26px;
+}
+
+.TerminalTabSplit::before,
+.TerminalTabSplit::after {
+  background: var(--TreeIndentGuidesStroke, color-mix(in srgb, currentColor 35%, transparent));
+  content: '';
+  pointer-events: none;
+  position: absolute;
+}
+
+.TerminalTabSplit::before {
+  bottom: 0;
+  left: 13px;
+  top: 0;
+  width: 1px;
+}
+
+.TerminalTabSplit::after {
+  height: 1px;
+  left: 13px;
+  top: 50%;
+  width: 9px;
+}
+
+.TerminalTabSplitFirst::before {
+  top: 50%;
+}
+
+.TerminalTabSplitLast::before {
+  bottom: 50%;
 }
 
 .TerminalTabLabel {

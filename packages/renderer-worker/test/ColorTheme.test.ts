@@ -7,6 +7,7 @@ beforeEach(() => {
     delete Preferences.state[key]
   }
   ColorTheme.state.colorThemeCss = ''
+  delete ColorTheme.state.colorTheme
   ColorTheme.state.watchedTheme = ''
 })
 
@@ -86,4 +87,23 @@ test('setColorTheme does not notify viewlets when applying the color theme fails
   await ColorTheme.setColorTheme('missing-theme')
 
   expect(Command.execute).not.toHaveBeenCalled()
+})
+
+test('getColorTheme keeps the applied color theme when a new theme fails to load', async () => {
+  await ColorTheme.setColorTheme('cobalt2')
+  await ColorTheme.setColorTheme('missing-theme')
+
+  expect(ColorTheme.getColorTheme()).toBe('cobalt2')
+})
+
+test('getColorTheme returns the applied color theme', async () => {
+  await ColorTheme.setColorTheme('cobalt2')
+
+  expect(ColorTheme.getColorTheme()).toBe('cobalt2')
+})
+
+test('getColorTheme falls back to the preferred color theme', () => {
+  Preferences.state['workbench.colorTheme'] = 'cobalt2'
+
+  expect(ColorTheme.getColorTheme()).toBe('cobalt2')
 })

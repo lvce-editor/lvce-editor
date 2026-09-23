@@ -8,6 +8,30 @@
   flex-direction: column;
 }
 
+/* Keep window controls in the space reserved above the primary sidebar. */
+.Workbench.TitleBarless > .TitleBar > :not(.TitleBarButtons) {
+  display: none;
+}
+
+.Workbench.TitleBarless > .TitleBar {
+  -webkit-app-region: drag;
+  flex-shrink: 0;
+  justify-content: flex-end;
+}
+
+.Workbench.CompactTitleBar > .TitleBar {
+  position: absolute;
+  top: 0;
+  left: var(--TitleBarLeft);
+  width: var(--TitleBarWidth);
+  z-index: 4;
+}
+
+.Workbench.CompactTitleBar .ContentArea > .ActivityBar,
+.Workbench.CompactTitleBar .ContentArea > .SideBar:not(.SecondarySideBar) {
+  margin-top: var(--TitleBarHeight);
+}
+
 .WorkbenchBody {
   display: flex;
   flex: 1;

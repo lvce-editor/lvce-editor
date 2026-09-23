@@ -1,5 +1,8 @@
-export const getQuickPickMenuEntries = () => {
+import * as ShellCommand from '../ShellCommand/ShellCommand.js'
+
+export const getQuickPickMenuEntries = async () => {
   return [
+    ...(await ShellCommand.getMenuEntries()),
     {
       id: 'Layout.signIn',
       label: 'Account: Sign In',
@@ -65,6 +68,10 @@ export const getQuickPickMenuEntries = () => {
     {
       id: 'Layout.toggleActivityBar',
       label: 'Layout: Toggle Activity Bar',
+    },
+    {
+      id: 'Layout.toggleMenuBar',
+      label: 'View: Toggle Menu Bar',
     },
     {
       id: 'Layout.toggleStatusBar',

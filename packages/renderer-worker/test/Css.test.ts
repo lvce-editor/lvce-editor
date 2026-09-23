@@ -127,3 +127,17 @@ test('acquireCssStyleSheet adopts a stylesheet again after its last view release
   expect(fetch).toHaveBeenCalledTimes(2)
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(2)
 })
+
+test('reloadDynamicCss updates an acquired stylesheet without changing its ownership', async () => {
+  const getCss = jest.fn((_preferences: Record<string, unknown>) => ':root { --editor-font-family: serif; }')
+  const id = 'Editor'
+  CssState.state.pending[id] = Promise.resolve()
+  CssState.state.references[id] = 2
+
+  await Css.reloadDynamicCss(id, getCss, { 'editor.fontFamily': 'serif' })
+
+  expect(getCss).toHaveBeenCalledWith({ 'editor.fontFamily': 'serif' })
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Css.addCssStyleSheet', id, ':root { --editor-font-family: serif; }')
+  expect(CssState.has(id)).toBe(true)
+  expect(CssState.state.references[id]).toBe(2)
+})

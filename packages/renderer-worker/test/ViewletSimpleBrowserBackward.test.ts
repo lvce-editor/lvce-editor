@@ -29,8 +29,8 @@ const ElectronBrowserViewFunctions = await import('../src/parts/ElectronBrowserV
 test('backward', async () => {
   // @ts-ignore
   ElectronBrowserViewFunctions.backward.mockImplementation(() => {})
-  const state = ViewletSimpleBrowser.create()
+  const state = { ...ViewletSimpleBrowser.create(), browserViewId: 1 }
   await ViewletSimpleBrowserBackward.backward(state)
   expect(ElectronBrowserViewFunctions.backward).toHaveBeenCalledTimes(1)
-  expect(ElectronBrowserViewFunctions.backward).toHaveBeenCalledWith(0)
+  expect(ElectronBrowserViewFunctions.backward).toHaveBeenCalledWith(1)
 })

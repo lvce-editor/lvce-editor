@@ -21,6 +21,54 @@ import * as WorkspaceConnection from '../WorkspaceConnection/WorkspaceConnection
 import { state } from '../WorkspaceState/WorkspaceState.js'
 
 const pathSeparator = '/'
+const workspaceProgressDelay = 200
+
+let nextWorkspaceProgressId = 0
+let currentWorkspaceProgress
+
+const clearWorkspaceProgressTimer = () => {
+  if (currentWorkspaceProgress?.timer) {
+    clearTimeout(currentWorkspaceProgress.timer)
+  }
+}
+
+const emitWorkspaceProgress = (message) => {
+  void GlobalEventBus.emitEvent('workspace.progress', message).catch(() => {})
+}
+
+export const startProgress = (message) => {
+  clearWorkspaceProgressTimer()
+  if (currentWorkspaceProgress?.visible) {
+    emitWorkspaceProgress('')
+  }
+  const id = ++nextWorkspaceProgressId
+  const progress = {
+    id,
+    message,
+    timer: setTimeout(() => {
+      if (currentWorkspaceProgress !== progress) {
+        return
+      }
+      progress.visible = true
+      emitWorkspaceProgress(message)
+    }, workspaceProgressDelay),
+    visible: false,
+  }
+  currentWorkspaceProgress = progress
+  return id
+}
+
+export const endProgress = (id) => {
+  if (!currentWorkspaceProgress || currentWorkspaceProgress.id !== id) {
+    return
+  }
+  const wasVisible = currentWorkspaceProgress.visible
+  clearWorkspaceProgressTimer()
+  currentWorkspaceProgress = undefined
+  if (wasVisible) {
+    emitWorkspaceProgress('')
+  }
+}
 
 const toWorkspaceUri = (path) => {
   if (!path || path.startsWith('file://') || GetProtocol.getProtocol(path) !== FileSystemProtocol.Disk) {
@@ -180,6 +228,7 @@ export const hydrate = async ({ href }) => {
   }
   const resolvedRoot = await GetResolvedRoot.getResolvedRoot(href)
   if (state.isTest) {
+    state.homeDir = resolvedRoot.homeDir
     return
   }
   if (state.workspacePath) {

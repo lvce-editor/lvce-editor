@@ -13,6 +13,7 @@ import { renderActions as renderExtensionActions } from '../ViewletExtensions/Vi
 import { getKeyBindings as getProblemsKeyBindings } from '../ViewletProblems/ViewletProblemsKeyBindings.js'
 import { menus as processExplorerMenus } from '../ViewletProcessExplorer/ViewletProcessExplorerMenuEntries.js'
 import { resize as resizeTitleBar } from '../ViewletTitleBar/ViewletTitleBarResize.js'
+import * as TitleBarMenuOverlay from '../ViewletTitleBar/TitleBarMenuOverlay.js'
 import { wrapTitleBarCommand } from '../ViewletTitleBar/WrapTitleBarCommand.js'
 import { wrapActivityBarCommand } from '../WrapActivityBarCommand/WrapActivityBarCommand.ts'
 import { wrapDiffViewCommand } from '../WrapDiffViewCommand/WrapDiffViewCommand.ts'
@@ -287,7 +288,9 @@ export const textSearch = {
             return state
           }
           const commands = await worker.invoke('TextSearch.render2', state.uid, diff)
-          return { ...state, commands }
+          const actionsDom = await worker.invoke('TextSearch.renderActions', state.uid)
+          const latestState = ViewletStates.getByUid(state.uid)?.state || state
+          return { ...latestState, actionsDom, commands }
         } finally {
           invocation.finish()
         }
@@ -299,6 +302,7 @@ export const textSearch = {
 export const titleBar = {
   extendModule() {
     return {
+      afterRender: TitleBarMenuOverlay.afterRender,
       handleFocusChange(state, isFocused) {
         return { ...state, isFocused }
       },
@@ -321,8 +325,8 @@ export const titleBar = {
   transformState(state) {
     return {
       ...state,
-      controlsOverlayEnabled: Preferences.get('window.controlsOverlay.enabled') === true,
-      titleBarStyleCustom: Preferences.get('window.titleBarStyle') === 'custom',
+      controlsOverlayEnabled: Preferences.get('window.controlsOverlay.enabled') === true && Preferences.get('window.titleBarless.enabled') !== true,
+      titleBarStyleCustom: Preferences.get('window.titleBarStyle') === 'custom' || Preferences.get('window.titleBarless.enabled') === true,
     }
   },
   wrapCommand: wrapTitleBarCommand,

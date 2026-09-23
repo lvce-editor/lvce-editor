@@ -10,7 +10,7 @@
       },
       "problemMatcher": [],
       "label": "npm: test",
-      "detail": "lerna run test"
+      "detail": "npm test --workspaces --if-present"
     },
     {
       "type": "npm",

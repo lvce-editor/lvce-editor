@@ -65,6 +65,8 @@ export const Commands = {
   handlePageFaviconUpdated: SimpleBrowser.handlePageFaviconUpdated,
   handleTitleUpdated: SimpleBrowser.handleTitleUpdated,
   handleTabPointerDown: SimpleBrowser.handleTabPointerDown,
+  handleTabsPointerOut: SimpleBrowser.handleTabsPointerOut,
+  handleTabsPointerOver: SimpleBrowser.handleTabsPointerOver,
   handleWillNavigate: SimpleBrowser.handleWillNavigate,
   hideTabHover: SimpleBrowser.hideTabHover,
   hideOverlay: SimpleBrowser.hideOverlay,

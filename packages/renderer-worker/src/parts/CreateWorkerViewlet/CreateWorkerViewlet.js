@@ -1,3 +1,4 @@
+import * as ComponentWorkerNames from '../ComponentWorkerNames/ComponentWorkerNames.js'
 import * as AdjustCommands from '../AdjustCommands/AdjustCommands.js'
 import * as ApplicationRegistry from '../ApplicationRegistry/ApplicationRegistry.ts'
 import * as AssetDir from '../AssetDir/AssetDir.js'
@@ -156,7 +157,7 @@ const createRenderTitle = (title) => {
 }
 
 const createWorkerViewletInternal = ({ adapter, config, context, worker }) => {
-  const { capabilities = {}, css = [], methods, name, state, variables = [], workspaceChangeEvent, workspaceChangeEventPrepend } = config
+  const { capabilities = {}, css = [], methods, name, state, variables = [], workspaceChangeEvent, workspaceChangeEventPrepend, workspaceProgressEvent } = config
   const Commands = {}
   const Events = {}
   const { idKey } = state
@@ -493,6 +494,7 @@ const createWorkerViewletInternal = ({ adapter, config, context, worker }) => {
     setComponentState,
     workspaceChangeEvent,
     workspaceChangeEventPrepend,
+    workspaceProgressEvent,
   }
   workerViewlet.renderContent = workerViewlet.render[0]
   workerViewlet.renderDialog = workerViewlet.render[0]
@@ -519,5 +521,7 @@ export const createWorkerViewlet = ({ workerId, getPlatform = Platform.getPlatfo
   const context = createContext(getPlatform)
   const worker = WorkerInvokerMap.getWorkerInvoker(workerId)
   const adapter = WorkerViewletAdapterMap.getWorkerViewletAdapter(workerId)
-  return createWorkerViewletInternal({ adapter, config, context, worker })
+  const viewlet = createWorkerViewletInternal({ adapter, config, context, worker })
+  ComponentWorkerNames.registerViewlet(viewlet.create, workerId)
+  return viewlet
 }

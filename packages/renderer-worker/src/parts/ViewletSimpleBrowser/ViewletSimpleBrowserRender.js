@@ -57,6 +57,11 @@ export const renderEventListeners = async () => {
       params: ['removeHistoryEntry', 'event.currentTarget.dataset.index'],
     },
     {
+      name: DomEventListenerFunctions.HandleClickSimpleBrowserHistoryUrl,
+      params: ['setUrl', 'event.currentTarget.dataset.url'],
+      preventDefault: true,
+    },
+    {
       name: DomEventListenerFunctions.HandleFocusInSimpleBrowser,
       params: ['handleFocusIn', 'event.target.name'],
     },
@@ -138,6 +143,14 @@ export const renderEventListeners = async () => {
       name: DomEventListenerFunctions.HandlePointerDownSimpleBrowserTabAction,
       params: ['hideTabHover'],
       stopPropagation: true,
+    },
+    {
+      name: DomEventListenerFunctions.HandlePointerOutSimpleBrowserTabs,
+      params: ['handleTabsPointerOut', 'event.clientX', 'event.clientY'],
+    },
+    {
+      name: DomEventListenerFunctions.HandlePointerOverSimpleBrowserTabs,
+      params: ['handleTabsPointerOver'],
     },
     {
       name: DomEventListenerFunctions.HandleClickSimpleBrowserNewTab,
@@ -225,6 +238,7 @@ const renderDom = {
       oldState.tabsEnabled === newState.tabsEnabled &&
       oldState.audioIndicatorEnabled === newState.audioIndicatorEnabled &&
       oldState.tabHover === newState.tabHover &&
+      oldState.tabWidth === newState.tabWidth &&
       oldState.history === newState.history &&
       oldState.historySearchValue === newState.historySearchValue &&
       oldState.tabDropIndex === newState.tabDropIndex &&

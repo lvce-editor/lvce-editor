@@ -267,11 +267,11 @@ test('renderEventListeners routes terminal toolbar clicks and stops panel event 
   expect(ViewletTerminalsRender.renderEventListeners()).toEqual([
     {
       name: 'handleClickTab',
-      params: ['handleClickTab', 'event.currentTarget.dataset.index'],
+      params: ['handleClickTab', 'event.currentTarget.dataset.index', 'event.currentTarget.dataset.terminalUid'],
     },
     {
       name: 'handleClickTerminalTabAction',
-      params: ['handleClickTerminalTabAction', 'event.currentTarget.dataset.index', 'event.currentTarget.dataset.command'],
+      params: ['handleClickTerminalTabAction', 'event.currentTarget.dataset.index', 'event.currentTarget.dataset.command', 'event.currentTarget.dataset.terminalUid'],
       stopPropagation: true,
     },
     {
@@ -303,8 +303,8 @@ test('splitTerminal opens a new terminal to the right of the active terminal', a
     0,
     {
       height: 400,
-      width: 400,
-      x: 410,
+      width: 355,
+      x: 365,
       y: 20,
     },
     '',
@@ -312,7 +312,7 @@ test('splitTerminal opens a new terminal to the right of the active terminal', a
   )
   expect(viewletResize).toHaveBeenCalledWith(41, {
     height: 400,
-    width: 400,
+    width: 355,
     x: 10,
     y: 20,
   })
@@ -342,7 +342,7 @@ test('splitTerminal inserts the new terminal directly after the active split', a
     ViewletModuleId.Terminal2,
     42,
     0,
-    expect.objectContaining({ x: 10 + (800 / 3) * 2 }),
+    expect.objectContaining({ x: 10 + (710 / 3) * 2 }),
     '',
     [terminalSpawnOptions],
   )
@@ -552,6 +552,38 @@ test('handleClickTab selects a terminal from its DOM dataset index', async () =>
   })
 })
 
+test('handleClickTab focuses the split identified by its DOM dataset', async () => {
+  const state = {
+    ...createLoadedState(),
+    activeTerminalUids: [41],
+    childUid: 41,
+    childUids: [41, 42],
+    tabs: [{ icon: 'terminal-bash', label: 'bash', terminalUids: [41, 42], uid: 41 }],
+  }
+
+  const newState = await ViewletTerminals.handleClickTab(state, '0', '42')
+
+  expect(newState).toMatchObject({
+    activeTerminalUids: [42],
+    childUid: 42,
+    childUids: [41, 42],
+    selectedIndex: 0,
+  })
+})
+
+test('renderDom updates split selection when the focused terminal changes', () => {
+  const state = {
+    ...createLoadedState(),
+    activeTerminalUids: [41],
+    childUid: 41,
+    childUids: [41, 42],
+    tabs: [{ icon: 'terminal-bash', label: 'bash', terminalUids: [41, 42], uid: 41 }],
+  }
+  const newState = { ...state, activeTerminalUids: [42], childUid: 42 }
+
+  expect(ViewletTerminalsRender.render[0].isEqual(state, newState)).toBe(false)
+})
+
 test('handleClickTerminalTabAction disposes the clicked terminal tab and focuses the previous tab', async () => {
   const state = {
     ...createLoadedState(),
@@ -580,6 +612,28 @@ test('handleClickTerminalTabAction disposes the clicked terminal tab and focuses
     childUid: 42,
     childUids: [42],
     selectedIndex: 1,
+  })
+})
+
+test('handleClickTerminalTabAction disposes only the clicked split', async () => {
+  const state = {
+    ...createLoadedState(),
+    activeTerminalUids: [42],
+    childUid: 42,
+    childUids: [41, 42],
+    selectedIndex: 0,
+    tabs: [{ icon: 'terminal-bash', label: 'bash', terminalUids: [41, 42], uid: 41 }],
+  }
+
+  const newState = await ViewletTerminals.handleClickTerminalTabAction(state, '0', 'killTerminalSplit', '42')
+
+  expect(viewletDisposeFunctional).toHaveBeenCalledWith(42)
+  expect(newState).toMatchObject({
+    activeTerminalUids: [41],
+    childUid: 41,
+    childUids: [41],
+    selectedIndex: 0,
+    tabs: [{ terminalUids: [41] }],
   })
 })
 

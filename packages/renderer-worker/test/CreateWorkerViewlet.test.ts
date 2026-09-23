@@ -165,6 +165,9 @@ test('text search command wrappers preserve a diff that has already started', as
     if (method === 'TextSearch.render2') {
       return [['setText', 'latest']]
     }
+    if (method === 'TextSearch.renderActions') {
+      return [['setText', 'actions']]
+    }
     return undefined
   })
   const viewlet = createWorkerViewletWithDependencies({
@@ -184,9 +187,11 @@ test('text search command wrappers preserve a diff that has already started', as
   const [firstResult, secondResult] = await Promise.all([first, second])
 
   expect(firstResult.commands).toEqual([['setText', 'latest']])
+  expect(firstResult.actionsDom).toEqual([['setText', 'actions']])
   expect(secondResult).toBe(state)
   expect(invoke.mock.calls.filter(([method]) => method === 'TextSearch.diff2')).toHaveLength(2)
   expect(invoke.mock.calls.filter(([method]) => method === 'TextSearch.render2')).toHaveLength(1)
+  expect(invoke.mock.calls.filter(([method]) => method === 'TextSearch.renderActions')).toHaveLength(1)
 })
 
 test('text search command wrappers discard superseded pipelines before diff starts', async () => {

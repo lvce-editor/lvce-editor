@@ -58,6 +58,8 @@ test('renderCss serializes valid layout bounds', () => {
   --SideBarWidth: 240px;
   --SecondarySideBarWidth: 300px;
   --TitleBarHeight: 35px;
+  --TitleBarLeft: 0px;
+  --TitleBarWidth: 0px;
   --SashPreviewLeft: 800px;
   --PreviewAreasWidth: 400px;
   --PreviewHeight: 765px;
@@ -114,6 +116,8 @@ test('renderCss serializes explicit application bounds', () => {
   --SideBarWidth: 240px;
   --SecondarySideBarWidth: 300px;
   --TitleBarHeight: 35px;
+  --TitleBarLeft: 0px;
+  --TitleBarWidth: 0px;
   --SashPreviewLeft: 800px;
   --PreviewAreasWidth: 400px;
   --PreviewHeight: 285px;
