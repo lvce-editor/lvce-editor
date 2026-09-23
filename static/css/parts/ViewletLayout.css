@@ -8,6 +8,17 @@
   flex-direction: column;
 }
 
+.Workbench.TitleBarless::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: env(titlebar-area-x, 0px);
+  width: min(48px, env(titlebar-area-width, 48px));
+  height: 29px;
+  -webkit-app-region: drag;
+  z-index: 10;
+}
+
 .WorkbenchBody {
   display: flex;
   flex: 1;

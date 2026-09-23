@@ -1,5 +1,13 @@
 [
   {
+    "category": "window",
+    "description": "Uses a Linux titlebar overlay and moves the workbench into the title bar area. Restart the app to apply changes.",
+    "heading": "Titlebarless Layout",
+    "id": "window.titleBarless.enabled",
+    "type": "boolean",
+    "value": false
+  },
+  {
     "category": "applications",
     "description": "Controls how application updates are installed",
     "heading": "Update Mode",

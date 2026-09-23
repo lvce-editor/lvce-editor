@@ -75,3 +75,15 @@ test('getAppWindowOptions - supports older title bar color keys', async () => {
     },
   })
 })
+
+test('getAppWindowOptions - enables the Linux titlebar overlay for the titlebarless layout', async () => {
+  await expect(
+    getOptions({ 'window.controlsOverlay.enabled': false, 'window.titleBarless.enabled': true }),
+  ).resolves.toMatchObject({
+    frame: false,
+    titleBarOverlay: {
+      height: 29,
+    },
+    titleBarStyle: 'hidden',
+  })
+})

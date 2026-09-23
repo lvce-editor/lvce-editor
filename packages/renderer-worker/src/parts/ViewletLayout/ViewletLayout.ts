@@ -200,6 +200,7 @@ export const create = (id: number): LayoutState => {
     windowHeight: 0,
     statusBarWidth: 0,
     titleBarHeight: 0,
+    titleBarless: false,
     titleBarLeft: 0,
     titleBarTop: 0,
     titleBarVisibleBeforeFullScreen: false,
@@ -454,6 +455,7 @@ export const loadContent = (state: LayoutState, savedState: any): LayoutState =>
   const previewViewletId = getSavedPreviewViewletId(stateToRestore)
   const secondaryPreviewUri = stateToRestore?.secondaryPreviewUri || ''
   const secondaryPreviewViewletId = getSavedSecondaryPreviewViewletId(stateToRestore)
+  const titleBarless = Preferences.get('window.titleBarless.enabled') === true
   const intermediateState: LayoutState = {
     ...state,
     activityBarVisible: true,
@@ -490,8 +492,9 @@ export const loadContent = (state: LayoutState, savedState: any): LayoutState =>
     secondaryPreviewWidth,
     secondaryPreviewMinWidth: 100,
     secondaryPreviewMaxWidth: Math.max(1800, windowWidth / 2),
-    titleBarHeight: isNativeTitleBarStyle(state.platform) ? 0 : GetDefaultTitleBarHeight.getDefaultTitleBarHeight(),
-    titleBarVisible: true,
+    titleBarHeight: titleBarless || !isNativeTitleBarStyle(state.platform) ? GetDefaultTitleBarHeight.getDefaultTitleBarHeight() : 0,
+    titleBarless,
+    titleBarVisible: !titleBarless,
     titleBarNative: isNativeTitleBarStyle(state.platform),
     windowHeight,
     windowWidth,

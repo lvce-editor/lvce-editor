@@ -503,7 +503,7 @@ export const getLayoutVirtualDom = (state: LayoutState) => {
   dom.push({
     type: VirtualDomElements.Div,
     id: state.applicationId === undefined ? 'Workbench' : `Workbench-${state.uid}`,
-    className: 'Viewlet Layout Workbench new',
+    className: `Viewlet Layout Workbench new${state.titleBarless ? ' TitleBarless' : ''}`,
     role: 'application',
     childCount: 0,
   })
