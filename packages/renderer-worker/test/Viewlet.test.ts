@@ -875,3 +875,27 @@ test('dialog widgets acquire their application owner before loading', async () =
     ApplicationRegistry.remove('dialog-preview')
   }
 })
+
+test('a transfer command can await a serialized attachment without blocking its own queue', async () => {
+  const state = { uid: 2, value: 'source' }
+  ViewletStates.set(2, {
+    state,
+    renderedState: state,
+    moduleId: 'Test',
+    factory: {
+      name: 'Test',
+      serializeCommands: true,
+      concurrentCommands: ['transfer'],
+      Commands: {
+        transfer: async (oldState) => {
+          await Viewlet.executeViewletCommand(2, 'attach')
+          return oldState
+        },
+        attach: async (oldState) => ({ ...oldState, value: 'destination' }),
+      },
+    },
+  })
+  jest.mocked(ViewletManager.render).mockReturnValue([])
+  await Viewlet.executeViewletCommand(2, 'transfer')
+  expect(ViewletStates.getState(2).value).toBe('destination')
+})

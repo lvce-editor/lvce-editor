@@ -1,12 +1,12 @@
 import { beforeEach, expect, jest, test } from '@jest/globals'
 
 const instances = new Map<number, any>()
-const invoke = jest.fn<any>()
-const render = jest.fn<any>()
-const dispose = jest.fn<any>()
-const resize = jest.fn<any>()
-const execute = jest.fn<any>()
-const send = jest.fn<any>()
+const invoke = jest.fn<(...args: any[]) => Promise<any>>()
+const render = jest.fn<(...args: any[]) => Promise<any>>()
+const dispose = jest.fn<(...args: any[]) => Promise<any>>()
+const resize = jest.fn<(...args: any[]) => Promise<any>>()
+const execute = jest.fn<(...args: any[]) => Promise<any>>()
+const send = jest.fn<(...args: any[]) => Promise<any>>()
 jest.unstable_mockModule('../src/parts/ViewletStates/ViewletStates.js', () => ({ getInstance: (uid) => instances.get(uid) }))
 jest.unstable_mockModule('../src/parts/ApplicationRegistry/ApplicationRegistry.ts', () => ({ getOwner: () => 'app-1' }))
 jest.unstable_mockModule('../src/parts/Viewlet/Viewlet.js', () => ({ dispose, resize, executeViewletCommand: execute }))

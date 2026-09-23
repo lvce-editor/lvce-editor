@@ -65,4 +65,27 @@ export const test: Test = async (api) => {
   await panelTerminal.click()
   await run('exit')
   await expect(Locator('.XtermTerminal')).toHaveCount(0)
+
+  // Moving one split leaves the other split and unrelated terminals owned by the panel.
+  await Command.execute('Terminals.addTerminal')
+  await Command.execute('Terminals.splitTerminal')
+  await Command.execute('Terminals.addTerminal')
+  await Command.execute('Terminals.handleClickTab', '0')
+  const state = await Command.execute('ComponentState.getState', panel.uid)
+  const splitUid = state.tabs[0].terminalUids[0]
+  await Command.execute('Terminals.handleTabPointerDown', String(splitUid))
+  await Command.execute('Main.handleDrop', await DragAndDrop.createDropSessionFromDragData())
+  await expect(Locator('.TerminalTab')).toHaveCount(2)
+  await expect(panelTerminal).toHaveCount(1)
+  await expect(mainTerminal).toHaveCount(1)
+  await Command.execute('Layout.hideSideBar')
+  await expect(mainTerminal).toBeVisible()
+  await Command.execute('Layout.showSideBar', 'Explorer')
+  await expect(mainTerminal).toBeVisible()
+  await Command.execute('Main.closeActiveEditor')
+  await expect(mainTerminal).toHaveCount(0)
+  await expect(Locator('.TerminalTab')).toHaveCount(2)
+  await panelTerminal.click()
+  await run('echo remaining-split')
+  await expect(panelTerminal).toContainText('remaining-split')
 }
