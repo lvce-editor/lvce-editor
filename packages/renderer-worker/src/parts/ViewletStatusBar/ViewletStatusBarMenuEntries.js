@@ -4,8 +4,13 @@ import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
 export const menus = [
   {
     id: MenuEntryId.StatusBar,
-    getMenuEntries() {
+    getMenuEntries(uid, { contextMenuItems = [] } = {}) {
+      const contributedEntries = contextMenuItems.map((item) => ({
+        ...item,
+        flags: MenuItemFlags.None,
+      }))
       return [
+        ...contributedEntries,
         {
           command: 'Layout.hideStatusBar',
           flags: MenuItemFlags.None,
