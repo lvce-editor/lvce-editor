@@ -59,7 +59,7 @@
     "@lvce-editor/cookie-import-view": "^0.3.2",
     "@lvce-editor/debug-worker": "^4.16.1",
     "@lvce-editor/dialog-worker": "^1.1.2",
-    "@lvce-editor/diff-view": "^3.37.0",
+    "@lvce-editor/diff-view": "^3.38.1",
     "@lvce-editor/diff-worker": "^3.4.0",
     "@lvce-editor/drag-and-drop-worker": "^0.11.0",
     "@lvce-editor/editor-worker": "^19.65.0",
