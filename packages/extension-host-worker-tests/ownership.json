@@ -28,6 +28,9 @@
     "packages/extension-host-worker-tests/src/viewlet.simple-browser-*.ts",
     "scripts/test-simple-browser-*.mjs"
   ],
+  "text-search-view": [
+    "packages/extension-host-worker-tests/src/viewlet.search-open-in-editor.ts"
+  ],
   "title-bar-worker": [
     "packages/extension-host-worker-tests/src/viewlet.title-bar-menu-close-on-application-blur.ts"
   ]
