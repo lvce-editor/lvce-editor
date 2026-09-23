@@ -2313,6 +2313,19 @@ export const handleSashPointerMove = async (state: LayoutState, x: number, y: nu
     const { kVisible, moduleId } = module
     if (state[kVisible] !== newState[kVisible]) {
       if (newState[kVisible]) {
+        if (module === LayoutModules.Panel) {
+          const shown = await show(
+            {
+              ...state,
+              panelHeight: newState.panelHeight,
+            },
+            module,
+            undefined,
+          )
+          newState = shown.newState
+          allCommands.push(...shown.commands)
+          continue
+        }
         const viewletUid = Id.create()
         showAsync(uid, newState, module, viewletUid) // TODO avoid side effect
         const commands = showPlaceholder(uid, newState, module)
