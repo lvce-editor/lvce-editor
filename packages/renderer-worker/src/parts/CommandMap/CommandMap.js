@@ -1,4 +1,5 @@
 import { execute, loadCommand } from '../Command/Command.js'
+import * as PreviewSandboxOutput from '../PreviewSandboxOutput/PreviewSandboxOutput.js'
 
 const lazy =
   (key) =>
@@ -8,6 +9,8 @@ const lazy =
   }
 
 export const commandMap = {
+  'Preview.clearOutput': PreviewSandboxOutput.clearOutput,
+  'Preview.logWarning': PreviewSandboxOutput.logWarning,
   'ShellCommand.install': async () => (await import('../ShellCommand/ShellCommand.js')).install(),
   'PortProvider.getPorts': async (workspaceUri) => (await import('../PortProvider/PortProvider.ts')).getPorts(workspaceUri),
   'Application.create': lazy('Application.create'),
