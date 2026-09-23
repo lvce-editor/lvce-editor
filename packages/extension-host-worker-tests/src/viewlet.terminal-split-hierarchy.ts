@@ -10,10 +10,10 @@ export const test: Test = async ({ Command, ComponentState, Locator, Settings, e
   const selected = Locator('.TerminalTabSelected')
   const { uid } = await ComponentState.getComponent('Terminals')
 
-  // Exercise every removal position and collapse back to a single, full-width terminal.
+  // Exercise every removal position and collapse back to a single terminal.
   for (const removedIndex of [0, 1, 2]) {
     await expect(panes).toHaveCount(1)
-    await expect(Locator('.TerminalTabs')).toHaveCount(0)
+    await expect(Locator('.TerminalTabs')).toHaveCount(1)
     await Command.execute('Terminals.splitTerminal')
     await expect(panes).toHaveCount(2)
     await expect(rows).toHaveCount(2)
@@ -47,7 +47,7 @@ export const test: Test = async ({ Command, ComponentState, Locator, Settings, e
     if (!terminal) throw new Error('Missing terminal component')
     await Command.execute('Terminals.handleTerminalExit', terminal.uid)
     await expect(panes).toHaveCount(1)
-    await expect(Locator('.TerminalTabs')).toHaveCount(0)
+    await expect(Locator('.TerminalTabs')).toHaveCount(1)
     await expect(panes.locator('.xterm-helper-textarea')).toBeFocused()
   }
 

@@ -1,6 +1,13 @@
 import * as ViewletTerminals from './ViewletTerminals.js'
 
 export const Commands = {
+  handleDrop: ViewletTerminals.handleDrop,
+  attachTerminal: ViewletTerminals.attachTerminal,
+  detachTerminal: ViewletTerminals.detachTerminal,
+  handleTabPointerDown: ViewletTerminals.handleTabPointerDown,
+  handleDragStart: ViewletTerminals.handleDragStart,
+  handleDragEnd: ViewletTerminals.handleDragEnd,
+  handleDragOver: ViewletTerminals.handleDragOver,
   addTerminal: ViewletTerminals.addTerminal,
   handleClickAction: ViewletTerminals.handleClickAction,
   handleClickTab: ViewletTerminals.handleClickTab,

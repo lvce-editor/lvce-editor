@@ -622,7 +622,7 @@ const executeViewletCommandInternal = async (uid, fnName, ...args) => {
 
 export const executeViewletCommand = (uid, fnName, ...args) => {
   const instance = ViewletStates.getInstance(uid)
-  if (instance?.factory.serializeCommands) {
+  if (instance?.factory.serializeCommands && !instance.factory.concurrentCommands?.includes(fnName)) {
     return ViewletCommandQueue.enqueue(uid, () => executeViewletCommandInternal(uid, fnName, ...args))
   }
   return executeViewletCommandInternal(uid, fnName, ...args)

@@ -8,6 +8,15 @@ const lazy =
   }
 
 export const commandMap = {
+  'TerminalTransfer.beginPanelTransfer': lazy('TerminalTransfer.beginPanelTransfer'),
+  'TerminalTransfer.cancelPanelTransfer': lazy('TerminalTransfer.cancelPanelTransfer'),
+
+  'TerminalTransfer.takePanelTerminal': lazy('TerminalTransfer.takePanelTerminal'),
+  'TerminalTransfer.resize': lazy('TerminalTransfer.resize'),
+  'TerminalTransfer.commit': lazy('TerminalTransfer.commit'),
+  'TerminalTransfer.rollback': lazy('TerminalTransfer.rollback'),
+  'TerminalTransfer.attachPanelTerminal': lazy('TerminalTransfer.attachPanelTerminal'),
+
   'Preview.clearOutput': async () => {
     const { clearOutput } = await import('../PreviewSandboxOutput/PreviewSandboxOutput.js')
     await clearOutput()

@@ -178,8 +178,8 @@ const runFnWithSideEffectInternal = async (instance, id, key, fn, ...args) => {
 }
 
 // Named commands, shortcuts, and DOM commands must finish rendering and effects in one queue.
-const runWithCommandQueue = (instance, callback) => {
-  if (!instance?.factory?.serializeCommands) return callback()
+const runWithCommandQueue = (instance, key, callback) => {
+  if (!instance?.factory?.serializeCommands || instance.factory.concurrentCommands?.includes(key)) return callback()
   const uid = instance.state.uid
   return ViewletCommandQueue.enqueue(uid, () => {
     if (ViewletStates.getByUid(uid) !== instance) return
@@ -187,10 +187,10 @@ const runWithCommandQueue = (instance, callback) => {
   })
 }
 
-const runFn = (instance, id, key, fn, args) => runWithCommandQueue(instance, () => runFnInternal(instance, id, key, fn, args))
+const runFn = (instance, id, key, fn, args) => runWithCommandQueue(instance, key, () => runFnInternal(instance, id, key, fn, args))
 
 const runFnWithSideEffect = (instance, id, key, fn, ...args) =>
-  runWithCommandQueue(instance, () => runFnWithSideEffectInternal(instance, id, key, fn, ...args))
+  runWithCommandQueue(instance, key, () => runFnWithSideEffectInternal(instance, id, key, fn, ...args))
 
 // TODO maybe wrapViewletCommand should accept module instead of id string
 // then check if instance.factory matches module -> only compare reference (int) instead of string
@@ -576,7 +576,7 @@ const maybeRegisterEvents = (module) => {
         if (!instance) {
           return
         }
-        return runWithCommandQueue(instance, async () => {
+        return runWithCommandQueue(instance, key, async () => {
           const newState = await InvokeViewletEvent.invokeViewletEvent(module.name, instance, value, ...params)
           if (!newState) {
             return

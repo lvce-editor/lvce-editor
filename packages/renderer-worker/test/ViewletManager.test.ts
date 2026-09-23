@@ -1581,3 +1581,28 @@ test.each(['preferences', 'workspace'])('%s events consume focus context before 
     delete GlobalEventBus.state.listenerMap[eventName]
   }
 })
+
+test('a named transfer command can await an attachment on its serialized viewlet queue', async () => {
+  const Viewlet = await import('../src/parts/Viewlet/Viewlet.js')
+  const initial = { uid: 96, owner: 'main' }
+  const factory = {
+    name: 'TransferPanel',
+    create: () => initial,
+    loadContent: (state) => state,
+    hasFunctionalRender: true,
+    serializeCommands: true,
+    concurrentCommands: ['drop'],
+    Commands: {
+      drop: async (state) => {
+        await Viewlet.executeViewletCommand(96, 'attach')
+        return state
+      },
+      attach: (state) => ({ ...state, owner: 'panel' }),
+    },
+    render: () => [],
+  }
+  await ViewletManager.load({ getModule: async () => factory, id: 'TransferPanel', uid: 96, type: 0 })
+  jest.mocked(RendererProcess.invoke).mockImplementation(async () => {})
+  await Command.execute('TransferPanel.drop')
+  expect(ViewletStates.getState(96).owner).toBe('panel')
+})

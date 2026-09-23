@@ -17,6 +17,9 @@ export const getTerminalsDom = (state) => {
   return [
     {
       type: VirtualDomElements.Div,
+      'data-uid': state.uid,
+      onDragOver: 'handleDragOver',
+      onDrop: 'handleDrop',
       className: MergeClassNames.mergeClassNames('Viewlet', 'Terminals'),
       childCount: childUids.length + (terminalTabsVisible ? 1 : 0),
       onMouseDown: DomEventListenerFunctions.HandleMouseDown,
