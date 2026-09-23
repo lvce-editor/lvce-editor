@@ -148,6 +148,41 @@ test('getLayoutVirtualDom renders the panel sash when the panel is hidden', () =
   )
 })
 
+test('getLayoutVirtualDom places the panel before the status bar', () => {
+  const state = {
+    activityBarVisible: false,
+    mainVisible: true,
+    mainId: 1,
+    panelSashVisible: false,
+    panelVisible: true,
+    panelId: 2,
+    previewSashVisible: false,
+    previewVisible: false,
+    previewId: -1,
+    secondaryPreviewSashVisible: false,
+    secondaryPreviewVisible: false,
+    secondaryPreviewId: -1,
+    secondarySideBarVisible: false,
+    secondarySideBarId: -1,
+    sideBarLocation: SideBarLocationType.Left,
+    sideBarSashVisible: false,
+    sideBarVisible: false,
+    sideBarId: -1,
+    statusBarVisible: true,
+    statusBarId: 3,
+    titleBarVisible: false,
+    titleBarId: -1,
+  }
+
+  // @ts-ignore
+  const dom = getLayoutVirtualDom(state)
+  const panelIndex = dom.findIndex((node) => node.uid === state.panelId)
+  const statusBarIndex = dom.findIndex((node) => node.uid === state.statusBarId)
+
+  expect(panelIndex).toBeGreaterThan(-1)
+  expect(statusBarIndex).toBeGreaterThan(panelIndex)
+})
+
 test.each([
   ['left', SideBarLocationType.Left],
   ['right', SideBarLocationType.Right],
