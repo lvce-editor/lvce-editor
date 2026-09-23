@@ -2315,7 +2315,7 @@ test('address focus updates synchronously while selection is computed by the bro
   expect(SimpleBrowserWorker.invoke).toHaveBeenCalledWith('SimpleBrowser.getAddressSelection', true, 'https://example.com', false, { start: 2, end: 8 })
   pendingSelection.resolve({ start: 2, end: 8 })
   await pendingSelection.promise
-  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.sendMultiple', [['Viewlet.setSelectionByName', 7, 'simple-browser-address', 2, 8]])
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.sendMultiple', [['Viewlet.setSelectionByName', 7, 'simple-browser-address', 2, 8, 'https://example.com']])
 })
 
 test('address blur asks the browser worker to clear selection and dismisses suggestions', async () => {
@@ -2325,7 +2325,7 @@ test('address blur asks the browser worker to clear selection and dismisses sugg
   expect(blurred.suggestions).toEqual([])
   expect(blurred.inputValue).toBe(state.inputValue)
   expect(SimpleBrowserWorker.invoke).toHaveBeenCalledWith('SimpleBrowser.getAddressSelection', false, state.inputValue, true, undefined)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.sendMultiple', [['Viewlet.setSelectionByName', 7, 'simple-browser-address', 0, 0]])
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.sendMultiple', [['Viewlet.setSelectionByName', 7, 'simple-browser-address', 0, 0, state.inputValue]])
 })
 
 test('typing keeps the dimmed snapshot through local and provider suggestion updates', async () => {

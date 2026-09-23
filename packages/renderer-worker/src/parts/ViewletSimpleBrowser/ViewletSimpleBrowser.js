@@ -1175,7 +1175,7 @@ const renderAddressSelection = async (state, focused, value = state.inputValue) 
     focused ? state.fullWidthAddressSelection : undefined,
   )
   await RendererProcess.invoke('Viewlet.sendMultiple', [
-    ['Viewlet.setSelectionByName', state.uid, InputName.SimpleBrowserAddress, selection.start, selection.end],
+    ['Viewlet.setSelectionByName', state.uid, InputName.SimpleBrowserAddress, selection.start, selection.end, value],
   ])
 }
 
