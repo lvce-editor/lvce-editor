@@ -122,7 +122,8 @@ const isHistoryUrl = (url) => typeof url === 'string' && url.startsWith(simpleBr
 
 const isHistoryTab = (tab) => isHistoryUrl(tab?.iframeSrc)
 
-const createHistoryTab = () => createTab({ browserViewId: 0, iframeSrc: simpleBrowserHistoryUrl, inputValue: simpleBrowserHistoryUrl, title: 'History' })
+const createHistoryTab = () =>
+  createTab({ browserViewId: 0, iframeSrc: simpleBrowserHistoryUrl, inputValue: simpleBrowserHistoryUrl, title: 'History' })
 
 const updateTab = (state, browserViewId, updates) => {
   const tabIndex = state.tabs.findIndex((tab) => tab.browserViewId === browserViewId)

@@ -29,6 +29,7 @@ const getFaviconSource = (favicon: unknown): string => {
 
 beforeEach(() => {
   jest.resetAllMocks()
+  jest.mocked(SimpleBrowserWorker.invoke).mockResolvedValue({ start: 0, end: 0 })
   jest.mocked(Viewlet.executeViewletCommand).mockResolvedValue(undefined as never)
   jest.mocked(SimpleBrowserFavicon.create).mockImplementation((favicon) => (typeof favicon === 'string' ? favicon : 'blob:created-favicon'))
   jest.mocked(SimpleBrowserFavicon.getSource).mockImplementation(getFaviconSource)
@@ -2476,7 +2477,6 @@ test('rendering committed input starts local suggestions without waiting for the
   expect(BrowserSearchSuggestions.get).not.toHaveBeenCalled()
 })
 
-
 test('address focus updates synchronously while selection is computed by the browser worker', async () => {
   const pendingSelection = Promise.withResolvers()
   jest.mocked(SimpleBrowserWorker.invoke).mockReturnValue(pendingSelection.promise)
@@ -2484,10 +2484,15 @@ test('address focus updates synchronously while selection is computed by the bro
   const focused = ViewletSimpleBrowser.handleAddressFocus(state, 'https://example.com')
   expect(focused).not.toBeInstanceOf(Promise)
   expect(focused.fullWidthAddressSelection).toBeUndefined()
-  expect(SimpleBrowserWorker.invoke).toHaveBeenCalledWith('SimpleBrowser.getAddressSelection', true, 'https://example.com', false, { start: 2, end: 8 })
+  expect(SimpleBrowserWorker.invoke).toHaveBeenCalledWith('SimpleBrowser.getAddressSelection', true, 'https://example.com', false, {
+    start: 2,
+    end: 8,
+  })
   pendingSelection.resolve({ start: 2, end: 8 })
   await pendingSelection.promise
-  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.sendMultiple', [['Viewlet.setSelectionByName', 7, 'simple-browser-address', 2, 8, 'https://example.com']])
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.sendMultiple', [
+    ['Viewlet.setSelectionByName', 7, 'simple-browser-address', 2, 8, 'https://example.com'],
+  ])
 })
 
 test('address blur asks the browser worker to clear selection and dismisses suggestions', async () => {
@@ -2497,7 +2502,9 @@ test('address blur asks the browser worker to clear selection and dismisses sugg
   expect(blurred.suggestions).toEqual([])
   expect(blurred.inputValue).toBe(state.inputValue)
   expect(SimpleBrowserWorker.invoke).toHaveBeenCalledWith('SimpleBrowser.getAddressSelection', false, state.inputValue, true, undefined)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.sendMultiple', [['Viewlet.setSelectionByName', 7, 'simple-browser-address', 0, 0, state.inputValue]])
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.sendMultiple', [
+    ['Viewlet.setSelectionByName', 7, 'simple-browser-address', 0, 0, state.inputValue],
+  ])
 })
 
 test('typing keeps the dimmed snapshot through local and provider suggestion updates', async () => {
