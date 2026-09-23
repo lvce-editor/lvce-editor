@@ -26,10 +26,18 @@ const launch = async () => {
     args: ['--no-sandbox', join(root, 'packages/main-process'), `--user-data-dir=${join(profile, 'chromium')}`],
     env,
   })
+  app.process().stderr.on('data', (data) => process.stderr.write(data))
+  app.on('console', (message) => console.log(message.text()))
   const paths = await app.evaluate(({ app }) => ({ config: process.env.XDG_CONFIG_HOME, data: app.getPath('userData') }))
   assert.equal(paths.config, env.XDG_CONFIG_HOME)
   assert.ok(paths.data.startsWith(profile + '/'), `Unexpected user data path: ${paths.data}`)
   const page = await app.firstWindow()
+  page.on('pageerror', (error) => console.error(error))
+  page.on('console', (message) => console.log(message.text()))
+  page.on('response', (response) => {
+    if (response.status() >= 400) console.error(response.status(), response.url())
+  })
+  console.log('Window URL', page.url())
   await expect(page.locator('.Main')).toBeVisible()
   await expect(page.locator('.ActivityBarItem').first()).toBeVisible()
   return page
