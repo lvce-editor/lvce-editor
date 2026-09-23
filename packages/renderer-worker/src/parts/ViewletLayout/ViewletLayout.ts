@@ -2317,6 +2317,7 @@ export const handleSashPointerMove = async (state: LayoutState, x: number, y: nu
               panelHeight: newState.panelHeight,
             },
             module,
+            undefined,
           )
           newState = shown.newState
           allCommands.push(...shown.commands)
