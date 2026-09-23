@@ -141,6 +141,7 @@ test('getAll - uses custom title bar style by default', async () => {
   PlatformPaths.getUserSettingsPath.mockImplementation(() => userSettingsPath)
 
   await expect(Preferences.getAll()).resolves.toEqual({
+    'window.titleBarless.enabled': false,
     'window.titleBarStyle': 'custom',
     'window.zoomLevel': 0,
   })
@@ -152,6 +153,7 @@ test('getAllSafe - error', async () => {
   PlatformPaths.getDefaultSettingsPath.mockImplementation(() => join(tmpDir, 'static', 'config', 'defaultSettings.json'))
 
   await expect(Preferences.getAllSafe()).resolves.toEqual({
+    'window.titleBarless.enabled': false,
     'window.titleBarStyle': 'custom',
   })
   expect(Logger.error).toHaveBeenCalledTimes(1)

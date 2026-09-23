@@ -143,6 +143,7 @@ export interface LayoutState {
   readonly statusBarVisible: boolean
   readonly statusBarWidth: number
   readonly titleBarHeight: number
+  readonly titleBarless: boolean
   readonly titleBarId: number
   readonly titleBarLeft: number
   readonly titleBarNative: boolean

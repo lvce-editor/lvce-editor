@@ -16,7 +16,8 @@
     "packages/extension-host-worker-tests": {
       "entry": ["src/**/*.js", "src/**/*.ts", "fixtures/**/*.js", "fixtures/**/*.ts"],
       "project": ["src/**/*.js", "src/**/*.ts", "fixtures/**/*.js", "fixtures/**/*.ts", "typings/**/*.d.ts"],
-      "ignoreDependencies": ["data"],
+      "ignoreDependencies": ["data", "electron"],
+      "ignoreBinaries": ["xdotool"],
       "ignoreUnresolved": ["./add.js", "./not-found.js", "./parts/math.js"]
     },
     "packages/main-process": {

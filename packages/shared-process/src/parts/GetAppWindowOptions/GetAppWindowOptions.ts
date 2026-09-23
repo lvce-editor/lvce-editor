@@ -37,12 +37,13 @@ export const getAppWindowOptions = async ({ preferences, preloadUrl, screenHeigh
     fallbackSymbolColor,
   )
   const titleBarPreference = preferences['window.titleBarStyle']
-  const frame = titleBarPreference !== 'custom'
-  const titleBarStyle = titleBarPreference === 'custom' ? 'hidden' : undefined
+  const titleBarless = preferences['window.titleBarless.enabled'] === true && Platform.isLinux
+  const frame = titleBarless ? false : titleBarPreference !== 'custom'
+  const titleBarStyle = titleBarless || titleBarPreference === 'custom' ? 'hidden' : undefined
   const zoomLevelPreference = preferences['window.zoomLevel']
   const zoomLevel = zoomLevelPreference
   const windowControlsOverlayPreference =
-    (Platform.isWindows || Platform.isMacOs || Platform.isLinux) && preferences['window.controlsOverlay.enabled']
+    (Platform.isWindows || Platform.isMacOs || Platform.isLinux) && preferences['window.controlsOverlay.enabled'] && !titleBarless
 
   const titleBarOverlay = windowControlsOverlayPreference
     ? {
