@@ -226,6 +226,12 @@ const wrapViewletCommand = (id, key, fn) => {
     return wrappedViewletCommand
   }
   const wrappedViewletCommand = async (...args) => {
+    if (fn.acceptsTargetUid && typeof args[0] === 'number') {
+      const [uid, ...commandArgs] = args
+      const instance = ViewletStates.getByUid(uid)
+      if (!instance || instance.factory.Commands?.[key] !== fn) return
+      return runFn(instance, uid, key, fn, commandArgs)
+    }
     // Get the focused instance of this type, or fall back to first instance
     const focusedUid = ViewletStates.getFocusedInstanceByType(id)
     let activeInstance

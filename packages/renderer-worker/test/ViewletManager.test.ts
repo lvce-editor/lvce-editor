@@ -75,6 +75,35 @@ test('UID-targeted async rendering ignores focus and never falls back after disp
   expect(renderPending).not.toHaveBeenCalled()
 })
 
+test('save accepts an explicit editor UID without treating it as a formatting option', async () => {
+  const save = Object.assign(
+    jest.fn((state, _skipFormatting?: boolean) => state),
+    { acceptsTargetUid: true },
+  )
+  const factory = {
+    Commands: { save },
+    create: () => ({ uid: 91 }),
+    loadContent: (state) => state,
+    render: [],
+  }
+  await ViewletManager.load({ getModule: async () => factory, id: 'SaveTarget', uid: 91, type: 0 })
+  const other = { uid: 92 }
+  ViewletStates.set(92, { factory, moduleId: 'SaveTarget', renderedState: other, state: other })
+  ViewletStates.state.focusedInstanceByType.SaveTarget = 92
+  await Command.execute('SaveTarget.save', 91)
+  expect(save).toHaveBeenLastCalledWith(expect.objectContaining({ uid: 91 }))
+  await Command.execute('SaveTarget.save', 91, true)
+  expect(save).toHaveBeenLastCalledWith(expect.objectContaining({ uid: 91 }), true)
+  await Command.execute('SaveTarget.save')
+  expect(save).toHaveBeenLastCalledWith(expect.objectContaining({ uid: 92 }))
+  await Command.execute('SaveTarget.save', false)
+  expect(save).toHaveBeenLastCalledWith(expect.objectContaining({ uid: 92 }), false)
+  ViewletStates.remove(91)
+  save.mockClear()
+  await Command.execute('SaveTarget.save', 91)
+  expect(save).not.toHaveBeenCalled()
+})
+
 test('runLoadContentLater starts deferred loading once', async () => {
   const loadContentLater = jest.fn(async (_state: unknown) => {})
   const viewletState = { uid: 42 }
