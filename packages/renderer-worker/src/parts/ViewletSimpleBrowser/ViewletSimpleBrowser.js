@@ -1,3 +1,4 @@
+import * as SimpleBrowserWorker from '../SimpleBrowserWorker/SimpleBrowserWorker.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as BrowserSuggestionRequests from '../BrowserSuggestionRequests/BrowserSuggestionRequests.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
@@ -121,7 +122,8 @@ const isHistoryUrl = (url) => typeof url === 'string' && url.startsWith(simpleBr
 
 const isHistoryTab = (tab) => isHistoryUrl(tab?.iframeSrc)
 
-const createHistoryTab = () => createTab({ browserViewId: 0, iframeSrc: simpleBrowserHistoryUrl, inputValue: simpleBrowserHistoryUrl, title: 'History' })
+const createHistoryTab = () =>
+  createTab({ browserViewId: 0, iframeSrc: simpleBrowserHistoryUrl, inputValue: simpleBrowserHistoryUrl, title: 'History' })
 
 const updateTab = (state, browserViewId, updates) => {
   const tabIndex = state.tabs.findIndex((tab) => tab.browserViewId === browserViewId)
@@ -1209,7 +1211,28 @@ export const closeSuggestions = (state) => {
   return dismissSuggestions(state)
 }
 
-export const handleAddressBlur = closeSuggestions
+const renderAddressSelection = async (state, focused, value = state.inputValue) => {
+  const selection = await SimpleBrowserWorker.invoke(
+    'SimpleBrowser.getAddressSelection',
+    focused,
+    value,
+    state.suggestions.length > 0,
+    focused ? state.fullWidthAddressSelection : undefined,
+  )
+  await RendererProcess.invoke('Viewlet.sendMultiple', [
+    ['Viewlet.setSelectionByName', state.uid, InputName.SimpleBrowserAddress, selection.start, selection.end, value],
+  ])
+}
+
+export const handleAddressFocus = (state, value) => {
+  void renderAddressSelection(state, true, value)
+  return { ...state, fullWidthAddressSelection: undefined }
+}
+
+export const handleAddressBlur = (state) => {
+  void renderAddressSelection(state, false)
+  return closeSuggestions(state)
+}
 export const handleSuggestionPointerDown = (state) => state
 
 export const selectNextSuggestion = (state) => {

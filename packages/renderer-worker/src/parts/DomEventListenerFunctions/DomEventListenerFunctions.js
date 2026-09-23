@@ -99,7 +99,8 @@ export const HandlePointerUpSimpleBrowserTab = 'handlePointerUpSimpleBrowserTab'
 
 export const HandleDragOverSimpleBrowserTabs = 'handleDragOverSimpleBrowserTabs'
 
-export const HandleBlurSimpleBrowserAddress = 'handleBlurSimpleBrowserAddress'
+export const HandleBlurSimpleBrowserAddress = 'handleAddressBlur'
+export const HandleFocusSimpleBrowserAddress = 'handleAddressFocus'
 export const HandlePointerDownSimpleBrowserSuggestion = 'handlePointerDownSimpleBrowserSuggestion'
 
 export const HandleSubmitSimpleBrowserAddress = 'handleSubmitSimpleBrowserAddress'

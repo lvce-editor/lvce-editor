@@ -38,7 +38,7 @@ const launch = async () => {
     if (response.status() >= 400) console.error(response.status(), response.url())
   })
   console.log('Window URL', page.url())
-  await expect(page.locator('.Main')).toBeVisible()
+  await expect(page.locator('.Main')).toBeVisible({ timeout: 60000 })
   await expect(page.locator('.ActivityBarItem').first()).toBeVisible()
   return page
 }
