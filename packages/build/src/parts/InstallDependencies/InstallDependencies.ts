@@ -3,7 +3,7 @@ import { fileURLToPath } from 'node:url'
 import * as ExitCode from '../ExitCode/ExitCode.ts'
 import * as Process from '../Process/Process.ts'
 
-const installCommands = ['npm ci --ignore-scripts', 'npm rebuild --workspaces']
+const installCommands = ['npm ci --ignore-scripts', 'npm rebuild --workspaces', 'npm run postinstall']
 
 /**
  * @typedef {{stdio: 'inherit'}} InstallCommandOptions
