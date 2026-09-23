@@ -1,7 +1,7 @@
 [
   {
     "category": "window",
-    "description": "Uses a Linux titlebar overlay and moves the workbench into the title bar area. Restart the app to apply changes.",
+    "description": "Places Linux window controls above the primary sidebar so the main and secondary sidebar extend to the top. With the primary sidebar hidden, reserves a full-width control strip. Restart the app to apply changes.",
     "heading": "Titlebarless Layout",
     "id": "window.titleBarless.enabled",
     "type": "boolean",

@@ -1,3 +1,4 @@
+import { isCompactTitleBar } from '../ViewletLayout/IsCompactTitleBar.ts'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import * as SideBarLocationType from '../SideBarLocationType/SideBarLocationType.js'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.js'
@@ -503,7 +504,7 @@ export const getLayoutVirtualDom = (state: LayoutState) => {
   dom.push({
     type: VirtualDomElements.Div,
     id: state.applicationId === undefined ? 'Workbench' : `Workbench-${state.uid}`,
-    className: `Viewlet Layout Workbench new${state.titleBarless ? ' TitleBarless' : ''}`,
+    className: `Viewlet Layout Workbench new${state.titleBarless ? ' TitleBarless' : ''}${isCompactTitleBar(state) ? ' CompactTitleBar' : ''}`,
     role: 'application',
     childCount: 0,
   })

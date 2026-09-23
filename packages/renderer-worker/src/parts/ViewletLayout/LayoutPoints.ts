@@ -1,3 +1,4 @@
+import { isCompactTitleBar } from './IsCompactTitleBar.ts'
 import * as Clamp from '../Clamp/Clamp.js'
 import * as GetDefaultTitleBarHeight from '../GetDefaultTitleBarHeight/GetDefaultTitleBarHeight.js'
 import * as LayoutKeys from '../LayoutKeys/LayoutKeys.js'
@@ -62,7 +63,8 @@ export const getPoints = (source: LayoutState, sideBarLocation = source.sideBarL
   const panelMinHeight = source[LayoutKeys.PanelMinHeight]
   const panelMaxHeight = source[LayoutKeys.PanelMaxHeight]
   const titleBarHeight = source[LayoutKeys.TitleBarHeight]
-  const titleBarlessClearance = source.titleBarless ? titleBarHeight : 0
+  const compactTitleBar = isCompactTitleBar(source)
+  const titleBarlessClearance = compactTitleBar ? titleBarHeight : 0
   const sideBarWidth = source[LayoutKeys.SideBarWidth]
   const panelHeight = source[LayoutKeys.PanelHeight]
   const statusBarHeight = source[LayoutKeys.StatusBarHeight]
@@ -137,7 +139,7 @@ export const getPoints = (source: LayoutState, sideBarLocation = source.sideBarL
     // @ts-ignore
     const p9 = /* End of ActivityBar */ windowWidth
 
-    if (titleBarVisible) {
+    if (titleBarVisible && !compactTitleBar) {
       p2 = titleBarHeight
     }
     if (statusBarVisible) {
@@ -206,7 +208,9 @@ export const getPoints = (source: LayoutState, sideBarLocation = source.sideBarL
     const destinationTitleBarTop = p1
     const destinationTitleBarWidth = windowWidth
     let destinationTitleBarHeight = 0
-    if (!source.titleBarVisible) {
+    if (source.titleBarless) {
+      destinationTitleBarHeight = titleBarHeight
+    } else if (!source.titleBarVisible) {
       destinationTitleBarHeight = 0
     } else {
       destinationTitleBarHeight = GetDefaultTitleBarHeight.getDefaultTitleBarHeight()
@@ -254,9 +258,11 @@ export const getPoints = (source: LayoutState, sideBarLocation = source.sideBarL
       statusBarWidth: destinationStatusBarWidth,
       statusBarHeight: destinationStatusBarHeight,
       statusBarVisible: destinationStatusBarVisible,
-      titleBarLeft: destinationTitleBarLeft,
+      titleBarLeft: compactTitleBar
+        ? Math.min(destinationSideBarLeft, activityBarVisible ? destinationActivityBarLeft : destinationSideBarLeft)
+        : destinationTitleBarLeft,
       titleBarTop: destinationTitleBarTop,
-      titleBarWidth: destinationTitleBarWidth,
+      titleBarWidth: compactTitleBar ? destinationSideBarWidth + (activityBarVisible ? destinationActivityBarWidth : 0) : destinationTitleBarWidth,
       titleBarHeight: destinationTitleBarHeight,
       titleBarVisible: destinationTitleBarVisible,
       previewLeft: destinationPreviewLeft,
@@ -284,7 +290,7 @@ export const getPoints = (source: LayoutState, sideBarLocation = source.sideBarL
     // @ts-ignore
     const p9 = /* End of Main */ 0
 
-    if (titleBarVisible) {
+    if (titleBarVisible && !compactTitleBar) {
       p2 = titleBarHeight
     }
     if (statusBarVisible) {
@@ -393,9 +399,11 @@ export const getPoints = (source: LayoutState, sideBarLocation = source.sideBarL
       statusBarWidth: destinationStatusBarWidth,
       statusBarHeight: destinationStatusBarHeight,
       statusBarVisible: destinationStatusBarVisible,
-      titleBarLeft: destinationTitleBarLeft,
+      titleBarLeft: compactTitleBar
+        ? Math.min(destinationSideBarLeft, activityBarVisible ? destinationActivityBarLeft : destinationSideBarLeft)
+        : destinationTitleBarLeft,
       titleBarTop: destinationTitleBarTop,
-      titleBarWidth: destinationTitleBarWidth,
+      titleBarWidth: compactTitleBar ? destinationSideBarWidth + (activityBarVisible ? destinationActivityBarWidth : 0) : destinationTitleBarWidth,
       titleBarHeight: destinationTitleBarHeight,
       titleBarVisible: destinationTitleBarVisible,
       previewLeft: destinationPreviewLeft,

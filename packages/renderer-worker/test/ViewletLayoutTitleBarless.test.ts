@@ -25,7 +25,7 @@ const createState = (sideBarLocation: number, titleBarless: boolean) => {
     statusBarVisible: true,
     titleBarHeight: titleBarless ? 29 : 35,
     titleBarless,
-    titleBarVisible: !titleBarless,
+    titleBarVisible: true,
     windowHeight: 800,
     windowWidth: 1200,
   })
@@ -35,7 +35,7 @@ for (const [locationName, location] of [
   ['left', SideBarLocationType.Left],
   ['right', SideBarLocationType.Right],
 ] as const) {
-  test(`titlebarless layout reserves native controls above the primary sidebar and activity bar with the sidebar on the ${locationName}`, () => {
+  test(`titlebarless layout reserves window controls above the primary sidebar and activity bar with the sidebar on the ${locationName}`, () => {
     const titleBarless = createState(location, true)
     const regular = createState(location, false)
 
@@ -48,7 +48,7 @@ for (const [locationName, location] of [
       secondarySideBarHeight: regular.secondarySideBarHeight + 35,
       sideBarTop: 29,
       sideBarHeight: regular.sideBarHeight + 6,
-      titleBarVisible: false,
+      titleBarVisible: true,
     })
   })
 }
@@ -63,4 +63,20 @@ test('titlebarless layout stays opt-in', () => {
     sideBarTop: 35,
     titleBarVisible: true,
   })
+})
+
+test('hidden primary sidebar reserves a full-width control strip', () => {
+  const state = LayoutPoints.getPoints({ ...createState(SideBarLocationType.Right, true), sideBarVisible: false })
+  expect(state).toMatchObject({ titleBarLeft: 0, titleBarWidth: 1200, mainTop: 29, activityBarTop: 29 })
+})
+
+test('fullscreen removes both the window controls and their clearance', () => {
+  const state = LayoutPoints.getPoints({ ...createState(SideBarLocationType.Right, true), titleBarVisible: false, fullScreen: true })
+  expect(state).toMatchObject({ mainTop: 0, sideBarTop: 0, activityBarTop: 0, secondarySideBarTop: 0 })
+})
+
+test('preview space is excluded from the compact window control strip', () => {
+  const state = LayoutPoints.getPoints({ ...createState(SideBarLocationType.Right, true), previewVisible: true, previewWidth: 400 })
+  expect(state.titleBarLeft + state.titleBarWidth).toBe(state.previewLeft)
+  expect(state.previewTop).toBe(0)
 })

@@ -43,8 +43,7 @@ export const getAppWindowOptions = async ({ preferences, preloadUrl, screenHeigh
   const zoomLevelPreference = preferences['window.zoomLevel']
   const zoomLevel = zoomLevelPreference
   const windowControlsOverlayPreference =
-    (Platform.isWindows || Platform.isMacOs || Platform.isLinux) &&
-    (preferences['window.controlsOverlay.enabled'] || titleBarless)
+    (Platform.isWindows || Platform.isMacOs || Platform.isLinux) && preferences['window.controlsOverlay.enabled'] && !titleBarless
 
   const titleBarOverlay = windowControlsOverlayPreference
     ? {

@@ -76,8 +76,7 @@ export const getAll = async (): Promise<any> => {
       ...userPreferences,
       ...overrides,
     }
-    // The titlebarless layout uses Linux Window Controls Overlay. Keep the
-    // preference inert on platforms where that native window mode is absent.
+    // Keep the Linux-only window layout inert on other platforms.
     preferences['window.titleBarless.enabled'] = Platform.isLinux && preferences['window.titleBarless.enabled'] === true
     // try {
     //   await mkdir(dirname(CACHED_SETTINGS_PATH), { recursive: true })

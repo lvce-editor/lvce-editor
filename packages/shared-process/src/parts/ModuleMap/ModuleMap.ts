@@ -93,6 +93,7 @@ export const getModuleId = (commandId: any): any => {
     case 'ElectronWindow.setBrowserFullWidthGestureEnabled':
     case 'ElectronWindow.toggleDevtools':
     case 'ElectronWindow.toggleFullScreen':
+    case 'ElectronWindow.toggleMaximize':
     case 'ElectronWindow.unmaximize':
     case 'ElectronWindow.zoomIn':
     case 'ElectronWindow.zoomOut':

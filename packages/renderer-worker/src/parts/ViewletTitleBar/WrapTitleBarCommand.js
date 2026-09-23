@@ -1,9 +1,15 @@
+import * as ElectronWindow from '../ElectronWindow/ElectronWindow.js'
 import * as TitleBarWorker from '../TitleBarWorker/TitleBarWorker.js'
 import * as TitleBarMenuOverlay from './TitleBarMenuOverlay.js'
 
 const commandQueues = new Map()
 
 const runTitleBarCommand = async (key, state, args) => {
+  // Toggle against the real window state, including native titlebar double-clicks.
+  if (key === 'handleClickToggleMaximize') {
+    await ElectronWindow.toggleMaximize()
+    return state
+  }
   const wasTitleBarMenuOpen = state.titleBarMenuOpen === true
   await TitleBarWorker.invoke(`TitleBar.${key}`, state.uid, ...args)
   const titleBarState = await TitleBarWorker.invoke('TitleBar.getComponentState', state.uid)

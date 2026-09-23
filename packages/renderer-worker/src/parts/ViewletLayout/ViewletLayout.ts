@@ -455,7 +455,7 @@ export const loadContent = (state: LayoutState, savedState: any): LayoutState =>
   const previewViewletId = getSavedPreviewViewletId(stateToRestore)
   const secondaryPreviewUri = stateToRestore?.secondaryPreviewUri || ''
   const secondaryPreviewViewletId = getSavedSecondaryPreviewViewletId(stateToRestore)
-  const titleBarless = Preferences.get('window.titleBarless.enabled') === true
+  const titleBarless = state.platform === PlatformType.Electron && Preferences.get('window.titleBarless.enabled') === true
   const intermediateState: LayoutState = {
     ...state,
     activityBarVisible: true,
@@ -494,8 +494,8 @@ export const loadContent = (state: LayoutState, savedState: any): LayoutState =>
     secondaryPreviewMaxWidth: Math.max(1800, windowWidth / 2),
     titleBarHeight: titleBarless || !isNativeTitleBarStyle(state.platform) ? GetDefaultTitleBarHeight.getDefaultTitleBarHeight() : 0,
     titleBarless,
-    titleBarVisible: !titleBarless,
-    titleBarNative: isNativeTitleBarStyle(state.platform),
+    titleBarVisible: true,
+    titleBarNative: !titleBarless && isNativeTitleBarStyle(state.platform),
     windowHeight,
     windowWidth,
     activityBarSashVisible: true,
