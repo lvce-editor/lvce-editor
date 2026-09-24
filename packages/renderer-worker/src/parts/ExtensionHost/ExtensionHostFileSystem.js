@@ -192,3 +192,14 @@ export const isReadonly = async (uri) => {
     protocol,
   })
 }
+
+export const getOpenExternalPath = (uri) => {
+  const { protocol, uri: providerUri } = getProviderProtocolPathAndUri(uri)
+  return executeProvider({
+    isolatedMethod: 'Extensions.executeFileSystemProviderGetOpenExternalPath',
+    isolatedParams: [providerUri],
+    legacyMethod: ExtensionHostCommandType.FileSystemGetOpenExternalPath,
+    legacyParams: [providerUri],
+    protocol,
+  })
+}

@@ -1,4 +1,5 @@
 import * as OpenExternal from '../OpenExternal/OpenExternal.js'
+import * as ExtensionHostFileSystem from '../ExtensionHost/ExtensionHostFileSystem.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
@@ -18,7 +19,9 @@ const openNativeFolderRemote = async (absolutePath) => {
 }
 
 const openNativeFolderElectron = async (absolutePath) => {
-  await OpenExternal.showItemInFolder(absolutePath)
+  const path =
+    absolutePath.includes('://') && !absolutePath.startsWith('file:') ? await ExtensionHostFileSystem.getOpenExternalPath(absolutePath) : absolutePath
+  await OpenExternal.showItemInFolder(path)
 }
 
 export const openNativeFolder = async (absolutePath) => {
