@@ -13,6 +13,10 @@ export const test: Test = async ({ Editor, FileSystem, KeyBoard, Locator, Main, 
 
   await Editor.setCursor(59, lines[59].length)
   await Editor.setDeltaY(600)
+  const startingSelections = await Editor.getSelections()
+  if (startingSelections[0] !== 59 || startingSelections[1] !== lines[59].length) {
+    throw new Error('The starting cursor is not on a later line at a nonzero column')
+  }
 
   const cursor = Locator('.EditorCursor')
   await expect(cursor).toBeVisible()
@@ -22,10 +26,18 @@ export const test: Test = async ({ Editor, FileSystem, KeyBoard, Locator, Main, 
   await expect(cursor).toBeVisible()
   await expect(cursor).toHaveCSS('translate', '0px')
   await expect(Locator('.EditorRow').first()).toContainText('line 00')
+  const firstPageUpSelections = await Editor.getSelections()
+  if (firstPageUpSelections[0] !== 0 || firstPageUpSelections[1] !== 0) {
+    throw new Error('PageUp did not move the cursor to document position 0/0')
+  }
 
   await KeyBoard.press('PageUp')
   await expect(cursor).toBeVisible()
   await expect(cursor).toHaveCSS('translate', '0px')
+  const repeatedPageUpSelections = await Editor.getSelections()
+  if (repeatedPageUpSelections[0] !== 0 || repeatedPageUpSelections[1] !== 0) {
+    throw new Error('Repeated PageUp moved the cursor away from document position 0/0')
+  }
   if ((await Editor.getText()) !== originalText) {
     throw new Error('PageUp changed the document contents')
   }
@@ -35,6 +47,11 @@ export const test: Test = async ({ Editor, FileSystem, KeyBoard, Locator, Main, 
   await Main.openUri(emptyFilePath)
   await KeyBoard.press('PageUp')
   await KeyBoard.press('PageUp')
-  await expect(Locator('.EditorCursor')).toBeVisible()
-  await expect(Locator('.EditorCursor')).toHaveCSS('translate', '0px')
+  const emptyCursor = Locator('.EditorCursor')
+  await expect(emptyCursor).toBeVisible()
+  await expect(emptyCursor).toHaveCSS('translate', '0px')
+  const emptySelections = await Editor.getSelections()
+  if (emptySelections[0] !== 0 || emptySelections[1] !== 0) {
+    throw new Error('Repeated PageUp moved the empty-document cursor away from 0/0')
+  }
 }
