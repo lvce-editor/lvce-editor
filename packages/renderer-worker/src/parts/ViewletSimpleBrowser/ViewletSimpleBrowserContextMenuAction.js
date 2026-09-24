@@ -2,6 +2,7 @@ import * as ElectronWebContentsViewFunctions from '../ElectronWebContentsViewFun
 import * as OpenBackgroundTab from './ViewletSimpleBrowserOpenBackgroundTab.js'
 
 const actions = {
+  passwords: ElectronWebContentsViewFunctions.passwords,
   backward: ElectronWebContentsViewFunctions.backward,
   forward: ElectronWebContentsViewFunctions.forward,
   reload: ElectronWebContentsViewFunctions.reload,
