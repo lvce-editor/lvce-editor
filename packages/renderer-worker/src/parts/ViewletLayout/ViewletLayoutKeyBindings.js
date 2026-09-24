@@ -68,7 +68,7 @@ export const getKeyBindings = () => {
     {
       key: KeyModifier.CtrlCmd | KeyModifier.Shift | KeyCode.KeyX,
       command: 'Layout.openSideBarViewlet',
-      args: ['Extensions'],
+      args: ['Extensions', true],
     },
     {
       key: KeyModifier.CtrlCmd | KeyModifier.Shift | KeyCode.KeyG,
