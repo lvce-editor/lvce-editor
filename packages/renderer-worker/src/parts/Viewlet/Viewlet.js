@@ -366,6 +366,10 @@ export const resize = async (id, dimensions) => {
   Assert.object(dimensions)
   const instance = ViewletStates.getInstance(id)
   if (!instance || !instance.factory || (!instance.factory.resize && !instance.factory?.Commands?.resize)) {
+    if (!instance) {
+      ViewletStates.setPendingResize(id, dimensions)
+      return []
+    }
     console.warn('cannot resize', id)
     return []
   }
