@@ -4,6 +4,7 @@ import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as BrowserFullWidth from '../BrowserFullWidth/BrowserFullWidth.js'
 // based on vscode's simple browser by Microsoft (https://github.com/microsoft/vscode/blob/e8fe2d07d31f30698b9262dd5e1fcc59a85c6bb1/extensions/simple-browser/src/extension.ts, License MIT)
 
+import * as ApplicationRegistry from '../ApplicationRegistry/ApplicationRegistry.ts'
 import * as Assert from '../Assert/Assert.ts'
 import * as BrowserSearchHistory from '../BrowserSearchHistory/BrowserSearchHistory.js'
 import * as BrowserSearchSuggestions from '../BrowserSearchSuggestions/BrowserSearchSuggestions.js'
@@ -24,6 +25,7 @@ import * as KeyBindings from '../KeyBindings/KeyBindings.js'
 import * as KeyBindingsState from '../KeyBindingsState/KeyBindingsState.js'
 import * as KeyModifier from '../KeyModifier/KeyModifier.js'
 import * as Preferences from '../Preferences/Preferences.js'
+import * as QuickPickOpening from '../QuickPickOpening/QuickPickOpening.js'
 import * as PrettyBytes from '../PrettyBytes/PrettyBytes.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SimpleBrowserFavicon from '../SimpleBrowserFavicon/SimpleBrowserFavicon.js'
@@ -31,6 +33,7 @@ import * as SimpleBrowserNewTabPage from '../SimpleBrowserNewTabPage/SimpleBrows
 import * as SimpleBrowserPageSnapshot from '../SimpleBrowserPageSnapshot/SimpleBrowserPageSnapshot.js'
 import * as SimpleBrowserPreferences from '../SimpleBrowserPreferences/SimpleBrowserPreferences.js'
 import * as SimpleBrowserSnapshot from '../SimpleBrowserSnapshot/SimpleBrowserSnapshot.js'
+import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as WhenExpression from '../WhenExpression/WhenExpression.js'
 
@@ -121,7 +124,8 @@ const isHistoryUrl = (url) => typeof url === 'string' && url.startsWith(simpleBr
 
 const isHistoryTab = (tab) => isHistoryUrl(tab?.iframeSrc)
 
-const createHistoryTab = () => createTab({ browserViewId: 0, iframeSrc: simpleBrowserHistoryUrl, inputValue: simpleBrowserHistoryUrl, title: 'History' })
+const createHistoryTab = () =>
+  createTab({ browserViewId: 0, iframeSrc: simpleBrowserHistoryUrl, inputValue: simpleBrowserHistoryUrl, title: 'History' })
 
 const updateTab = (state, browserViewId, updates) => {
   const tabIndex = state.tabs.findIndex((tab) => tab.browserViewId === browserViewId)
@@ -320,7 +324,7 @@ const getId = (idPart) => {
 }
 
 export const loadContent = async (state, savedState) => {
-  const { x, y, width, height, uri, uid } = state
+  const { x, y, width, height, uri } = state
   const idPart = uri.slice('simple-browser://'.length)
   const id = getId(idPart)
   const savedTabs = getTabsFromSavedState(savedState)
@@ -373,7 +377,7 @@ export const loadContent = async (state, savedState) => {
     }
   }
 
-  const browserViewId = await ElectronWebContentsView.createWebContentsView(id, uid)
+  const browserViewId = await ElectronWebContentsView.createWebContentsView(id, fallThroughKeyBindings)
   await ElectronWebContentsViewFunctions.setFallthroughKeyBindings(browserViewId, fallThroughKeyBindings)
   await ElectronWebContentsViewFunctions.resizeWebContentsView(browserViewId, browserViewX, browserViewY, browserViewWidth, browserViewHeight)
   Assert.number(browserViewId)
@@ -444,8 +448,8 @@ export const hide = async (state) => {
 }
 
 const createUnloadedTab = async (state) => {
-  const { headerHeight, height, uid, width, x, y } = state
-  const browserViewId = await ElectronWebContentsView.createWebContentsView(0, uid)
+  const { headerHeight, height, width, x, y } = state
+  const browserViewId = await ElectronWebContentsView.createWebContentsView(0, getFallThroughKeyBindings())
   await ElectronWebContentsViewFunctions.hide(browserViewId)
   await ElectronWebContentsViewFunctions.resizeWebContentsView(browserViewId, x, y + headerHeight, width, height - headerHeight)
   return createTab({ browserViewId })
@@ -538,12 +542,12 @@ const switchToTab = async (state, initialTabs, selectedTabIndex) => {
   return activateTab(state, tabs, selectedTabIndex)
 }
 
-export const createNewTab = async (state, focusAddress = true) => {
+export const createNewTab = async (state, focusAddress = true, requiresNativeView = false) => {
   if (!state.tabsEnabled) {
     return state
   }
   const currentState = state.hasSuggestionsOverlay ? await closeSuggestions(state) : state
-  const tab = await createEmptyTab()
+  const tab = requiresNativeView ? await createUnloadedTab(currentState) : await createEmptyTab()
   const newState = await switchToTab(currentState, [...currentState.tabs, tab], currentState.tabs.length)
   if (!focusAddress) {
     return newState
@@ -941,11 +945,18 @@ export const showOverlay = async (state, overlayId) => {
 export const afterRender = async (oldState, newState) => {
   if (oldState.fullWidth !== newState.fullWidth && newState.fullWidth) {
     await show(newState)
-    if (newState.fullWidthAddressSelection || !newState.iframeSrc) {
-      await ElectronWindow.focus()
-      await RendererProcess.invoke('Window.focusBrowserAddress', newState.uid, newState.fullWidthAddressSelection)
-    } else {
-      await ElectronWebContentsViewFunctions.focus(newState.browserViewId)
+    // Showing the native page can finish after the command palette acquired focus.
+    // Cover module loading, instance creation, and the asynchronous focus event.
+    // Preserve the opening palette throughout those intervals.
+    const applicationId = ApplicationRegistry.getOwner(newState.uid)
+    const palette = ViewletStates.getInstance(ViewletModuleId.QuickPick, applicationId)
+    if (!QuickPickOpening.isOpening(applicationId) && !palette && FocusState.get() !== WhenExpression.FocusQuickPickInput) {
+      if (newState.fullWidthAddressSelection || !newState.iframeSrc) {
+        await ElectronWindow.focus()
+        await RendererProcess.invoke('Window.focusBrowserAddress', newState.uid, newState.fullWidthAddressSelection)
+      } else {
+        await ElectronWebContentsViewFunctions.focus(newState.browserViewId)
+      }
     }
   }
   if (oldState.selectedTabIndex !== newState.selectedTabIndex || oldState.fullWidth !== newState.fullWidth) {
@@ -1398,17 +1409,24 @@ export const handleKeyBinding = async (state, browserViewId, keyBinding) => {
 export const handleDidNavigate = async (state, browserViewId, value) => {
   const [actualBrowserViewId, url] = parseWebContentsEvent(state, browserViewId, value)
   const displayUrl = SimpleBrowserNewTabPage.toDisplayUrl(url)
-  const { canGoBack, canGoForward } = await ElectronWebContentsViewFunctions.getStats(actualBrowserViewId)
+  const { canGoBack, canGoForward, isFocused, url: currentUrl } = await ElectronWebContentsViewFunctions.getStats(actualBrowserViewId)
+  if (currentUrl && currentUrl !== url) return state
   const tab = state.tabs.find((tab) => tab.browserViewId === actualBrowserViewId)
   if (tab?.pageSnapshot && actualBrowserViewId === state.browserViewId && visibleBrowserUids.has(state.uid)) {
     await ElectronWebContentsViewFunctions.show(actualBrowserViewId)
     if (FocusState.get() === WhenExpression.FocusSimpleBrowser) await ElectronWebContentsViewFunctions.focus(actualBrowserViewId)
   }
+  const preserveAddress =
+    actualBrowserViewId === state.browserViewId &&
+    !state.isLoading &&
+    !isFocused &&
+    FocusState.get() === WhenExpression.FocusSimpleBrowserInput &&
+    ViewletStates.getFocusedInstanceByType(ViewletModuleId.SimpleBrowser) === state.uid
   const newState = updateTab(state, actualBrowserViewId, {
     canGoBack,
     canGoForward,
     iframeSrc: displayUrl,
-    inputValue: displayUrl,
+    inputValue: preserveAddress ? state.inputValue : displayUrl,
     isLoading: false,
     pageSnapshot: undefined,
   })

@@ -899,3 +899,17 @@ test('a transfer command can await a serialized attachment without blocking its 
   await Viewlet.executeViewletCommand(2, 'transfer')
   expect(ViewletStates.getState(2).value).toBe('destination')
 })
+
+
+test.each([false, true])('palette opening is tracked during load and cleared after failure=%s', async (fail) => {
+  const QuickPickOpening = await import('../src/parts/QuickPickOpening/QuickPickOpening.js')
+  // @ts-ignore
+  ViewletManager.load.mockImplementation(async () => {
+    expect(QuickPickOpening.isOpening(undefined)).toBe(true)
+    if (fail) throw new Error('palette load failed')
+    return []
+  })
+  if (fail) await expect(Viewlet.openWidget('QuickPick', 'commands')).rejects.toThrow('palette load failed')
+  else await Viewlet.openWidget('QuickPick', 'commands')
+  expect(QuickPickOpening.isOpening(undefined)).toBe(false)
+})

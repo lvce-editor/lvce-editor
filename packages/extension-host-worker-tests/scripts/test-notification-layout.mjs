@@ -51,7 +51,33 @@ try {
     assert.equal(await checkBounds(), '', 'The close button must stay visible when scrolling')
     await expect(page.locator('.NotificationCloseButton')).toBeVisible()
   }
-  console.log('Notification text wraps, stays within the viewport, and scrolls without hiding the close button')
+  await page.setViewportSize({ width: 1280, height: 720 })
+  await page.setContent(`<style>* { box-sizing: border-box } body { font: 16px system-ui } ${css}
+    .PreviewArea { position: fixed; top: 0; bottom: 0; background: gray }
+  </style>
+  <div class="PreviewArea"></div>
+  <div class="Widgets"><div class="Notification"><p class="NotificationMessage">Continue signing in</p><button class="NotificationCloseButton">Close</button></div></div>`)
+  const preview = page.locator('.PreviewArea')
+  const notification = page.locator('.Notification')
+  for (const left of [900, 700, 500]) {
+    await preview.evaluate((element, value) => {
+      element.style.left = `${value}px`
+      element.style.width = `${innerWidth - value}px`
+      document.documentElement.style.setProperty('--NotificationRight', `calc(100vw - ${value}px + 30px)`)
+      document.documentElement.style.setProperty('--NotificationMaxWidth', `min(250px, calc(${value}px - 60px), calc(100vw - 60px))`)
+    }, left)
+    const previewBounds = await preview.boundingBox()
+    const notificationBounds = await notification.boundingBox()
+    assert.ok(notificationBounds.x + notificationBounds.width <= previewBounds.x - 29, `Notification overlaps Simple Browser at split x=${left}`)
+  }
+  await preview.evaluate((element) => {
+    element.remove()
+    document.documentElement.style.setProperty('--NotificationRight', '30px')
+    document.documentElement.style.setProperty('--NotificationMaxWidth', 'min(250px, calc(100vw - 60px))')
+  })
+  const notificationBounds = await notification.boundingBox()
+  assert.ok(notificationBounds.x + notificationBounds.width <= 1250, 'Notification remains within the IDE viewport after closing Simple Browser')
+  console.log('Notification text wraps, stays within the viewport, and moves with the IDE boundary beside Simple Browser')
 } finally {
   await browser.close()
 }

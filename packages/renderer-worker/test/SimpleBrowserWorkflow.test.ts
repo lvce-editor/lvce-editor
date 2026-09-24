@@ -81,7 +81,7 @@ test('waits for navigation before sending sequential keys', async () => {
 
 test('opens workflow tabs without requesting address focus', async () => {
   await executeWorkflow('music')
-  expect(Command.execute).toHaveBeenCalledWith('SimpleBrowser.createNewTab', false)
+  expect(Command.execute).toHaveBeenCalledWith('SimpleBrowser.createNewTab', false, true)
 })
 
 test('stops after navigation failure and allows another invocation', async () => {

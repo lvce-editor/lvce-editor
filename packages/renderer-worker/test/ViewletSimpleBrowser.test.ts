@@ -482,7 +482,7 @@ test('loadContent - restore id - same browser view', async () => {
     iframeSrc: 'https://example.com/',
   })
   expect(ElectronWebContentsView.createWebContentsView).toHaveBeenCalledTimes(1)
-  expect(ElectronWebContentsView.createWebContentsView).toHaveBeenCalledWith(1, 0)
+  expect(ElectronWebContentsView.createWebContentsView).toHaveBeenCalledWith(1, expect.arrayContaining(browserTabKeyBindings))
   expect(ElectronWebContentsViewFunctions.setFallthroughKeyBindings).toHaveBeenCalledTimes(1)
   expect(ElectronWebContentsViewFunctions.setFallthroughKeyBindings).toHaveBeenCalledWith(1, browserTabKeyBindings)
   expect(ElectronWebContentsViewFunctions.setIframeSrc).not.toHaveBeenCalled()
@@ -529,7 +529,7 @@ test('loadContent - restore id - browser view does not exist yet', async () => {
     iframeSrc: 'https://example.com/',
   })
   expect(ElectronWebContentsView.createWebContentsView).toHaveBeenCalledTimes(1)
-  expect(ElectronWebContentsView.createWebContentsView).toHaveBeenCalledWith(1, 0)
+  expect(ElectronWebContentsView.createWebContentsView).toHaveBeenCalledWith(1, expect.arrayContaining(browserTabKeyBindings))
   expect(ElectronWebContentsViewFunctions.setFallthroughKeyBindings).toHaveBeenCalledTimes(1)
   expect(ElectronWebContentsViewFunctions.setFallthroughKeyBindings).toHaveBeenCalledWith(2, browserTabKeyBindings)
   expect(ElectronWebContentsViewFunctions.setIframeSrc).toHaveBeenCalledTimes(1)
@@ -569,7 +569,7 @@ test('loadContent restores every tab but creates a web contents view only for th
     { browserViewId: 0, iframeSrc: 'https://three.example', title: 'Three' },
   ])
   expect(ElectronWebContentsView.createWebContentsView).toHaveBeenCalledTimes(1)
-  expect(ElectronWebContentsView.createWebContentsView).toHaveBeenCalledWith(12, 7)
+  expect(ElectronWebContentsView.createWebContentsView).toHaveBeenCalledWith(12, expect.arrayContaining(browserTabKeyBindings))
   expect(ElectronWebContentsViewFunctions.setIframeSrc).toHaveBeenCalledTimes(1)
   expect(ElectronWebContentsViewFunctions.setIframeSrc).toHaveBeenCalledWith(17, 'https://two.example')
 })
@@ -620,18 +620,21 @@ test('creates and selects an empty tab without allocating native content', async
   expect(ElectronWindow.focus).toHaveBeenCalledTimes(1)
 })
 
-test('workflow tab creation preserves page focus without scheduling address focus', async () => {
+test('workflow tab creation allocates and focuses the page without scheduling address focus', async () => {
   // @ts-ignore
   ElectronWebContentsView.createWebContentsView.mockResolvedValue(13)
   // @ts-ignore
   ElectronWebContentsViewFunctions.getStats.mockResolvedValue({ title: 'New Tab' })
   const state = { ...createTwoTabState(), focusAddressVersion: 3 }
 
-  const newState = await ViewletSimpleBrowser.createNewTab(state, false)
+  const newState = await ViewletSimpleBrowser.createNewTab(state, false, true)
+
+  expect(newState.browserViewId).toBe(13)
+  expect(ElectronWebContentsView.createWebContentsView).toHaveBeenCalledWith(0, expect.arrayContaining(browserTabKeyBindings))
 
   expect(newState.focusAddressVersion).toBe(3)
   expect(ElectronWindow.focus).not.toHaveBeenCalled()
-  expect(ElectronWebContentsViewFunctions.focus).not.toHaveBeenCalled()
+  expect(ElectronWebContentsViewFunctions.focus).toHaveBeenCalledWith(13)
 })
 
 test('updates open new tab pages when the color theme changes', async () => {
@@ -1118,7 +1121,7 @@ test('creates a restored background tab web contents view when the tab is select
   })
   expect(newState.tabs[0]).toMatchObject({ browserViewId: 18, iframeSrc: 'https://one.example', isLoading: true })
   expect(ElectronWebContentsView.createWebContentsView).toHaveBeenCalledTimes(1)
-  expect(ElectronWebContentsView.createWebContentsView).toHaveBeenCalledWith(0, 7)
+  expect(ElectronWebContentsView.createWebContentsView).toHaveBeenCalledWith(0, expect.arrayContaining(browserTabKeyBindings))
   expect(ElectronWebContentsViewFunctions.resizeWebContentsView).toHaveBeenCalledWith(18, 10, 85, 300, 135)
   expect(ElectronWebContentsViewFunctions.setIframeSrc).toHaveBeenCalledWith(18, 'https://one.example')
   expect(ElectronWebContentsViewFunctions.show).toHaveBeenCalledWith(18)
@@ -2625,4 +2628,84 @@ test('background navigation preserves the selected address value version', async
 
   expect(loadedState.inputValue).toBe('unfinished input')
   expect(loadedState.addressValueVersion).toBe(state.addressValueVersion)
+})
+
+test.each([true, false])('same-document navigation preserves only the focused browser address (%s)', async (ownsFocus) => {
+  const ViewletStates = await import('../src/parts/ViewletStates/ViewletStates.js')
+  const state = { ...createTabsState(), uid: 7, inputValue: 'unfinished address', isLoading: false }
+  FocusState.set(WhenExpression.FocusSimpleBrowserInput)
+  ViewletStates.setFocusedInstanceByType(ownsFocus ? 7 : 8, ViewletModuleId.SimpleBrowser)
+  jest.mocked(ElectronWebContentsViewFunctions.getStats).mockResolvedValueOnce({ canGoBack: true, canGoForward: false })
+  const result = await ViewletSimpleBrowser.handleDidNavigate(state, state.browserViewId, 'https://one.example/pushed')
+  expect(result.iframeSrc).toBe('https://one.example/pushed')
+  expect(result.inputValue).toBe(ownsFocus ? 'unfinished address' : 'https://one.example/pushed')
+})
+
+test('late navigation events cannot replace a newer native page or finish its pending load', async () => {
+  const state = { ...createTabsState(), inputValue: 'https://one.example/new', iframeSrc: 'https://one.example/new', isLoading: true }
+  jest.mocked(ElectronWebContentsViewFunctions.getStats).mockResolvedValueOnce({
+    canGoBack: true,
+    canGoForward: false,
+    url: 'https://one.example/new',
+  })
+  const result = await ViewletSimpleBrowser.handleDidNavigate(state, state.browserViewId, 'https://one.example/old')
+  expect(result).toBe(state)
+})
+
+test('native page focus overrides stale address focus context during navigation', async () => {
+  const ViewletStates = await import('../src/parts/ViewletStates/ViewletStates.js')
+  const state = { ...createTabsState(), uid: 7, inputValue: 'https://one.example/old', isLoading: false }
+  FocusState.set(WhenExpression.FocusSimpleBrowserInput)
+  ViewletStates.setFocusedInstanceByType(7, ViewletModuleId.SimpleBrowser)
+  jest.mocked(ElectronWebContentsViewFunctions.getStats).mockResolvedValueOnce({
+    canGoBack: true,
+    canGoForward: false,
+    isFocused: true,
+    url: 'https://one.example/new',
+  })
+  const result = await ViewletSimpleBrowser.handleDidNavigate(state, state.browserViewId, 'https://one.example/new')
+  expect(result.inputValue).toBe('https://one.example/new')
+})
+
+test('entering full width preserves command palette focus acquired while showing the native page', async () => {
+  jest.mocked(ElectronWebContentsViewFunctions.show).mockImplementation(async () => {
+    FocusState.set(WhenExpression.FocusQuickPickInput)
+  })
+  jest.mocked(ElectronWebContentsViewFunctions.focus).mockResolvedValue(undefined as never)
+  jest.mocked(RendererProcess.invoke).mockResolvedValue(undefined as never)
+  const state = { ...ViewletSimpleBrowser.create(7), browserViewId: 12, iframeSrc: 'https://example.com' }
+  await ViewletSimpleBrowser.afterRender(state, { ...state, fullWidth: true })
+  expect(ElectronWebContentsViewFunctions.show).toHaveBeenCalledWith(12)
+  expect(ElectronWebContentsViewFunctions.focus).not.toHaveBeenCalled()
+})
+
+
+test('entering full width preserves a command palette before its asynchronous focus event arrives', async () => {
+  const ViewletStates = await import('../src/parts/ViewletStates/ViewletStates.js')
+  const palette = { uid: 800001 }
+  jest.mocked(ElectronWebContentsViewFunctions.show).mockImplementation(async () => {
+    ViewletStates.set(palette.uid, { factory: {}, moduleId: ViewletModuleId.QuickPick, renderedState: palette, state: palette })
+  })
+  jest.mocked(ElectronWebContentsViewFunctions.focus).mockResolvedValue(undefined as never)
+  jest.mocked(RendererProcess.invoke).mockResolvedValue(undefined as never)
+  const state = { ...ViewletSimpleBrowser.create(7), browserViewId: 12, iframeSrc: 'https://example.com' }
+  try {
+    await ViewletSimpleBrowser.afterRender(state, { ...state, fullWidth: true })
+    expect(ElectronWebContentsViewFunctions.focus).not.toHaveBeenCalled()
+  } finally {
+    delete ViewletStates.state.instances[palette.uid]
+  }
+})
+
+
+test('entering full width preserves a palette whose module is still loading', async () => {
+  const QuickPickOpening = await import('../src/parts/QuickPickOpening/QuickPickOpening.js')
+  jest.mocked(ElectronWebContentsViewFunctions.show).mockResolvedValue(undefined as never)
+  jest.mocked(ElectronWebContentsViewFunctions.focus).mockResolvedValue(undefined as never)
+  jest.mocked(RendererProcess.invoke).mockResolvedValue(undefined as never)
+  const state = { ...ViewletSimpleBrowser.create(7), browserViewId: 12, iframeSrc: 'https://example.com' }
+  await QuickPickOpening.run(undefined, async () => {
+    await ViewletSimpleBrowser.afterRender(state, { ...state, fullWidth: true })
+    expect(ElectronWebContentsViewFunctions.focus).not.toHaveBeenCalled()
+  })
 })
