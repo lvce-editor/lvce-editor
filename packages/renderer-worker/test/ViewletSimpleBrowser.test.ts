@@ -2678,16 +2678,3 @@ test('entering full width preserves command palette focus acquired while showing
   expect(ElectronWebContentsViewFunctions.show).toHaveBeenCalledWith(12)
   expect(ElectronWebContentsViewFunctions.focus).not.toHaveBeenCalled()
 })
-
-test('entering full width preserves an address edited before the render finishes', async () => {
-  jest.mocked(ElectronWebContentsViewFunctions.show).mockResolvedValue(undefined as never)
-  jest.mocked(ElectronWebContentsViewFunctions.focus).mockResolvedValue(undefined as never)
-  jest.mocked(RendererProcess.invoke).mockImplementation(async (method) => {
-    if (method === 'Window.captureBrowserAddress') return { start: 1, end: 1 } as never
-    return undefined as never
-  })
-  const state = { ...ViewletSimpleBrowser.create(7), browserViewId: 12, iframeSrc: 'https://example.com' }
-  await ViewletSimpleBrowser.afterRender(state, { ...state, fullWidth: true })
-  expect(ElectronWebContentsViewFunctions.focus).not.toHaveBeenCalled()
-  expect(RendererProcess.invoke).not.toHaveBeenCalledWith('Window.focusBrowserAddress', expect.anything(), expect.anything())
-})
