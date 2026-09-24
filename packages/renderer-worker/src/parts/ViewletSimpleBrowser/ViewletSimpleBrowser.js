@@ -943,11 +943,15 @@ export const showOverlay = async (state, overlayId) => {
 export const afterRender = async (oldState, newState) => {
   if (oldState.fullWidth !== newState.fullWidth && newState.fullWidth) {
     await show(newState)
-    if (newState.fullWidthAddressSelection || !newState.iframeSrc) {
-      await ElectronWindow.focus()
-      await RendererProcess.invoke('Window.focusBrowserAddress', newState.uid, newState.fullWidthAddressSelection)
-    } else {
-      await ElectronWebContentsViewFunctions.focus(newState.browserViewId)
+    // Showing the native page can finish after the command palette acquired focus.
+    // Preserve that newer focus instead of blurring and dismissing the palette.
+    if (FocusState.get() !== WhenExpression.FocusQuickPickInput) {
+      if (newState.fullWidthAddressSelection || !newState.iframeSrc) {
+        await ElectronWindow.focus()
+        await RendererProcess.invoke('Window.focusBrowserAddress', newState.uid, newState.fullWidthAddressSelection)
+      } else {
+        await ElectronWebContentsViewFunctions.focus(newState.browserViewId)
+      }
     }
   }
   if (oldState.selectedTabIndex !== newState.selectedTabIndex || oldState.fullWidth !== newState.fullWidth) {

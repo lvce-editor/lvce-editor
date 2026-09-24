@@ -2666,3 +2666,15 @@ test('native page focus overrides stale address focus context during navigation'
   const result = await ViewletSimpleBrowser.handleDidNavigate(state, state.browserViewId, 'https://one.example/new')
   expect(result.inputValue).toBe('https://one.example/new')
 })
+
+test('entering full width preserves command palette focus acquired while showing the native page', async () => {
+  jest.mocked(ElectronWebContentsViewFunctions.show).mockImplementation(async () => {
+    FocusState.set(WhenExpression.FocusQuickPickInput)
+  })
+  jest.mocked(ElectronWebContentsViewFunctions.focus).mockResolvedValue(undefined as never)
+  jest.mocked(RendererProcess.invoke).mockResolvedValue(undefined as never)
+  const state = { ...ViewletSimpleBrowser.create(7), browserViewId: 12, iframeSrc: 'https://example.com' }
+  await ViewletSimpleBrowser.afterRender(state, { ...state, fullWidth: true })
+  expect(ElectronWebContentsViewFunctions.show).toHaveBeenCalledWith(12)
+  expect(ElectronWebContentsViewFunctions.focus).not.toHaveBeenCalled()
+})
