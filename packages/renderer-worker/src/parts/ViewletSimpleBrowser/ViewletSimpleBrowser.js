@@ -373,7 +373,7 @@ export const loadContent = async (state, savedState) => {
     }
   }
 
-  const browserViewId = await ElectronWebContentsView.createWebContentsView(id, uid)
+  const browserViewId = await ElectronWebContentsView.createWebContentsView(id, fallThroughKeyBindings)
   await ElectronWebContentsViewFunctions.setFallthroughKeyBindings(browserViewId, fallThroughKeyBindings)
   await ElectronWebContentsViewFunctions.resizeWebContentsView(browserViewId, browserViewX, browserViewY, browserViewWidth, browserViewHeight)
   Assert.number(browserViewId)
@@ -444,8 +444,8 @@ export const hide = async (state) => {
 }
 
 const createUnloadedTab = async (state) => {
-  const { headerHeight, height, uid, width, x, y } = state
-  const browserViewId = await ElectronWebContentsView.createWebContentsView(0, uid)
+  const { headerHeight, height, width, x, y } = state
+  const browserViewId = await ElectronWebContentsView.createWebContentsView(0, getFallThroughKeyBindings())
   await ElectronWebContentsViewFunctions.hide(browserViewId)
   await ElectronWebContentsViewFunctions.resizeWebContentsView(browserViewId, x, y + headerHeight, width, height - headerHeight)
   return createTab({ browserViewId })

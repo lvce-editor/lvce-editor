@@ -482,7 +482,7 @@ test('loadContent - restore id - same browser view', async () => {
     iframeSrc: 'https://example.com/',
   })
   expect(ElectronWebContentsView.createWebContentsView).toHaveBeenCalledTimes(1)
-  expect(ElectronWebContentsView.createWebContentsView).toHaveBeenCalledWith(1, 0)
+  expect(ElectronWebContentsView.createWebContentsView).toHaveBeenCalledWith(1, expect.arrayContaining(browserTabKeyBindings))
   expect(ElectronWebContentsViewFunctions.setFallthroughKeyBindings).toHaveBeenCalledTimes(1)
   expect(ElectronWebContentsViewFunctions.setFallthroughKeyBindings).toHaveBeenCalledWith(1, browserTabKeyBindings)
   expect(ElectronWebContentsViewFunctions.setIframeSrc).not.toHaveBeenCalled()
@@ -529,7 +529,7 @@ test('loadContent - restore id - browser view does not exist yet', async () => {
     iframeSrc: 'https://example.com/',
   })
   expect(ElectronWebContentsView.createWebContentsView).toHaveBeenCalledTimes(1)
-  expect(ElectronWebContentsView.createWebContentsView).toHaveBeenCalledWith(1, 0)
+  expect(ElectronWebContentsView.createWebContentsView).toHaveBeenCalledWith(1, expect.arrayContaining(browserTabKeyBindings))
   expect(ElectronWebContentsViewFunctions.setFallthroughKeyBindings).toHaveBeenCalledTimes(1)
   expect(ElectronWebContentsViewFunctions.setFallthroughKeyBindings).toHaveBeenCalledWith(2, browserTabKeyBindings)
   expect(ElectronWebContentsViewFunctions.setIframeSrc).toHaveBeenCalledTimes(1)
@@ -569,7 +569,7 @@ test('loadContent restores every tab but creates a web contents view only for th
     { browserViewId: 0, iframeSrc: 'https://three.example', title: 'Three' },
   ])
   expect(ElectronWebContentsView.createWebContentsView).toHaveBeenCalledTimes(1)
-  expect(ElectronWebContentsView.createWebContentsView).toHaveBeenCalledWith(12, 7)
+  expect(ElectronWebContentsView.createWebContentsView).toHaveBeenCalledWith(12, expect.arrayContaining(browserTabKeyBindings))
   expect(ElectronWebContentsViewFunctions.setIframeSrc).toHaveBeenCalledTimes(1)
   expect(ElectronWebContentsViewFunctions.setIframeSrc).toHaveBeenCalledWith(17, 'https://two.example')
 })
@@ -630,7 +630,7 @@ test('workflow tab creation allocates and focuses the page without scheduling ad
   const newState = await ViewletSimpleBrowser.createNewTab(state, false, true)
 
   expect(newState.browserViewId).toBe(13)
-  expect(ElectronWebContentsView.createWebContentsView).toHaveBeenCalledWith(0, state.uid)
+  expect(ElectronWebContentsView.createWebContentsView).toHaveBeenCalledWith(0, expect.arrayContaining(browserTabKeyBindings))
 
   expect(newState.focusAddressVersion).toBe(3)
   expect(ElectronWindow.focus).not.toHaveBeenCalled()
@@ -1121,7 +1121,7 @@ test('creates a restored background tab web contents view when the tab is select
   })
   expect(newState.tabs[0]).toMatchObject({ browserViewId: 18, iframeSrc: 'https://one.example', isLoading: true })
   expect(ElectronWebContentsView.createWebContentsView).toHaveBeenCalledTimes(1)
-  expect(ElectronWebContentsView.createWebContentsView).toHaveBeenCalledWith(0, 7)
+  expect(ElectronWebContentsView.createWebContentsView).toHaveBeenCalledWith(0, expect.arrayContaining(browserTabKeyBindings))
   expect(ElectronWebContentsViewFunctions.resizeWebContentsView).toHaveBeenCalledWith(18, 10, 85, 300, 135)
   expect(ElectronWebContentsViewFunctions.setIframeSrc).toHaveBeenCalledWith(18, 'https://one.example')
   expect(ElectronWebContentsViewFunctions.show).toHaveBeenCalledWith(18)
