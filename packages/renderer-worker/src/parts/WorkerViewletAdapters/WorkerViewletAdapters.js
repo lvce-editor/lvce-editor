@@ -322,6 +322,7 @@ export const titleBar = {
       titleBarTitleEnabled: Preferences.get('titleBar.titleEnabled') ?? false,
     }
   },
+  transformRenderedState: TitleBarMenuOverlay.reconcile,
   transformState(state) {
     return {
       ...state,

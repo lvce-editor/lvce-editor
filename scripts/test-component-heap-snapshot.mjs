@@ -64,7 +64,7 @@ try {
   await expect(page.locator('.HeapSnapshotTable')).toBeVisible()
   const files = (await readdir(downloads)).filter((name) => name.endsWith('.heapsnapshot'))
   assert.equal(files.length, 1)
-  assert.match(files[0], /^Explorer-Worker-/)
+  assert.match(files[0], /^worker-\d+-Explorer-Worker-\d+\.heapsnapshot$/)
   const snapshot = JSON.parse(await readFile(join(downloads, files[0]), 'utf8'))
   assert.ok(snapshot.snapshot.node_count > 0)
   assert.ok(snapshot.nodes.length > 0)
