@@ -1,6 +1,8 @@
 import { afterEach, beforeEach, expect, jest, test } from '@jest/globals'
 
-afterEach(() => jest.useRealTimers())
+afterEach(() => {
+  jest.useRealTimers()
+})
 
 const frameCallbacks: Array<(timestamp: number) => void> = []
 let currentTime = 0
