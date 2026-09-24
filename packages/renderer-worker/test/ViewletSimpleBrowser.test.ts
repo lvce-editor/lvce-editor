@@ -2678,3 +2678,21 @@ test('entering full width preserves command palette focus acquired while showing
   expect(ElectronWebContentsViewFunctions.show).toHaveBeenCalledWith(12)
   expect(ElectronWebContentsViewFunctions.focus).not.toHaveBeenCalled()
 })
+
+
+test('entering full width preserves a command palette before its asynchronous focus event arrives', async () => {
+  const ViewletStates = await import('../src/parts/ViewletStates/ViewletStates.js')
+  const palette = { uid: 800001 }
+  jest.mocked(ElectronWebContentsViewFunctions.show).mockImplementation(async () => {
+    ViewletStates.set(palette.uid, { factory: {}, moduleId: ViewletModuleId.QuickPick, renderedState: palette, state: palette })
+  })
+  jest.mocked(ElectronWebContentsViewFunctions.focus).mockResolvedValue(undefined as never)
+  jest.mocked(RendererProcess.invoke).mockResolvedValue(undefined as never)
+  const state = { ...ViewletSimpleBrowser.create(7), browserViewId: 12, iframeSrc: 'https://example.com' }
+  try {
+    await ViewletSimpleBrowser.afterRender(state, { ...state, fullWidth: true })
+    expect(ElectronWebContentsViewFunctions.focus).not.toHaveBeenCalled()
+  } finally {
+    delete ViewletStates.state.instances[palette.uid]
+  }
+})

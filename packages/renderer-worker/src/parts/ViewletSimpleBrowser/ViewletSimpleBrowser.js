@@ -4,6 +4,7 @@ import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as BrowserFullWidth from '../BrowserFullWidth/BrowserFullWidth.js'
 // based on vscode's simple browser by Microsoft (https://github.com/microsoft/vscode/blob/e8fe2d07d31f30698b9262dd5e1fcc59a85c6bb1/extensions/simple-browser/src/extension.ts, License MIT)
 
+import * as ApplicationRegistry from '../ApplicationRegistry/ApplicationRegistry.ts'
 import * as Assert from '../Assert/Assert.ts'
 import * as BrowserSearchHistory from '../BrowserSearchHistory/BrowserSearchHistory.js'
 import * as BrowserSearchSuggestions from '../BrowserSearchSuggestions/BrowserSearchSuggestions.js'
@@ -944,8 +945,10 @@ export const afterRender = async (oldState, newState) => {
   if (oldState.fullWidth !== newState.fullWidth && newState.fullWidth) {
     await show(newState)
     // Showing the native page can finish after the command palette acquired focus.
-    // Preserve that newer focus instead of blurring and dismissing the palette.
-    if (FocusState.get() !== WhenExpression.FocusQuickPickInput) {
+    // The palette instance exists before its asynchronous focus event arrives.
+    // Preserve it throughout that interval instead of blurring and dismissing it.
+    const palette = ViewletStates.getInstance(ViewletModuleId.QuickPick, ApplicationRegistry.getOwner(newState.uid))
+    if (!palette && FocusState.get() !== WhenExpression.FocusQuickPickInput) {
       if (newState.fullWidthAddressSelection || !newState.iframeSrc) {
         await ElectronWindow.focus()
         await RendererProcess.invoke('Window.focusBrowserAddress', newState.uid, newState.fullWidthAddressSelection)
