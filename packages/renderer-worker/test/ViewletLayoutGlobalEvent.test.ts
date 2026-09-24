@@ -10,6 +10,11 @@ const problemsInvoke = jest.fn<(method: string, ...params: readonly unknown[]) =
 }))
 const statusBarInvoke = jest.fn<(method: string, ...params: readonly unknown[]) => Promise<unknown>>(async () => undefined)
 const reloadDynamicCss = jest.fn(async () => undefined)
+const rendererInvoke = jest.fn<(method: string, ...params: readonly unknown[]) => Promise<unknown>>(async () => undefined)
+const sourceControlInvoke = jest.fn<(method: string, ...params: readonly unknown[]) => Promise<unknown>>(async () => 0)
+
+jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () => ({ invoke: rendererInvoke }))
+jest.unstable_mockModule('../src/parts/SourceControlWorker/SourceControlWorker.js', () => ({ invoke: sourceControlInvoke }))
 
 jest.unstable_mockModule('../src/parts/Preferences/Preferences.js', () => {
   return {
@@ -351,4 +356,30 @@ test('source control progress notifies the view without refreshing workspace fil
   expect(progress).toHaveBeenCalledTimes(1)
   expect(result.commands).toEqual([['render.1']])
   expect(extensionManagementInvoke).not.toHaveBeenCalled()
+})
+
+test('extension refresh commits ready view updates before waiting for a provider badge query', async () => {
+  const badgeStarted = Promise.withResolvers<void>()
+  const badgeResult = Promise.withResolvers<number>()
+  sourceControlInvoke.mockImplementationOnce(async () => {
+    badgeStarted.resolve()
+    return badgeResult.promise
+  })
+  const commits = [['Viewlet.commitPending', 5, 6]]
+  const handler = jest.fn((state: { uid: number }) => ({ ...state, commands: commits }))
+  ViewletStates.set('status-bar', createInstance(5, 'handleExtensionsChanged', handler))
+  jest.mocked(ViewletManager.render).mockReturnValueOnce(commits)
+  const state = ViewletLayout.create(1)
+  const refresh = ViewletLayout.handleExtensionsChanged(state)
+  try {
+    await badgeStarted.promise
+    // Later direct renders of this view cannot pass the queued transaction until it commits.
+    expect(rendererInvoke).toHaveBeenCalledWith('Viewlet.sendMultiple', commits)
+  } finally {
+    badgeResult.resolve(0)
+    await refresh
+  }
+  expect(rendererInvoke).toHaveBeenCalledTimes(1)
+  const result = await refresh
+  expect(result.commands).not.toContainEqual(commits[0])
 })
