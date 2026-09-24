@@ -300,7 +300,6 @@ export const textSearch = {
 }
 
 export const titleBar = {
-  transformRenderedState: TitleBarMenuOverlay.reconcile,
   extendModule() {
     return {
       afterRender: TitleBarMenuOverlay.afterRender,
@@ -323,6 +322,7 @@ export const titleBar = {
       titleBarTitleEnabled: Preferences.get('titleBar.titleEnabled') ?? false,
     }
   },
+  transformRenderedState: TitleBarMenuOverlay.reconcile,
   transformState(state) {
     return {
       ...state,
