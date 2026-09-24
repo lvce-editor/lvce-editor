@@ -258,8 +258,8 @@
   {
     "name": "builtin.media-preview",
     "repository": "github.com/lvce-editor/media-preview",
-    "version": "2.16.1",
-    "sha256": "ed4e60aa4ba0f1bc2bedae5d154f0170936fe6efe518e2a4cbc2c5767e86be9b",
+    "version": "2.16.2",
+    "sha256": "f8b26f9b991949ec107e9fc1d85554923535710c5d63b963891429f8eec1850a",
     "created": "2024-09-07"
   },
   {
