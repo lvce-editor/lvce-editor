@@ -150,6 +150,7 @@ export const getSimpleBrowserVirtualDom = (
     for (let index = 0; index < tabs.length; index++) {
       const tab = tabs[index]
       const isSelected = index === selectedTabIndex
+      const isHistoryTab = tab.iframeSrc?.startsWith('simple-browser-history://')
       const isMuted = Boolean(tab.muted)
       const showAudioIndicator = audioIndicatorEnabled && (tab.isAudioPlaying || isMuted)
       const tabClass = isSelected ? 'SimpleBrowserTab SimpleBrowserTabSelected' : 'SimpleBrowserTab'
@@ -178,7 +179,12 @@ export const getSimpleBrowserVirtualDom = (
         ariaLabel: tab.title || 'New Tab',
         childCount: 3 + (showAudioIndicator ? 1 : 0),
       })
-      if (tab.favicon) {
+      if (isHistoryTab) {
+        dom.push(
+          { type: VirtualDomElements.Div, className: 'SimpleBrowserTabFaviconWrapper', childCount: 1 },
+          { type: VirtualDomElements.Span, className: 'SimpleBrowserTabFavicon SimpleBrowserTabHistoryFavicon', ariaHidden: true, childCount: 0 },
+        )
+      } else if (tab.favicon) {
         dom.push(
           {
             type: VirtualDomElements.Div,

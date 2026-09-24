@@ -271,6 +271,29 @@ test('renders selectable tabs with favicon, title, close, and new tab controls',
   expect(dom).toContainEqual(expect.objectContaining({ className: 'SimpleBrowserNewTab', onClick: 'handleClickSimpleBrowserNewTab' }))
 })
 
+test('renders a history icon for history tabs without changing website favicons', () => {
+  const dom = GetSimpleBrowserVirtualDom.getSimpleBrowserVirtualDom(false, false, false, '', '', [], -1, [
+    { favicon: 'https://example.com/favicon.png', iframeSrc: 'https://example.com', title: 'Example' },
+    { favicon: '', iframeSrc: 'simple-browser-history://', title: 'History' },
+  ], 1)
+
+  const historyTabIndex = dom.findIndex((node) => node.className === 'SimpleBrowserTab SimpleBrowserTabSelected')
+  expect(dom.slice(historyTabIndex, historyTabIndex + 5)).toEqual([
+    expect.objectContaining({ className: 'SimpleBrowserTab SimpleBrowserTabSelected', childCount: 3 }),
+    { type: VirtualDomElements.Div, className: 'SimpleBrowserTabFaviconWrapper', childCount: 1 },
+    {
+      type: VirtualDomElements.Span,
+      className: 'SimpleBrowserTabFavicon SimpleBrowserTabHistoryFavicon',
+      ariaHidden: true,
+      childCount: 0,
+    },
+    { type: VirtualDomElements.Span, className: 'SimpleBrowserTabTitle', childCount: 1 },
+    { type: VirtualDomElements.Text, text: 'History', childCount: 0 },
+  ])
+  expect(dom).toContainEqual(expect.objectContaining({ src: 'https://example.com/favicon.png' }))
+  expect(dom).not.toContainEqual(expect.objectContaining({ className: 'SimpleBrowserTabFavicon SimpleBrowserTabFaviconFallback' }))
+})
+
 test('freezes tab sizing through the tab list style', () => {
   const dom = GetSimpleBrowserVirtualDom.getSimpleBrowserVirtualDom(
     false,

@@ -118,6 +118,14 @@
   width: 16px;
 }
 
+.SimpleBrowserTabHistoryFavicon {
+  background-color: currentColor;
+  mask-image: url(/icons/history.svg);
+  mask-position: center;
+  mask-repeat: no-repeat;
+  mask-size: 16px;
+}
+
 .SimpleBrowserTabAudio {
   align-items: center;
   background: transparent;
