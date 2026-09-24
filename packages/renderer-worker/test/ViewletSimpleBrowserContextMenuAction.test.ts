@@ -1,6 +1,7 @@
 import { beforeEach, expect, jest, test } from '@jest/globals'
 jest.unstable_mockModule('../src/parts/ElectronWebContentsViewFunctions/ElectronWebContentsViewFunctions.js', () => ({
   backward: jest.fn(),
+  passwords: jest.fn(),
   forward: jest.fn(),
   reload: jest.fn(),
   inspectElement: jest.fn(),
@@ -23,4 +24,13 @@ test('a delayed action targets its originating tab after selection changes', asy
 test('a closed originating tab cannot redirect an action', async () => {
   await handleContextMenuAction({ browserViewId: 18, tabs: [{ browserViewId: 18 }] }, 17, 'toggleDevTools')
   expect(functions.toggleDevTools).not.toHaveBeenCalled()
+})
+
+test('password actions cannot redirect to another or closed tab', async () => {
+  const state = { browserViewId: 18, tabs: [{ browserViewId: 17 }, { browserViewId: 18 }] }
+  await handleContextMenuAction(state, 17, 'passwords', ['fill'])
+  expect(functions.passwords).toHaveBeenCalledWith(17, 'fill')
+  jest.clearAllMocks()
+  await handleContextMenuAction({ browserViewId: 18, tabs: [{ browserViewId: 18 }] }, 17, 'passwords', ['fill'])
+  expect(functions.passwords).not.toHaveBeenCalled()
 })
