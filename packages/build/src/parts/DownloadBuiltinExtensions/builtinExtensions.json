@@ -103,8 +103,8 @@
   {
     "name": "builtin.remote-ssh",
     "repository": "github.com/lvce-editor/remote-ssh",
-    "version": "0.13.1",
-    "sha256": "2ac9c172217806f24e33798b525e2f52f18483b93a29b9367417cc33e8d85e0d",
+    "version": "0.13.2",
+    "sha256": "d5ff7d76d556067cdc736f2682bf0027622d52305c06b97d24fad339036ab880",
     "created": "2026-08-03"
   },
   {
@@ -258,8 +258,8 @@
   {
     "name": "builtin.media-preview",
     "repository": "github.com/lvce-editor/media-preview",
-    "version": "2.16.3",
-    "sha256": "f177d53beffb36686c8802a109cb0a8cf73499dc366d210cad26ab6a2e9263df",
+    "version": "2.16.4",
+    "sha256": "ea343ba474f86f2c07c9c60bae5691ea18349c0253adf1f72e74dfa6e13e4f06",
     "created": "2024-09-07"
   },
   {
