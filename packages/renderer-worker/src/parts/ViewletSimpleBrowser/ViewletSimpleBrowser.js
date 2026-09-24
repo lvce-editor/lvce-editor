@@ -31,6 +31,7 @@ import * as SimpleBrowserNewTabPage from '../SimpleBrowserNewTabPage/SimpleBrows
 import * as SimpleBrowserPageSnapshot from '../SimpleBrowserPageSnapshot/SimpleBrowserPageSnapshot.js'
 import * as SimpleBrowserPreferences from '../SimpleBrowserPreferences/SimpleBrowserPreferences.js'
 import * as SimpleBrowserSnapshot from '../SimpleBrowserSnapshot/SimpleBrowserSnapshot.js'
+import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as WhenExpression from '../WhenExpression/WhenExpression.js'
 
@@ -1404,11 +1405,16 @@ export const handleDidNavigate = async (state, browserViewId, value) => {
     await ElectronWebContentsViewFunctions.show(actualBrowserViewId)
     if (FocusState.get() === WhenExpression.FocusSimpleBrowser) await ElectronWebContentsViewFunctions.focus(actualBrowserViewId)
   }
+  const preserveAddress =
+    actualBrowserViewId === state.browserViewId &&
+    !state.isLoading &&
+    FocusState.get() === WhenExpression.FocusSimpleBrowserInput &&
+    ViewletStates.getFocusedInstanceByType(ViewletModuleId.SimpleBrowser) === state.uid
   const newState = updateTab(state, actualBrowserViewId, {
     canGoBack,
     canGoForward,
     iframeSrc: displayUrl,
-    inputValue: displayUrl,
+    inputValue: preserveAddress ? state.inputValue : displayUrl,
     isLoading: false,
     pageSnapshot: undefined,
   })
