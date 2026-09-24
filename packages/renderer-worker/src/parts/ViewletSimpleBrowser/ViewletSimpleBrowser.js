@@ -943,9 +943,10 @@ export const showOverlay = async (state, overlayId) => {
 export const afterRender = async (oldState, newState) => {
   if (oldState.fullWidth !== newState.fullWidth && newState.fullWidth) {
     await show(newState)
-    // Showing the native page can finish after the command palette acquired focus.
-    // Preserve that newer focus instead of blurring and dismissing the palette.
-    if (FocusState.get() !== WhenExpression.FocusQuickPickInput) {
+    // Rendering can finish after the user focused the palette or started editing.
+    // Observe the current DOM selection instead of restoring an older focus choice.
+    const addressSelection = await RendererProcess.invoke('Window.captureBrowserAddress', newState.uid)
+    if (!addressSelection && FocusState.get() !== WhenExpression.FocusQuickPickInput) {
       if (newState.fullWidthAddressSelection || !newState.iframeSrc) {
         await ElectronWindow.focus()
         await RendererProcess.invoke('Window.focusBrowserAddress', newState.uid, newState.fullWidthAddressSelection)
