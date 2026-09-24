@@ -489,8 +489,8 @@
   {
     "name": "builtin.language-features-json",
     "repository": "github.com/lvce-editor/language-features-json",
-    "version": "1.23.3",
-    "sha256": "7f64d44ade6721ebab4ae947951f698c8607c0c5fb19394e9b5b9d975d5bd5bb",
+    "version": "1.24.0",
+    "sha256": "7a792b321194d4cbd4e07b9d967f354f64cf87c6fba6195b29e6f8cde1b399b6",
     "created": "2024-02-28"
   },
   {
