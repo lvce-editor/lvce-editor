@@ -368,7 +368,9 @@ export const getWorkerName = async (uid) => {
   }
   const workerName = ComponentWorkerNames.getName(instance.factory, instance.moduleId)
   if (workerName) {
-    return workerName
+    const workers = await RendererProcess.invoke('Workers.getWorkers')
+    const worker = workers.find((item) => item.name === workerName)
+    return worker?.runtimeName ?? workerName
   }
   return globalThis.name
 }
