@@ -12,6 +12,7 @@ jest.unstable_mockModule('../src/parts/ExtensionManagementWorker/ExtensionManage
 const Platform = await import('../src/parts/Platform/Platform.js')
 const ComponentState = await import('../src/parts/ComponentState/ComponentState.js')
 const WorkerNames = await import('../src/parts/ComponentWorkerNames/ComponentWorkerNames.js')
+const RendererProcess = await import('../src/parts/RendererProcess/RendererProcess.js')
 const GetExtensionViews = await import('../src/parts/GetExtensionViews/GetExtensionViews.ts')
 const ExtensionManagementWorker = await import('../src/parts/ExtensionManagementWorker/ExtensionManagementWorker.js')
 
@@ -25,8 +26,12 @@ test('resolves worker ownership even when the displayed module name differs', as
   const factory = { create: () => {}, hasFunctionalRender: true }
   WorkerNames.registerViewlet(factory.create, 'explorer')
   WorkerNames.registerWorker('/explorerViewWorkerMain.js', 'Explorer Worker')
+  jest.mocked(RendererProcess.invoke).mockResolvedValue([
+    { id: 'worker-1', name: 'Explorer Worker', runtimeName: 'Explorer Worker [worker-1]' },
+  ] as any)
   ViewletStates.set(9, { factory, renderedState: { uid: 9 }, moduleId: 'Renamed Explorer', state: { uid: 9 } })
-  await expect(ComponentState.getWorkerName(9)).resolves.toBe('Explorer Worker')
+  await expect(ComponentState.getWorkerName(9)).resolves.toBe('Explorer Worker [worker-1]')
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Workers.getWorkers')
   expect(ComponentState.getComponents()[0].heapSnapshotAvailable).toBe(true)
 })
 
