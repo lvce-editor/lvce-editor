@@ -620,18 +620,21 @@ test('creates and selects an empty tab without allocating native content', async
   expect(ElectronWindow.focus).toHaveBeenCalledTimes(1)
 })
 
-test('workflow tab creation preserves page focus without scheduling address focus', async () => {
+test('workflow tab creation allocates and focuses the page without scheduling address focus', async () => {
   // @ts-ignore
   ElectronWebContentsView.createWebContentsView.mockResolvedValue(13)
   // @ts-ignore
   ElectronWebContentsViewFunctions.getStats.mockResolvedValue({ title: 'New Tab' })
   const state = { ...createTwoTabState(), focusAddressVersion: 3 }
 
-  const newState = await ViewletSimpleBrowser.createNewTab(state, false)
+  const newState = await ViewletSimpleBrowser.createNewTab(state, false, true)
+
+  expect(newState.browserViewId).toBe(13)
+  expect(ElectronWebContentsView.createWebContentsView).toHaveBeenCalledWith(0, state.uid)
 
   expect(newState.focusAddressVersion).toBe(3)
   expect(ElectronWindow.focus).not.toHaveBeenCalled()
-  expect(ElectronWebContentsViewFunctions.focus).not.toHaveBeenCalled()
+  expect(ElectronWebContentsViewFunctions.focus).toHaveBeenCalledWith(13)
 })
 
 test('updates open new tab pages when the color theme changes', async () => {

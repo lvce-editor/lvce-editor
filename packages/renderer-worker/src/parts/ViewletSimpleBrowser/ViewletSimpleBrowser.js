@@ -538,12 +538,12 @@ const switchToTab = async (state, initialTabs, selectedTabIndex) => {
   return activateTab(state, tabs, selectedTabIndex)
 }
 
-export const createNewTab = async (state, focusAddress = true) => {
+export const createNewTab = async (state, focusAddress = true, requiresNativeView = false) => {
   if (!state.tabsEnabled) {
     return state
   }
   const currentState = state.hasSuggestionsOverlay ? await closeSuggestions(state) : state
-  const tab = await createEmptyTab()
+  const tab = requiresNativeView ? await createUnloadedTab(currentState) : await createEmptyTab()
   const newState = await switchToTab(currentState, [...currentState.tabs, tab], currentState.tabs.length)
   if (!focusAddress) {
     return newState
