@@ -42,6 +42,7 @@ import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletMap from '../ViewletMap/ViewletMap.js'
 import * as ViewletManagerVisitor from '../ViewletManagerVisitor/ViewletManagerVisitor.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
+import * as UpdateDynamicFocusContext from '../UpdateDynamicFocusContext/UpdateDynamicFocusContext.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
@@ -2885,10 +2886,16 @@ const getActiveSideBarExtensionId = (state: LayoutState): string => {
 
 export const handleExtensionsChanged = async (state: LayoutState, extensionId?: string, disabled?: boolean): Promise<LayoutStateResult> => {
   const globalEventResult = await callGlobalEvent(state, 'handleExtensionsChanged')
+  // Workers have already queued these transactions. Commit them before an extension
+  // provider query can delay every subsequent direct render of the same views.
+  UpdateDynamicFocusContext.updateDynamicFocusContext(globalEventResult.commands)
+  if (globalEventResult.commands.length > 0) {
+    await RendererProcess.invoke('Viewlet.sendMultiple', globalEventResult.commands)
+  }
   const sourceControlBadgeResult = await refreshSourceControlBadgeCount(globalEventResult.newState)
   const extensionChangeResult = {
     newState: sourceControlBadgeResult.newState,
-    commands: [...globalEventResult.commands, ...sourceControlBadgeResult.commands],
+    commands: sourceControlBadgeResult.commands,
   }
   if (!disabled || !extensionId || getActiveSideBarExtensionId(extensionChangeResult.newState) !== extensionId) {
     return extensionChangeResult

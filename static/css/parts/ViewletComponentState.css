@@ -6,6 +6,8 @@
   height: 100%;
   overflow: auto;
   padding: 16px;
+  scrollbar-color: var(--EditorScrollBarBackground, rgba(57, 71, 71, 0.6)) transparent;
+  scrollbar-width: thin;
 }
 
 .ComponentStateHeader {

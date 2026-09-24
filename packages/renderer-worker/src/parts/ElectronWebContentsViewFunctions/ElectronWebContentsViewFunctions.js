@@ -92,3 +92,5 @@ export const getDomTree = (id) => {
 export const insertJavaScript = (id, code, userGesture = false) => {
   return EmbedsWorker.invoke('ElectronWebContentsView.insertJavaScript', id, code, userGesture)
 }
+
+export const passwords = (id, action) => EmbedsWorker.invoke('ElectronWebContentsView.passwords', id, action)

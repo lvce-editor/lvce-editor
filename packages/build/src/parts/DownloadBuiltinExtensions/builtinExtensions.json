@@ -103,8 +103,8 @@
   {
     "name": "builtin.remote-ssh",
     "repository": "github.com/lvce-editor/remote-ssh",
-    "version": "0.13.1",
-    "sha256": "2ac9c172217806f24e33798b525e2f52f18483b93a29b9367417cc33e8d85e0d",
+    "version": "0.13.2",
+    "sha256": "d5ff7d76d556067cdc736f2682bf0027622d52305c06b97d24fad339036ab880",
     "created": "2026-08-03"
   },
   {
@@ -244,8 +244,8 @@
   {
     "name": "builtin.heap-snapshot-viewer",
     "repository": "github.com/lvce-editor/heap-snapshot-viewer",
-    "version": "1.26.1",
-    "sha256": "d99f494957a8c8f35e893e1d76fbea23e6ebabacff7703469b111ef08ad200a9",
+    "version": "1.27.1",
+    "sha256": "557b54c613adc69dd8106524742234d04b1ef6535a630dfb1615e2d8aa45432c",
     "created": "2024-08-09"
   },
   {
@@ -258,8 +258,8 @@
   {
     "name": "builtin.media-preview",
     "repository": "github.com/lvce-editor/media-preview",
-    "version": "2.16.0",
-    "sha256": "58881f066bd920cafded257d06db59539ac766207c468029f5685628a8dafcd5",
+    "version": "2.16.4",
+    "sha256": "ea343ba474f86f2c07c9c60bae5691ea18349c0253adf1f72e74dfa6e13e4f06",
     "created": "2024-09-07"
   },
   {
@@ -370,8 +370,8 @@
   {
     "name": "builtin.language-basics-python",
     "repository": "github.com/lvce-editor/language-basics-python",
-    "version": "0.16.1",
-    "sha256": "1c4f3a10c89447c43e0d029d098b35443c8c676d7d7111512251b98044d6ea8a",
+    "version": "0.16.2",
+    "sha256": "e74b6837cbdd39e59aa23e900ee191bed631c6511cb75d808b95c5eaead1c1cf",
     "created": "2022-06-16"
   },
   {
@@ -489,8 +489,8 @@
   {
     "name": "builtin.language-features-json",
     "repository": "github.com/lvce-editor/language-features-json",
-    "version": "1.23.2",
-    "sha256": "84b6c16f8247df1467af138ce970a26b6424cd8ed3298ee3c0e039c20470ca4c",
+    "version": "1.23.3",
+    "sha256": "7f64d44ade6721ebab4ae947951f698c8607c0c5fb19394e9b5b9d975d5bd5bb",
     "created": "2024-02-28"
   },
   {

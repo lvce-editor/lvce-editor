@@ -158,6 +158,7 @@ const refreshGutterDecorationsAll = Object.assign(() => EditorWorker.invoke('Edi
 export const getCommands = async () => {
   const commandIds = await EditorWorker.invoke('Editor.getCommandIds')
   Object.assign(Commands, WrapEditorCommands.wrapEditorCommands(commandIds), WrapEditorCommands.wrapEditorCommands(subWidgetCommandIds), {
+    'Editor.save': Object.assign(WrapEditorCommands.wrapEditorCommand('Editor.save'), { acceptsTargetUid: true }),
     __renderPending: renderPending,
     handleFocus,
     handleUriChange,
