@@ -5,7 +5,7 @@ const executeViewletCommand = jest.fn()
 const getViewletState = jest.fn((_key: string) => ({ previewId: 71 }))
 const focusSetFocus = jest.fn()
 const rendererProcessInvoke = jest.fn()
-const terminalWorkerInvoke = jest.fn()
+const terminalWorkerInvoke = jest.fn<(...args: unknown[]) => Promise<void>>()
 
 beforeEach(() => {
   executeViewletCommand.mockClear()
