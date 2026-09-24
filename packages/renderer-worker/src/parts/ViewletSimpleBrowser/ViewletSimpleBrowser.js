@@ -122,7 +122,8 @@ const isHistoryUrl = (url) => typeof url === 'string' && url.startsWith(simpleBr
 
 const isHistoryTab = (tab) => isHistoryUrl(tab?.iframeSrc)
 
-const createHistoryTab = () => createTab({ browserViewId: 0, iframeSrc: simpleBrowserHistoryUrl, inputValue: simpleBrowserHistoryUrl, title: 'History' })
+const createHistoryTab = () =>
+  createTab({ browserViewId: 0, iframeSrc: simpleBrowserHistoryUrl, inputValue: simpleBrowserHistoryUrl, title: 'History' })
 
 const updateTab = (state, browserViewId, updates) => {
   const tabIndex = state.tabs.findIndex((tab) => tab.browserViewId === browserViewId)
@@ -1399,7 +1400,8 @@ export const handleKeyBinding = async (state, browserViewId, keyBinding) => {
 export const handleDidNavigate = async (state, browserViewId, value) => {
   const [actualBrowserViewId, url] = parseWebContentsEvent(state, browserViewId, value)
   const displayUrl = SimpleBrowserNewTabPage.toDisplayUrl(url)
-  const { canGoBack, canGoForward } = await ElectronWebContentsViewFunctions.getStats(actualBrowserViewId)
+  const { canGoBack, canGoForward, isFocused, url: currentUrl } = await ElectronWebContentsViewFunctions.getStats(actualBrowserViewId)
+  if (currentUrl && currentUrl !== url) return state
   const tab = state.tabs.find((tab) => tab.browserViewId === actualBrowserViewId)
   if (tab?.pageSnapshot && actualBrowserViewId === state.browserViewId && visibleBrowserUids.has(state.uid)) {
     await ElectronWebContentsViewFunctions.show(actualBrowserViewId)
@@ -1408,6 +1410,7 @@ export const handleDidNavigate = async (state, browserViewId, value) => {
   const preserveAddress =
     actualBrowserViewId === state.browserViewId &&
     !state.isLoading &&
+    !isFocused &&
     FocusState.get() === WhenExpression.FocusSimpleBrowserInput &&
     ViewletStates.getFocusedInstanceByType(ViewletModuleId.SimpleBrowser) === state.uid
   const newState = updateTab(state, actualBrowserViewId, {

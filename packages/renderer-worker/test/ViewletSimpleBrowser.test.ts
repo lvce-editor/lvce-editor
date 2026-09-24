@@ -2640,3 +2640,29 @@ test.each([true, false])('same-document navigation preserves only the focused br
   expect(result.iframeSrc).toBe('https://one.example/pushed')
   expect(result.inputValue).toBe(ownsFocus ? 'unfinished address' : 'https://one.example/pushed')
 })
+
+test('late navigation events cannot replace a newer native page or finish its pending load', async () => {
+  const state = { ...createTabsState(), inputValue: 'https://one.example/new', iframeSrc: 'https://one.example/new', isLoading: true }
+  jest.mocked(ElectronWebContentsViewFunctions.getStats).mockResolvedValueOnce({
+    canGoBack: true,
+    canGoForward: false,
+    url: 'https://one.example/new',
+  })
+  const result = await ViewletSimpleBrowser.handleDidNavigate(state, state.browserViewId, 'https://one.example/old')
+  expect(result).toBe(state)
+})
+
+test('native page focus overrides stale address focus context during navigation', async () => {
+  const ViewletStates = await import('../src/parts/ViewletStates/ViewletStates.js')
+  const state = { ...createTabsState(), uid: 7, inputValue: 'https://one.example/old', isLoading: false }
+  FocusState.set(WhenExpression.FocusSimpleBrowserInput)
+  ViewletStates.setFocusedInstanceByType(7, ViewletModuleId.SimpleBrowser)
+  jest.mocked(ElectronWebContentsViewFunctions.getStats).mockResolvedValueOnce({
+    canGoBack: true,
+    canGoForward: false,
+    isFocused: true,
+    url: 'https://one.example/new',
+  })
+  const result = await ViewletSimpleBrowser.handleDidNavigate(state, state.browserViewId, 'https://one.example/new')
+  expect(result.inputValue).toBe('https://one.example/new')
+})
