@@ -1,9 +1,12 @@
-import { beforeEach, expect, jest, test } from '@jest/globals'
+import { afterEach, beforeEach, expect, jest, test } from '@jest/globals'
+
+afterEach(() => jest.useRealTimers())
 
 const frameCallbacks: Array<(timestamp: number) => void> = []
 let currentTime = 0
 
 jest.unstable_mockModule('../src/parts/RequestAnimationFrame/RequestAnimationFrame.js', () => ({
+  cancelAnimationFrame: jest.fn(),
   requestAnimationFrame: jest.fn((callback: (timestamp: number) => void) => {
     frameCallbacks.push(callback)
   }),
@@ -242,4 +245,23 @@ test('orders invokeAndTransfer after pending render work', async () => {
   expect(rpc.invoke).toHaveBeenCalledTimes(1)
   expect(rpc.invokeAndTransfer).toHaveBeenCalledWith('IpcParent.create', {})
   expect(rpc.invoke.mock.invocationCallOrder[0]).toBeLessThan(rpc.invokeAndTransfer.mock.invocationCallOrder[0])
+})
+
+test('a suspended animation frame cannot block rendering and following RPCs', async () => {
+  jest.useFakeTimers()
+  const frame = RendererFrameScheduler.sendMultiple([['Viewlet.send', 1, 'startup']])
+  const css = RendererFrameScheduler.invoke('Css.addCssStyleSheet', 'title-bar', '.TitleBar {}')
+  await flushMicrotasks()
+  const lateFrame = frameCallbacks.shift()!
+  currentTime = 100
+  await jest.advanceTimersByTimeAsync(100)
+  expect(rpc.invoke.mock.calls).toEqual([
+    ['Viewlet.sendMultiple', [['Viewlet.send', 1, 'startup']]],
+    ['Css.addCssStyleSheet', 'title-bar', '.TitleBar {}'],
+  ])
+  await Promise.all([frame, css])
+  lateFrame(100)
+  await flushMicrotasks()
+  expect(rpc.invoke).toHaveBeenCalledTimes(2)
+  expect(frameCallbacks).toHaveLength(0)
 })
