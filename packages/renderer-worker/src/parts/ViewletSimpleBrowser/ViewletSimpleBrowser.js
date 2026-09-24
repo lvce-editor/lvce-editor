@@ -320,7 +320,7 @@ const getId = (idPart) => {
 }
 
 export const loadContent = async (state, savedState) => {
-  const { x, y, width, height, uri, uid } = state
+  const { x, y, width, height, uri } = state
   const idPart = uri.slice('simple-browser://'.length)
   const id = getId(idPart)
   const savedTabs = getTabsFromSavedState(savedState)
