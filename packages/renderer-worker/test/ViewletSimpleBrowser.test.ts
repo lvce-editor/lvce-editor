@@ -2696,3 +2696,16 @@ test('entering full width preserves a command palette before its asynchronous fo
     delete ViewletStates.state.instances[palette.uid]
   }
 })
+
+
+test('entering full width preserves a palette whose module is still loading', async () => {
+  const QuickPickOpening = await import('../src/parts/QuickPickOpening/QuickPickOpening.js')
+  jest.mocked(ElectronWebContentsViewFunctions.show).mockResolvedValue(undefined as never)
+  jest.mocked(ElectronWebContentsViewFunctions.focus).mockResolvedValue(undefined as never)
+  jest.mocked(RendererProcess.invoke).mockResolvedValue(undefined as never)
+  const state = { ...ViewletSimpleBrowser.create(7), browserViewId: 12, iframeSrc: 'https://example.com' }
+  await QuickPickOpening.run(undefined, async () => {
+    await ViewletSimpleBrowser.afterRender(state, { ...state, fullWidth: true })
+    expect(ElectronWebContentsViewFunctions.focus).not.toHaveBeenCalled()
+  })
+})

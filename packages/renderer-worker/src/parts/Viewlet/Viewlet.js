@@ -1,3 +1,4 @@
+import * as QuickPickOpening from '../QuickPickOpening/QuickPickOpening.js'
 import * as Assert from '../Assert/Assert.ts'
 import * as ApplicationRegistry from '../ApplicationRegistry/ApplicationRegistry.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.js'
@@ -454,7 +455,14 @@ export const openWidgetForApplication = (applicationId, moduleId, ...args) => {
   return openWidgetWithLayout(ViewletStates.getState(ViewletModuleId.Layout, applicationId), moduleId, ...args)
 }
 
-const openWidgetWithLayout = async (layout, moduleId, ...args) => {
+const openWidgetWithLayout = (layout, moduleId, ...args) => {
+  if (moduleId === ViewletModuleId.QuickPick) {
+    return QuickPickOpening.run(layout?.applicationId, () => loadWidgetWithLayout(layout, moduleId, ...args))
+  }
+  return loadWidgetWithLayout(layout, moduleId, ...args)
+}
+
+const loadWidgetWithLayout = async (layout, moduleId, ...args) => {
   const applicationId = moduleId === ViewletModuleId.QuickPick || moduleId === ViewletModuleId.Dialog ? layout?.applicationId : undefined
   const existingInstance = ViewletStates.getInstance(moduleId, applicationId)
   const type = args[0]

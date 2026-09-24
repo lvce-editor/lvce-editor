@@ -25,6 +25,7 @@ import * as KeyBindings from '../KeyBindings/KeyBindings.js'
 import * as KeyBindingsState from '../KeyBindingsState/KeyBindingsState.js'
 import * as KeyModifier from '../KeyModifier/KeyModifier.js'
 import * as Preferences from '../Preferences/Preferences.js'
+import * as QuickPickOpening from '../QuickPickOpening/QuickPickOpening.js'
 import * as PrettyBytes from '../PrettyBytes/PrettyBytes.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SimpleBrowserFavicon from '../SimpleBrowserFavicon/SimpleBrowserFavicon.js'
@@ -945,10 +946,11 @@ export const afterRender = async (oldState, newState) => {
   if (oldState.fullWidth !== newState.fullWidth && newState.fullWidth) {
     await show(newState)
     // Showing the native page can finish after the command palette acquired focus.
-    // The palette instance exists before its asynchronous focus event arrives.
-    // Preserve it throughout that interval instead of blurring and dismissing it.
-    const palette = ViewletStates.getInstance(ViewletModuleId.QuickPick, ApplicationRegistry.getOwner(newState.uid))
-    if (!palette && FocusState.get() !== WhenExpression.FocusQuickPickInput) {
+    // Cover module loading, instance creation, and the asynchronous focus event.
+    // Preserve the opening palette throughout those intervals.
+    const applicationId = ApplicationRegistry.getOwner(newState.uid)
+    const palette = ViewletStates.getInstance(ViewletModuleId.QuickPick, applicationId)
+    if (!QuickPickOpening.isOpening(applicationId) && !palette && FocusState.get() !== WhenExpression.FocusQuickPickInput) {
       if (newState.fullWidthAddressSelection || !newState.iframeSrc) {
         await ElectronWindow.focus()
         await RendererProcess.invoke('Window.focusBrowserAddress', newState.uid, newState.fullWidthAddressSelection)
