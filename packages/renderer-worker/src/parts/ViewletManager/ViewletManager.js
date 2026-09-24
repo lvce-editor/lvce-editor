@@ -870,6 +870,22 @@ const loadInternal = async (viewlet, focus, restore, restoreState) => {
       moduleId,
     }
     ViewletStates.set(viewletUid, instance)
+    const pendingResize = ViewletStates.takePendingResize(viewletUid)
+    const resizeFn = module.Commands?.resize || module.resize
+    if (pendingResize && resizeFn) {
+      if (module.hasFunctionalResize) {
+        const resizedState = await resizeFn(instance.state, pendingResize)
+        instance.state = resizedState
+        if (module.resizeEffect) {
+          await module.resizeEffect(resizedState)
+        }
+      } else {
+        const result = await resizeFn(instance.state, pendingResize)
+        instance.state = result.newState
+        extraCommands.push(...result.commands)
+      }
+      newState = instance.state
+    }
     if (viewlet.id === ViewletModuleId.Layout && applicationId === undefined) {
       ViewletStates.set(ViewletModuleId.Layout, instance)
     }

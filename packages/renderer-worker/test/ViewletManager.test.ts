@@ -49,6 +49,7 @@ const RendererProcess = await import('../src/parts/RendererProcess/RendererProce
 
 const Command = await import('../src/parts/Command/Command.js')
 const ViewletManager = await import('../src/parts/ViewletManager/ViewletManager.js')
+const Viewlet = await import('../src/parts/Viewlet/Viewlet.js')
 const ViewletExtensionViewRender = await import('../src/parts/ViewletExtensionView/ViewletExtensionViewRender.ts')
 const ViewletLayout = await import('../src/parts/ViewletLayout/ViewletLayout.ipc.js')
 
@@ -981,6 +982,29 @@ test('load - race condition', async () => {
   // @ts-ignore
   expect(mockModule.loadContent).toHaveBeenCalledWith({ uid: 1, x: 0, version: 11 }, undefined)
   expect(mockModule.contentLoaded).not.toHaveBeenCalled()
+})
+
+test('load applies the latest resize received before the viewlet instance is registered', async () => {
+  const resizeEffect = jest.fn()
+  const mockModule = {
+    create: jest.fn((uid: number) => ({ uid, x: 0, y: 0, width: 0, height: 0 })),
+    hasFunctionalResize: true,
+    loadContent: jest.fn(async (state: { uid: number }) => {
+      await Viewlet.resize(state.uid, { x: 10, y: 20, width: 300, height: 200 })
+      await Viewlet.resize(state.uid, { x: 40, y: 50, width: 800, height: 600 })
+      return { ...state, browserViewId: 1 }
+    }),
+    resize: jest.fn((state: { browserViewId?: number }, dimensions: { x: number; y: number; width: number; height: number }) => ({ ...state, ...dimensions })),
+    resizeEffect,
+  }
+  const state = ViewletManager.create(async () => mockModule, 'test', 0, '', 0, 0, 0, 0)
+
+  await ViewletManager.load(state)
+
+  expect(mockModule.resize).toHaveBeenCalledTimes(1)
+  expect(mockModule.resize).toHaveBeenCalledWith(expect.objectContaining({ browserViewId: 1 }), { x: 40, y: 50, width: 800, height: 600 })
+  expect(resizeEffect).toHaveBeenCalledWith(expect.objectContaining({ x: 40, y: 50, width: 800, height: 600 }))
+  expect(Viewlet.getState(1)).toMatchObject({ x: 40, y: 50, width: 800, height: 600 })
 })
 
 test('load should mark the loaded instance as focused for its module type', async () => {
