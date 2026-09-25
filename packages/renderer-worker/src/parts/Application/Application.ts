@@ -260,8 +260,13 @@ const disposeApplication = async (applicationId: string): Promise<void> => {
       }
     }
   }
-  ApplicationRegistry.remove(applicationId)
-  ApplicationFileSystem.dispose(applicationId)
+  for (const cleanup of [ApplicationRegistry.remove, ApplicationFileSystem.dispose]) {
+    try {
+      await cleanup(applicationId)
+    } catch (error) {
+      errors.push(error)
+    }
+  }
   try {
     await ExtensionManagementWorker.invoke('Extensions.disposeApplication', applicationId)
   } catch (error) {
