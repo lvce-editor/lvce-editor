@@ -478,17 +478,19 @@ test('bundleCss preserves the extension runtime status layout', async () => {
   align-items: baseline;
   column-gap: 24px;
   contain: content;
-  display: grid;
-  grid-template-columns: max-content minmax(0, 1fr);
+  display: flex;
+  flex-wrap: wrap;
   margin: 0;
   max-width: 640px;
   row-gap: 12px;
 }`)
     expect(css).toContain(`.RuntimeStatusDefinitionList > dt {
   color: var(--DescriptionForeground, color-mix(in srgb, var(--WorkbenchForeground) 76%, transparent));
+  flex: 0 0 140px;
   font-weight: 600;
 }`)
     expect(css).toContain(`.RuntimeStatusDefinitionList > dd {
+  flex: 1 1 calc(100% - 164px);
   margin: 0;
   min-width: 0;
   overflow-wrap: anywhere;
