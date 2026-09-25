@@ -213,6 +213,11 @@ const getDom = (state) => {
   )
 }
 
+export const getComponentDom = (state) => {
+  const dom = getDom(state)
+  return dom.map((node) => (node.name === InputName.SimpleBrowserAddress ? { ...node, value: state.inputValue } : node))
+}
+
 const renderDom = {
   isEqual(oldState, newState) {
     return (
