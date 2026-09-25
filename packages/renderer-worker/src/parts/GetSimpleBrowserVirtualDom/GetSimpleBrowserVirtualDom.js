@@ -544,7 +544,7 @@ export const getSimpleBrowserVirtualDom = (
       {
         type: VirtualDomElements.Form,
         className: 'SimpleBrowserLoginForm',
-        'data-request-id': loginChallenge.requestId,
+        'data-requestId': loginChallenge.requestId,
         childCount: 3,
         onSubmit: 'handle-simple-browser-login-submit',
         onKeyDown: 'handle-simple-browser-login-keydown',
@@ -589,7 +589,7 @@ export const getSimpleBrowserVirtualDom = (
         className: 'Button ButtonSecondary',
         inputType: 'button',
         value: 'Cancel',
-        'data-request-id': loginChallenge.requestId,
+        'data-requestId': loginChallenge.requestId,
         onClick: 'handle-simple-browser-login-cancel',
         childCount: 0,
       },
