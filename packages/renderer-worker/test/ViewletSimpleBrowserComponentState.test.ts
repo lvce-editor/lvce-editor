@@ -9,6 +9,13 @@ test('rejects changing the component uid', () => {
   expect(() => ComponentState.setComponentState({ uid: 1 }, { uid: 2 })).toThrow('SimpleBrowser state uid must remain 1')
 })
 
+test('keeps active authentication requests out of persisted component state', () => {
+  const state = { uid: 1, loginChallenges: [{ requestId: '12:1', host: 'example.com' }] }
+
+  expect(ComponentState.getComponentState(state)).toEqual({ uid: 1, loginChallenges: [] })
+  expect(state.loginChallenges).toHaveLength(1)
+})
+
 test('returns the current rendered Simple Browser DOM', () => {
   const dom = ComponentState.getComponentDom({
     canGoBack: false,
