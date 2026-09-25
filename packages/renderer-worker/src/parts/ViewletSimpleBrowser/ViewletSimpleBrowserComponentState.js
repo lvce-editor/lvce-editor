@@ -1,3 +1,7 @@
+import { getComponentDom } from './ViewletSimpleBrowserRender.js'
+
+export { getComponentDom }
+
 export const getComponentState = (state) => state
 
 export const setComponentState = (currentState, state) => {

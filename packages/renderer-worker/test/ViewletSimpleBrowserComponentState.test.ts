@@ -8,3 +8,25 @@ test.each([null, [], 'invalid', 42])('rejects non-object state %p', (state) => {
 test('rejects changing the component uid', () => {
   expect(() => ComponentState.setComponentState({ uid: 1 }, { uid: 2 })).toThrow('SimpleBrowser state uid must remain 1')
 })
+
+test('returns the current rendered Simple Browser DOM', () => {
+  const dom = ComponentState.getComponentDom({
+    canGoBack: false,
+    canGoForward: false,
+    chromeTheme: 'light',
+    history: [],
+    historySearchValue: '',
+    inputValue: 'https://example.com/current',
+    isLoading: false,
+    selectedTabIndex: 0,
+    snapshot: '',
+    suggestions: [],
+    selectedSuggestionIndex: -1,
+    tabs: [],
+    tabsEnabled: true,
+    audioIndicatorEnabled: true,
+  })
+
+  expect(dom).not.toHaveLength(0)
+  expect(JSON.stringify(dom)).toContain('https://example.com/current')
+})
