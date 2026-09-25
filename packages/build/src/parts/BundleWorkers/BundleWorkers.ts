@@ -6,6 +6,7 @@ import * as Copy from '../Copy/Copy.ts'
 import * as JsonFile from '../JsonFile/JsonFile.ts'
 import * as Logger from '../Logger/Logger.ts'
 import * as Path from '../Path/Path.ts'
+import * as PatchDialogWorkerProductName from '../PatchDialogWorkerProductName/PatchDialogWorkerProductName.ts'
 import * as ValidateRendererProcessArtifacts from '../ValidateRendererProcessArtifacts/ValidateRendererProcessArtifacts.ts'
 
 const workersJsonPath = 'packages/renderer-worker/src/parts/Workers/Workers.json'
@@ -26,7 +27,7 @@ const getWorkerSourcePath = (defaultPath) => {
   return ''
 }
 
-const copyWorkers = async ({ toRoot, workers }) => {
+const copyWorkers = async ({ product, toRoot, workers }) => {
   for (const worker of workers) {
     if (worker.id === 'rendererWorker') {
       continue
@@ -44,6 +45,9 @@ const copyWorkers = async ({ toRoot, workers }) => {
       from,
       to: Path.join(toRoot, stripLeadingSlash(productionPath)),
     })
+    if (worker.id === 'dialogWorker') {
+      await PatchDialogWorkerProductName.patchDialogWorkerProductName({ product, toRoot })
+    }
   }
 }
 
@@ -77,7 +81,7 @@ export const bundleWorkers = async ({ commitHash, platform, assetDir, version, d
     ignore: ['static'],
   })
 
-  await copyWorkers({ toRoot, workers })
+  await copyWorkers({ product, toRoot, workers })
   await BundleBuiltinSettings.bundleBuiltinSettings({ toRoot, workers })
 
   await Copy.copy({
