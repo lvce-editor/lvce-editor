@@ -129,7 +129,7 @@ test('renders an HTTP authentication prompt with a masked password field', () =>
   expect(dom[0].childCount).toBe(3)
   expect(dom).toContainEqual(expect.objectContaining({ className: 'SimpleBrowserLoginDialog', role: 'dialog', ariaModal: true }))
   expect(dom).toContainEqual(expect.objectContaining({ className: 'InputBox SimpleBrowserLoginInput', inputType: 'password', name: 'password' }))
-  expect(dom).toContainEqual(expect.objectContaining({ 'data-request-id': '12:1', onSubmit: 'handle-simple-browser-login-submit' }))
+  expect(dom).toContainEqual(expect.objectContaining({ 'data-requestId': '12:1', onSubmit: 'handle-simple-browser-login-submit' }))
 })
 
 test('renders the empty tab landing page in the view dom', () => {
