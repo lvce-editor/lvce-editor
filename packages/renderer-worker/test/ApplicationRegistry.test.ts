@@ -105,3 +105,13 @@ test('failed operations do not keep application teardown pending', async () => {
   ApplicationRegistry.close('source')
   await ApplicationRegistry.waitForOperations('source')
 })
+
+test('replacing and disposing editor snapshots removes obsolete storage entries', async () => {
+  ApplicationRegistry.create(source)
+  await ApplicationRegistry.setSavedState('source', 'Editor', { lines: ['first document'] })
+  await ApplicationRegistry.setSavedState('source', 'Editor', { lines: ['replacement document'] })
+  expect(stored.size).toBe(1)
+  expect(await ApplicationRegistry.getSavedState('source', 'Editor')).toEqual({ lines: ['replacement document'] })
+  await ApplicationRegistry.remove('source')
+  expect(stored.size).toBe(0)
+})
