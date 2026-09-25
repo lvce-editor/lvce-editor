@@ -56,6 +56,7 @@ const createNewTabKeyBinding = KeyModifier.CtrlCmd | KeyCode.KeyT
 const focusNextTabKeyBinding = KeyModifier.CtrlCmd | KeyCode.Tab
 const focusPreviousTabKeyBinding = KeyModifier.CtrlCmd | KeyModifier.Shift | KeyCode.Tab
 const openHistoryKeyBinding = KeyModifier.CtrlCmd | KeyCode.KeyH
+const loginOverlayId = 'login'
 export const simpleBrowserHistoryUrl = 'simple-browser-history://'
 const toggleDevToolsKeyBinding = KeyModifier.CtrlCmd | KeyModifier.Shift | KeyCode.KeyI
 const focusAddressKeyBinding = KeyModifier.CtrlCmd | KeyCode.KeyL
@@ -203,6 +204,7 @@ export const create = (id, uri, x, y, width, height) => {
     selectedSuggestionIndex: -1,
     suggestions: [],
     overlayIds: [],
+    loginChallenges: [],
     snapshot: '',
     suggestionsEnabled: false,
     searchHistory: [],
@@ -718,6 +720,18 @@ export const focusPreviousTab = (state) => {
   return selectTab(state, (state.selectedTabIndex - 1 + state.tabs.length) % state.tabs.length)
 }
 
+const removeLoginChallenges = async (state, predicate, cancel = true) => {
+  const challenges = state.loginChallenges || []
+  const removed = challenges.filter(predicate)
+  if (removed.length === 0) return state
+  if (cancel) {
+    await Promise.all(removed.map((challenge) => ElectronWebContentsViewFunctions.cancelLogin(challenge.requestId)))
+  }
+  const loginChallenges = challenges.filter((challenge) => !predicate(challenge))
+  const nextState = { ...state, loginChallenges }
+  return loginChallenges.length === 0 ? hideOverlay(nextState, loginOverlayId) : nextState
+}
+
 const closeTabInternal = async (state, index, disposeWebContentsView) => {
   if (!state.tabsEnabled) {
     return state
@@ -727,8 +741,9 @@ const closeTabInternal = async (state, index, disposeWebContentsView) => {
     return state
   }
   if (tabIndex === state.selectedTabIndex) BrowserSuggestionRequests.cancel(state.uid)
-  const currentState = tabIndex === state.selectedTabIndex && state.hasSuggestionsOverlay ? await closeSuggestions(state) : state
+  let currentState = tabIndex === state.selectedTabIndex && state.hasSuggestionsOverlay ? await closeSuggestions(state) : state
   const tab = currentState.tabs[tabIndex]
+  currentState = await removeLoginChallenges(currentState, (challenge) => Number(challenge.browserViewId) === Number(tab.browserViewId))
   const closedTabs = [...currentState.closedTabs, { iframeSrc: tab.iframeSrc, title: tab.title, index: tabIndex }]
   const closedState = { ...currentState, closedTabs }
   if (currentState.tabs.length === 1) {
@@ -775,6 +790,7 @@ export const closeTab = (state, index) => {
 }
 
 export const handleBrowserViewDestroyed = async (state, browserViewId) => {
+  state = await removeLoginChallenges(state, (challenge) => Number(challenge.browserViewId) === Number(browserViewId), false)
   const tabIndex = state.tabs.findIndex((tab) => tab.browserViewId === Number(browserViewId))
   if (tabIndex === -1) {
     return state
@@ -845,7 +861,9 @@ const closeTabsByIndex = async (state, indexes, preferredTabIndex) => {
   const indexesToClose = new Set(indexes)
   const selectedTabWillClose = indexesToClose.has(oldSelectedTabIndex)
   if (selectedTabWillClose) BrowserSuggestionRequests.cancel(state.uid)
-  const currentState = selectedTabWillClose && hasSuggestionsOverlay ? await closeSuggestions(state) : state
+  let currentState = selectedTabWillClose && hasSuggestionsOverlay ? await closeSuggestions(state) : state
+  const closingBrowserViewIds = new Set(indexes.map((index) => currentState.tabs[index]?.browserViewId).filter(Boolean))
+  currentState = await removeLoginChallenges(currentState, (challenge) => closingBrowserViewIds.has(challenge.browserViewId))
   const { browserViewId, tabs: currentTabs } = currentState
   const preferredBrowserViewId = currentTabs[preferredTabIndex]?.browserViewId
   const tabsToClose = currentTabs.filter((tab, index) => indexesToClose.has(index))
@@ -943,6 +961,15 @@ export const showOverlay = async (state, overlayId) => {
 }
 
 export const afterRender = async (oldState, newState) => {
+  const oldLoginRequestId = oldState.loginChallenges?.[0]?.requestId
+  const newLoginRequestId = newState.loginChallenges?.[0]?.requestId
+  if (newLoginRequestId && oldLoginRequestId !== newLoginRequestId) {
+    await Promise.all([
+      RendererProcess.invoke('Viewlet.setValueByName', newState.uid, 'username', ''),
+      RendererProcess.invoke('Viewlet.setValueByName', newState.uid, 'password', ''),
+      RendererProcess.invoke('Viewlet.focusElementByName', newState.uid, 'username'),
+    ])
+  }
   if (oldState.fullWidth !== newState.fullWidth && newState.fullWidth) {
     await show(newState)
     // Showing the native page can finish after the command palette acquired focus.
@@ -1344,15 +1371,55 @@ export const go = async (state) => {
   return navigate(newState, newState.inputValue)
 }
 
-export const handleWillNavigate = (state, browserViewId, value) => {
+export const handleWillNavigate = async (state, browserViewId, value) => {
   const [actualBrowserViewId, url] = parseWebContentsEvent(state, browserViewId, value)
-  return updateTab(state, actualBrowserViewId, {
+  const clearedState = await removeLoginChallenges(state, (challenge) => Number(challenge.browserViewId) === Number(actualBrowserViewId))
+  return updateTab(clearedState, actualBrowserViewId, {
     favicon: '',
     iframeSrc: SimpleBrowserNewTabPage.toDisplayUrl(url),
     isAudioPlaying: false,
     isLoading: true,
   })
 }
+
+export const handleLogin = async (state, browserViewId, challenge) => {
+  const actualBrowserViewId = Number(browserViewId)
+  if (!state.tabs.some((tab) => Number(tab.browserViewId) === actualBrowserViewId)) {
+    await ElectronWebContentsViewFunctions.cancelLogin(challenge.requestId)
+    return state
+  }
+  const loginChallenges = state.loginChallenges || []
+  if (loginChallenges.some((pending) => pending.requestId === challenge.requestId)) return state
+  const shouldShowOverlay = loginChallenges.length === 0
+  const nextState = {
+    ...state,
+    loginChallenges: [...loginChallenges, { ...challenge, browserViewId: actualBrowserViewId }],
+  }
+  return shouldShowOverlay ? showOverlay(nextState, loginOverlayId) : nextState
+}
+
+const settleLogin = async (state, requestId, credentials) => {
+  const challenges = state.loginChallenges || []
+  const challenge = challenges.find((pending) => pending.requestId === requestId)
+  if (!challenge) return state
+  if (credentials) {
+    await ElectronWebContentsViewFunctions.acceptLogin(requestId, credentials.username, credentials.password)
+  } else {
+    await ElectronWebContentsViewFunctions.cancelLogin(requestId)
+  }
+  const loginChallenges = challenges.filter((pending) => pending.requestId !== requestId)
+  const nextState = { ...state, loginChallenges }
+  return loginChallenges.length === 0 ? hideOverlay(nextState, loginOverlayId) : nextState
+}
+
+export const submitLogin = (state, requestId, username, password) => {
+  if (!username || !password) return state
+  return settleLogin(state, requestId, { username, password })
+}
+
+export const cancelLogin = (state, requestId) => settleLogin(state, requestId, undefined)
+
+export const cancelLoginOnEscape = (state, requestId, key) => (key === 'Escape' ? cancelLogin(state, requestId) : state)
 
 export const handleFocusIn = (state, name) => {
   const focusKey =

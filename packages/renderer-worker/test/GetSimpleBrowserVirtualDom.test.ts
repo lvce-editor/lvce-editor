@@ -101,6 +101,37 @@ test('names the address input so focus can be restored after rendering', () => {
   )
 })
 
+test('renders an HTTP authentication prompt with a masked password field', () => {
+  const dom = GetSimpleBrowserVirtualDom.getSimpleBrowserVirtualDom(
+    false,
+    false,
+    false,
+    'https://example.com',
+    '',
+    [],
+    -1,
+    [],
+    0,
+    true,
+    true,
+    [],
+    undefined,
+    -1,
+    false,
+    'light',
+    undefined,
+    false,
+    [],
+    '',
+    { host: 'example.com', realm: 'Members', requestId: '12:1' },
+  )
+
+  expect(dom[0].childCount).toBe(3)
+  expect(dom).toContainEqual(expect.objectContaining({ className: 'SimpleBrowserLoginDialog', role: 'dialog', ariaModal: true }))
+  expect(dom).toContainEqual(expect.objectContaining({ className: 'InputBox SimpleBrowserLoginInput', inputType: 'password', name: 'password' }))
+  expect(dom).toContainEqual(expect.objectContaining({ 'data-request-id': '12:1', onSubmit: 'handle-simple-browser-login-submit' }))
+})
+
 test('renders the empty tab landing page in the view dom', () => {
   const dom = GetSimpleBrowserVirtualDom.getSimpleBrowserVirtualDom(
     false,

@@ -9,6 +9,7 @@ export const Commands = {
   handleDidNavigate: ElectronBrowserView.handleDidNavigate,
   handleKeyBinding: ElectronBrowserView.handleKeyBinding,
   handlePageFaviconUpdated: ElectronBrowserView.handlePageFaviconUpdated,
+  handleLogin: ElectronBrowserView.handleLogin,
   handleTitleUpdated: ElectronBrowserView.handleTitleUpdated,
   handleWillNavigate: ElectronBrowserView.handleWillNavigate,
   handleWindowOpen: ElectronBrowserView.handleWindowOpen,

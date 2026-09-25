@@ -9,6 +9,70 @@
   position: relative;
 }
 
+.SimpleBrowserLoginBackdrop {
+  align-items: center;
+  background: rgb(0 0 0 / 35%);
+  display: flex;
+  inset: 0;
+  justify-content: center;
+  position: absolute;
+  z-index: 20;
+}
+
+.SimpleBrowserLoginDialog {
+  background: var(--DialogBackground, var(--WidgetBackground, var(--MainBackground, var(--EditorBackground))));
+  border: 1px solid var(--WidgetBorder, var(--PanelBorder, transparent));
+  border-radius: 6px;
+  box-shadow: 0 12px 32px rgb(0 0 0 / 28%);
+  box-sizing: border-box;
+  color: var(--WorkbenchForeground);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: calc(100% - 32px);
+  padding: 20px;
+  width: 360px;
+}
+
+.SimpleBrowserLoginTitle {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.SimpleBrowserLoginOrigin {
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.SimpleBrowserLoginRealm {
+  color: var(--DescriptionForeground, var(--WorkbenchForeground));
+}
+
+.SimpleBrowserLoginForm {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.SimpleBrowserLoginLabel {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.SimpleBrowserLoginInput {
+  box-sizing: border-box;
+  min-height: 28px;
+  width: 100%;
+}
+
+.SimpleBrowserLoginActions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  margin-top: 6px;
+}
+
 .SimpleBrowserHeader {
   background: var(--MainBackground, var(--EditorBackground));
   box-sizing: border-box;
