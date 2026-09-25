@@ -350,6 +350,40 @@ test('clears form values when a queued authentication challenge becomes active',
   expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.focusElementByName', newState.uid, 'username')
 })
 
+test('keeps simultaneous authentication challenges separate and ignores stale submission', async () => {
+  const first = { browserViewId: 12, requestId: '12:1' }
+  const second = { requestId: '13:2', host: 'two.example' }
+  const state = { ...createTabsState(), loginChallenges: [first], overlayIds: ['login'] }
+
+  const queued = await ViewletSimpleBrowser.handleLogin(state, 13, second)
+  expect(queued.loginChallenges).toEqual([first, { ...second, browserViewId: 13 }])
+  expect(await ViewletSimpleBrowser.handleLogin(queued, 13, second)).toBe(queued)
+  const submitted = await ViewletSimpleBrowser.submitLogin(queued, '12:1', 'alice', 'secret')
+  expect(submitted.loginChallenges).toEqual([{ ...second, browserViewId: 13 }])
+  expect(submitted.overlayIds).toContain('login')
+  expect(await ViewletSimpleBrowser.submitLogin(submitted, '12:1', 'alice', 'secret')).toBe(submitted)
+  expect(ElectronWebContentsViewFunctions.acceptLogin).toHaveBeenCalledTimes(1)
+  expect(ElectronWebContentsViewFunctions.acceptLogin).toHaveBeenCalledWith('12:1', 'alice', 'secret')
+  const canceled = await ViewletSimpleBrowser.cancelLoginOnEscape(submitted, '13:2', 'Escape')
+  expect(canceled.loginChallenges).toEqual([])
+  expect(canceled.overlayIds).not.toContain('login')
+  expect(ElectronWebContentsViewFunctions.cancelLogin).toHaveBeenCalledWith('13:2')
+})
+
+test('closing a challenged tab cancels only its pending authentication', async () => {
+  const first = { browserViewId: 12, requestId: '12:1' }
+  const second = { browserViewId: 13, requestId: '13:2' }
+  const state = { ...createTabsState(), loginChallenges: [first, second], overlayIds: ['login'] }
+
+  const nextState = await ViewletSimpleBrowser.closeTab(state, 1)
+
+  expect(nextState.loginChallenges).toEqual([first])
+  expect(nextState.overlayIds).toContain('login')
+  expect(ElectronWebContentsViewFunctions.cancelLogin).toHaveBeenCalledTimes(1)
+  expect(ElectronWebContentsViewFunctions.cancelLogin).toHaveBeenCalledWith('13:2')
+  expect(nextState.tabs.some((tab) => tab.browserViewId === 13)).toBe(false)
+})
+
 test('uses the URL input focus context for the address field', () => {
   const state = ViewletSimpleBrowser.create(42)
 
