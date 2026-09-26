@@ -1,9 +1,6 @@
 import { app } from 'electron'
 import { join } from 'node:path'
 import { handleMacOsSaveShortcut } from './handleMacOsSaveShortcut.js'
-import { normalizeDefaultElectronArgv } from './normalizeDefaultElectronArgv.js'
-
-normalizeDefaultElectronArgv(process.argv, process.defaultApp)
 
 const root = process.env.LVCE_ROOT || process.cwd()
 const iconPath = join(root, 'packages', 'build', 'files', 'icon.png')
