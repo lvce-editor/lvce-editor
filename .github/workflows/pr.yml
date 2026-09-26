@@ -151,7 +151,9 @@ jobs:
         working-directory: ./packages/extension-host-worker-tests
         # Rendering 100,000 items takes ~22s locally and exceeds the default
         # 25s on macOS CI. Keep a bounded stress-test window for every platform.
-        run: npm run e2e:headless -- --test-name-prefix=status-bar.extension-many-items --test-timeout=120000
+        run: >-
+          npm run e2e:headless -- --test-name-prefix=status-bar.extension-many-items --test-timeout=120000
+          '--initial-settings={"statusBar.itemsVisible":true,"statusBar.builtinProblemsEnabled":true,"statusBar.builtinNotificationsEnabled":true}'
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0
       - name: Test error dialog and notification rendering

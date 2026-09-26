@@ -10,6 +10,7 @@ export const testManyStatusBarItems = async ({ Command, Extension, expect, Locat
     })
     await Command.execute('Layout.showStatusBar')
     await Command.execute('Layout.loadStatusBarIfVisible')
+    await expect(Locator('.StatusBarItem[name="Problems"]')).toHaveCount(1)
     await Extension.addWebExtension(extensionUri)
     await Command.execute('ExtensionHost.executeCommand', `manyStatusBarItems${count}.create`)
     await Command.execute('StatusBar.handleExtensionsChanged')
