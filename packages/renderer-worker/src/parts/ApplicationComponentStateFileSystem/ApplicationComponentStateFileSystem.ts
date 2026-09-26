@@ -3,7 +3,7 @@ import * as ComponentState from '../ComponentState/ComponentState.js'
 import * as DirentType from '../DirentType/DirentType.js'
 import * as FileSystemComponentState from '../FileSystem/FileSystemComponentState.js'
 
-const pattern = /^live-component-state:\/\/\/(?:dom\/|schemas\/)?(\d+(?:\.\d+)?)\.json$/
+const pattern = /^live-component-state:\/\/\/(?:dom\/|saved\/|schemas\/)?(\d+(?:\.\d+)?)\.json$/
 
 export const execute = async (applicationId: string, method: string, uri: string, ...args: readonly any[]): Promise<any> => {
   const application = ApplicationRegistry.assertOpen(applicationId)
