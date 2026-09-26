@@ -23,6 +23,7 @@
     "scripts/wait-for-server-ready.mjs",
     "fixtures/running-extensions-test-helpers.js",
     "fixtures/sample.extension-disable-lifecycle/test.js",
-    "fixtures/sample.running-extensions-live-view/test.js"
+    "fixtures/sample.running-extensions-live-view/test.js",
+    "fixtures/sample.extension-many-status-bar-items/test.js"
   ]
 }

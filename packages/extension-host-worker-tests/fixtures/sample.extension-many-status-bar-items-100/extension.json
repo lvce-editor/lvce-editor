@@ -1,0 +1,21 @@
+{
+  "id": "sample.extension-many-status-bar-items-100",
+  "name": "Many Status Bar Items (100)",
+  "version": "0.0.0",
+  "browser": "main.js",
+  "isolated": true,
+  "activation": [
+    "onStatusBarItem",
+    "onCommand:manyStatusBarItems100.create"
+  ],
+  "statusBarItems": [
+    {
+      "id": "many-status-bar-items"
+    }
+  ],
+  "commands": [
+    {
+      "id": "manyStatusBarItems100.create"
+    }
+  ]
+}
