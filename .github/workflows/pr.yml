@@ -75,6 +75,8 @@ jobs:
         working-directory: ./packages/build
         run: npm test -- --runTestsByPath test/BundleBuiltinSettings.test.ts
       - run: npm test
+      - name: Test main-process unit test shutdown
+        run: node --test scripts/test/main-process-shutdown.test.mjs
       - name: install playwright dependencies (extension host worker tests)
         working-directory: ./packages/extension-host-worker-tests
         run: npx playwright install chromium
