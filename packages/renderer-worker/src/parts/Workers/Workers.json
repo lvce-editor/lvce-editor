@@ -1291,6 +1291,10 @@
         "saveState": { "name": "Panel.saveState", "parameters": [{ "source": "state", "name": "uid" }] },
         "terminate": { "name": "Panel.terminate", "parameters": [] },
         "getCommandIds": { "name": "Panel.getCommandIds", "parameters": [] },
+        "getComponentState": { "name": "Panel.getComponentState", "parameters": [{ "source": "state", "name": "uid" }] },
+        "setComponentState": { "name": "Panel.setComponentState", "parameters": [
+          { "source": "state", "name": "uid" }, { "source": "argument", "name": "componentState" }
+        ] },
         "renderEventListeners": { "name": "Panel.renderEventListeners", "parameters": [] }
       },
       "capabilities": { "directRender": true, "events": true, "render": true, "resize": true, "rootRender": true },
