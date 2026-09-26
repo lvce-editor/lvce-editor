@@ -258,7 +258,7 @@ test('bundleCss fades overflowing simple browser tab titles', async () => {
   }
 }, 30_000)
 
-test('bundleCss keeps the preview sash transparent', async () => {
+test('bundleCss renders a visible preview sash border', async () => {
   const dir = await mkdtemp(join(tmpdir(), 'lvce-bundle-css-'))
 
   try {
@@ -281,6 +281,7 @@ test('bundleCss keeps the preview sash transparent', async () => {
 }`)
     expect(css).toContain(`.SashPreview {
   left: var(--SashPreviewLeft);
+  border-left: 1px solid var(--SashBorder, gray);
 }`)
     expect(css).toContain(`.SashSecondaryPreview {
   left: var(--SashSecondaryPreviewLeft);

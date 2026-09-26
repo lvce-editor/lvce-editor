@@ -112,6 +112,7 @@ test('getLayoutVirtualDom does not render the preview close button when preview 
   const dom = getLayoutVirtualDom(state)
 
   expect(dom.some((node) => node.className?.includes('PreviewCloseButton'))).toBe(false)
+  expect(dom).not.toContainEqual(expect.objectContaining({ className: 'Viewlet Sash SashVertical SashPreview' }))
 })
 
 test('getLayoutVirtualDom renders the panel sash when the panel is hidden', () => {
