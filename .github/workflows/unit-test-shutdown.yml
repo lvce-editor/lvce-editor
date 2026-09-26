@@ -1,0 +1,54 @@
+name: Unit test shutdown
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  shutdown:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: '.nvmrc'
+      - run: npm ci
+        env:
+          DOWNLOAD_BUILTIN_EXTENSIONS: 0
+      - name: Reproduce main-process test shutdown
+        shell: python
+        run: |
+          import os, pathlib, signal, subprocess, tempfile
+          reports = pathlib.Path('shutdown-reports').resolve()
+          reports.mkdir()
+          env = dict(os.environ, NODE_OPTIONS=f'--report-on-signal --report-exclude-env --report-directory={reports}')
+          for attempt in range(100):
+              with tempfile.TemporaryDirectory() as cache:
+                  command = ['npm', 'test', '--workspace', 'packages/main-process', '--', f'--cacheDirectory={cache}']
+                  child = subprocess.Popen(command, env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, start_new_session=True)
+                  try:
+                      output, _ = child.communicate(timeout=30)
+                  except subprocess.TimeoutExpired:
+                      processes = subprocess.check_output(['ps', '-eo', 'pid,args'], text=True)
+                      (reports / 'processes.txt').write_text(processes)
+                      for line in processes.splitlines():
+                          if 'node --unhandled-rejections=warn' in line and 'jest.js' in line:
+                              pid = int(line.split()[0])
+                              os.kill(pid, signal.SIGUSR2)
+                      try:
+                          output, _ = child.communicate(timeout=5)
+                      except subprocess.TimeoutExpired:
+                          os.killpg(child.pid, signal.SIGKILL)
+                          output, _ = child.communicate()
+                      (reports / f'attempt-{attempt}.log').write_bytes(output)
+                      raise RuntimeError(f'Test shutdown timed out on attempt {attempt}')
+                  (reports / f'attempt-{attempt}.log').write_bytes(output)
+                  print(f'Attempt {attempt}: exit {child.returncode}', flush=True)
+                  if child.returncode:
+                      raise RuntimeError(output.decode())
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: unit-test-shutdown
+          path: shutdown-reports
