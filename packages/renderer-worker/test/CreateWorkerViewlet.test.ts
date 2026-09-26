@@ -112,6 +112,7 @@ test('configures immediate workspace feedback for the title bar and main area', 
 test('disposes preview worker state when the preview viewlet closes', async () => {
   const invoke = jest.fn(async (..._args: readonly unknown[]) => undefined)
   const viewlet = createWorkerViewletWithDependencies({
+    adapter: getWorkerViewletAdapter('preview'),
     config: getWorkerViewletConfig('preview'),
     worker: { invoke, restart: jest.fn() },
   })
