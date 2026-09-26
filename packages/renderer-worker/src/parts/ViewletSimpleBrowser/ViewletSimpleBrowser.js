@@ -1,3 +1,5 @@
+import * as HtmlPreviewUrl from '../HtmlPreviewUrl/HtmlPreviewUrl.js'
+import * as SimpleBrowserPreview from '../SimpleBrowserPreview/SimpleBrowserPreview.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as BrowserSuggestionRequests from '../BrowserSuggestionRequests/BrowserSuggestionRequests.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
@@ -123,14 +125,18 @@ const createTab = ({
 
 const isHistoryUrl = (url) => typeof url === 'string' && url.startsWith(simpleBrowserHistoryUrl)
 
+const isPreviewTab = (tab) => HtmlPreviewUrl.isHtmlPreviewUrl(tab?.iframeSrc)
+const isSpecialTab = (tab) => isHistoryTab(tab) || isPreviewTab(tab)
+const createPreviewTab = (url) => createTab({ iframeSrc: url, inputValue: url, title: 'HTML Preview' })
+
 const isHistoryTab = (tab) => isHistoryUrl(tab?.iframeSrc)
 
 const createHistoryTab = () =>
   createTab({ browserViewId: 0, iframeSrc: simpleBrowserHistoryUrl, inputValue: simpleBrowserHistoryUrl, title: 'History' })
 
 const updateTab = (state, browserViewId, updates) => {
-  const tabIndex = state.tabs.findIndex((tab) => tab.browserViewId === browserViewId)
-  if (tabIndex === -1) {
+  const tabIndex = browserViewId ? state.tabs.findIndex((tab) => tab.browserViewId === browserViewId) : state.selectedTabIndex
+  if (tabIndex === -1 || state.tabs.length === 0) {
     return state.tabs.length === 0 ? { ...state, ...updates } : state
   }
   const tabs = state.tabs.with(tabIndex, { ...state.tabs[tabIndex], ...updates })
@@ -347,11 +353,17 @@ export const loadContent = async (state, savedState) => {
   const shortcuts = SimpleBrowserPreferences.getShortCuts()
   const fallThroughKeyBindings = getFallThroughKeyBindings()
 
-  const historyTabRequested = isHistoryUrl(uri) || isHistoryTab(savedSelectedTab)
-  if (historyTabRequested) {
-    const restoredTabs = savedSelectedTab && isHistoryTab(savedSelectedTab) ? savedTabs : [createHistoryTab()]
-    const tabs = tabsEnabled ? restoredTabs : [restoredTabs[savedSelectedTabIndex]]
-    const selectedTabIndex = tabsEnabled && savedSelectedTab && isHistoryTab(savedSelectedTab) ? savedSelectedTabIndex : 0
+  const specialTabRequested = isHistoryUrl(uri) || HtmlPreviewUrl.isHtmlPreviewUrl(uri) || isSpecialTab(savedSelectedTab)
+  if (specialTabRequested) {
+    const restoredTabs =
+      savedSelectedTab && isSpecialTab(savedSelectedTab)
+        ? savedTabs
+        : [HtmlPreviewUrl.isHtmlPreviewUrl(uri) ? createPreviewTab(uri) : createHistoryTab()]
+    const restoredIndex = savedSelectedTab && isSpecialTab(savedSelectedTab) ? savedSelectedTabIndex : 0
+    const tabs = tabsEnabled ? restoredTabs : [restoredTabs[restoredIndex]]
+    const selectedTabIndex = tabsEnabled && savedSelectedTab && isSpecialTab(savedSelectedTab) ? savedSelectedTabIndex : 0
+    if (isPreviewTab(tabs[selectedTabIndex]))
+      tabs[selectedTabIndex] = await SimpleBrowserPreview.materialize({ ...state, headerHeight }, tabs[selectedTabIndex])
     const selectedTab = tabs[selectedTabIndex]
     return {
       ...state,
@@ -475,6 +487,7 @@ const updateNewTabPages = async (state) => {
 export const handleColorThemeChanged = updateNewTabPages
 
 const materializeTab = async (state, tab) => {
+  if (isPreviewTab(tab)) return SimpleBrowserPreview.materialize(state, tab)
   if (isHistoryTab(tab)) {
     return tab
   }
@@ -509,9 +522,10 @@ const prepareTabDeactivation = async (state, tab) => {
 }
 
 const switchToTab = async (state, initialTabs, selectedTabIndex) => {
+  const previousTab = state.tabs[state.selectedTabIndex]
   state = await closeFind({ ...state, tabs: initialTabs }, false)
   BrowserSuggestionRequests.cancel(state.uid)
-  const oldTabIndex = initialTabs.findIndex((tab) => tab.browserViewId === state.browserViewId)
+  const oldTabIndex = initialTabs.indexOf(previousTab)
   const oldTab = initialTabs[oldTabIndex]
   const oldBrowserViewId = oldTab?.browserViewId || state.browserViewId
   const deactivationPromise = prepareTabDeactivation(state, oldTab)
@@ -569,15 +583,21 @@ export const duplicateTab = async (state, index) => {
   }
   const currentState = hasSuggestionsOverlay ? await closeSuggestions(state) : state
   const sourceTab = currentState.tabs[tabIndex]
-  const emptyTab = isHistoryTab(sourceTab) ? createHistoryTab() : sourceTab.iframeSrc ? await createUnloadedTab(currentState) : await createEmptyTab()
+  const emptyTab = isPreviewTab(sourceTab)
+    ? createPreviewTab(sourceTab.iframeSrc)
+    : isHistoryTab(sourceTab)
+      ? createHistoryTab()
+      : sourceTab.iframeSrc
+        ? await createUnloadedTab(currentState)
+        : await createEmptyTab()
   const tab = {
     ...emptyTab,
     iframeSrc: sourceTab.iframeSrc,
     inputValue: sourceTab.inputValue,
-    isLoading: Boolean(sourceTab.iframeSrc),
+    isLoading: Boolean(sourceTab.iframeSrc) && !isSpecialTab(sourceTab),
     title: sourceTab.title,
   }
-  if (tab.iframeSrc && !isHistoryTab(tab)) {
+  if (tab.iframeSrc && !isSpecialTab(tab)) {
     void ElectronWebContentsViewFunctions.setIframeSrc(tab.browserViewId, tab.iframeSrc)
   }
   const tabs = currentState.tabs.toSpliced(tabIndex + 1, 0, tab)
@@ -592,7 +612,7 @@ export const muteTab = async (state, index) => {
     return state
   }
   const tab = tabs[tabIndex]
-  if (isHistoryTab(tab)) {
+  if (isSpecialTab(tab)) {
     return state
   }
   const muted = !tab.muted
@@ -607,7 +627,11 @@ export const reloadTab = async (state, index) => {
     return state
   }
   const tab = tabs[tabIndex]
-  if (isHistoryTab(tab)) {
+  if (isPreviewTab(tab)) {
+    await SimpleBrowserPreview.reload(tab)
+    return state
+  }
+  if (isSpecialTab(tab)) {
     return state
   }
   await ElectronWebContentsViewFunctions.reload(tab.browserViewId)
@@ -629,8 +653,8 @@ export const openOrRevealTab = async (state, url) => {
 export const openTab = async (state, url, disposition) => {
   const { hasSuggestionsOverlay } = state
   const currentState = hasSuggestionsOverlay ? await closeSuggestions(state) : state
-  if (isHistoryUrl(url)) {
-    const tab = createHistoryTab()
+  if (isHistoryUrl(url) || HtmlPreviewUrl.isHtmlPreviewUrl(url)) {
+    const tab = HtmlPreviewUrl.isHtmlPreviewUrl(url) ? createPreviewTab(url) : createHistoryTab()
     const tabs = [...currentState.tabs, tab]
     if (disposition === 'background-tab') {
       return { ...currentState, tabs }
@@ -744,6 +768,7 @@ const closeTabInternal = async (state, index, disposeWebContentsView) => {
   let currentState = tabIndex === state.selectedTabIndex && state.hasSuggestionsOverlay ? await closeSuggestions(state) : state
   const tab = currentState.tabs[tabIndex]
   currentState = await removeLoginChallenges(currentState, (challenge) => Number(challenge.browserViewId) === Number(tab.browserViewId))
+  await SimpleBrowserPreview.dispose(tab)
   const closedTabs = [...currentState.closedTabs, { iframeSrc: tab.iframeSrc, title: tab.title, index: tabIndex }]
   const closedState = { ...currentState, closedTabs }
   if (currentState.tabs.length === 1) {
@@ -864,8 +889,8 @@ const closeTabsByIndex = async (state, indexes, preferredTabIndex) => {
   let currentState = selectedTabWillClose && hasSuggestionsOverlay ? await closeSuggestions(state) : state
   const closingBrowserViewIds = new Set(indexes.map((index) => currentState.tabs[index]?.browserViewId).filter(Boolean))
   currentState = await removeLoginChallenges(currentState, (challenge) => closingBrowserViewIds.has(challenge.browserViewId))
-  const { browserViewId, tabs: currentTabs } = currentState
-  const preferredBrowserViewId = currentTabs[preferredTabIndex]?.browserViewId
+  const { tabs: currentTabs } = currentState
+  const preferredTab = currentTabs[preferredTabIndex]
   const tabsToClose = currentTabs.filter((tab, index) => indexesToClose.has(index))
   const closedTabs = [
     ...currentState.closedTabs,
@@ -875,8 +900,9 @@ const closeTabsByIndex = async (state, indexes, preferredTabIndex) => {
   const closedState = { ...currentState, closedTabs }
   let remainingTabs = currentTabs.filter((tab, index) => !indexesToClose.has(index))
   await Promise.all(tabsToClose.filter((tab) => tab.browserViewId).map((tab) => ElectronWebContentsView.disposeWebContentsView(tab.browserViewId)))
+  await Promise.all(tabsToClose.map(SimpleBrowserPreview.dispose))
   tabsToClose.forEach((tab) => SimpleBrowserFavicon.dispose(tab.favicon))
-  const retainedSelectedTabIndex = remainingTabs.findIndex((tab) => tab.browserViewId === browserViewId)
+  const retainedSelectedTabIndex = remainingTabs.indexOf(currentTabs[oldSelectedTabIndex])
   if (retainedSelectedTabIndex !== -1) {
     return {
       ...closedState,
@@ -884,10 +910,7 @@ const closeTabsByIndex = async (state, indexes, preferredTabIndex) => {
       tabs: remainingTabs,
     }
   }
-  const selectedTabIndex = Math.max(
-    0,
-    remainingTabs.findIndex((tab) => tab.browserViewId === preferredBrowserViewId),
-  )
+  const selectedTabIndex = Math.max(0, remainingTabs.indexOf(preferredTab))
   let selectedTab = remainingTabs[selectedTabIndex]
   if (!selectedTab.browserViewId) {
     selectedTab = await materializeTab(currentState, selectedTab)
@@ -1298,12 +1321,16 @@ const navigate = async (state, value) => {
   if (openCookieImportView(value)) {
     return state
   }
-  const iframeSrc = IframeSrc.toIframeSrc(value, state.shortcuts)
+  const iframeSrc = HtmlPreviewUrl.isHtmlPreviewUrl(value) ? value : IframeSrc.toIframeSrc(value, state.shortcuts)
+  if (HtmlPreviewUrl.isHtmlPreviewUrl(iframeSrc)) {
+    return openTab(state, iframeSrc, 'foreground-tab')
+  }
   if (isHistoryUrl(iframeSrc)) {
     return openTab(state, simpleBrowserHistoryUrl, 'foreground-tab')
   }
   const selectedTab = state.tabs[state.selectedTabIndex]
-  if (isHistoryTab(selectedTab)) {
+  if (isSpecialTab(selectedTab)) {
+    await SimpleBrowserPreview.dispose(selectedTab)
     const tab = await createUnloadedTab(state)
     const nextTab = {
       ...tab,
@@ -1564,6 +1591,7 @@ export const dispose = async (state) => {
   await Promise.all([
     ...state.tabs.filter((tab) => tab.browserViewId).map((tab) => ElectronWebContentsView.disposeWebContentsView(tab.browserViewId)),
     ...state.tabs.map((tab) => SimpleBrowserFavicon.dispose(tab.favicon)),
+    ...state.tabs.map(SimpleBrowserPreview.dispose),
     RendererProcess.invoke('Viewlet.sendMultiple', [['Css.removeCssStyleSheet', SimpleBrowserPageSnapshot.getStyleSheetId(state.uid)]]),
     SimpleBrowserSnapshot.dispose(state.snapshot),
   ])

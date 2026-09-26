@@ -150,6 +150,13 @@ jest.unstable_mockModule('../src/parts/SimpleBrowserFavicon/SimpleBrowserFavicon
 }))
 
 jest.unstable_mockModule('../src/parts/Viewlet/Viewlet.js', () => ({ executeViewletCommand: jest.fn() }))
+jest.unstable_mockModule('../src/parts/SimpleBrowserPreview/SimpleBrowserPreview.js', () => ({
+  materialize: jest.fn(),
+  dispose: jest.fn(),
+  reload: jest.fn(),
+  resize: jest.fn(),
+}))
+const SimpleBrowserPreview = await import('../src/parts/SimpleBrowserPreview/SimpleBrowserPreview.js')
 const Viewlet = await import('../src/parts/Viewlet/Viewlet.js')
 const BrowserSuggestionRequests = await import('../src/parts/BrowserSuggestionRequests/BrowserSuggestionRequests.js')
 const ViewletSimpleBrowser = await import('../src/parts/ViewletSimpleBrowser/ViewletSimpleBrowser.js')
@@ -2788,4 +2795,55 @@ test('keeps the selected tab visible after a title update rerenders the tab stri
   expect(newState.selectedTabIndex).toBe(oldState.selectedTabIndex)
   await ViewletSimpleBrowser.afterRender(oldState, newState)
   expect(RendererProcess.invoke).toHaveBeenCalledWith('Window.revealBrowserTab', newState.uid)
+})
+
+test('preview tabs use independent child viewlets and never allocate native views', async () => {
+  let uid = 100
+  jest.mocked(SimpleBrowserPreview.materialize).mockImplementation(async (_state, tab) => (tab.previewUid ? tab : { ...tab, previewUid: ++uid }))
+  const url = 'html-preview:///file%3A%2F%2F%2Fhello%20%23%25.html'
+  const initial = await ViewletSimpleBrowser.loadContent(ViewletSimpleBrowser.create(7, url, 0, 0, 300, 200))
+  expect(initial.tabs[0].previewUid).toBe(101)
+  const second = await ViewletSimpleBrowser.openTab(initial, url, 'foreground-tab')
+  expect(second.tabs[1].previewUid).toBe(102)
+  const first = await ViewletSimpleBrowser.selectTab(second, 0)
+  expect(first.tabs[0].previewUid).toBe(101)
+  await ViewletSimpleBrowser.reloadTab(first, 0)
+  expect(SimpleBrowserPreview.reload).toHaveBeenCalledWith(first.tabs[0])
+  const closed = await ViewletSimpleBrowser.closeTab(first, 0)
+  expect(SimpleBrowserPreview.dispose).toHaveBeenCalledWith(first.tabs[0])
+  expect(closed.tabs[0].previewUid).toBe(102)
+  expect(ElectronWebContentsView.createWebContentsView).not.toHaveBeenCalled()
+  expect(ElectronWebContentsViewFunctions.setIframeSrc).not.toHaveBeenCalled()
+  const saved = ViewletSimpleBrowser.saveState(closed)
+  expect(saved.tabs[0]).not.toHaveProperty('previewUid')
+  const restored = await ViewletSimpleBrowser.loadContent(ViewletSimpleBrowser.create(8, 'simple-browser://', 0, 0, 300, 200), saved)
+  expect(restored.tabs[0].iframeSrc).toBe(url)
+  expect(restored.tabs[0].previewUid).toBe(103)
+})
+
+test('switching between native and preview tabs preserves the native view and disposes preview on navigation', async () => {
+  jest.mocked(SimpleBrowserPreview.materialize).mockImplementation(async (_state, tab) => ({ ...tab, previewUid: 101 }))
+  jest.mocked(ElectronWebContentsViewFunctions.hide).mockResolvedValue(undefined)
+  jest.mocked(ElectronWebContentsViewFunctions.show).mockResolvedValue(undefined)
+  jest.mocked(ElectronWebContentsViewFunctions.focus).mockResolvedValue(undefined)
+  jest.mocked(ElectronWebContentsViewFunctions.resizeWebContentsView).mockResolvedValue(undefined)
+  // @ts-ignore
+  jest.mocked(ElectronWebContentsViewFunctions.setIframeSrc).mockResolvedValue({})
+  jest.mocked(ElectronWebContentsView.createWebContentsView).mockResolvedValue(22)
+  const initial = {
+    ...ViewletSimpleBrowser.create(7, '', 0, 0, 300, 200),
+    browserViewId: 21,
+    tabs: [{ browserViewId: 21, iframeSrc: 'https://example.com', title: 'Example' }],
+  }
+  const preview = await ViewletSimpleBrowser.openTab(initial, 'html-preview:///a.html', 'foreground-tab')
+  expect(ElectronWebContentsViewFunctions.hide).toHaveBeenCalledWith(21)
+  expect(ElectronWebContentsView.createWebContentsView).not.toHaveBeenCalled()
+  const native = await ViewletSimpleBrowser.selectTab(preview, 0)
+  expect(native.browserViewId).toBe(21)
+  expect(ElectronWebContentsViewFunctions.show).toHaveBeenCalledWith(21)
+  const selectedPreview = await ViewletSimpleBrowser.selectTab(native, 1)
+  const navigated = await ViewletSimpleBrowser.setUrl(selectedPreview, 'https://example.org')
+  expect(SimpleBrowserPreview.dispose).toHaveBeenCalledWith(expect.objectContaining({ previewUid: 101 }))
+  expect(navigated.browserViewId).toBe(22)
+  expect(navigated.tabs[1]).not.toHaveProperty('previewUid')
 })

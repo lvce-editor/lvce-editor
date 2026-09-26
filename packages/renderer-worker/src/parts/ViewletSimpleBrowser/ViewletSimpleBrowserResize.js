@@ -1,3 +1,4 @@
+import * as SimpleBrowserPreview from '../SimpleBrowserPreview/SimpleBrowserPreview.js'
 import * as ElectronWebContentsViewFunctions from '../ElectronWebContentsViewFunctions/ElectronWebContentsViewFunctions.js'
 
 export const hasFunctionalResize = true
@@ -10,6 +11,7 @@ export const resize = (state, dimensions) => {
 }
 
 export const resizeEffect = async (state) => {
+  await SimpleBrowserPreview.resize(state)
   const { headerHeight, tabs, x, y, width, height } = state
   await Promise.all(
     tabs
