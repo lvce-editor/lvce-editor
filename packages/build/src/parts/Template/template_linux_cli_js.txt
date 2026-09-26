@@ -1,11 +1,16 @@
 import { spawn } from 'node:child_process'
-import { mkdtemp, readFile } from 'node:fs/promises'
-import { tmpdir } from 'node:os'
-import { join } from 'node:path'
+import { createRequire } from 'node:module'
+import { access, chmod, mkdtemp, mkdir, readFile, rename, rm } from 'node:fs/promises'
+import { constants } from 'node:fs'
+import { homedir, tmpdir } from 'node:os'
+import { dirname, join, resolve } from 'node:path'
+import { fileURLToPath } from 'node:url'
 
 const applicationName = '@@APPLICATION_NAME@@'
 const foregroundCommands = new Set(['install', 'list'])
 const electronDiagnosticPattern = /^\[\d+:\d+\/\d+\.\d+:(?:ERROR|WARNING):/
+const appRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..')
+const mainProcessRequire = createRequire(join(appRoot, 'packages', 'main-process', 'package.json'))
 
 const isVersionRequest = (args) => args.includes('--version') || args.includes('-v')
 
@@ -17,6 +22,82 @@ const isForegroundRequest = (args) => {
 }
 
 const shellQuote = (value) => `'${value.replaceAll("'", "'\\''")}'`
+
+const parseElectronVersion = (args) => {
+  const filteredArgs = []
+  let electronVersion
+  for (let index = 0; index < args.length; index++) {
+    const arg = args[index]
+    if (arg === '--electron-version' || arg.startsWith('--electron-version=')) {
+      const value = arg === '--electron-version' ? args[++index] : arg.slice('--electron-version='.length)
+      if (!value || value.startsWith('--') || !/^v?\d+\.\d+\.\d+(?:-[\w.-]+)?$/.test(value)) {
+        throw new Error('--electron-version requires a valid Electron version (for example, --electron-version=44.0.0)')
+      }
+      if (!electronVersion) {
+        electronVersion = value.replace(/^v/, '')
+      }
+      continue
+    }
+    filteredArgs.push(arg)
+  }
+  return { electronVersion, args: filteredArgs }
+}
+
+const getElectronExecutablePath = (electronDir) => {
+  if (process.platform === 'darwin') {
+    return join(electronDir, 'Electron.app', 'Contents', 'MacOS', 'Electron')
+  }
+  if (process.platform === 'win32') {
+    return join(electronDir, 'electron.exe')
+  }
+  return join(electronDir, 'electron')
+}
+
+const ensureElectronRuntime = async (electronVersion) => {
+  const cacheHome = process.env.XDG_CACHE_HOME || join(homedir(), '.cache')
+  const cacheRoot = join(cacheHome, applicationName, 'electron')
+  const cachePath = join(cacheRoot, `${electronVersion}-${process.platform}-${process.arch}`)
+  const executablePath = getElectronExecutablePath(cachePath)
+  try {
+    await access(executablePath, constants.X_OK)
+    return executablePath
+  } catch {}
+
+  await mkdir(cacheRoot, { recursive: true })
+  const stagingPath = await mkdtemp(join(cacheRoot, `.download-${electronVersion}-`))
+  try {
+    const electronGetPath = mainProcessRequire.resolve('@electron/get')
+    const extractZipPath = mainProcessRequire.resolve('@electron-internal/extract-zip')
+    const electronGet = await import(electronGetPath)
+    const extractZipModule = await import(extractZipPath)
+    const zipPath = await electronGet.downloadArtifact({
+      version: electronVersion,
+      platform: process.platform,
+      artifactName: 'electron',
+      arch: process.arch,
+    })
+    await extractZipModule.default(zipPath, { dir: stagingPath })
+    const stagedExecutablePath = getElectronExecutablePath(stagingPath)
+    await access(stagedExecutablePath, constants.X_OK).catch(async () => {
+      await chmod(stagedExecutablePath, 0o755)
+      await access(stagedExecutablePath, constants.X_OK)
+    })
+    try {
+      await rename(stagingPath, cachePath)
+    } catch (error) {
+      try {
+        await access(executablePath, constants.X_OK)
+      } catch {
+        throw error
+      }
+    }
+    return executablePath
+  } catch (error) {
+    throw new Error(`Failed to prepare Electron ${electronVersion}: ${error instanceof Error ? error.message : error}`, { cause: error })
+  } finally {
+    await rm(stagingPath, { recursive: true, force: true })
+  }
+}
 
 const getTransientLaunchOptions = async (args) => {
   if (!args.includes('--transient')) {
@@ -76,7 +157,10 @@ const launchElectron = async (args, envOverrides) => {
 
   const foreground = isForegroundRequest(args)
   const verbose = args.includes('--verbose')
-  const child = spawn(process.execPath, args, {
+  const parsedArgs = parseElectronVersion(args)
+  const executablePath = parsedArgs.electronVersion ? await ensureElectronRuntime(parsedArgs.electronVersion) : process.execPath
+  const launchArgs = parsedArgs.electronVersion ? [appRoot, ...parsedArgs.args] : args
+  const child = spawn(executablePath, launchArgs, {
     detached: true,
     env,
     stdio: foreground ? ['inherit', 'inherit', 'pipe'] : 'ignore',
