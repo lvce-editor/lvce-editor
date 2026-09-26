@@ -2753,7 +2753,6 @@ test('entering full width preserves command palette focus acquired while showing
   expect(ElectronWebContentsViewFunctions.focus).not.toHaveBeenCalled()
 })
 
-
 test('entering full width preserves a command palette before its asynchronous focus event arrives', async () => {
   const ViewletStates = await import('../src/parts/ViewletStates/ViewletStates.js')
   const palette = { uid: 800001 }
@@ -2771,7 +2770,6 @@ test('entering full width preserves a command palette before its asynchronous fo
   }
 })
 
-
 test('entering full width preserves a palette whose module is still loading', async () => {
   const QuickPickOpening = await import('../src/parts/QuickPickOpening/QuickPickOpening.js')
   jest.mocked(ElectronWebContentsViewFunctions.show).mockResolvedValue(undefined as never)
@@ -2782,4 +2780,12 @@ test('entering full width preserves a palette whose module is still loading', as
     await ViewletSimpleBrowser.afterRender(state, { ...state, fullWidth: true })
     expect(ElectronWebContentsViewFunctions.focus).not.toHaveBeenCalled()
   })
+})
+
+test('keeps the selected tab visible after a title update rerenders the tab strip', async () => {
+  const oldState = createTabsState()
+  const newState = await ViewletSimpleBrowser.handleTitleUpdated(oldState, oldState.browserViewId, 'Loaded title')
+  expect(newState.selectedTabIndex).toBe(oldState.selectedTabIndex)
+  await ViewletSimpleBrowser.afterRender(oldState, newState)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Window.revealBrowserTab', newState.uid)
 })
