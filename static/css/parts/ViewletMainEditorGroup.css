@@ -70,7 +70,7 @@
 .EditorGroupHeader {
   display: flex;
   contain: strict;
-  height: 35px;
+  height: var(--EditorGroupHeight);
   justify-content: space-between;
 }
 
