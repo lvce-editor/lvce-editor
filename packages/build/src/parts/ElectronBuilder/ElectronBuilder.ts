@@ -9,6 +9,7 @@ import * as CreatePlaceholderElectronApp from '../CreatePlaceholderElectronApp/C
 import * as ElectronBuilderConfigType from '../ElectronBuilderConfigType/ElectronBuilderConfigType.ts'
 import * as FileExtension from '../FileExtension/FileExtension.ts'
 import * as GetElectronVersion from '../GetElectronVersion/GetElectronVersion.ts'
+import * as GetWindowsUnpackedDir from '../GetWindowsUnpackedDir/GetWindowsUnpackedDir.ts'
 import * as Logger from '../Logger/Logger.ts'
 import * as Path from '../Path/Path.ts'
 import * as Remove from '../Remove/Remove.ts'
@@ -345,7 +346,7 @@ const copyElectronResult = async ({
     })
     await CreatePlaceholderElectronApp.createPlaceholderElectronApp({ product, version, config, electronVersion, asar })
     await Copy.copyFile({
-      from: `packages/build/.tmp/electron-builder-placeholder-app/dist/win-unpacked/${product.windowsExecutableName}.exe`,
+      from: `packages/build/.tmp/electron-builder-placeholder-app/dist/${GetWindowsUnpackedDir.getWindowsUnpackedDir(arch)}/${product.windowsExecutableName}.exe`,
       to: `packages/build/.tmp/linux/snap/${debArch}/app/${product.windowsExecutableName}.exe`,
     })
   }
