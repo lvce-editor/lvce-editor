@@ -244,7 +244,7 @@ setInterval(() => {}, 1000)
     try {
       await mkdir(binPath, { recursive: true })
       await mkdir(join(mainProcessPath, 'node_modules', '@electron', 'get'), { recursive: true })
-      await mkdir(join(mainProcessPath, 'node_modules', 'extract-zip'), { recursive: true })
+      await mkdir(join(mainProcessPath, 'node_modules', '@electron-internal', 'extract-zip'), { recursive: true })
       await mkdir(dirname(fakeElectronPath), { recursive: true })
       await writeFile(join(mainProcessPath, 'package.json'), JSON.stringify({ type: 'module' }))
       await writeFile(
@@ -261,11 +261,11 @@ setInterval(() => {}, 1000)
 `,
       )
       await writeFile(
-        join(mainProcessPath, 'node_modules', 'extract-zip', 'package.json'),
+        join(mainProcessPath, 'node_modules', '@electron-internal', 'extract-zip', 'package.json'),
         JSON.stringify({ main: 'index.cjs' }),
       )
       await writeFile(
-        join(mainProcessPath, 'node_modules', 'extract-zip', 'index.cjs'),
+        join(mainProcessPath, 'node_modules', '@electron-internal', 'extract-zip', 'index.cjs'),
         `const { cpSync } = require('node:fs')
 module.exports = async (_zipPath, { dir }) => {
   if (process.env.LVCE_TEST_FAIL_EXTRACTION) throw new Error('fixture extraction failed')

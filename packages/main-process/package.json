@@ -28,8 +28,8 @@
   },
   "dependencies": {
     "@electron/get": "^5.1.0",
-    "@lvce-editor/main-process": "^6.51.6",
-    "extract-zip": "^2.0.1"
+    "@lvce-editor/main-process": "^6.51.7",
+    "@electron-internal/extract-zip": "^1.0.5"
   },
   "devDependencies": {
     "@jest/globals": "^30.5.2",

@@ -67,7 +67,7 @@ const ensureElectronRuntime = async (electronVersion) => {
   const stagingPath = await mkdtemp(join(cacheRoot, `.download-${electronVersion}-`))
   try {
     const electronGetPath = mainProcessRequire.resolve('@electron/get')
-    const extractZipPath = mainProcessRequire.resolve('extract-zip')
+    const extractZipPath = mainProcessRequire.resolve('@electron-internal/extract-zip')
     const electronGet = await import(electronGetPath)
     const extractZipModule = await import(extractZipPath)
     const zipPath = await electronGet.downloadArtifact({
