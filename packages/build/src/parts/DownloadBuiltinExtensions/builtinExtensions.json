@@ -53,8 +53,8 @@
   {
     "name": "builtin.pull-request-github",
     "repository": "github.com/lvce-editor/pull-request-github",
-    "version": "1.6.2",
-    "sha256": "923915d0fc28f0a83f2a4550ddc83337de5d7b327d17447fb38d942f9623fd0e",
+    "version": "1.8.1",
+    "sha256": "dd88e0d283ea92581966ecd09ee1a2fefa5caaa9a3cda383076b433b82527029",
     "created": "2026-08-19",
     "enabled": false
   },
