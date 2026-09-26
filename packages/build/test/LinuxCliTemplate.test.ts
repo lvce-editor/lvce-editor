@@ -233,7 +233,11 @@ setInterval(() => {}, 1000)
     const root = await mkdtemp(join(tmpdir(), 'lvce-linux-cli-electron-version-'))
     const binPath = join(root, 'bin')
     const mainProcessPath = join(root, 'packages', 'main-process')
-    const fakeElectronPath = join(root, 'electron-artifact', 'electron')
+    const artifactDir = join(root, 'electron-artifact')
+    const fakeElectronPath =
+      process.platform === 'darwin'
+        ? join(artifactDir, 'Electron.app', 'Contents', 'MacOS', 'Electron')
+        : join(artifactDir, 'electron')
     const downloadResultPath = join(root, 'download.json')
     const launchResultPath = join(root, 'launch.json')
     const cachePath = join(root, 'cache')
@@ -285,7 +289,7 @@ writeFileSync(process.env.LVCE_TEST_LAUNCH_RESULT, JSON.stringify({ args: proces
         ELECTRON_RUN_AS_NODE: '1',
         LVCE_TEST_DOWNLOAD_RESULT: downloadResultPath,
         LVCE_TEST_ELECTRON_ARTIFACT: fakeElectronPath,
-        LVCE_TEST_ELECTRON_ARTIFACT_DIR: dirname(fakeElectronPath),
+        LVCE_TEST_ELECTRON_ARTIFACT_DIR: artifactDir,
         LVCE_TEST_LAUNCH_RESULT: launchResultPath,
         XDG_CACHE_HOME: cachePath,
       }
@@ -297,7 +301,11 @@ writeFileSync(process.env.LVCE_TEST_LAUNCH_RESULT, JSON.stringify({ args: proces
       expect(launch.args).toEqual([root, '--wait'])
       expect(launch.runAsNode).toBeUndefined()
       expect(stderr).toBe('')
-      await expect(access(join(cachePath, 'lvce', 'electron', `44.1.2-${process.platform}-${process.arch}`, 'electron'), constants.X_OK)).resolves.toBeUndefined()
+      const cachedExecutablePath =
+        process.platform === 'darwin'
+          ? join(cachePath, 'lvce', 'electron', `44.1.2-${process.platform}-${process.arch}`, 'Electron.app', 'Contents', 'MacOS', 'Electron')
+          : join(cachePath, 'lvce', 'electron', `44.1.2-${process.platform}-${process.arch}`, 'electron')
+      await expect(access(cachedExecutablePath, constants.X_OK)).resolves.toBeUndefined()
 
       await execFileAsync(process.execPath, [cliPath, '--electron-version=44.1.2', '--wait'], { env })
       expect((await readFile(downloadResultPath, 'utf8')).trim().split('\n')).toHaveLength(1)
