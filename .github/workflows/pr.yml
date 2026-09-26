@@ -149,7 +149,9 @@ jobs:
           PLAYWRIGHT_BROWSERS_PATH: 0
       - name: Test status bar with many extension items
         working-directory: ./packages/extension-host-worker-tests
-        run: npm run e2e:headless -- --test-name-prefix=status-bar.extension-many-items
+        # Rendering 100,000 items takes ~22s locally and exceeds the default
+        # 25s on macOS CI. Keep a bounded stress-test window for every platform.
+        run: npm run e2e:headless -- --test-name-prefix=status-bar.extension-many-items --test-timeout=120000
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0
       - name: Test error dialog and notification rendering
