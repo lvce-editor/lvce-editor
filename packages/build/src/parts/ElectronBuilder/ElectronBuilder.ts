@@ -346,7 +346,7 @@ const copyElectronResult = async ({
     })
     await CreatePlaceholderElectronApp.createPlaceholderElectronApp({ product, version, config, electronVersion, asar })
     await Copy.copyFile({
-      from: `packages/build/.tmp/electron-builder-placeholder-app/dist/${GetWindowsUnpackedDir.getWindowsUnpackedDir(arch)}/${product.windowsExecutableName}.exe`,
+      from: `packages/build/.tmp/electron-builder-placeholder-app/dist/${GetWindowsUnpackedDir.getWindowsUnpackedDir(process.arch)}/${product.windowsExecutableName}.exe`,
       to: `packages/build/.tmp/linux/snap/${debArch}/app/${product.windowsExecutableName}.exe`,
     })
   }
