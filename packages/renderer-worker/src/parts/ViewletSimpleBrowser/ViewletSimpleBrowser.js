@@ -986,7 +986,7 @@ export const afterRender = async (oldState, newState) => {
       }
     }
   }
-  if (oldState.selectedTabIndex !== newState.selectedTabIndex || oldState.fullWidth !== newState.fullWidth) {
+  if (oldState.tabs !== newState.tabs || oldState.selectedTabIndex !== newState.selectedTabIndex || oldState.fullWidth !== newState.fullWidth) {
     await RendererProcess.invoke('Window.revealBrowserTab', newState.uid)
   }
   const { overlayIds: oldOverlayIds } = oldState
