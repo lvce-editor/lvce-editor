@@ -1,5 +1,9 @@
 import { beforeEach, expect, jest, test } from '@jest/globals'
 
+jest.unstable_mockModule('../src/parts/ViewletManager/ViewletManager.js', () => ({
+  load: jest.fn(async () => []),
+}))
+
 const panelWorkerInvocations: any[] = []
 let panelWorkerDiffResult: any[] = []
 let panelWorkerRenderCommands: any[] = []
@@ -29,6 +33,7 @@ jest.unstable_mockModule('../src/parts/PanelWorker/PanelWorker.js', () => {
 
 const ViewletLayout = await import('../src/parts/ViewletLayout/ViewletLayout.ts')
 const LayoutPoints = await import('../src/parts/ViewletLayout/LayoutPoints.ts')
+const ViewletManager = await import('../src/parts/ViewletManager/ViewletManager.js')
 const ViewletStates = await import('../src/parts/ViewletStates/ViewletStates.js')
 
 beforeEach(() => {
@@ -37,6 +42,7 @@ beforeEach(() => {
   panelWorkerDiffResult = []
   panelWorkerRenderCommands = []
   currentPanelView = ''
+  jest.mocked(ViewletManager.load).mockResolvedValue([])
 })
 
 const createPanelInstance = (uid = 77) => {
@@ -209,6 +215,39 @@ test('showPanel selects requested panel view when panel is visible', async () =>
     ['Panel.toggleView', 77, 'Terminals', 'file:///workspace/folder'],
     ['Panel.diff2', 77],
     ['Panel.render2', 77, [11]],
+  ])
+})
+
+test('showPanel selects requested panel view when panel is hidden', async () => {
+  jest.mocked(ViewletManager.load).mockResolvedValue([['Viewlet.create', 'Panel', 77]])
+  const state = {
+    ...ViewletLayout.create(1),
+    panelVisible: false,
+    panelView: 'Output',
+  }
+
+  const result = await ViewletLayout.showPanel(state, 'Problems')
+
+  expect(result.newState.panelVisible).toBe(true)
+  expect(result.newState.panelView).toBe('Problems')
+  expect(ViewletManager.load).toHaveBeenCalledWith(expect.objectContaining({ id: 'Panel' }), false, true, undefined)
+})
+
+test('showPanel keeps the panel visible when Problems is already selected', async () => {
+  createPanelInstance()
+  const state = {
+    ...ViewletLayout.create(1),
+    panelVisible: true,
+    panelView: 'Problems',
+  }
+
+  const result = await ViewletLayout.showPanel(state, 'Problems')
+
+  expect(result.newState.panelVisible).toBe(true)
+  expect(result.newState.panelView).toBe('Problems')
+  expect(panelWorkerInvocations).toEqual([
+    ['Panel.toggleView', 77, 'Problems', ''],
+    ['Panel.diff2', 77],
   ])
 })
 
