@@ -100,6 +100,11 @@ jobs:
         run: npm run e2e:headless -- --test-name-prefix=viewlet.editor-typescript-readonly-union-parameters
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0
+      - name: Test TypeScript destructured async defaults
+        working-directory: ./packages/extension-host-worker-tests
+        run: npm run e2e:headless -- --test-name-prefix=viewlet.editor-typescript-destructured-async-default-parameters
+        env:
+          PLAYWRIGHT_BROWSERS_PATH: 0
       - name: Test renderer layout blur dispatch
         if: matrix.os == 'ubuntu-24.04'
         run: node --experimental-vm-modules node_modules/jest/bin/jest.js --config packages/renderer-worker/package.json --runInBand --coverage=false --testPathPatterns=ViewletLayoutBlur.test
