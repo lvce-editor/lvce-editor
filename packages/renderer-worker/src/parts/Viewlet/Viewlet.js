@@ -176,7 +176,7 @@ export const send = (id, method, ...args) => {
 /**
  * @deprecated
  */
-export const dispose = async (id) => {
+export const dispose = async (id, deferDom = false) => {
   if (!id) {
     console.warn('no instance to dispose')
     return
@@ -189,6 +189,7 @@ export const dispose = async (id) => {
   const instanceUid = instance.state.uid
   // TODO status should have enum
   instance.status = 'disposing'
+  let deferredCommands
   try {
     if (!instance.factory) {
       throw new Error(`${id} is missing a factory function`)
@@ -201,7 +202,9 @@ export const dispose = async (id) => {
       await instance.factory.dispose(instance.state)
     }
     const cssDisposeCommands = getCssDisposeCommands(instance)
-    if (widgetDisposeCommands.length > 0 || cssDisposeCommands.length > 0) {
+    if (deferDom) {
+      deferredCommands = [...widgetDisposeCommands, ['Viewlet.dispose', instanceUid], ...cssDisposeCommands]
+    } else if (widgetDisposeCommands.length > 0 || cssDisposeCommands.length > 0) {
       await RendererProcess.invoke('Viewlet.sendMultiple', [...widgetDisposeCommands, ['Viewlet.dispose', instanceUid], ...cssDisposeCommands])
     } else {
       await RendererProcess.invoke(/* Viewlet.dispose */ 'Viewlet.dispose', /* id */ instanceUid)
@@ -217,6 +220,18 @@ export const dispose = async (id) => {
   instance.status = 'disposed'
   ViewletStates.remove(id)
   await GlobalEventBus.emitEvent(`Viewlet.dispose.${id}`)
+  return deferredCommands
+}
+
+// Hidden runtime views can retain live sessions while releasing their container DOM.
+export const hide = async (id) => {
+  const instance = ViewletStates.getInstance(id)
+  if (!instance?.factory.hide) {
+    return (await dispose(id, true)) || []
+  }
+  await instance.factory.hide(instance.state)
+  instance.status = 'hidden'
+  return [['Viewlet.dispose', instance.state.uid], ...getCssDisposeCommands(instance)]
 }
 
 export const disposeFunctional = (id) => {
