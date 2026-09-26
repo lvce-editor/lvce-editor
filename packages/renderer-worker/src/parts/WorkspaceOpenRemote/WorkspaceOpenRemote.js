@@ -1,4 +1,5 @@
 import * as Command from '../Command/Command.js'
+import * as ExtensionManagementWorker from '../ExtensionManagementWorker/ExtensionManagementWorker.js'
 import * as GetRemoteHomepage from '../GetRemoteHomepage/GetRemoteHomepage.js'
 import * as Notification from '../Notification/Notification.js'
 import * as Preferences from '../Preferences/Preferences.js'
@@ -6,7 +7,6 @@ import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as Workspace from '../Workspace/Workspace.js'
-import * as WorkspaceConnection from '../WorkspaceConnection/WorkspaceConnection.js'
 
 const getErrorMessage = (error) => {
   const message = error instanceof Error ? error.message : String(error)
@@ -19,10 +19,9 @@ const openRemoteInternal = async () => {
     await Notification.create('info', 'Open a workspace folder to view its Git remote.')
     return
   }
-  if (WorkspaceConnection.isActive()) {
-    throw new Error('Opening Git remotes is not yet supported for remote workspaces.')
-  }
-  const remote = await SharedProcess.invoke('Workspace.getGitRemote', cwd)
+  const remote = cwd.startsWith('remote-ssh://')
+    ? await ExtensionManagementWorker.invoke('Extensions.executeWorkspaceRequest', cwd, 'git-remote')
+    : await SharedProcess.invoke('Workspace.getGitRemote', cwd)
   if (Workspace.getPath() !== cwd) return
   const url = GetRemoteHomepage.getRemoteHomepage(remote, Preferences.get('git.remoteHosts'))
   if (!url) {
