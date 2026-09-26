@@ -1778,7 +1778,7 @@
     "productionPath": "/packages/source-control-worker/dist/sourceControlWorkerMain.js",
     "settingName": "develop.sourceControlWorkerPath",
     "hotReloadCommand": "Source Control.hotReload",
-    "contentSecurityPolicy": ["default-src 'none'"]
+    "contentSecurityPolicy": ["default-src 'none'", "script-src 'self'"]
   },
   {
     "id": "statusBar",
