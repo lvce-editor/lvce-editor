@@ -359,7 +359,7 @@ test('exposes Simple Browser state and renders edits through its component state
   ViewletStates.set(10, { factory, moduleId: 'SimpleBrowser', renderedState: state, state })
 
   expect(ComponentState.getComponents()).toEqual([
-    { displayName: 'SimpleBrowser', domAvailable: false, heapSnapshotAvailable: false, editable: true, moduleId: 'SimpleBrowser', uid: 10 },
+    { displayName: 'SimpleBrowser', domAvailable: true, heapSnapshotAvailable: false, editable: true, moduleId: 'SimpleBrowser', uid: 10 },
   ])
   await expect(ComponentState.getState(10)).resolves.toBe(state)
 

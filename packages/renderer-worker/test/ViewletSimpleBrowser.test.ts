@@ -76,6 +76,8 @@ jest.unstable_mockModule('../src/parts/ElectronWebContentsViewFunctions/Electron
     show: jest.fn(() => {
       throw new Error('not implemented')
     }),
+    acceptLogin: jest.fn(),
+    cancelLogin: jest.fn(),
     getStats: jest.fn(),
   }
 })
@@ -307,6 +309,79 @@ test('saveState preserves all browser tabs and the selected tab', () => {
       { favicon: '', iframeSrc: 'https://four.example', inputValue: 'https://four.example', title: 'Four' },
     ],
   })
+})
+
+test('submits credentials for the matching authentication challenge without storing them in component state', async () => {
+  const state = {
+    ...createTabsState(),
+    loginChallenges: [{ browserViewId: 12, requestId: '12:1' }],
+    overlayIds: ['login'],
+  }
+
+  const nextState = await ViewletSimpleBrowser.submitLogin(state, '12:1', 'alice', 'secret')
+
+  expect(ElectronWebContentsViewFunctions.acceptLogin).toHaveBeenCalledWith('12:1', 'alice', 'secret')
+  expect(nextState.loginChallenges).toEqual([])
+  expect(JSON.stringify(nextState)).not.toContain('secret')
+})
+
+test('cancels an authentication challenge when its browser tab navigates', async () => {
+  const state = {
+    ...createTabsState(),
+    loginChallenges: [{ browserViewId: 12, requestId: '12:1' }],
+    overlayIds: ['login'],
+  }
+
+  const nextState = await ViewletSimpleBrowser.handleWillNavigate(state, 12, 'https://next.example')
+
+  expect(ElectronWebContentsViewFunctions.cancelLogin).toHaveBeenCalledWith('12:1')
+  expect(nextState.loginChallenges).toEqual([])
+  expect(nextState.iframeSrc).toBe('https://next.example')
+})
+
+test('clears form values when a queued authentication challenge becomes active', async () => {
+  const oldState = { ...createTabsState(), loginChallenges: [{ browserViewId: 12, requestId: '12:1' }] }
+  const newState = { ...oldState, loginChallenges: [{ browserViewId: 13, requestId: '13:2' }] }
+
+  await ViewletSimpleBrowser.afterRender(oldState, newState)
+
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.setValueByName', newState.uid, 'username', '')
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.setValueByName', newState.uid, 'password', '')
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.focusElementByName', newState.uid, 'username')
+})
+
+test('keeps simultaneous authentication challenges separate and ignores stale submission', async () => {
+  const first = { browserViewId: 12, requestId: '12:1' }
+  const second = { requestId: '13:2', host: 'two.example' }
+  const state = { ...createTabsState(), loginChallenges: [first], overlayIds: ['login'] }
+
+  const queued = await ViewletSimpleBrowser.handleLogin(state, 13, second)
+  expect(queued.loginChallenges).toEqual([first, { ...second, browserViewId: 13 }])
+  expect(await ViewletSimpleBrowser.handleLogin(queued, 13, second)).toBe(queued)
+  const submitted = await ViewletSimpleBrowser.submitLogin(queued, '12:1', 'alice', 'secret')
+  expect(submitted.loginChallenges).toEqual([{ ...second, browserViewId: 13 }])
+  expect(submitted.overlayIds).toContain('login')
+  expect(await ViewletSimpleBrowser.submitLogin(submitted, '12:1', 'alice', 'secret')).toBe(submitted)
+  expect(ElectronWebContentsViewFunctions.acceptLogin).toHaveBeenCalledTimes(1)
+  expect(ElectronWebContentsViewFunctions.acceptLogin).toHaveBeenCalledWith('12:1', 'alice', 'secret')
+  const canceled = await ViewletSimpleBrowser.cancelLoginOnEscape(submitted, '13:2', 'Escape')
+  expect(canceled.loginChallenges).toEqual([])
+  expect(canceled.overlayIds).not.toContain('login')
+  expect(ElectronWebContentsViewFunctions.cancelLogin).toHaveBeenCalledWith('13:2')
+})
+
+test('closing a challenged tab cancels only its pending authentication', async () => {
+  const first = { browserViewId: 12, requestId: '12:1' }
+  const second = { browserViewId: 13, requestId: '13:2' }
+  const state = { ...createTabsState(), loginChallenges: [first, second], overlayIds: ['login'] }
+
+  const nextState = await ViewletSimpleBrowser.closeTab(state, 1)
+
+  expect(nextState.loginChallenges).toEqual([first])
+  expect(nextState.overlayIds).toContain('login')
+  expect(ElectronWebContentsViewFunctions.cancelLogin).toHaveBeenCalledTimes(1)
+  expect(ElectronWebContentsViewFunctions.cancelLogin).toHaveBeenCalledWith('13:2')
+  expect(nextState.tabs.some((tab) => tab.browserViewId === 13)).toBe(false)
 })
 
 test('uses the URL input focus context for the address field', () => {
@@ -1554,10 +1629,9 @@ test('disposes every retained web contents view with the Simple Browser', async 
   expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.sendMultiple', [['Css.removeCssStyleSheet', 'simple-browser-preview-7']])
 })
 
-test('handleWillNavigate', () => {
+test('handleWillNavigate', async () => {
   const state = ViewletSimpleBrowser.create()
-  // @ts-ignore
-  expect(ViewletSimpleBrowser.handleWillNavigate(state, 'https://example.com', false, false)).toMatchObject({
+  expect(await ViewletSimpleBrowser.handleWillNavigate(state, 0, 'https://example.com')).toMatchObject({
     isLoading: true,
   })
 })
@@ -1669,7 +1743,7 @@ test('keeps the internal new tab URL out of the address state', async () => {
   // @ts-ignore
   ElectronWebContentsViewFunctions.getStats.mockResolvedValueOnce({ canGoBack: false, canGoForward: false })
 
-  const loadingState = ViewletSimpleBrowser.handleWillNavigate(state, 12, SimpleBrowserNewTabPage.url)
+  const loadingState = await ViewletSimpleBrowser.handleWillNavigate(state, 12, SimpleBrowserNewTabPage.url)
   const loadedState = await ViewletSimpleBrowser.handleDidNavigate(loadingState, 12, SimpleBrowserNewTabPage.url)
 
   expect(loadingState).toMatchObject({ iframeSrc: '', isLoading: true })
@@ -2607,7 +2681,7 @@ test('openOrRevealTab preserves existing tabs when opening a new remote', async 
 
 test('synchronizes the address after a page starts and finishes navigation', async () => {
   const state = { ...ViewletSimpleBrowser.create(), browserViewId: 12, inputValue: 'https://example.com', iframeSrc: 'https://example.com' }
-  const loadingState = ViewletSimpleBrowser.handleWillNavigate(state, 12, 'https://example.com/next')
+  const loadingState = await ViewletSimpleBrowser.handleWillNavigate(state, 12, 'https://example.com/next')
   jest.mocked(ElectronWebContentsViewFunctions.getStats).mockResolvedValueOnce({ canGoBack: true, canGoForward: false })
   const loadedState = await ViewletSimpleBrowser.handleDidNavigate(loadingState, 12, 'https://example.com/next')
 

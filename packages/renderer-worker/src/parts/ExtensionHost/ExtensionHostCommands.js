@@ -55,8 +55,8 @@ const searchDirectory = async (uri, prefix = '') => {
 
 export const searchFileWithHtml = (uri) => searchDirectory(uri)
 
-export const searchFileWithMemory = () => {
-  return Object.entries(FileSystemMemory.getFiles())
+export const searchFileWithMemory = async () => {
+  return Object.entries(await FileSystemMemory.getFiles())
     .filter(([, value]) => value.type === DirentType.File)
     .map(([path]) => path)
 }

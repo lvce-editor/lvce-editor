@@ -103,6 +103,7 @@ export const getSimpleBrowserVirtualDom = (
   historyTab = false,
   historyEntries = [],
   historySearchValue = '',
+  loginChallenge,
 ) => {
   const inlineSuggestion = getInlineSuggestion(value, suggestions)
   const historyDom = historyTab ? GetSimpleBrowserHistoryVirtualDom.getSimpleBrowserHistoryVirtualDom(historyEntries, historySearchValue) : []
@@ -123,7 +124,8 @@ export const getSimpleBrowserVirtualDom = (
         (historyDom.length > 0 ? 1 : 0) +
         (isNewTab ? 1 : 0) +
         (suggestions.length > 0 ? 1 : 0) +
-        (tabHover ? 1 : 0),
+        (tabHover ? 1 : 0) +
+        (loginChallenge ? 1 : 0),
     },
   ]
   if (tabsEnabled) {
@@ -504,6 +506,100 @@ export const getSimpleBrowserVirtualDom = (
         childCount: 1,
       },
       text(tabHover.statusLabel),
+    )
+  }
+  if (loginChallenge) {
+    dom.push(
+      {
+        type: VirtualDomElements.Div,
+        className: 'SimpleBrowserLoginBackdrop',
+        childCount: 1,
+      },
+      {
+        type: VirtualDomElements.Div,
+        className: 'SimpleBrowserLoginDialog',
+        role: AriaRoles.Dialog,
+        ariaModal: true,
+        ariaLabel: 'Sign in to website',
+        childCount: 4,
+      },
+      {
+        type: VirtualDomElements.Div,
+        className: 'SimpleBrowserLoginTitle',
+        childCount: 1,
+      },
+      text('Sign in to website'),
+      {
+        type: VirtualDomElements.Div,
+        className: 'SimpleBrowserLoginOrigin',
+        childCount: 1,
+      },
+      text(loginChallenge.host || ''),
+      {
+        type: VirtualDomElements.Div,
+        className: 'SimpleBrowserLoginRealm',
+        childCount: 1,
+      },
+      text(loginChallenge.realm ? `“${loginChallenge.realm}” requires a username and password.` : 'This website requires a username and password.'),
+      {
+        type: VirtualDomElements.Form,
+        className: 'SimpleBrowserLoginForm',
+        'data-requestId': loginChallenge.requestId,
+        childCount: 3,
+        onSubmit: 'handle-simple-browser-login-submit',
+        onKeyDown: 'handle-simple-browser-login-keydown',
+      },
+      {
+        type: VirtualDomElements.Label,
+        className: 'SimpleBrowserLoginLabel',
+        childCount: 2,
+      },
+      text('Username'),
+      {
+        type: VirtualDomElements.Input,
+        className: 'InputBox SimpleBrowserLoginInput',
+        name: 'username',
+        autoFocus: true,
+        autocomplete: 'username',
+        required: true,
+        childCount: 0,
+      },
+      {
+        type: VirtualDomElements.Label,
+        className: 'SimpleBrowserLoginLabel',
+        childCount: 2,
+      },
+      text('Password'),
+      {
+        type: VirtualDomElements.Input,
+        className: 'InputBox SimpleBrowserLoginInput',
+        name: 'password',
+        inputType: 'password',
+        autocomplete: 'current-password',
+        required: true,
+        childCount: 0,
+      },
+      {
+        type: VirtualDomElements.Div,
+        className: 'SimpleBrowserLoginActions',
+        childCount: 2,
+      },
+      {
+        type: VirtualDomElements.Input,
+        className: 'Button ButtonSecondary',
+        inputType: 'button',
+        value: 'Cancel',
+        'data-requestId': loginChallenge.requestId,
+        onClick: 'handle-simple-browser-login-cancel',
+        childCount: 0,
+      },
+      {
+        type: VirtualDomElements.Input,
+        className: 'Button ButtonPrimary',
+        inputType: 'submit',
+        value: 'Sign in',
+        childCount: 0,
+      },
     )
   }
   return dom

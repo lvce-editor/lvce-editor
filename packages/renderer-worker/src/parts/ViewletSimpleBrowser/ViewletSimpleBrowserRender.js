@@ -17,6 +17,13 @@ export const renderEventListeners = () => {
     { name: 'handleSimpleBrowserFindPrevious', params: ['findPrevious'] },
     { name: 'handleSimpleBrowserFindClose', params: ['closeFind'] },
     { name: DomEventListenerFunctions.HandleSubmitSimpleBrowserAddress, params: ['go'], preventDefault: true },
+    {
+      name: 'handle-simple-browser-login-submit',
+      params: ['submitLogin', 'event.currentTarget.dataset.requestId', 'event.currentTarget.elements.username.value', 'event.currentTarget.elements.password.value'],
+      preventDefault: true,
+    },
+    { name: 'handle-simple-browser-login-keydown', params: ['cancelLoginOnEscape', 'event.currentTarget.dataset.requestId', 'event.key'] },
+    { name: 'handle-simple-browser-login-cancel', params: ['cancelLogin', 'event.currentTarget.dataset.requestId'] },
     { name: DomEventListenerFunctions.HandleBlurSimpleBrowserAddress, params: ['handleAddressBlur'] },
     { name: DomEventListenerFunctions.HandlePointerDownSimpleBrowserSuggestion, params: ['handleSuggestionPointerDown'], preventDefault: true },
     { name: DomEventListenerFunctions.HandleClickSuggestion, params: ['acceptSuggestion', 'event.currentTarget.dataset.value'] },
@@ -210,7 +217,13 @@ const getDom = (state) => {
     historyTab,
     state.history,
     state.historySearchValue,
+    state.loginChallenges?.[0],
   )
+}
+
+export const getComponentDom = (state) => {
+  const dom = getDom(state)
+  return dom.map((node) => (node.name === InputName.SimpleBrowserAddress ? { ...node, value: state.inputValue } : node))
 }
 
 const renderDom = {
@@ -235,6 +248,7 @@ const renderDom = {
       oldState.tabsEnabled === newState.tabsEnabled &&
       oldState.audioIndicatorEnabled === newState.audioIndicatorEnabled &&
       oldState.tabHover === newState.tabHover &&
+      oldState.loginChallenges === newState.loginChallenges &&
       oldState.tabWidth === newState.tabWidth &&
       oldState.history === newState.history &&
       oldState.historySearchValue === newState.historySearchValue &&

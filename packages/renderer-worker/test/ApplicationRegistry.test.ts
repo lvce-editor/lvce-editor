@@ -1,12 +1,26 @@
 import { afterEach, expect, test } from '@jest/globals'
-import * as ApplicationRegistry from '../src/parts/ApplicationRegistry/ApplicationRegistry.ts'
+const stored = new Map<string, Response>()
+Object.defineProperty(globalThis, 'location', { configurable: true, value: { href: 'https://example.test/app/' } })
+Object.defineProperty(globalThis, 'caches', {
+  configurable: true,
+  value: {
+    open: async (): Promise<unknown> => ({
+      delete: async (url: string): Promise<boolean> => stored.delete(url),
+      match: async (url: string): Promise<Response | undefined> => stored.get(url)?.clone(),
+      put: async (url: string, response: Response): Promise<void> => {
+        stored.set(url, response.clone())
+      },
+    }),
+  },
+})
+const ApplicationRegistry = await import('../src/parts/ApplicationRegistry/ApplicationRegistry.ts')
 
-const source = { id: 'source', layoutUid: 1, workspacePath: 'memfs:///source', workspaceUri: 'memfs:///source', href: '' }
+const source = { href: '', id: 'source', layoutUid: 1, workspacePath: 'memfs:///source', workspaceUri: 'memfs:///source' }
 const preview = { ...source, id: 'preview', layoutUid: 2 }
 
-afterEach(() => {
-  ApplicationRegistry.remove('source')
-  ApplicationRegistry.remove('preview')
+afterEach(async () => {
+  await ApplicationRegistry.remove('source')
+  await ApplicationRegistry.remove('preview')
 })
 
 test('rejects component ownership collisions without changing either application', () => {
@@ -26,12 +40,12 @@ test('rejects duplicate layouts before registering a second application', () => 
   expect(() => ApplicationRegistry.get('preview')).toThrow('Application not found')
 })
 
-test('removing one application releases only its ownership', () => {
+test('removing one application releases only its ownership', async () => {
   ApplicationRegistry.create(source)
   ApplicationRegistry.create(preview)
   ApplicationRegistry.own('source', 3)
   ApplicationRegistry.own('preview', 4)
-  ApplicationRegistry.remove('preview')
+  await ApplicationRegistry.remove('preview')
 
   expect(ApplicationRegistry.getOwner(2)).toBeUndefined()
   expect(ApplicationRegistry.getOwner(4)).toBeUndefined()
@@ -47,19 +61,19 @@ test('stores an immutable application snapshot', () => {
   expect(Object.isFrozen(ApplicationRegistry.get('source'))).toBe(true)
 })
 
-test('view state is isolated even for identical storage keys and resets with the application', () => {
+test('view state is isolated even for identical storage keys and resets with the application', async () => {
   ApplicationRegistry.create(source)
   ApplicationRegistry.create(preview)
   const value = { selected: ['src/main.ts'] }
-  ApplicationRegistry.setSavedState('source', 'Explorer', value)
-  ApplicationRegistry.setSavedState('preview', 'Explorer', { selected: ['README.md'] })
+  await ApplicationRegistry.setSavedState('source', 'Explorer', value)
+  await ApplicationRegistry.setSavedState('preview', 'Explorer', { selected: ['README.md'] })
   value.selected.push('extension.json')
-  expect(ApplicationRegistry.getSavedState('source', 'Explorer')).toEqual({ selected: ['src/main.ts'] })
-  expect(ApplicationRegistry.getSavedState('preview', 'Explorer')).toEqual({ selected: ['README.md'] })
-  ApplicationRegistry.remove('preview')
+  expect(await ApplicationRegistry.getSavedState('source', 'Explorer')).toEqual({ selected: ['src/main.ts'] })
+  expect(await ApplicationRegistry.getSavedState('preview', 'Explorer')).toEqual({ selected: ['README.md'] })
+  await ApplicationRegistry.remove('preview')
   ApplicationRegistry.create(preview)
-  expect(ApplicationRegistry.getSavedState('preview', 'Explorer')).toBeUndefined()
-  expect(ApplicationRegistry.getSavedState('source', 'Explorer')).toEqual({ selected: ['src/main.ts'] })
+  expect(await ApplicationRegistry.getSavedState('preview', 'Explorer')).toBeUndefined()
+  expect(await ApplicationRegistry.getSavedState('source', 'Explorer')).toEqual({ selected: ['src/main.ts'] })
 })
 
 test('closing blocks new operations and claims but waits for previously accepted work', async () => {
@@ -76,7 +90,7 @@ test('closing blocks new operations and claims but waits for previously accepted
   await running
   await waiting
   expect(ApplicationRegistry.getOwner(4)).toBe('preview')
-  ApplicationRegistry.remove('source')
+  await ApplicationRegistry.remove('source')
   ApplicationRegistry.create(source)
   expect(ApplicationRegistry.assertOpen('source').id).toBe('source')
 })
@@ -90,4 +104,14 @@ test('failed operations do not keep application teardown pending', async () => {
   ).rejects.toThrow('failed')
   ApplicationRegistry.close('source')
   await ApplicationRegistry.waitForOperations('source')
+})
+
+test('replacing and disposing editor snapshots removes obsolete storage entries', async () => {
+  ApplicationRegistry.create(source)
+  await ApplicationRegistry.setSavedState('source', 'Editor', { lines: ['first document'] })
+  await ApplicationRegistry.setSavedState('source', 'Editor', { lines: ['replacement document'] })
+  expect(stored.size).toBe(1)
+  expect(await ApplicationRegistry.getSavedState('source', 'Editor')).toEqual({ lines: ['replacement document'] })
+  await ApplicationRegistry.remove('source')
+  expect(stored.size).toBe(0)
 })
