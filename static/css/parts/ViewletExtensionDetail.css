@@ -98,10 +98,10 @@
 
 .RuntimeStatusDefinitionList {
   align-items: baseline;
-  column-gap: 24px;
+  column-gap: 12px;
   contain: content;
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
   margin: 0;
   max-width: 640px;
   row-gap: 12px;
@@ -109,12 +109,10 @@
 
 .RuntimeStatusDefinitionList > dt {
   color: var(--DescriptionForeground, color-mix(in srgb, var(--WorkbenchForeground) 76%, transparent));
-  flex: 0 0 140px;
   font-weight: 600;
 }
 
 .RuntimeStatusDefinitionList > dd {
-  flex: 1 1 calc(100% - 164px);
   margin: 0;
   min-width: 0;
   overflow-wrap: anywhere;
