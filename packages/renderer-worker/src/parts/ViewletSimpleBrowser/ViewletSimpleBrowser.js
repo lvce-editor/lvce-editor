@@ -48,10 +48,6 @@ export const serializeCommands = true
 
 const navigationHeaderHeight = 30
 const tabsHeaderHeight = 35
-const newTabButtonWidth = 24
-const tabHorizontalBoxSize = 15
-const minimumTabWidth = 90
-const maximumTabWidth = 180
 const closeTabKeyBinding = KeyModifier.CtrlCmd | KeyCode.KeyW
 const reopenClosedTabKeyBinding = KeyModifier.CtrlCmd | KeyModifier.Shift | KeyCode.KeyT
 const createNewTabKeyBinding = KeyModifier.CtrlCmd | KeyCode.KeyT
@@ -842,22 +838,14 @@ export const closeCurrentTab = (state) => {
   return closeTab(state, state.selectedTabIndex)
 }
 
-const getTabWidth = (state) => {
-  const { tabs, width } = state
-  if (tabs.length === 0 || !Number.isFinite(width)) {
-    return maximumTabWidth
-  }
-  const availableTabWidth = (width - newTabButtonWidth) / tabs.length - tabHorizontalBoxSize
-  return Math.max(minimumTabWidth, Math.min(maximumTabWidth, availableTabWidth))
-}
-
-export const handleTabsPointerOver = (state) => {
-  if (state.tabWidth !== undefined || state.tabs.length === 0) {
+export const handleTabsPointerOver = (state, tabWidth) => {
+  if (state.tabWidth !== undefined || state.tabs.length === 0 || !Number.isFinite(tabWidth) || tabWidth <= 0) {
     return state
   }
+  // Freeze the rendered width: flex layout can be narrower than the space available to the view.
   return {
     ...state,
-    tabWidth: getTabWidth(state),
+    tabWidth,
   }
 }
 
