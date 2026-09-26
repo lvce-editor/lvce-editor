@@ -900,7 +900,6 @@ test('a transfer command can await a serialized attachment without blocking its 
   expect(ViewletStates.getState(2).value).toBe('destination')
 })
 
-
 test.each([false, true])('palette opening is tracked during load and cleared after failure=%s', async (fail) => {
   const QuickPickOpening = await import('../src/parts/QuickPickOpening/QuickPickOpening.js')
   // @ts-ignore
@@ -912,4 +911,63 @@ test.each([false, true])('palette opening is tracked during load and cleared aft
   if (fail) await expect(Viewlet.openWidget('QuickPick', 'commands')).rejects.toThrow('palette load failed')
   else await Viewlet.openWidget('QuickPick', 'commands')
   expect(QuickPickOpening.isOpening(undefined)).toBe(false)
+})
+
+test('dispose - can defer DOM removal to the parent render transaction', async () => {
+  let resolveDispose = () => {}
+  const factoryDispose = jest.fn(
+    (_state: unknown) =>
+      new Promise<void>((resolve) => {
+        resolveDispose = resolve
+      }),
+  )
+  ViewletStates.set(2, {
+    state: { uid: 2 },
+    renderedState: { uid: 2 },
+    moduleId: 'Problems',
+    factory: { dispose: factoryDispose },
+  })
+
+  const pending = Viewlet.dispose(2, true)
+  await Promise.resolve()
+  expect(factoryDispose).toHaveBeenCalledWith({ uid: 2 })
+  expect(ViewletStates.getInstance(2)).toBeDefined()
+  expect(RendererProcess.invoke).not.toHaveBeenCalled()
+  resolveDispose()
+
+  expect(await pending).toEqual([['Viewlet.dispose', 2]])
+  expect(ViewletStates.getInstance(2)).toBeUndefined()
+  expect(RendererProcess.invoke).not.toHaveBeenCalled()
+})
+
+test('hide - retains runtime state and returns container cleanup for the parent transaction', async () => {
+  const hide = jest.fn(async (_state: unknown) => {})
+  const dispose = jest.fn()
+  ViewletStates.set(2, {
+    state: { uid: 2, tabs: [{ uid: 3 }] },
+    renderedState: { uid: 2 },
+    moduleId: 'Terminals',
+    factory: { hide, dispose },
+  })
+
+  expect(await Viewlet.hide(2)).toEqual([['Viewlet.dispose', 2]])
+  expect(hide).toHaveBeenCalledWith({ uid: 2, tabs: [{ uid: 3 }] })
+  expect(dispose).not.toHaveBeenCalled()
+  expect(ViewletStates.getInstance(2).status).toBe('hidden')
+  expect(RendererProcess.invoke).not.toHaveBeenCalled()
+})
+
+test('hide - disposes ordinary child worker state without removing DOM before the parent patches', async () => {
+  const dispose = jest.fn(async (_state: unknown) => {})
+  ViewletStates.set(2, {
+    state: { uid: 2 },
+    renderedState: { uid: 2 },
+    moduleId: 'Problems',
+    factory: { dispose },
+  })
+
+  expect(await Viewlet.hide(2)).toEqual([['Viewlet.dispose', 2]])
+  expect(dispose).toHaveBeenCalledWith({ uid: 2 })
+  expect(ViewletStates.getInstance(2)).toBeUndefined()
+  expect(RendererProcess.invoke).not.toHaveBeenCalled()
 })
