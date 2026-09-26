@@ -9,7 +9,9 @@ const RendererProcess = await import('../src/parts/RendererProcess/RendererProce
 const Viewlet = await import('../src/parts/Viewlet/Viewlet.js')
 const Preview = await import('../src/parts/SimpleBrowserPreview/SimpleBrowserPreview.js')
 
-beforeEach(() => jest.resetAllMocks())
+beforeEach(() => {
+  jest.resetAllMocks()
+})
 
 test('creates a detached child preview with the exact decoded URI and content bounds', async () => {
   jest.mocked(ViewletManager.load).mockResolvedValue([['create']])
