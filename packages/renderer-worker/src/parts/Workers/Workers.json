@@ -1219,8 +1219,13 @@
         },
         "renderActions": { "name": "Output.renderActions", "parameters": [{ "source": "state", "name": "uid" }] },
         "saveState": { "name": "Output.saveState", "parameters": [{ "source": "state", "name": "uid" }] },
+        "setComponentState": { "name": "Output.setComponentState", "parameters": [
+          { "source": "state", "name": "id" }, { "source": "argument", "name": "componentState" }
+        ] },
         "terminate": { "name": "Output.terminate", "parameters": [] },
         "getCommandIds": { "name": "Output.getCommandIds", "parameters": [] },
+        "getComponentDom": { "name": "Output.getComponentDom", "parameters": [{ "source": "state", "name": "id" }] },
+        "getComponentState": { "name": "Output.getComponentState", "parameters": [{ "source": "state", "name": "id" }] },
         "renderEventListeners": { "name": "Output.renderEventListeners", "parameters": [] }
       },
       "outputs": [{ "stateField": "actionsDom", "method": { "name": "Output.renderActions", "parameters": [{ "source": "state", "name": "uid" }] } }],
