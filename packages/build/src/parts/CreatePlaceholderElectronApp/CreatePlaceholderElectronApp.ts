@@ -22,13 +22,14 @@ const copyElectronBuilderConfig = async ({ config, version, product, electronVer
   })
 }
 
-const runElectronBuilder = async ({}) => {
+const runElectronBuilder = async ({ arch }) => {
   try {
     /**
      * @type {ElectronBuilder.CliOptions}
      */
     const options = {
       projectDir: Path.absolute('packages/build/.tmp/electron-builder-placeholder-app'),
+      targets: ElectronBuilder.Platform.WINDOWS.createTarget('nsis', ElectronBuilder.archFromString(arch)),
     }
     await ElectronBuilder.build(options)
   } catch (error) {
@@ -39,7 +40,7 @@ const runElectronBuilder = async ({}) => {
 // workaround for modifying exe properties, which
 // doesn't seem to be possible with electron builder
 // for prepackaged apps
-export const createPlaceholderElectronApp = async ({ config, product, version, electronVersion, asar = false }) => {
+export const createPlaceholderElectronApp = async ({ config, product, version, electronVersion, arch, asar = false }) => {
   await copyElectronBuilderConfig({ config, product, version, electronVersion, asar })
 
   await WriteFile.writeFile({
@@ -52,5 +53,5 @@ export const createPlaceholderElectronApp = async ({ config, product, version, e
     to: 'packages/build/.tmp/electron-builder-placeholder-app/build/icon.ico',
   })
 
-  await runElectronBuilder({})
+  await runElectronBuilder({ arch })
 }
