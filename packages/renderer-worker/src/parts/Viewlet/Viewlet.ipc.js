@@ -16,5 +16,6 @@ export const Commands = {
   reload: Viewlet.reload,
   send: Viewlet.send,
   dispose: Viewlet.dispose,
+  hide: Viewlet.hide,
   resize: Viewlet.resize,
 }

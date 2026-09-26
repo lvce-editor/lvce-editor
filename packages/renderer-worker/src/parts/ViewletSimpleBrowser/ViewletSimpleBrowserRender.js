@@ -19,7 +19,12 @@ export const renderEventListeners = () => {
     { name: DomEventListenerFunctions.HandleSubmitSimpleBrowserAddress, params: ['go'], preventDefault: true },
     {
       name: 'handle-simple-browser-login-submit',
-      params: ['submitLogin', 'event.currentTarget.dataset.requestId', 'event.currentTarget.elements.username.value', 'event.currentTarget.elements.password.value'],
+      params: [
+        'submitLogin',
+        'event.currentTarget.dataset.requestId',
+        'event.currentTarget.elements.username.value',
+        'event.currentTarget.elements.password.value',
+      ],
       preventDefault: true,
     },
     { name: 'handle-simple-browser-login-keydown', params: ['cancelLoginOnEscape', 'event.currentTarget.dataset.requestId', 'event.key'] },
@@ -184,6 +189,7 @@ const areTabsEqual = (oldTabs, newTabs) => {
     const newTab = newTabs[index]
     return (
       oldTab.browserViewId === newTab.browserViewId &&
+      oldTab.previewUid === newTab.previewUid &&
       oldTab.favicon === newTab.favicon &&
       oldTab.isAudioPlaying === newTab.isAudioPlaying &&
       oldTab.muted === newTab.muted &&
