@@ -1,3 +1,4 @@
+import * as HtmlPreviewUrl from '../HtmlPreviewUrl/HtmlPreviewUrl.js'
 import * as BrowserFullWidth from '../BrowserFullWidth/BrowserFullWidth.js'
 import * as ActivityBarWorker from '../ActivityBarWorker/ActivityBarWorker.js'
 import * as ApplicationRegistry from '../ApplicationRegistry/ApplicationRegistry.ts'
@@ -1271,6 +1272,17 @@ export const showPreview = async (
   uri: string = initialState.previewUri,
   previewViewletId: string = getPreviewViewletId(uri),
 ) => {
+  if (previewViewletId === ViewletModuleId.Preview && /\.html?(?:[?#].*)?$/i.test(uri)) {
+    return showPreview(initialState, HtmlPreviewUrl.encode(uri), ViewletModuleId.SimpleBrowser)
+  }
+  if (HtmlPreviewUrl.isHtmlPreviewUrl(uri)) {
+    previewViewletId = ViewletModuleId.SimpleBrowser
+    if (initialState.previewVisible && initialState.previewViewletId === ViewletModuleId.SimpleBrowser) {
+      await Viewlet.executeViewletCommand(initialState.previewId, 'openTab', uri, 'foreground-tab')
+      return { newState: initialState, commands: [] }
+    }
+  }
+
   if (
     initialState.previewVisible &&
     initialState.previewId !== -1 &&

@@ -9,6 +9,7 @@ jest.unstable_mockModule('../src/parts/SaveState/SaveState.js', () => {
 
 jest.unstable_mockModule('../src/parts/Viewlet/Viewlet.js', () => {
   return {
+    executeViewletCommand: jest.fn(),
     disposeFunctional: jest.fn(() => []),
     resize: jest.fn(() => []),
   }
@@ -323,8 +324,8 @@ test('showPreview enables preview sash', async () => {
   expect(result.newState).toMatchObject({
     previewVisible: true,
     previewSashVisible: true,
-    previewUri: 'file:///test.html',
-    previewViewletId: 'Preview',
+    previewUri: 'html-preview:///file%3A%2F%2F%2Ftest.html',
+    previewViewletId: 'SimpleBrowser',
   })
 })
 
@@ -356,14 +357,14 @@ test('showPreview keeps the preview hidden until its viewlet has loaded', async 
 
   expect(latestState).toMatchObject({
     previewVisible: false,
-    previewUri: 'file:///test.html',
+    previewUri: 'html-preview:///file%3A%2F%2F%2Ftest.html',
   })
 
   resolveLoad([['Viewlet.createFunctionalRoot', 'Preview', 2, true]])
   const result = await resultPromise
   expect(result.newState).toMatchObject({
     previewVisible: true,
-    previewUri: 'file:///test.html',
+    previewUri: 'html-preview:///file%3A%2F%2F%2Ftest.html',
   })
 })
 
@@ -397,65 +398,13 @@ test('showPreview opens the simple browser in the preview area', async () => {
   )
 })
 
-test('showPreview moves an open simple browser to the secondary preview before opening an html preview', async () => {
-  // @ts-ignore
-  ViewletStates.getInstance.mockImplementation((id) => (id === 7 ? { state: { uid: 7 } } : undefined))
-  const state = LayoutPoints.getPoints({
-    ...ViewletLayout.create(1),
-    previewActionsEventListeners: ['click'],
-    previewActionsUid: 9,
-    previewId: 7,
-    previewMinWidth: 100,
-    previewUri: 'simple-browser://12',
-    previewViewletId: 'SimpleBrowser',
-    previewVisible: true,
-    previewWidth: 600,
-    secondaryPreviewMinWidth: 100,
-    statusBarHeight: 20,
-    statusBarVisible: true,
-    titleBarHeight: 35,
-    titleBarVisible: true,
-    windowHeight: 800,
-    windowWidth: 1200,
-  })
-
+test('showPreview opens HTML in the existing browser without a second preview area', async () => {
+  const state = { ...ViewletLayout.create(1), previewVisible: true, previewViewletId: 'SimpleBrowser', previewId: 7 }
   const result = await ViewletLayout.showPreview(state, 'file:///test.html')
-
-  expect(result.newState).toMatchObject({
-    previewLeft: 400,
-    previewUri: 'file:///test.html',
-    previewViewletId: 'Preview',
-    previewVisible: true,
-    previewWidth: 400,
-    secondaryPreviewActionsEventListeners: ['click'],
-    secondaryPreviewActionsUid: 9,
-    secondaryPreviewId: 7,
-    secondaryPreviewLeft: 800,
-    secondaryPreviewUri: 'simple-browser://12',
-    secondaryPreviewViewletId: 'SimpleBrowser',
-    secondaryPreviewVisible: true,
-    secondaryPreviewWidth: 400,
-  })
-  expect(Viewlet.disposeFunctional).not.toHaveBeenCalledWith(7)
-  expect(Viewlet.disposeFunctional).not.toHaveBeenCalledWith(9)
-  expect(Viewlet.resize).toHaveBeenCalledWith(7, {
-    x: result.newState.secondaryPreviewLeft,
-    y: result.newState.secondaryPreviewTop,
-    width: result.newState.secondaryPreviewWidth,
-    height: result.newState.secondaryPreviewHeight,
-  })
-  expect(ViewletManager.load).toHaveBeenCalledTimes(1)
-  expect(ViewletManager.load).toHaveBeenCalledWith(
-    expect.objectContaining({
-      id: 'Preview',
-      uri: 'file:///test.html',
-      x: 400,
-      width: 400,
-    }),
-    false,
-    true,
-    undefined,
-  )
+  expect(result).toEqual({ newState: state, commands: [] })
+  expect(Viewlet.executeViewletCommand).toHaveBeenCalledWith(7, 'openTab', 'html-preview:///file%3A%2F%2F%2Ftest.html', 'foreground-tab')
+  expect(ViewletManager.load).not.toHaveBeenCalled()
+  expect(Viewlet.disposeFunctional).not.toHaveBeenCalled()
 })
 
 test.each([
@@ -485,7 +434,6 @@ test.each([
     previewWidth: 400,
     statusBarWidth: 800,
   })
-
 })
 
 test.each([
@@ -728,14 +676,7 @@ test('showPreview keeps code visible when voice chat is already open', async () 
   })
   expect(Viewlet.disposeFunctional).not.toHaveBeenCalledWith(8)
   expect(result.newState.previewHeight).toBe(result.newState.windowHeight - result.newState.previewTop)
-  expect(result.commands).toContainEqual([
-    'Viewlet.setBounds',
-    expect.any(Number),
-    0,
-    0,
-    result.newState.previewWidth,
-    result.newState.previewHeight,
-  ])
+  expect(result.commands).toContainEqual(['Viewlet.setBounds', expect.any(Number), 0, 0, result.newState.previewWidth, result.newState.previewHeight])
 })
 
 test('hideSecondaryPreview leaves the primary preview mounted', async () => {
