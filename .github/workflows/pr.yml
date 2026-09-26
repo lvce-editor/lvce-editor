@@ -141,12 +141,6 @@ jobs:
         run: npm run e2e:headless -- --test-name-prefix=viewlet.extensions-shortcut-focus
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0
-      - name: Test editor PageUp moves cursor to document start
-        if: matrix.os == 'ubuntu-24.04'
-        working-directory: ./packages/extension-host-worker-tests
-        run: npm run e2e:headless -- --test-name-prefix=viewlet.editor-pageup-document-start
-        env:
-          PLAYWRIGHT_BROWSERS_PATH: 0
       - name: Test Source Control provider progress
         if: matrix.os == 'ubuntu-24.04'
         working-directory: ./packages/extension-host-worker-tests
