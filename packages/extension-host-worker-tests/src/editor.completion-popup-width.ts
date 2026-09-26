@@ -2,7 +2,7 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'editor.completion-popup-width'
 
-export const test: Test = async ({ Command, Editor, EditorCompletion, expect, Extension, FileSystem, Locator, Main, Workspace }) => {
+export const test: Test = async ({ Command, Editor, expect, Extension, FileSystem, Locator, Main, Workspace }) => {
   await Extension.addWebExtension(import.meta.resolve('../fixtures/editor.completion-popup-width'))
   const tmpDir = await FileSystem.getTmpDir()
   await FileSystem.writeFile(`${tmpDir}/file.xyz`, ' '.repeat(100))
@@ -40,7 +40,7 @@ export const test: Test = async ({ Command, Editor, EditorCompletion, expect, Ex
   await expect(popup).toHaveCSS('width', '273px')
   await Editor.deleteCharacterLeft()
   await expect(popup).toHaveCSS('width', '273px')
-  await EditorCompletion.selectCurrentIndex()
+  await Locator('.EditorCompletionItem').click()
   await expect(popup).toBeHidden()
   const text = await Editor.getText()
   if (!text.startsWith('window.titleBarStyle')) throw new Error(`Unexpected completion text: ${text}`)
