@@ -1,0 +1,29 @@
+{
+  "id": "builtin.sample-source-control-tree",
+  "name": "Sample Source Control Tree",
+  "browser": "main.js",
+  "isolated": true,
+  "activation": ["onSourceControl:memfs"],
+  "sourceControlProviders": [
+    {
+      "id": "sample-source-control-tree"
+    }
+  ],
+  "commands": [
+    {
+      "id": "sourceControlTree.record"
+    },
+    {
+      "id": "sourceControlTree.lastFile"
+    }
+  ],
+  "source-control-actions": {
+    "working-tree-item": [
+      {
+        "command": "sourceControlTree.record",
+        "label": "Record File",
+        "icon": "Check"
+      }
+    ]
+  }
+}

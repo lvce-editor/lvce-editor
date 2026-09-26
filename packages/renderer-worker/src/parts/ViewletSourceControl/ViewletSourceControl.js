@@ -14,9 +14,10 @@ import * as WrapSourceControlCommand from '../WrapSourceControlCommand/WrapSourc
 
 // TODO when accept input is invoked multiple times, it should not lead to errors
 
-export const create = (id, uri, x, y, width, height) => {
+export const create = (id, uri, x, y, width, height, args, parentUid) => {
   return {
     uid: id,
+    parentUid,
     x,
     y,
     width,
@@ -57,7 +58,7 @@ export const loadContent = async (state, savedState) => {
   )
   const diffResult = await SourceControlWorker.invoke('SourceControl.diff2', state.uid)
   const commands = await SourceControlWorker.invoke('SourceControl.render2', state.uid, diffResult)
-  const actionsDom = await SourceControlWorker.invoke('SourceControl.renderActions2', state.uid)
+  const actionsDom = await SourceControlWorker.invoke('SourceControl.renderActions', state.uid)
   const badgeCount = await SourceControlWorker.invoke('SourceControl.getBadgeCount', state.uid)
   if (state.applicationId === undefined) await Command.execute('Layout.setBadgeCount', ViewletModuleId.SourceControl, badgeCount)
   else await Application.execute(state.applicationId, 'Layout.setBadgeCount', ViewletModuleId.SourceControl, badgeCount)
@@ -153,7 +154,7 @@ export const handleWorkspaceChange = async (state) => {
   await SourceControlWorker.invoke('SourceControl.loadContent', state.uid)
   const diffResult = await SourceControlWorker.invoke('SourceControl.diff2', state.uid)
   const commands = await SourceControlWorker.invoke('SourceControl.render2', state.uid, diffResult)
-  const actionsDom = await SourceControlWorker.invoke('SourceControl.renderActions2', state.uid)
+  const actionsDom = await SourceControlWorker.invoke('SourceControl.renderActions', state.uid)
   const badgeCount = await SourceControlWorker.invoke('SourceControl.getBadgeCount', state.uid)
   if (state.applicationId === undefined) await Command.execute('Layout.setBadgeCount', ViewletModuleId.SourceControl, badgeCount)
   else await Application.execute(state.applicationId, 'Layout.setBadgeCount', ViewletModuleId.SourceControl, badgeCount)
@@ -169,7 +170,7 @@ export const handleExtensionsChanged = async (state) => {
   await SourceControlWorker.invoke('SourceControl.loadContent', state.uid, state.savedState)
   const diffResult = await SourceControlWorker.invoke('SourceControl.diff2', state.uid)
   const commands = await SourceControlWorker.invoke('SourceControl.render2', state.uid, diffResult)
-  const actionsDom = await SourceControlWorker.invoke('SourceControl.renderActions2', state.uid)
+  const actionsDom = await SourceControlWorker.invoke('SourceControl.renderActions', state.uid)
   const badgeCount = await SourceControlWorker.invoke('SourceControl.getBadgeCount', state.uid)
   return {
     ...state,
