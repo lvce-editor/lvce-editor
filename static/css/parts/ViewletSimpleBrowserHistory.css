@@ -13,6 +13,7 @@
   margin: 0 0 24px;
   font-size: 26px;
   font-weight: 400;
+  user-select: text;
 }
 
 .SimpleBrowserHistoryControls {
