@@ -12,14 +12,15 @@ export const test: Test = async ({ expect, Locator }) => {
   const menu = Locator('#Menu-0')
   await expect(menu).toBeVisible()
 
-  const aboutItem = menu.locator('.MenuItem', { hasText: 'About' })
+  const aboutItem = Locator('#Menu-0 .MenuItem', { hasText: 'About' })
+  const focusedItem = Locator('#Menu-0 .MenuItem.MenuItemFocused')
   await aboutItem.hover()
-  await expect(aboutItem).toHaveClass(/MenuItemFocused/)
+  await expect(focusedItem).toHaveText('About')
 
   await Locator('.EditorRow').first().hover()
   await expect(menu).toBeVisible()
-  await expect(menu.locator('.MenuItemFocused')).toHaveCount(0)
+  await expect(Locator('.MenuItemFocused')).toHaveCount(0)
 
   await aboutItem.hover()
-  await expect(aboutItem).toHaveClass(/MenuItemFocused/)
+  await expect(focusedItem).toHaveText('About')
 }
