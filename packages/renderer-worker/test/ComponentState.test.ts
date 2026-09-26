@@ -60,9 +60,33 @@ test('lists native and supported worker-backed components once', () => {
   })
 
   expect(ComponentState.getComponents()).toEqual([
-    { displayName: 'Editor', domAvailable: false, heapSnapshotAvailable: false, editable: false, moduleId: 'Editor', uid: 3 },
-    { displayName: 'Explorer', domAvailable: false, heapSnapshotAvailable: false, editable: true, moduleId: 'Explorer', uid: 2 },
-    { displayName: 'Layout', domAvailable: false, heapSnapshotAvailable: false, editable: true, moduleId: 'Layout', uid: 1 },
+    {
+      displayName: 'Editor',
+      domAvailable: false,
+      heapSnapshotAvailable: false,
+      editable: false,
+      moduleId: 'Editor',
+      savedStateAvailable: false,
+      uid: 3,
+    },
+    {
+      displayName: 'Explorer',
+      domAvailable: false,
+      heapSnapshotAvailable: false,
+      editable: true,
+      moduleId: 'Explorer',
+      savedStateAvailable: false,
+      uid: 2,
+    },
+    {
+      displayName: 'Layout',
+      domAvailable: false,
+      heapSnapshotAvailable: false,
+      editable: true,
+      moduleId: 'Layout',
+      savedStateAvailable: false,
+      uid: 1,
+    },
   ])
 })
 
@@ -89,6 +113,7 @@ test('uses a worker-backed component state availability check', () => {
       heapSnapshotAvailable: false,
       editable: true,
       moduleId: 'ExtensionView',
+      savedStateAvailable: false,
       uid: 4,
     },
   ])
@@ -107,15 +132,40 @@ test('labels extension views by title and sorts by display name then uid', () =>
   }
 
   expect(ComponentState.getComponents()).toEqual([
-    { displayName: 'Hetzner (extension)', domAvailable: false, heapSnapshotAvailable: false, editable: true, moduleId: 'ExtensionView', uid: 2 },
-    { displayName: 'Hetzner (extension)', domAvailable: false, heapSnapshotAvailable: false, editable: true, moduleId: 'ExtensionView', uid: 3 },
-    { displayName: 'Notes (extension)', domAvailable: false, heapSnapshotAvailable: false, editable: true, moduleId: 'ExtensionView', uid: 1 },
+    {
+      displayName: 'Hetzner (extension)',
+      domAvailable: false,
+      heapSnapshotAvailable: false,
+      editable: true,
+      moduleId: 'ExtensionView',
+      savedStateAvailable: false,
+      uid: 2,
+    },
+    {
+      displayName: 'Hetzner (extension)',
+      domAvailable: false,
+      heapSnapshotAvailable: false,
+      editable: true,
+      moduleId: 'ExtensionView',
+      savedStateAvailable: false,
+      uid: 3,
+    },
+    {
+      displayName: 'Notes (extension)',
+      domAvailable: false,
+      heapSnapshotAvailable: false,
+      editable: true,
+      moduleId: 'ExtensionView',
+      savedStateAvailable: false,
+      uid: 1,
+    },
     {
       displayName: 'sample.untitled (extension)',
       domAvailable: false,
       heapSnapshotAvailable: false,
       editable: true,
       moduleId: 'ExtensionView',
+      savedStateAvailable: false,
       uid: 4,
     },
   ])
@@ -127,6 +177,7 @@ test('labels extension views by title and sorts by display name then uid', () =>
     heapSnapshotAvailable: false,
     editable: true,
     moduleId: 'ExtensionView',
+    savedStateAvailable: false,
     uid: 1,
   })
 })
@@ -151,6 +202,64 @@ test('gets authoritative worker state', async () => {
 
   await expect(ComponentState.getState(2)).resolves.toBe(componentState)
   expect(getComponentState).toHaveBeenCalledWith(rendererState)
+})
+
+test('gets current factory saved state without changing the component state', async () => {
+  const rendererState = { uid: 8, value: 'runtime' }
+  const savedState = { uid: 8, value: 'persisted' }
+  const saveState = jest.fn(async (_state: typeof rendererState) => savedState)
+  ViewletStates.set(8, { factory: { saveState }, moduleId: 'Explorer', renderedState: rendererState, state: rendererState })
+
+  await expect(ComponentState.getSavedState(8)).resolves.toBe(savedState)
+  expect(saveState).toHaveBeenCalledWith(rendererState)
+  expect(ViewletStates.getState(8)).toBe(rendererState)
+})
+
+test('exposes saved-state capability independently of component editability', () => {
+  const rendererState = { uid: 11 }
+  ViewletStates.set(11, {
+    factory: { hasFunctionalRender: true, saveState: jest.fn() },
+    moduleId: 'Secrets',
+    renderedState: rendererState,
+    state: rendererState,
+  })
+
+  expect(ComponentState.getComponents()).toEqual([
+    {
+      displayName: 'Secrets',
+      domAvailable: false,
+      editable: false,
+      heapSnapshotAvailable: false,
+      moduleId: 'Secrets',
+      savedStateAvailable: true,
+      uid: 11,
+    },
+  ])
+})
+
+test('reports unavailable, undefined, disposed and missing saved state explicitly', async () => {
+  await expect(ComponentState.getSavedState(99)).rejects.toThrow('Component not found: 99')
+
+  const componentState = { uid: 8 }
+  ViewletStates.set(8, { factory: {}, moduleId: 'Editor', renderedState: componentState, state: componentState })
+  await expect(ComponentState.getSavedState(8)).rejects.toThrow('Saved component state API not available: Editor')
+
+  ViewletStates.set(9, {
+    factory: { saveState: jest.fn(async () => undefined) },
+    moduleId: 'Explorer',
+    renderedState: { uid: 9 },
+    state: { uid: 9 },
+  })
+  await expect(ComponentState.getSavedState(9)).rejects.toThrow('Saved component state is undefined: Explorer')
+
+  ViewletStates.set(10, {
+    factory: { saveState: jest.fn() },
+    moduleId: 'Explorer',
+    renderedState: { uid: 10 },
+    status: 'disposed',
+    state: { uid: 10 },
+  })
+  await expect(ComponentState.getSavedState(10)).rejects.toThrow('Component is disposed: 10')
 })
 
 test('sets renderer-native state and renders it', async () => {
@@ -342,7 +451,15 @@ test('gets virtual DOM through the component API without rendering or changing s
   expect(ViewletManager.render).not.toHaveBeenCalled()
   expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.getComponentDom', 0.25)
   expect(ComponentState.getComponents()).toEqual([
-    { displayName: 'TitleBar', domAvailable: true, heapSnapshotAvailable: false, editable: true, moduleId: 'TitleBar', uid: 0.25 },
+    {
+      displayName: 'TitleBar',
+      domAvailable: true,
+      heapSnapshotAvailable: false,
+      editable: true,
+      moduleId: 'TitleBar',
+      savedStateAvailable: false,
+      uid: 0.25,
+    },
   ])
 })
 
@@ -359,7 +476,15 @@ test('exposes Simple Browser state and renders edits through its component state
   ViewletStates.set(10, { factory, moduleId: 'SimpleBrowser', renderedState: state, state })
 
   expect(ComponentState.getComponents()).toEqual([
-    { displayName: 'SimpleBrowser', domAvailable: true, heapSnapshotAvailable: false, editable: true, moduleId: 'SimpleBrowser', uid: 10 },
+    {
+      displayName: 'SimpleBrowser',
+      domAvailable: true,
+      heapSnapshotAvailable: false,
+      editable: true,
+      moduleId: 'SimpleBrowser',
+      savedStateAvailable: true,
+      uid: 10,
+    },
   ])
   await expect(ComponentState.getState(10)).resolves.toBe(state)
 
@@ -382,7 +507,15 @@ test('exposes Layout state and renders edits through its component state hooks',
   ViewletStates.set(1, { factory, moduleId: 'Layout', renderedState: state, state })
 
   expect(ComponentState.getComponents()).toEqual([
-    { displayName: 'Layout', domAvailable: false, heapSnapshotAvailable: false, editable: true, moduleId: 'Layout', uid: 1 },
+    {
+      displayName: 'Layout',
+      domAvailable: false,
+      heapSnapshotAvailable: false,
+      editable: true,
+      moduleId: 'Layout',
+      savedStateAvailable: true,
+      uid: 1,
+    },
   ])
   await expect(ComponentState.getState(1)).resolves.toBe(state)
 
