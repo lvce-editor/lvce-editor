@@ -296,9 +296,10 @@ writeFileSync(process.env.LVCE_TEST_LAUNCH_RESULT, JSON.stringify({ args: proces
       const { stderr } = await execFileAsync(process.execPath, [cliPath, '--electron-version', '44.1.2', '--wait'], { env })
       const download = JSON.parse((await readFile(downloadResultPath, 'utf8')).trim())
       const launch = JSON.parse(await readFile(launchResultPath, 'utf8'))
+      const realAppRoot = await realpath(root)
 
       expect(download).toMatchObject({ version: '44.1.2', platform: process.platform, artifactName: 'electron' })
-      expect(launch.args).toEqual([root, '--wait'])
+      expect(launch.args).toEqual([realAppRoot, '--wait'])
       expect(launch.runAsNode).toBeUndefined()
       expect(stderr).toBe('')
       const cachedExecutablePath =
