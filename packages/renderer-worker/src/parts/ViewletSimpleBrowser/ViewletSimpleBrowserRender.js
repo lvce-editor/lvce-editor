@@ -159,7 +159,7 @@ export const renderEventListeners = () => {
     },
     {
       name: DomEventListenerFunctions.HandlePointerOverSimpleBrowserTabs,
-      params: ['handleTabsPointerOver'],
+      params: ['handleTabsPointerOver', 'event.currentTarget.firstElementChild.firstElementChild.offsetWidth'],
     },
     {
       name: DomEventListenerFunctions.HandleClickSimpleBrowserNewTab,

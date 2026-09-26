@@ -278,7 +278,7 @@ test('routes tab list pointer events for freezing and restoring tab sizing', () 
     expect.arrayContaining([
       {
         name: DomEventListenerFunctions.HandlePointerOverSimpleBrowserTabs,
-        params: ['handleTabsPointerOver'],
+        params: ['handleTabsPointerOver', 'event.currentTarget.firstElementChild.firstElementChild.offsetWidth'],
       },
       {
         name: DomEventListenerFunctions.HandlePointerOutSimpleBrowserTabs,

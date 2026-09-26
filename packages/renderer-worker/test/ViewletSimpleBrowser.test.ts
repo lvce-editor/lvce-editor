@@ -2423,10 +2423,15 @@ test.each([1, 2])('does not select a tab on pointer down with button %s', async 
 test('freezes tab width while the pointer is over the tab list', () => {
   const state = { ...createTwoTabState(), width: 400 }
 
-  const frozen = ViewletSimpleBrowser.handleTabsPointerOver(state)
+  const frozen = ViewletSimpleBrowser.handleTabsPointerOver(state, 98)
 
-  expect(frozen.tabWidth).toBe(173)
-  expect(ViewletSimpleBrowser.handleTabsPointerOver(frozen)).toBe(frozen)
+  expect(frozen.tabWidth).toBe(98)
+  expect(ViewletSimpleBrowser.handleTabsPointerOver(frozen, 147)).toBe(frozen)
+})
+
+test.each([undefined, NaN, Infinity, 0, -1])('does not freeze an invalid measured tab width (%s)', (tabWidth) => {
+  const state = createTwoTabState()
+  expect(ViewletSimpleBrowser.handleTabsPointerOver(state, tabWidth)).toBe(state)
 })
 
 test('restores tab sizing only after the pointer leaves the tab list', () => {
