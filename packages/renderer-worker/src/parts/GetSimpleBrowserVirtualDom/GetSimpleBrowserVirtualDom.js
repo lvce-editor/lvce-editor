@@ -104,9 +104,19 @@ export const getSimpleBrowserVirtualDom = (
   historyEntries = [],
   historySearchValue = '',
   loginChallenge,
+  historyScrollTop = 0,
+  historyViewportHeight = 1600,
 ) => {
   const inlineSuggestion = getInlineSuggestion(value, suggestions)
-  const historyDom = historyTab ? GetSimpleBrowserHistoryVirtualDom.getSimpleBrowserHistoryVirtualDom(historyEntries, historySearchValue) : []
+  const historyDom = historyTab
+    ? GetSimpleBrowserHistoryVirtualDom.getSimpleBrowserHistoryVirtualDom(
+        historyEntries,
+        historySearchValue,
+        historySearchValue,
+        historyScrollTop,
+        historyViewportHeight,
+      )
+    : []
   const selectedTab = tabs[selectedTabIndex]
   const isNewTab = Boolean(selectedTab && !selectedTab.browserViewId && !selectedTab.iframeSrc && !historyTab)
   /** @type {any[]} */

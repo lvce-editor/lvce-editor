@@ -325,6 +325,39 @@ test('renders a history icon for history tabs without changing website favicons'
   expect(dom).not.toContainEqual(expect.objectContaining({ className: 'SimpleBrowserTabFavicon SimpleBrowserTabFaviconFallback' }))
 })
 
+test('renders a bounded embedded history window at the requested scroll position', () => {
+  const entries = Array.from({ length: 10_000 }, (_, index) => ({ date: 10_000 - index, url: `https://example.test/${index}` }))
+  const dom = GetSimpleBrowserVirtualDom.getSimpleBrowserVirtualDom(
+    false,
+    false,
+    false,
+    '',
+    '',
+    [],
+    -1,
+    [{ iframeSrc: 'simple-browser-history://', title: 'History' }],
+    0,
+    true,
+    true,
+    [],
+    undefined,
+    -1,
+    false,
+    'light',
+    undefined,
+    true,
+    entries,
+    '',
+    undefined,
+    5_000 * 56,
+    300,
+  )
+  const renderedUrls = dom.filter((node) => node.className === 'SimpleBrowserHistoryUrl').map((node) => node['data-url'])
+
+  expect(renderedUrls.length).toBeLessThan(40)
+  expect(renderedUrls).toContain('https://example.test/5000')
+})
+
 test('freezes tab sizing through the tab list style', () => {
   const dom = GetSimpleBrowserVirtualDom.getSimpleBrowserVirtualDom(
     false,
