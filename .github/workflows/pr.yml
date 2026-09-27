@@ -100,6 +100,11 @@ jobs:
         run: npm run e2e:headless -- --test-name-prefix=viewlet.source-control-view-mode
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0
+      - name: Test editor cursor positioning in split groups
+        working-directory: ./packages/extension-host-worker-tests
+        run: npm run e2e:headless -- --test-name-prefix=viewlet.main-editor-cursor-after-split --browser-test=scripts/test-editor-cursor-splits.mjs
+        env:
+          PLAYWRIGHT_BROWSERS_PATH: 0
       - name: Test TypeScript readonly union highlighting
         working-directory: ./packages/extension-host-worker-tests
         run: npm run e2e:headless -- --test-name-prefix=viewlet.editor-typescript-readonly-union-parameters

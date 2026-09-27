@@ -3,8 +3,8 @@ import { fork } from 'child_process'
 import { mkdir, readdir, rm, writeFile } from 'fs/promises'
 import { mkdtemp } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
-import { dirname, join } from 'node:path'
-import { fileURLToPath } from 'node:url'
+import { dirname, join, resolve } from 'node:path'
+import { fileURLToPath, pathToFileURL } from 'node:url'
 import express from 'express'
 import cors from 'cors'
 import { waitForServerReady } from '../scripts/wait-for-server-ready.mjs'
@@ -37,7 +37,7 @@ const getPaths = async () => {
   return testFiles
 }
 
-const testFile = async (page, name, timeout) => {
+const testFile = async (page, name, timeout, browserTest) => {
   const relativePath = getRelativePath(name)
   const url = `http://localhost:3000${relativePath}`
   await page.goto(url)
@@ -47,6 +47,7 @@ const testFile = async (page, name, timeout) => {
   const state = await testOverlay.getAttribute('data-state')
   switch (state) {
     case 'pass':
+      if (browserTest) await browserTest({ page, name })
       break
     case 'skip':
       break
@@ -170,9 +171,11 @@ const runTests = async () => {
       if (event.text() === expectedConsole) receivedExpectedConsole = true
       handleConsole(event)
     })
+    const browserTestPath = argv.find((argument) => argument.startsWith('--browser-test='))?.slice('--browser-test='.length)
+    const browserTest = browserTestPath ? (await import(pathToFileURL(resolve(browserTestPath)).href)).test : undefined
     const testNames = await getPaths()
     for (const testName of testNames) {
-      await testFile(page, testName, timeout)
+      await testFile(page, testName, timeout, browserTest)
     }
     if (expectedConsole && !receivedExpectedConsole) throw new Error(`Missing test assertion: ${expectedConsole}`)
   } catch (error) {
