@@ -11,6 +11,7 @@ import * as GetTextEditorContent from '../GetTextEditorContent/GetTextEditorCont
 import * as GetTokenizePath from '../GetTokenizePath/GetTokenizePath.js'
 import * as Id from '../Id/Id.js'
 import * as Languages from '../Languages/Languages.js'
+import * as LanguagesState from '../LanguagesState/LanguagesState.js'
 import * as LayoutWidgets from '../LayoutWidgets/LayoutWidgets.ts'
 import * as Platform from '../Platform/Platform.js'
 import * as Preferences from '../Preferences/Preferences.js'
@@ -100,8 +101,10 @@ const getFirstLine = (content) => {
 const getLanguageId = (state, content, savedState) => {
   const explicitLanguageId = savedState?.editorState?.explicitLanguageId
   if (typeof explicitLanguageId === 'string' && Languages.getTokenizeFunctionPath(explicitLanguageId)) {
+    LanguagesState.setExplicitLanguageId(state.uri, explicitLanguageId)
     return explicitLanguageId
   }
+  LanguagesState.clearExplicitLanguageId(state.uri)
   const fileName = Workspace.pathBaseName(state.uri)
   const languageId = Languages.getLanguageId(fileName)
   if (languageId === 'unknown') {
