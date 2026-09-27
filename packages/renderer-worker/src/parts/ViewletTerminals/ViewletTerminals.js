@@ -1,6 +1,7 @@
 import * as Assert from '../Assert/Assert.ts'
 import * as Command from '../Command/Command.js'
 import * as Focus from '../Focus/Focus.js'
+import * as GetTerminalTabsDom from '../GetTerminalTabsDom/GetTerminalTabsDom.js'
 import * as GetTerminalSpawnOptions from '../GetTerminalSpawnOptions/GetTerminalSpawnOptions.js'
 import * as Id from '../Id/Id.js'
 import * as Preferences from '../Preferences/Preferences.js'
@@ -73,7 +74,7 @@ export const getOwnedViewletIds = (state) => {
 
 const getContentWidth = (state) => {
   const { tabs, width, tabsWidth, terminalTabsEnabled } = state
-  return terminalTabsEnabled && tabs.length > 1 ? width - tabsWidth : width
+  return terminalTabsEnabled && GetTerminalTabsDom.hasVisibleTabs(tabs) ? width - tabsWidth : width
 }
 
 const getChildBounds = (state, index = 0, count = 1) => {
@@ -169,7 +170,7 @@ export const addTerminal = async (state, cwd = '') => {
   return newState
 }
 
-export const focusIndex = async (state, index) => {
+export const focusIndex = async (state, index, terminalUid) => {
   Assert.object(state)
   Assert.number(index)
   const { activeTerminalUids, focusVersion, tabs } = state
@@ -177,10 +178,12 @@ export const focusIndex = async (state, index) => {
     return state
   }
   const childUids = getTerminalUids(tabs[index])
-  const childUid = activeTerminalUids[index] || childUids[0]
+  const requestedTerminalUid = Number(terminalUid)
+  const childUid = childUids.includes(requestedTerminalUid) ? requestedTerminalUid : activeTerminalUids[index] || childUids[0]
   await sendCommands(await resizeTerminals(state, childUids))
   return {
     ...state,
+    activeTerminalUids: activeTerminalUids.with(index, childUid),
     childUid,
     childUids,
     focusVersion: focusVersion + 1,
@@ -236,7 +239,7 @@ export const handleMouseDown = (state, childUid) => {
   }
 }
 
-const removeTerminal = async (state, terminalUid) => {
+const removeTerminal = async (state, terminalUid, dispose = true) => {
   const { activeTerminalUids: oldActiveTerminalUids, childUid: oldChildUid, focusVersion, selectedIndex: oldSelectedIndex, tabs: oldTabs } = state
   if (terminalUid === -1) {
     return state
@@ -288,7 +291,7 @@ const removeTerminal = async (state, terminalUid) => {
     selectedIndex,
     tabs,
   }
-  const commands = Viewlet.disposeFunctional(terminalUid)
+  const commands = dispose ? Viewlet.disposeFunctional(terminalUid) : []
   const terminalUidsToResize = remainingTerminalUids.length > 0 ? remainingTerminalUids : childUids
   if (terminalUidsToResize.length > 0) {
     commands.push(...(await resizeTerminals(newState, terminalUidsToResize)))
@@ -319,8 +322,8 @@ export const afterRender = async (oldState, newState) => {
   }
 }
 
-export const handleClickTab = (state, index) => {
-  return focusIndex(state, Number(index))
+export const handleClickTab = (state, index, terminalUid) => {
+  return focusIndex(state, Number(index), terminalUid)
 }
 
 export const killTerminalTab = async (state, index) => {
@@ -354,11 +357,13 @@ export const killTerminalTab = async (state, index) => {
   return newState
 }
 
-export const handleClickTerminalTabAction = (state, index, command) => {
+export const handleClickTerminalTabAction = (state, index, command, terminalUid) => {
   Assert.string(command)
   switch (command) {
     case 'killTerminalTab':
       return killTerminalTab(state, Number(index))
+    case 'killTerminalSplit':
+      return removeTerminal(state, Number(terminalUid))
     default:
       throw new Error(`Unknown terminal tab action: ${command}`)
   }
@@ -412,3 +417,91 @@ export const resize = async (state, dimensions) => {
     commands,
   }
 }
+
+export const serializeCommands = true
+export const concurrentCommands = ['handleDrop']
+
+export const detachTerminal = (state, terminalUid) => removeTerminal(state, terminalUid, false)
+
+export const attachTerminal = async (state, tab, sourceIndex = state.tabs.length, splitIndex = -1) => {
+  const terminalUid = tab.uid
+  if (getOwnedViewletIds(state).includes(terminalUid)) {
+    return state
+  }
+  let tabs = [...state.tabs]
+  let activeTerminalUids = [...state.activeTerminalUids]
+  let selectedIndex = Math.min(sourceIndex, tabs.length)
+  const groupIndex = splitIndex === -1 ? -1 : tabs.findIndex((item) => item.uid === tab.groupUid)
+  if (groupIndex !== -1) {
+    selectedIndex = groupIndex
+    const group = tabs[groupIndex]
+    tabs[groupIndex] = { ...group, terminalUids: getTerminalUids(group).toSpliced(splitIndex, 0, terminalUid) }
+    activeTerminalUids[groupIndex] = terminalUid
+  } else {
+    tabs.splice(selectedIndex, 0, { uid: terminalUid, terminalUids: [terminalUid], label: tab.label, icon: tab.icon })
+    activeTerminalUids.splice(selectedIndex, 0, terminalUid)
+  }
+  const next = {
+    ...state,
+    tabs,
+    activeTerminalUids,
+    selectedIndex,
+    childUid: terminalUid,
+    childUids: getTerminalUids(tabs[selectedIndex]),
+    focusVersion: state.focusVersion + 1,
+  }
+  await sendCommands(await resizeTerminals(next, next.childUids))
+  return next
+}
+
+export const handleTabPointerDown = async (state, rawUid) => {
+  const terminalUid = Number(rawUid)
+  const tab = state.tabs.find((item) => getTerminalUids(item).includes(terminalUid))
+  if (!tab) {
+    return state
+  }
+  await RendererProcess.invoke('Viewlet.sendMultiple', [
+    [
+      'Viewlet.setDragData',
+      state.uid,
+      {
+        items: [{ type: 'application/x-lvce-terminal', data: `lvce-terminal:${JSON.stringify({ sourceUid: state.uid, terminalUid })}` }],
+        label: tab.label,
+      },
+    ],
+  ])
+  return state
+}
+
+export const handleDragEnd = async (state) => {
+  await RendererProcess.invoke('Viewlet.sendMultiple', [['Viewlet.setDragData', state.uid, { items: [], label: '' }]])
+  return state
+}
+
+export const handleDragStart = (state) => state
+export const handleDragOver = (state) => state
+
+// Do not run this callback on the panel command queue: the main-area transfer
+// calls back into attachTerminal on that queue before completing.
+export const dropTerminal = async (panelUid, dropId) => {
+  const MainAreaWorker = await import('../MainAreaWorker/MainAreaWorker.js')
+  const { renderMainAreaPending } = await import('../RenderMainAreaPending/RenderMainAreaPending.ts')
+  const panel = ViewletStates.getInstance(panelUid)
+  if (!panel) {
+    return
+  }
+  const main = ViewletStates.getInstance(ViewletModuleId.Main, panel.state.applicationId)
+  if (!main) {
+    return
+  }
+  await MainAreaWorker.invoke('MainArea.handlePanelDrop', main.state.uid, panelUid, dropId)
+  await renderMainAreaPending(main.state.uid)
+}
+
+export const handleDrop = async (state, dropId) => {
+  await dropTerminal(state.uid, dropId)
+  return state
+}
+
+// Keep running terminals available to restoreExistingTerminals when switching panel tabs.
+export const hide = () => {}

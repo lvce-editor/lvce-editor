@@ -11,6 +11,7 @@ export const {
   create,
   dispose,
   getCommands,
+  getComponentDom,
   getComponentState,
   getKeyBindings,
   getMenus,

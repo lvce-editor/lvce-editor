@@ -14,7 +14,7 @@ const getPrefix = (commandId) => {
 }
 
 export const getModuleId = (commandId) => {
-  if (commandId === 'SimpleBrowser.executeWorkflow') {
+  if (commandId === 'SimpleBrowser.executeWorkflow' || commandId === 'SimpleBrowser.openHistory') {
     return ModuleId.SimpleBrowserWorkflow
   }
   const prefix = getPrefix(commandId)
@@ -22,6 +22,8 @@ export const getModuleId = (commandId) => {
     throw new CommandNotFoundError(commandId)
   }
   switch (prefix) {
+    case 'TerminalTransfer':
+      return ModuleId.TerminalTransfer
     case 'About':
       return ModuleId.About
     case 'Exec':

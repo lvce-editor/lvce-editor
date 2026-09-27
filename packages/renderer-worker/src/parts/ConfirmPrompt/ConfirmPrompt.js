@@ -27,5 +27,8 @@ export const prompt = async (
 }
 
 export const showErrorMessage = ({ message, platform = Platform.getPlatform(), confirmMessage = ConfirmPromptStrings.ok(), title = '' }) => {
+  if (_mockId) {
+    return showMockConfirmPrompt(message, { confirmMessage, title })
+  }
   return DialogWorker.invoke('ConfirmPrompt.showErrorMessage', { confirmMessage, message, platform, title })
 }

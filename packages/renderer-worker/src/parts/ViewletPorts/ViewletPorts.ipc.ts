@@ -7,6 +7,7 @@ export const {
   Variables,
   create,
   dispose,
+  getComponentState,
   getCommands,
   getKeyBindings,
   getMenus,
@@ -25,4 +26,5 @@ export const {
   renderTitle,
   resize,
   saveState,
+  setComponentState,
 } = createWorkerViewlet({ workerId: 'portsView' })

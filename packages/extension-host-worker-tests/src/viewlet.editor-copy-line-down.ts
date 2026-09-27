@@ -13,4 +13,16 @@ export const test = async ({ FileSystem, Workspace, Main, Editor, Locator, expec
 
   const editor = Locator('.Editor')
   await expect(editor).toHaveText('content 1content 1')
+
+  const longContent = Array.from({ length: 100 }, (_, index) => `line ${index + 1}`).join('\n')
+  await FileSystem.writeFile(`${tmpDir}/long-file.txt`, longContent)
+  await Main.openUri(`${tmpDir}/long-file.txt`)
+  await Editor.setCursor(99, 7)
+
+  const cursor = Locator('.EditorCursor')
+  await Editor.copyLineDown()
+  await expect(cursor).toBeVisible()
+
+  await Editor.copyLineDown()
+  await expect(cursor).toBeVisible()
 }

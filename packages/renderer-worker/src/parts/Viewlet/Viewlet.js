@@ -1,3 +1,4 @@
+import * as QuickPickOpening from '../QuickPickOpening/QuickPickOpening.js'
 import * as Assert from '../Assert/Assert.ts'
 import * as ApplicationRegistry from '../ApplicationRegistry/ApplicationRegistry.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.js'
@@ -11,7 +12,6 @@ import * as Logger from '../Logger/Logger.js'
 import * as RebaseState from '../RebaseState/RebaseState.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SaveState from '../SaveState/SaveState.js'
-import * as SimpleBrowserOverlay from '../SimpleBrowserOverlay/SimpleBrowserOverlay.js'
 import * as UpdateDynamicFocusContext from '../UpdateDynamicFocusContext/UpdateDynamicFocusContext.js'
 import { VError } from '../VError/VError.js'
 import * as ViewletCommandQueue from '../ViewletCommandQueue/ViewletCommandQueue.js'
@@ -129,7 +129,7 @@ export const reload = async (id) => {
     if (instance.factory.dispose) {
       await instance.factory.dispose(oldState)
     }
-    const newState = await instance.factory.loadContent(oldState, savedState)
+    const newState = await instance.factory.loadContent(oldState, savedState, { preserveFocus: true })
     Assert.object(newState)
     if (ViewletStates.getInstance(id) !== instance) {
       return
@@ -176,7 +176,7 @@ export const send = (id, method, ...args) => {
 /**
  * @deprecated
  */
-export const dispose = async (id) => {
+export const dispose = async (id, deferDom = false) => {
   if (!id) {
     console.warn('no instance to dispose')
     return
@@ -189,6 +189,7 @@ export const dispose = async (id) => {
   const instanceUid = instance.state.uid
   // TODO status should have enum
   instance.status = 'disposing'
+  let deferredCommands
   try {
     if (!instance.factory) {
       throw new Error(`${id} is missing a factory function`)
@@ -201,7 +202,9 @@ export const dispose = async (id) => {
       await instance.factory.dispose(instance.state)
     }
     const cssDisposeCommands = getCssDisposeCommands(instance)
-    if (widgetDisposeCommands.length > 0 || cssDisposeCommands.length > 0) {
+    if (deferDom) {
+      deferredCommands = [...widgetDisposeCommands, ['Viewlet.dispose', instanceUid], ...cssDisposeCommands]
+    } else if (widgetDisposeCommands.length > 0 || cssDisposeCommands.length > 0) {
       await RendererProcess.invoke('Viewlet.sendMultiple', [...widgetDisposeCommands, ['Viewlet.dispose', instanceUid], ...cssDisposeCommands])
     } else {
       await RendererProcess.invoke(/* Viewlet.dispose */ 'Viewlet.dispose', /* id */ instanceUid)
@@ -217,6 +220,18 @@ export const dispose = async (id) => {
   instance.status = 'disposed'
   ViewletStates.remove(id)
   await GlobalEventBus.emitEvent(`Viewlet.dispose.${id}`)
+  return deferredCommands
+}
+
+// Hidden runtime views can retain live sessions while releasing their container DOM.
+export const hide = async (id) => {
+  const instance = ViewletStates.getInstance(id)
+  if (!instance?.factory.hide) {
+    return (await dispose(id, true)) || []
+  }
+  await instance.factory.hide(instance.state)
+  instance.status = 'hidden'
+  return [['Viewlet.dispose', instance.state.uid], ...getCssDisposeCommands(instance)]
 }
 
 export const disposeFunctional = (id) => {
@@ -367,6 +382,10 @@ export const resize = async (id, dimensions) => {
   Assert.object(dimensions)
   const instance = ViewletStates.getInstance(id)
   if (!instance || !instance.factory || (!instance.factory.resize && !instance.factory?.Commands?.resize)) {
+    if (!instance) {
+      ViewletStates.setPendingResize(id, dimensions)
+      return []
+    }
     console.warn('cannot resize', id)
     return []
   }
@@ -451,7 +470,14 @@ export const openWidgetForApplication = (applicationId, moduleId, ...args) => {
   return openWidgetWithLayout(ViewletStates.getState(ViewletModuleId.Layout, applicationId), moduleId, ...args)
 }
 
-const openWidgetWithLayout = async (layout, moduleId, ...args) => {
+const openWidgetWithLayout = (layout, moduleId, ...args) => {
+  if (moduleId === ViewletModuleId.QuickPick) {
+    return QuickPickOpening.run(layout?.applicationId, () => loadWidgetWithLayout(layout, moduleId, ...args))
+  }
+  return loadWidgetWithLayout(layout, moduleId, ...args)
+}
+
+const loadWidgetWithLayout = async (layout, moduleId, ...args) => {
   const applicationId = moduleId === ViewletModuleId.QuickPick || moduleId === ViewletModuleId.Dialog ? layout?.applicationId : undefined
   const existingInstance = ViewletStates.getInstance(moduleId, applicationId)
   const type = args[0]
@@ -507,18 +533,7 @@ const openWidgetWithLayout = async (layout, moduleId, ...args) => {
   // TODO send focus changes to renderer process together with other message
   UpdateDynamicFocusContext.updateDynamicFocusContext(commands)
   commands.push(['Viewlet.focus', childUid])
-  const hasSimpleBrowserOverlay = moduleId === ViewletModuleId.QuickPick
-  if (hasSimpleBrowserOverlay) {
-    await SimpleBrowserOverlay.show('quick-pick')
-  }
-  try {
-    await RendererProcess.invoke('Viewlet.executeCommands', commands)
-  } catch (error) {
-    if (hasSimpleBrowserOverlay) {
-      await SimpleBrowserOverlay.hide('quick-pick')
-    }
-    throw error
-  }
+  await RendererProcess.invoke('Viewlet.executeCommands', commands)
 }
 
 export const closeWidget = async (id) => {
@@ -530,18 +545,11 @@ export const closeWidget = async (id) => {
     if (!childInstance) {
       return
     }
-    const hasSimpleBrowserOverlay = childInstance.moduleId === ViewletModuleId.QuickPick
     const child = childInstance.state
     const childUid = child.uid
     const commands = disposeFunctional(childUid)
-    try {
-      await RendererProcess.invoke(/* Viewlet.dispose */ 'Viewlet.sendMultiple', commands)
-    } finally {
-      if (hasSimpleBrowserOverlay) {
-        await SimpleBrowserOverlay.hide('quick-pick')
-      }
-    }
-    if (hasSimpleBrowserOverlay) {
+    await RendererProcess.invoke(/* Viewlet.dispose */ 'Viewlet.sendMultiple', commands)
+    if (childInstance.moduleId === ViewletModuleId.QuickPick) {
       const mainInstance = ViewletStates.getInstance(ViewletModuleId.Main)
       if (mainInstance) {
         await executeViewletCommand(mainInstance.state.uid, 'focus')
@@ -610,7 +618,7 @@ const executeViewletCommandInternal = async (uid, fnName, ...args) => {
   const instance = ViewletStates.getInstance(uid)
   if (!instance) {
     // Worker render notifications can arrive or leave the command queue after disposal.
-    if (fnName !== DomEventListenerFunctions.HandleBlur && fnName !== '__renderPending') {
+    if (fnName !== DomEventListenerFunctions.HandleBlur && fnName !== '__renderPending' && fnName !== 'updateGitIgnoredUris') {
       Logger.warn(`cannot execute ${fnName} instance not found ${uid}`)
     }
     return
@@ -641,7 +649,7 @@ const executeViewletCommandInternal = async (uid, fnName, ...args) => {
 
 export const executeViewletCommand = (uid, fnName, ...args) => {
   const instance = ViewletStates.getInstance(uid)
-  if (instance?.factory.serializeCommands) {
+  if (instance?.factory.serializeCommands && !instance.factory.concurrentCommands?.includes(fnName)) {
     return ViewletCommandQueue.enqueue(uid, () => executeViewletCommandInternal(uid, fnName, ...args))
   }
   return executeViewletCommandInternal(uid, fnName, ...args)

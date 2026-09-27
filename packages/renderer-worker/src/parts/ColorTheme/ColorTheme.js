@@ -28,13 +28,13 @@ const FALLBACK_COLOR_THEME_ID = 'slime'
 const applyColorTheme = async (colorThemeId) => {
   try {
     Assert.string(colorThemeId)
-    state.colorTheme = colorThemeId
     const colorThemeCss = await GetColorThemeCss.getColorThemeCss(colorThemeId)
     if (!colorThemeCss) {
       return new Error(`Color theme is empty`)
     }
     state.colorThemeCss = colorThemeCss
     await Css.addCssStyleSheet('ContributedColorTheme', colorThemeCss)
+    state.colorTheme = colorThemeId
     if (Platform.getPlatform() === PlatformType.Web) {
       const themeColor = GetMetaThemeColor.getMetaThemeColor(colorThemeId) || ''
       await Meta.setThemeColor(themeColor)
@@ -51,6 +51,10 @@ const applyColorTheme = async (colorThemeId) => {
 export const getColorThemeCss = () => {
   const { colorThemeCss } = state
   return colorThemeCss
+}
+
+export const getColorTheme = () => {
+  return state.colorTheme || getPreferredColorTheme()
 }
 
 export const setColorTheme = async (colorThemeId) => {

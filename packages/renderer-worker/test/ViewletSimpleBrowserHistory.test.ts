@@ -20,6 +20,8 @@ test('create', () => {
     loaded: false,
     entries: [],
     searchValue: '',
+    scrollTop: 0,
+    viewportHeight: 1600,
   })
 })
 

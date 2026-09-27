@@ -1,0 +1,21 @@
+{
+  "id": "test.completion-wide-label",
+  "name": "Completion Wide Label",
+  "description": "",
+  "browser": "main.js",
+  "languages": [
+    {
+      "id": "xyz",
+      "extensions": [
+        ".xyz"
+      ]
+    }
+  ],
+  "isolated": true,
+  "completionProviders": [
+    {
+      "id": "editor.completion-wide-label-provider",
+      "languageId": "xyz"
+    }
+  ]
+}

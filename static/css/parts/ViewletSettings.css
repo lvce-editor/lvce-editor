@@ -21,6 +21,8 @@
   flex: 1;
   display: flex;
   flex-direction: column;
+  min-height: 0;
+  position: relative;
   overflow-y: auto;
   scrollbar-color: var(--EditorScrollBarBackground, rgba(57, 71, 71, 0.6)) transparent;
   scrollbar-width: thin;
@@ -34,6 +36,8 @@
   padding-left: 15px;
 }
 
-.SettingsResizer {
+.SettingsMain > .SettingsResizer {
   background: var(--ExtensionDetailTabsBorder);
+  flex: 0 0 var(--SashSize);
+  position: relative;
 }

@@ -1,4 +1,4 @@
-import { pathToFileURL } from 'node:url'
+import { fileURLToPath, pathToFileURL } from 'node:url'
 import * as ErrorCodes from '../ErrorCodes/ErrorCodes.ts'
 import * as ExtensionManifest from '../ExtensionManifest/ExtensionManifest.ts'
 import * as ExtensionManifestStatus from '../ExtensionManifestStatus/ExtensionManifestStatus.ts'
@@ -32,6 +32,9 @@ const getCliLinkArgs = (): any => {
 }
 
 const resolveLinkPath = (path: any): any => {
+  if (path.startsWith('file:')) {
+    return fileURLToPath(path)
+  }
   if (Path.isAbsolute(path)) {
     return path
   }

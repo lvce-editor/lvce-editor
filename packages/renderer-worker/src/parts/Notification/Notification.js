@@ -7,7 +7,7 @@ export const state = {
 export const create = async (type, text) => {
   // @ts-ignore
   state.notifications.push({ type, text })
-  await RendererProcess.invoke(/* Notification.create */ 'Notification.create', /* type */ type, /* text */ text)
+  return RendererProcess.invoke(/* Notification.create */ 'Notification.create', /* type */ type, /* text */ text)
 }
 
 export const showWithOptions = async (type, text, options) => {

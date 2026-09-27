@@ -22,6 +22,8 @@ export const handleDidNavigate = dispatch('browser-view-did-navigate', 'handleDi
 
 export const handleAudioStateChanged = dispatch('browser-view-audio-state-changed', 'handleAudioStateChanged')
 
+export const handleDownloadStateChanged = dispatch('browser-view-download-state-changed', 'handleDownloadStateChanged')
+
 export const handleBrowserViewDestroyed = dispatch('browser-view-destroyed', 'handleBrowserViewDestroyed')
 
 export const handleContextMenu = dispatch('browser-view-context-menu', 'handleContextMenu')
@@ -29,6 +31,8 @@ export const handleContextMenu = dispatch('browser-view-context-menu', 'handleCo
 export const handleKeyBinding = dispatch('browser-view-key-binding', 'handleKeyBinding')
 
 export const handlePageFaviconUpdated = dispatch('browser-view-page-favicon-updated', 'handlePageFaviconUpdated')
+
+export const handleLogin = dispatch('browser-view-login', 'handleLogin')
 
 export const handleTitleUpdated = dispatch('browser-view-title-updated', 'handleTitleUpdated')
 

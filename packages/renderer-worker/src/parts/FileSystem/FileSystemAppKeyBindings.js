@@ -1,7 +1,7 @@
 import * as PlatformPaths from '../PlatformPaths/PlatformPaths.js'
 import * as FileSystemAppShared from './FileSystemAppShared.js'
 
-const defaultContent = '{}'
+const defaultContent = '[]'
 
 export const readFile = () => {
   return FileSystemAppShared.readFileInternal(PlatformPaths.getUserKeyBindingsPath, defaultContent)

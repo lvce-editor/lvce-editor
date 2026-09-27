@@ -5,7 +5,7 @@ const executeViewletCommand = jest.fn()
 const getViewletState = jest.fn((_key: string) => ({ previewId: 71 }))
 const focusSetFocus = jest.fn()
 const rendererProcessInvoke = jest.fn()
-const terminalWorkerInvoke = jest.fn()
+const terminalWorkerInvoke = jest.fn<(...args: unknown[]) => Promise<void>>()
 
 beforeEach(() => {
   executeViewletCommand.mockClear()
@@ -243,4 +243,22 @@ test('uses the host launch directory supplied by the container terminal resolver
   const loaded = await ViewletTerminal2.loadContent(state, undefined, options)
   await ViewletTerminal2.loadContentLater(loaded)
   expect(terminalWorkerInvoke).toHaveBeenCalledWith('Terminal.create', 42, '/host/project', options.command, options.args, { backend: 'mock' })
+})
+
+test('startup failures remain visible in the terminal instead of removing its tab', async () => {
+  terminalWorkerInvoke.mockRejectedValueOnce(new Error('SSH connection refused'))
+  const state = { ...ViewletTerminal2.create(301), command: 'bash' }
+  await ViewletTerminal2.loadContentLater(state)
+  const data = rendererProcessInvoke.mock.calls.find((call) => call[2] === 'write')?.[3] as Uint8Array
+  expect(new TextDecoder().decode(data)).toContain('SSH connection refused')
+  expect(new TextDecoder().decode(data)).toContain('Create a new terminal to retry')
+  expect(commandExecute).not.toHaveBeenCalledWith('Terminals.handleTerminalExit', 301)
+})
+
+test('nonzero process exit keeps its diagnostic visible', async () => {
+  const state = ViewletTerminal2.create(302)
+  await ViewletTerminal2.handleExit(state, { exitCode: 127, signal: 0 })
+  const data = rendererProcessInvoke.mock.calls.find((call) => call[2] === 'write')?.[3] as Uint8Array
+  expect(new TextDecoder().decode(data)).toContain('exited with code 127')
+  expect(commandExecute).not.toHaveBeenCalledWith('Terminals.handleTerminalExit', 302)
 })

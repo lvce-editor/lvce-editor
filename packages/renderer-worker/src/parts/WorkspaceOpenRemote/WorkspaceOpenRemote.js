@@ -1,4 +1,5 @@
 import * as Command from '../Command/Command.js'
+import * as ExtensionManagementWorker from '../ExtensionManagementWorker/ExtensionManagementWorker.js'
 import * as GetRemoteHomepage from '../GetRemoteHomepage/GetRemoteHomepage.js'
 import * as Notification from '../Notification/Notification.js'
 import * as Preferences from '../Preferences/Preferences.js'
@@ -6,18 +7,21 @@ import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as Workspace from '../Workspace/Workspace.js'
-import * as WorkspaceConnection from '../WorkspaceConnection/WorkspaceConnection.js'
 
-export const openRemote = async () => {
+const getErrorMessage = (error) => {
+  const message = error instanceof Error ? error.message : String(error)
+  return message.replace(/:\/\/[^/\s@]+@/g, '://<redacted>@')
+}
+
+const openRemoteInternal = async () => {
   const cwd = Workspace.getPath()
   if (!cwd) {
     await Notification.create('info', 'Open a workspace folder to view its Git remote.')
     return
   }
-  if (WorkspaceConnection.isActive()) {
-    throw new Error('Opening Git remotes is not yet supported for remote workspaces.')
-  }
-  const remote = await SharedProcess.invoke('Workspace.getGitRemote', cwd)
+  const remote = cwd.startsWith('remote-ssh://')
+    ? await ExtensionManagementWorker.invoke('Extensions.executeWorkspaceRequest', cwd, 'git-remote')
+    : await SharedProcess.invoke('Workspace.getGitRemote', cwd)
   if (Workspace.getPath() !== cwd) return
   const url = GetRemoteHomepage.getRemoteHomepage(remote, Preferences.get('git.remoteHosts'))
   if (!url) {
@@ -31,4 +35,12 @@ export const openRemote = async () => {
   }
   await Command.execute('Layout.showPreview', 'simple-browser://')
   await Command.execute('SimpleBrowser.openOrRevealTab', url)
+}
+
+export const openRemote = async () => {
+  try {
+    await openRemoteInternal()
+  } catch (error) {
+    await Notification.create('error', `Failed to open Git remote: ${getErrorMessage(error)}`)
+  }
 }

@@ -17,10 +17,11 @@ const Notification = await import('../src/parts/Notification/Notification.js')
 
 test('create', async () => {
   // @ts-ignore
-  RendererProcess.invoke.mockImplementation(() => {})
-  await Notification.create('info', 'sample text')
+  RendererProcess.invoke.mockResolvedValue('Notification-42')
+  const id = await Notification.create('info', 'sample text')
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
   expect(RendererProcess.invoke).toHaveBeenCalledWith('Notification.create', 'info', 'sample text')
+  expect(id).toBe('Notification-42')
 })
 
 test('dispose', async () => {

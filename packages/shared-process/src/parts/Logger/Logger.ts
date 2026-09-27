@@ -1,6 +1,8 @@
 import { Console } from 'node:console'
-import { createWriteStream } from 'node:fs'
-import { tmpdir } from 'node:os'
+import { createWriteStream, mkdirSync } from 'node:fs'
+import { join } from 'node:path'
+import { fileURLToPath } from 'node:url'
+import * as PlatformPaths from '../PlatformPaths/PlatformPaths.ts'
 
 // TODO mock this module when used in unit tests
 
@@ -12,8 +14,10 @@ const state: any = {
 }
 
 const createConsole = (): any => {
-  const logFile = `${tmpdir()}/log-shared-process.txt`
-  const writeStream = createWriteStream(logFile)
+  const directory = fileURLToPath(PlatformPaths.getLogsDir())
+  mkdirSync(directory, { recursive: true })
+  const logFile = join(directory, 'log-shared-process.txt')
+  const writeStream = createWriteStream(logFile, { flags: 'a' })
   const logger = new Console(writeStream)
   return logger
 }

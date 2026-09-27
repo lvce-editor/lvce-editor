@@ -23,6 +23,7 @@ export interface WidgetReference {
 export interface BrowserFullWidthState {
   readonly browserWasVisible?: boolean
   readonly browserUid: number
+  readonly hideTitleBar?: boolean
   readonly layout: Partial<LayoutState>
   readonly browserBounds: { x: number; y: number; width: number; height: number }
   readonly ideFocusUid: number | undefined
@@ -43,7 +44,6 @@ export interface LayoutState {
   readonly activityBarTop: number
   readonly activityBarVisible: boolean
   readonly activityBarWidth: number
-  readonly authAccessToken: string
   readonly authErrorMessage: string
   readonly assetDir: string
   readonly backendUrl: string
@@ -143,6 +143,7 @@ export interface LayoutState {
   readonly statusBarVisible: boolean
   readonly statusBarWidth: number
   readonly titleBarHeight: number
+  readonly titleBarless: boolean
   readonly titleBarId: number
   readonly titleBarLeft: number
   readonly titleBarNative: boolean

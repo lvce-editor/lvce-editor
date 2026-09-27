@@ -178,8 +178,8 @@ const runFnWithSideEffectInternal = async (instance, id, key, fn, ...args) => {
 }
 
 // Named commands, shortcuts, and DOM commands must finish rendering and effects in one queue.
-const runWithCommandQueue = (instance, callback) => {
-  if (!instance?.factory?.serializeCommands) return callback()
+const runWithCommandQueue = (instance, key, callback) => {
+  if (!instance?.factory?.serializeCommands || instance.factory.concurrentCommands?.includes(key)) return callback()
   const uid = instance.state.uid
   return ViewletCommandQueue.enqueue(uid, () => {
     if (ViewletStates.getByUid(uid) !== instance) return
@@ -187,10 +187,10 @@ const runWithCommandQueue = (instance, callback) => {
   })
 }
 
-const runFn = (instance, id, key, fn, args) => runWithCommandQueue(instance, () => runFnInternal(instance, id, key, fn, args))
+const runFn = (instance, id, key, fn, args) => runWithCommandQueue(instance, key, () => runFnInternal(instance, id, key, fn, args))
 
 const runFnWithSideEffect = (instance, id, key, fn, ...args) =>
-  runWithCommandQueue(instance, () => runFnWithSideEffectInternal(instance, id, key, fn, ...args))
+  runWithCommandQueue(instance, key, () => runFnWithSideEffectInternal(instance, id, key, fn, ...args))
 
 // TODO maybe wrapViewletCommand should accept module instead of id string
 // then check if instance.factory matches module -> only compare reference (int) instead of string
@@ -226,6 +226,12 @@ const wrapViewletCommand = (id, key, fn) => {
     return wrappedViewletCommand
   }
   const wrappedViewletCommand = async (...args) => {
+    if (fn.acceptsTargetUid && typeof args[0] === 'number') {
+      const [uid, ...commandArgs] = args
+      const instance = ViewletStates.getByUid(uid)
+      if (!instance || instance.factory.Commands?.[key] !== fn) return
+      return runFn(instance, uid, key, fn, commandArgs)
+    }
     // Get the focused instance of this type, or fall back to first instance
     const focusedUid = ViewletStates.getFocusedInstanceByType(id)
     let activeInstance
@@ -398,7 +404,7 @@ const getRenderCommands = (module, oldState, newState, uid = newState.uid || mod
             newParentRenderedState.parentUid,
           ),
         )
-      } else {
+      } else if (!parentInstance || parentInstance.factory?.setTitle) {
         commands.push(['Viewlet.send', parentId, 'setTitle', title])
       }
     }
@@ -535,9 +541,36 @@ const maybeRegisterEvents = (module) => {
       const commands = render(instance.factory, instance.renderedState, newState, uid, newState.parentUid)
       instance.state = newState
       instance.renderedState = newState
+      updateDynamicFocusContext(commands)
       await RendererProcess.invoke(/* Viewlet.sendMultiple */ kSendMultiple, /* commands */ commands)
     }
     GlobalEventBus.addListener(module.workspaceChangeEvent || 'workspace.change', handleUpdate, { prepend: module.workspaceChangeEventPrepend })
+  }
+
+  if (module.Commands && module.Commands.handleWorkspaceProgress && module.workspaceProgressEvent) {
+    const value = module.Commands.handleWorkspaceProgress
+    const handleUpdate = async (...params) => {
+      const instance = ViewletStates.getInstance(module.name)
+      if (!instance) {
+        return
+      }
+      const newState = await InvokeViewletEvent.invokeViewletEvent(module.name, instance, value, ...params)
+      if (!newState) {
+        return
+      }
+      if (module.shouldApplyNewstate && !module.shouldApplyNewState(newState)) {
+        console.log('[viewlet manager] return', newState)
+        return
+      }
+      const uid = instance.uid || instance.state.uid
+      Assert.number(uid)
+      const commands = render(instance.factory, instance.renderedState, newState, uid, newState.parentUid)
+      instance.state = newState
+      instance.renderedState = newState
+      updateDynamicFocusContext(commands)
+      await RendererProcess.invoke(/* Viewlet.sendMultiple */ kSendMultiple, /* commands */ commands)
+    }
+    GlobalEventBus.addListener(module.workspaceProgressEvent, handleUpdate)
   }
 
   // deprecated, use commands instead
@@ -549,7 +582,7 @@ const maybeRegisterEvents = (module) => {
         if (!instance) {
           return
         }
-        return runWithCommandQueue(instance, async () => {
+        return runWithCommandQueue(instance, key, async () => {
           const newState = await InvokeViewletEvent.invokeViewletEvent(module.name, instance, value, ...params)
           if (!newState) {
             return
@@ -563,6 +596,7 @@ const maybeRegisterEvents = (module) => {
           const commands = render(instance.factory, instance.renderedState, newState, uid, newState.parentUid)
           instance.state = newState
           instance.renderedState = newState
+          updateDynamicFocusContext(commands)
           await RendererProcess.invoke(/* Viewlet.sendMultiple */ kSendMultiple, /* commands */ commands)
         })
       }
@@ -836,6 +870,22 @@ const loadInternal = async (viewlet, focus, restore, restoreState) => {
       moduleId,
     }
     ViewletStates.set(viewletUid, instance)
+    const pendingResize = ViewletStates.takePendingResize(viewletUid)
+    const resizeFn = module.Commands?.resize || module.resize
+    if (pendingResize && resizeFn) {
+      if (module.hasFunctionalResize) {
+        const resizedState = await resizeFn(instance.state, pendingResize)
+        instance.state = resizedState
+        if (module.resizeEffect) {
+          await module.resizeEffect(resizedState)
+        }
+      } else {
+        const result = await resizeFn(instance.state, pendingResize)
+        instance.state = result.newState
+        extraCommands.push(...result.commands)
+      }
+      newState = instance.state
+    }
     if (viewlet.id === ViewletModuleId.Layout && applicationId === undefined) {
       ViewletStates.set(ViewletModuleId.Layout, instance)
     }

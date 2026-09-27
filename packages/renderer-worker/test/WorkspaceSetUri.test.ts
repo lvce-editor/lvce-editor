@@ -5,6 +5,7 @@ const exists = jest.fn<(uri: string) => Promise<boolean>>(async () => true)
 const createNotification = jest.fn<(type: string, text: string) => Promise<void>>(async () => {})
 const setWindowTitle = jest.fn<(title: string) => Promise<void>>(async () => {})
 const disposeTextSearchWorker = jest.fn<() => Promise<void>>(async () => {})
+const resetTerminalConnection = jest.fn(async () => {})
 const disposeFileSystemWorker = jest.fn<() => Promise<void>>(async () => {})
 const isTest = jest.fn<() => boolean>(() => false)
 const getPlatform = jest.fn(() => PlatformType.Test)
@@ -44,6 +45,8 @@ jest.unstable_mockModule('../src/parts/TextSearchWorker/TextSearchWorker.js', ()
   dispose: disposeTextSearchWorker,
 }))
 
+jest.unstable_mockModule('../src/parts/TerminalWorker/TerminalWorker.js', () => ({ resetWorkspaceConnection: resetTerminalConnection }))
+
 jest.unstable_mockModule('../src/parts/FileSystemWorker/FileSystemWorker.js', () => ({
   dispose: disposeFileSystemWorker,
 }))
@@ -74,6 +77,7 @@ beforeEach(() => {
   exists.mockResolvedValue(true)
   setWindowTitle.mockClear()
   disposeTextSearchWorker.mockClear()
+  resetTerminalConnection.mockClear()
   disposeFileSystemWorker.mockClear()
   isTest.mockClear()
   isTest.mockReturnValue(false)
@@ -86,6 +90,46 @@ beforeEach(() => {
   Workspace.state.pathSeparator = '/'
   Workspace.state.workspacePath = ''
   Workspace.state.workspaceUri = ''
+})
+
+test('delays workspace progress and clears it when the operation finishes', async () => {
+  jest.useFakeTimers()
+  const listener = jest.fn()
+  GlobalEventBus.addListener('workspace.progress', listener)
+
+  const id = Workspace.startProgress('Opening Remote Workspace…')
+  jest.advanceTimersByTime(199)
+  await Promise.resolve()
+  expect(listener).not.toHaveBeenCalled()
+
+  jest.advanceTimersByTime(1)
+  await Promise.resolve()
+  expect(listener).toHaveBeenCalledWith('Opening Remote Workspace…')
+
+  Workspace.endProgress(id)
+  await Promise.resolve()
+  expect(listener).toHaveBeenLastCalledWith('')
+  jest.useRealTimers()
+})
+
+test('ignores completion from a superseded workspace operation', async () => {
+  jest.useFakeTimers()
+  const listener = jest.fn()
+  GlobalEventBus.addListener('workspace.progress', listener)
+
+  const firstId = Workspace.startProgress('First')
+  jest.advanceTimersByTime(200)
+  await Promise.resolve()
+  const secondId = Workspace.startProgress('Second')
+  Workspace.endProgress(firstId)
+  jest.advanceTimersByTime(200)
+  await Promise.resolve()
+
+  expect(listener.mock.calls).toEqual([['First'], [''], ['Second']])
+  Workspace.endProgress(secondId)
+  await Promise.resolve()
+  expect(listener).toHaveBeenLastCalledWith('')
+  jest.useRealTimers()
 })
 
 test('setPath uses the product name for an empty workspace', async () => {
@@ -104,7 +148,8 @@ test('setPath uses the folder name for a workspace', async () => {
   expect(setWindowTitle).toHaveBeenCalledWith('project')
   expect(Workspace.getWorkspaceUri()).toBe('file:///home/test/project')
   expect(disposeTextSearchWorker).not.toHaveBeenCalled()
-  expect(disposeFileSystemWorker).toHaveBeenCalledTimes(1)
+  expect(resetTerminalConnection).toHaveBeenCalledTimes(1)
+  expect(disposeFileSystemWorker).not.toHaveBeenCalled()
   expect(stopRemoteCli).toHaveBeenCalledTimes(1)
 })
 
@@ -156,7 +201,8 @@ test('setUri preserves the uri and decodes the workspace path', async () => {
   expect(exists).toHaveBeenCalledWith('/home/test/my folder/#project?')
   expect(setWindowTitle).toHaveBeenCalledWith('#project?')
   expect(disposeTextSearchWorker).not.toHaveBeenCalled()
-  expect(disposeFileSystemWorker).toHaveBeenCalledTimes(1)
+  expect(resetTerminalConnection).toHaveBeenCalledTimes(1)
+  expect(disposeFileSystemWorker).not.toHaveBeenCalled()
 })
 
 test('setUri preserves the current workspace when a local folder does not exist', async () => {

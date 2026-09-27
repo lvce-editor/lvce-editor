@@ -42,6 +42,19 @@ test('rerenders when suggestions change', () => {
   expect(ViewletSimpleBrowserRender.render[0].isEqual(state, newState)).toBe(false)
 })
 
+test('rerenders the snapshot when the activity bar settings menu opens', () => {
+  const oldState = {
+    ...state,
+    overlayIds: ['menu'],
+  }
+  const newState = {
+    ...oldState,
+    overlayIds: ['settings-menu'],
+  }
+
+  expect(ViewletSimpleBrowserRender.render[0].isEqual(oldState, newState)).toBe(false)
+})
+
 test('updates inline completion when the input changes but suggestions stay the same', () => {
   const oldState = { ...state, inputValue: 'what is', suggestions: ['what is'] }
   const newState = { ...oldState, inputValue: 'what' }
@@ -222,6 +235,14 @@ test('routes address input changes to the simple browser state', () => {
   })
 })
 
+test('routes history link clicks to navigation without following the anchor', () => {
+  expect(ViewletSimpleBrowserRender.renderEventListeners()).toContainEqual({
+    name: DomEventListenerFunctions.HandleClickSimpleBrowserHistoryUrl,
+    params: ['setUrl', 'event.currentTarget.dataset.url'],
+    preventDefault: true,
+  })
+})
+
 test('routes browser chrome focus with the focused element name', () => {
   expect(ViewletSimpleBrowserRender.renderEventListeners()).toContainEqual({
     name: DomEventListenerFunctions.HandleFocusInSimpleBrowser,
@@ -263,6 +284,28 @@ test('routes tab pointer events to show and hide the rich hover', () => {
       },
     ]),
   )
+})
+
+test('routes tab list pointer events for freezing and restoring tab sizing', () => {
+  expect(ViewletSimpleBrowserRender.renderEventListeners()).toEqual(
+    expect.arrayContaining([
+      {
+        name: DomEventListenerFunctions.HandlePointerOverSimpleBrowserTabs,
+        params: ['handleTabsPointerOver', 'event.currentTarget.firstElementChild.firstElementChild.offsetWidth'],
+      },
+      {
+        name: DomEventListenerFunctions.HandlePointerOutSimpleBrowserTabs,
+        params: ['handleTabsPointerOut', 'event.clientX', 'event.clientY'],
+      },
+    ]),
+  )
+})
+
+test('rerenders when the frozen tab width changes', () => {
+  const oldState = { ...state, tabWidth: 180 }
+  const newState = { ...state, tabWidth: 120 }
+
+  expect(ViewletSimpleBrowserRender.render[0].isEqual(oldState, newState)).toBe(false)
 })
 
 test('routes audio button clicks to mute the tab without selecting it', () => {

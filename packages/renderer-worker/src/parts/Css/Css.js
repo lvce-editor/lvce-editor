@@ -1,6 +1,7 @@
 import * as CssState from '../CssState/CssState.js'
 import * as GetCss from '../GetCss/GetCss.js'
 import * as GetCssId from '../GetCssId/GetCssId.js'
+import * as NormalizeRendererCommands from '../NormalizeRendererCommands/NormalizeRendererCommands.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 
 const escapeCssComment = (value) => {
@@ -45,7 +46,10 @@ export const releaseCssStyleSheet = (css) => {
     return []
   }
   CssState.remove(css)
-  return [['Css.removeCssStyleSheet', GetCssId.getCssId(css)]]
+  const id = GetCssId.getCssId(css)
+  // Panel workers may send this removal directly, bypassing the frame scheduler.
+  NormalizeRendererCommands.removeCssText(id)
+  return [['Css.removeCssStyleSheet', id]]
 }
 
 export const addCssStyleSheet = (id, css) => {
@@ -62,6 +66,13 @@ export const addDynamicCss = (id, getCss, preferences) => {
     CssState.set(id, actuallyAddDynamicCss(id, getCss, preferences))
   }
   return CssState.get(id)
+}
+
+export const reloadDynamicCss = async (id, getCss, preferences) => {
+  if (!CssState.has(id)) {
+    return
+  }
+  await actuallyAddDynamicCss(id, getCss, preferences)
 }
 
 export const acquireDynamicCss = async (id, getCss, preferences) => {
@@ -81,6 +92,7 @@ export const releaseDynamicCss = (id) => {
     return []
   }
   CssState.remove(id)
+  NormalizeRendererCommands.removeCssText(id)
   return [['Css.removeCssStyleSheet', id]]
 }
 

@@ -7,6 +7,7 @@ import * as Preferences from '../Preferences/Preferences.ts'
 import * as PreloadUrl from '../PreloadUrl/PreloadUrl.ts'
 import * as Process from '../Process/Process.ts'
 import * as TransientLinkedExtensions from '../TransientLinkedExtensions/TransientLinkedExtensions.ts'
+import * as WindowsStagedUpdate from '../WindowsStagedUpdate/WindowsStagedUpdate.ts'
 
 export const handleElectronReady = async (parsedArgs: any, workingDirectory: any): Promise<any> => {
   Assert.object(parsedArgs)
@@ -25,6 +26,7 @@ export const handleElectronReady = async (parsedArgs: any, workingDirectory: any
     const preferences = await Preferences.getAllSafe()
     const preloadUrl = PreloadUrl.getPreloadUrl()
     await AppWindow.createAppWindow({ parsedArgs, preferences, preloadUrl, workingDirectory })
+    await WindowsStagedUpdate.confirmStartup()
   } catch (error) {
     Logger.error(error)
     Process.exit(ExitCode.ExpectedError)

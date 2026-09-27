@@ -7,13 +7,23 @@ export const hasFunctionalRootRender = true
 
 export const renderEventListeners = () => {
   return [
+    { name: 'handleTabPointerDown', params: ['handleTabPointerDown', 'event.currentTarget.dataset.terminalUid'] },
+    { name: 'handleDragStart', params: ['handleDragStart'], dragEffect: 'move' },
+    { name: 'handleDragEnd', params: ['handleDragEnd'] },
+    { name: 'handleDragOver', params: ['handleDragOver'], preventDefault: true },
+    { name: 'handleDrop', params: ['handleDrop', 'event.dropId'], preventDefault: true },
     {
       name: DomEventListenerFunctions.HandleClickTab,
-      params: ['handleClickTab', 'event.currentTarget.dataset.index'],
+      params: ['handleClickTab', 'event.currentTarget.dataset.index', 'event.currentTarget.dataset.terminalUid'],
     },
     {
       name: DomEventListenerFunctions.HandleClickTerminalTabAction,
-      params: ['handleClickTerminalTabAction', 'event.currentTarget.dataset.index', 'event.currentTarget.dataset.command'],
+      params: [
+        'handleClickTerminalTabAction',
+        'event.currentTarget.dataset.index',
+        'event.currentTarget.dataset.command',
+        'event.currentTarget.dataset.terminalUid',
+      ],
       stopPropagation: true,
     },
     {
@@ -29,6 +39,7 @@ const renderDom = {
     return (
       oldState.tabs === newState.tabs &&
       oldState.childUids === newState.childUids &&
+      oldState.activeTerminalUids === newState.activeTerminalUids &&
       oldState.selectedIndex === newState.selectedIndex &&
       oldState.terminalTabsEnabled === newState.terminalTabsEnabled
     )

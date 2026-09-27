@@ -8,6 +8,15 @@ jest.unstable_mockModule('../src/parts/PortsViewWorker/PortsViewWorker.ts', () =
     if (command === 'Ports.getCommandIds') {
       return ['addPort', 'removePort']
     }
+    if (command === 'Ports.getComponentState') {
+      return { uid: 1 }
+    }
+    if (command === 'Ports.getMenuIds') {
+      return [28]
+    }
+    if (command === 'Ports.getMenuEntries2') {
+      return []
+    }
     return undefined
   }),
 }))
@@ -44,6 +53,29 @@ test('registers ports view commands', async () => {
 
   expect(typeof ViewletPorts.Commands.addPort).toBe('function')
   expect(typeof ViewletPorts.Commands.removePort).toBe('function')
+})
+
+test('exposes component state commands', () => {
+  expect(typeof ViewletPorts.getComponentState).toBe('function')
+  expect(typeof ViewletPorts.setComponentState).toBe('function')
+})
+
+test('registers ports view menus', async () => {
+  await expect(ViewletPorts.getMenus()).resolves.toEqual([
+    expect.objectContaining({
+      id: 28,
+    }),
+  ])
+})
+
+test('routes component state operations through the ports worker', async () => {
+  const state = ViewletPorts.create(1, 'ports://', 10, 20, 800, 600)
+
+  await expect(ViewletPorts.getComponentState(state)).resolves.toEqual({ uid: 1 })
+  expect(PortsViewWorker.invoke).toHaveBeenNthCalledWith(1, 'Ports.getComponentState', 1)
+
+  await ViewletPorts.setComponentState(state, { uid: 1 })
+  expect(PortsViewWorker.invoke).toHaveBeenNthCalledWith(2, 'Ports.setComponentState', 1, { uid: 1 })
 })
 
 test('resizes and rerenders the ports view', async () => {

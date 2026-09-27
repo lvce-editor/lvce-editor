@@ -16,7 +16,6 @@ logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-lerna-debug.log*
 
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
@@ -126,3 +125,5 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+/packages/main-process/pages

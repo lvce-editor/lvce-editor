@@ -1,5 +1,6 @@
 import * as Css from '../Css/Css.js'
 import * as Preferences from '../Preferences/Preferences.js'
+import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
 export const loadInstance = async (id, module) => {
   if (module.Css) {
@@ -23,4 +24,18 @@ export const disposeInstance = (id, module) => {
     commands.push(...Css.releaseDynamicCss(id))
   }
   return commands
+}
+
+export const reloadDynamicCss = async () => {
+  const seen = new Set()
+  const promises = []
+  for (const instance of ViewletStates.getValues()) {
+    const { factory, moduleId } = instance
+    if (!factory.getDynamicCss || seen.has(moduleId)) {
+      continue
+    }
+    seen.add(moduleId)
+    promises.push(Css.reloadDynamicCss(moduleId, factory.getDynamicCss, Preferences.state))
+  }
+  await Promise.all(promises)
 }

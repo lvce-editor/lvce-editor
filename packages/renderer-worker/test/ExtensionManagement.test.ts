@@ -49,12 +49,19 @@ jest.unstable_mockModule('../src/parts/GetActiveEditor/GetActiveEditor.js', () =
   }
 })
 
+jest.unstable_mockModule('../src/parts/IconTheme/IconTheme.js', () => {
+  return {
+    reload: jest.fn(),
+  }
+})
+
 const ExtensionManagement = await import('../src/parts/ExtensionManagement/ExtensionManagement.js')
 const ExtensionManagementIpc = await import('../src/parts/ExtensionManagement/ExtensionManagement.ipc.js')
 const Command = await import('../src/parts/Command/Command.js')
 const ContextMenu = await import('../src/parts/ContextMenu/ContextMenu.js')
 const ExtensionManagementWorker = await import('../src/parts/ExtensionManagementWorker/ExtensionManagementWorker.js')
 const GetActiveEditor = await import('../src/parts/GetActiveEditor/GetActiveEditor.js')
+const IconTheme = await import('../src/parts/IconTheme/IconTheme.js')
 const SharedProcess = await import('../src/parts/SharedProcess/SharedProcess.js')
 
 test('activateByEvent delegates to the isolated extension management worker', async () => {
@@ -78,6 +85,7 @@ test('handleExtensionsCacheInvalidated refreshes renderer state without invalida
 
   expect(ExtensionManagementWorker.invoke).not.toHaveBeenCalled()
   expect(Command.execute).toHaveBeenNthCalledWith(1, 'KeyBindings.hydrate')
+  expect(IconTheme.reload).toHaveBeenCalledTimes(1)
   expect(Command.execute).toHaveBeenNthCalledWith(2, 'ColorTheme.reload')
   expect(Command.execute).toHaveBeenNthCalledWith(3, 'Layout.handleExtensionsChanged')
   expect(GetActiveEditor.updateAllDiagnostics).toHaveBeenCalledTimes(1)
@@ -87,6 +95,7 @@ test('handleExtensionsCacheInvalidated forwards the disabled extension state', a
   await ExtensionManagement.handleExtensionsCacheInvalidated('sample.extension', true)
 
   expect(Command.execute).toHaveBeenNthCalledWith(1, 'KeyBindings.hydrate')
+  expect(IconTheme.reload).toHaveBeenCalledTimes(1)
   expect(Command.execute).toHaveBeenNthCalledWith(2, 'ColorTheme.reload')
   expect(Command.execute).toHaveBeenNthCalledWith(3, 'Layout.handleExtensionsChanged', 'sample.extension', true)
   expect(GetActiveEditor.updateAllDiagnostics).toHaveBeenCalledTimes(1)
