@@ -22,6 +22,10 @@ test('registers the audio state handler with the IPC module', () => {
   expect(ElectronBrowserViewIpc.Commands.handleAudioStateChanged).toBe(ElectronBrowserView.handleAudioStateChanged)
 })
 
+test('registers the download state handler with the IPC module', () => {
+  expect(ElectronBrowserViewIpc.Commands.handleDownloadStateChanged).toBe(ElectronBrowserView.handleDownloadStateChanged)
+})
+
 test('forwards web contents audio state changes through the global event bus', async () => {
   const listener = jest.fn()
   GlobalEventBus.addListener('browser-view-audio-state-changed', listener)
@@ -29,6 +33,15 @@ test('forwards web contents audio state changes through the global event bus', a
   await ElectronBrowserView.handleAudioStateChanged(12, true)
 
   expect(listener).toHaveBeenCalledWith(12, true)
+})
+
+test('forwards web contents download state changes through the global event bus', async () => {
+  const listener = jest.fn()
+  GlobalEventBus.addListener('browser-view-download-state-changed', listener)
+
+  await ElectronBrowserView.handleDownloadStateChanged(12, 3, 'started')
+
+  expect(listener).toHaveBeenCalledWith(12, 3, 'started')
 })
 
 test('forwards web contents keybindings through the global event bus', async () => {

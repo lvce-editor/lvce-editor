@@ -180,6 +180,16 @@ export const renderEventListeners = () => {
         'event.currentTarget.offsetHeight',
       ],
     },
+    {
+      name: DomEventListenerFunctions.HandleClickSimpleBrowserDownloads,
+      params: [
+        'showDownloadsMenu',
+        'event.clientX',
+        'event.currentTarget.parentElement.offsetTop',
+        'event.currentTarget.offsetTop',
+        'event.currentTarget.offsetHeight',
+      ],
+    },
   ]
 }
 
@@ -232,6 +242,7 @@ const getDom = (state) => {
     state.historyScrollTop,
     state.historyViewportHeight,
     state.overlayIds?.includes(SimpleBrowserOverlay.SettingsMenu) ?? false,
+    state.downloadStates,
   )
 }
 
@@ -250,6 +261,7 @@ const renderDom = {
       oldState.findActiveMatch === newState.findActiveMatch &&
       oldState.fullWidth === newState.fullWidth &&
       oldState.chromeTheme === newState.chromeTheme &&
+      oldState.downloadStates === newState.downloadStates &&
       oldState.iframeSrc === newState.iframeSrc &&
       oldState.canGoBack === newState.canGoBack &&
       oldState.canGoForward === newState.canGoForward &&
