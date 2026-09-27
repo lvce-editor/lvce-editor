@@ -14,7 +14,6 @@ const checkClicks = async (page, editor) => {
   // Stay inside the text area: its exact left edge can belong to a split sash.
   for (const column of [5, 1, original.length - 1, original.length + 5]) {
     await page.mouse.click(textX + characterWidth * column, textY)
-    await expect(editor.locator('textarea')).toBeFocused()
     const expectedColumn = Math.min(column, original.length)
     // Wait for the asynchronous mouse command; allow subpixel rounding of the caret.
     await expect
@@ -25,6 +24,7 @@ const checkClicks = async (page, editor) => {
           : Infinity
       })
       .toBeLessThan(2)
+    await expect(editor.locator('textarea')).toBeFocused()
     await page.keyboard.type('X')
     await expect(row).toHaveText(`${original.slice(0, expectedColumn)}X${original.slice(expectedColumn)}`)
     await page.keyboard.press('Backspace')
