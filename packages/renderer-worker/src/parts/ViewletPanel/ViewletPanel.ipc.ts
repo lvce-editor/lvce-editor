@@ -15,6 +15,7 @@ export const {
   getCommands,
   getComponentState,
   getKeyBindings,
+  getMenus,
   hasDirectRender,
   hasFunctionalEvents,
   hasFunctionalRender,
