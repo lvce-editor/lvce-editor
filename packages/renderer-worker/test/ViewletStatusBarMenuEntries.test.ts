@@ -12,7 +12,7 @@ test('getMenus', async () => {
 
 test('getMenuEntries', async () => {
   const menus = await ViewletStatusBarMenuEntries.getMenus()
-  const result = menus[0].getMenuEntries()
+  const result = menus[0].getMenuEntries(1)
 
   expect(result).toEqual([
     {
@@ -21,5 +21,17 @@ test('getMenuEntries', async () => {
       id: 'hide-status-bar',
       label: 'Hide Status Bar',
     },
+  ])
+})
+
+test('getMenuEntries includes item-specific context menu items and keeps the generic action', async () => {
+  const menus = await ViewletStatusBarMenuEntries.getMenus()
+  const result = menus[0].getMenuEntries(1, {
+    contextMenuItems: [{ args: ['main'], command: 'git.checkout', id: 'switch-main', label: 'Switch to main branch' }],
+  })
+
+  expect(result).toEqual([
+    { args: ['main'], command: 'git.checkout', flags: MenuItemFlags.None, id: 'switch-main', label: 'Switch to main branch' },
+    { command: 'Layout.hideStatusBar', flags: MenuItemFlags.None, id: 'hide-status-bar', label: 'Hide Status Bar' },
   ])
 })

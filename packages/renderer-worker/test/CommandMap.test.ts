@@ -17,6 +17,11 @@ test('registers the terminal send text command', () => {
   expect(commandMap['Terminals.sendText']).toBeDefined()
 })
 
+test('registers preview sandbox warning output commands', () => {
+  expect(commandMap['Preview.logWarning']).toBeDefined()
+  expect(commandMap['Preview.clearOutput']).toBeDefined()
+})
+
 test('registers the simple browser suggestion event bridge commands', () => {
   expect(commandMap['SimpleBrowser.acceptSuggestion']).toBeDefined()
   expect(commandMap['SimpleBrowser.closeSuggestions']).toBeDefined()

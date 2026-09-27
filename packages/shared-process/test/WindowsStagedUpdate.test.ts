@@ -36,6 +36,16 @@ test('rejects corrupted downloaded payloads', async () => {
   }
 })
 
+const waitForTestEditorExit = async (pid: number): Promise<void> => {
+  const deadline = Date.now() + 10000
+  while (WindowsUpdateHelper.isRunning(pid)) {
+    if (Date.now() > deadline) {
+      throw new Error('Test editor did not exit during cleanup')
+    }
+    await new Promise((resolve) => setTimeout(resolve, 100))
+  }
+}
+
 const windowsTest = process.platform === 'win32' ? test : test.skip
 
 windowsTest.each([false, true])(
@@ -47,6 +57,7 @@ windowsTest.each([false, true])(
     const stage = `${install}.stage-${token}`
     const backup = `${install}.backup-${token}`
     const ready = join(root, 'ready')
+    const stop = join(root, 'stop')
     const path = join(root, 'plan.json')
     const log = join(root, 'log.txt')
     try {
@@ -67,7 +78,9 @@ windowsTest.each([false, true])(
         System.Threading.Thread.Sleep(700);
         System.IO.File.WriteAllText(${JSON.stringify(`${ready}.tmp`)}, ${JSON.stringify(acknowledgment)} + System.Diagnostics.Process.GetCurrentProcess().Id + "}");
         System.IO.File.Move(${JSON.stringify(`${ready}.tmp`)}, ${JSON.stringify(ready)});
-        System.Threading.Thread.Sleep(8000);
+        while (!System.IO.File.Exists(${JSON.stringify(stop)})) {
+          System.Threading.Thread.Sleep(100);
+        }
       } }`
       const compile = `Add-Type -TypeDefinition '${source.replaceAll("'", "''")}' -OutputAssembly '${join(stage, 'app.exe').replaceAll("'", "''")}' -OutputType ConsoleApplication`
       await promisify(execFile)(
@@ -92,7 +105,12 @@ windowsTest.each([false, true])(
     } catch (error) {
       throw new Error(await readFile(log, 'utf8').catch(() => String(error)))
     } finally {
-      await new Promise((resolve) => setTimeout(resolve, 3500))
+      await writeFile(stop, '')
+      const acknowledgment = await readFile(ready, 'utf8').catch(() => '')
+      if (acknowledgment) {
+        const { pid } = JSON.parse(acknowledgment)
+        await waitForTestEditorExit(pid)
+      }
       await rm(root, { force: true, maxRetries: 5, recursive: true, retryDelay: 200 })
     }
   },

@@ -11,6 +11,17 @@ test('exposes useful Simple Browser actions in the toolbar menu', () => {
     MenuEntrySeparator.menuEntrySeparator,
     { command: 'SimpleBrowser.openHistory', flags: MenuItemFlags.None, id: 'history', label: 'History' },
     { command: 'SimpleBrowser.openDownloads', flags: MenuItemFlags.None, id: 'downloads', label: 'Downloads' },
+    ...[
+      ['save', 'Save Password'],
+      ['fill', 'Fill Password'],
+      ['manage', 'Manage Passwords'],
+    ].map(([action, label]) => ({
+      command: 'Viewlet.executeViewletCommand',
+      args: [42, 'handleContextMenuAction', 17, 'passwords', [action]],
+      flags: MenuItemFlags.None,
+      id: `passwords-${action}`,
+      label,
+    })),
     MenuEntrySeparator.menuEntrySeparator,
     { command: 'SimpleBrowser.zoomIn', flags: MenuItemFlags.None, id: 'zoom-in', label: 'Zoom In' },
     { command: 'SimpleBrowser.zoomOut', flags: MenuItemFlags.None, id: 'zoom-out', label: 'Zoom Out' },

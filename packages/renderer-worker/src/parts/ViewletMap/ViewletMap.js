@@ -62,7 +62,7 @@ export const getModuleId = async (uri, opener) => {
   if (uri.startsWith('search-editor://')) {
     return ViewletModuleId.Search
   }
-  if (uri.startsWith('simple-browser://')) {
+  if (uri.startsWith('simple-browser://') || uri.startsWith('html-preview:///')) {
     return ViewletModuleId.SimpleBrowser
   }
   if (uri.startsWith('simple-browser-history://')) {

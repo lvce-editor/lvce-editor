@@ -1,5 +1,13 @@
 [
   {
+    "category": "window",
+    "description": "Places Linux window controls above the primary sidebar so the main and secondary sidebar extend to the top. With the primary sidebar hidden, reserves a full-width control strip. Restart the app to apply changes.",
+    "heading": "Titlebarless Layout",
+    "id": "window.titleBarless.enabled",
+    "type": "boolean",
+    "value": false
+  },
+  {
     "category": "applications",
     "description": "Controls how application updates are installed",
     "heading": "Update Mode",
@@ -187,6 +195,14 @@
   },
   {
     "category": "workbench",
+    "description": "Enables the experimental modern UI styling",
+    "heading": "Modern UI",
+    "id": "workbench.experimental.modernUI",
+    "type": "boolean",
+    "value": false
+  },
+  {
+    "category": "workbench",
     "description": "Specifies the workbench color theme",
     "heading": "Color Theme",
     "id": "workbench.colorTheme",
@@ -246,7 +262,17 @@
     "description": "Controls the location of the side bar",
     "heading": "Side Bar Location",
     "id": "workbench.sideBarLocation",
-    "type": "string",
+    "options": [
+      {
+        "id": "left",
+        "label": "Left"
+      },
+      {
+        "id": "right",
+        "label": "Right"
+      }
+    ],
+    "type": "enum",
     "value": "right"
   },
   {

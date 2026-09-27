@@ -14,3 +14,31 @@ export const getPorts = async (workspaceUri: string, applicationId?: string): Pr
       : await ExtensionManagementWorker.invoke('Extensions.invokeForApplication', applicationId, 'Extensions.executeProvidersByEvent', ...args)
   return results.flat()
 }
+
+export const forwardPort = async (workspaceUri: string, port: number, applicationId: string): Promise<unknown> => {
+  if (!workspaceUri.startsWith('remote-ssh://')) {
+    throw new Error('Port forwarding is only available in Remote SSH workspaces')
+  }
+  return ExtensionManagementWorker.invoke(
+    'Extensions.invokeForApplication',
+    applicationId,
+    'Extensions.executeCommand',
+    'remote-ssh.forwardPort',
+    workspaceUri,
+    port,
+  )
+}
+
+export const stopForwardPort = async (workspaceUri: string, port: number, applicationId: string): Promise<void> => {
+  if (!workspaceUri.startsWith('remote-ssh://')) {
+    throw new Error('Port forwarding is only available in Remote SSH workspaces')
+  }
+  await ExtensionManagementWorker.invoke(
+    'Extensions.invokeForApplication',
+    applicationId,
+    'Extensions.executeCommand',
+    'remote-ssh.stopForwardPort',
+    workspaceUri,
+    port,
+  )
+}

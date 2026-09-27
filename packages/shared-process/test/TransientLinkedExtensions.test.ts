@@ -2,6 +2,7 @@ import { afterEach, expect, test } from '@jest/globals'
 import { mkdir, mkdtemp, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
+import { fileURLToPath, pathToFileURL } from 'node:url'
 import * as ErrorCodes from '../src/parts/ErrorCodes/ErrorCodes.js'
 import * as TransientLinkedExtensions from '../src/parts/TransientLinkedExtensions/TransientLinkedExtensions.js'
 
@@ -24,6 +25,25 @@ test('getLinkedExtensions - reads repeated --link args', () => {
     {
       path: '/tmp/two',
       resolvedPath: '/tmp/two',
+      source: '--link',
+    },
+  ])
+})
+
+test('getLinkedExtensions - resolves repeated file URI args', () => {
+  const firstPath = join(tmpdir(), 'linked extension ü #%.1')
+  const secondPath = join(tmpdir(), 'linked worker ü #%.2')
+  process.argv = [...originalArgv, '--link', pathToFileURL(firstPath).href, `--link=${pathToFileURL(secondPath).href}`]
+
+  expect(TransientLinkedExtensions.getLinkedExtensions()).toEqual([
+    {
+      path: pathToFileURL(firstPath).href,
+      resolvedPath: fileURLToPath(pathToFileURL(firstPath)),
+      source: '--link',
+    },
+    {
+      path: pathToFileURL(secondPath).href,
+      resolvedPath: fileURLToPath(pathToFileURL(secondPath)),
       source: '--link',
     },
   ])
@@ -108,4 +128,37 @@ test('validate - accepts recognized linked worker paths', async () => {
       source: '--link',
     },
   ])
+})
+
+test('validate - accepts extension file URI with encoded path characters', async () => {
+  const tmpDir = await mkdtemp(join(tmpdir(), 'lvce transient ü #%-'))
+  const extensionPath = join(tmpDir, 'extension ü #%.1')
+  await mkdir(extensionPath, { recursive: true })
+  await writeFile(join(extensionPath, 'extension.json'), JSON.stringify({ id: 'test-extension' }))
+  const fileUri = pathToFileURL(extensionPath).href
+  process.argv = [...originalArgv, `--link=${fileUri}`]
+
+  await expect(TransientLinkedExtensions.validate()).resolves.toEqual([
+    {
+      path: fileUri,
+      resolvedPath: extensionPath,
+      source: '--link',
+    },
+  ])
+})
+
+test('validate - reports a missing file URI target as a missing path', async () => {
+  const fileUri = pathToFileURL(join(tmpdir(), 'missing linked extension')).href
+  process.argv = [...originalArgv, '--link', fileUri]
+
+  await expect(TransientLinkedExtensions.validate()).rejects.toMatchObject({
+    code: ErrorCodes.ENOENT,
+    message: `Failed to start: --link path does not exist: ${fileUri} (resolved to ${fileURLToPath(fileUri)})`,
+  })
+})
+
+test('getLinkedExtensions - rejects malformed file URIs', () => {
+  process.argv = [...originalArgv, '--link', 'file:///tmp/bad%ZZ']
+
+  expect(() => TransientLinkedExtensions.getLinkedExtensions()).toThrow()
 })

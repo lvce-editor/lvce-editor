@@ -10,3 +10,17 @@
 .Preview > .Html {
   margin: 8px;
 }
+
+.SimpleBrowserHtmlPreview {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  position: relative;
+}
+
+.SimpleBrowserHtmlPreview > .Preview {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border: none;
+}

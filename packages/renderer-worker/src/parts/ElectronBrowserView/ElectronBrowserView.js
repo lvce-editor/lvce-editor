@@ -30,6 +30,8 @@ export const handleKeyBinding = dispatch('browser-view-key-binding', 'handleKeyB
 
 export const handlePageFaviconUpdated = dispatch('browser-view-page-favicon-updated', 'handlePageFaviconUpdated')
 
+export const handleLogin = dispatch('browser-view-login', 'handleLogin')
+
 export const handleTitleUpdated = dispatch('browser-view-title-updated', 'handleTitleUpdated')
 
 export const handleWillNavigate = dispatch('browser-view-will-navigate', 'handleWillNavigate')

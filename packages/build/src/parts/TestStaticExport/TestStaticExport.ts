@@ -1,4 +1,5 @@
 import { VError } from '@lvce-editor/verror'
+import assert from 'node:assert/strict'
 import { join } from 'node:path'
 import { pathToFileURL } from 'node:url'
 import * as Copy from '../Copy/Copy.ts'
@@ -54,6 +55,12 @@ const main = async () => {
   }
   await ReadFile.readFile(join(tmpDir, 'dist', commitHash, 'tests', 'sample.test.html'))
   await ReadFile.readFile(join(tmpDir, 'dist', 'tests', 'sample.test.html'))
+  const config = JSON.parse(await ReadFile.readFile(join(tmpDir, 'dist', 'config.json')))
+  assert.equal(typeof config.commit, 'string')
+  assert.equal(typeof config.productName, 'string')
+  assert.equal(typeof config.version, 'string')
+  const commitConfig = JSON.parse(await ReadFile.readFile(join(tmpDir, 'dist', commitHash, 'config.json')))
+  assert.deepEqual(commitConfig, config)
   // Static e2e pages must start without an optional on-load commands file.
   await Remove.remove(join(tmpDir, 'dist', commitHash, 'config', 'onLoadCommands.json'))
   const testOverview = await ReadFile.readFile(join(tmpDir, 'dist', commitHash, 'tests', 'index.html'))

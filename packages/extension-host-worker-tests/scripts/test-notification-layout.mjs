@@ -3,6 +3,8 @@ import assert from 'node:assert/strict'
 import { readFile } from 'node:fs/promises'
 
 const css = await readFile(new URL('../../../static/css/parts/Notification.css', import.meta.url), 'utf8')
+const iconButtonCss = await readFile(new URL('../../../static/css/parts/IconButton.css', import.meta.url), 'utf8')
+const maskIconCss = await readFile(new URL('../../../static/css/parts/MaskIcon.css', import.meta.url), 'utf8')
 const browser = await chromium.launch({ headless: true })
 try {
   const page = await browser.newPage()
@@ -15,8 +17,8 @@ try {
   ]
   for (const { message, width, height } of cases) {
     await page.setViewportSize({ width, height })
-    await page.setContent(`<style>* { box-sizing: border-box } body { font: 16px system-ui } ${css}</style>
-      <div class="Notification"><p class="NotificationMessage"></p><button class="NotificationCloseButton">Close</button></div>`)
+    await page.setContent(`<style>* { box-sizing: border-box } body { font: 16px system-ui } ${iconButtonCss} ${maskIconCss} ${css}</style>
+      <div class="Notification"><p class="NotificationMessage"></p><button class="IconButton NotificationCloseButton" aria-label="Close" title="Close"><div class="MaskIcon MaskIconClose"></div></button></div>`)
     await page.locator('.NotificationMessage').evaluate((element, text) => {
       element.textContent = text
     }, message)
@@ -45,13 +47,53 @@ try {
       })
     assert.equal(await checkBounds(), '', `Notification must contain its text at ${width}x${height}`)
     await expect(page.locator('.NotificationMessage')).toHaveText(message)
+    if (message === 'Saved') {
+      const lineAndButtonBounds = await page.evaluate(() => {
+        const line = document.querySelector('.NotificationMessage').getBoundingClientRect()
+        const close = document.querySelector('.NotificationCloseButton').getBoundingClientRect()
+        return {
+          lineCenter: line.top + Number.parseFloat(getComputedStyle(document.querySelector('.NotificationMessage')).lineHeight) / 2,
+          closeCenter: close.top + close.height / 2,
+        }
+      })
+      assert.ok(
+        Math.abs(lineAndButtonBounds.lineCenter - lineAndButtonBounds.closeCenter) <= 1,
+        `Close button should be vertically centered on a single line: ${JSON.stringify(lineAndButtonBounds)}`,
+      )
+    }
     await page.locator('.NotificationMessage').evaluate((element) => {
       element.scrollTop = element.scrollHeight
     })
     assert.equal(await checkBounds(), '', 'The close button must stay visible when scrolling')
     await expect(page.locator('.NotificationCloseButton')).toBeVisible()
   }
-  console.log('Notification text wraps, stays within the viewport, and scrolls without hiding the close button')
+  await page.setViewportSize({ width: 1280, height: 720 })
+  await page.setContent(`<style>* { box-sizing: border-box } body { font: 16px system-ui } ${css}
+    .PreviewArea { position: fixed; top: 0; bottom: 0; background: gray }
+  </style>
+  <div class="PreviewArea"></div>
+  <div class="Widgets"><div class="Notification"><p class="NotificationMessage">Continue signing in</p><button class="NotificationCloseButton">Close</button></div></div>`)
+  const preview = page.locator('.PreviewArea')
+  const notification = page.locator('.Notification')
+  for (const left of [900, 700, 500]) {
+    await preview.evaluate((element, value) => {
+      element.style.left = `${value}px`
+      element.style.width = `${innerWidth - value}px`
+      document.documentElement.style.setProperty('--NotificationRight', `calc(100vw - ${value}px + 30px)`)
+      document.documentElement.style.setProperty('--NotificationMaxWidth', `min(250px, calc(${value}px - 60px), calc(100vw - 60px))`)
+    }, left)
+    const previewBounds = await preview.boundingBox()
+    const notificationBounds = await notification.boundingBox()
+    assert.ok(notificationBounds.x + notificationBounds.width <= previewBounds.x - 29, `Notification overlaps Simple Browser at split x=${left}`)
+  }
+  await preview.evaluate((element) => {
+    element.remove()
+    document.documentElement.style.setProperty('--NotificationRight', '30px')
+    document.documentElement.style.setProperty('--NotificationMaxWidth', 'min(250px, calc(100vw - 60px))')
+  })
+  const notificationBounds = await notification.boundingBox()
+  assert.ok(notificationBounds.x + notificationBounds.width <= 1250, 'Notification remains within the IDE viewport after closing Simple Browser')
+  console.log('Notification text wraps, stays within the viewport, and moves with the IDE boundary beside Simple Browser')
 } finally {
   await browser.close()
 }

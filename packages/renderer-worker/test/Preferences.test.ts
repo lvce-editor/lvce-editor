@@ -174,12 +174,12 @@ test('set - does not persist preferences in test mode', async () => {
   expect(Preferences.state.x).toBe(42)
 })
 
-test('toggleAutoSave - turns auto save on', async () => {
+test('toggleAutoSave - turns auto save on when the editor loses focus', async () => {
   Object.assign(Preferences.state, { 'files.autoSave': 'off' })
 
   await Preferences.toggleAutoSave()
 
-  expect(Preferences.state['files.autoSave']).toBe('afterDelay')
+  expect(Preferences.state['files.autoSave']).toBe('onFocusChange')
 })
 
 test('toggleAutoSave - turns auto save off', async () => {

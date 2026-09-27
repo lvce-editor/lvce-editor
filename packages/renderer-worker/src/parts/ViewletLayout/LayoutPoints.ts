@@ -1,3 +1,4 @@
+import { isCompactTitleBar } from './IsCompactTitleBar.ts'
 import * as Clamp from '../Clamp/Clamp.js'
 import * as GetDefaultTitleBarHeight from '../GetDefaultTitleBarHeight/GetDefaultTitleBarHeight.js'
 import * as LayoutKeys from '../LayoutKeys/LayoutKeys.js'
@@ -62,6 +63,8 @@ export const getPoints = (source: LayoutState, sideBarLocation = source.sideBarL
   const panelMinHeight = source[LayoutKeys.PanelMinHeight]
   const panelMaxHeight = source[LayoutKeys.PanelMaxHeight]
   const titleBarHeight = source[LayoutKeys.TitleBarHeight]
+  const compactTitleBar = isCompactTitleBar(source)
+  const titleBarlessClearance = compactTitleBar ? titleBarHeight : 0
   const sideBarWidth = source[LayoutKeys.SideBarWidth]
   const panelHeight = source[LayoutKeys.PanelHeight]
   const statusBarHeight = source[LayoutKeys.StatusBarHeight]
@@ -91,7 +94,7 @@ export const getPoints = (source: LayoutState, sideBarLocation = source.sideBarL
     : Math.max(0, widthBeforeSecondaryPreview - destinationPreviewWidth)
 
   if (source.sideBarFocusMode) {
-    const contentTop = titleBarVisible ? titleBarHeight : 0
+    const contentTop = titleBarVisible ? titleBarHeight : titleBarlessClearance
     const contentBottom = statusBarVisible ? windowHeight - statusBarHeight : windowHeight
     const focusSecondarySideBar = source.sideBarFocusModeTarget === 'secondary'
     return {
@@ -136,7 +139,7 @@ export const getPoints = (source: LayoutState, sideBarLocation = source.sideBarL
     // @ts-ignore
     const p9 = /* End of ActivityBar */ windowWidth
 
-    if (titleBarVisible) {
+    if (titleBarVisible && !compactTitleBar) {
       p2 = titleBarHeight
     }
     if (statusBarVisible) {
@@ -154,9 +157,9 @@ export const getPoints = (source: LayoutState, sideBarLocation = source.sideBarL
     }
 
     const destinationActivityBarLeft = p8
-    const destinationActivityBarTop = p2
+    const destinationActivityBarTop = p2 + titleBarlessClearance
     const destinationActivityBarWidth = 48
-    const destinationActivityBarHeight = p3 - p2
+    const destinationActivityBarHeight = p3 - destinationActivityBarTop
     const destinationActivityBarVisible = activityBarVisible
 
     // Calculate sidebar width for left section
@@ -184,9 +187,9 @@ export const getPoints = (source: LayoutState, sideBarLocation = source.sideBarL
     const destinationPanelVisible = panelVisible
 
     const destinationSideBarLeft = p7
-    const destinationSideBarTop = p2
+    const destinationSideBarTop = p2 + titleBarlessClearance
     const destinationSideBarWidth = sideBarVisible ? adjustedSideBarWidth : newSideBarWidth
-    const destinationSideBarHeight = p3 - p2
+    const destinationSideBarHeight = p3 - destinationSideBarTop
     const destinationSideBarVisible = sideBarVisible
 
     const destinationSecondarySideBarLeft = secondarySideBarLeft
@@ -205,7 +208,9 @@ export const getPoints = (source: LayoutState, sideBarLocation = source.sideBarL
     const destinationTitleBarTop = p1
     const destinationTitleBarWidth = windowWidth
     let destinationTitleBarHeight = 0
-    if (!source.titleBarVisible) {
+    if (source.titleBarless) {
+      destinationTitleBarHeight = titleBarHeight
+    } else if (!source.titleBarVisible) {
       destinationTitleBarHeight = 0
     } else {
       destinationTitleBarHeight = GetDefaultTitleBarHeight.getDefaultTitleBarHeight()
@@ -253,9 +258,11 @@ export const getPoints = (source: LayoutState, sideBarLocation = source.sideBarL
       statusBarWidth: destinationStatusBarWidth,
       statusBarHeight: destinationStatusBarHeight,
       statusBarVisible: destinationStatusBarVisible,
-      titleBarLeft: destinationTitleBarLeft,
+      titleBarLeft: compactTitleBar
+        ? Math.min(destinationSideBarLeft, activityBarVisible ? destinationActivityBarLeft : destinationSideBarLeft)
+        : destinationTitleBarLeft,
       titleBarTop: destinationTitleBarTop,
-      titleBarWidth: destinationTitleBarWidth,
+      titleBarWidth: compactTitleBar ? destinationSideBarWidth + (activityBarVisible ? destinationActivityBarWidth : 0) : destinationTitleBarWidth,
       titleBarHeight: destinationTitleBarHeight,
       titleBarVisible: destinationTitleBarVisible,
       previewLeft: destinationPreviewLeft,
@@ -283,7 +290,7 @@ export const getPoints = (source: LayoutState, sideBarLocation = source.sideBarL
     // @ts-ignore
     const p9 = /* End of Main */ 0
 
-    if (titleBarVisible) {
+    if (titleBarVisible && !compactTitleBar) {
       p2 = titleBarHeight
     }
     if (statusBarVisible) {
@@ -303,9 +310,9 @@ export const getPoints = (source: LayoutState, sideBarLocation = source.sideBarL
       p8 = p7
     }
     const destinationActivityBarLeft = p6
-    const destinationActivityBarTop = p2
+    const destinationActivityBarTop = p2 + titleBarlessClearance
     const destinationActivityBarWidth = 48
-    const destinationActivityBarHeight = p3 - p2
+    const destinationActivityBarHeight = p3 - destinationActivityBarTop
     const destinationActivityBarVisible = activityBarVisible
 
     const maxSecondarySideBarWidth = Math.max(0, availableWidth - p8 - mainMinWidth)
@@ -328,9 +335,9 @@ export const getPoints = (source: LayoutState, sideBarLocation = source.sideBarL
     const destinationPanelVisible = panelVisible
 
     const destinationSideBarLeft = p7
-    const destinationSideBarTop = p2
+    const destinationSideBarTop = p2 + titleBarlessClearance
     const destinationSideBarWidth = sideBarVisible ? p8 - p7 : newSideBarWidth
-    const destinationSideBarHeight = p3 - p2
+    const destinationSideBarHeight = p3 - destinationSideBarTop
     const destinationSideBarVisible = sideBarVisible
 
     const destinationSecondarySideBarLeft = secondarySideBarLeft
@@ -392,9 +399,11 @@ export const getPoints = (source: LayoutState, sideBarLocation = source.sideBarL
       statusBarWidth: destinationStatusBarWidth,
       statusBarHeight: destinationStatusBarHeight,
       statusBarVisible: destinationStatusBarVisible,
-      titleBarLeft: destinationTitleBarLeft,
+      titleBarLeft: compactTitleBar
+        ? Math.min(destinationSideBarLeft, activityBarVisible ? destinationActivityBarLeft : destinationSideBarLeft)
+        : destinationTitleBarLeft,
       titleBarTop: destinationTitleBarTop,
-      titleBarWidth: destinationTitleBarWidth,
+      titleBarWidth: compactTitleBar ? destinationSideBarWidth + (activityBarVisible ? destinationActivityBarWidth : 0) : destinationTitleBarWidth,
       titleBarHeight: destinationTitleBarHeight,
       titleBarVisible: destinationTitleBarVisible,
       previewLeft: destinationPreviewLeft,

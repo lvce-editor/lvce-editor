@@ -64,6 +64,13 @@ export const addDynamicCss = (id, getCss, preferences) => {
   return CssState.get(id)
 }
 
+export const reloadDynamicCss = async (id, getCss, preferences) => {
+  if (!CssState.has(id)) {
+    return
+  }
+  await actuallyAddDynamicCss(id, getCss, preferences)
+}
+
 export const acquireDynamicCss = async (id, getCss, preferences) => {
   CssState.addReference(id)
   try {

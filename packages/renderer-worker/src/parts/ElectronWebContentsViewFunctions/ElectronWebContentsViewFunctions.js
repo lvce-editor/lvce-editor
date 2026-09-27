@@ -92,3 +92,9 @@ export const getDomTree = (id) => {
 export const insertJavaScript = (id, code, userGesture = false) => {
   return EmbedsWorker.invoke('ElectronWebContentsView.insertJavaScript', id, code, userGesture)
 }
+
+export const passwords = (id, action) => EmbedsWorker.invoke('ElectronWebContentsView.passwords', id, action)
+
+export const acceptLogin = (requestId, username, password) => EmbedsWorker.invoke('ElectronWebContentsView.acceptLogin', requestId, username, password)
+
+export const cancelLogin = (requestId) => EmbedsWorker.invoke('ElectronWebContentsView.cancelLogin', requestId)

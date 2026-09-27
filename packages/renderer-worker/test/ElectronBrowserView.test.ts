@@ -40,6 +40,16 @@ test('forwards web contents keybindings through the global event bus', async () 
   expect(listener).toHaveBeenCalledWith(12, 2050)
 })
 
+test('forwards web contents login challenges through the global event bus', async () => {
+  const listener = jest.fn()
+  const challenge = { host: 'example.com', requestId: '12:1' }
+  GlobalEventBus.addListener('browser-view-login', listener)
+
+  await ElectronBrowserView.handleLogin(12, challenge)
+
+  expect(listener).toHaveBeenCalledWith(12, challenge)
+})
+
 test('forwards web contents context menus through the global event bus', async () => {
   const listener = jest.fn()
   const params = { linkURL: 'https://example.com', x: 10, y: 20 }

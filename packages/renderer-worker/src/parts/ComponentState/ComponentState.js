@@ -1,3 +1,9 @@
+import * as AssetDir from '../AssetDir/AssetDir.js'
+import * as ExtensionManagementWorker from '../ExtensionManagementWorker/ExtensionManagementWorker.js'
+import * as GetExtensionViews from '../GetExtensionViews/GetExtensionViews.ts'
+import * as ComponentWorkerNames from '../ComponentWorkerNames/ComponentWorkerNames.js'
+import * as Platform from '../Platform/Platform.js'
+import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as ApplicationRegistry from '../ApplicationRegistry/ApplicationRegistry.ts'
 import * as EditorWorker from '../EditorWorker/EditorWorker.ts'
 import * as FilterFocusCommands from '../FilterFocusCommands/FilterFocusCommands.js'
@@ -240,7 +246,9 @@ export const getComponents = (viewUid = undefined) => {
       displayName,
       domAvailable: typeof instance.factory.getComponentDom === 'function',
       editable: isEditable(instance),
+      heapSnapshotAvailable: Platform.getPlatform() === PlatformType.Electron,
       moduleId,
+      savedStateAvailable: typeof instance.factory.saveState === 'function',
       uid,
     })
   }
@@ -256,6 +264,21 @@ export const getState = async (uid) => {
     return instance.factory.getComponentState(instance.state)
   }
   return instance.state
+}
+
+export const getSavedState = async (uid) => {
+  const instance = getInstance(uid)
+  if (instance.status === 'disposed') {
+    throw new Error(`Component is disposed: ${uid}`)
+  }
+  if (typeof instance.factory.saveState !== 'function') {
+    throw new Error(`Saved component state API not available: ${instance.moduleId}`)
+  }
+  const savedState = await instance.factory.saveState(instance.state)
+  if (savedState === undefined) {
+    throw new Error(`Saved component state is undefined: ${instance.moduleId}`)
+  }
+  return savedState
 }
 
 export const getDom = async (uid) => {
@@ -339,4 +362,31 @@ export const setDom = async (uid, dom) => {
   }
   await RendererProcess.invoke('Viewlet.setComponentDom', uid, dom)
   await refreshOpenEditors(uid)
+}
+
+export const getWorkerName = async (uid) => {
+  if (Platform.getPlatform() !== PlatformType.Electron) {
+    throw new Error('Component heap snapshots require Electron')
+  }
+  const instance = getInstance(uid)
+  if (instance.moduleId === 'ExtensionView') {
+    const applicationId = ApplicationRegistry.getOwner(uid)
+    const view = await GetExtensionViews.getExtensionView(instance.state.viewId, applicationId)
+    const args = ['Extensions.getRunningExtensions', AssetDir.assetDir, PlatformType.Electron]
+    const extensions = await (applicationId === undefined
+      ? ExtensionManagementWorker.invoke(...args)
+      : ExtensionManagementWorker.invoke('Extensions.invokeForApplication', applicationId, ...args))
+    const extension = extensions.find((item) => item.id === view?.extensionId)
+    if (!extension?.isolated) {
+      throw new Error('Component extension does not have an isolated worker')
+    }
+    return extension.workerName || `Extension API (Electron): ${extension.id}`
+  }
+  const workerName = ComponentWorkerNames.getName(instance.factory, instance.moduleId)
+  if (workerName) {
+    const workers = await RendererProcess.invoke('Workers.getWorkers')
+    const worker = workers.find((item) => item.name === workerName)
+    return worker?.runtimeName ?? workerName
+  }
+  return globalThis.name
 }

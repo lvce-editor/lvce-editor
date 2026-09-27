@@ -284,7 +284,7 @@ jobs:
       - name: Test staged Windows installer
         if: matrix.versions.os == 'windows-2025'
         shell: pwsh
-        run: ./packages/build/scripts/test-windows-staging.ps1 -Installer '${{ env.ASSET_WINDOWS_EXE_X64 || env.ASSET_WINDOWS_EXE_ARM64 }}'
+        run: ./packages/build/scripts/test-windows-staging.ps1 -Installer '${{ env.ASSET_WINDOWS_EXE_X64 || env.ASSET_WINDOWS_EXE_ARM64 }}' -Architecture '${{ matrix.versions.arch }}'
       - name: Declare staged Windows installer support
         if: matrix.versions.os == 'windows-2025'
         shell: pwsh

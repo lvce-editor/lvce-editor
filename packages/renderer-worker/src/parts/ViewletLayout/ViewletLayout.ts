@@ -1,3 +1,4 @@
+import * as HtmlPreviewUrl from '../HtmlPreviewUrl/HtmlPreviewUrl.js'
 import * as BrowserFullWidth from '../BrowserFullWidth/BrowserFullWidth.js'
 import * as ActivityBarWorker from '../ActivityBarWorker/ActivityBarWorker.js'
 import * as ApplicationRegistry from '../ApplicationRegistry/ApplicationRegistry.ts'
@@ -35,11 +36,14 @@ import * as SaveState from '../SaveState/SaveState.js'
 import * as SideBarLocationType from '../SideBarLocationType/SideBarLocationType.js'
 import * as SourceControlWorker from '../SourceControlWorker/SourceControlWorker.js'
 import * as StatusBarWorker from '../StatusBarWorker/StatusBarWorker.js'
+import * as TitleBarWorker from '../TitleBarWorker/TitleBarWorker.js'
 import { VError } from '../VError/VError.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletMap from '../ViewletMap/ViewletMap.js'
+import * as ViewletManagerVisitor from '../ViewletManagerVisitor/ViewletManagerVisitor.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
+import * as UpdateDynamicFocusContext from '../UpdateDynamicFocusContext/UpdateDynamicFocusContext.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
@@ -198,6 +202,7 @@ export const create = (id: number): LayoutState => {
     windowHeight: 0,
     statusBarWidth: 0,
     titleBarHeight: 0,
+    titleBarless: false,
     titleBarLeft: 0,
     titleBarTop: 0,
     titleBarVisibleBeforeFullScreen: false,
@@ -452,6 +457,7 @@ export const loadContent = (state: LayoutState, savedState: any): LayoutState =>
   const previewViewletId = getSavedPreviewViewletId(stateToRestore)
   const secondaryPreviewUri = stateToRestore?.secondaryPreviewUri || ''
   const secondaryPreviewViewletId = getSavedSecondaryPreviewViewletId(stateToRestore)
+  const titleBarless = state.platform === PlatformType.Electron && Preferences.get('window.titleBarless.enabled') === true
   const intermediateState: LayoutState = {
     ...state,
     activityBarVisible: true,
@@ -488,9 +494,10 @@ export const loadContent = (state: LayoutState, savedState: any): LayoutState =>
     secondaryPreviewWidth,
     secondaryPreviewMinWidth: 100,
     secondaryPreviewMaxWidth: Math.max(1800, windowWidth / 2),
-    titleBarHeight: isNativeTitleBarStyle(state.platform) ? 0 : GetDefaultTitleBarHeight.getDefaultTitleBarHeight(),
+    titleBarHeight: titleBarless || !isNativeTitleBarStyle(state.platform) ? GetDefaultTitleBarHeight.getDefaultTitleBarHeight() : 0,
+    titleBarless,
     titleBarVisible: true,
-    titleBarNative: isNativeTitleBarStyle(state.platform),
+    titleBarNative: !titleBarless && isNativeTitleBarStyle(state.platform),
     windowHeight,
     windowWidth,
     activityBarSashVisible: true,
@@ -1144,6 +1151,19 @@ export const toggleActivityBar = (state: LayoutState) => {
   return toggle(state, LayoutModules.ActivityBar)
 }
 
+export const toggleMenuBar = async (state: LayoutState): Promise<LayoutStateResult> => {
+  const titleBar = ViewletStates.getInstance(LayoutModules.TitleBar.moduleId, state.applicationId)
+  if (titleBar) {
+    const titleBarState = await TitleBarWorker.invoke('TitleBar.getComponentState', titleBar.state.uid)
+    const command = titleBarState.titleBarMenuBarEnabled ? 'hideMenuBar' : 'showMenuBar'
+    await Viewlet.executeViewletCommand(titleBar.state.uid, command)
+  }
+  return {
+    newState: state,
+    commands: [],
+  }
+}
+
 const getPreferredViewLocation = async (viewId: string): Promise<'preview' | 'secondaryPreview' | 'sideBar'> => {
   if (!viewId.includes('.')) {
     return 'sideBar'
@@ -1252,6 +1272,17 @@ export const showPreview = async (
   uri: string = initialState.previewUri,
   previewViewletId: string = getPreviewViewletId(uri),
 ) => {
+  if (previewViewletId === ViewletModuleId.Preview && /\.html?(?:[?#].*)?$/i.test(uri)) {
+    return showPreview(initialState, HtmlPreviewUrl.encode(uri), ViewletModuleId.SimpleBrowser)
+  }
+  if (HtmlPreviewUrl.isHtmlPreviewUrl(uri)) {
+    previewViewletId = ViewletModuleId.SimpleBrowser
+    if (initialState.previewVisible && initialState.previewViewletId === ViewletModuleId.SimpleBrowser) {
+      await Viewlet.executeViewletCommand(initialState.previewId, 'openTab', uri, 'foreground-tab')
+      return { newState: initialState, commands: [] }
+    }
+  }
+
   if (
     initialState.previewVisible &&
     initialState.previewId !== -1 &&
@@ -2295,6 +2326,19 @@ export const handleSashPointerMove = async (state: LayoutState, x: number, y: nu
     const { kVisible, moduleId } = module
     if (state[kVisible] !== newState[kVisible]) {
       if (newState[kVisible]) {
+        if (module === LayoutModules.Panel) {
+          const shown = await show(
+            {
+              ...state,
+              panelHeight: newState.panelHeight,
+            },
+            module,
+            undefined,
+          )
+          newState = shown.newState
+          allCommands.push(...shown.commands)
+          continue
+        }
         const viewletUid = Id.create()
         showAsync(uid, newState, module, viewletUid) // TODO avoid side effect
         const commands = showPlaceholder(uid, newState, module)
@@ -2735,6 +2779,10 @@ export const handleWorkspaceRefresh = async (state: LayoutState, refresh: Worksp
   return result
 }
 
+export const handleSourceControlProgressChange = async (state: LayoutState): Promise<LayoutStateResult> => {
+  return callGlobalEvent(state, 'handleSourceControlProgressChange')
+}
+
 export const refreshProblemsSummary = async (state: LayoutState): Promise<LayoutStateResult> => {
   try {
     const summary = await ProblemsWorker.invoke('Problems.getProblemsSummary')
@@ -2786,6 +2834,7 @@ export const handleDiagnosticsChange = async (state: LayoutState, uri: string) =
 
 export const handleSettingsChanged = async (state: LayoutState) => {
   await Preferences.hydrate()
+  await ViewletManagerVisitor.reloadDynamicCss()
   await BrowserFullWidth.configureGesture()
   return callGlobalEvent(state, 'handleSettingsChanged')
 }
@@ -2849,10 +2898,16 @@ const getActiveSideBarExtensionId = (state: LayoutState): string => {
 
 export const handleExtensionsChanged = async (state: LayoutState, extensionId?: string, disabled?: boolean): Promise<LayoutStateResult> => {
   const globalEventResult = await callGlobalEvent(state, 'handleExtensionsChanged')
+  // Workers have already queued these transactions. Commit them before an extension
+  // provider query can delay every subsequent direct render of the same views.
+  UpdateDynamicFocusContext.updateDynamicFocusContext(globalEventResult.commands)
+  if (globalEventResult.commands.length > 0) {
+    await RendererProcess.invoke('Viewlet.sendMultiple', globalEventResult.commands)
+  }
   const sourceControlBadgeResult = await refreshSourceControlBadgeCount(globalEventResult.newState)
   const extensionChangeResult = {
     newState: sourceControlBadgeResult.newState,
-    commands: [...globalEventResult.commands, ...sourceControlBadgeResult.commands],
+    commands: sourceControlBadgeResult.commands,
   }
   if (!disabled || !extensionId || getActiveSideBarExtensionId(extensionChangeResult.newState) !== extensionId) {
     return extensionChangeResult
