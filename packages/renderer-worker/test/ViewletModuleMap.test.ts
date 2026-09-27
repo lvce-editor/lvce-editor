@@ -71,6 +71,15 @@ test('running extensions uses worker-backed module', async () => {
   expect(typeof module.getCommands).toBe('function')
 })
 
+test('workers view uses worker-backed module', async () => {
+  const module = await ViewletModuleMap.map[ViewletModuleId.Workers]()
+
+  expect(module.hasFunctionalRender).toBe(true)
+  expect(typeof module.loadContent).toBe('function')
+  expect(typeof module.getCommands).toBe('function')
+  expect(module.hasFunctionalResize).toBe(true)
+})
+
 test('simple browser history exposes the placeholder view', async () => {
   const module = await ViewletModuleMap.map[ViewletModuleId.SimpleBrowserHistory]()
 
