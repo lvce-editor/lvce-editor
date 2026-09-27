@@ -2,7 +2,7 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'viewlet.editor-language-mode-persistence'
 
-export const test: Test = async ({ expect, FileSystem, Locator, Main, QuickPick, Workspace }) => {
+export const test: Test = async ({ Editor, FileSystem, Main, QuickPick, Workspace }) => {
   const tmpDir = await FileSystem.getTmpDir()
   const uri = `${tmpDir}/script.txt`
   await FileSystem.writeFile(uri, 'const value = 1')
@@ -18,10 +18,9 @@ export const test: Test = async ({ expect, FileSystem, Locator, Main, QuickPick,
   await QuickPick.setValue('javascript')
   await QuickPick.selectItem('javascript')
 
-  const keywordToken = Locator('.Token.Keyword', { hasText: 'const' })
-  await expect(keywordToken).toBeVisible()
-
   await Main.closeAllEditors()
   await Main.openUri(uri)
-  await expect(keywordToken).toBeVisible()
+  await Editor.setCursor(0, 0)
+  await Editor.toggleLineComment()
+  await Editor.shouldHaveText('// const value = 1')
 }

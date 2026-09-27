@@ -221,7 +221,7 @@ export const getLanguageConfiguration = async (editor) => {
     throw new Error('languages must be loaded before requesting language configuration')
   }
   try {
-    editor.languageId = getLanguageId(editor.uri)
+    editor.languageId ||= getLanguageId(editor.uri)
     const languageConfiguration = await ExtensionHostLanguages.getLanguageConfiguration(editor.languageId)
     return languageConfiguration
   } catch (error) {
