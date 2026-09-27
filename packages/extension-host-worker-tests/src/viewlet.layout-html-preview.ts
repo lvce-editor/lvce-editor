@@ -7,9 +7,12 @@ export const test: Test = async ({ Command, Editor, expect, FileSystem, Locator,
   await Workspace.setPath(tmpDir)
   const first = `${tmpDir}/index # %.html`
   const second = `${tmpDir}/second.html`
+  const long = `${tmpDir}/long.html`
   await FileSystem.writeFile(`${tmpDir}/theme.css`, '#message { color: rgb(255, 0, 0); }')
+  const paragraphs = Array.from({ length: 100 }, (_, index) => `<p>Preview line ${index}</p>`).join('')
   await FileSystem.writeFile(first, '<link rel="stylesheet" href="./theme.css"><p id="message">hello world</p>')
   await FileSystem.writeFile(second, '<p id="second">second preview</p>')
+  await FileSystem.writeFile(long, `${paragraphs}<p id="bottom-marker">bottom of preview</p>`)
   await Main.openUri(first)
   await Command.execute('Layout.showPreview', first)
   const preview = Locator('.SimpleBrowser .Preview')
@@ -27,4 +30,11 @@ export const test: Test = async ({ Command, Editor, expect, FileSystem, Locator,
   await expect(preview.locator('#message')).toHaveText('updated preview')
   await Command.execute('SimpleBrowser.reload')
   await expect(preview.locator('#message')).toBeVisible()
+
+  await expect(preview).toHaveCSS('overflow-y', 'auto')
+
+  await Command.execute('Layout.showPreview', long)
+  const bottomMarker = preview.locator('#bottom-marker')
+  await bottomMarker.hover()
+  await expect(bottomMarker).toBeVisible()
 }
