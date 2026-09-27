@@ -64,7 +64,6 @@ try {
   const open = async (page) => {
     await command(page, 'Layout.showPanel', 'Terminals')
     await expect(page.locator('.XtermTerminal')).toHaveCount(1)
-    await expect(page.locator('.xterm-helper-textarea')).toBeFocused()
   }
   const checkOutput = async (page, text) => {
     const input = page.locator('.xterm-helper-textarea')

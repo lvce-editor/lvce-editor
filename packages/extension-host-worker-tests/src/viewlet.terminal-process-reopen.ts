@@ -2,8 +2,9 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'viewlet.terminal-process-reopen'
 
-export const test: Test = async ({ Command, expect, KeyBoard, Locator, Settings, Workspace }) => {
-  await Workspace.openTmpDir()
+export const test: Test = async ({ Command, expect, FileSystem, KeyBoard, Locator, Settings, Workspace }) => {
+  const tmpDir = await FileSystem.getTmpDir({ scheme: 'file' })
+  await Workspace.setUri(tmpDir)
   await Settings.update({ 'terminal.backend': 'real' })
   for (let cycle = 0; cycle < 3; cycle++) {
     await Command.execute('Layout.showPanel', 'Terminals')
