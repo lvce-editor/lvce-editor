@@ -62,14 +62,23 @@ try {
         .map((metric) => metric.pid),
     )
   const open = async (page) => {
+    await page.bringToFront()
+    const window = await app.browserWindow(page)
+    await window.evaluate((window) => window.focus())
     await command(page, 'Layout.showPanel', 'Terminals')
     await expect(page.locator('.XtermTerminal')).toHaveCount(1)
+    await expect(page.locator('.XtermTerminal .xterm-helper-textarea')).toBeVisible()
   }
   const checkOutput = async (page, text) => {
-    const input = page.locator('.xterm-helper-textarea')
+    const input = page.locator('.XtermTerminal .xterm-helper-textarea')
     const middle = Math.floor(text.length / 2)
+    await page.bringToFront()
+    const window = await app.browserWindow(page)
+    await window.evaluate((window) => window.focus())
     await input.focus()
-    await page.keyboard.type(`printf '%s%s\\n' '${text.slice(0, middle)}' '${text.slice(middle)}'`)
+    await expect(input).toBeFocused()
+    const command = `printf '%s%s\\n' '${text.slice(0, middle)}' '${text.slice(middle)}'`
+    for (const char of command) await page.keyboard.press(char === ' ' ? 'Space' : char)
     await page.keyboard.press('Enter')
     await expect(page.locator('.XtermTerminal')).toContainText(text)
   }
