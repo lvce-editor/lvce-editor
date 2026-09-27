@@ -3,6 +3,8 @@ import assert from 'node:assert/strict'
 import { readFile } from 'node:fs/promises'
 
 const css = await readFile(new URL('../../../static/css/parts/Notification.css', import.meta.url), 'utf8')
+const iconButtonCss = await readFile(new URL('../../../static/css/parts/IconButton.css', import.meta.url), 'utf8')
+const maskIconCss = await readFile(new URL('../../../static/css/parts/MaskIcon.css', import.meta.url), 'utf8')
 const browser = await chromium.launch({ headless: true })
 try {
   const page = await browser.newPage()
@@ -15,8 +17,8 @@ try {
   ]
   for (const { message, width, height } of cases) {
     await page.setViewportSize({ width, height })
-    await page.setContent(`<style>* { box-sizing: border-box } body { font: 16px system-ui } ${css}</style>
-      <div class="Notification"><p class="NotificationMessage"></p><button class="NotificationCloseButton">Close</button></div>`)
+    await page.setContent(`<style>* { box-sizing: border-box } body { font: 16px system-ui } ${iconButtonCss} ${maskIconCss} ${css}</style>
+      <div class="Notification"><p class="NotificationMessage"></p><button class="IconButton NotificationCloseButton" aria-label="Close" title="Close"><div class="MaskIcon MaskIconClose"></div></button></div>`)
     await page.locator('.NotificationMessage').evaluate((element, text) => {
       element.textContent = text
     }, message)
@@ -45,6 +47,20 @@ try {
       })
     assert.equal(await checkBounds(), '', `Notification must contain its text at ${width}x${height}`)
     await expect(page.locator('.NotificationMessage')).toHaveText(message)
+    if (message === 'Saved') {
+      const lineAndButtonBounds = await page.evaluate(() => {
+        const line = document.querySelector('.NotificationMessage').getBoundingClientRect()
+        const close = document.querySelector('.NotificationCloseButton').getBoundingClientRect()
+        return {
+          lineCenter: line.top + Number.parseFloat(getComputedStyle(document.querySelector('.NotificationMessage')).lineHeight) / 2,
+          closeCenter: close.top + close.height / 2,
+        }
+      })
+      assert.ok(
+        Math.abs(lineAndButtonBounds.lineCenter - lineAndButtonBounds.closeCenter) <= 1,
+        `Close button should be vertically centered on a single line: ${JSON.stringify(lineAndButtonBounds)}`,
+      )
+    }
     await page.locator('.NotificationMessage').evaluate((element) => {
       element.scrollTop = element.scrollHeight
     })

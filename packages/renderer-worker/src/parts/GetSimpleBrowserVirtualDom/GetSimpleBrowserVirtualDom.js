@@ -123,6 +123,7 @@ export const getSimpleBrowserVirtualDom = (
         (pageSnapshotDom.length > 0 ? 1 : 0) +
         (historyDom.length > 0 ? 1 : 0) +
         (isNewTab ? 1 : 0) +
+        (selectedTab?.previewUid ? 1 : 0) +
         (suggestions.length > 0 ? 1 : 0) +
         (tabHover ? 1 : 0) +
         (loginChallenge ? 1 : 0),
@@ -407,6 +408,12 @@ export const getSimpleBrowserVirtualDom = (
       childCount: 0,
     },
   )
+  if (selectedTab?.previewUid) {
+    dom.push(
+      { type: VirtualDomElements.Div, className: 'SimpleBrowserHtmlPreview', childCount: 1 },
+      { type: VirtualDomElements.Reference, uid: selectedTab.previewUid },
+    )
+  }
   if (isNewTab) {
     dom.push(...getNewTabVirtualDom(value))
   }

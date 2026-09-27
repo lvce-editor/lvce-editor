@@ -226,6 +226,20 @@ test('loads workspace ports before the initial panel is registered', async () =>
   )
 })
 
+test('routes Remote SSH forwarding through the owning workspace application', async () => {
+  await Application.create({ ...options('preview'), workspaceUri: 'remote-ssh://host/work' })
+  jest.mocked(ExtensionManagementWorker.invoke).mockResolvedValueOnce({ localPort: 3000 })
+  await expect(Application.execute('preview', 'PortProvider.forwardPort', 3000)).resolves.toEqual({ localPort: 3000 })
+  expect(ExtensionManagementWorker.invoke).toHaveBeenCalledWith(
+    'Extensions.invokeForApplication',
+    'preview',
+    'Extensions.executeCommand',
+    'remote-ssh.forwardPort',
+    'remote-ssh://host/work',
+    3000,
+  )
+})
+
 test('routes extension prompts and their widgets to the explicit application', async () => {
   const ExtensionHostQuickPick = await import('../src/parts/ExtensionHost/ExtensionHostQuickPick.js')
   const QuickPick = await import('../src/parts/QuickPick/QuickPick.js')

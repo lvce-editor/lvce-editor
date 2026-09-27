@@ -174,8 +174,11 @@ export const execute = (applicationId: string, command: string, ...args: readonl
       )
     case 'ExtensionHost.getCommands':
       return ApplicationRegistry.track(applicationId, () => ExtensionHostCommands.getCommands(args[0], args[1], applicationId))
-    case 'GetActiveEditor.getTextDocument':
-      return ApplicationRegistry.track(applicationId, () => GetActiveEditor.getTextDocument(applicationId))
+    case 'ExtensionHostSourceControl.getEnabledProviderIds':
+    case 'ExtensionHostSourceControl.getFileDecorations':
+      return ApplicationRegistry.track(applicationId, () =>
+        ExtensionManagementWorker.invoke('Extensions.invokeForApplication', applicationId, command, ...args),
+      )
     case 'Extensions.reload':
       return ApplicationRegistry.track(applicationId, async () => {
         await ExtensionManagementWorker.invoke('Extensions.reloadApplicationExtension', applicationId, ...args)
@@ -187,16 +190,23 @@ export const execute = (applicationId: string, command: string, ...args: readonl
         }
         await ViewletManager.executeForApplication(applicationId, 'Layout.handleWorkspaceRefresh')
       })
+    case 'GetActiveEditor.getTextDocument':
+      return ApplicationRegistry.track(applicationId, () => GetActiveEditor.getTextDocument(applicationId))
+    case 'PortProvider.forwardPort':
+      return ApplicationRegistry.track(applicationId, async () => {
+        const { forwardPort } = await import('../PortProvider/PortProvider.ts')
+        return forwardPort(application.workspaceUri, args[0], applicationId)
+      })
     case 'PortProvider.getPorts':
       return ApplicationRegistry.track(applicationId, async () => {
         const { getPorts } = await import('../PortProvider/PortProvider.ts')
         return getPorts(application.workspaceUri, applicationId)
       })
-    case 'ExtensionHostSourceControl.getEnabledProviderIds':
-    case 'ExtensionHostSourceControl.getFileDecorations':
-      return ApplicationRegistry.track(applicationId, () =>
-        ExtensionManagementWorker.invoke('Extensions.invokeForApplication', applicationId, command, ...args),
-      )
+    case 'PortProvider.stopForwardPort':
+      return ApplicationRegistry.track(applicationId, async () => {
+        const { stopForwardPort } = await import('../PortProvider/PortProvider.ts')
+        await stopForwardPort(application.workspaceUri, args[0], applicationId)
+      })
     case 'Workspace.getUri':
     case 'Workspace.getWorkspaceUri':
       return Promise.resolve(application.workspaceUri)

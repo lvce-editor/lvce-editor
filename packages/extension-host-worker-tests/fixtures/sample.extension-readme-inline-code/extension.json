@@ -1,0 +1,6 @@
+{
+  "id": "test.extension-readme-inline-code",
+  "name": "Inline Code Readme",
+  "description": "Extension with inline code in README prose",
+  "commands": []
+}

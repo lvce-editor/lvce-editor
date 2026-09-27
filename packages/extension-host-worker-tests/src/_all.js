@@ -37,12 +37,12 @@ const getPaths = async () => {
   return testFiles
 }
 
-const testFile = async (page, name) => {
+const testFile = async (page, name, timeout) => {
   const relativePath = getRelativePath(name)
   const url = `http://localhost:3000${relativePath}`
   await page.goto(url)
   const testOverlay = page.locator('#TestOverlay')
-  await expect(testOverlay).toBeVisible({ timeout: 25_000 })
+  await expect(testOverlay).toBeVisible({ timeout })
   const text = await testOverlay.textContent()
   const state = await testOverlay.getAttribute('data-state')
   switch (state) {
@@ -111,6 +111,11 @@ const launchServer = async ({ ci, configDir, cacheDir, dataDir }) => {
 }
 
 const runTests = async () => {
+  const timeoutArgument = process.argv.find((argument) => argument.startsWith('--test-timeout='))
+  const timeout = timeoutArgument ? Number(timeoutArgument.slice('--test-timeout='.length)) : 25_000
+  if (!Number.isSafeInteger(timeout) || timeout <= 0) {
+    throw new Error('--test-timeout must be a positive integer in milliseconds')
+  }
   // TODO use build tmp folder
   const configDir = await getTmpDir()
   const cacheDir = await getTmpDir()
@@ -167,7 +172,7 @@ const runTests = async () => {
     })
     const testNames = await getPaths()
     for (const testName of testNames) {
-      await testFile(page, testName)
+      await testFile(page, testName, timeout)
     }
     if (expectedConsole && !receivedExpectedConsole) throw new Error(`Missing test assertion: ${expectedConsole}`)
   } catch (error) {

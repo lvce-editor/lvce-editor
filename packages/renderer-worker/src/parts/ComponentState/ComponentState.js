@@ -248,6 +248,7 @@ export const getComponents = (viewUid = undefined) => {
       editable: isEditable(instance),
       heapSnapshotAvailable: Platform.getPlatform() === PlatformType.Electron,
       moduleId,
+      savedStateAvailable: typeof instance.factory.saveState === 'function',
       uid,
     })
   }
@@ -263,6 +264,21 @@ export const getState = async (uid) => {
     return instance.factory.getComponentState(instance.state)
   }
   return instance.state
+}
+
+export const getSavedState = async (uid) => {
+  const instance = getInstance(uid)
+  if (instance.status === 'disposed') {
+    throw new Error(`Component is disposed: ${uid}`)
+  }
+  if (typeof instance.factory.saveState !== 'function') {
+    throw new Error(`Saved component state API not available: ${instance.moduleId}`)
+  }
+  const savedState = await instance.factory.saveState(instance.state)
+  if (savedState === undefined) {
+    throw new Error(`Saved component state is undefined: ${instance.moduleId}`)
+  }
+  return savedState
 }
 
 export const getDom = async (uid) => {

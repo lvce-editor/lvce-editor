@@ -149,9 +149,6 @@ export const preview = {
       decrement(state) {
         return { ...state, count: state.count - 1 }
       },
-      dispose(state) {
-        return { ...state, disposed: true }
-      },
       increment(state) {
         return { ...state, count: state.count + 1 }
       },
@@ -162,7 +159,7 @@ export const preview = {
       return state
     }
     const layoutState = ViewletStates.getState(ViewletModuleId.Layout)
-    return { ...state, uri: layoutState.previewUri || state.uri }
+    return { ...state, uri: state.uri || layoutState?.previewUri }
   },
   wrapCommand(command, defaultWrapCommand, { worker }) {
     if (command !== 'getRuntimeDiagnostics') {

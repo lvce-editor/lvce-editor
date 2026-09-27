@@ -2,7 +2,8 @@ import { createWorkerViewlet } from '../CreateWorkerViewlet/CreateWorkerViewlet.
 import * as PreviewSandBoxWorker from '../PreviewSandBoxWorker/PreviewSandBoxWorker.js'
 
 const workerViewlet = createWorkerViewlet({ workerId: 'preview' })
-const { dispose: disposeWorkerViewlet } = workerViewlet
+const { dispose: disposeWorkerViewlet, loadContent: loadWorkerContent } = workerViewlet
+const instances = new Set()
 
 export const {
   Commands,
@@ -23,7 +24,6 @@ export const {
   hasFunctionalRootRender,
   hotReload,
   increment,
-  loadContent,
   menus,
   name,
   render,
@@ -34,7 +34,19 @@ export const {
   saveState,
 } = workerViewlet
 
+export const loadContent = async (state, ...args) => {
+  instances.add(state.uid)
+  try {
+    return await loadWorkerContent(state, ...args)
+  } catch (error) {
+    instances.delete(state.uid)
+    if (instances.size === 0) await PreviewSandBoxWorker.dispose()
+    throw error
+  }
+}
+
 export const dispose = async (state) => {
   await disposeWorkerViewlet(state)
-  await PreviewSandBoxWorker.dispose()
+  instances.delete(state.uid)
+  if (instances.size === 0) await PreviewSandBoxWorker.dispose()
 }

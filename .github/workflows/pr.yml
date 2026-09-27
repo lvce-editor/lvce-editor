@@ -32,22 +32,22 @@ jobs:
         id: npm-cache
         with:
           path: '**/node_modules'
-          key: ${{ runner.os }}-cacheNodeModules-${{ steps.nodeModulesCacheKey.outputs.value }}
+          key: ${{ runner.os }}-${{ runner.arch }}-cacheNodeModules-${{ steps.nodeModulesCacheKey.outputs.value }}
       - uses: actions/cache@v6
         id: electron-rebuild-cache
         with:
           path: '~/.electron-gyp'
-          key: ${{ runner.os }}-cacheElectronRebuild-${{ steps.nodeModulesCacheKey.outputs.value }}
+          key: ${{ runner.os }}-${{ runner.arch }}-cacheElectronRebuild-${{ steps.nodeModulesCacheKey.outputs.value }}
       - uses: actions/cache@v6
         id: electron-builder-cache
         with:
           path: '~/.cache/electron-builder'
-          key: ${{ runner.os }}-cacheElectronBuilder-${{ steps.nodeModulesCacheKey.outputs.value }}
+          key: ${{ runner.os }}-${{ runner.arch }}-cacheElectronBuilder-${{ steps.nodeModulesCacheKey.outputs.value }}
       - uses: actions/cache@v6
         id: build-cache
         with:
           path: 'packages/build/.tmp/cachedDependencies'
-          key: ${{ runner.os }}-build-cache-${{ steps.nodeModulesCacheKey.outputs.value }}
+          key: ${{ runner.os }}-${{ runner.arch }}-build-cache-${{ steps.nodeModulesCacheKey.outputs.value }}
       - name: npm ci
         run: node packages/build/src/parts/InstallDependencies/InstallDependencies.ts
         if: steps.npm-cache.outputs.cache-hit != 'true'
@@ -95,9 +95,19 @@ jobs:
           npm run e2e:headless --prefix packages/extension-host-worker-tests -- --test-name-prefix=workspace.remote-local-services
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0
+      - name: Test source control tree and list toolbar actions
+        working-directory: ./packages/extension-host-worker-tests
+        run: npm run e2e:headless -- --test-name-prefix=viewlet.source-control-view-mode
+        env:
+          PLAYWRIGHT_BROWSERS_PATH: 0
       - name: Test TypeScript readonly union highlighting
         working-directory: ./packages/extension-host-worker-tests
         run: npm run e2e:headless -- --test-name-prefix=viewlet.editor-typescript-readonly-union-parameters
+        env:
+          PLAYWRIGHT_BROWSERS_PATH: 0
+      - name: Test TypeScript destructured async defaults
+        working-directory: ./packages/extension-host-worker-tests
+        run: npm run e2e:headless -- --test-name-prefix=viewlet.editor-typescript-destructured-async-default-parameters
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0
       - name: Test renderer layout blur dispatch
@@ -141,22 +151,19 @@ jobs:
         run: npm run e2e:headless -- --test-name-prefix=viewlet.extensions-shortcut-focus
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0
-      - name: Test editor PageUp moves cursor to document start
-        if: matrix.os == 'ubuntu-24.04'
-        working-directory: ./packages/extension-host-worker-tests
-        run: npm run e2e:headless -- --test-name-prefix=viewlet.editor-pageup-document-start
-        env:
-          PLAYWRIGHT_BROWSERS_PATH: 0
       - name: Test Source Control provider progress
         if: matrix.os == 'ubuntu-24.04'
         working-directory: ./packages/extension-host-worker-tests
         run: npm run e2e:headless -- --test-name-prefix=viewlet.source-control-progress
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0
-      - name: Test integrated terminal rendering
-        if: matrix.os == 'ubuntu-24.04'
+      - name: Test status bar with many extension items
         working-directory: ./packages/extension-host-worker-tests
-        run: npm run e2e:headless -- --test-name-prefix=viewlet.terminal-
+        # Rendering 100,000 items takes ~22s locally and exceeds the default
+        # 25s on macOS CI. Keep a bounded stress-test window for every platform.
+        run: >-
+          npm run e2e:headless -- --test-name-prefix=status-bar.extension-many-items --test-timeout=120000
+          '--initial-settings={"statusBar.itemsVisible":true,"statusBar.builtinProblemsEnabled":true,"statusBar.builtinNotificationsEnabled":true}'
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0
       - name: Test error dialog and notification rendering
@@ -176,6 +183,11 @@ jobs:
         run: npm run test:server
       - name: Test Static Export
         run: npm run test-static-export
+      - name: Test HTML preview browser integration
+        working-directory: ./packages/extension-host-worker-tests
+        run: node src/_all.js --ci --headless --test-name-prefix=viewlet.layout-html-preview
+        env:
+          PLAYWRIGHT_BROWSERS_PATH: 0
       - name: Test static command picker
         working-directory: ./packages/extension-host-worker-tests
         run: node src/_all.js --ci --headless --test-name-prefix=viewlet.quick-pick-builtin-commands
@@ -210,6 +222,23 @@ jobs:
         run: npm run e2e:headless -- --test-name-prefix=viewlet.extension-detail-canonical-uri
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0
+      - name: Test extension README inline code rendering
+        if: matrix.os == 'ubuntu-24.04'
+        working-directory: ./packages/extension-host-worker-tests
+        run: npm run e2e:headless -- --test-name-prefix=viewlet.extension-detail-readme-inline-code
+        env:
+          PLAYWRIGHT_BROWSERS_PATH: 0
+      - name: Test completion popup width
+        working-directory: ./packages/extension-host-worker-tests
+        run: npm run e2e:headless -- --test-name-prefix=editor.completion-popup-width
+        env:
+          PLAYWRIGHT_BROWSERS_PATH: 0
+      - name: Test Output live component state
+        if: matrix.os == 'ubuntu-24.04'
+        working-directory: ./packages/extension-host-worker-tests
+        run: npm run e2e:headless -- --test-name-prefix=viewlet.output-component-state
+        env:
+          PLAYWRIGHT_BROWSERS_PATH: 0
       - name: Build Electron App (deb)
         if: matrix.os == 'ubuntu-24.04'
         run: npm run build:electron:deb
@@ -226,21 +255,14 @@ jobs:
         if: matrix.os == 'windows-2025'
         with:
           path: '~\AppData\Local\electron-builder'
-          key: ${{ runner.os }}-electron-builder-${{ hashFiles('package-lock.json') }}
+          key: ${{ runner.os }}-${{ runner.arch }}-electron-builder-${{ hashFiles('package-lock.json') }}
       - name: Build Electron App (exe)
         if: matrix.os == 'windows-2025'
-        run: npm run build:electron:windows:exe
+        run: npm run build:electron:windows:exe:x64
       - name: Test staged Windows installer
         if: matrix.os == 'windows-2025'
         shell: pwsh
         run: ./packages/build/scripts/test-windows-staging.ps1
-      - name: Build Electron App (exe, arm64)
-        if: matrix.os == 'windows-2025'
-        run: npm run build:electron:windows:exe:arm64
-      - name: Test staged Windows ARM64 installer
-        if: matrix.os == 'windows-2025'
-        shell: pwsh
-        run: ./packages/build/scripts/test-windows-staging.ps1 -Architecture arm64
       - name: Build Electron App (AppImage)
         if: matrix.os == 'ubuntu-24.04'
         run: npm run build:electron:app-image
@@ -248,6 +270,81 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: electron-app-${{ matrix.os }}
+          path: packages/build/.tmp/releases/*
+          if-no-files-found: error
+      - name: Clean up
+        run: rm -rf packages/build/.tmp
+        shell: bash
+
+  windows-arm:
+    runs-on: windows-11-arm
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: '.nvmrc'
+          architecture: arm64
+      - name: Setup Python 3
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+          architecture: arm64
+      - name: Compute node modules cache key
+        id: nodeModulesCacheKey
+        shell: bash
+        run: echo "value=$(node packages/build/src/parts/ComputeNodeModulesCacheKey/ComputeNodeModulesCacheKey.ts)" >> $GITHUB_OUTPUT
+      - uses: actions/cache@v6
+        id: npm-cache
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-${{ runner.arch }}-cacheNodeModules-${{ steps.nodeModulesCacheKey.outputs.value }}
+      - uses: actions/cache@v6
+        id: electron-rebuild-cache
+        with:
+          path: '~/.electron-gyp'
+          key: ${{ runner.os }}-${{ runner.arch }}-cacheElectronRebuild-${{ steps.nodeModulesCacheKey.outputs.value }}
+      - uses: actions/cache@v6
+        id: electron-builder-cache
+        with:
+          path: '~/.cache/electron-builder'
+          key: ${{ runner.os }}-${{ runner.arch }}-cacheElectronBuilder-${{ steps.nodeModulesCacheKey.outputs.value }}
+      - uses: actions/cache@v6
+        id: build-cache
+        with:
+          path: 'packages/build/.tmp/cachedDependencies'
+          key: ${{ runner.os }}-${{ runner.arch }}-build-cache-${{ steps.nodeModulesCacheKey.outputs.value }}
+      - name: npm ci
+        run: node packages/build/src/parts/InstallDependencies/InstallDependencies.ts
+        if: steps.npm-cache.outputs.cache-hit != 'true'
+        env:
+          DOWNLOAD_BUILTIN_EXTENSIONS: 0
+      - name: Compute builtin extensions cache key
+        id: builtinExtensionsCacheKey
+        run: echo "value=$(node packages/build/src/parts/ComputeBuiltinExtensionsCacheKey/ComputeBuiltinExtensionsCacheKey.ts)" >> $GITHUB_OUTPUT
+        shell: bash
+      - uses: actions/cache@v6
+        id: builtin-extensions-cache
+        with:
+          path: extensions
+          key: builtinExtensions-${{ steps.builtinExtensionsCacheKey.outputs.value }}
+      - name: Download Builtin Extensions
+        run: node packages/build/src/parts/DownloadBuiltinExtensions/DownloadBuiltinExtensions.ts
+        if: steps.builtin-extensions-cache.outputs.cache-hit != 'true'
+      - name: Cache Electron Builder Dependencies (Windows)
+        uses: actions/cache@v6
+        with:
+          path: '~\AppData\Local\electron-builder'
+          key: ${{ runner.os }}-${{ runner.arch }}-electron-builder-${{ hashFiles('package-lock.json') }}
+      - name: Build Electron App (exe, arm64)
+        run: npm run build:electron:windows:exe:arm64
+      - name: Test staged Windows ARM64 installer
+        shell: pwsh
+        run: ./packages/build/scripts/test-windows-staging.ps1 -Architecture arm64
+      - name: Upload Electron App Artifacts
+        uses: actions/upload-artifact@v7
+        with:
+          name: electron-app-windows-arm64
           path: packages/build/.tmp/releases/*
           if-no-files-found: error
       - name: Clean up

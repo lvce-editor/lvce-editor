@@ -258,7 +258,7 @@ test('bundleCss fades overflowing simple browser tab titles', async () => {
   }
 }, 30_000)
 
-test('bundleCss keeps the preview sash transparent', async () => {
+test('bundleCss renders a visible preview sash border', async () => {
   const dir = await mkdtemp(join(tmpdir(), 'lvce-bundle-css-'))
 
   try {
@@ -281,6 +281,7 @@ test('bundleCss keeps the preview sash transparent', async () => {
 }`)
     expect(css).toContain(`.SashPreview {
   left: var(--SashPreviewLeft);
+  border-left: 1px solid var(--SashBorder, gray);
 }`)
     expect(css).toContain(`.SashSecondaryPreview {
   left: var(--SashSecondaryPreviewLeft);
@@ -476,21 +477,19 @@ test('bundleCss preserves the extension runtime status layout', async () => {
 
     expect(css).toContain(`.RuntimeStatusDefinitionList {
   align-items: baseline;
-  column-gap: 24px;
+  column-gap: 12px;
   contain: content;
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
   margin: 0;
   max-width: 640px;
   row-gap: 12px;
 }`)
     expect(css).toContain(`.RuntimeStatusDefinitionList > dt {
   color: var(--DescriptionForeground, color-mix(in srgb, var(--WorkbenchForeground) 76%, transparent));
-  flex: 0 0 140px;
   font-weight: 600;
 }`)
     expect(css).toContain(`.RuntimeStatusDefinitionList > dd {
-  flex: 1 1 calc(100% - 164px);
   margin: 0;
   min-width: 0;
   overflow-wrap: anywhere;
