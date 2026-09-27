@@ -42,6 +42,19 @@ test('rerenders when suggestions change', () => {
   expect(ViewletSimpleBrowserRender.render[0].isEqual(state, newState)).toBe(false)
 })
 
+test('rerenders the snapshot when the activity bar settings menu opens', () => {
+  const oldState = {
+    ...state,
+    overlayIds: ['menu'],
+  }
+  const newState = {
+    ...oldState,
+    overlayIds: ['settings-menu'],
+  }
+
+  expect(ViewletSimpleBrowserRender.render[0].isEqual(oldState, newState)).toBe(false)
+})
+
 test('updates inline completion when the input changes but suggestions stay the same', () => {
   const oldState = { ...state, inputValue: 'what is', suggestions: ['what is'] }
   const newState = { ...oldState, inputValue: 'what' }

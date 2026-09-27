@@ -3,6 +3,7 @@ import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEven
 import * as GetSimpleBrowserVirtualDom from '../GetSimpleBrowserVirtualDom/GetSimpleBrowserVirtualDom.js'
 import * as InputName from '../InputName/InputName.js'
 import * as SimpleBrowserPageSnapshot from '../SimpleBrowserPageSnapshot/SimpleBrowserPageSnapshot.js'
+import * as SimpleBrowserOverlay from '../SimpleBrowserOverlay/SimpleBrowserOverlay.js'
 import * as TabDrag from './ViewletSimpleBrowserTabDrag.js'
 
 export const hasFunctionalRender = true
@@ -179,6 +180,16 @@ export const renderEventListeners = () => {
         'event.currentTarget.offsetHeight',
       ],
     },
+    {
+      name: DomEventListenerFunctions.HandleClickSimpleBrowserDownloads,
+      params: [
+        'showDownloadsMenu',
+        'event.clientX',
+        'event.currentTarget.parentElement.offsetTop',
+        'event.currentTarget.offsetTop',
+        'event.currentTarget.offsetHeight',
+      ],
+    },
   ]
 }
 
@@ -230,6 +241,8 @@ const getDom = (state) => {
     state.loginChallenges?.[0],
     state.historyScrollTop,
     state.historyViewportHeight,
+    state.overlayIds?.includes(SimpleBrowserOverlay.SettingsMenu) ?? false,
+    state.downloadStates,
   )
 }
 
@@ -248,11 +261,13 @@ const renderDom = {
       oldState.findActiveMatch === newState.findActiveMatch &&
       oldState.fullWidth === newState.fullWidth &&
       oldState.chromeTheme === newState.chromeTheme &&
+      oldState.downloadStates === newState.downloadStates &&
       oldState.iframeSrc === newState.iframeSrc &&
       oldState.canGoBack === newState.canGoBack &&
       oldState.canGoForward === newState.canGoForward &&
       oldState.isLoading === newState.isLoading &&
       oldState.snapshot === newState.snapshot &&
+      oldState.overlayIds === newState.overlayIds &&
       oldState.suggestions === newState.suggestions &&
       (oldState.inputValue === newState.inputValue || newState.suggestions.length === 0) &&
       oldState.selectedSuggestionIndex === newState.selectedSuggestionIndex &&

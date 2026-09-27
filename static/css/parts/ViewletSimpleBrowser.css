@@ -89,6 +89,14 @@
   gap: inherit;
 }
 
+.SimpleBrowserDownloadButton {
+  color: var(--DescriptionForeground, #858585);
+}
+
+.SimpleBrowserDownloadButtonComplete {
+  color: var(--ButtonBackground, #0e639c);
+}
+
 .SimpleBrowserAddressBar {
   background: var(--InputBoxBackground, var(--MainBackground, var(--EditorBackground)));
   flex: 1;
@@ -386,6 +394,10 @@
 }
 
 .SimpleBrowserSnapshotSearchSuggestions {
+  filter: none;
+}
+
+.SimpleBrowserSnapshotSettingsMenu {
   filter: none;
 }
 

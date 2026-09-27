@@ -201,6 +201,7 @@ export const create = (id, uri, x, y, width, height) => {
     canGoBack: true,
     isAudioPlaying: false,
     isLoading: false,
+    downloadStates: {},
     muted: false,
     hasSuggestionsOverlay: false,
     selectedSuggestionIndex: -1,
@@ -1581,6 +1582,26 @@ export const handlePageFaviconUpdated = (state, browserViewId, favicons) => {
 export const handleAudioStateChanged = (state, browserViewId, audible) => {
   const [actualBrowserViewId, isAudioPlaying] = parseWebContentsEvent(state, browserViewId, audible)
   return updateTab(state, actualBrowserViewId, { isAudioPlaying: Boolean(isAudioPlaying) })
+}
+
+export const handleDownloadStateChanged = (state, browserViewId, downloadId, status) => {
+  const [actualBrowserViewId, actualDownloadId] = parseWebContentsEvent(state, browserViewId, downloadId)
+  if (!state.tabs.some((tab) => tab.browserViewId === actualBrowserViewId) || !actualDownloadId) {
+    return state
+  }
+  const downloadStates = { ...state.downloadStates }
+  if (status === 'started') {
+    downloadStates[actualDownloadId] = 'downloading'
+  } else {
+    if (downloadStates[actualDownloadId] !== 'downloading') {
+      return state
+    }
+    delete downloadStates[actualDownloadId]
+    if (status === 'completed') {
+      downloadStates.completed = 'completed'
+    }
+  }
+  return { ...state, downloadStates }
 }
 
 export const dispose = async (state) => {

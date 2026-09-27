@@ -22,6 +22,8 @@ export const handleDidNavigate = dispatch('browser-view-did-navigate', 'handleDi
 
 export const handleAudioStateChanged = dispatch('browser-view-audio-state-changed', 'handleAudioStateChanged')
 
+export const handleDownloadStateChanged = dispatch('browser-view-download-state-changed', 'handleDownloadStateChanged')
+
 export const handleBrowserViewDestroyed = dispatch('browser-view-destroyed', 'handleBrowserViewDestroyed')
 
 export const handleContextMenu = dispatch('browser-view-context-menu', 'handleContextMenu')
