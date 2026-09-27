@@ -14,6 +14,7 @@ jest.unstable_mockModule('../src/parts/Preferences/Preferences.js', () => ({
 jest.unstable_mockModule('../src/parts/LinkedWorkerPreferences/LinkedWorkerPreferences.js', () => ({
   getLinkedWorkerPreferences: jest.fn(() => ({
     'develop.mainAreaWorkerPath': '/test/main-area-worker',
+    'develop.portsViewPath': '/test/ports-view-worker',
   })),
 }))
 
@@ -28,4 +29,5 @@ test('addCustomPathsToIndexHtml - adds linked worker urls in production', async 
 
   expect(Preferences.getUserPreferences).not.toHaveBeenCalled()
   expect(result).toContain(`"develop.mainAreaWorkerPath": "${mainAreaWorkerUrl}"`)
+  expect(result).toContain(`"develop.portsViewPath": "${GetRemoteUrl.getRemoteUrl('/test/ports-view-worker')}"`)
 })
