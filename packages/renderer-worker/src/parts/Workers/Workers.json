@@ -1674,7 +1674,11 @@
         "dispose": { "name": "Workers.dispose", "parameters": [{ "source": "state", "name": "uid" }] },
         "resize": {
           "name": "Workers.resize",
-          "parameters": [{ "source": "state", "name": "uid" }, { "source": "argument", "name": "dimensions" }]
+          "parameters": [
+            { "source": "state", "name": "uid" },
+            { "source": "argument", "name": "dimensions", "index": "width" },
+            { "source": "argument", "name": "dimensions", "index": "height" }
+          ]
         },
         "getCommandIds": { "name": "Workers.getCommandIds", "parameters": [] },
         "renderEventListeners": { "name": "Workers.renderEventListeners", "parameters": [] }
