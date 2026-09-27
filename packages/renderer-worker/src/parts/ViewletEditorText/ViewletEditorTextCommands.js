@@ -6,6 +6,7 @@ import * as WhenExpression from '../WhenExpression/WhenExpression.js'
 import * as GetTokenizePath from '../GetTokenizePath/GetTokenizePath.js'
 import * as Languages from '../Languages/Languages.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
+import * as SaveState from '../SaveState/SaveState.js'
 import * as WrapEditorCommands from '../WrapEditorCommands/WrapEditorCommands.js'
 
 const subWidgetCommandIds = [
@@ -134,6 +135,13 @@ const loadContent = (editor, savedState, context) => {
 }
 
 const updateDiagnostics = WrapEditorCommands.wrapEditorCommand('Editor.updateDiagnostics', { preserveFocus: true })
+const setLanguageId = async (editor, languageId, tokenizePath, isExplicit) => {
+  const result = await WrapEditorCommands.wrapEditorCommand('Editor.setLanguageId')(editor, languageId, tokenizePath, isExplicit)
+  if (isExplicit) {
+    await SaveState.saveViewletState(editor.uid)
+  }
+  return result
+}
 
 const renderPending = Object.assign(WrapEditorCommands.renderPendingEditors, { targetUid: true })
 const handleEditorFocus = WrapEditorCommands.wrapEditorCommand('Editor.handleFocus')
@@ -166,6 +174,7 @@ export const getCommands = async () => {
     loadContentLater,
     renderPending,
     refreshGutterDecorationsAll,
+    setLanguageId,
     showOverlayMessage,
     updateDiagnostics,
     hotReload,
