@@ -10,6 +10,7 @@ import * as Logger from '../Logger/Logger.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as SplitLines from '../SplitLines/SplitLines.js'
 import * as IconThemeWorker from '../IconThemeWorker/IconThemeWorker.js'
+import * as SaveState from '../SaveState/SaveState.js'
 
 export const getLanguageId = (fileName) => {
   Assert.string(fileName)
@@ -221,7 +222,13 @@ export const getLanguageConfiguration = async (editor) => {
     throw new Error('languages must be loaded before requesting language configuration')
   }
   try {
-    editor.languageId ||= getLanguageId(editor.uri)
+    const savedState = await SaveState.getSavedViewletState(`Editor:${editor.uri}`)
+    const explicitLanguageId = savedState?.editorState?.explicitLanguageId
+    if (typeof explicitLanguageId === 'string' && editor.languageId === explicitLanguageId) {
+      editor.languageId = explicitLanguageId
+    } else {
+      editor.languageId = getLanguageId(editor.uri)
+    }
     const languageConfiguration = await ExtensionHostLanguages.getLanguageConfiguration(editor.languageId)
     return languageConfiguration
   } catch (error) {

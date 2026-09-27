@@ -12,9 +12,14 @@ jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
   }
 })
 
+jest.unstable_mockModule('../src/parts/SaveState/SaveState.js', () => ({
+  getSavedViewletState: jest.fn(async () => undefined),
+}))
+
 const Languages = await import('../src/parts/Languages/Languages.js')
 const LanguagesState = await import('../src/parts/LanguagesState/LanguagesState.js')
 const SharedProcess = await import('../src/parts/SharedProcess/SharedProcess.js')
+const SaveState = await import('../src/parts/SaveState/SaveState.js')
 
 beforeEach(() => {
   LanguagesState.state.loaded = false
@@ -84,6 +89,50 @@ test('getLanguageConfiguration - uses file name language over extension language
     },
   })
   expect(editor.languageId).toBe('jsonc')
+})
+
+test('getLanguageConfiguration - preserves a restored explicit language mode', async () => {
+  await Languages.addLanguages([
+    {
+      id: 'plaintext',
+      extensions: ['.txt'],
+      tokenize: '/tokenizePlaintext.js',
+    },
+    {
+      id: 'javascript',
+      extensions: ['.js'],
+      tokenize: '/tokenizeJavaScript.js',
+    },
+  ])
+  LanguagesState.setLoaded(true)
+  // @ts-ignore
+  SaveState.getSavedViewletState.mockResolvedValue({
+    editorState: {
+      explicitLanguageId: 'javascript',
+    },
+  })
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation((method, languageId) => {
+    if (method === 'ExtensionHost.getLanguageConfiguration' && languageId === 'javascript') {
+      return {
+        comments: {
+          lineComment: '//',
+        },
+      }
+    }
+    throw new Error('unexpected message')
+  })
+  const editor = {
+    uri: 'app:///script.txt',
+    languageId: 'javascript',
+  }
+  expect(await Languages.getLanguageConfiguration(editor)).toEqual({
+    comments: {
+      lineComment: '//',
+    },
+  })
+  expect(editor.languageId).toBe('javascript')
+  expect(SaveState.getSavedViewletState).toHaveBeenCalledWith('Editor:app:///script.txt')
 })
 
 test('getLanguageConfiguration - error - languages must be loaded before requesting language configuration', async () => {
