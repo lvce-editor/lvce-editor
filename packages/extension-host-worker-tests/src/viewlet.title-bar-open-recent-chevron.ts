@@ -14,6 +14,7 @@ export const test = async ({ TitleBarMenuBar, Locator, expect }) => {
   await expect(chevron).toHaveCSS('height', '16px')
   await expect(chevron).toHaveCSS('mask-image', /chevron-right\.svg/)
   await expect(chevron).toHaveCSS('mask-mode', 'alpha')
+  await expect(menu.locator('.MenuItem').nth(0).locator('.MenuItemSubMenuArrowRight')).toHaveCount(0)
 
   await TitleBarMenuBar.handleKeyEnd()
   await TitleBarMenuBar.handleKeyArrowUp()
