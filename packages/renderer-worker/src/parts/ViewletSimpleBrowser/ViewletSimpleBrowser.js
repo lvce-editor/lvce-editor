@@ -227,6 +227,8 @@ export const create = (id, uri, x, y, width, height) => {
     visitedSites: [],
     history: [],
     historySearchValue: '',
+    historyScrollTop: 0,
+    historyViewportHeight: 1600,
   }
 }
 
@@ -1141,7 +1143,15 @@ export const handleHistoryInput = (state, value) => {
   return {
     ...state,
     historySearchValue: value,
+    historyScrollTop: 0,
   }
+}
+
+export const handleHistoryScroll = (state, scrollTop, viewportHeight) => {
+  if (state.historyScrollTop === scrollTop && state.historyViewportHeight === viewportHeight) {
+    return state
+  }
+  return { ...state, historyScrollTop: scrollTop, historyViewportHeight: viewportHeight }
 }
 
 export const clearHistory = async (state) => {
@@ -1149,6 +1159,7 @@ export const clearHistory = async (state) => {
   return {
     ...state,
     history,
+    historyScrollTop: 0,
   }
 }
 
@@ -1164,6 +1175,7 @@ export const removeHistoryEntry = async (state, index) => {
   return {
     ...state,
     history,
+    historyScrollTop: 0,
   }
 }
 

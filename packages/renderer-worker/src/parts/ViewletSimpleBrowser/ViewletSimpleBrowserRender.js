@@ -58,6 +58,10 @@ export const renderEventListeners = () => {
       params: ['handleHistoryInput', 'event.target.value'],
     },
     {
+      name: DomEventListenerFunctions.HandleScrollSimpleBrowserHistory,
+      params: ['handleHistoryScroll', 'event.target.scrollTop', 'event.target.clientHeight'],
+    },
+    {
       name: DomEventListenerFunctions.HandleClickSimpleBrowserHistoryClear,
       params: ['clearHistory'],
     },
@@ -224,6 +228,8 @@ const getDom = (state) => {
     state.history,
     state.historySearchValue,
     state.loginChallenges?.[0],
+    state.historyScrollTop,
+    state.historyViewportHeight,
   )
 }
 
@@ -258,6 +264,8 @@ const renderDom = {
       oldState.tabWidth === newState.tabWidth &&
       oldState.history === newState.history &&
       oldState.historySearchValue === newState.historySearchValue &&
+      oldState.historyScrollTop === newState.historyScrollTop &&
+      oldState.historyViewportHeight === newState.historyViewportHeight &&
       oldState.tabDropIndex === newState.tabDropIndex &&
       areTabsEqual(oldState.tabs, newState.tabs)
     )

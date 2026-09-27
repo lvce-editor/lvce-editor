@@ -1,7 +1,9 @@
 import * as LocalStorage from '../LocalStorage/LocalStorage.js'
+import * as IndexedDbKeyValueStorage from '../IndexedDbKeyValueStorage/IndexedDbKeyValueStorage.js'
 
-const maximumEntries = 1000
-const storageKey = 'simple-browser-history'
+const maximumEntries = 100_000
+const legacyStorageKey = 'simple-browser-history'
+const storageKey = 'simple-browser-history-v2'
 let pendingMutation = Promise.resolve()
 
 const isSupportedUrl = (value) => {
@@ -32,18 +34,36 @@ export const normalize = (value) => {
   }
   /** @type {Array<{date: number, url: string}>} */
   const entries = []
+  let isSorted = true
   for (const item of value) {
     const entry = normalizeEntry(item)
     if (entry) {
+      const previousEntry = entries.at(-1)
+      if (previousEntry && previousEntry.date < entry.date) {
+        isSorted = false
+      }
       entries.push(entry)
     }
   }
-  return entries.sort((a, b) => b.date - a.date).slice(0, maximumEntries)
+  if (!isSorted) {
+    entries.sort((a, b) => b.date - a.date)
+  }
+  return entries.length > maximumEntries ? entries.slice(0, maximumEntries) : entries
 }
 
 const loadFromStorage = async () => {
   try {
-    return normalize(await LocalStorage.getJson(storageKey))
+    const storedEntries = await IndexedDbKeyValueStorage.get(storageKey)
+    if (Array.isArray(storedEntries)) {
+      return normalize(storedEntries)
+    }
+  } catch {
+    // Read and migrate the previous local-storage value below.
+  }
+  try {
+    const legacyEntries = normalize(await LocalStorage.getJson(legacyStorageKey))
+    await IndexedDbKeyValueStorage.set(storageKey, legacyEntries)
+    return legacyEntries
   } catch {
     return []
   }
@@ -51,9 +71,9 @@ const loadFromStorage = async () => {
 
 const saveToStorage = async (entries) => {
   try {
-    await LocalStorage.setJson(storageKey, entries)
+    await IndexedDbKeyValueStorage.set(storageKey, entries)
   } catch {
-    // Browsing should continue when local storage is unavailable or full.
+    // Browsing should continue when history storage is unavailable.
   }
 }
 
@@ -83,7 +103,18 @@ export const add = (entries, url, date = Date.now()) => {
   if (!entry) {
     return entries
   }
-  return normalize([entry, ...entries])
+  let start = 0
+  let end = entries.length
+  while (start < end) {
+    const middle = Math.floor((start + end) / 2)
+    if (entries[middle].date > entry.date) {
+      start = middle + 1
+    } else {
+      end = middle
+    }
+  }
+  const newEntries = entries.toSpliced(start, 0, entry)
+  return newEntries.length > maximumEntries ? newEntries.slice(0, maximumEntries) : newEntries
 }
 
 export const remove = (entries, index) => {
@@ -99,7 +130,7 @@ export const record = async (url, date = Date.now()) => {
   if (!entry) {
     return undefined
   }
-  return mutate((entries) => normalize([entry, ...entries]))
+  return mutate((entries) => add(entries, entry.url, entry.date))
 }
 
 export const clear = () => {
