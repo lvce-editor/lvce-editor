@@ -1296,6 +1296,8 @@
         "saveState": { "name": "Panel.saveState", "parameters": [{ "source": "state", "name": "uid" }] },
         "terminate": { "name": "Panel.terminate", "parameters": [] },
         "getCommandIds": { "name": "Panel.getCommandIds", "parameters": [] },
+        "getMenuEntryIds": { "name": "Panel.getMenuIds", "parameters": [] },
+        "getMenuEntries": { "name": "Panel.getMenuEntries2", "parameters": [{ "source": "argument", "name": "args", "spread": true }] },
         "getComponentState": { "name": "Panel.getComponentState", "parameters": [{ "source": "state", "name": "uid" }] },
         "setComponentState": { "name": "Panel.setComponentState", "parameters": [
           { "source": "state", "name": "uid" }, { "source": "argument", "name": "componentState" }
