@@ -55,6 +55,7 @@
   height: 16px;
   display: block;
   mask-image: url(/icons/chevron-right.svg);
+  mask-mode: alpha;
   mask-repeat: no-repeat;
   mask-position: center;
   mask-size: 100%;
