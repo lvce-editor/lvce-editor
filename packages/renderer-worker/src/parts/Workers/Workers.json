@@ -1639,6 +1639,55 @@
     }
   },
   {
+    "id": "workersView",
+    "fileName": "workersViewMain.js",
+    "contentSecurityPolicy": ["default-src 'none'"],
+    "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/workers-view/dist/workersViewMain.js",
+    "productionPath": "/packages/workers-view/dist/workersViewMain.js",
+    "settingName": "develop.workersViewPath",
+    "viewlet": {
+      "name": "Workers",
+      "title": "Workers",
+      "state": {
+        "idKey": "uid",
+        "fields": ["uri", "x", "y", "width", "height"],
+        "contextFields": ["platform", "assetDir"],
+        "defaults": { "title": "Workers" }
+      },
+      "commandPrefix": "Workers",
+      "methods": {
+        "create": {
+          "name": "Workers.create",
+          "parameters": [
+            { "source": "state", "name": "uid" }, { "source": "state", "name": "uri" }, { "source": "state", "name": "x" },
+            { "source": "state", "name": "y" }, { "source": "state", "name": "width" }, { "source": "state", "name": "height" },
+            { "source": "state", "name": "platform" }, { "source": "state", "name": "assetDir" }
+          ]
+        },
+        "loadContent": { "name": "Workers.loadContent", "parameters": [{ "source": "state", "name": "uid" }] },
+        "refresh": { "name": "Workers.refresh", "parameters": [{ "source": "state", "name": "uid" }] },
+        "diff": { "name": "Workers.diff2", "parameters": [{ "source": "state", "name": "uid" }] },
+        "render": {
+          "name": "Workers.render2",
+          "parameters": [{ "source": "state", "name": "uid" }, { "source": "result", "name": "diff" }]
+        },
+        "dispose": { "name": "Workers.dispose", "parameters": [{ "source": "state", "name": "uid" }] },
+        "resize": {
+          "name": "Workers.resize",
+          "parameters": [
+            { "source": "state", "name": "uid" },
+            { "source": "argument", "name": "dimensions", "index": "width" },
+            { "source": "argument", "name": "dimensions", "index": "height" }
+          ]
+        },
+        "getCommandIds": { "name": "Workers.getCommandIds", "parameters": [] },
+        "renderEventListeners": { "name": "Workers.renderEventListeners", "parameters": [] }
+      },
+      "capabilities": { "directRender": true, "events": true, "render": true, "resize": true, "rootRender": true },
+      "renderComparison": "emptyCommands"
+    }
+  },
+  {
     "id": "secretsView",
     "fileName": "secretsViewWorkerMain.js",
     "contentSecurityPolicy": ["default-src 'none'"],
