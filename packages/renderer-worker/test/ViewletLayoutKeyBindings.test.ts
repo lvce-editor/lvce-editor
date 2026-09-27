@@ -33,6 +33,11 @@ test('getKeyBindings - toggle terminal panel', () => {
         command: 'Layout.togglePanel',
         key: KeyModifier.CtrlCmd | KeyCode.Backquote,
       },
+      {
+        args: ['Terminals'],
+        command: 'Layout.togglePanel',
+        key: KeyModifier.CtrlCmd | KeyCode.KeyJ,
+      },
     ]),
   )
 })
