@@ -389,6 +389,10 @@
   filter: none;
 }
 
+.SimpleBrowserSnapshotSettingsMenu {
+  filter: none;
+}
+
 .SimpleBrowserPreview {
   background: var(--EditorBackground, var(--MainBackground));
   contain: strict;

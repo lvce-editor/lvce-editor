@@ -106,6 +106,7 @@ export const getSimpleBrowserVirtualDom = (
   loginChallenge,
   historyScrollTop = 0,
   historyViewportHeight = 1600,
+  undimmedSnapshot = false,
 ) => {
   const inlineSuggestion = getInlineSuggestion(value, suggestions)
   const historyDom = historyTab
@@ -437,7 +438,7 @@ export const getSimpleBrowserVirtualDom = (
       },
       {
         type: VirtualDomElements.Img,
-        className: suggestions.length > 0 ? 'SimpleBrowserSnapshot SimpleBrowserSnapshotSearchSuggestions' : 'SimpleBrowserSnapshot',
+        className: `SimpleBrowserSnapshot${suggestions.length > 0 ? ' SimpleBrowserSnapshotSearchSuggestions' : ''}${undimmedSnapshot ? ' SimpleBrowserSnapshotSettingsMenu' : ''}`,
         src: snapshot,
         draggable: false,
         childCount: 0,
