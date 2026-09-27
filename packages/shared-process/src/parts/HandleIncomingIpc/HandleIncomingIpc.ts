@@ -40,7 +40,7 @@ export const handleIncomingIpc = async (ipcId: any, handle: any, message: any): 
   if (!ipcAndResponse) {
     return
   }
-  const { response, target, release, complete } = ipcAndResponse
+  const { complete, release, response, target } = ipcAndResponse
   const error = await ApplyIncomingIpcResponse.applyIncomingIpcResponse(target, response, ipcId)
   complete?.()
   if (!error) {
