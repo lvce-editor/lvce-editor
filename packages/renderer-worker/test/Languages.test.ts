@@ -12,20 +12,16 @@ jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
   }
 })
 
-jest.unstable_mockModule('../src/parts/SaveState/SaveState.js', () => ({
-  getSavedViewletState: jest.fn(async () => undefined),
-}))
-
 const Languages = await import('../src/parts/Languages/Languages.js')
 const LanguagesState = await import('../src/parts/LanguagesState/LanguagesState.js')
 const SharedProcess = await import('../src/parts/SharedProcess/SharedProcess.js')
-const SaveState = await import('../src/parts/SaveState/SaveState.js')
 
 beforeEach(() => {
   LanguagesState.state.loaded = false
   LanguagesState.state.fileNameMap = Object.create(null)
   LanguagesState.state.extensionMap = Object.create(null)
   LanguagesState.state.tokenizerMap = Object.create(null)
+  LanguagesState.state.explicitLanguageMap = Object.create(null)
   LanguagesState.state.firstLines = []
 })
 
@@ -105,12 +101,7 @@ test('getLanguageConfiguration - preserves a restored explicit language mode', a
     },
   ])
   LanguagesState.setLoaded(true)
-  // @ts-ignore
-  SaveState.getSavedViewletState.mockResolvedValue({
-    editorState: {
-      explicitLanguageId: 'javascript',
-    },
-  })
+  LanguagesState.setExplicitLanguageId('app:///script.txt', 'javascript')
   // @ts-ignore
   SharedProcess.invoke.mockImplementation((method, languageId) => {
     if (method === 'ExtensionHost.getLanguageConfiguration' && languageId === 'javascript') {
@@ -132,7 +123,6 @@ test('getLanguageConfiguration - preserves a restored explicit language mode', a
     },
   })
   expect(editor.languageId).toBe('javascript')
-  expect(SaveState.getSavedViewletState).toHaveBeenCalledWith('Editor:app:///script.txt')
 })
 
 test('getLanguageConfiguration - error - languages must be loaded before requesting language configuration', async () => {

@@ -5,6 +5,7 @@ import * as Focus from '../Focus/Focus.js'
 import * as WhenExpression from '../WhenExpression/WhenExpression.js'
 import * as GetTokenizePath from '../GetTokenizePath/GetTokenizePath.js'
 import * as Languages from '../Languages/Languages.js'
+import * as LanguagesState from '../LanguagesState/LanguagesState.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SaveState from '../SaveState/SaveState.js'
 import * as WrapEditorCommands from '../WrapEditorCommands/WrapEditorCommands.js'
@@ -109,6 +110,7 @@ const hotReload = async (state, editor, ...args) => {
 
 const handleUriChange = async (editor, editorUidOrNewUri, maybeNewUri) => {
   const newUri = maybeNewUri ?? editorUidOrNewUri
+  LanguagesState.clearExplicitLanguageId(editor.uri)
   await EditorWorker.invoke('Editor.handleUriChange', editor.uid, newUri)
   const languageId = Languages.getLanguageId(newUri)
   if (languageId !== editor.languageId) {
@@ -138,7 +140,10 @@ const updateDiagnostics = WrapEditorCommands.wrapEditorCommand('Editor.updateDia
 const setLanguageId = async (editor, languageId, tokenizePath, isExplicit) => {
   const result = await WrapEditorCommands.wrapEditorCommand('Editor.setLanguageId')(editor, languageId, tokenizePath, isExplicit)
   if (isExplicit) {
+    LanguagesState.setExplicitLanguageId(editor.uri, languageId)
     await SaveState.saveViewletState(editor.uid)
+  } else {
+    LanguagesState.clearExplicitLanguageId(editor.uri)
   }
   return result
 }
