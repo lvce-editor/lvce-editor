@@ -26,13 +26,49 @@ const checkClicks = async (page, editor) => {
       .toBeLessThan(2)
     await expect(editor.locator('textarea')).toBeFocused()
     await page.keyboard.type('X')
-    await expect(row).toHaveText(`${original.slice(0, expectedColumn)}X${original.slice(expectedColumn)}`)
+    await expect(row)
+      .toHaveText(`${original.slice(0, expectedColumn)}X${original.slice(expectedColumn)}`)
+      .catch(async (error) => {
+        console.log(
+          'CURSOR-TRACE',
+          JSON.stringify(
+            await page.evaluate(() => ({
+              events: window.cursorEvents,
+              viewport: { width: innerWidth, height: innerHeight },
+              active: document.activeElement.outerHTML,
+              editors: [...document.querySelectorAll('.Editor')].map((e) => ({
+                uid: e.dataset.uid,
+                rows: [...e.querySelectorAll('.EditorRow')].slice(0, 3).map((r) => r.textContent),
+              })),
+            })),
+          ),
+        )
+        throw error
+      })
     await page.keyboard.press('Backspace')
     await expect(row).toHaveText(original)
   }
 }
 
 export const test = async ({ page, name }) => {
+  await page.evaluate(() => {
+    window.cursorEvents = []
+    for (const type of ['pointerdown', 'mousedown', 'focusin', 'focusout', 'beforeinput', 'input', 'keydown'])
+      document.addEventListener(
+        type,
+        (event) => {
+          window.cursorEvents.push({
+            time: performance.now(),
+            type,
+            uid: event.target.closest('.Editor')?.dataset.uid,
+            key: event.key,
+            data: event.data,
+          })
+          if (window.cursorEvents.length > 250) window.cursorEvents.shift()
+        },
+        true,
+      )
+  })
   const editors = page.locator('.Editor')
   await expect(editors).toHaveCount(name.includes('unsplit') ? 1 : 2)
   for (const width of [1280, 1100]) {
