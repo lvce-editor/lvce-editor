@@ -5,7 +5,7 @@ export const name = 'viewlet.editor-breadcrumbs-json-icons'
 export const test: Test = async ({ Editor, FileSystem, Locator, Main, Settings, Workspace, expect }) => {
   const tmpDir = await FileSystem.getTmpDir()
   const uri = `${tmpDir}/package.json`
-  await FileSystem.writeFile(uri, '{\n  "scripts": {\n    "build": "tsc"\n  },\n  "items": [\n    {"enabled": true}\n  ]\n}')
+  await FileSystem.writeFile(uri, '{\n  "scripts": {\n    "build": "tsc"\n  },\n  "items": [\n    {"enabled": true, "count": 42, "empty": null}\n  ]\n}')
   await Settings.update({ 'breadcrumbs.enabled': true, 'workbench.iconTheme': 'vscode-icons' })
   await Workspace.setPath(tmpDir)
   await Main.openUri(uri)
@@ -24,6 +24,12 @@ export const test: Test = async ({ Editor, FileSystem, Locator, Main, Settings, 
   await expect(symbols.nth(2)).toHaveText('enabled')
   await expect(Locator('.MaskIconSymbolArray')).toHaveCSS('mask-image', /\/symbol-array.svg/)
   await expect(Locator('.MaskIconSymbolBoolean')).toHaveCSS('mask-image', /\/symbol-boolean.svg/)
+  await Editor.setCursor(5, 31)
+  await expect(symbols.nth(2)).toHaveText('count')
+  await expect(Locator('.MaskIconSymbolNumber')).toHaveCSS('mask-image', /\/symbol-numeric.svg/)
+  await Editor.setCursor(5, 46)
+  await expect(symbols.nth(2)).toHaveText('empty')
+  await expect(Locator('.MaskIconSymbolNull')).toHaveCSS('mask-image', /\/circle-slash.svg/)
   await Editor.setCursor(0, 0)
   await Editor.type('\n')
   await Editor.setCursor(6, 18)
