@@ -183,6 +183,11 @@ jobs:
         run: npm run test:server
       - name: Test Static Export
         run: npm run test-static-export
+      - name: Test menu highlight on mouse leave
+        working-directory: ./packages/extension-host-worker-tests
+        run: node scripts/test-menu-mouse-leave.mjs
+        env:
+          PLAYWRIGHT_BROWSERS_PATH: 0
       - name: Test HTML preview browser integration
         working-directory: ./packages/extension-host-worker-tests
         run: node src/_all.js --ci --headless --test-name-prefix=viewlet.layout-html-preview
