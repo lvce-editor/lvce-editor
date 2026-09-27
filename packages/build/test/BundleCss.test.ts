@@ -346,7 +346,7 @@ test('bundleCss keeps the main workbench column separate from the full-height pr
   }
 }, 30_000)
 
-test('bundleCss centers quick pick in the non-preview area', async () => {
+test('bundleCss constrains and centers quick pick in the non-preview area', async () => {
   const dir = await mkdtemp(join(tmpdir(), 'lvce-bundle-css-'))
 
   try {
@@ -357,7 +357,9 @@ test('bundleCss centers quick pick in the non-preview area', async () => {
 
     const css = await readFile(join(dir, 'App.css'), 'utf8')
 
+    expect(css).toContain('width: min(600px, calc(100% - var(--PreviewAreasWidth, 0px) - 32px));')
     expect(css).toContain('left: calc((100% - var(--PreviewAreasWidth, 0px)) / 2);')
+    expect(css).toContain('transform: translateX(-50%);')
   } finally {
     await rm(dir, { recursive: true, force: true })
   }

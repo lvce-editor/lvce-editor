@@ -4,10 +4,11 @@
 /* TODO recalculate style is really slow in chrome for unknown reasons */
 .QuickPick {
   position: absolute;
-  width: 600px;
+  width: min(600px, calc(100% - var(--PreviewAreasWidth, 0px) - 32px));
   top: 50px;
   left: calc((100% - var(--PreviewAreasWidth, 0px)) / 2);
-  margin-left: -300px; /* TODO maybe this should be 301px because of padding to be centered */
+  margin-left: 0;
+  transform: translateX(-50%);
   padding: 0 1px 6px;
   background: var(--QuickPickBackground);
   color: var(--ListForeground);
