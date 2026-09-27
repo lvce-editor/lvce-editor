@@ -58,9 +58,7 @@
   height: 16px;
 }
 
-.Editor:has(> .EditorBreadcrumbs) > .Gutter,
-.Editor:has(> .EditorBreadcrumbs) > .EditorContent,
-.Editor:has(> .EditorBreadcrumbs) > .EditorMinimap {
+.EditorBreadcrumbsOffset {
   height: calc(100% - 22px);
   margin-top: 22px;
 }
@@ -103,9 +101,10 @@
 
 .EditorRow {
   display: block;
-  height: var(--EditorLineHeight);
-  line-height: var(--EditorLineHeight);
-  contain: strict;
+  flex: none;
+  height: var(--EditorRowHeight, var(--EditorLineHeight));
+  line-height: var(--EditorRowHeight, var(--EditorLineHeight));
+  contain: var(--EditorRowContain, strict);
 }
 
 .EditorRowHighlighted {
@@ -260,6 +259,9 @@
 
 .LineNumber {
   contain: content;
+  flex: none;
+  height: var(--EditorRowHeight, var(--EditorLineHeight));
+  position: relative;
 }
 
 .LineNumberActive {
