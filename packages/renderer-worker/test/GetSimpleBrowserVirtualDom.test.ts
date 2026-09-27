@@ -22,6 +22,39 @@ test('renders a snapshot below the browser header', () => {
   ])
 })
 
+test('renders a Simple Browser snapshot without dimming for the activity bar settings menu', () => {
+  const dom = GetSimpleBrowserVirtualDom.getSimpleBrowserVirtualDom(
+    true,
+    true,
+    false,
+    'https://example.com',
+    'blob:https://example.com/snapshot',
+    [],
+    -1,
+    [],
+    0,
+    true,
+    true,
+    [],
+    undefined,
+    -1,
+    false,
+    'light',
+    undefined,
+    false,
+    [],
+    '',
+    undefined,
+    0,
+    1600,
+    true,
+  )
+
+  expect(dom.at(-1)).toMatchObject({
+    className: 'SimpleBrowserSnapshot SimpleBrowserSnapshotSettingsMenu',
+  })
+})
+
 test('renders history as an interactive browser tab page', () => {
   const dom = GetSimpleBrowserVirtualDom.getSimpleBrowserVirtualDom(
     false,
