@@ -1398,6 +1398,24 @@ test('updates audio state for the selected tab', () => {
   expect(paused).toMatchObject({ isAudioPlaying: false, tabs: [{ browserViewId: 12, isAudioPlaying: false }] })
 })
 
+test('tracks concurrent browser downloads and ignores updates for removed tabs', () => {
+  const state = {
+    ...ViewletSimpleBrowser.create(),
+    browserViewId: 12,
+    tabs: [{ browserViewId: 12 }, { browserViewId: 13 }],
+  }
+
+  const firstStarted = ViewletSimpleBrowser.handleDownloadStateChanged(state, 12, 1, 'started')
+  const secondStarted = ViewletSimpleBrowser.handleDownloadStateChanged(firstStarted, 13, 2, 'started')
+  const firstCompleted = ViewletSimpleBrowser.handleDownloadStateChanged(secondStarted, 12, 1, 'completed')
+  const secondFailed = ViewletSimpleBrowser.handleDownloadStateChanged(firstCompleted, 13, 2, 'failed')
+
+  expect(firstStarted.downloadStates).toEqual({ 1: 'downloading' })
+  expect(firstCompleted.downloadStates).toEqual({ 2: 'downloading', completed: 'completed' })
+  expect(secondFailed.downloadStates).toEqual({ completed: 'completed' })
+  expect(ViewletSimpleBrowser.handleDownloadStateChanged(state, 99, 3, 'completed')).toBe(state)
+})
+
 test('closing a tab disposes only its web contents view', async () => {
   // @ts-ignore
   ElectronWebContentsView.disposeWebContentsView.mockResolvedValue(undefined)

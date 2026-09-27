@@ -5,7 +5,7 @@ import * as Preferences from '../Preferences/Preferences.js'
 import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 
 const isSimpleBrowserMenu = (menuId) => {
-  return menuId === MenuEntryId.SimpleBrowserTab || menuId === MenuEntryId.SimpleBrowserToolbar
+  return menuId === MenuEntryId.SimpleBrowserTab || menuId === MenuEntryId.SimpleBrowserToolbar || menuId === MenuEntryId.SimpleBrowserDownloads
 }
 
 const hasContextMenuNativePreference = (menuId) => {

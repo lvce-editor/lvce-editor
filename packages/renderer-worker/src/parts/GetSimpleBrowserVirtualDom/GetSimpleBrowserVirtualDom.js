@@ -107,6 +107,7 @@ export const getSimpleBrowserVirtualDom = (
   historyScrollTop = 0,
   historyViewportHeight = 1600,
   undimmedSnapshot = false,
+  downloadStates = {},
 ) => {
   const inlineSuggestion = getInlineSuggestion(value, suggestions)
   const historyDom = historyTab
@@ -119,6 +120,10 @@ export const getSimpleBrowserVirtualDom = (
       )
     : []
   const selectedTab = tabs[selectedTabIndex]
+  const downloadStatuses = Object.values(downloadStates)
+  const isDownloading = downloadStatuses.includes('downloading')
+  const hasCompletedDownload = downloadStatuses.includes('completed')
+  const showDownloadsButton = isDownloading || hasCompletedDownload
   const isNewTab = Boolean(selectedTab && !selectedTab.browserViewId && !selectedTab.iframeSrc && !historyTab)
   /** @type {any[]} */
   const dom = [
@@ -381,7 +386,7 @@ export const getSimpleBrowserVirtualDom = (
     {
       type: VirtualDomElements.Div,
       className: 'SimpleBrowserButtonsRight',
-      childCount: 3,
+      childCount: 3 + (showDownloadsButton ? 1 : 0),
     },
     {
       type: VirtualDomElements.Button,
@@ -395,6 +400,19 @@ export const getSimpleBrowserVirtualDom = (
       childCount: 0,
       onClick: DomEventListenerFunctions.HandleClickOpenExternal,
     },
+    ...(showDownloadsButton
+      ? [
+          {
+            type: VirtualDomElements.Button,
+            className: `IconButton SimpleBrowserDownloadButton${isDownloading ? ' SimpleBrowserDownloadButtonDownloading' : ' SimpleBrowserDownloadButtonComplete'}`,
+            ariaLabel: 'Downloads',
+            title: 'Downloads',
+            onClick: DomEventListenerFunctions.HandleClickSimpleBrowserDownloads,
+            childCount: 1,
+          },
+          { type: VirtualDomElements.Div, className: 'MaskIcon MaskIconArrowDown', childCount: 0 },
+        ]
+      : []),
     {
       type: VirtualDomElements.Button,
       className: 'IconButton SimpleBrowserFullWidthButton',

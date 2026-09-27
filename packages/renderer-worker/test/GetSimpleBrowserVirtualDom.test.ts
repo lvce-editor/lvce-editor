@@ -22,6 +22,46 @@ test('renders a snapshot below the browser header', () => {
   ])
 })
 
+test('shows the downloads button while downloading and blue after successful completion', () => {
+  const render = (downloadStates) =>
+    GetSimpleBrowserVirtualDom.getSimpleBrowserVirtualDom(
+      false,
+      false,
+      false,
+      'https://example.com',
+      '',
+      [],
+      -1,
+      [{ browserViewId: 12 }],
+      0,
+      true,
+      true,
+      [],
+      undefined,
+      -1,
+      false,
+      'light',
+      undefined,
+      false,
+      [],
+      '',
+      undefined,
+      0,
+      1600,
+      false,
+      downloadStates,
+    )
+
+  expect(render({})).not.toContainEqual(expect.objectContaining({ ariaLabel: 'Downloads' }))
+  expect(render({ 1: 'downloading' })).toContainEqual(
+    expect.objectContaining({ className: 'IconButton SimpleBrowserDownloadButton SimpleBrowserDownloadButtonDownloading', ariaLabel: 'Downloads' }),
+  )
+  expect(render({ completed: 'completed' })).toContainEqual(
+    expect.objectContaining({ className: 'IconButton SimpleBrowserDownloadButton SimpleBrowserDownloadButtonComplete', ariaLabel: 'Downloads' }),
+  )
+  expect(render({ 1: 'failed' })).not.toContainEqual(expect.objectContaining({ ariaLabel: 'Downloads' }))
+})
+
 test('renders a Simple Browser snapshot without dimming for the activity bar settings menu', () => {
   const dom = GetSimpleBrowserVirtualDom.getSimpleBrowserVirtualDom(
     true,
