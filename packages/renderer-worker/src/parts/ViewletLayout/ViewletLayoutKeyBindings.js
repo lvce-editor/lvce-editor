@@ -38,6 +38,11 @@ export const getKeyBindings = () => {
       args: ['Terminals'],
     },
     {
+      key: KeyModifier.CtrlCmd | KeyCode.KeyJ,
+      command: 'Layout.togglePanel',
+      args: ['Terminals'],
+    },
+    {
       key: KeyModifier.CtrlCmd | KeyModifier.Shift | KeyCode.Backquote,
       command: 'Layout.openIntegratedTerminal',
       args: [''],
