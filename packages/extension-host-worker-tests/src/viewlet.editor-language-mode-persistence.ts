@@ -2,8 +2,6 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'viewlet.editor-language-mode-persistence'
 
-export const skip = 1
-
 export const test: Test = async ({ expect, FileSystem, Locator, Main, QuickPick, Workspace }) => {
   const tmpDir = await FileSystem.getTmpDir()
   const uri = `${tmpDir}/script.txt`
