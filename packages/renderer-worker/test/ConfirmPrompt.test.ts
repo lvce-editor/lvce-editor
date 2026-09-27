@@ -71,3 +71,26 @@ test('prompt - preserves test worker mocks', async () => {
   })
   expect(DialogWorker.invoke).not.toHaveBeenCalled()
 })
+
+test('showErrorMessage - preserves test worker mocks', async () => {
+  const ipc = {}
+  TestWorker.set(ipc)
+  ConfirmPrompt.mock(42)
+  // @ts-ignore
+  JsonRpc.invoke.mockResolvedValue(true)
+
+  await expect(
+    ConfirmPrompt.showErrorMessage({
+      confirmMessage: 'Close',
+      message: 'Something went wrong',
+      platform: PlatformType.Electron,
+      title: 'Error',
+    }),
+  ).resolves.toBe(true)
+
+  expect(JsonRpc.invoke).toHaveBeenCalledWith(ipc, 'Test.executeMock', 42, 'Something went wrong', {
+    confirmMessage: 'Close',
+    title: 'Error',
+  })
+  expect(DialogWorker.invoke).not.toHaveBeenCalled()
+})
