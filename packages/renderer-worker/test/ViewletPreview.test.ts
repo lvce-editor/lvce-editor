@@ -3,6 +3,7 @@ import { expect, jest, test } from '@jest/globals'
 
 const disposePreviewSandBoxWorker = jest.fn<() => Promise<void>>()
 const disposePreviewWorker = jest.fn<(_state: unknown) => Promise<void>>()
+const invokeOutputViewWorker = jest.fn<(...args: readonly unknown[]) => Promise<void>>()
 
 jest.unstable_mockModule('../src/parts/CreateWorkerViewlet/CreateWorkerViewlet.js', () => ({
   createWorkerViewlet: jest.fn(() => ({
@@ -15,6 +16,10 @@ jest.unstable_mockModule('../src/parts/GetOrCreateWorker/GetOrCreateWorker.js', 
   getOrCreateWorker: jest.fn(() => ({
     dispose: disposePreviewSandBoxWorker,
   })),
+}))
+
+jest.unstable_mockModule('../src/parts/OutputViewWorker/OutputViewWorker.js', () => ({
+  invoke: invokeOutputViewWorker,
 }))
 
 const ViewletPreview = await import('../src/parts/ViewletPreview/ViewletPreview.js')
@@ -37,4 +42,19 @@ test('closing one of two previews preserves the shared sandbox', async () => {
   expect(disposePreviewSandBoxWorker).not.toHaveBeenCalled()
   await ViewletPreview.dispose({ uid: 11 })
   expect(disposePreviewSandBoxWorker).toHaveBeenCalledTimes(1)
+})
+
+test('preview lifecycle shows and hides the preview sandbox output channel', async () => {
+  invokeOutputViewWorker.mockClear()
+  await ViewletPreview.loadContent({ uid: 20 })
+  await ViewletPreview.loadContent({ uid: 21 })
+  expect(invokeOutputViewWorker).toHaveBeenCalledTimes(1)
+  expect(invokeOutputViewWorker).toHaveBeenLastCalledWith('Output.setPreviewSandboxActive', true)
+
+  await ViewletPreview.dispose({ uid: 20 })
+  expect(invokeOutputViewWorker).toHaveBeenCalledTimes(1)
+
+  await ViewletPreview.dispose({ uid: 21 })
+  expect(invokeOutputViewWorker).toHaveBeenCalledTimes(2)
+  expect(invokeOutputViewWorker).toHaveBeenLastCalledWith('Output.setPreviewSandboxActive', false)
 })

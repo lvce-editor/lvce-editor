@@ -1,9 +1,20 @@
 import { createWorkerViewlet } from '../CreateWorkerViewlet/CreateWorkerViewlet.js'
+import * as OutputViewWorker from '../OutputViewWorker/OutputViewWorker.js'
 import * as PreviewSandBoxWorker from '../PreviewSandBoxWorker/PreviewSandBoxWorker.js'
 
 const workerViewlet = createWorkerViewlet({ workerId: 'preview' })
 const { dispose: disposeWorkerViewlet, loadContent: loadWorkerContent } = workerViewlet
 const instances = new Set()
+let outputChannelActive = false
+
+const updateOutputChannelState = async () => {
+  const active = instances.size > 0
+  if (outputChannelActive === active) {
+    return
+  }
+  outputChannelActive = active
+  await OutputViewWorker.invoke('Output.setPreviewSandboxActive', active)
+}
 
 export const {
   Commands,
@@ -35,18 +46,24 @@ export const {
 } = workerViewlet
 
 export const loadContent = async (state, ...args) => {
-  instances.add(state.uid)
+  const { uid } = state
+  instances.add(uid)
   try {
-    return await loadWorkerContent(state, ...args)
+    const result = await loadWorkerContent(state, ...args)
+    await updateOutputChannelState()
+    return result
   } catch (error) {
-    instances.delete(state.uid)
+    instances.delete(uid)
+    await updateOutputChannelState()
     if (instances.size === 0) await PreviewSandBoxWorker.dispose()
     throw error
   }
 }
 
 export const dispose = async (state) => {
+  const { uid } = state
   await disposeWorkerViewlet(state)
-  instances.delete(state.uid)
+  instances.delete(uid)
+  await updateOutputChannelState()
   if (instances.size === 0) await PreviewSandBoxWorker.dispose()
 }
