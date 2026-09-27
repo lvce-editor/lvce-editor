@@ -18,7 +18,13 @@ export const test: Test = async ({ Command, Editor, expect, FileSystem, Locator,
   const tmpDir = await FileSystem.getTmpDir()
   const uri = `${tmpDir}/main.ts`
   await FileSystem.writeFile(uri, 'const foo: string = 123\n\nconsole.log(foo)\n')
-  await Settings.update({ 'editor.diagnostics': true })
+  await Settings.update({
+    'editor.diagnostics': true,
+    'statusBar.builtinProblemsEnabled': true,
+    'statusBar.itemsVisible': true,
+  })
+  await Command.execute('Layout.showStatusBar')
+  await Command.execute('Layout.loadStatusBarIfVisible')
   await Workspace.setPath(tmpDir)
   await Main.openUri(uri)
 
@@ -50,6 +56,16 @@ export const test: Test = async ({ Command, Editor, expect, FileSystem, Locator,
   await expect(itemProblems).toBeVisible()
   await expect(errorCount).toHaveText('1')
   await expect(warningCount).toHaveText('0')
+
+  for (const count of [10, 100, 1_000, 10_000, 100_000, 1_000_000, 1]) {
+    await Command.execute('StatusBar.handleProblemsSummaryChange', {
+      errorCount: count,
+      hasEditor: true,
+      warningCount: 0,
+    })
+    await expect(errorCount).toHaveText(String(count))
+    await expect(warningCount).toHaveText('0')
+  }
 
   await Main.closeAllEditors()
   await expect(errorCount).toHaveText('0')
