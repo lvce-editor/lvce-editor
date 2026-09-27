@@ -46,4 +46,12 @@ export const test: Test = async ({ Command, expect, Locator, Main }) => {
   await Command.execute('Output.handleFilterInput', 'live update', 2)
   await expect(Locator('.FilterInput')).toHaveValue('live update')
   await Main.closeAllEditors()
+
+  // Reopening Output must restore CSS removed over the panel's direct renderer connection.
+  for (let i = 0; i < 2; i++) {
+    await Command.execute('Layout.showPanel', 'Problems')
+    await expect(Locator('.Problems')).toBeVisible()
+    await Command.execute('Layout.showPanel', 'Output')
+    await expect(Locator('.Output')).toBeVisible()
+  }
 }
