@@ -1641,6 +1641,7 @@
   {
     "id": "workersView",
     "fileName": "workersViewMain.js",
+    "contentSecurityPolicy": ["default-src 'none'"],
     "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/workers-view/dist/workersViewMain.js",
     "productionPath": "/packages/workers-view/dist/workersViewMain.js",
     "settingName": "develop.workersViewPath",

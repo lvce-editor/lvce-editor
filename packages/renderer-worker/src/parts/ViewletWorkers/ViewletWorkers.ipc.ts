@@ -25,4 +25,5 @@ export const {
   renderTitle,
   resize,
   saveState,
+  serializeCommands,
 } = createWorkerViewlet({ workerId: 'workersView' })

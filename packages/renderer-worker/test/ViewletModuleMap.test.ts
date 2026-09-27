@@ -78,6 +78,7 @@ test('workers view uses worker-backed module', async () => {
   expect(typeof module.loadContent).toBe('function')
   expect(typeof module.getCommands).toBe('function')
   expect(module.hasFunctionalResize).toBe(true)
+  expect(Reflect.get(module, 'serializeCommands')).toBe(true)
 })
 
 test('simple browser history exposes the placeholder view', async () => {
