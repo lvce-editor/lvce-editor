@@ -255,7 +255,7 @@ jobs:
         run: npm run e2e:headless -- --test-name-prefix=viewlet.title-bar-menu-help-about-closes-menu
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0
-      - name: Test Keyboard Shortcuts with persisted string bindings
+      - name: Test Keyboard Shortcuts with persisted string and built-in bindings
         working-directory: ./packages/extension-host-worker-tests
         run: npm run e2e:headless -- --test-name-prefix=viewlet.key-bindings-open-string-binding
         env:
