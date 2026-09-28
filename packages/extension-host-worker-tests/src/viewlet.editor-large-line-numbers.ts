@@ -15,5 +15,8 @@ export const test: Test = async ({ Editor, FileSystem, Locator, Main, Settings, 
 
   await Editor.setDeltaY(80_000)
 
+  const lineNumber = Locator('.LineNumber').first()
+  await expect(lineNumber).toHaveCSS('display', 'flex')
+  await expect(lineNumber).toHaveCSS('justify-content', 'flex-end')
   await expect(Locator('.Gutter')).toHaveCSS('width', /^(3[1-9]|[4-9]\d|\d{3,})(?:\.\d+)?px$/ as unknown as string)
 }
