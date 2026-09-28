@@ -10,7 +10,7 @@ export const test: Test = async ({ expect, Locator, QuickPick }) => {
   await expect(command).toBeVisible()
   await QuickPick.selectItem('Developer: Open Workers View')
 
-  const view = Locator('.workers-view')
+  const view = Locator('.WorkersView')
   await expect(view.locator('h1')).toHaveText('Workers')
   await expect(view.locator('[role="table"][aria-label="Workers"]')).toBeVisible()
 }
