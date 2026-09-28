@@ -91,7 +91,7 @@ try {
   assert.equal(repeated.evaluate, first.evaluate, 'unchanged workers must not have their names reevaluated')
   assert.equal(repeated.attach, first.attach, 'polling must reuse existing debugger sessions')
   assert.equal(repeated.detach, 0, 'polling must not detach debugger sessions')
-  await page.locator('.WorkersView button').click()
+  await page.locator('.WorkersViewRefreshButton').click()
   await expect.poll(async () => (await counts()).heap).toBeGreaterThan(repeated.heap)
   assert.equal((await counts()).evaluate, first.evaluate, 'manual refresh must also reuse cached names')
   await close()
