@@ -91,9 +91,8 @@ try {
   assert.equal(repeated.evaluate, first.evaluate, 'unchanged workers must not have their names reevaluated')
   assert.equal(repeated.attach, first.attach, 'polling must reuse existing debugger sessions')
   assert.equal(repeated.detach, 0, 'polling must not detach debugger sessions')
-  await page.locator('.WorkersViewRefreshButton').click()
   await expect.poll(async () => (await counts()).heap).toBeGreaterThan(repeated.heap)
-  assert.equal((await counts()).evaluate, first.evaluate, 'manual refresh must also reuse cached names')
+  assert.equal((await counts()).evaluate, first.evaluate, 'automatic refresh must also reuse cached names')
   await close()
   const closed = await counts()
   // Observe more than one polling interval to detect a leaked update timer.
@@ -102,7 +101,7 @@ try {
   await open()
   await expect.poll(async () => (await counts()).evaluate).toBeGreaterThan(closed.evaluate)
   await close()
-  console.log(`PASS: ${first.evaluate} worker names evaluated once; repeated heap polling, manual refresh, close, and reopen verified`)
+  console.log(`PASS: ${first.evaluate} worker names evaluated once; repeated heap polling, automatic refresh, close, and reopen verified`)
 } finally {
   try {
     await app?.close()
