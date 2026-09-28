@@ -77,6 +77,15 @@ const toWorkspaceUri = (path) => {
   return PathToFileUri.pathToFileUri(path)
 }
 
+const fileUriToPath = (uri) => {
+  const url = new URL(uri)
+  const path = decodeURIComponent(url.pathname)
+  if (url.hostname) {
+    return `//${url.hostname}${path}`
+  }
+  return /^\/[A-Za-z]:\//.test(path) ? path.slice(1) : path
+}
+
 const validateLocalPath = async (path) => {
   if (IsTest.isTest()) {
     return
@@ -115,7 +124,7 @@ export const setPath = async (path) => {
 export const setUri = async (uri, connectionOrPathSeparator, legacyConnection, openUri = '') => {
   const connection = legacyConnection || (typeof connectionOrPathSeparator === 'object' ? connectionOrPathSeparator : undefined)
   const protocol = GetProtocol.getProtocol(uri)
-  const path = connection?.workspacePath || (protocol === 'file' ? decodeURIComponent(uri.slice('file://'.length)) : uri)
+  const path = connection?.workspacePath || (protocol === 'file' ? fileUriToPath(uri) : uri)
   if (protocol === 'file' && !connection) {
     await validateLocalPath(path)
   }
