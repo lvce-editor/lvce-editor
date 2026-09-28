@@ -163,6 +163,23 @@ const runTests = async () => {
     }, initialSettings)
   }
   const page = await context.newPage()
+  if (argv.includes('--diagnose-process-explorer')) {
+    page.on('websocket', (socket) => {
+      console.info('[DEBUG-process-explorer-rpc] socket', new URL(socket.url()).pathname)
+      for (const event of ['framesent', 'framereceived']) {
+        socket.on(event, ({ payload }) => {
+          try {
+            const message = JSON.parse(String(payload))
+            console.info('[DEBUG-process-explorer-rpc]', event, JSON.stringify({ id: message.id, method: message.method, error: Boolean(message.error) }))
+          } catch {
+            console.info('[DEBUG-process-explorer-rpc]', event, 'non-json frame')
+          }
+        })
+      }
+      socket.on('socketerror', (error) => console.info('[DEBUG-process-explorer-rpc] socket error', error))
+    })
+  }
+
   try {
     const expectedConsole = argv.find((argument) => argument.startsWith('--expect-console='))?.slice('--expect-console='.length)
     let receivedExpectedConsole = false

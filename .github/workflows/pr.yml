@@ -97,7 +97,7 @@ jobs:
           PLAYWRIGHT_BROWSERS_PATH: 0
       - name: Test process explorer error presentation
         working-directory: ./packages/extension-host-worker-tests
-        run: npm run e2e:headless -- --test-name-prefix=viewlet.process-explorer-error-style
+        run: npm run e2e:headless -- --test-name-prefix=viewlet.process-explorer-error-style --diagnose-process-explorer
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0
       - name: Test editor breadcrumbs

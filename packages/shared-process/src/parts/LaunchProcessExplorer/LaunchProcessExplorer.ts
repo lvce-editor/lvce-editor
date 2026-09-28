@@ -6,6 +6,7 @@ import * as LaunchProcess from '../LaunchProcess/LaunchProcess.ts'
 import * as ProcessExplorerPath from '../ProcessExplorerPath/ProcessExplorerPath.ts'
 
 export const launchProcessExplorer = async (): Promise<any> => {
+  console.info('[DEBUG-process-explorer-rpc] launching backend')
   const ipc = await LaunchProcess.launchProcess({
     defaultPath: ProcessExplorerPath.processExplorerPath,
     isElectron: IsElectron.isElectron,
@@ -13,6 +14,7 @@ export const launchProcessExplorer = async (): Promise<any> => {
     settingName: 'develop.processExplorerPath',
     targetRpcId: IpcId.ProcessExplorer,
   })
+  console.info('[DEBUG-process-explorer-rpc] backend launched')
   if (IsElectron.isElectron) {
     await ConnectIpcToElectron.connectIpcToElectron(ipc, IpcId.ProcessExplorerRenderer)
   }
