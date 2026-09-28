@@ -34,6 +34,22 @@ test('prompt - invokes dialog worker', async () => {
   })
 })
 
+test('prompt3 - invokes dialog worker', async () => {
+  const options = {
+    cancelMessage: 'Cancel',
+    confirmMessage: 'Save',
+    discardMessage: "Don't Save",
+    discardPrompt: 'Discard changes?',
+    title: 'Save Changes',
+  }
+  // @ts-ignore
+  DialogWorker.invoke.mockResolvedValue('discard')
+
+  await expect(ConfirmPrompt.prompt3('Save changes?', options)).resolves.toBe('discard')
+
+  expect(DialogWorker.invoke).toHaveBeenCalledWith('ConfirmPrompt.prompt3', 'Save changes?', options)
+})
+
 test('showErrorMessage - invokes dialog worker', async () => {
   // @ts-ignore
   DialogWorker.invoke.mockResolvedValue(true)
