@@ -162,38 +162,12 @@ const runTests = async () => {
       if (location.protocol === 'http:' || location.protocol === 'https:') localStorage.setItem('settings', JSON.stringify(value))
     }, initialSettings)
   }
-  // Temporary diagnostics for the Process Explorer Windows worker-start failure.
-  if (argv.includes('--diagnose-process-explorer')) {
-    context.on('response', (response) => {
-      if (response.status() >= 400 || response.url().includes('process-explorer')) {
-        console.info('[DEBUG-process-explorer] response', response.status(), response.url())
-      }
-    })
-    context.on('requestfailed', (request) => {
-      console.info('[DEBUG-process-explorer] request failed', request.url(), request.failure()?.errorText)
-    })
-    await context.addInitScript(() => {
-      const OriginalWorker = globalThis.Worker
-      globalThis.Worker = class extends OriginalWorker {
-        constructor(url, options) {
-          console.info('[DEBUG-process-explorer] worker', String(url), JSON.stringify(options))
-          super(url, options)
-          this.addEventListener('error', (event) => {
-            console.info('[DEBUG-process-explorer] worker error', String(url), event.message, event.filename, event.lineno)
-          })
-        }
-      }
-    })
-  }
   const page = await context.newPage()
   try {
     const expectedConsole = argv.find((argument) => argument.startsWith('--expect-console='))?.slice('--expect-console='.length)
     let receivedExpectedConsole = false
     page.on('console', (event) => {
       if (event.text() === expectedConsole) receivedExpectedConsole = true
-      if (argv.includes('--diagnose-process-explorer') && event.type() === 'error') {
-        console.info('[DEBUG-process-explorer] console location', JSON.stringify(event.location()))
-      }
       handleConsole(event)
     })
     const testNames = await getPaths()
