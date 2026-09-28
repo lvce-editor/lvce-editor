@@ -40,6 +40,9 @@
 }
 
 .EditorBreadcrumb {
+  align-items: center;
+  display: inline-flex;
+  gap: 4px;
   flex-shrink: 0;
   max-width: 240px;
   overflow: hidden;
@@ -279,4 +282,12 @@
 
 .DiffEditorLineNumber {
   contain: strict;
+}
+
+.EditorBreadcrumbIcon {
+  --MaskIconSize: 16px;
+
+  flex: 0 0 16px;
+  height: 16px;
+  width: 16px;
 }
