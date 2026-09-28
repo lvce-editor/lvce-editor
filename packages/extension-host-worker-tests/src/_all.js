@@ -166,7 +166,9 @@ const runTests = async () => {
   if (argv.includes('--diagnose-process-explorer')) {
     page.on('websocket', (socket) => {
       console.info('[DEBUG-process-explorer-rpc] socket', new URL(socket.url()).pathname)
-      for (const event of ['framesent', 'framereceived']) {
+      /** @type {Array<'framesent' | 'framereceived'>} */
+      const frameEvents = ['framesent', 'framereceived']
+      for (const event of frameEvents) {
         socket.on(event, ({ payload }) => {
           try {
             const message = JSON.parse(String(payload))
