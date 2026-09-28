@@ -166,18 +166,20 @@ const runTests = async () => {
   if (argv.includes('--diagnose-process-explorer')) {
     page.on('websocket', (socket) => {
       console.info('[DEBUG-process-explorer-rpc] socket', new URL(socket.url()).pathname)
-      /** @type {Array<'framesent' | 'framereceived'>} */
-      const frameEvents = ['framesent', 'framereceived']
-      for (const event of frameEvents) {
-        socket.on(event, ({ payload }) => {
-          try {
-            const message = JSON.parse(String(payload))
-            console.info('[DEBUG-process-explorer-rpc]', event, JSON.stringify({ id: message.id, method: message.method, error: Boolean(message.error) }))
-          } catch {
-            console.info('[DEBUG-process-explorer-rpc]', event, 'non-json frame')
-          }
-        })
+      /**
+       * @param {string} event
+       * @param {string | Buffer} payload
+       */
+      const logFrame = (event, payload) => {
+        try {
+          const message = JSON.parse(String(payload))
+          console.info('[DEBUG-process-explorer-rpc]', event, JSON.stringify({ id: message.id, method: message.method, error: Boolean(message.error) }))
+        } catch {
+          console.info('[DEBUG-process-explorer-rpc]', event, 'non-json frame')
+        }
       }
+      socket.on('framesent', ({ payload }) => logFrame('framesent', payload))
+      socket.on('framereceived', ({ payload }) => logFrame('framereceived', payload))
       socket.on('socketerror', (error) => console.info('[DEBUG-process-explorer-rpc] socket error', error))
     })
   }
