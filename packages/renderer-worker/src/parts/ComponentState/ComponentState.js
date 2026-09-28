@@ -219,6 +219,16 @@ const isEditable = (instance) => {
   return typeof instance.factory.getComponentState === 'function' && typeof instance.factory.setComponentState === 'function'
 }
 
+const hasComponentDom = (instance) => {
+  if (typeof instance.factory.getComponentDom !== 'function') {
+    return false
+  }
+  if (typeof instance.factory.isComponentDomAvailable === 'function') {
+    return instance.factory.isComponentDomAvailable(instance.state)
+  }
+  return true
+}
+
 const getInstance = (uid) => {
   const instance = ViewletStates.getByUid(uid)
   if (!instance) {
@@ -244,7 +254,7 @@ export const getComponents = (viewUid = undefined) => {
     const displayName = moduleId === 'ExtensionView' ? `${instance.state?.title || instance.state?.viewId || moduleId} (extension)` : moduleId
     components.push({
       displayName,
-      domAvailable: typeof instance.factory.getComponentDom === 'function',
+      domAvailable: hasComponentDom(instance),
       editable: isEditable(instance),
       heapSnapshotAvailable: Platform.getPlatform() === PlatformType.Electron,
       moduleId,
@@ -283,7 +293,7 @@ export const getSavedState = async (uid) => {
 
 export const getDom = async (uid) => {
   const instance = getInstance(uid)
-  if (typeof instance.factory.getComponentDom !== 'function') {
+  if (!hasComponentDom(instance)) {
     throw new Error(`Component DOM API not available: ${instance.moduleId}`)
   }
   const preview = await RendererProcess.invoke('Viewlet.getComponentDom', uid)
@@ -329,7 +339,7 @@ export const setState = async (uid, newComponentState) => {
 
 export const setDom = async (uid, dom) => {
   const instance = getInstance(uid)
-  if (typeof instance.factory.getComponentDom !== 'function') {
+  if (!hasComponentDom(instance)) {
     throw new Error(`Component DOM API not available: ${instance.moduleId}`)
   }
   if (!Array.isArray(dom) || dom.length === 0) {

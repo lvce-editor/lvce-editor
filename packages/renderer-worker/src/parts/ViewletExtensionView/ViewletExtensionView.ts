@@ -308,6 +308,10 @@ export const rerender = async (state: ViewletExtensionViewState): Promise<Viewle
 
 export const isComponentStateAvailable = (state: ViewletExtensionViewState): boolean => state.kind === 'virtualDom' && state.stateful
 
+export const isComponentDomAvailable = (state: ViewletExtensionViewState): boolean => state.kind === 'virtualDom'
+
+export const getComponentDom = (state: ViewletExtensionViewState): readonly unknown[] => state.dom
+
 export const getComponentState = async (state: ViewletExtensionViewState): Promise<unknown> => {
   return ExtensionManagementWorker.invoke('Extensions.getViewInstanceState', state.viewId, state.uid, assetDir, getPlatform())
 }
