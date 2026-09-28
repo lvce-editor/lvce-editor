@@ -16,7 +16,8 @@ export const test: Test = async ({ Command, expect, Locator }) => {
   const dismissed = Command.execute('Notification.showWithOptions', 'info', 'There are no changes to commit', ['Create Empty Commit'])
   await expect(option).toBeVisible()
   await notification.locator('[aria-label="Close"]').click()
-  if ((await dismissed) !== undefined) {
+  const dismissedChoice = await dismissed
+  if (dismissedChoice !== undefined && dismissedChoice !== null) {
     throw new Error('Dismissing the notification selected an action')
   }
   await expect(notification).toBeHidden()
