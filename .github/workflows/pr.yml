@@ -93,6 +93,7 @@ jobs:
         run: |
           node --experimental-vm-modules node_modules/jest/bin/jest.js --config packages/renderer-worker/package.json --runInBand --coverage=false --testPathPatterns='(IpcParentWithNodeAlternate|LaunchFileSystemWorker|WebSocketCapability|ExtensionNodeRpc|WorkspaceConnection|WorkspaceSetUri|LoadProcessExplorerViewletModule|GetTerminalSpawnOptions).test'
           npm run e2e:headless --prefix packages/extension-host-worker-tests -- --test-name-prefix=workspace.remote-local-services
+          npm run e2e:headless --prefix packages/extension-host-worker-tests -- --test-name-prefix=workspace.local-uri-path
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0
       - name: Test process explorer error presentation
