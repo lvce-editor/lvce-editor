@@ -67,14 +67,14 @@ try {
     await input.fill('>Developer: Open Workers View')
     await expect(page.getByRole('option', { name: 'Developer: Open Workers View', exact: true })).toBeVisible()
     await input.press('Enter')
-    await expect(page.locator('.workers-view')).toBeVisible()
-    await expect(page.locator('.workers-view')).toContainText(/\d+(\.\d+)? (KiB|MiB)/)
+    await expect(page.locator('.WorkersView')).toBeVisible()
+    await expect(page.locator('.WorkersView')).toContainText(/\d+(\.\d+)? (KiB|MiB)/)
   }
   const close = async () => {
     const tab = page.locator('.MainTab').filter({ hasText: 'Workers' })
     await tab.hover()
     await tab.locator('.EditorTabCloseButton').click()
-    await expect(page.locator('.workers-view')).toHaveCount(0)
+    await expect(page.locator('.WorkersView')).toHaveCount(0)
     await expect.poll(() => app.evaluate(({ BrowserWindow }) => BrowserWindow.getAllWindows()[0].webContents.debugger.isAttached())).toBe(false)
   }
   await open()
@@ -91,7 +91,7 @@ try {
   assert.equal(repeated.evaluate, first.evaluate, 'unchanged workers must not have their names reevaluated')
   assert.equal(repeated.attach, first.attach, 'polling must reuse existing debugger sessions')
   assert.equal(repeated.detach, 0, 'polling must not detach debugger sessions')
-  await page.locator('.workers-view button').click()
+  await page.locator('.WorkersView button').click()
   await expect.poll(async () => (await counts()).heap).toBeGreaterThan(repeated.heap)
   assert.equal((await counts()).evaluate, first.evaluate, 'manual refresh must also reuse cached names')
   await close()
