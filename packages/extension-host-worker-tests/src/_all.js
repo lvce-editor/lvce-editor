@@ -92,6 +92,7 @@ const launchServer = async ({ ci, configDir, cacheDir, dataDir }) => {
   const server = fork(SERVER_PATH, serverArgs, {
     stdio: 'inherit',
     env: {
+      ...process.env,
       XDG_CONFIG_HOME: configDir,
       XDG_CACHE_HOME: cacheDir,
       XDG_DATA_HOME: dataDir,
