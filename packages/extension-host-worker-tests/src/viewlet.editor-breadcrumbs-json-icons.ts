@@ -2,7 +2,7 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 
 export const name = 'viewlet.editor-breadcrumbs-json-icons'
 
-export const test: Test = async ({ Editor, FileSystem, Locator, Main, Settings, Workspace, expect }) => {
+export const test: Test = async ({ Editor, FileSystem, KeyBoard, Locator, Main, Settings, Workspace, expect }) => {
   const tmpDir = await FileSystem.getTmpDir()
   const uri = `${tmpDir}/package.json`
   await FileSystem.writeFile(uri, '{\n  "scripts": {\n    "build": "tsc"\n  },\n  "items": [\n    {"enabled": true, "count": 42, "empty": null}\n  ]\n}')
@@ -14,7 +14,7 @@ export const test: Test = async ({ Editor, FileSystem, Locator, Main, Settings, 
   await expect(symbols).toHaveCount(2)
   await expect(symbols.nth(0)).toHaveText('scripts')
   await expect(symbols.nth(1)).toHaveText('build')
-  await expect(Locator('.EditorBreadcrumbFile .FileIcon')).toHaveAttribute('src', /file_type_npm/)
+  await expect(Locator('.EditorBreadcrumbFile .FileIcon[src*="file_type_npm.svg"]')).toHaveCount(1)
   await expect(Locator('.MaskIconSymbolObject')).toHaveCSS('mask-image', /\/json.svg/)
   await expect(Locator('.MaskIconSymbolString')).toHaveCSS('mask-image', /\/symbol-string.svg/)
   await Editor.setCursor(5, 18)
@@ -31,7 +31,8 @@ export const test: Test = async ({ Editor, FileSystem, Locator, Main, Settings, 
   await expect(symbols.nth(2)).toHaveText('empty')
   await expect(Locator('.MaskIconSymbolNull')).toHaveCSS('mask-image', /\/circle-slash.svg/)
   await Editor.setCursor(0, 0)
-  await Editor.type('\n')
+  await KeyBoard.press('Enter')
+  await expect(Locator('.EditorRow')).toHaveCount(9)
   await Editor.setCursor(6, 18)
   await expect(symbols).toHaveCount(3)
   await expect(symbols.nth(2)).toHaveText('enabled')
