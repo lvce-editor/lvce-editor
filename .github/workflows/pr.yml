@@ -154,6 +154,9 @@ jobs:
         run: npm run e2e:notification-layout
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0
+      - name: Test Workers view memory polling in Electron
+        if: matrix.os == 'ubuntu-24.04'
+        run: xvfb-run -a npm run test:workers-memory
       - name: Test terminal process lifecycle in Electron and browser
         if: matrix.os == 'ubuntu-24.04'
         run: |
