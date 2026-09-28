@@ -7,7 +7,7 @@ interface ComponentInfo {
 
 export const name = 'viewlet.workers-component-state'
 
-export const test: Test = async ({ Command, expect, Locator, Main, QuickPick }) => {
+export const test: Test = async ({ Command, Editor, expect, Locator, Main, QuickPick }) => {
   const openWorkers = async (): Promise<void> => {
     await QuickPick.open()
     await QuickPick.setValue('>workers')
@@ -28,7 +28,7 @@ export const test: Test = async ({ Command, expect, Locator, Main, QuickPick }) 
 
   const component = await getWorkersComponent()
   const uri = `live-component-state:///${component.uid}.json`
-  const state = await Command.execute('ComponentState.getState', component.uid)
+  const state = (await Command.execute('ComponentState.getState', component.uid)) as { readonly workers: readonly unknown[] }
   const stateContent = await Command.execute('FileSystem.readFile', uri)
   const fileState = JSON.parse(stateContent as string)
   if (fileState.uid !== component.uid || !fileState.loaded || !Array.isArray(fileState.workers)) {
@@ -36,14 +36,25 @@ export const test: Test = async ({ Command, expect, Locator, Main, QuickPick }) 
   }
 
   await Main.openUri(uri)
+  const editorState = JSON.parse(await Editor.getText())
+  if (editorState.uid !== component.uid || !editorState.loaded || !Array.isArray(editorState.workers)) {
+    throw new Error('Expected Open JSON State to show the Workers component data')
+  }
+  await Main.closeActiveEditor()
   const changedState = {
     ...state,
+    // A state error pauses the Workers view's one-second auto-refresh while the edited list is asserted.
+    error: new Error('Pause automatic refresh during component state edit'),
     workers: [
       ...(state as { workers: readonly unknown[] }).workers,
       { id: 'state-test', memory: 0, name: 'Inspector Worker', runtimeName: 'Inspector Worker [state-test]' },
     ],
   }
   await Command.execute('ComponentState.setState', component.uid, changedState)
+  const updatedState = (await Command.execute('ComponentState.getState', component.uid)) as { readonly workers: readonly { readonly name: string }[] }
+  if (!updatedState.workers.some((worker) => worker.name === 'Inspector Worker')) {
+    throw new Error(`Expected Workers state update, got: ${JSON.stringify(updatedState.workers)}`)
+  }
   await expect(Locator('.WorkersView')).toContainText('Inspector Worker')
 
   await Command.execute('Workers.refresh', component.uid)
