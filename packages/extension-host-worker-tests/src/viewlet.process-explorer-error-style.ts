@@ -4,6 +4,7 @@ export const name = 'viewlet.process-explorer-error-style'
 
 export const test: Test = async ({ Command, expect, Locator }) => {
   await Command.execute('Developer.openProcessExplorer')
+  await expect(Locator('.ProcessExplorerTable')).toBeVisible()
   await Command.execute('ProcessExplorer.setError', {
     code: 'ERR_PROCESS_EXPLORER_TEST',
     message: 'Process explorer connection was closed',
