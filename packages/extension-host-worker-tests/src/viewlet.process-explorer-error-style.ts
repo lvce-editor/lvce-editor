@@ -3,15 +3,12 @@ import type { Test } from '@lvce-editor/test-with-playwright'
 export const name = 'viewlet.process-explorer-error-style'
 
 export const test: Test = async ({ Command, expect, Locator }) => {
-  console.info('[DEBUG-process-explorer-stage] opening')
   await Command.execute('Developer.openProcessExplorer')
-  console.info('[DEBUG-process-explorer-stage] opened')
   await expect(Locator('.ProcessExplorerTable')).toBeVisible()
   await Command.execute('ProcessExplorer.setError', {
     code: 'ERR_PROCESS_EXPLORER_TEST',
     message: 'Process explorer connection was closed',
   })
-  console.info('[DEBUG-process-explorer-stage] error set')
   const error = Locator('.ProcessExplorerError')
   const icon = Locator('.ProcessExplorerErrorIcon')
   try {
@@ -32,9 +29,7 @@ export const test: Test = async ({ Command, expect, Locator }) => {
     await expect(icon).toBeVisible()
     await expect(error).toHaveCSS('overflow-wrap', 'anywhere')
   } finally {
-    console.info('[DEBUG-process-explorer-stage] refreshing')
     await Command.execute('ProcessExplorer.refresh')
-    console.info('[DEBUG-process-explorer-stage] refreshed')
   }
   await expect(error).toBeHidden()
   await expect(icon).toBeHidden()
