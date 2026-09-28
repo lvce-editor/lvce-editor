@@ -150,6 +150,15 @@ test('loadContent exposes managed extension view state', async () => {
   expect(ViewletExtensionView.isComponentStateAvailable(state)).toBe(true)
 })
 
+test('exposes DOM for virtual DOM views but not iframe views', () => {
+  const state = { ...createState(), dom: [{ childCount: 0, type: 4 }] }
+  const iframeState = { ...state, kind: 'iframe' }
+
+  expect(ViewletExtensionView.isComponentDomAvailable(state)).toBe(true)
+  expect(ViewletExtensionView.getComponentDom(state)).toEqual(state.dom)
+  expect(ViewletExtensionView.isComponentDomAvailable(iframeState)).toBe(false)
+})
+
 test('sidebar dom uses custom view title instead of id', () => {
   const dom = GetSideBarDom.getSideBarDom({
     actionsUid: -1,

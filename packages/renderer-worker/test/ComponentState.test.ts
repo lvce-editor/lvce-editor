@@ -470,6 +470,29 @@ test('rejects missing components and components without a DOM API', async () => 
   await expect(ComponentState.getDom(1)).rejects.toThrow('Component DOM API not available: Layout')
 })
 
+test('exposes extension view DOM only for virtual DOM views and prefers the mounted DOM', async () => {
+  const cachedDom = [{ childCount: 0, type: 4 }]
+  const mountedDom = [{ childCount: 0, className: 'PullRequests', type: 4 }]
+  const state = { dom: cachedDom, kind: 'virtualDom', uid: 12 }
+  const factory = {
+    getComponentDom: (currentState: typeof state) => currentState.dom,
+    hasFunctionalRender: true,
+    isComponentDomAvailable: (currentState: typeof state) => currentState.kind === 'virtualDom',
+  }
+  ViewletStates.set(12, { factory, moduleId: 'ExtensionView', renderedState: state, state })
+  jest.mocked(RendererProcess.invoke).mockResolvedValue(mountedDom)
+
+  expect(ComponentState.getComponents()[0].domAvailable).toBe(true)
+  await expect(ComponentState.getDom(12)).resolves.toBe(mountedDom)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.getComponentDom', 12)
+
+  const iframeState = { ...state, kind: 'iframe', uid: 13 }
+  ViewletStates.set(13, { factory, moduleId: 'ExtensionView', renderedState: iframeState, state: iframeState })
+
+  expect(ComponentState.getComponents().find(({ uid }) => uid === 13)?.domAvailable).toBe(false)
+  await expect(ComponentState.getDom(13)).rejects.toThrow('Component DOM API not available: ExtensionView')
+})
+
 test('exposes Simple Browser state and renders edits through its component state hooks', async () => {
   const factory = await import('../src/parts/ViewletSimpleBrowser/ViewletSimpleBrowser.ipc.js')
   const state = { ...factory.create(10, 'simple-browser://', 0, 0, 800, 600), browserViewId: 12 }
