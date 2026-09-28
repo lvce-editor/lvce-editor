@@ -1681,6 +1681,11 @@
           ]
         },
         "getCommandIds": { "name": "Workers.getCommandIds", "parameters": [] },
+        "getComponentState": { "name": "Workers.getComponentState", "parameters": [{ "source": "state", "name": "uid" }] },
+        "setComponentState": {
+          "name": "Workers.setComponentState",
+          "parameters": [{ "source": "state", "name": "uid" }, { "source": "argument", "name": "componentState" }]
+        },
         "renderEventListeners": { "name": "Workers.renderEventListeners", "parameters": [] }
       },
       "capabilities": { "directRender": true, "events": true, "render": true, "resize": true, "rootRender": true },
