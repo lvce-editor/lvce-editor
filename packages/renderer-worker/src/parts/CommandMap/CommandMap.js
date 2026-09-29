@@ -304,6 +304,7 @@ export const commandMap = {
   'Main.reopenEditorWith': lazy('Main.reopenEditorWith'),
   'Main.save': lazy('Main.save'),
   'Markdown.getVirtualDom': lazy('Markdown.getVirtualDom'),
+  'Markdown.getVirtualDomFromMarkdown': lazy('Markdown.getVirtualDomFromMarkdown'),
   'Markdown.renderMarkdown': lazy('Markdown.renderMarkdown'),
   'MeasureTextHeight.measureTextBlockHeight': lazy('MeasureTextHeight.measureTextBlockHeight'),
   'MeasureTextHeight.measureTextHeight': lazy('MeasureTextHeight.measureTextHeight'),
