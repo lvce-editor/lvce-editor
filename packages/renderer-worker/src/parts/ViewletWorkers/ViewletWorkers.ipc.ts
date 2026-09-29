@@ -8,6 +8,7 @@ export const {
   create,
   dispose,
   getCommands,
+  getComponentState,
   getKeyBindings,
   getMenus,
   getTitle,
@@ -25,5 +26,6 @@ export const {
   renderTitle,
   resize,
   saveState,
+  setComponentState,
   serializeCommands,
 } = createWorkerViewlet({ workerId: 'workersView' })

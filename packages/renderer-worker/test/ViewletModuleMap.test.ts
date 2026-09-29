@@ -45,6 +45,7 @@ const componentStateViewlets = [
   ViewletModuleId.SourceControl,
   ViewletModuleId.StatusBar,
   ViewletModuleId.TitleBar,
+  ViewletModuleId.Workers,
 ]
 
 test.each(componentStateViewlets)('viewlet %s exposes live component state access', async (moduleId) => {

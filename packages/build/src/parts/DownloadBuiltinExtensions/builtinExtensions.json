@@ -1,5 +1,12 @@
 [
   {
+    "name": "builtin.performance-profile-view",
+    "repository": "github.com/lvce-editor/performance-profile-view",
+    "version": "0.1.1",
+    "sha256": "9660dffd1eca59dfe266e187a53a7211ebbdc701d83274306e15875ae031f167",
+    "created": "2026-09-29"
+  },
+  {
     "name": "builtin.notebook",
     "repository": "github.com/lvce-editor/notebook",
     "version": "0.1.1",
@@ -24,8 +31,8 @@
   {
     "name": "builtin.csv-viewer",
     "repository": "github.com/lvce-editor/csv-viewer",
-    "version": "2.14.1",
-    "sha256": "136b3aafa2ceca51ac6789916640f982058145fc91a954ac7224ef86a9b194fb",
+    "version": "2.15.1",
+    "sha256": "c8d97e043e305e21ae11719fa5ad80cb4d35c1ba8dbf81842f3a5bae9fab9582",
     "created": "2024-10-13"
   },
   {
@@ -53,8 +60,8 @@
   {
     "name": "builtin.pull-request-github",
     "repository": "github.com/lvce-editor/pull-request-github",
-    "version": "1.8.1",
-    "sha256": "dd88e0d283ea92581966ecd09ee1a2fefa5caaa9a3cda383076b433b82527029",
+    "version": "1.8.3",
+    "sha256": "69697995589db4e46f070c3e11bf36ebdad68b8f19ffba99e15dece7be2b1e3b",
     "created": "2026-08-19",
     "enabled": false
   },
@@ -468,8 +475,8 @@
   {
     "name": "builtin.language-basics-yaml",
     "repository": "github.com/lvce-editor/language-basics-yaml",
-    "version": "1.11.0",
-    "sha256": "246100eca30dce9e590c18bbc427f7cb48ded96ef94272efacc46650a7b5de31",
+    "version": "1.11.1",
+    "sha256": "2a64d479eda8abd8c094060afcbeb38734f5bbcb2eed0519e46fdb3f8577cca0",
     "created": "2022-06-16"
   },
   {
@@ -503,8 +510,8 @@
   {
     "name": "builtin.language-features-typescript",
     "repository": "github.com/lvce-editor/language-features-typescript",
-    "version": "5.21.0",
-    "sha256": "fd4b723255886ef33b7c28db2b700964e6fd09da77c31c274abbb484ee002252",
+    "version": "5.23.0",
+    "sha256": "3187e2256fca023c58813a1ca3f6553fb1ba2d5cd707eb495a1ad1a33047a996",
     "created": "2022-06-16"
   },
   {

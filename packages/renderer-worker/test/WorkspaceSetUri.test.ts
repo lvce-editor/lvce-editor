@@ -205,6 +205,18 @@ test('setUri preserves the uri and decodes the workspace path', async () => {
   expect(disposeFileSystemWorker).not.toHaveBeenCalled()
 })
 
+test.each([
+  ['file:///C:/Users/test/my%20folder', 'C:/Users/test/my folder'],
+  ['file:///d:/work/%23project%25', 'd:/work/#project%'],
+  ['file://server/share/my%20folder', '//server/share/my folder'],
+])('setUri converts %s to a native workspace path', async (uri, path) => {
+  await Workspace.setUri(uri)
+
+  expect(Workspace.getWorkspacePath()).toBe(path)
+  expect(Workspace.getWorkspaceUri()).toBe(uri)
+  expect(exists).toHaveBeenCalledWith(path)
+})
+
 test('setUri preserves the current workspace when a local folder does not exist', async () => {
   Workspace.state.workspacePath = '/home/test/current'
   Workspace.state.workspaceUri = 'file:///home/test/current'

@@ -463,3 +463,27 @@
 .MaskIconSortPrecedence {
   mask-image: url(/icons/sort-precedence.svg);
 }
+
+.MaskIconSymbolObject {
+  mask-image: url(/icons/json.svg);
+}
+
+.MaskIconSymbolArray {
+  mask-image: url(/icons/symbol-array.svg);
+}
+
+.MaskIconSymbolString {
+  mask-image: url(/icons/symbol-string.svg);
+}
+
+.MaskIconSymbolNumber {
+  mask-image: url(/icons/symbol-numeric.svg);
+}
+
+.MaskIconSymbolBoolean {
+  mask-image: url(/icons/symbol-boolean.svg);
+}
+
+.MaskIconSymbolNull {
+  mask-image: url(/icons/circle-slash.svg);
+}
