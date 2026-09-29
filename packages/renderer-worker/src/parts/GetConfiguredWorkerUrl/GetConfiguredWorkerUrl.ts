@@ -1,25 +1,31 @@
 import * as ConfigState from '../ConfigState/ConfigState.js'
+import * as ComponentWorkerNames from '../ComponentWorkerNames/ComponentWorkerNames.js'
 import * as IsProduction from '../IsProduction/IsProduction.js'
 import * as Preferences from '../Preferences/Preferences.js'
+import * as RuntimeWorkerPaths from '../RuntimeWorkerPaths/RuntimeWorkerPaths.ts'
 
-const getConfigKey = (preferenceKey: string) => {
-  const key = preferenceKey.split('.').at(-1) || ''
-  return key.replace(/Path$/, 'Url')
-}
-
-export const getConfiguredWorkerUrl = (preferenceKey: string, fallback: string) => {
-  const configuredUrlFromConfig = ConfigState.get(getConfigKey(preferenceKey))
-  let configuredWorkerUrl = configuredUrlFromConfig
-  if (!configuredWorkerUrl) {
-    const configuredUrlFromPreferences = Preferences.get(preferenceKey) || ''
-    if (configuredUrlFromPreferences) {
-      const configuredUrlWithSlash = configuredUrlFromPreferences.startsWith('/') ? configuredUrlFromPreferences : '/' + configuredUrlFromPreferences
-      configuredWorkerUrl = '/remote' + configuredUrlWithSlash
-    }
+const resolveConfiguredWorkerUrl = (preferenceKey: string, fallback: string) => {
+  const runtimeWorkerUrl = RuntimeWorkerPaths.get(preferenceKey)
+  if (runtimeWorkerUrl) {
+    return runtimeWorkerUrl
+  }
+  const configKey = (preferenceKey.split('.').at(-1) || '').replace(/Path$/, 'Url')
+  const configUrl = ConfigState.get(configKey)
+  if (configUrl) return configUrl
+  let configuredWorkerUrl = Preferences.get(preferenceKey) || ''
+  if (configuredWorkerUrl) {
+    const configuredUrlWithSlash = configuredWorkerUrl.startsWith('/') ? configuredWorkerUrl : '/' + configuredWorkerUrl
+    configuredWorkerUrl = '/remote' + configuredUrlWithSlash
   }
   configuredWorkerUrl = configuredWorkerUrl || fallback
   if (IsProduction.isProduction) {
     configuredWorkerUrl = fallback
   }
   return configuredWorkerUrl
+}
+
+export const getConfiguredWorkerUrl = (preferenceKey: string, fallback: string): string => {
+  const url = resolveConfiguredWorkerUrl(preferenceKey, fallback)
+  ComponentWorkerNames.registerUrl(preferenceKey, url)
+  return url
 }

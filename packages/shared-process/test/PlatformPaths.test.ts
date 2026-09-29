@@ -22,6 +22,10 @@ test('configDir', () => {
   expect(PlatformPaths.configDir).toEqual(expect.any(String))
 })
 
+test('getConfigUri', () => {
+  expect(PlatformPaths.getConfigUri()).toBe(pathToFileURL(PlatformPaths.configDir).toString())
+})
+
 test('cacheDir', () => {
   expect(PlatformPaths.cacheDir).toEqual(expect.any(String))
 })
@@ -46,10 +50,6 @@ test('getMarketplaceUrl', () => {
   expect(PlatformPaths.getMarketplaceUrl()).toEqual(expect.any(String))
 })
 
-test('getPathSeparator', () => {
-  expect(PlatformPaths.getPathSeparator()).toEqual(expect.any(String))
-})
-
 test('getLogsDir', () => {
   expect(PlatformPaths.getLogsDir()).toEqual(expect.any(String))
 })
@@ -60,6 +60,10 @@ test('getUserSettingsPath', () => {
 
 test('getRecentlyOpenedPath', () => {
   expect(PlatformPaths.getRecentlyOpenedPath()).toEqual(expect.any(String))
+})
+
+test('getConfigJsonPath - dev fallback', () => {
+  expect(PlatformPaths.getConfigJsonPath()).toBe(pathToFileURL(join(Root.root, 'static', 'config.json')).toString())
 })
 
 test('getTestPath - uses absolute TEST_PATH', () => {

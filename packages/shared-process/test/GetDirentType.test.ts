@@ -4,210 +4,210 @@ import * as GetDirentType from '../src/parts/GetDirentType/GetDirentType.js'
 
 test('getDirentType - file', () => {
   const dirent = {
-    path: '',
-    isFile() {
+    isBlockDevice(): any {
+      return false
+    },
+    isCharacterDevice(): any {
+      return false
+    },
+    isDirectory(): any {
+      return false
+    },
+    isFIFO(): any {
+      return false
+    },
+    isFile(): any {
       return true
     },
-    isDirectory() {
+    isSocket(): any {
       return false
     },
-    isSymbolicLink() {
-      return false
-    },
-    isBlockDevice() {
-      return false
-    },
-    isSocket() {
-      return false
-    },
-    isCharacterDevice() {
-      return false
-    },
-    isFIFO() {
+    isSymbolicLink(): any {
       return false
     },
     name: '',
     parentPath: '',
+    path: '',
   }
   expect(GetDirentType.getDirentType(dirent)).toBe(DirentType.File)
 })
 
 test('getDirentType - directory', () => {
   const dirent = {
-    path: '',
-    isFile() {
+    isBlockDevice(): any {
       return false
     },
-    isDirectory() {
+    isCharacterDevice(): any {
+      return false
+    },
+    isDirectory(): any {
       return true
     },
-    isSymbolicLink() {
+    isFIFO(): any {
       return false
     },
-    isBlockDevice() {
+    isFile(): any {
       return false
     },
-    isSocket() {
+    isSocket(): any {
       return false
     },
-    isCharacterDevice() {
-      return false
-    },
-    isFIFO() {
+    isSymbolicLink(): any {
       return false
     },
     name: '',
     parentPath: '',
+    path: '',
   }
   expect(GetDirentType.getDirentType(dirent)).toBe(DirentType.Directory)
 })
 
 test('getDirentType - symlink', () => {
   const dirent = {
-    path: '',
-    isFile() {
+    isBlockDevice(): any {
       return false
     },
-    isDirectory() {
+    isCharacterDevice(): any {
       return false
     },
-    isSymbolicLink() {
+    isDirectory(): any {
+      return false
+    },
+    isFIFO(): any {
+      return false
+    },
+    isFile(): any {
+      return false
+    },
+    isSocket(): any {
+      return false
+    },
+    isSymbolicLink(): any {
       return true
-    },
-    isBlockDevice() {
-      return false
-    },
-    isSocket() {
-      return false
-    },
-    isCharacterDevice() {
-      return false
-    },
-    isFIFO() {
-      return false
     },
     name: '',
     parentPath: '',
+    path: '',
   }
   expect(GetDirentType.getDirentType(dirent)).toBe(DirentType.Symlink)
 })
 
 test('getDirentType - socket', () => {
   const dirent = {
-    path: '',
-    isFile() {
+    isBlockDevice(): any {
       return false
     },
-    isDirectory() {
+    isCharacterDevice(): any {
       return false
     },
-    isSymbolicLink() {
+    isDirectory(): any {
       return false
     },
-    isBlockDevice() {
+    isFIFO(): any {
       return false
     },
-    isSocket() {
+    isFile(): any {
+      return false
+    },
+    isSocket(): any {
       return true
     },
-    isCharacterDevice() {
-      return false
-    },
-    isFIFO() {
+    isSymbolicLink(): any {
       return false
     },
     name: '',
     parentPath: '',
+    path: '',
   }
   expect(GetDirentType.getDirentType(dirent)).toBe(DirentType.Socket)
 })
 
 test('getDirentType - block device', () => {
   const dirent = {
-    path: '',
-    isFile() {
-      return false
-    },
-    isDirectory() {
-      return false
-    },
-    isSymbolicLink() {
-      return false
-    },
-    isSocket() {
-      return false
-    },
-    isBlockDevice() {
+    isBlockDevice(): any {
       return true
     },
-    isCharacterDevice() {
+    isCharacterDevice(): any {
       return false
     },
-    isFIFO() {
+    isDirectory(): any {
+      return false
+    },
+    isFIFO(): any {
+      return false
+    },
+    isFile(): any {
+      return false
+    },
+    isSocket(): any {
+      return false
+    },
+    isSymbolicLink(): any {
       return false
     },
     name: '',
     parentPath: '',
+    path: '',
   }
   expect(GetDirentType.getDirentType(dirent)).toBe(DirentType.BlockDevice)
 })
 
 test('getDirentType - character device', () => {
   const dirent = {
-    path: '',
-    isFile() {
+    isBlockDevice(): any {
       return false
     },
-    isDirectory() {
-      return false
-    },
-    isSymbolicLink() {
-      return false
-    },
-    isSocket() {
-      return false
-    },
-    isBlockDevice() {
-      return false
-    },
-    isCharacterDevice() {
+    isCharacterDevice(): any {
       return true
     },
-    isFIFO() {
+    isDirectory(): any {
+      return false
+    },
+    isFIFO(): any {
+      return false
+    },
+    isFile(): any {
+      return false
+    },
+    isSocket(): any {
+      return false
+    },
+    isSymbolicLink(): any {
       return false
     },
     name: '',
     parentPath: '',
+    path: '',
   }
   expect(GetDirentType.getDirentType(dirent)).toBe(DirentType.CharacterDevice)
 })
 
 test('getDirentType - unknown', () => {
   const dirent = {
-    path: '',
-    isFile() {
+    isBlockDevice(): any {
       return false
     },
-    isDirectory() {
+    isCharacterDevice(): any {
       return false
     },
-    isSymbolicLink() {
+    isDirectory(): any {
       return false
     },
-    isSocket() {
+    isFIFO(): any {
       return false
     },
-    isBlockDevice() {
+    isFile(): any {
       return false
     },
-    isCharacterDevice() {
+    isSocket(): any {
       return false
     },
-    isFIFO() {
+    isSymbolicLink(): any {
       return false
     },
     name: '',
     parentPath: '',
+    path: '',
   }
   expect(GetDirentType.getDirentType(dirent)).toBe(DirentType.Unknown)
 })

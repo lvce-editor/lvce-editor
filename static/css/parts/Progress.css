@@ -1,5 +1,29 @@
+@keyframes progress {
+  from {
+    transform: translateX(0%) scaleX(1);
+  }
+
+  50% {
+    transform: translateX(2500%) scaleX(3);
+  }
+
+  to {
+    transform: translateX(4900%) scaleX(1);
+  }
+}
+
 .ProgressContainer {
   width: 100%;
   height: 2px;
   contain: strict;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.Progress {
+  width: 2%;
+  height: 100%;
+  animation: progress 4s infinite linear;
+  background-color: var(--ProgressBarBackground, #0e70c0);
+  transform-origin: left;
 }

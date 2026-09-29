@@ -1,0 +1,90 @@
+.SimpleBrowserHistory {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.SimpleBrowserHistoryContent {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 32px;
+  box-sizing: border-box;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+  width: 100%;
+}
+
+.SimpleBrowserHistoryHeading {
+  margin: 0 0 24px;
+  font-size: 26px;
+  font-weight: 400;
+  user-select: text;
+}
+
+.SimpleBrowserHistoryControls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.SimpleBrowserHistorySearchInput {
+  min-width: 160px;
+}
+
+.SimpleBrowserHistoryList {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.SimpleBrowserHistoryListViewport {
+  flex: 1;
+  min-height: 0;
+  margin-top: 24px;
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+
+.SimpleBrowserHistoryEntry {
+  box-sizing: border-box;
+  display: grid;
+  flex: 0 0 56px;
+  grid-template-columns: minmax(160px, auto) minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 16px;
+  height: 56px;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--PanelBorder, rgba(128, 128, 128, 0.35));
+}
+
+.SimpleBrowserHistoryDate {
+  color: var(--DescriptionForeground, currentColor);
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.SimpleBrowserHistoryUrl {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.SimpleBrowserHistoryEmpty {
+  margin: 24px 0 0;
+  color: var(--DescriptionForeground, currentColor);
+}
+
+@media (max-width: 600px) {
+  .SimpleBrowserHistoryEntry {
+    grid-template-columns: minmax(72px, 30%) minmax(0, 1fr) auto;
+    gap: 8px;
+    padding: 6px;
+    font-size: 12px;
+  }
+}

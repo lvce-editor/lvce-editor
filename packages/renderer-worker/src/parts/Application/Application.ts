@@ -1,0 +1,300 @@
+import * as ApplicationFileSystem from '../ApplicationFileSystem/ApplicationFileSystem.ts'
+import * as ApplicationRegistry from '../ApplicationRegistry/ApplicationRegistry.ts'
+import * as Command from '../Command/Command.js'
+import * as ExtensionHostCommands from '../ExtensionHost/ExtensionHostCommands.js'
+import * as ExtensionHostQuickPick from '../ExtensionHost/ExtensionHostQuickPick.js'
+import * as ExtensionManagementWorker from '../ExtensionManagementWorker/ExtensionManagementWorker.js'
+import * as GetActiveEditor from '../GetActiveEditor/GetActiveEditor.js'
+import * as Id from '../Id/Id.js'
+import * as Platform from '../Platform/Platform.js'
+import * as QuickPick from '../QuickPick/QuickPick.js'
+import * as RendererProcess from '../RendererProcess/RendererProcess.js'
+import * as Viewlet from '../Viewlet/Viewlet.js'
+import * as ViewletManager from '../ViewletManager/ViewletManager.js'
+import * as ViewletModule from '../ViewletModule/ViewletModule.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+import * as ViewletStates from '../ViewletStates/ViewletStates.js'
+
+export interface ApplicationOptions {
+  readonly height: number
+  readonly href: string
+  readonly id: string
+  readonly rootId: string
+  readonly width: number
+  readonly workspacePath: string
+  readonly workspaceUri: string
+  readonly extensions?: readonly any[]
+  readonly files?: Readonly<Record<string, string>>
+  readonly textFileExtensions?: readonly string[]
+}
+
+const disposals = new Map<string, Promise<void>>()
+const hostReady = Promise.withResolvers<void>()
+export const markHostReady = (): void => hostReady.resolve()
+export const waitForHost = (): Promise<void> => hostReady.promise
+
+const initialize = async (options: ApplicationOptions, layoutUid: number): Promise<number> => {
+  await ExtensionManagementWorker.invoke('Extensions.createApplication', options.id, Platform.getPlatform(), options.extensions || [])
+  for (const [uri, content] of Object.entries(options.files || {})) {
+    await ApplicationFileSystem.execute(options.id, 'writeFile', uri, content)
+  }
+  const commands = await ViewletManager.load(
+    {
+      applicationId: options.id,
+      getModule: ViewletModule.load,
+      id: ViewletModuleId.Layout,
+      type: 0,
+      uid: layoutUid,
+      uri: '',
+      show: false,
+      focus: false,
+    },
+    false,
+    false,
+    {
+      Layout: { bounds: { windowWidth: options.width, windowHeight: options.height } },
+      restore: false,
+    },
+  )
+  const initialCommands = commands.filter((command) => command[0] !== 'Viewlet.setDom2')
+  initialCommands.push(['Viewlet.appendToRoot', layoutUid, options.rootId])
+  initialCommands.push(['Viewlet.setBounds', layoutUid, 0, 0, options.width, options.height])
+  await RendererProcess.invoke('Viewlet.executeCommands', initialCommands)
+  for (const part of ['Main', 'SideBar', 'SecondarySideBar', 'Panel', 'ActivityBar', 'StatusBar', 'TitleBar']) {
+    await ViewletManager.executeForApplication(options.id, `Layout.load${part}IfVisible`)
+  }
+  return layoutUid
+}
+
+// Internal host entry point; normal workbench startup still owns its existing layout.
+export const create = async (options: ApplicationOptions): Promise<number> => {
+  if (!options.rootId || !Number.isFinite(options.width) || !Number.isFinite(options.height) || options.width <= 0 || options.height <= 0) {
+    throw new Error('Invalid application root or dimensions')
+  }
+  const layoutUid = Id.create()
+  ApplicationRegistry.create({
+    id: options.id,
+    layoutUid,
+    href: options.href,
+    workspacePath: options.workspacePath,
+    workspaceUri: options.workspaceUri,
+    textFileExtensions: options.textFileExtensions,
+  })
+  try {
+    return await ApplicationRegistry.track(options.id, () => initialize(options, layoutUid))
+  } catch (error) {
+    try {
+      await dispose(options.id)
+    } catch (cleanupError) {
+      throw new AggregateError(
+        [error, cleanupError],
+        `Failed to create application ${options.id}: ${String(error)}; cleanup: ${String(cleanupError)}`,
+      )
+    }
+    throw error
+  }
+}
+
+export const execute = (applicationId: string, command: string, ...args: readonly any[]): Promise<any> => {
+  const application = ApplicationRegistry.assertOpen(applicationId)
+  if (command === 'Main.openInput' && application.textFileExtensions?.length) {
+    const [options] = args
+    const uri = options.editorInput?.uri
+    if (typeof uri === 'string' && application.textFileExtensions.some((extension) => uri.endsWith(extension))) {
+      return ApplicationRegistry.track(applicationId, () =>
+        ViewletManager.executeForApplication(applicationId, command, {
+          ...options,
+          editorInput: { ...options.editorInput, type: 'editor', forceText: true },
+        }),
+      )
+    }
+  }
+  if (command === 'Main.openUri' && application.textFileExtensions?.length) {
+    const [input, focus = true] = args
+    const uri = typeof input === 'string' ? input : input.uri
+    if (application.textFileExtensions.some((extension) => uri.endsWith(extension))) {
+      return ApplicationRegistry.track(applicationId, () =>
+        ViewletManager.executeForApplication(applicationId, 'Main.openInput', {
+          editorInput: { type: 'editor', uri, forceText: true },
+          focus: typeof input === 'string' ? focus : input.focus,
+          preview: typeof input === 'string' ? false : input.preview,
+          reuseExisting: typeof input === 'string' ? true : input.reuseExisting,
+        }),
+      )
+    }
+  }
+  if (command.startsWith('FileSystem.')) {
+    return ApplicationRegistry.track(applicationId, async () => {
+      const method = command.slice('FileSystem.'.length)
+      const result = await ApplicationFileSystem.execute(applicationId, method, ...args)
+      if (
+        method === 'writeFile' ||
+        method === 'remove' ||
+        method === 'rename' ||
+        method === 'mkdir' ||
+        method === 'createFile' ||
+        method === 'copy'
+      ) {
+        const changes =
+          method === 'remove'
+            ? { deleted: [args[0]] }
+            : method === 'rename'
+              ? { renamed: [[args[0], args[1]]] }
+              : { changed: [method === 'copy' ? args[1] : args[0]] }
+        if (method !== 'writeFile' || args[3] !== false) {
+          await ViewletManager.executeForApplication(applicationId, 'Layout.handleWorkspaceRefresh', changes)
+        } else {
+          await ExtensionManagementWorker.invoke('Extensions.invokeForApplication', applicationId, 'Extensions.handleFileChanges', changes)
+        }
+        await RendererProcess.invoke('ApplicationHost.fileSaved', applicationId, method === 'copy' ? args[1] : args[0])
+      }
+      return result
+    })
+  }
+  switch (command) {
+    case 'Notification.create':
+      return ApplicationRegistry.track(applicationId, () => RendererProcess.invoke('Notification.create', args[0], args[1], application.layoutUid))
+    case 'Dialog.show':
+      return ApplicationRegistry.track(applicationId, () => Viewlet.openWidgetForApplication(applicationId, ViewletModuleId.Dialog, args[0]))
+    case 'Dialog.showWarning':
+      return ApplicationRegistry.track(applicationId, () =>
+        Viewlet.openWidgetForApplication(applicationId, ViewletModuleId.Dialog, { ...args[0], type: 'warning' }),
+      )
+    case 'Viewlet.openWidget':
+      return ApplicationRegistry.track(applicationId, () => Viewlet.openWidgetForApplication(applicationId, args[0], ...args.slice(1)))
+    case 'QuickPick.showCustom':
+      return ApplicationRegistry.track(applicationId, () => QuickPick.showCustom(args[0], args[1], applicationId))
+    case 'ExtensionHostQuickPick.showQuickPick':
+      return ApplicationRegistry.track(applicationId, () => ExtensionHostQuickPick.showQuickPick(args[0], applicationId))
+    case 'ExtensionHostQuickPick.showQuickInput':
+      return ApplicationRegistry.track(applicationId, () => ExtensionHostQuickPick.showQuickInput(args[0], applicationId))
+    case 'ExtensionHost.executeCommand':
+      return ApplicationRegistry.track(applicationId, () =>
+        ExtensionManagementWorker.invoke('Extensions.invokeForApplication', applicationId, 'Extensions.executeCommand', ...args),
+      )
+    case 'ExtensionHost.getCommands':
+      return ApplicationRegistry.track(applicationId, () => ExtensionHostCommands.getCommands(args[0], args[1], applicationId))
+    case 'ExtensionHostSourceControl.getEnabledProviderIds':
+    case 'ExtensionHostSourceControl.getFileDecorations':
+      return ApplicationRegistry.track(applicationId, () =>
+        ExtensionManagementWorker.invoke('Extensions.invokeForApplication', applicationId, command, ...args),
+      )
+    case 'Extensions.reload':
+      return ApplicationRegistry.track(applicationId, async () => {
+        await ExtensionManagementWorker.invoke('Extensions.reloadApplicationExtension', applicationId, ...args)
+        for (const uid of ApplicationRegistry.getUids(applicationId)) {
+          const instance = ViewletStates.getByUid(uid)
+          if (instance?.moduleId === ViewletModuleId.EditorText || instance?.moduleId === ViewletModuleId.ExtensionView) {
+            await Viewlet.executeViewletCommand(uid, 'loadContent', undefined, { preserveFocus: true })
+          }
+        }
+        await ViewletManager.executeForApplication(applicationId, 'Layout.handleWorkspaceRefresh')
+      })
+    case 'GetActiveEditor.getTextDocument':
+      return ApplicationRegistry.track(applicationId, () => GetActiveEditor.getTextDocument(applicationId))
+    case 'PortProvider.forwardPort':
+      return ApplicationRegistry.track(applicationId, async () => {
+        const { forwardPort } = await import('../PortProvider/PortProvider.ts')
+        return forwardPort(application.workspaceUri, args[0], applicationId)
+      })
+    case 'PortProvider.getPorts':
+      return ApplicationRegistry.track(applicationId, async () => {
+        const { getPorts } = await import('../PortProvider/PortProvider.ts')
+        return getPorts(application.workspaceUri, applicationId)
+      })
+    case 'PortProvider.stopForwardPort':
+      return ApplicationRegistry.track(applicationId, async () => {
+        const { stopForwardPort } = await import('../PortProvider/PortProvider.ts')
+        await stopForwardPort(application.workspaceUri, args[0], applicationId)
+      })
+    case 'Workspace.getUri':
+    case 'Workspace.getWorkspaceUri':
+      return Promise.resolve(application.workspaceUri)
+    case 'Workspace.getPath':
+    case 'Workspace.getWorkspacePath':
+      return Promise.resolve(application.workspacePath)
+    case 'Layout.getHref':
+      return Promise.resolve(application.href)
+    case 'Preferences.get':
+    case 'Preferences.update':
+      return Promise.resolve(Command.execute(command, ...args))
+    default:
+      return ApplicationRegistry.track(applicationId, () => ViewletManager.executeForApplication(applicationId, command, ...args))
+  }
+}
+
+export const executeForView = (uid: number, command: string, ...args: readonly any[]): Promise<any> => {
+  const applicationId = ApplicationRegistry.getOwner(uid)
+  if (applicationId === undefined) {
+    // Ports requests its initial content before the view is added to ViewletStates.
+    if (command === 'PortProvider.getPorts') {
+      return import('../PortProvider/PortProvider.ts').then(({ getPorts }) => getPorts(args[0]))
+    }
+    if (!ViewletStates.getByUid(uid)) {
+      return Promise.reject(new Error(`Component not found: ${uid}`))
+    }
+    return Promise.resolve(Command.execute(command, ...args))
+  }
+  return execute(applicationId, command, ...args)
+}
+
+export const resize = (applicationId: string, width: number, height: number): Promise<void> => {
+  if (!Number.isFinite(width) || !Number.isFinite(height) || width <= 0 || height <= 0) {
+    throw new Error('Invalid application dimensions')
+  }
+  return ApplicationRegistry.track(applicationId, async () => {
+    const { layoutUid } = ApplicationRegistry.get(applicationId)
+    await execute(applicationId, 'Layout.handleResize', width, height)
+    await RendererProcess.invoke('Viewlet.setBounds', layoutUid, 0, 0, width, height)
+  })
+}
+
+const disposeApplication = async (applicationId: string): Promise<void> => {
+  ApplicationRegistry.close(applicationId)
+  await ApplicationRegistry.waitForOperations(applicationId)
+  const errors: unknown[] = []
+  for (const uid of [...ApplicationRegistry.getUids(applicationId)].reverse()) {
+    try {
+      if (ViewletStates.getByUid(uid)) {
+        await Viewlet.dispose(uid)
+      } else {
+        await RendererProcess.invoke('Viewlet.dispose', uid)
+      }
+    } catch (error) {
+      errors.push(error)
+      ViewletStates.remove(uid)
+      try {
+        await RendererProcess.invoke('Viewlet.dispose', uid)
+      } catch (rendererError) {
+        errors.push(rendererError)
+      }
+    }
+  }
+  for (const cleanup of [ApplicationRegistry.remove, ApplicationFileSystem.dispose]) {
+    try {
+      await cleanup(applicationId)
+    } catch (error) {
+      errors.push(error)
+    }
+  }
+  try {
+    await ExtensionManagementWorker.invoke('Extensions.disposeApplication', applicationId)
+  } catch (error) {
+    errors.push(error)
+  }
+  if (errors.length > 0) {
+    throw new AggregateError(errors, `Failed to dispose application ${applicationId}`)
+  }
+}
+
+export const dispose = (applicationId: string): Promise<void> => {
+  const existing = disposals.get(applicationId)
+  if (existing) {
+    return existing
+  }
+  const operation = disposeApplication(applicationId)
+  disposals.set(applicationId, operation)
+  const result = operation.finally(() => disposals.delete(applicationId))
+  disposals.set(applicationId, result)
+  return result
+}

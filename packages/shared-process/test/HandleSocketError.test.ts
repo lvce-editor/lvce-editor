@@ -14,7 +14,7 @@ afterEach(() => {
 
 class NodeError extends Error {
   code: any
-  constructor(message, code) {
+  constructor(message: any, code: any) {
     super(message)
     this.code = code
   }

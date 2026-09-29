@@ -1,12 +1,23 @@
 import { beforeEach, expect, test } from '@jest/globals'
 import * as ConfigState from '../src/parts/ConfigState/ConfigState.js'
-import * as GetConfiguredWorkerUrl from '../src/parts/GetConfiguredWorkerUrl/GetConfiguredWorkerUrl.ts'
 import * as PreferencesState from '../src/parts/PreferencesState/PreferencesState.js'
+import * as GetConfiguredWorkerUrl from '../src/parts/GetConfiguredWorkerUrl/GetConfiguredWorkerUrl.ts'
+import { getConfiguredWorkerUrl } from '../src/parts/GetConfiguredWorkerUrl/GetConfiguredWorkerUrl.ts'
+import * as RuntimeWorkerPaths from '../src/parts/RuntimeWorkerPaths/RuntimeWorkerPaths.ts'
 
 beforeEach(() => {
+  RuntimeWorkerPaths.initialize()
   ConfigState.reset()
   PreferencesState.set('develop.testWorkerPath', '')
   PreferencesState.set('develop.someWorkerPath', '')
+})
+
+test('prefers a runtime worker url', () => {
+  RuntimeWorkerPaths.initialize({
+    'develop.mainAreaWorkerPath': '/remote/test/main-area-worker.js',
+  })
+
+  expect(getConfiguredWorkerUrl('develop.mainAreaWorkerPath', '/fallback.js')).toBe('/remote/test/main-area-worker.js')
 })
 
 test('returns config worker url without adding remote prefix', () => {

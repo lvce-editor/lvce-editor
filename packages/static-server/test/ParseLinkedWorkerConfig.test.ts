@@ -1,5 +1,5 @@
 import { expect, test } from '@jest/globals'
-import * as ParseLinkedWorkerConfig from '../src/parts/ParseLinkedWorkerConfig/ParseLinkedWorkerConfig.js'
+import * as ParseLinkedWorkerConfig from '../src/parts/ParseLinkedWorkerConfig/ParseLinkedWorkerConfig.ts'
 
 test('parses linked editor worker', () => {
   const config = ParseLinkedWorkerConfig.parseLinkedWorkerConfig(['--link', './packages/editor-worker/dist/editorWorkerMain.js'], '/test')

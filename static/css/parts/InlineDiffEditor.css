@@ -8,20 +8,29 @@
   display: flex;
   color: rgb(188, 190, 190);
   flex: 1;
+  flex-direction: column;
 }
 
 .InlineDiffEditorContent {
   contain: strict;
   flex: 1;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  height: 100%;
+  overflow: hidden;
   position: relative !important;
 }
 
-.Deletion {
-  background: var(--DeletionBackground);
+.InlineDiffEditor .EditorRow,
+.InlineDiffEditor .Insertion,
+.InlineDiffEditor .Deletion {
+  padding: 0 8px;
 }
 
-.Insertion {
-  background: var(--InsertionBackground);
+.InlineDiffEditor .Deletion {
+  background: rgba(248, 81, 73, 0.18);
+}
+
+.InlineDiffEditor .Insertion {
+  background: rgba(46, 160, 67, 0.18);
 }

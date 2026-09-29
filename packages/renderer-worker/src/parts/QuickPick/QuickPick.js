@@ -1,5 +1,6 @@
 import * as Command from '../Command/Command.js'
 import { executeCallback2, registerCallback } from '../QuickPickEntriesCustom/QuickPickEntriesCustom.js'
+import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
 export const show = async (...args) => {
@@ -16,6 +17,10 @@ export const showRecent = () => {
   return show('recent')
 }
 
+export const openGoToLine = () => {
+  return show('go-to-line')
+}
+
 export const showEveryThing = () => {
   return show('everything')
 }
@@ -28,9 +33,13 @@ export const showCommands = () => {
   return show('commands')
 }
 
-export const showCustom = async (picks, options) => {
+export const showCustom = async (picks, options, applicationId) => {
   const { callbackId, promise } = registerCallback()
-  await show('custom', picks, callbackId, options)
+  if (applicationId === undefined) {
+    await show('custom', picks, callbackId, options)
+  } else {
+    await Viewlet.openWidgetForApplication(applicationId, ViewletModuleId.QuickPick, 'custom', picks, callbackId, options)
+  }
   if (options?.waitUntil === 'visible') {
     return
   }

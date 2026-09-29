@@ -54,8 +54,8 @@ test('handleCliArgs - with linked extension', async () => {
     return [
       {
         id: 'extension-1',
-        version: '0.0.1',
         symlink: '../../../Documents/extension-1',
+        version: '0.0.1',
       },
     ]
   })

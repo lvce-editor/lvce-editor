@@ -1,0 +1,55 @@
+{
+  "$schema": "https://unpkg.com/knip@6/schema.json",
+  "exclude": ["exports", "types"],
+  "workspaces": {
+    ".": {
+      "entry": ["scripts/**/*.js"],
+      "project": ["eslint.config.js", "scripts/**/*.js"],
+      "ignoreDependencies": ["prettier"],
+      "ignoreUnresolved": ["../build/src/parts/Format/Format.js"]
+    },
+    "packages/build": {
+      "entry": ["bin/build.ts", "test/**/*.test.js", "test/**/*.test.ts"],
+      "project": ["bin/**/*.ts", "src/**/*.js", "src/**/*.ts", "test/**/*.js", "test/**/*.ts"],
+      "ignoreBinaries": ["microbundle"]
+    },
+    "packages/extension-host-worker-tests": {
+      "entry": ["src/**/*.js", "scripts/wait-for-server-ready.mjs", "test/**/*.test.mjs"],
+      "project": ["src/**/*.js", "scripts/**/*.mjs", "test/**/*.mjs", "typings/**/*.d.ts"],
+      "ignoreDependencies": ["data", "electron", "@lvce-editor/test-with-playwright"],
+      "ignoreBinaries": ["xdotool"],
+      "ignoreUnresolved": ["./add.js", "./not-found.js", "./parts/math.js"]
+    },
+    "packages/main-process": {
+      "entry": ["src/mainProcessMain.js", "test/**/*.test.js"],
+      "project": ["src/**/*.js", "test/**/*.js"],
+      "ignoreDependencies": ["electron", "@electron/get", "@electron-internal/extract-zip"],
+      "ignoreBinaries": ["dbus-daemon"]
+    },
+    "packages/renderer-worker": {
+      "entry": ["src/rendererWorkerMain.ts", "test/**/*.test.ts"],
+      "project": ["src/**/*.ts", "test/**/*.ts"],
+      "ignoreBinaries": ["microbundle"],
+      "ignoreDependencies": ["@lvce-editor/*", "@vscode/codicons"]
+    },
+    "packages/server": {
+      "entry": ["index.js", "bin/server.js"],
+      "project": ["index.js", "bin/**/*.js", "src/**/*.js"]
+    },
+    "packages/shared-process": {
+      "entry": [
+        "bin/sharedProcess.ts",
+        "src/sharedProcessMain.ts",
+        "src/parts/GetHeadersDefault/GetHeadersDefault.ts",
+        "src/parts/GetHeadersOtherWorker/GetHeadersOtherWorker.ts",
+        "test/**/*.test.ts"
+      ],
+      "project": ["bin/**/*.ts", "src/**/*.ts", "test/**/*.ts"],
+      "ignoreDependencies": ["@lvce-editor/auth-process", "@lvce-editor/static-server"]
+    },
+    "packages/static-server": {
+      "entry": ["src/static-server.ts", "src/parts/ContentSecurityPolicyUpdateWorker/ContentSecurityPolicyUpdateWorker.ts", "test/**/*.test.ts"],
+      "project": ["src/**/*.ts", "test/**/*.ts"]
+    }
+  }
+}

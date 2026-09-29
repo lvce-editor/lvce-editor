@@ -14,6 +14,11 @@ import { VError } from '../VError/VError.js'
 
 const pathSeparator = '/'
 
+export const exists = async (uri) => {
+  const handle = await PersistentFileHandle.getHandle(uri)
+  return Boolean(handle)
+}
+
 const getDirent = (handle) => {
   const { name, kind } = handle
   const type = FileHandleTypeMap.getDirentType(kind)
@@ -121,6 +126,20 @@ export const writeFile = async (uri, content) => {
   }
 }
 
+export const writeBlob = async (uri, blob) => {
+  try {
+    const handle = await GetFileHandle.getFileHandle(uri, {
+      create: true,
+    })
+    if (!handle) {
+      throw new VError(`File not found ${uri}`)
+    }
+    await FileSystemFileHandle.write(handle, blob)
+  } catch (error) {
+    throw new VError(error, 'Failed to save file')
+  }
+}
+
 export const remove = async (uri) => {
   try {
     const dirname = Path.dirname(pathSeparator, uri)
@@ -178,8 +197,8 @@ export const mkdir = async (uri) => {
   }
 }
 
-export const getPathSeparator = () => {
-  return pathSeparator
+export const isReadonly = () => {
+  return false
 }
 
 export const getBlobSrc = async (uri) => {

@@ -24,7 +24,11 @@ export const getMenuEntries = async (id, ...args) => {
 
 export const getMenuEntries2 = async (uid, menuId, ...args) => {
   try {
-    const module = await getModule(menuId)
+    const instance = ViewletStates.getByUid(uid)
+    const module = MenuEntriesRegistryState.getForModuleId(menuId, instance?.moduleId)
+    if (!module) {
+      throw new Error(`menu entries for ${menuId} not found`)
+    }
     // @ts-ignore
     return module.getMenuEntries(uid, ...args)
   } catch (error) {

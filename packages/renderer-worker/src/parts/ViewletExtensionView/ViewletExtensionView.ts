@@ -1,37 +1,260 @@
+import { assetDir } from '../AssetDir/AssetDir.js'
+import * as ActionType from '../ActionType/ActionType.js'
+import * as Command from '../Command/Command.js'
+import * as ExtensionManagementWorker from '../ExtensionManagementWorker/ExtensionManagementWorker.js'
+import * as Focus from '../Focus/Focus.js'
+import * as GetActionsVirtualDom from '../GetActionsVirtualDom/GetActionsVirtualDom.js'
 import * as GetExtensionViews from '../GetExtensionViews/GetExtensionViews.ts'
+import type { ExtensionView } from '../GetExtensionViews/GetExtensionViews.ts'
+import { getPlatform } from '../Platform/Platform.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+import * as WhenExpression from '../WhenExpression/WhenExpression.js'
 import type { ViewletExtensionViewState } from './ViewletExtensionViewState.ts'
 
-export const create = (id: number, uri: string, x: number, y: number, width: number, height: number): ViewletExtensionViewState => {
+// Keep extension state changes, DOM patches, and focus updates in event order.
+export const serializeCommands = true
+
+interface ViewRenderResult {
+  readonly css?: string
+  readonly dom?: readonly unknown[]
+  readonly focusSelector?: string
+  readonly patches?: readonly unknown[]
+  readonly scrollPosition?: readonly [selector: string, scrollTop: number]
+  readonly title?: string
+  readonly type: string
+}
+
+interface CreateViewInstanceSuccess {
+  readonly eventListeners?: readonly unknown[]
+  readonly ok: true
+  readonly result: ViewRenderResult
+  readonly stateful?: boolean
+}
+
+interface CreateViewInstanceError {
+  readonly error: {
+    readonly message: string
+    readonly name: string
+    readonly stack?: string
+  }
+  readonly ok: false
+}
+
+type CreateViewInstanceResult = CreateViewInstanceSuccess | CreateViewInstanceError
+
+interface ViewAction {
+  readonly command: string
+  readonly icon: string
+  readonly title: string
+}
+
+const restoreError = (serializedError: CreateViewInstanceError['error']): Error => {
+  const error = new Error(serializedError.message)
+  error.name = serializedError.name
+  if (serializedError.stack) {
+    error.stack = serializedError.stack
+  }
+  return error
+}
+
+const getCssId = (view: ExtensionView): string => {
+  return `ExtensionView:${view.id}`
+}
+
+const loadCss = async (view: ExtensionView): Promise<string> => {
+  if (!view.css) {
+    return ''
+  }
+  try {
+    const response = await fetch(view.css)
+    if (!response.ok) {
+      throw new Error(response.statusText)
+    }
+    return response.text()
+  } catch (error) {
+    console.warn(`[renderer-worker] Failed to load css for extension view ${view.id}: ${error}`)
+    return ''
+  }
+}
+
+const createContext = (state: ViewletExtensionViewState, savedState: unknown): unknown => {
   return {
+    state: savedState,
+    uid: state.uid,
+    uri: state.uri,
+    viewId: state.viewId,
+  }
+}
+
+const getScrollPositionCommands = (state: ViewletExtensionViewState, result: ViewRenderResult): readonly (readonly unknown[])[] => {
+  if (!result.scrollPosition) {
+    return []
+  }
+  const [selector, scrollTop] = result.scrollPosition
+  return [['Viewlet.setProperty', state.uid, selector, 'scrollTop', scrollTop]]
+}
+
+const getCssCommands = (state: ViewletExtensionViewState, result: ViewRenderResult): readonly (readonly unknown[])[] => {
+  if (typeof result.css !== 'string') {
+    return []
+  }
+  return [['Viewlet.setCss', state.uid, result.css]]
+}
+
+const renderVirtualDomResult = (state: ViewletExtensionViewState, result: ViewRenderResult | undefined): ViewletExtensionViewState => {
+  if (!result) {
+    return {
+      ...state,
+      commands: [],
+      focusSelector: '',
+      patches: [],
+    }
+  }
+  return {
+    ...state,
+    commands: [...getScrollPositionCommands(state, result), ...getCssCommands(state, result)],
+    dom: result.type === 'setDom' ? result.dom || [] : state.dom,
+    focusSelector: typeof result.focusSelector === 'string' ? result.focusSelector : '',
+    patches: result.type === 'setPatches' ? result.patches || [] : [],
+    title: typeof result.title === 'string' ? result.title : state.title,
+  }
+}
+
+const getViewTitle = (view: GetExtensionViews.ExtensionView): string => {
+  return view.displayName || view.name || view.title
+}
+
+const getActionsDom = async (state: ViewletExtensionViewState): Promise<readonly unknown[]> => {
+  if (state.kind !== 'virtualDom') {
+    return []
+  }
+  const actionsDom = (await ExtensionManagementWorker.invoke('Extensions.getViewActionsDom', state.viewId, state.uid, assetDir, getPlatform())) as
+    readonly unknown[] | undefined
+  if (actionsDom !== undefined) {
+    return actionsDom
+  }
+  const actions = (await ExtensionManagementWorker.invoke(
+    'Extensions.getViewActions',
+    state.viewId,
+    state.uid,
+    assetDir,
+    getPlatform(),
+  )) as readonly ViewAction[]
+  if (actions.length === 0) {
+    return []
+  }
+  return GetActionsVirtualDom.getActionsVirtualDom(
+    actions.map((action) => ({
+      command: action.command,
+      icon: action.icon,
+      id: action.title,
+      type: ActionType.Button,
+    })),
+  )
+}
+
+export const create = (
+  id: number,
+  uri: string,
+  x: number,
+  y: number,
+  width: number,
+  height: number,
+  _args?: unknown,
+  parentUid?: number,
+): ViewletExtensionViewState => {
+  return {
+    actionsDom: [],
+    commands: [],
+    css: '',
+    cssId: '',
     csp: '',
     credentialless: true,
+    dom: [],
+    eventListeners: [],
+    focusSelector: '',
     height,
     iframeSandbox: [],
     iframeSrc: '',
+    kind: '',
+    parentUid,
+    patches: [],
+    stateful: false,
     title: '',
     uid: id,
     uri,
+    viewId: uri,
     width,
     x,
     y,
   }
 }
 
-export const loadContent = async (state: ViewletExtensionViewState): Promise<ViewletExtensionViewState> => {
-  const view = await GetExtensionViews.getExtensionView(state.uri)
+export const loadContent = async (
+  state: ViewletExtensionViewState,
+  savedState: unknown,
+  options: { readonly opener?: string } = {},
+): Promise<ViewletExtensionViewState> => {
+  const view = await GetExtensionViews.getExtensionView(options.opener || state.uri, state.applicationId)
   if (!view) {
     throw new Error(`view ${state.uri} not found`)
+  }
+  const title = getViewTitle(view)
+  const css = await loadCss(view)
+  const cssId = css ? getCssId(view) : ''
+  const contributedEventListeners = view.eventListeners || []
+  const stateWithViewId = {
+    ...state,
+    viewId: view.id,
+  }
+  if (view.kind === 'virtualDom') {
+    const result = await ExtensionManagementWorker.invoke(
+      'Extensions.createViewInstance',
+      view.id,
+      state.uid,
+      createContext(stateWithViewId, savedState),
+      assetDir,
+      getPlatform(),
+      state.applicationId,
+    )
+    const createResult = result as CreateViewInstanceResult
+    if (createResult.ok === false) {
+      throw restoreError(createResult.error)
+    }
+    const renderResult = createResult.ok === true ? createResult.result : (result as ViewRenderResult)
+    const eventListeners = createResult.ok === true ? createResult.eventListeners || contributedEventListeners : contributedEventListeners
+    const initialState = {
+      ...stateWithViewId,
+      title,
+    }
+    const newState = {
+      ...renderVirtualDomResult(initialState, renderResult),
+      css,
+      cssId,
+      eventListeners,
+      kind: view.kind,
+      stateful: createResult.ok === true && createResult.stateful === true,
+    }
+    return {
+      ...newState,
+      actionsDom: await getActionsDom(newState),
+    }
   }
   if (!view.iframe) {
     throw new Error(`view ${state.uri} is missing iframe contribution`)
   }
   return {
-    ...state,
+    ...stateWithViewId,
+    actionsDom: [],
+    css,
+    cssId,
     csp: view.iframe.csp,
     credentialless: view.iframe.credentialless,
+    eventListeners: contributedEventListeners,
     iframeSandbox: view.iframe.sandbox,
     iframeSrc: view.iframe.src,
-    title: view.title,
+    kind: 'iframe',
+    title,
   }
 }
 
@@ -42,4 +265,155 @@ export const resize = (state: ViewletExtensionViewState, dimensions: any): Viewl
     ...state,
     ...dimensions,
   }
+}
+
+const dispatchEvent = async (state: ViewletExtensionViewState, event: unknown): Promise<ViewletExtensionViewState> => {
+  if (state.kind !== 'virtualDom') {
+    return state
+  }
+  const result = await ExtensionManagementWorker.invoke('Extensions.dispatchViewEvent', state.viewId, state.uid, event, assetDir, getPlatform())
+  const newState = renderVirtualDomResult(state, result as ViewRenderResult | undefined)
+  return {
+    ...newState,
+    actionsDom: await getActionsDom(newState),
+  }
+}
+
+export const handleViewEvent = (
+  state: ViewletExtensionViewState,
+  type: string,
+  name: string,
+  value?: unknown,
+): Promise<ViewletExtensionViewState> => {
+  if (state.kind === 'virtualDom' && (type === 'click' || type === 'focus')) {
+    Focus.setFocus(WhenExpression.Empty, undefined, state.uid, ViewletModuleId.ExtensionView)
+  }
+  return dispatchEvent(state, {
+    name,
+    type,
+    ...(value !== undefined && { value }),
+  })
+}
+
+export const handleViewCommand = (
+  state: ViewletExtensionViewState,
+  handler: string,
+  ...args: readonly unknown[]
+): Promise<ViewletExtensionViewState> => {
+  return dispatchEvent(state, {
+    args,
+    handler,
+    type: 'command',
+  })
+}
+
+export const rerender = async (state: ViewletExtensionViewState): Promise<ViewletExtensionViewState> => {
+  if (state.kind !== 'virtualDom') {
+    return state
+  }
+  const result = await ExtensionManagementWorker.invoke('Extensions.renderViewInstance', state.viewId, state.uid, assetDir, getPlatform())
+  const newState = renderVirtualDomResult(state, result as ViewRenderResult)
+  return {
+    ...newState,
+    actionsDom: await getActionsDom(newState),
+  }
+}
+
+export const isComponentStateAvailable = (state: ViewletExtensionViewState): boolean => state.kind === 'virtualDom' && state.stateful
+
+export const isComponentDomAvailable = (state: ViewletExtensionViewState): boolean => state.kind === 'virtualDom'
+
+export const getComponentDom = (state: ViewletExtensionViewState): readonly unknown[] => state.dom
+
+export const getComponentState = async (state: ViewletExtensionViewState): Promise<unknown> => {
+  return ExtensionManagementWorker.invoke('Extensions.getViewInstanceState', state.viewId, state.uid, assetDir, getPlatform())
+}
+
+export const setComponentState = async (state: ViewletExtensionViewState, componentState: unknown): Promise<ViewletExtensionViewState> => {
+  const result = await ExtensionManagementWorker.invoke(
+    'Extensions.setViewInstanceState',
+    state.viewId,
+    state.uid,
+    componentState,
+    assetDir,
+    getPlatform(),
+  )
+  const newState = renderVirtualDomResult(state, result as ViewRenderResult | undefined)
+  return {
+    ...newState,
+    actionsDom: await getActionsDom(newState),
+  }
+}
+
+export const handleClickAction = async (state: ViewletExtensionViewState, index: number, command: string): Promise<ViewletExtensionViewState> => {
+  void index
+  await Command.execute('ExtensionHost.executeCommand', command)
+  return state
+}
+
+export const handleInput = (state: ViewletExtensionViewState, name: string, value: string): Promise<ViewletExtensionViewState> => {
+  return handleViewEvent(state, 'input', name, value)
+}
+
+export const handleClick = (state: ViewletExtensionViewState, name: string): Promise<ViewletExtensionViewState> => {
+  return handleViewEvent(state, 'click', name)
+}
+
+export const handleSubmit = (state: ViewletExtensionViewState, name: string): Promise<ViewletExtensionViewState> => {
+  return handleViewEvent(state, 'submit', name)
+}
+
+export const handleFocus = (state: ViewletExtensionViewState, name: string): Promise<ViewletExtensionViewState> => {
+  return handleViewEvent(state, 'focus', name)
+}
+
+export const handleBlur = (state: ViewletExtensionViewState, name: string): Promise<ViewletExtensionViewState> => {
+  return handleViewEvent(state, 'blur', name)
+}
+
+export const handleContextMenu = (state: ViewletExtensionViewState, name: string, x: number, y: number): Promise<ViewletExtensionViewState> => {
+  return dispatchEvent(state, {
+    name,
+    type: 'contextmenu',
+    x,
+    y,
+  })
+}
+
+export const handleActiveEditorChange = async (state: ViewletExtensionViewState, activeUri: string): Promise<ViewletExtensionViewState> => {
+  const { kind, uid, uri, viewId } = state
+  if (kind !== 'virtualDom') {
+    return state
+  }
+  await ExtensionManagementWorker.invoke('Extensions.setViewInstanceActive', viewId, uid, uri === activeUri, assetDir, getPlatform())
+  return state
+}
+
+export const Commands = {
+  handleActiveEditorChange,
+  handleBlur,
+  handleContextMenu,
+  handleClick,
+  handleClickAction,
+  handleFocus,
+  handleInput,
+  handleSubmit,
+  handleViewCommand,
+  handleViewEvent,
+  loadContent,
+  rerender,
+}
+
+export const dispose = async (state: ViewletExtensionViewState): Promise<void> => {
+  if (state.kind !== 'virtualDom') {
+    return
+  }
+  await ExtensionManagementWorker.invoke('Extensions.disposeViewInstance', state.viewId, state.uid, assetDir, getPlatform())
+}
+
+export const saveState = async (state: ViewletExtensionViewState): Promise<unknown> => {
+  if (state.kind !== 'virtualDom') {
+    return undefined
+  }
+  return ExtensionManagementWorker.invoke('Extensions.saveViewInstanceState', state.viewId, state.uid, assetDir, getPlatform())
 }

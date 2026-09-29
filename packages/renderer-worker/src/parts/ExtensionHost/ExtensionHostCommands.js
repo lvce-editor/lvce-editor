@@ -1,61 +1,64 @@
+import * as AssetDir from '../AssetDir/AssetDir.js'
+import * as DirentType from '../DirentType/DirentType.js'
 import * as ExtensionMeta from '../ExtensionMeta/ExtensionMeta.js'
-import * as ExtensionHostCommandType from '../ExtensionHostCommandType/ExtensionHostCommandType.js'
-import * as ExtensionHostWorker from '../ExtensionHostWorker/ExtensionHostWorker.js'
 import * as ExtensionManagementWorker from '../ExtensionManagementWorker/ExtensionManagementWorker.js'
-import * as ExtensionHostShared from './ExtensionHostShared.js'
+import * as FileSystemHtml from '../FileSystem/FileSystemHtml.js'
+import * as FileSystemMemory from '../FileSystem/FileSystemMemory.js'
 
 const getCommandsFromExtension = (extension) => {
-  if (!extension || !extension.commands) {
+  if (!extension || extension.disabled || !extension.commands) {
     return []
   }
-  return extension.commands
+  return extension.commands.filter((command) => command.internal !== true)
 }
 
 const getCommandsFromExtensions = (extensions) => {
   return extensions.flatMap(getCommandsFromExtension)
 }
 
-export const getCommands = async (assetDir, platform) => {
-  const extensions = await ExtensionMeta.getExtensions(assetDir, platform)
+export const getCommands = async (assetDir, platform, applicationId) => {
+  const extensions =
+    applicationId === undefined
+      ? await ExtensionMeta.getExtensions(assetDir, platform)
+      : await ExtensionManagementWorker.invoke('Extensions.invokeForApplication', applicationId, 'Extensions.getAllExtensions', assetDir, platform)
   const commands = getCommandsFromExtensions(extensions)
   return commands
 }
 
-// TODO add test for this
-// TODO add test for when this errors
-
-const isCommandNotFoundError = (error) => {
-  return error instanceof Error && error.name === 'CommandNotFoundError'
-}
-
-const executeLegacyExtensionHostCommand = (id, args) => {
-  return ExtensionHostShared.executeProvider({
-    event: `onCommand:${id}`,
-    method: ExtensionHostCommandType.CommandExecute,
-    params: [id, ...args],
-    noProviderFoundMessage: 'No command provider found',
-  })
-}
-
 export const executeCommand = async (id, ...args) => {
-  try {
-    return await ExtensionManagementWorker.invoke('Extensions.executeCommand', id, ...args)
-  } catch (error) {
-    if (!isCommandNotFoundError(error)) {
-      throw error
-    }
-    return executeLegacyExtensionHostCommand(id, args)
+  return ExtensionManagementWorker.invoke('Extensions.executeCommand', id, ...args)
+}
+
+export const searchFileWithFetch = async (path) => {
+  const response = await fetch(`${AssetDir.assetDir}/config/fileMap.json`)
+  if (!response.ok) {
+    throw new Error(response.statusText)
   }
+  const fileList = await response.json()
+  const prefixLength = path.length - 'file:///'.length
+  return fileList.map((item) => item.replace(/^\//, '').slice(prefixLength))
 }
 
-export const searchFileWithFetch = (...args) => {
-  return ExtensionHostWorker.invoke('SearchFileWithFetch.searchFileWithFetch', ...args)
+const searchDirectory = async (uri, prefix = '') => {
+  const entries = await FileSystemHtml.readDirWithFileTypes(uri)
+  const results = []
+  for (const entry of entries) {
+    const relativePath = prefix ? `${prefix}/${entry.name}` : entry.name
+    if (entry.type === DirentType.Directory) {
+      results.push(...(await searchDirectory(`${uri}/${entry.name}`, relativePath)))
+    } else {
+      results.push(relativePath)
+    }
+  }
+  return results
 }
 
-export const searchFileWithHtml = (...args) => {
-  return ExtensionHostWorker.invoke('SearchFileWithHtml.searchFileWithHtml', ...args)
+export const searchFileWithHtml = (uri) => searchDirectory(uri)
+
+export const searchFileWithMemory = async () => {
+  return Object.entries(await FileSystemMemory.getFiles())
+    .filter(([, value]) => value.type === DirentType.File)
+    .map(([path]) => path)
 }
 
-export const searchFileWithMemory = (...args) => {
-  return ExtensionHostWorker.invoke('SearchFileWithMemory.searchFileWithMemory', ...args)
-}
+export const searchFileWithProvider = (uri) => ExtensionManagementWorker.invoke('Extensions.executeWorkspaceRequest', uri, 'file-search')

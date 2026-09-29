@@ -1,5 +1,6 @@
 import * as Character from '../Character/Character.js'
 import * as Command from '../Command/Command.js'
+import * as GetExtensionViews from '../GetExtensionViews/GetExtensionViews.ts'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SaveState from '../SaveState/SaveState.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
@@ -10,19 +11,39 @@ import * as ViewletModuleMap from '../ViewletModuleMap/ViewletModuleMap.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as Id from '../Id/Id.js'
 
+const defaultTitleAreaHeight = 35
+
 export const create = (id, uri, x, y, width, height) => {
   return {
     uid: id,
+    currentExtensionId: '',
     currentViewletId: '',
     currentViewletRequestId: 0,
     x,
     y,
     width,
     height,
-    titleAreaHeight: 35,
+    titleAreaHeight: defaultTitleAreaHeight,
     actions: [],
+    actionsEventListeners: [],
     title: Character.EmptyString,
     childUid: -1,
+    actionsUid: -1,
+  }
+}
+
+export const getComponentState = (state) => state
+
+export const setComponentState = (currentState, componentState) => {
+  if (!componentState || typeof componentState !== 'object' || Array.isArray(componentState)) {
+    throw new TypeError('SideBar state must be an object')
+  }
+  if (componentState.uid !== currentState.uid) {
+    throw new Error(`SideBar state uid must remain ${currentState.uid}`)
+  }
+  return {
+    ...currentState,
+    title: componentState.title,
   }
 }
 
@@ -47,12 +68,13 @@ export const create = (id, uri, x, y, width, height) => {
 
 export const loadContent = async (state, savedState, targetViewletId) => {
   // TODO get it from layout state
-  let savedViewletId = targetViewletId || (await Command.execute('Layout.getActiveSideBarView'))
+  const restore = savedState?.restore !== false
+  let savedViewletId = restore ? targetViewletId || (await Command.execute('Layout.getActiveSideBarView')) : ViewletModuleId.Explorer
   if (!savedViewletId) {
     savedViewletId = ViewletModuleId.Explorer
   }
   // const savedViewletId = getSavedViewletId(savedState)
-  return handleSideBarViewletChange(state, savedViewletId)
+  return handleSideBarViewletChange(state, savedViewletId, restore)
 }
 
 // export const contentLoaded = async (state, savedState) => {
@@ -90,6 +112,14 @@ const getChildModuleId = (moduleId) => {
   return ViewletModuleId.ExtensionView
 }
 
+const getExtensionViewMetadata = async (moduleId, applicationId) => {
+  const view = await GetExtensionViews.getExtensionView(moduleId, applicationId)
+  return {
+    extensionId: view?.extensionId || '',
+    titleAreaHeight: view?.showSideBarHeader === false ? 0 : defaultTitleAreaHeight,
+  }
+}
+
 // TODO
 // export const getChildren = (state) => {
 //   const { titleAreaHeight, currentViewletId } = state
@@ -102,7 +132,7 @@ const getChildModuleId = (moduleId) => {
 //   ]
 // }
 
-export const handleSideBarViewletChange = async (state, moduleId) => {
+export const handleSideBarViewletChange = async (state, moduleId, restore = true) => {
   console.assert(typeof moduleId === 'string')
   if (!moduleId) {
     // const currentViewletState = ViewletStates.getState(state.currentViewletId)
@@ -115,17 +145,29 @@ export const handleSideBarViewletChange = async (state, moduleId) => {
     return state
   }
   // TODO set it in layout
-  const { currentViewletId, titleAreaHeight } = state
+  const { childUid: currentChildUid, currentViewletId } = state
   const requestId = state.currentViewletRequestId + 1
-  const savePromise = SaveState.saveViewletState(currentViewletId)
+  const savePromise = restore && currentChildUid !== -1 ? SaveState.saveViewletStateWithStorageId(currentChildUid, currentViewletId) : undefined
   state.currentViewletRequestId = requestId
   state.currentViewletId = moduleId
 
-  const childDimensions = getContentDimensions(state, titleAreaHeight)
   const uid = state.uid
 
-  const childUid = Id.create()
   const childModuleId = getChildModuleId(moduleId)
+  const extensionViewMetadata =
+    childModuleId === ViewletModuleId.ExtensionView
+      ? await getExtensionViewMetadata(moduleId, state.applicationId)
+      : {
+          extensionId: '',
+          titleAreaHeight: defaultTitleAreaHeight,
+        }
+  const { extensionId, titleAreaHeight } = extensionViewMetadata
+  if (state.currentViewletRequestId !== requestId || state.currentViewletId !== moduleId) {
+    await savePromise
+    return state
+  }
+  const childDimensions = getContentDimensions(state, titleAreaHeight)
+  const childUid = Id.create()
 
   const commands = await ViewletManager.load(
     {
@@ -148,38 +190,60 @@ export const handleSideBarViewletChange = async (state, moduleId) => {
       shouldRenderEvents: false,
     },
     false,
-    true,
+    restore,
+    restore ? undefined : { restore: false },
   )
   if (state.currentViewletRequestId !== requestId || state.currentViewletId !== moduleId) {
-    Viewlet.disposeFunctional(childUid)
+    const disposeCommands = Viewlet.disposeFunctional(childUid)
+    if (disposeCommands.length > 0) {
+      await RendererProcess.invoke('Viewlet.sendMultiple', disposeCommands)
+    }
     await savePromise
     return state
   }
   let actionsDom = []
+  let actionsEventListeners = []
   let actionsUid = -1
+  let title = Character.EmptyString
   if (commands) {
+    if (currentChildUid !== -1) {
+      commands.unshift(...Viewlet.disposeFunctional(currentChildUid))
+    }
     const actionsDomIndex = commands.findIndex((command) => command[2] === 'setActionsDom')
     if (actionsDomIndex >= 0) {
-      actionsDom = commands[actionsDomIndex][3]
+      const nextActionsDom = commands[actionsDomIndex][3]
+      actionsDom = Array.isArray(nextActionsDom) ? nextActionsDom : []
       commands.splice(actionsDomIndex, 1)
     }
+    const titleIndex = commands.findIndex((command) => command[2] === 'setTitle')
+    title = titleIndex === -1 ? Character.EmptyString : commands[titleIndex][3]
+    if (titleIndex !== -1) {
+      commands.splice(titleIndex, 1)
+    }
+    if (!title && childModuleId === ViewletModuleId.ExtensionView) {
+      const childInstance = ViewletStates.getInstance(childUid)
+      title = childInstance?.state?.title || Character.EmptyString
+    }
     const eventsIndex = commands.findIndex((command) => command[0] === 'Viewlet.registerEventListeners')
-    if (eventsIndex >= 0 || actionsDom.length > 0) {
-      const events = eventsIndex >= 0 ? commands[eventsIndex][2] : []
+    actionsEventListeners = eventsIndex >= 0 ? commands[eventsIndex][2] : []
+    if (titleAreaHeight > 0 && actionsDom.length > 0) {
       actionsUid = Id.create()
-      commands.push(
-        ['Viewlet.createFunctionalRoot', moduleId, actionsUid, true],
-        ['Viewlet.registerEventListeners', actionsUid, events],
-        ['Viewlet.setDom2', actionsUid, actionsDom],
-        ['Viewlet.setUid', actionsUid, childUid],
-      )
+      commands.push(['Viewlet.createFunctionalRoot', moduleId, actionsUid, true])
+      if (actionsEventListeners.length > 0) {
+        commands.push(['Viewlet.registerEventListeners', actionsUid, actionsEventListeners])
+      }
+      commands.push(['Viewlet.setDom2', actionsUid, actionsDom], ['Viewlet.setUid', actionsUid, childUid])
     }
     if (state.currentViewletRequestId !== requestId || state.currentViewletId !== moduleId) {
-      Viewlet.disposeFunctional(childUid)
+      const disposeCommands = Viewlet.disposeFunctional(childUid)
+      if (disposeCommands.length > 0) {
+        await RendererProcess.invoke('Viewlet.sendMultiple', disposeCommands)
+      }
       await savePromise
       return state
     }
     await RendererProcess.invoke('Viewlet.sendMultiple', commands)
+    ViewletManager.runLoadContentLater(childUid)
   }
 
   // TODO race condition (check if disposed after created)
@@ -187,10 +251,72 @@ export const handleSideBarViewletChange = async (state, moduleId) => {
   await savePromise
   return {
     ...state,
+    currentExtensionId: extensionId,
     currentViewletRequestId: requestId,
     currentViewletId: moduleId,
     childUid,
+    actionsEventListeners,
     actionsUid,
+    titleAreaHeight,
+    title,
+  }
+}
+
+export const setActionsDom = (state, actionsDom, childUid, eventListeners = state.actionsEventListeners) => {
+  if (state.childUid !== childUid || state.titleAreaHeight === 0) {
+    return {
+      commands: [],
+      handled: false,
+      renderParent: false,
+      statePatch: {},
+    }
+  }
+  if (state.actionsUid !== -1) {
+    const commands = []
+    if (eventListeners.length > 0) {
+      commands.push(['Viewlet.registerEventListeners', state.actionsUid, eventListeners])
+    }
+    commands.push(['Viewlet.setDom2', state.actionsUid, actionsDom])
+    return {
+      commands,
+      handled: true,
+      renderParent: false,
+      statePatch: {
+        actionsEventListeners: eventListeners,
+      },
+    }
+  }
+  if (actionsDom.length === 0) {
+    return {
+      commands: [],
+      handled: true,
+      renderParent: false,
+      statePatch: {
+        actionsEventListeners: eventListeners,
+      },
+    }
+  }
+  const actionsUid = Id.create()
+  const commands = [['Viewlet.createFunctionalRoot', state.currentViewletId, actionsUid, true]]
+  if (eventListeners.length > 0) {
+    commands.push(['Viewlet.registerEventListeners', actionsUid, eventListeners])
+  }
+  commands.push(['Viewlet.setDom2', actionsUid, actionsDom], ['Viewlet.setUid', actionsUid, childUid])
+  return {
+    commands,
+    handled: true,
+    renderParent: false,
+    statePatch: {
+      actionsEventListeners: eventListeners,
+      actionsUid,
+    },
+  }
+}
+
+export const setTitle = (state, title) => {
+  return {
+    ...state,
+    title,
   }
 }
 
@@ -203,6 +329,10 @@ export const openViewlet = async (state, moduleId, focus = false, args) => {
 
 export const dispose = (state) => {
   // state.currentViewletId = undefined
+}
+
+export const getOwnedViewletIds = (state) => {
+  return state.childUid === -1 ? [] : [state.childUid]
 }
 
 export const openDefaultViewlet = async (state) => {
@@ -220,7 +350,7 @@ export const close = (state) => {
 export const resize = async (state, dimensions) => {
   const { titleAreaHeight } = state
   const childDimensions = getContentDimensions(dimensions, titleAreaHeight)
-  const currentViewletInstance = ViewletStates.getInstance(state.currentViewletId)
+  const currentViewletInstance = ViewletStates.getByUid(state.childUid)
   const newState = {
     ...state,
     ...dimensions,
@@ -241,11 +371,15 @@ export const resize = async (state, dimensions) => {
 
 export const focus = async (state) => {
   const { currentViewletId } = state
-  const currentViewlet = ViewletStates.getInstance(currentViewletId)
+  const currentViewlet = ViewletStates.getByUid(state.childUid)
   if (!currentViewlet) {
     return state
   }
-  await Command.execute(`${currentViewletId}.focus`)
+  if (state.applicationId === undefined) {
+    await Command.execute(`${currentViewletId}.focus`)
+  } else {
+    await ViewletManager.executeForApplication(state.applicationId, `${currentViewletId}.focus`)
+  }
   // if (!currentViewlet.factory.focus) {
   //   throw new Error(`missing focus function for ${currentViewletId}`)
   // }

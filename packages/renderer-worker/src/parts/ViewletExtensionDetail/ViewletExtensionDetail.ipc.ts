@@ -1,7 +1,7 @@
-export * from './VielwetExtensionDetailCommands.ts'
-export * from './ViewletExtensionDetail.ts'
-export * from './ViewletExtensionDetailCss.ts'
-export * from './ViewletExtensionDetailKeyBindings.ts'
-export * from './ViewletExtensionDetailMenuEntries.ts'
-export * from './ViewletExtensionDetailName.ts'
-export * from './ViewletExtensionDetailRender.ts'
+import { createWorkerViewlet } from '../CreateWorkerViewlet/CreateWorkerViewlet.js'
+
+export const {
+  Commands, create, Css, dispose, Events, focus, getCommands, getComponentDom, getComponentState, getKeyBindings, getMenus, getQuickPickMenuEntries, getStorageKey,
+  getTitle, hasDirectRender, hasFunctionalEvents, hasFunctionalRender, hasFunctionalResize, hasFunctionalRootRender, hotReload, loadContent,
+  menus, name, render, renderActions, renderEventListeners, renderTitle, resize, saveState, setComponentState, Variables, wrapExtensionDetailCommand,
+} = createWorkerViewlet({ workerId: 'extensionDetail' })

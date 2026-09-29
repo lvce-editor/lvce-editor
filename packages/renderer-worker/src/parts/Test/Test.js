@@ -9,6 +9,11 @@ export const execute = async (href) => {
   await JsonRpc.invoke(ipc, 'Test.execute', href, Platform.getPlatform(), AssetDir.assetDir)
 }
 
+export const executeAll = async (tests, href) => {
+  const ipc = await LaunchTestWorker.launchTestWorker()
+  await JsonRpc.invoke(ipc, 'Test.executeAll', tests, href, Platform.getPlatform(), AssetDir.assetDir)
+}
+
 export const tryAutoFix = async () => {
   const ipc = TestWorker.get()
   await JsonRpc.invoke(ipc, 'Test.tryAutoFix')

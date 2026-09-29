@@ -81,6 +81,7 @@ export const handleSecondarySideBarViewletChange = async (state, moduleId) => {
   )
 
   await RendererProcess.invoke('Viewlet.sendMultiple', commands)
+  ViewletManager.runLoadContentLater(childUid)
 
   await savePromise
   return {

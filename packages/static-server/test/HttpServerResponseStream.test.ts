@@ -4,7 +4,7 @@ import { writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { Writable } from 'node:stream'
-import * as HttpServerResponseStream from '../src/parts/HttpServerResponseStream/HttpServerResponseStream.js'
+import * as HttpServerResponseStream from '../src/parts/HttpServerResponseStream/HttpServerResponseStream.ts'
 
 test('send', async () => {
   const tmpFile = join(tmpdir(), randomUUID() + '-file.txt')

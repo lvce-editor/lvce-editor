@@ -78,7 +78,17 @@
 }
 
 .StatusBarIcon {
-  width: 30px;
-  height: 19px;
+  width: 16px;
+  height: 16px;
   contain: strict;
+}
+
+@keyframes statusBarItemSpin {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.Spinning {
+  animation: statusBarItemSpin 2s linear infinite;
 }

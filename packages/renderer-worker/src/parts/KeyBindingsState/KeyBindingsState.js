@@ -1,11 +1,13 @@
 import * as Assert from '../Assert/Assert.ts'
 import * as Context from '../Context/Context.js'
+import { isEqualUint32Array } from '../IsEqualUint32Array/IsEqualUint32Array.js'
 import * as Logger from '../Logger/Logger.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 
 export const state = {
   keyBindings: [],
   keyBindingSets: Object.create(null),
+  keyBindingSetCounts: Object.create(null),
   /**
    * @type {Uint32Array}
    */
@@ -37,7 +39,12 @@ const matchesContext = (keyBinding) => {
 }
 
 const getMatchingKeyBindings = (keyBindingSets) => {
-  return Object.values(keyBindingSets).reverse().flat(1).filter(matchesContext)
+  const userKeyBindings = keyBindingSets.user || []
+  const defaultKeyBindings = Object.entries(keyBindingSets)
+    .filter(([id]) => id !== 'user')
+    .map(([, keyBindings]) => keyBindings)
+    .reverse()
+  return [userKeyBindings, ...defaultKeyBindings].flat(1).filter(matchesContext)
 }
 
 const getAvailableKeyBindings = (keyBindings) => {
@@ -45,10 +52,14 @@ const getAvailableKeyBindings = (keyBindings) => {
 }
 
 export const update = () => {
-  const matchingKeyBindings = getMatchingKeyBindings(state.keyBindingSets)
+  const { keyBindingIdentifiers: oldKeyBindingIdentifiers, keyBindingSets } = state
+  const matchingKeyBindings = getMatchingKeyBindings(keyBindingSets)
   const keyBindingIdentifiers = getAvailableKeyBindings(matchingKeyBindings)
-  RendererProcess.invoke('KeyBindings.setIdentifiers', keyBindingIdentifiers)
   state.matchingKeyBindings = matchingKeyBindings
+  if (isEqualUint32Array(oldKeyBindingIdentifiers, keyBindingIdentifiers)) {
+    return
+  }
+  RendererProcess.invoke('KeyBindings.setIdentifiers', keyBindingIdentifiers)
   state.keyBindingIdentifiers = keyBindingIdentifiers
 }
 
@@ -56,23 +67,37 @@ export const addKeyBindings = (id, keyBindings) => {
   Assert.string(id)
   Assert.array(keyBindings)
   if (id in state.keyBindingSets) {
-    Logger.warn(`cannot add keybindings multiple times: ${id}`)
+    state.keyBindingSetCounts[id]++
     return
   }
   state.keyBindingSets[id] = keyBindings
+  state.keyBindingSetCounts[id] = 1
+  update()
+}
+
+export const setKeyBindings = (id, keyBindings) => {
+  Assert.string(id)
+  Assert.array(keyBindings)
+  state.keyBindingSets[id] = keyBindings
+  state.keyBindingSetCounts[id] = 1
   update()
 }
 
 export const removeKeyBindings = (id) => {
-  const { keyBindingSets } = state
+  const { keyBindingSets, keyBindingSetCounts } = state
   if (!(id in keyBindingSets)) {
     Logger.warn(`cannot remove keybindings that are not registered: ${id}`)
     return
   }
+  keyBindingSetCounts[id]--
+  if (keyBindingSetCounts[id] > 0) {
+    return
+  }
   delete keyBindingSets[id]
+  delete keyBindingSetCounts[id]
   update()
 }
 
 export const getKeyBindings = () => {
-  return state.keyBindings
+  return state.matchingKeyBindings
 }

@@ -1,0 +1,319 @@
+import { beforeEach, expect, jest, test } from '@jest/globals'
+import * as PlatformType from '../src/parts/PlatformType/PlatformType.js'
+import * as SharedProcessCommandType from '../src/parts/SharedProcessCommandType/SharedProcessCommandType.js'
+
+beforeEach(() => {
+  jest.resetAllMocks()
+})
+
+jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
+  return {
+    invoke: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+  }
+})
+
+jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
+  return {
+    getPlatform: jest.fn(() => {
+      return PlatformType.Remote
+    }),
+    getMarketplaceUrl: jest.fn(() => {
+      return 'test://example.com'
+    }),
+  }
+})
+
+jest.unstable_mockModule('../src/parts/ContextMenu/ContextMenu.js', () => {
+  return {
+    show2: jest.fn(),
+  }
+})
+
+jest.unstable_mockModule('../src/parts/Command/Command.js', () => {
+  return {
+    execute: jest.fn(),
+  }
+})
+
+jest.unstable_mockModule('../src/parts/ExtensionManagementWorker/ExtensionManagementWorker.js', () => {
+  return {
+    invoke: jest.fn(),
+  }
+})
+
+jest.unstable_mockModule('../src/parts/GetActiveEditor/GetActiveEditor.js', () => {
+  return {
+    updateAllDiagnostics: jest.fn(),
+  }
+})
+
+jest.unstable_mockModule('../src/parts/IconTheme/IconTheme.js', () => {
+  return {
+    reload: jest.fn(),
+  }
+})
+
+const ExtensionManagement = await import('../src/parts/ExtensionManagement/ExtensionManagement.js')
+const ExtensionManagementIpc = await import('../src/parts/ExtensionManagement/ExtensionManagement.ipc.js')
+const Command = await import('../src/parts/Command/Command.js')
+const ContextMenu = await import('../src/parts/ContextMenu/ContextMenu.js')
+const ExtensionManagementWorker = await import('../src/parts/ExtensionManagementWorker/ExtensionManagementWorker.js')
+const GetActiveEditor = await import('../src/parts/GetActiveEditor/GetActiveEditor.js')
+const IconTheme = await import('../src/parts/IconTheme/IconTheme.js')
+const SharedProcess = await import('../src/parts/SharedProcess/SharedProcess.js')
+
+test('activateByEvent delegates to the isolated extension management worker', async () => {
+  await ExtensionManagement.activateByEvent('onStatusBarItem', '/asset', 1)
+
+  expect(ExtensionManagementWorker.invoke).toHaveBeenCalledWith('Extensions.activateByEvent', 'onStatusBarItem', '/asset', 1)
+  expect(ExtensionManagementIpc.Commands.activateByEvent).toBe(ExtensionManagement.activateByEvent)
+  expect(ExtensionManagementIpc.Commands['ExtensionHostManagement.activateByEvent']).toBe(ExtensionManagement.activateByEvent)
+})
+
+test('doInvalidateExtensionsCache asks the extension management worker to invalidate', async () => {
+  await ExtensionManagement.doInvalidateExtensionsCache()
+
+  expect(ExtensionManagementWorker.invoke).toHaveBeenCalledTimes(1)
+  expect(ExtensionManagementWorker.invoke).toHaveBeenCalledWith('Extensions.invalidateExtensionsCache')
+  expect(Command.execute).not.toHaveBeenCalled()
+})
+
+test('handleExtensionsCacheInvalidated refreshes renderer state without invalidating again', async () => {
+  await ExtensionManagement.handleExtensionsCacheInvalidated()
+
+  expect(ExtensionManagementWorker.invoke).not.toHaveBeenCalled()
+  expect(Command.execute).toHaveBeenNthCalledWith(1, 'KeyBindings.hydrate')
+  expect(IconTheme.reload).toHaveBeenCalledTimes(1)
+  expect(Command.execute).toHaveBeenNthCalledWith(2, 'ColorTheme.reload')
+  expect(Command.execute).toHaveBeenNthCalledWith(3, 'Layout.handleExtensionsChanged')
+  expect(GetActiveEditor.updateAllDiagnostics).toHaveBeenCalledTimes(1)
+})
+
+test('handleExtensionsCacheInvalidated forwards the disabled extension state', async () => {
+  await ExtensionManagement.handleExtensionsCacheInvalidated('sample.extension', true)
+
+  expect(Command.execute).toHaveBeenNthCalledWith(1, 'KeyBindings.hydrate')
+  expect(IconTheme.reload).toHaveBeenCalledTimes(1)
+  expect(Command.execute).toHaveBeenNthCalledWith(2, 'ColorTheme.reload')
+  expect(Command.execute).toHaveBeenNthCalledWith(3, 'Layout.handleExtensionsChanged', 'sample.extension', true)
+  expect(GetActiveEditor.updateAllDiagnostics).toHaveBeenCalledTimes(1)
+})
+
+test('handleExtensionsCacheInvalidated refreshes diagnostics when another renderer refresh fails', async () => {
+  // @ts-ignore
+  Command.execute.mockRejectedValueOnce(new Error('Failed to hydrate keybindings'))
+
+  await ExtensionManagement.handleExtensionsCacheInvalidated('sample.extension', true)
+
+  expect(GetActiveEditor.updateAllDiagnostics).toHaveBeenCalledTimes(1)
+})
+
+test('cache invalidation commands handle notifications without invalidating again', () => {
+  expect(ExtensionManagementIpc.Commands.handleExtensionsCacheInvalidated).toBe(ExtensionManagement.handleExtensionsCacheInvalidated)
+  expect(ExtensionManagementIpc.Commands.invalidateExtensionsCache).toBe(ExtensionManagement.handleExtensionsCacheInvalidated)
+})
+
+test.skip('install', async () => {
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation((method, ...params) => {
+    switch (method) {
+      case SharedProcessCommandType.InstallExtensionInstallExtension:
+        return null
+      default:
+        throw new Error('unexpected message')
+    }
+  })
+  await ExtensionManagement.install('test-author.test-extension')
+  expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(SharedProcess.invoke).toHaveBeenCalledWith(SharedProcessCommandType.InstallExtensionInstallExtension, 'test-author.test-extension')
+})
+
+test('showViewContextMenu opens extension view context menu', async () => {
+  await ExtensionManagement.showViewContextMenu(1, 'sample.views.testing', 'sample.card', 10, 20)
+
+  expect(ContextMenu.show2).toHaveBeenCalledWith(1, 30, 10, 20, {
+    menuId: 'sample.card',
+    viewId: 'sample.views.testing',
+  })
+})
+
+test.skip('install - error', async () => {
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation(async (method, ...params) => {
+    switch (method) {
+      case SharedProcessCommandType.InstallExtensionInstallExtension:
+        throw new TypeError('x is not a function')
+      default:
+        throw new Error('unexpected message')
+    }
+  })
+  await expect(ExtensionManagement.install('test-author.test-extension')).rejects.toThrow(new TypeError('x is not a function'))
+})
+
+test.skip('uninstall', async () => {
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation((method, ...params) => {
+    switch (method) {
+      case 'ExtensionManagement.uninstall':
+        return null
+      default:
+        throw new Error('unexpected message')
+    }
+  })
+  await ExtensionManagement.uninstall('test-author.test-extension')
+  expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(SharedProcess.invoke).toHaveBeenCalledWith('ExtensionManagement.uninstall', 'test-author.test-extension')
+})
+
+test.skip('uninstall - error', async () => {
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation(async (method, ...params) => {
+    switch (method) {
+      case 'ExtensionManagement.uninstall':
+        throw new TypeError('x is not a function')
+      default:
+        throw new Error('unexpected message')
+    }
+  })
+  await expect(ExtensionManagement.uninstall('test-author.test-extension')).rejects.toThrow(new TypeError('x is not a function'))
+})
+
+test.skip('disable', async () => {
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation((method, ...params) => {
+    switch (method) {
+      case 'ExtensionManagement.disable':
+        return null
+      default:
+        throw new Error('unexpected message')
+    }
+  })
+  await ExtensionManagement.disable('test-author.test-extension')
+  expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(SharedProcess.invoke).toHaveBeenCalledWith('ExtensionManagement.disable', 'test-author.test-extension')
+})
+
+test.skip('disable - error', async () => {
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation((method, ...params) => {
+    switch (method) {
+      case 'ExtensionManagement.disable':
+        throw new TypeError('x is not a function')
+      default:
+        throw new Error('unexpected message')
+    }
+  })
+  await expect(ExtensionManagement.disable('test-author.test-extension')).rejects.toThrow(new TypeError('x is not a function'))
+})
+
+test.skip('enable', async () => {
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation((method, ...params) => {
+    switch (method) {
+      case 'ExtensionManagement.enable':
+        return null
+      default:
+        throw new Error('unexpected message')
+    }
+  })
+  await ExtensionManagement.enable('test-author.test-extension')
+  expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(SharedProcess.invoke).toHaveBeenCalledWith('ExtensionManagement.enable', 'test-author.test-extension')
+})
+
+test.skip('enable - error', async () => {
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation((method, ...params) => {
+    switch (method) {
+      case 'ExtensionManagement.enable':
+        throw new TypeError('x is not a function')
+      default:
+        throw new Error('unexpected message')
+    }
+  })
+  await expect(ExtensionManagement.enable('test-author.test-extension')).rejects.toThrow(new TypeError('x is not a function'))
+})
+
+test.skip('getAllExtensions', async () => {
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation((method, ...params) => {
+    switch (method) {
+      case 'ExtensionManagement.getAllExtensions':
+        return {
+          builtinExtensions: [
+            {
+              id: 'builtin.language-basics-html',
+              name: 'Language Basics HTML',
+              description: 'Provides syntax highlighting and bracket matching in HTML files.',
+              languages: [
+                {
+                  id: 'html',
+                  extensions: ['.html'],
+                  tokenize: 'src/tokenizeHtml.js',
+                  configuration: './languageConfiguration.json',
+                },
+              ],
+            },
+          ],
+          installedExtensions: [
+            {
+              id: 'test-author-2.test-extension',
+              publisher: 'test-author-2',
+              description: 'Test Extension',
+              name: 'test-extension',
+              version: '0.0.1',
+              main: 'main.js',
+              path: '/tmp/extensions/test-author-2.test-extension',
+            },
+          ],
+          disabledExtensions: [],
+        }
+      default:
+        throw new Error('unexpected message')
+    }
+  })
+  expect(await ExtensionManagement.getAllExtensions()).toEqual({
+    builtinExtensions: [
+      {
+        id: 'builtin.language-basics-html',
+        name: 'Language Basics HTML',
+        description: 'Provides syntax highlighting and bracket matching in HTML files.',
+        languages: [
+          {
+            id: 'html',
+            extensions: ['.html'],
+            tokenize: 'src/tokenizeHtml.js',
+            configuration: './languageConfiguration.json',
+          },
+        ],
+      },
+    ],
+    installedExtensions: [
+      {
+        id: 'test-author-2.test-extension',
+        publisher: 'test-author-2',
+        description: 'Test Extension',
+        name: 'test-extension',
+        version: '0.0.1',
+        main: 'main.js',
+        path: '/tmp/extensions/test-author-2.test-extension',
+      },
+    ],
+    disabledExtensions: [],
+  })
+})
+
+test.skip('getAllExtensions - error', async () => {
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation((method, ...params) => {
+    switch (method) {
+      case 'ExtensionManagement.getAllExtensions':
+        throw new TypeError('x is not a function')
+      default:
+        throw new Error('unexpected message')
+    }
+  })
+  await expect(ExtensionManagement.getAllExtensions()).rejects.toThrow(new TypeError('x is not a function'))
+})

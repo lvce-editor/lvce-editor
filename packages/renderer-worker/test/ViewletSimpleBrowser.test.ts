@@ -1,0 +1,2904 @@
+import { afterEach, beforeEach, expect, jest, test } from '@jest/globals'
+import * as GetSimpleBrowserVirtualDom from '../src/parts/GetSimpleBrowserVirtualDom/GetSimpleBrowserVirtualDom.js'
+
+afterEach(() => {
+  BrowserSuggestionRequests.cancel(7)
+  jest.useRealTimers()
+  for (const key of [
+    'simpleBrowser.audioIndicator.enabled',
+    'simpleBrowser.chromeTheme',
+    'simpleBrowser.shortcuts',
+    'simpleBrowser.suggestions',
+    'simpleBrowser.tabHover.enabled',
+    'simpleBrowser.tabs.enabled',
+    'simpleBrowser.unloadTabs',
+  ]) {
+    delete Preferences.state[key]
+  }
+})
+
+const getFaviconSource = (favicon: unknown): string => {
+  if (typeof favicon === 'string') {
+    return favicon
+  }
+  if (favicon && typeof favicon === 'object' && 'url' in favicon && typeof favicon.url === 'string') {
+    return favicon.url
+  }
+  return ''
+}
+
+beforeEach(() => {
+  jest.resetAllMocks()
+  jest.mocked(SimpleBrowserWorker.invoke).mockResolvedValue({ start: 0, end: 0 })
+  jest.mocked(Viewlet.executeViewletCommand).mockResolvedValue(undefined as never)
+  jest.mocked(SimpleBrowserFavicon.create).mockImplementation((favicon) => (typeof favicon === 'string' ? favicon : 'blob:created-favicon'))
+  jest.mocked(SimpleBrowserFavicon.getSource).mockImplementation(getFaviconSource)
+  FocusState.set(0)
+})
+
+jest.unstable_mockModule('../src/parts/SimpleBrowserWorker/SimpleBrowserWorker.js', () => ({ invoke: jest.fn() }))
+
+jest.unstable_mockModule('../src/parts/ElectronWebContentsViewFunctions/ElectronWebContentsViewFunctions.js', () => {
+  return {
+    capturePage: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+    hide: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+    insertJavaScript: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+    reload: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+    setAudioMuted: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+    toggleDevtools: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+    forward: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+    focus: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+    backward: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+    setIframeSrc: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+    resizeWebContentsView: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+    setFallthroughKeyBindings: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+    show: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+    acceptLogin: jest.fn(),
+    cancelLogin: jest.fn(),
+    getStats: jest.fn(),
+  }
+})
+jest.unstable_mockModule('../src/parts/ElectronWebContentsView/ElectronWebContentsView.js', () => {
+  return {
+    adoptWebContentsView: jest.fn(),
+    createWebContentsView: jest.fn(() => {
+      return 1
+    }),
+    disposeWebContentsView: jest.fn(),
+    releaseWebContentsView: jest.fn(),
+  }
+})
+
+jest.unstable_mockModule('../src/parts/ElectronWindow/ElectronWindow.js', () => ({
+  focus: jest.fn(),
+}))
+
+jest.unstable_mockModule('../src/parts/Focus/Focus.js', () => ({
+  setFocus: jest.fn(),
+}))
+
+jest.unstable_mockModule('../src/parts/KeyBindingsInitial/KeyBindingsInitial.js', () => {
+  return {
+    getKeyBindings: jest.fn(() => []),
+  }
+})
+
+jest.unstable_mockModule('../src/parts/BrowserSearchSuggestions/BrowserSearchSuggestions.js', () => ({
+  get: jest.fn(),
+}))
+
+jest.unstable_mockModule('../src/parts/BrowserHistory/BrowserHistory.js', () => ({
+  load: jest.fn(),
+  getSuggestions: jest.fn(),
+  record: jest.fn(),
+}))
+
+jest.unstable_mockModule('../src/parts/BrowserSearchHistory/BrowserSearchHistory.js', () => ({
+  add: jest.fn(),
+  getSuggestions: jest.fn(),
+  load: jest.fn(),
+  save: jest.fn(),
+}))
+
+jest.unstable_mockModule('../src/parts/BrowserVisitedSites/BrowserVisitedSites.js', () => ({
+  add: jest.fn(),
+  getSuggestions: jest.fn(),
+  load: jest.fn(),
+  save: jest.fn(),
+}))
+
+jest.unstable_mockModule('../src/parts/Command/Command.js', () => ({
+  execute: jest.fn(),
+}))
+
+jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () => ({
+  invoke: jest.fn(),
+}))
+
+jest.unstable_mockModule('../src/parts/SimpleBrowserSnapshot/SimpleBrowserSnapshot.js', () => ({
+  create: jest.fn(),
+  dispose: jest.fn(),
+}))
+
+jest.unstable_mockModule('../src/parts/SimpleBrowserFavicon/SimpleBrowserFavicon.js', () => ({
+  create: jest.fn((favicon) => (typeof favicon === 'string' ? favicon : 'blob:created-favicon')),
+  dispose: jest.fn(),
+  getSource: jest.fn(getFaviconSource),
+}))
+
+jest.unstable_mockModule('../src/parts/Viewlet/Viewlet.js', () => ({ executeViewletCommand: jest.fn() }))
+jest.unstable_mockModule('../src/parts/SimpleBrowserPreview/SimpleBrowserPreview.js', () => ({
+  materialize: jest.fn(),
+  dispose: jest.fn(),
+  reload: jest.fn(),
+  resize: jest.fn(),
+}))
+const SimpleBrowserPreview = await import('../src/parts/SimpleBrowserPreview/SimpleBrowserPreview.js')
+const Viewlet = await import('../src/parts/Viewlet/Viewlet.js')
+const BrowserSuggestionRequests = await import('../src/parts/BrowserSuggestionRequests/BrowserSuggestionRequests.js')
+const ViewletSimpleBrowser = await import('../src/parts/ViewletSimpleBrowser/ViewletSimpleBrowser.js')
+const ViewletSimpleBrowserOpenBackgroundTab = await import('../src/parts/ViewletSimpleBrowser/ViewletSimpleBrowserOpenBackgroundTab.js')
+const ViewletSimpleBrowserResize = await import('../src/parts/ViewletSimpleBrowser/ViewletSimpleBrowserResize.js')
+const BrowserHistory = await import('../src/parts/BrowserHistory/BrowserHistory.js')
+const BrowserSearchSuggestions = await import('../src/parts/BrowserSearchSuggestions/BrowserSearchSuggestions.js')
+const BrowserSearchHistory = await import('../src/parts/BrowserSearchHistory/BrowserSearchHistory.js')
+const BrowserVisitedSites = await import('../src/parts/BrowserVisitedSites/BrowserVisitedSites.js')
+const Command = await import('../src/parts/Command/Command.js')
+const ColorTheme = await import('../src/parts/ColorTheme/ColorTheme.js')
+const ElectronWebContentsViewFunctions = await import('../src/parts/ElectronWebContentsViewFunctions/ElectronWebContentsViewFunctions.js')
+const ElectronWebContentsView = await import('../src/parts/ElectronWebContentsView/ElectronWebContentsView.js')
+const ElectronWindow = await import('../src/parts/ElectronWindow/ElectronWindow.js')
+const Focus = await import('../src/parts/Focus/Focus.js')
+const InputName = await import('../src/parts/InputName/InputName.js')
+const KeyCode = await import('../src/parts/KeyCode/KeyCode.js')
+const KeyBindingsInitial = await import('../src/parts/KeyBindingsInitial/KeyBindingsInitial.js')
+const KeyBindingsState = await import('../src/parts/KeyBindingsState/KeyBindingsState.js')
+const KeyModifier = await import('../src/parts/KeyModifier/KeyModifier.js')
+const Preferences = await import('../src/parts/Preferences/Preferences.js')
+const SimpleBrowserWorker = await import('../src/parts/SimpleBrowserWorker/SimpleBrowserWorker.js')
+const RendererProcess = await import('../src/parts/RendererProcess/RendererProcess.js')
+const SimpleBrowserNewTabPage = await import('../src/parts/SimpleBrowserNewTabPage/SimpleBrowserNewTabPage.js')
+const SimpleBrowserSnapshot = await import('../src/parts/SimpleBrowserSnapshot/SimpleBrowserSnapshot.js')
+const SimpleBrowserFavicon = await import('../src/parts/SimpleBrowserFavicon/SimpleBrowserFavicon.js')
+const ViewletModuleId = await import('../src/parts/ViewletModuleId/ViewletModuleId.js')
+const FocusState = await import('../src/parts/FocusState/FocusState.js')
+const WhenExpression = await import('../src/parts/WhenExpression/WhenExpression.js')
+
+beforeEach(() => {
+  jest.mocked(BrowserHistory.load).mockResolvedValue([] as never)
+  jest.mocked(BrowserHistory.getSuggestions).mockReturnValue([] as never)
+  ColorTheme.state.colorThemeCss = ''
+  // @ts-ignore
+  BrowserSearchHistory.add.mockImplementation((searches) => searches)
+  // @ts-ignore
+  BrowserSearchHistory.getSuggestions.mockReturnValue([])
+  // @ts-ignore
+  BrowserSearchHistory.load.mockResolvedValue([])
+  // @ts-ignore
+  BrowserVisitedSites.add.mockImplementation((sites) => sites)
+  // @ts-ignore
+  BrowserVisitedSites.getSuggestions.mockReturnValue([])
+  // @ts-ignore
+  BrowserVisitedSites.load.mockResolvedValue([])
+  KeyBindingsState.state.matchingKeyBindings = []
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.getStats.mockResolvedValue({
+    title: 'test',
+    url: '',
+    canGoBack: true,
+    canGoForward: true,
+  })
+})
+
+const browserTabKeyBindings = [
+  KeyModifier.CtrlCmd | KeyCode.KeyF,
+  KeyModifier.CtrlCmd | KeyModifier.Shift | KeyCode.KeyI,
+  KeyModifier.CtrlCmd | KeyCode.KeyL,
+  KeyModifier.CtrlCmd | KeyCode.KeyW,
+  KeyModifier.CtrlCmd | KeyCode.KeyT,
+  KeyModifier.CtrlCmd | KeyModifier.Shift | KeyCode.KeyT,
+  KeyModifier.CtrlCmd | KeyCode.Tab,
+  KeyModifier.CtrlCmd | KeyModifier.Shift | KeyCode.Tab,
+  KeyModifier.CtrlCmd | KeyCode.KeyH,
+]
+
+const createTabsState = (selectedTabIndex = 0) => {
+  const tabs = [
+    {
+      browserViewId: 12,
+      canGoBack: false,
+      canGoForward: false,
+      favicon: '',
+      iframeSrc: 'https://one.example',
+      inputValue: 'https://one.example',
+      isAudioPlaying: false,
+      isLoading: false,
+      muted: false,
+      title: 'One',
+    },
+    {
+      browserViewId: 13,
+      canGoBack: true,
+      canGoForward: false,
+      favicon: '',
+      iframeSrc: 'https://two.example',
+      inputValue: 'https://two.example',
+      isAudioPlaying: false,
+      isLoading: false,
+      muted: false,
+      title: 'Two',
+    },
+    {
+      browserViewId: 14,
+      canGoBack: false,
+      canGoForward: false,
+      favicon: '',
+      iframeSrc: 'https://three.example',
+      inputValue: 'https://three.example',
+      isAudioPlaying: false,
+      isLoading: false,
+      muted: false,
+      title: 'Three',
+    },
+    {
+      browserViewId: 15,
+      canGoBack: false,
+      canGoForward: false,
+      favicon: '',
+      iframeSrc: 'https://four.example',
+      inputValue: 'https://four.example',
+      isAudioPlaying: false,
+      isLoading: false,
+      muted: false,
+      title: 'Four',
+    },
+  ]
+  const selectedTab = tabs[selectedTabIndex]
+  return {
+    ...ViewletSimpleBrowser.create(),
+    browserViewId: selectedTab.browserViewId,
+    iframeSrc: selectedTab.iframeSrc,
+    inputValue: selectedTab.inputValue,
+    isAudioPlaying: selectedTab.isAudioPlaying,
+    isLoading: selectedTab.isLoading,
+    muted: selectedTab.muted,
+    selectedTabIndex,
+    tabs,
+    title: selectedTab.title,
+  }
+}
+
+const createTwoTabState = () => {
+  const state = createTabsState()
+  return {
+    ...state,
+    tabs: state.tabs.slice(0, 2),
+  }
+}
+
+test('create', () => {
+  const state = ViewletSimpleBrowser.create()
+  expect(state).toBeDefined()
+})
+
+test('saveState preserves all browser tabs and the selected tab', () => {
+  const state = createTabsState(1)
+
+  expect(ViewletSimpleBrowser.saveState(state)).toEqual({
+    iframeSrc: 'https://two.example',
+    selectedTabIndex: 1,
+    tabs: [
+      { favicon: '', iframeSrc: 'https://one.example', inputValue: 'https://one.example', title: 'One' },
+      { favicon: '', iframeSrc: 'https://two.example', inputValue: 'https://two.example', title: 'Two' },
+      { favicon: '', iframeSrc: 'https://three.example', inputValue: 'https://three.example', title: 'Three' },
+      { favicon: '', iframeSrc: 'https://four.example', inputValue: 'https://four.example', title: 'Four' },
+    ],
+  })
+})
+
+test('submits credentials for the matching authentication challenge without storing them in component state', async () => {
+  const state = {
+    ...createTabsState(),
+    loginChallenges: [{ browserViewId: 12, requestId: '12:1' }],
+    overlayIds: ['login'],
+  }
+
+  const nextState = await ViewletSimpleBrowser.submitLogin(state, '12:1', 'alice', 'secret')
+
+  expect(ElectronWebContentsViewFunctions.acceptLogin).toHaveBeenCalledWith('12:1', 'alice', 'secret')
+  expect(nextState.loginChallenges).toEqual([])
+  expect(JSON.stringify(nextState)).not.toContain('secret')
+})
+
+test('cancels an authentication challenge when its browser tab navigates', async () => {
+  const state = {
+    ...createTabsState(),
+    loginChallenges: [{ browserViewId: 12, requestId: '12:1' }],
+    overlayIds: ['login'],
+  }
+
+  const nextState = await ViewletSimpleBrowser.handleWillNavigate(state, 12, 'https://next.example')
+
+  expect(ElectronWebContentsViewFunctions.cancelLogin).toHaveBeenCalledWith('12:1')
+  expect(nextState.loginChallenges).toEqual([])
+  expect(nextState.iframeSrc).toBe('https://next.example')
+})
+
+test('clears form values when a queued authentication challenge becomes active', async () => {
+  const oldState = { ...createTabsState(), loginChallenges: [{ browserViewId: 12, requestId: '12:1' }] }
+  const newState = { ...oldState, loginChallenges: [{ browserViewId: 13, requestId: '13:2' }] }
+
+  await ViewletSimpleBrowser.afterRender(oldState, newState)
+
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.setValueByName', newState.uid, 'username', '')
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.setValueByName', newState.uid, 'password', '')
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.focusElementByName', newState.uid, 'username')
+})
+
+test('keeps simultaneous authentication challenges separate and ignores stale submission', async () => {
+  const first = { browserViewId: 12, requestId: '12:1' }
+  const second = { requestId: '13:2', host: 'two.example' }
+  const state = { ...createTabsState(), loginChallenges: [first], overlayIds: ['login'] }
+
+  const queued = await ViewletSimpleBrowser.handleLogin(state, 13, second)
+  expect(queued.loginChallenges).toEqual([first, { ...second, browserViewId: 13 }])
+  expect(await ViewletSimpleBrowser.handleLogin(queued, 13, second)).toBe(queued)
+  const submitted = await ViewletSimpleBrowser.submitLogin(queued, '12:1', 'alice', 'secret')
+  expect(submitted.loginChallenges).toEqual([{ ...second, browserViewId: 13 }])
+  expect(submitted.overlayIds).toContain('login')
+  expect(await ViewletSimpleBrowser.submitLogin(submitted, '12:1', 'alice', 'secret')).toBe(submitted)
+  expect(ElectronWebContentsViewFunctions.acceptLogin).toHaveBeenCalledTimes(1)
+  expect(ElectronWebContentsViewFunctions.acceptLogin).toHaveBeenCalledWith('12:1', 'alice', 'secret')
+  const canceled = await ViewletSimpleBrowser.cancelLoginOnEscape(submitted, '13:2', 'Escape')
+  expect(canceled.loginChallenges).toEqual([])
+  expect(canceled.overlayIds).not.toContain('login')
+  expect(ElectronWebContentsViewFunctions.cancelLogin).toHaveBeenCalledWith('13:2')
+})
+
+test('closing a challenged tab cancels only its pending authentication', async () => {
+  const first = { browserViewId: 12, requestId: '12:1' }
+  const second = { browserViewId: 13, requestId: '13:2' }
+  const state = { ...createTabsState(), loginChallenges: [first, second], overlayIds: ['login'] }
+
+  const nextState = await ViewletSimpleBrowser.closeTab(state, 1)
+
+  expect(nextState.loginChallenges).toEqual([first])
+  expect(nextState.overlayIds).toContain('login')
+  expect(ElectronWebContentsViewFunctions.cancelLogin).toHaveBeenCalledTimes(1)
+  expect(ElectronWebContentsViewFunctions.cancelLogin).toHaveBeenCalledWith('13:2')
+  expect(nextState.tabs.some((tab) => tab.browserViewId === 13)).toBe(false)
+})
+
+test('uses the URL input focus context for the address field', () => {
+  const state = ViewletSimpleBrowser.create(42)
+
+  const newState = ViewletSimpleBrowser.handleFocusIn(state, InputName.SimpleBrowserAddress)
+
+  expect(newState).toBe(state)
+  expect(Focus.setFocus).toHaveBeenCalledWith(WhenExpression.FocusSimpleBrowserInput, undefined, 42, ViewletModuleId.SimpleBrowser)
+})
+
+test('uses the browser focus context for tabs and toolbar controls', () => {
+  const state = ViewletSimpleBrowser.create(42)
+
+  const newState = ViewletSimpleBrowser.handleFocusIn(state, '')
+
+  expect(newState).toBe(state)
+  expect(Focus.setFocus).toHaveBeenCalledWith(WhenExpression.FocusSimpleBrowser, undefined, 42, ViewletModuleId.SimpleBrowser)
+})
+
+test('loadContent', async () => {
+  // @ts-ignore
+  BrowserSearchHistory.load.mockResolvedValue(['cheeseburger'])
+  // @ts-ignore
+  ElectronWebContentsView.createWebContentsView.mockImplementation(() => {
+    return 1
+  })
+  // @ts-ignore
+  // ElectronWebContentsViewFunctions.resizeBrowserView.mockImplementation(() => {})
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.setIframeSrc.mockImplementation(() => {})
+  const state = ViewletSimpleBrowser.create(0, 'simple-browser://', 0, 0, 0, 0)
+  expect(await ViewletSimpleBrowser.loadContent(state)).toMatchObject({
+    audioIndicatorEnabled: true,
+    headerHeight: 65,
+    iframeSrc: 'https://example.com/',
+    inputValue: 'https://example.com/',
+    searchHistory: ['cheeseburger'],
+    tabHoverEnabled: false,
+    tabsEnabled: true,
+    unloadTabs: false,
+  })
+})
+
+test('loadContent renders a history URI without creating a native browser view', async () => {
+  const state = ViewletSimpleBrowser.create(0, 'simple-browser-history://', 0, 0, 300, 200)
+
+  const newState = await ViewletSimpleBrowser.loadContent(state)
+
+  expect(newState).toMatchObject({
+    browserViewId: 0,
+    iframeSrc: 'simple-browser-history://',
+    inputValue: 'simple-browser-history://',
+    title: 'History',
+  })
+  expect(newState.tabs).toEqual([
+    expect.objectContaining({
+      browserViewId: 0,
+      iframeSrc: 'simple-browser-history://',
+      title: 'History',
+    }),
+  ])
+  expect(ElectronWebContentsView.createWebContentsView).not.toHaveBeenCalled()
+})
+
+test('loadContent uses registered keybindings without loading every viewlet', async () => {
+  const registeredKeyBinding = {
+    command: 'test.registered',
+    key: KeyModifier.CtrlCmd | KeyCode.KeyB,
+  }
+  KeyBindingsState.state.matchingKeyBindings = [registeredKeyBinding]
+  // @ts-ignore
+  ElectronWebContentsView.createWebContentsView.mockResolvedValue(1)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.resizeWebContentsView.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.setFallthroughKeyBindings.mockResolvedValue(undefined)
+  const state = ViewletSimpleBrowser.create(0, 'simple-browser://1', 0, 0, 300, 200)
+
+  await ViewletSimpleBrowser.loadContent(state)
+
+  expect(KeyBindingsInitial.getKeyBindings).not.toHaveBeenCalled()
+  expect(ElectronWebContentsViewFunctions.setFallthroughKeyBindings).toHaveBeenCalledWith(1, [registeredKeyBinding.key, ...browserTabKeyBindings])
+})
+
+test('backgroundLoadContent does not load or configure keybindings for an invisible browser view', async () => {
+  // @ts-ignore
+  ElectronWebContentsView.createWebContentsView.mockResolvedValue(1)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.resizeWebContentsView.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.setIframeSrc.mockResolvedValue({ newTitle: '' })
+  const state = ViewletSimpleBrowser.create(0, 'simple-browser://', 0, 0, 300, 200)
+
+  await ViewletSimpleBrowser.backgroundLoadContent(state)
+
+  expect(KeyBindingsInitial.getKeyBindings).not.toHaveBeenCalled()
+  expect(ElectronWebContentsViewFunctions.setFallthroughKeyBindings).not.toHaveBeenCalled()
+})
+
+test('loadContent enables tab hovers through simpleBrowser.tabHover.enabled', async () => {
+  Preferences.state['simpleBrowser.tabHover.enabled'] = true
+  // @ts-ignore
+  ElectronWebContentsView.createWebContentsView.mockResolvedValue(1)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.setIframeSrc.mockResolvedValue(undefined)
+  const state = ViewletSimpleBrowser.create(0, 'simple-browser://', 0, 0, 300, 200)
+
+  const newState = await ViewletSimpleBrowser.loadContent(state)
+
+  expect(newState).toMatchObject({ tabHoverEnabled: true })
+  delete Preferences.state['simpleBrowser.tabHover.enabled']
+})
+
+test('loadContent disables the audio indicator through simpleBrowser.audioIndicator.enabled', async () => {
+  Preferences.state['simpleBrowser.audioIndicator.enabled'] = false
+  // @ts-ignore
+  ElectronWebContentsView.createWebContentsView.mockResolvedValue(1)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.setIframeSrc.mockResolvedValue(undefined)
+  const state = ViewletSimpleBrowser.create(0, 'simple-browser://', 0, 0, 300, 200)
+
+  const newState = await ViewletSimpleBrowser.loadContent(state)
+
+  expect(newState).toMatchObject({ audioIndicatorEnabled: false })
+  delete Preferences.state['simpleBrowser.audioIndicator.enabled']
+})
+
+test('loadContent disables the tab strip through simpleBrowser.tabs.enabled', async () => {
+  Preferences.state['simpleBrowser.tabs.enabled'] = false
+  // @ts-ignore
+  ElectronWebContentsView.createWebContentsView.mockResolvedValue(1)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.setIframeSrc.mockResolvedValue(undefined)
+  const state = ViewletSimpleBrowser.create(0, 'simple-browser://', 0, 0, 300, 200)
+
+  const newState = await ViewletSimpleBrowser.loadContent(state)
+
+  expect(newState).toMatchObject({ headerHeight: 30, tabsEnabled: false })
+  expect(newState.tabs).toHaveLength(1)
+  delete Preferences.state['simpleBrowser.tabs.enabled']
+})
+
+test('loadContent enables inactive tab unloading through simpleBrowser.unloadTabs', async () => {
+  Preferences.state['simpleBrowser.unloadTabs'] = true
+  // @ts-ignore
+  ElectronWebContentsView.createWebContentsView.mockResolvedValue(1)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.setIframeSrc.mockResolvedValue(undefined)
+  const state = ViewletSimpleBrowser.create(0, 'simple-browser://', 0, 0, 300, 200)
+
+  const newState = await ViewletSimpleBrowser.loadContent(state)
+
+  expect(newState).toMatchObject({ unloadTabs: true })
+  delete Preferences.state['simpleBrowser.unloadTabs']
+})
+
+test('loadContent - restore id - same browser view', async () => {
+  jest.mocked(ElectronWebContentsViewFunctions.getStats).mockResolvedValue({
+    title: 'Example',
+    url: 'https://example.com/',
+    canGoBack: true,
+    canGoForward: false,
+  } as never)
+  // @ts-ignore
+  ElectronWebContentsView.createWebContentsView.mockImplementation(() => {
+    return 1
+  })
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.setIframeSrc.mockImplementation(() => {})
+  const state = ViewletSimpleBrowser.create(0, 'simple-browser://1', 0, 0, 0, 0)
+  expect(await ViewletSimpleBrowser.loadContent(state)).toMatchObject({
+    iframeSrc: 'https://example.com/',
+  })
+  expect(ElectronWebContentsView.createWebContentsView).toHaveBeenCalledTimes(1)
+  expect(ElectronWebContentsView.createWebContentsView).toHaveBeenCalledWith(1, expect.arrayContaining(browserTabKeyBindings))
+  expect(ElectronWebContentsViewFunctions.setFallthroughKeyBindings).toHaveBeenCalledTimes(1)
+  expect(ElectronWebContentsViewFunctions.setFallthroughKeyBindings).toHaveBeenCalledWith(1, browserTabKeyBindings)
+  expect(ElectronWebContentsViewFunctions.setIframeSrc).not.toHaveBeenCalled()
+})
+
+test('loadContent navigates a restored tab when a new native view reuses its saved id', async () => {
+  jest.mocked(ElectronWebContentsView.createWebContentsView).mockResolvedValue(2 as never)
+  jest.mocked(ElectronWebContentsViewFunctions.setIframeSrc).mockResolvedValue(undefined as never)
+  jest.mocked(ElectronWebContentsViewFunctions.getStats).mockResolvedValue({
+    canGoBack: false,
+    canGoForward: false,
+    title: '',
+    url: '',
+  } as never)
+  const state = ViewletSimpleBrowser.create(7, 'simple-browser://2', 0, 0, 600, 400)
+  const savedState = {
+    iframeSrc: 'https://selected.example/',
+    selectedTabIndex: 1,
+    tabs: [
+      { iframeSrc: 'https://background.example/', title: 'Background' },
+      { iframeSrc: 'https://selected.example/', title: 'Selected' },
+    ],
+  }
+
+  const restored = await ViewletSimpleBrowser.loadContent(state, savedState)
+
+  expect(ElectronWebContentsViewFunctions.setIframeSrc).toHaveBeenCalledWith(2, 'https://selected.example/')
+  expect(restored.tabs).toMatchObject([
+    { browserViewId: 0, title: 'Background' },
+    { browserViewId: 2, title: 'Selected' },
+  ])
+  expect(restored.selectedTabIndex).toBe(1)
+})
+
+test('loadContent - restore id - browser view does not exist yet', async () => {
+  // @ts-ignore
+  ElectronWebContentsView.createWebContentsView.mockImplementation(() => {
+    return 2
+  })
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.setIframeSrc.mockImplementation(() => {})
+  const state = ViewletSimpleBrowser.create(0, 'simple-browser://1', 0, 0, 0, 0)
+  expect(await ViewletSimpleBrowser.loadContent(state)).toMatchObject({
+    iframeSrc: 'https://example.com/',
+  })
+  expect(ElectronWebContentsView.createWebContentsView).toHaveBeenCalledTimes(1)
+  expect(ElectronWebContentsView.createWebContentsView).toHaveBeenCalledWith(1, expect.arrayContaining(browserTabKeyBindings))
+  expect(ElectronWebContentsViewFunctions.setFallthroughKeyBindings).toHaveBeenCalledTimes(1)
+  expect(ElectronWebContentsViewFunctions.setFallthroughKeyBindings).toHaveBeenCalledWith(2, browserTabKeyBindings)
+  expect(ElectronWebContentsViewFunctions.setIframeSrc).toHaveBeenCalledTimes(1)
+  expect(ElectronWebContentsViewFunctions.setIframeSrc).toHaveBeenCalledWith(2, 'https://example.com/')
+})
+
+test('loadContent restores every tab but creates a web contents view only for the selected tab', async () => {
+  // @ts-ignore
+  ElectronWebContentsView.createWebContentsView.mockResolvedValue(17)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.setIframeSrc.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.getStats.mockResolvedValue({ canGoBack: false, canGoForward: false, title: '' })
+  const state = ViewletSimpleBrowser.create(7, 'simple-browser://12', 10, 20, 300, 200)
+  const savedState = {
+    iframeSrc: 'https://two.example',
+    selectedTabIndex: 1,
+    tabs: [
+      { favicon: 'https://one.example/favicon.ico', iframeSrc: 'https://one.example', inputValue: 'one.example', title: 'One' },
+      { favicon: 'https://two.example/favicon.ico', iframeSrc: 'https://two.example', inputValue: 'two.example', title: 'Two' },
+      { favicon: '', iframeSrc: 'https://three.example', inputValue: 'three.example', title: 'Three' },
+    ],
+  }
+
+  const newState = await ViewletSimpleBrowser.loadContent(state, savedState)
+
+  expect(newState).toMatchObject({
+    browserViewId: 17,
+    iframeSrc: 'https://two.example',
+    inputValue: 'two.example',
+    selectedTabIndex: 1,
+    title: 'Two',
+  })
+  expect(newState.tabs).toMatchObject([
+    { browserViewId: 0, iframeSrc: 'https://one.example', title: 'One' },
+    { browserViewId: 17, iframeSrc: 'https://two.example', title: 'Two' },
+    { browserViewId: 0, iframeSrc: 'https://three.example', title: 'Three' },
+  ])
+  expect(ElectronWebContentsView.createWebContentsView).toHaveBeenCalledTimes(1)
+  expect(ElectronWebContentsView.createWebContentsView).toHaveBeenCalledWith(12, expect.arrayContaining(browserTabKeyBindings))
+  expect(ElectronWebContentsViewFunctions.setIframeSrc).toHaveBeenCalledTimes(1)
+  expect(ElectronWebContentsViewFunctions.setIframeSrc).toHaveBeenCalledWith(17, 'https://two.example')
+})
+
+test('handleTitleUpdated', async () => {
+  const state = ViewletSimpleBrowser.create()
+  expect(await ViewletSimpleBrowser.handleTitleUpdated(state, 'new Title')).toMatchObject({
+    title: 'new Title',
+  })
+})
+
+test('creates and selects an empty tab without allocating native content', async () => {
+  // @ts-ignore
+  ElectronWebContentsView.createWebContentsView.mockResolvedValue(13)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.hide.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.show.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.focus.mockResolvedValue(undefined)
+  const state = {
+    ...ViewletSimpleBrowser.create(7, '', 10, 20, 300, 200),
+    browserViewId: 12,
+    suggestionsEnabled: true,
+    tabs: [
+      {
+        browserViewId: 12,
+        canGoBack: false,
+        canGoForward: false,
+        favicon: 'https://example.com/favicon.png',
+        iframeSrc: 'https://example.com',
+        inputValue: 'https://example.com',
+        isLoading: false,
+        title: 'Example',
+      },
+    ],
+  }
+
+  const newState = await ViewletSimpleBrowser.createNewTab(state)
+
+  expect(newState).toMatchObject({ browserViewId: 0, inputValue: '', selectedTabIndex: 1, title: 'New Tab' })
+  expect(newState.tabs).toHaveLength(2)
+  expect(ElectronWebContentsView.disposeWebContentsView).not.toHaveBeenCalled()
+  expect(ElectronWebContentsViewFunctions.hide).toHaveBeenCalledWith(12)
+  expect(ElectronWebContentsViewFunctions.show).not.toHaveBeenCalled()
+  expect(ElectronWebContentsViewFunctions.setIframeSrc).not.toHaveBeenCalled()
+  expect(ElectronWebContentsView.createWebContentsView).not.toHaveBeenCalled()
+  expect(ElectronWindow.focus).toHaveBeenCalledTimes(1)
+})
+
+test('workflow tab creation allocates and focuses the page without scheduling address focus', async () => {
+  // @ts-ignore
+  ElectronWebContentsView.createWebContentsView.mockResolvedValue(13)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.getStats.mockResolvedValue({ title: 'New Tab' })
+  const state = { ...createTwoTabState(), focusAddressVersion: 3 }
+
+  const newState = await ViewletSimpleBrowser.createNewTab(state, false, true)
+
+  expect(newState.browserViewId).toBe(13)
+  expect(ElectronWebContentsView.createWebContentsView).toHaveBeenCalledWith(0, expect.arrayContaining(browserTabKeyBindings))
+
+  expect(newState.focusAddressVersion).toBe(3)
+  expect(ElectronWindow.focus).not.toHaveBeenCalled()
+  expect(ElectronWebContentsViewFunctions.focus).toHaveBeenCalledWith(13)
+})
+
+test('updates open new tab pages when the color theme changes', async () => {
+  ColorTheme.state.colorThemeCss = ':root { --EditorBackground: #193549; --InputBoxBackground: #15232d; }'
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.setIframeSrc.mockResolvedValue(undefined)
+  const state = { ...createTwoTabState(), chromeTheme: 'inherit' }
+  const { tabs } = state
+  tabs[0].iframeSrc = ''
+
+  const newState = await ViewletSimpleBrowser.handleColorThemeChanged(state)
+
+  expect(newState).toBe(state)
+  expect(ElectronWebContentsViewFunctions.setIframeSrc).toHaveBeenCalledTimes(1)
+  expect(ElectronWebContentsViewFunctions.setIframeSrc).toHaveBeenCalledWith(12, SimpleBrowserNewTabPage.getUrl(undefined, false, 'inherit'))
+})
+
+test.each(['light', 'inherit'])('updates open new tab pages when browser chrome changes to %s', async (chromeTheme) => {
+  Preferences.state['simpleBrowser.chromeTheme'] = chromeTheme
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.setIframeSrc.mockResolvedValue(undefined)
+  const state = { ...createTwoTabState(), chromeTheme: chromeTheme === 'light' ? 'inherit' : 'light' }
+  state.tabs[0].iframeSrc = ''
+
+  const newState = await ViewletSimpleBrowser.handleSettingsChanged(state)
+
+  expect(newState.chromeTheme).toBe(chromeTheme)
+  expect(ElectronWebContentsViewFunctions.setIframeSrc).toHaveBeenCalledTimes(1)
+  expect(ElectronWebContentsViewFunctions.setIframeSrc).toHaveBeenCalledWith(12, SimpleBrowserNewTabPage.getUrl(undefined, false, chromeTheme))
+})
+
+test('updates cached settings without recreating browser tabs', async () => {
+  Preferences.state['simpleBrowser.audioIndicator.enabled'] = false
+  Preferences.state['simpleBrowser.chromeTheme'] = 'light'
+  Preferences.state['simpleBrowser.shortcuts'] = [{ prefix: 'docs', url: 'https://docs.example/{query}' }]
+  Preferences.state['simpleBrowser.suggestions'] = false
+  Preferences.state['simpleBrowser.tabHover.enabled'] = true
+  Preferences.state['simpleBrowser.tabs.enabled'] = false
+  Preferences.state['simpleBrowser.unloadTabs'] = true
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.resizeWebContentsView.mockResolvedValue(undefined)
+  const state = {
+    ...createTwoTabState(),
+    headerHeight: 65,
+    height: 200,
+    width: 300,
+    x: 0,
+    y: 0,
+    suggestionsEnabled: true,
+  }
+
+  const newState = await ViewletSimpleBrowser.handleSettingsChanged(state)
+
+  expect(newState).toMatchObject({
+    audioIndicatorEnabled: false,
+    chromeTheme: 'light',
+    shortcuts: [{ prefix: 'docs', url: 'https://docs.example/{query}' }],
+    suggestionsEnabled: false,
+    tabHoverEnabled: true,
+    tabsEnabled: false,
+    unloadTabs: true,
+    headerHeight: 30,
+  })
+  expect(newState.tabs).toBe(state.tabs)
+  expect(ElectronWebContentsView.disposeWebContentsView).not.toHaveBeenCalled()
+  expect(ElectronWebContentsViewFunctions.resizeWebContentsView).toHaveBeenCalledTimes(2)
+  expect(ElectronWebContentsViewFunctions.resizeWebContentsView).toHaveBeenNthCalledWith(1, 12, 0, 30, 300, 170)
+  expect(ElectronWebContentsViewFunctions.resizeWebContentsView).toHaveBeenNthCalledWith(2, 13, 0, 30, 300, 170)
+})
+
+test('disabling suggestions closes the popup and rejects pending provider results', async () => {
+  Preferences.state['simpleBrowser.suggestions'] = false
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.show.mockResolvedValue(undefined)
+  const state = {
+    ...ViewletSimpleBrowser.create(7),
+    browserViewId: 12,
+    hasSuggestionsOverlay: true,
+    inputValue: 'what is',
+    overlayIds: ['search-suggestions'],
+    snapshot: 'blob:https://example.com/snapshot',
+    suggestions: [{ favicon: '', type: 'search', value: 'what is' }],
+    suggestionsEnabled: true,
+  }
+  const sessionId = BrowserSuggestionRequests.begin(7, 12, 'what is', undefined, undefined)
+
+  const disabled = await ViewletSimpleBrowser.handleSettingsChanged(state)
+  const lateResult = await ViewletSimpleBrowser.applySuggestions(disabled, 7, 'what is', ['what is love'], undefined, sessionId)
+
+  expect(disabled).toMatchObject({ hasSuggestionsOverlay: false, selectedSuggestionIndex: -1, suggestions: [], suggestionsEnabled: false })
+  expect(disabled.overlayIds).toEqual([])
+  expect(lateResult).toBe(disabled)
+  expect(ElectronWebContentsViewFunctions.show).toHaveBeenCalledWith(12)
+})
+
+test('toggling suggestions refreshes generated new-tab pages', async () => {
+  Preferences.state['simpleBrowser.suggestions'] = true
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.setIframeSrc.mockResolvedValue(undefined)
+  const state = {
+    ...ViewletSimpleBrowser.create(7),
+    browserViewId: 12,
+    suggestionsEnabled: false,
+    tabs: [{ browserViewId: 12, iframeSrc: '', inputValue: '', title: 'New Tab' }],
+  }
+
+  const enabled = await ViewletSimpleBrowser.handleSettingsChanged(state)
+
+  expect(enabled.suggestionsEnabled).toBe(true)
+  expect(ElectronWebContentsViewFunctions.setIframeSrc).toHaveBeenCalledWith(12, SimpleBrowserNewTabPage.getUrl(undefined, true, 'light'))
+})
+
+test('does not reload new tab pages for unrelated settings changes', async () => {
+  const state = { ...createTwoTabState(), chromeTheme: 'light' }
+  state.tabs[0].iframeSrc = ''
+
+  expect(await ViewletSimpleBrowser.handleSettingsChanged(state)).toBe(state)
+  expect(ElectronWebContentsViewFunctions.setIframeSrc).not.toHaveBeenCalled()
+})
+
+test('opens a target blank link in a new selected tab by default', async () => {
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.hide.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.show.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.focus.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.resizeWebContentsView.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.setFallthroughKeyBindings.mockResolvedValue(undefined)
+  const state = {
+    ...ViewletSimpleBrowser.create(7, '', 10, 20, 300, 200),
+    browserViewId: 12,
+    tabs: [{ browserViewId: 12, iframeSrc: 'https://example.com', inputValue: 'https://example.com', title: 'Example' }],
+  }
+
+  const newState = await ViewletSimpleBrowser.handleWindowOpen(state, 12, 13, 'https://example.com/docs', 'foreground-tab')
+
+  expect(newState).toMatchObject({ browserViewId: 13, iframeSrc: 'https://example.com/docs', selectedTabIndex: 1 })
+  expect(newState.tabs).toHaveLength(2)
+  expect(ElectronWebContentsView.adoptWebContentsView).toHaveBeenCalledTimes(1)
+  expect(ElectronWebContentsView.createWebContentsView).not.toHaveBeenCalled()
+  expect(ElectronWebContentsViewFunctions.setIframeSrc).not.toHaveBeenCalled()
+  expect(ElectronWebContentsViewFunctions.resizeWebContentsView).toHaveBeenCalledWith(13, 10, 85, 300, 135)
+  expect(ElectronWebContentsViewFunctions.hide).toHaveBeenCalledWith(12)
+  expect(ElectronWebContentsViewFunctions.show).toHaveBeenCalledWith(13)
+  expect(ElectronWebContentsViewFunctions.focus).toHaveBeenCalledWith(13)
+})
+
+test.each([true, false])('keeps a target blank background tab hidden and preserves browser focus (%s)', async (browserFocused) => {
+  FocusState.set(browserFocused ? WhenExpression.FocusSimpleBrowser : 0)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.hide.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.resizeWebContentsView.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.setFallthroughKeyBindings.mockResolvedValue(undefined)
+  const state = {
+    ...ViewletSimpleBrowser.create(7, '', 10, 20, 300, 200),
+    browserViewId: 12,
+    tabs: [{ browserViewId: 12, iframeSrc: 'https://example.com', inputValue: 'https://example.com', title: 'Example' }],
+  }
+
+  const newState = await ViewletSimpleBrowser.handleWindowOpen(state, 12, 13, 'https://example.com/docs', 'background-tab')
+
+  expect(newState).toMatchObject({ browserViewId: 12, selectedTabIndex: 0 })
+  expect(newState.tabs).toHaveLength(2)
+  expect(ElectronWebContentsViewFunctions.hide).toHaveBeenCalledWith(13)
+  expect(ElectronWebContentsViewFunctions.show).not.toHaveBeenCalled()
+  if (browserFocused) {
+    expect(ElectronWebContentsViewFunctions.focus).toHaveBeenCalledWith(12)
+    expect(jest.mocked(ElectronWebContentsViewFunctions.hide).mock.invocationCallOrder[0]).toBeLessThan(
+      jest.mocked(ElectronWebContentsViewFunctions.focus).mock.invocationCallOrder[0],
+    )
+  } else {
+    expect(ElectronWebContentsViewFunctions.focus).not.toHaveBeenCalled()
+  }
+})
+
+test('does not focus an inactive source tab when it opens a background child', async () => {
+  FocusState.set(WhenExpression.FocusSimpleBrowser)
+  const state = {
+    ...ViewletSimpleBrowser.create(7, '', 10, 20, 300, 200),
+    browserViewId: 14,
+    selectedTabIndex: 1,
+    tabs: [
+      { browserViewId: 12, iframeSrc: 'https://example.com', inputValue: 'https://example.com', title: 'Example' },
+      { browserViewId: 14, iframeSrc: 'https://active.example', inputValue: 'https://active.example', title: 'Active' },
+    ],
+  }
+
+  const newState = await ViewletSimpleBrowser.handleWindowOpen(state, 12, 13, 'https://example.com/docs', 'background-tab')
+
+  expect(newState).toMatchObject({ browserViewId: 14, selectedTabIndex: 1 })
+  expect(ElectronWebContentsViewFunctions.hide).toHaveBeenCalledWith(13)
+  expect(ElectronWebContentsViewFunctions.focus).not.toHaveBeenCalled()
+})
+
+test('keeps a popup child loaded when tab unloading is enabled', async () => {
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.hide.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.resizeWebContentsView.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.setFallthroughKeyBindings.mockResolvedValue(undefined)
+  const state = {
+    ...ViewletSimpleBrowser.create(7, '', 10, 20, 300, 200),
+    browserViewId: 12,
+    tabs: [{ browserViewId: 12, iframeSrc: 'https://example.com', inputValue: 'https://example.com', title: 'Example' }],
+    unloadTabs: true,
+  }
+
+  const newState = await ViewletSimpleBrowser.handleWindowOpen(state, 12, 13, 'https://example.com/docs', 'background-tab')
+
+  expect(newState.tabs[1]).toMatchObject({ browserViewId: 13, iframeSrc: 'https://example.com/docs', isLoading: true })
+  expect(ElectronWebContentsView.adoptWebContentsView).toHaveBeenCalledTimes(1)
+  expect(ElectronWebContentsView.createWebContentsView).not.toHaveBeenCalled()
+  expect(ElectronWebContentsViewFunctions.setIframeSrc).not.toHaveBeenCalled()
+})
+
+test('opens a context menu link in a new background web contents view', async () => {
+  // @ts-ignore
+  ElectronWebContentsView.createWebContentsView.mockResolvedValue(13)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.hide.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.setIframeSrc.mockResolvedValue(undefined)
+  const state = {
+    ...ViewletSimpleBrowser.create(7, '', 10, 20, 300, 200),
+    browserViewId: 12,
+    tabs: [{ browserViewId: 12, iframeSrc: 'https://example.com', inputValue: 'https://example.com', title: 'Example' }],
+  }
+
+  const newState = await ViewletSimpleBrowserOpenBackgroundTab.openBackgroundTab(state, 'https://example.com/docs')
+
+  expect(newState).toMatchObject({ browserViewId: 12, selectedTabIndex: 0 })
+  expect(newState.tabs).toHaveLength(2)
+  expect(newState.tabs[1]).toMatchObject({ browserViewId: 13, iframeSrc: 'https://example.com/docs' })
+  expect(ElectronWebContentsViewFunctions.setIframeSrc).toHaveBeenCalledWith(13, 'https://example.com/docs')
+  expect(ElectronWebContentsViewFunctions.show).not.toHaveBeenCalled()
+})
+
+test('opens a target blank link in the system browser when configured', async () => {
+  // @ts-ignore
+  ElectronWebContentsView.disposeWebContentsView.mockResolvedValue(undefined)
+  Preferences.state['simpleBrowser.openExternalLinks'] = 'externalBrowser'
+  const state = {
+    ...ViewletSimpleBrowser.create(),
+    browserViewId: 12,
+    tabs: [{ browserViewId: 12 }],
+  }
+
+  const newState = await ViewletSimpleBrowser.handleWindowOpen(state, 12, 13, 'https://example.com/docs', 'foreground-tab')
+
+  expect(newState).toBe(state)
+  expect(ElectronWebContentsView.adoptWebContentsView).toHaveBeenCalledTimes(1)
+  expect(ElectronWebContentsView.disposeWebContentsView).toHaveBeenCalledWith(13)
+  expect(Command.execute).toHaveBeenCalledWith('Open.openExternal', 'https://example.com/docs')
+  delete Preferences.state['simpleBrowser.openExternalLinks']
+})
+
+test('ignores a target blank event from another simple browser instance', async () => {
+  const state = {
+    ...ViewletSimpleBrowser.create(),
+    browserViewId: 12,
+    tabs: [{ browserViewId: 12 }],
+  }
+
+  const newState = await ViewletSimpleBrowser.handleWindowOpen(state, 99, 13, 'https://example.com/docs', 'foreground-tab')
+
+  expect(newState).toBe(state)
+  expect(ElectronWebContentsView.adoptWebContentsView).not.toHaveBeenCalled()
+  expect(ElectronWebContentsView.createWebContentsView).not.toHaveBeenCalled()
+  expect(Command.execute).not.toHaveBeenCalled()
+})
+
+test('switches tabs by showing the selected view before hiding the previous active view', async () => {
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.hide.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.show.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.focus.mockResolvedValue(undefined)
+  const state = {
+    ...ViewletSimpleBrowser.create(),
+    browserViewId: 12,
+    tabs: [
+      {
+        browserViewId: 12,
+        canGoBack: false,
+        canGoForward: false,
+        favicon: '',
+        iframeSrc: 'https://one.example',
+        inputValue: 'https://one.example',
+        isLoading: false,
+        title: 'One',
+        zoomLevel: 0,
+      },
+      {
+        browserViewId: 13,
+        canGoBack: true,
+        canGoForward: false,
+        favicon: '',
+        iframeSrc: 'https://two.example',
+        inputValue: 'https://two.example',
+        isLoading: false,
+        title: 'Two',
+        zoomLevel: 1,
+      },
+    ],
+  }
+
+  const newState = await ViewletSimpleBrowser.selectTab(state, '1')
+
+  expect(newState).toMatchObject({
+    browserViewId: 13,
+    canGoBack: true,
+    inputValue: 'https://two.example',
+    selectedTabIndex: 1,
+    title: 'Two',
+    zoomLevel: 1,
+  })
+  expect(ElectronWebContentsViewFunctions.hide).toHaveBeenCalledWith(12)
+  expect(ElectronWebContentsViewFunctions.show).toHaveBeenCalledWith(13)
+  // @ts-ignore
+  const showCallOrder = ElectronWebContentsViewFunctions.show.mock.invocationCallOrder[0]
+  // @ts-ignore
+  const hideCallOrder = ElectronWebContentsViewFunctions.hide.mock.invocationCallOrder[0]
+  expect(showCallOrder).toBeLessThan(hideCallOrder)
+})
+
+test('unloads a silent inactive tab after capturing its dom and css', async () => {
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.insertJavaScript.mockResolvedValue({
+    css: '.page { color: red; }',
+    dom: { type: 'html', attributes: {}, children: [{ type: 'body', attributes: {}, children: [] }] },
+    url: 'https://one.example',
+  })
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.show.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.focus.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsView.disposeWebContentsView.mockResolvedValue(undefined)
+  const state = { ...createTwoTabState(), unloadTabs: true }
+
+  const newState = await ViewletSimpleBrowser.selectTab(state, 1)
+
+  expect(ElectronWebContentsViewFunctions.insertJavaScript).toHaveBeenCalledWith(12, expect.any(String))
+  expect(ElectronWebContentsView.disposeWebContentsView).toHaveBeenCalledWith(12)
+  expect(ElectronWebContentsViewFunctions.hide).not.toHaveBeenCalledWith(12)
+  expect(newState.tabs[0]).toMatchObject({
+    browserViewId: 0,
+    pageSnapshot: {
+      css: '.page { color: red; }',
+      key: 'webcontents-snapshot-one-example',
+    },
+  })
+})
+
+test('never unloads an inactive tab that is playing audio', async () => {
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.hide.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.show.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.focus.mockResolvedValue(undefined)
+  const state = createTwoTabState()
+  const tabs = state.tabs.with(0, { ...state.tabs[0], isAudioPlaying: true })
+
+  const newState = await ViewletSimpleBrowser.selectTab({ ...state, isAudioPlaying: true, tabs, unloadTabs: true }, 1)
+
+  expect(newState.tabs[0]).toMatchObject({ browserViewId: 12, isAudioPlaying: true })
+  expect(ElectronWebContentsViewFunctions.insertJavaScript).not.toHaveBeenCalled()
+  expect(ElectronWebContentsView.disposeWebContentsView).not.toHaveBeenCalled()
+  expect(ElectronWebContentsViewFunctions.hide).toHaveBeenCalledWith(12)
+})
+
+test('keeps the inactive web contents alive when snapshot capture fails', async () => {
+  const consoleError = jest.spyOn(console, 'error').mockImplementation(() => {})
+  try {
+    // @ts-ignore
+    ElectronWebContentsViewFunctions.insertJavaScript.mockRejectedValue(new Error('capture failed'))
+    // @ts-ignore
+    ElectronWebContentsViewFunctions.hide.mockResolvedValue(undefined)
+    // @ts-ignore
+    ElectronWebContentsViewFunctions.show.mockResolvedValue(undefined)
+    // @ts-ignore
+    ElectronWebContentsViewFunctions.focus.mockResolvedValue(undefined)
+    const state = { ...createTwoTabState(), unloadTabs: true }
+
+    const newState = await ViewletSimpleBrowser.selectTab(state, 1)
+
+    expect(newState.tabs[0]).toMatchObject({ browserViewId: 12 })
+    expect(ElectronWebContentsView.disposeWebContentsView).not.toHaveBeenCalled()
+    expect(ElectronWebContentsViewFunctions.hide).toHaveBeenCalledWith(12)
+  } finally {
+    consoleError.mockRestore()
+  }
+})
+
+test.each([true, false])('finishes a cached preview reload with browser focus %s', async (browserFocused) => {
+  // @ts-ignore
+  ElectronWebContentsView.createWebContentsView.mockResolvedValue(18)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.hide.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.resizeWebContentsView.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.setIframeSrc.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.show.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.focus.mockResolvedValue(undefined)
+  const pageSnapshot = {
+    css: '.page { color: red; }',
+    dom: [{ type: 4, className: 'page', childCount: 0 }],
+    key: 'webcontents-snapshot-one-example',
+  }
+  const state = {
+    ...ViewletSimpleBrowser.create(7, 'simple-browser://12', 10, 20, 300, 200),
+    browserViewId: 12,
+    headerHeight: 65,
+    isAudioPlaying: true,
+    tabs: [
+      { browserViewId: 12, iframeSrc: 'https://two.example', inputValue: 'two.example', isAudioPlaying: true, title: 'Two' },
+      { browserViewId: 0, iframeSrc: 'https://one.example', inputValue: 'one.example', pageSnapshot, title: 'One' },
+    ],
+    unloadTabs: true,
+  }
+
+  const loadingState = await ViewletSimpleBrowser.selectTab(state, 1)
+
+  expect(loadingState.tabs[1]).toMatchObject({ browserViewId: 18, isLoading: true, pageSnapshot })
+  expect(ElectronWebContentsViewFunctions.show).not.toHaveBeenCalledWith(18)
+  expect(ElectronWebContentsViewFunctions.focus).not.toHaveBeenCalledWith(18)
+  await ViewletSimpleBrowser.show(loadingState)
+
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.getStats.mockResolvedValue({ canGoBack: false, canGoForward: false })
+  FocusState.set(browserFocused ? WhenExpression.FocusSimpleBrowser : 0)
+  const loadedState = await ViewletSimpleBrowser.handleDidNavigate(loadingState, 18, 'https://one.example')
+
+  expect(ElectronWebContentsViewFunctions.show).toHaveBeenCalledWith(18)
+  if (browserFocused) expect(ElectronWebContentsViewFunctions.focus).toHaveBeenCalledWith(18)
+  else expect(ElectronWebContentsViewFunctions.focus).not.toHaveBeenCalledWith(18)
+  expect(loadedState.tabs[1]).toMatchObject({ browserViewId: 18, isLoading: false })
+  expect(loadedState.tabs[1].pageSnapshot).toBeUndefined()
+})
+
+test('creates a restored background tab web contents view when the tab is selected', async () => {
+  // @ts-ignore
+  ElectronWebContentsView.createWebContentsView.mockResolvedValue(18)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.hide.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.resizeWebContentsView.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.setIframeSrc.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.show.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.focus.mockResolvedValue(undefined)
+  const state = {
+    ...ViewletSimpleBrowser.create(7, 'simple-browser://17', 10, 20, 300, 200),
+    browserViewId: 17,
+    headerHeight: 65,
+    selectedTabIndex: 1,
+    tabs: [
+      { browserViewId: 0, iframeSrc: 'https://one.example', inputValue: 'one.example', title: 'One' },
+      { browserViewId: 17, iframeSrc: 'https://two.example', inputValue: 'two.example', title: 'Two' },
+    ],
+  }
+
+  const newState = await ViewletSimpleBrowser.selectTab(state, 0)
+
+  expect(newState).toMatchObject({
+    browserViewId: 18,
+    iframeSrc: 'https://one.example',
+    inputValue: 'one.example',
+    selectedTabIndex: 0,
+    title: 'One',
+  })
+  expect(newState.tabs[0]).toMatchObject({ browserViewId: 18, iframeSrc: 'https://one.example', isLoading: true })
+  expect(ElectronWebContentsView.createWebContentsView).toHaveBeenCalledTimes(1)
+  expect(ElectronWebContentsView.createWebContentsView).toHaveBeenCalledWith(0, expect.arrayContaining(browserTabKeyBindings))
+  expect(ElectronWebContentsViewFunctions.resizeWebContentsView).toHaveBeenCalledWith(18, 10, 85, 300, 135)
+  expect(ElectronWebContentsViewFunctions.setIframeSrc).toHaveBeenCalledWith(18, 'https://one.example')
+  expect(ElectronWebContentsViewFunctions.show).toHaveBeenCalledWith(18)
+  expect(ElectronWebContentsViewFunctions.hide).toHaveBeenCalledWith(17)
+  expect(ElectronWebContentsViewFunctions.focus).toHaveBeenCalledWith(18)
+})
+
+test('Ctrl+Tab from the focused web contents selects the next browser tab', async () => {
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.hide.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.show.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.focus.mockResolvedValue(undefined)
+  const state = createTwoTabState()
+
+  const newState = await ViewletSimpleBrowser.handleKeyBinding(state, 12, KeyModifier.CtrlCmd | KeyCode.Tab)
+
+  expect(newState).toMatchObject({ browserViewId: 13, selectedTabIndex: 1, title: 'Two' })
+  expect(ElectronWebContentsViewFunctions.focus).toHaveBeenCalledWith(13)
+})
+
+test('Ctrl+Shift+Tab from the focused web contents wraps to the previous browser tab', async () => {
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.hide.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.show.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.focus.mockResolvedValue(undefined)
+  const state = createTwoTabState()
+
+  const newState = await ViewletSimpleBrowser.handleKeyBinding(state, 12, KeyModifier.CtrlCmd | KeyModifier.Shift | KeyCode.Tab)
+
+  expect(newState).toMatchObject({ browserViewId: 13, selectedTabIndex: 1, title: 'Two' })
+  expect(ElectronWebContentsViewFunctions.focus).toHaveBeenCalledWith(13)
+})
+
+test('Ctrl+W from the focused web contents closes the current browser tab', async () => {
+  // @ts-ignore
+  ElectronWebContentsView.disposeWebContentsView.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.show.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.focus.mockResolvedValue(undefined)
+  const state = createTwoTabState()
+
+  const newState = await ViewletSimpleBrowser.handleKeyBinding(state, 12, KeyModifier.CtrlCmd | KeyCode.KeyW)
+
+  expect(newState).toMatchObject({ browserViewId: 13, selectedTabIndex: 0, title: 'Two' })
+  expect(newState.tabs).toHaveLength(1)
+  expect(ElectronWebContentsView.disposeWebContentsView).toHaveBeenCalledWith(12)
+  expect(ElectronWebContentsViewFunctions.focus).toHaveBeenCalledWith(13)
+})
+
+test('Ctrl+T from the focused web contents creates a new browser tab', async () => {
+  // @ts-ignore
+  ElectronWebContentsView.createWebContentsView.mockResolvedValue(14)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.hide.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.resizeWebContentsView.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.show.mockResolvedValue(undefined)
+  const state = createTwoTabState()
+
+  const newState = await ViewletSimpleBrowser.handleKeyBinding(state, 12, KeyModifier.CtrlCmd | KeyCode.KeyT)
+
+  expect(newState).toMatchObject({ browserViewId: 0, focusAddressVersion: 1, selectedTabIndex: 2, title: 'New Tab' })
+  expect(newState.tabs).toHaveLength(3)
+  expect(ElectronWebContentsViewFunctions.hide).toHaveBeenCalledWith(12)
+  expect(ElectronWebContentsViewFunctions.show).not.toHaveBeenCalledWith(14)
+  expect(ElectronWindow.focus).toHaveBeenCalledTimes(1)
+})
+
+test('Ctrl+H from the focused web contents opens history', async () => {
+  const state = createTwoTabState()
+
+  const newState = await ViewletSimpleBrowser.handleKeyBinding(state, 12, KeyModifier.CtrlCmd | KeyCode.KeyH)
+
+  expect(newState.selectedTabIndex).toBe(2)
+  expect(newState.tabs[2]).toMatchObject({
+    browserViewId: 0,
+    iframeSrc: 'simple-browser-history://',
+    title: 'History',
+  })
+})
+
+test('ignores keybindings from another simple browser instance', async () => {
+  const state = createTwoTabState()
+
+  const newState = await ViewletSimpleBrowser.handleKeyBinding(state, 99, KeyModifier.CtrlCmd | KeyCode.Tab)
+
+  expect(newState).toBe(state)
+  expect(ElectronWebContentsViewFunctions.hide).not.toHaveBeenCalled()
+})
+
+test('updates the matching background tab from web contents events', async () => {
+  const state = {
+    ...ViewletSimpleBrowser.create(),
+    browserViewId: 12,
+    tabs: [
+      { browserViewId: 12, favicon: '', iframeSrc: 'https://one.example', inputValue: 'https://one.example', title: 'One' },
+      { browserViewId: 13, favicon: '', iframeSrc: 'https://two.example', inputValue: 'https://two.example', title: 'Two' },
+    ],
+  }
+
+  const withTitle = await ViewletSimpleBrowser.handleTitleUpdated(state, 13, 'Updated Two')
+  const withFavicon = ViewletSimpleBrowser.handlePageFaviconUpdated(withTitle, 13, ['https://two.example/favicon.png'])
+  const withAudio = ViewletSimpleBrowser.handleAudioStateChanged(withFavicon, 13, true)
+
+  expect(withAudio.title).toBe('')
+  expect(withAudio.tabs[1]).toMatchObject({ favicon: 'https://two.example/favicon.png', isAudioPlaying: true, title: 'Updated Two' })
+})
+
+test('records completed page navigation in history', async () => {
+  const historyEntries = [{ date: 200, url: 'https://example.com/docs' }]
+  // @ts-ignore
+  BrowserHistory.record.mockResolvedValue(historyEntries)
+  const state = {
+    ...ViewletSimpleBrowser.create(),
+    browserViewId: 12,
+    tabs: [{ browserViewId: 12, iframeSrc: '', inputValue: '', title: 'Example' }],
+  }
+
+  const newState = await ViewletSimpleBrowser.handleDidNavigate(state, 12, 'https://example.com/docs')
+
+  expect(BrowserHistory.record).toHaveBeenCalledWith('https://example.com/docs')
+  expect(newState).toMatchObject({ iframeSrc: 'https://example.com/docs', isLoading: false })
+})
+
+test('remembers the origin when a page favicon is received', () => {
+  const visitedSites = [{ favicon: 'https://soundcloud.com/favicon.ico', origin: 'https://soundcloud.com' }]
+  // @ts-ignore
+  BrowserVisitedSites.add.mockReturnValue(visitedSites)
+  const state = {
+    ...ViewletSimpleBrowser.create(),
+    browserViewId: 12,
+    tabs: [{ browserViewId: 12, favicon: '', iframeSrc: 'https://soundcloud.com/discover', title: 'SoundCloud' }],
+  }
+
+  const newState = ViewletSimpleBrowser.handlePageFaviconUpdated(state, 12, ['https://soundcloud.com/favicon.ico'])
+
+  expect(BrowserVisitedSites.add).toHaveBeenCalledWith([], 'https://soundcloud.com/discover', 'https://soundcloud.com/favicon.ico')
+  expect(BrowserVisitedSites.save).toHaveBeenCalledWith(visitedSites)
+  expect(newState).toMatchObject({ favicon: 'https://soundcloud.com/favicon.ico', visitedSites })
+})
+
+test('creates a renderer object url for fetched favicon bytes and persists its source url', () => {
+  const favicon = { bytes: new Uint8Array([0, 1, 2]), mimeType: 'image/png', url: 'https://soundcloud.com/favicon.ico' }
+  jest.mocked(SimpleBrowserFavicon.create).mockReturnValue('blob:favicon')
+  const visitedSites = [{ favicon: favicon.url, origin: 'https://soundcloud.com' }]
+  jest.mocked(BrowserVisitedSites.add).mockReturnValue(visitedSites)
+  const state = {
+    ...ViewletSimpleBrowser.create(),
+    browserViewId: 12,
+    tabs: [{ browserViewId: 12, favicon: '', iframeSrc: 'https://soundcloud.com/discover', title: 'SoundCloud' }],
+  }
+
+  const newState = ViewletSimpleBrowser.handlePageFaviconUpdated(state, 12, [favicon])
+
+  expect(newState).toMatchObject({ favicon: 'blob:favicon', faviconUrl: favicon.url, visitedSites })
+  expect(ViewletSimpleBrowser.saveState(newState).tabs[0].favicon).toBe(favicon.url)
+  expect(BrowserVisitedSites.add).toHaveBeenCalledWith([], 'https://soundcloud.com/discover', favicon.url)
+})
+
+test('revokes a replaced favicon object url', () => {
+  jest.mocked(SimpleBrowserFavicon.create).mockReturnValue('blob:new-favicon')
+  const state = {
+    ...ViewletSimpleBrowser.create(),
+    browserViewId: 12,
+    tabs: [{ browserViewId: 12, favicon: 'blob:old-favicon', iframeSrc: 'https://example.com', title: 'Example' }],
+  }
+
+  ViewletSimpleBrowser.handlePageFaviconUpdated(state, 12, [
+    { bytes: new Uint8Array([0]), mimeType: 'image/png', url: 'https://example.com/favicon.ico' },
+  ])
+
+  expect(SimpleBrowserFavicon.dispose).toHaveBeenCalledWith('blob:old-favicon')
+})
+
+test('updates audio state for the selected tab', () => {
+  const state = {
+    ...ViewletSimpleBrowser.create(),
+    browserViewId: 12,
+    tabs: [{ browserViewId: 12, isAudioPlaying: false }],
+  }
+
+  const playing = ViewletSimpleBrowser.handleAudioStateChanged(state, 12, true)
+  const paused = ViewletSimpleBrowser.handleAudioStateChanged(playing, 12, false)
+
+  expect(playing).toMatchObject({ isAudioPlaying: true, tabs: [{ browserViewId: 12, isAudioPlaying: true }] })
+  expect(paused).toMatchObject({ isAudioPlaying: false, tabs: [{ browserViewId: 12, isAudioPlaying: false }] })
+})
+
+test('tracks concurrent browser downloads and ignores updates for removed tabs', () => {
+  const state = {
+    ...ViewletSimpleBrowser.create(),
+    browserViewId: 12,
+    tabs: [{ browserViewId: 12 }, { browserViewId: 13 }],
+  }
+
+  const firstStarted = ViewletSimpleBrowser.handleDownloadStateChanged(state, 12, 1, 'started')
+  const secondStarted = ViewletSimpleBrowser.handleDownloadStateChanged(firstStarted, 13, 2, 'started')
+  const firstCompleted = ViewletSimpleBrowser.handleDownloadStateChanged(secondStarted, 12, 1, 'completed')
+  const secondFailed = ViewletSimpleBrowser.handleDownloadStateChanged(firstCompleted, 13, 2, 'failed')
+
+  expect(firstStarted.downloadStates).toEqual({ 1: 'downloading' })
+  expect(firstCompleted.downloadStates).toEqual({ 2: 'downloading', completed: 'completed' })
+  expect(secondFailed.downloadStates).toEqual({ completed: 'completed' })
+  expect(ViewletSimpleBrowser.handleDownloadStateChanged(state, 99, 3, 'completed')).toBe(state)
+})
+
+test('closing a tab disposes only its web contents view', async () => {
+  // @ts-ignore
+  ElectronWebContentsView.disposeWebContentsView.mockResolvedValue(undefined)
+  const state = {
+    ...ViewletSimpleBrowser.create(),
+    browserViewId: 12,
+    tabs: [
+      { browserViewId: 12, favicon: '', iframeSrc: 'https://one.example', inputValue: 'https://one.example', title: 'One' },
+      { browserViewId: 13, favicon: 'blob:two-favicon', iframeSrc: 'https://two.example', inputValue: 'https://two.example', title: 'Two' },
+    ],
+  }
+
+  const newState = await ViewletSimpleBrowser.closeTab(state, 1)
+
+  expect(newState.tabs).toHaveLength(1)
+  expect(newState.browserViewId).toBe(12)
+  expect(ElectronWebContentsView.disposeWebContentsView).toHaveBeenCalledWith(13)
+  expect(SimpleBrowserFavicon.dispose).toHaveBeenCalledWith('blob:two-favicon')
+})
+
+test('closes an oauth tab when its child web contents closes itself', async () => {
+  // @ts-ignore
+  ElectronWebContentsView.releaseWebContentsView.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.show.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.focus.mockResolvedValue(undefined)
+  const state = {
+    ...ViewletSimpleBrowser.create(),
+    browserViewId: 13,
+    selectedTabIndex: 1,
+    tabs: [
+      { browserViewId: 12, favicon: '', iframeSrc: 'https://soundcloud.com', inputValue: 'https://soundcloud.com', title: 'SoundCloud' },
+      { browserViewId: 13, favicon: '', iframeSrc: 'https://accounts.google.com', inputValue: 'https://accounts.google.com', title: 'Sign in' },
+    ],
+  }
+
+  const newState = await ViewletSimpleBrowser.handleBrowserViewDestroyed(state, 13)
+
+  expect(newState).toMatchObject({ browserViewId: 12, selectedTabIndex: 0, title: 'SoundCloud' })
+  expect(newState.tabs).toHaveLength(1)
+  expect(ElectronWebContentsView.releaseWebContentsView).toHaveBeenCalledTimes(1)
+  expect(ElectronWebContentsView.disposeWebContentsView).not.toHaveBeenCalled()
+  expect(ElectronWebContentsViewFunctions.show).toHaveBeenCalledWith(12)
+  expect(ElectronWebContentsViewFunctions.focus).toHaveBeenCalledWith(12)
+})
+
+test('ignores a destroyed web contents event from another simple browser instance', async () => {
+  const state = {
+    ...ViewletSimpleBrowser.create(),
+    browserViewId: 12,
+    tabs: [{ browserViewId: 12 }],
+  }
+
+  const newState = await ViewletSimpleBrowser.handleBrowserViewDestroyed(state, 13)
+
+  expect(newState).toBe(state)
+  expect(ElectronWebContentsView.releaseWebContentsView).not.toHaveBeenCalled()
+})
+
+test('closes the selected tab from the browser menu', async () => {
+  // @ts-ignore
+  ElectronWebContentsView.disposeWebContentsView.mockResolvedValue(undefined)
+  const state = {
+    ...ViewletSimpleBrowser.create(),
+    browserViewId: 13,
+    selectedTabIndex: 1,
+    tabs: [
+      { browserViewId: 12, favicon: '', iframeSrc: 'https://one.example', inputValue: 'https://one.example', title: 'One', zoomLevel: 0 },
+      { browserViewId: 13, favicon: '', iframeSrc: 'https://two.example', inputValue: 'https://two.example', title: 'Two', zoomLevel: 0 },
+    ],
+  }
+
+  const newState = await ViewletSimpleBrowser.closeCurrentTab(state)
+
+  expect(newState.tabs).toHaveLength(1)
+  expect(newState.browserViewId).toBe(12)
+  expect(ElectronWebContentsView.disposeWebContentsView).toHaveBeenCalledWith(13)
+})
+
+test('mutes a background tab without changing the active tab state', async () => {
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.setAudioMuted.mockResolvedValue(undefined)
+  const state = createTabsState()
+
+  const newState = await ViewletSimpleBrowser.muteTab(state, 1)
+
+  expect(ElectronWebContentsViewFunctions.setAudioMuted).toHaveBeenCalledWith(13, true)
+  expect(newState.muted).toBe(false)
+  expect(newState.tabs[1].muted).toBe(true)
+})
+
+test('unmutes a muted tab', async () => {
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.setAudioMuted.mockResolvedValue(undefined)
+  const state = createTabsState()
+  state.tabs[1].muted = true
+
+  const newState = await ViewletSimpleBrowser.muteTab(state, 1)
+
+  expect(ElectronWebContentsViewFunctions.setAudioMuted).toHaveBeenCalledWith(13, false)
+  expect(newState.muted).toBe(false)
+  expect(newState.tabs[1].muted).toBe(false)
+})
+
+test('duplicates a tab directly to its right and selects the duplicate', async () => {
+  // @ts-ignore
+  ElectronWebContentsView.createWebContentsView.mockResolvedValue(16)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.hide.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.show.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.focus.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.setIframeSrc.mockResolvedValue(undefined)
+  const state = createTabsState()
+
+  const newState = await ViewletSimpleBrowser.duplicateTab(state, 1)
+
+  expect(newState.tabs.map((tab) => tab.browserViewId)).toEqual([12, 13, 16, 14, 15])
+  expect(newState).toMatchObject({ browserViewId: 16, iframeSrc: 'https://two.example', selectedTabIndex: 2, title: 'Two' })
+  expect(ElectronWebContentsViewFunctions.setIframeSrc).toHaveBeenCalledWith(16, 'https://two.example')
+  expect(ElectronWebContentsViewFunctions.hide).toHaveBeenCalledWith(12)
+  expect(ElectronWebContentsViewFunctions.show).toHaveBeenCalledWith(16)
+})
+
+test('reloads only the requested tab', async () => {
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.reload.mockResolvedValue(undefined)
+  const state = createTabsState()
+
+  const newState = await ViewletSimpleBrowser.reloadTab(state, 2)
+
+  expect(ElectronWebContentsViewFunctions.reload).toHaveBeenCalledWith(14)
+  expect(newState.isLoading).toBe(false)
+  expect(newState.tabs[2].isLoading).toBe(true)
+})
+
+test('closes tabs to the left and activates the context-menu tab when necessary', async () => {
+  // @ts-ignore
+  ElectronWebContentsView.disposeWebContentsView.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.show.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.focus.mockResolvedValue(undefined)
+  const state = createTabsState()
+
+  const newState = await ViewletSimpleBrowser.closeTabsToTheLeft(state, 2)
+
+  expect(newState.tabs.map((tab) => tab.browserViewId)).toEqual([14, 15])
+  expect(newState).toMatchObject({ browserViewId: 14, selectedTabIndex: 0, title: 'Three' })
+  expect(ElectronWebContentsView.disposeWebContentsView).toHaveBeenCalledTimes(2)
+  expect(ElectronWebContentsView.disposeWebContentsView).toHaveBeenCalledWith(12)
+  expect(ElectronWebContentsView.disposeWebContentsView).toHaveBeenCalledWith(13)
+})
+
+test('closes tabs to the right and activates the context-menu tab when necessary', async () => {
+  // @ts-ignore
+  ElectronWebContentsView.disposeWebContentsView.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.show.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.focus.mockResolvedValue(undefined)
+  const state = createTabsState(3)
+
+  const newState = await ViewletSimpleBrowser.closeTabsToTheRight(state, 1)
+
+  expect(newState.tabs.map((tab) => tab.browserViewId)).toEqual([12, 13])
+  expect(newState).toMatchObject({ browserViewId: 13, selectedTabIndex: 1, title: 'Two' })
+  expect(ElectronWebContentsView.disposeWebContentsView).toHaveBeenCalledTimes(2)
+  expect(ElectronWebContentsView.disposeWebContentsView).toHaveBeenCalledWith(14)
+  expect(ElectronWebContentsView.disposeWebContentsView).toHaveBeenCalledWith(15)
+})
+
+test('closes every other tab and selects the context-menu tab', async () => {
+  // @ts-ignore
+  ElectronWebContentsView.disposeWebContentsView.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.show.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.focus.mockResolvedValue(undefined)
+  const state = createTabsState()
+
+  const newState = await ViewletSimpleBrowser.closeOtherTabs(state, 1)
+
+  expect(newState.tabs.map((tab) => tab.browserViewId)).toEqual([13])
+  expect(newState).toMatchObject({ browserViewId: 13, selectedTabIndex: 0, title: 'Two' })
+  expect(ElectronWebContentsView.disposeWebContentsView).toHaveBeenCalledTimes(3)
+  expect(ElectronWebContentsView.disposeWebContentsView).not.toHaveBeenCalledWith(13)
+})
+test('hides every retained web contents view when the Simple Browser is hidden', async () => {
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.hide.mockResolvedValue(undefined)
+  const state = {
+    ...ViewletSimpleBrowser.create(),
+    tabs: [{ browserViewId: 12 }, { browserViewId: 0 }, { browserViewId: 13 }],
+  }
+
+  await ViewletSimpleBrowser.hide(state)
+
+  expect(ElectronWebContentsViewFunctions.hide).toHaveBeenCalledTimes(2)
+  expect(ElectronWebContentsViewFunctions.hide).toHaveBeenNthCalledWith(1, 12)
+  expect(ElectronWebContentsViewFunctions.hide).toHaveBeenNthCalledWith(2, 13)
+})
+
+test('resizes active and hidden web contents views', async () => {
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.resizeWebContentsView.mockResolvedValue(undefined)
+  const state = {
+    ...ViewletSimpleBrowser.create(7, '', 10, 20, 300, 200),
+    tabs: [{ browserViewId: 12 }, { browserViewId: 0 }, { browserViewId: 13 }],
+  }
+
+  await ViewletSimpleBrowserResize.resizeEffect(state)
+
+  expect(ElectronWebContentsViewFunctions.resizeWebContentsView).toHaveBeenNthCalledWith(1, 12, 10, 85, 300, 135)
+  expect(ElectronWebContentsViewFunctions.resizeWebContentsView).toHaveBeenNthCalledWith(2, 13, 10, 85, 300, 135)
+})
+
+test('disposes every retained web contents view with the Simple Browser', async () => {
+  // @ts-ignore
+  ElectronWebContentsView.disposeWebContentsView.mockResolvedValue(undefined)
+  const state = {
+    ...ViewletSimpleBrowser.create(7),
+    snapshot: 'blob:https://example.com/snapshot',
+    tabs: [{ browserViewId: 12 }, { browserViewId: 0 }, { browserViewId: 13 }],
+  }
+
+  await ViewletSimpleBrowser.dispose(state)
+
+  expect(ElectronWebContentsView.disposeWebContentsView).toHaveBeenCalledTimes(2)
+  expect(ElectronWebContentsView.disposeWebContentsView).toHaveBeenNthCalledWith(1, 12)
+  expect(ElectronWebContentsView.disposeWebContentsView).toHaveBeenNthCalledWith(2, 13)
+  expect(SimpleBrowserSnapshot.dispose).toHaveBeenCalledWith('blob:https://example.com/snapshot')
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.sendMultiple', [['Css.removeCssStyleSheet', 'simple-browser-preview-7']])
+})
+
+test('handleWillNavigate', async () => {
+  const state = ViewletSimpleBrowser.create()
+  expect(await ViewletSimpleBrowser.handleWillNavigate(state, 0, 'https://example.com')).toMatchObject({
+    isLoading: true,
+  })
+})
+
+test('setUrl applies the loading state before navigation completes', async () => {
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.setIframeSrc.mockReturnValue({
+    then() {
+      throw new Error('navigation should not be awaited')
+    },
+  })
+  const state = { ...ViewletSimpleBrowser.create(), browserViewId: 12 }
+
+  const loadingState = await ViewletSimpleBrowser.setUrl(state, 'https://example.com')
+
+  expect(ElectronWebContentsViewFunctions.setIframeSrc).toHaveBeenCalledWith(12, 'https://example.com')
+  expect(loadingState).toMatchObject({
+    iframeSrc: 'https://example.com',
+    inputValue: 'https://example.com',
+    isLoading: true,
+  })
+  await expect(ViewletSimpleBrowser.handleDidNavigate(loadingState, 'https://example.com')).resolves.toMatchObject({
+    isLoading: false,
+  })
+})
+
+test('setUrl materializes native content when an empty tab navigates', async () => {
+  // @ts-ignore
+  ElectronWebContentsView.createWebContentsView.mockResolvedValue(13)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.setFallthroughKeyBindings.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.resizeWebContentsView.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.setIframeSrc.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.show.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.focus.mockResolvedValue(undefined)
+  const state = {
+    ...ViewletSimpleBrowser.create(7, '', 10, 20, 300, 200),
+    tabs: [{ browserViewId: 0, iframeSrc: '', inputValue: '', title: 'New Tab' }],
+  }
+
+  const loadingState = await ViewletSimpleBrowser.setUrl(state, 'https://example.com')
+
+  expect(ElectronWebContentsView.createWebContentsView).toHaveBeenCalledTimes(1)
+  expect(ElectronWebContentsViewFunctions.setIframeSrc).toHaveBeenCalledWith(13, 'https://example.com')
+  expect(loadingState).toMatchObject({ browserViewId: 13, iframeSrc: 'https://example.com', isLoading: true })
+})
+
+test('setUrl replaces the history tab with the exact selected history destination', async () => {
+  // @ts-ignore
+  ElectronWebContentsView.createWebContentsView.mockResolvedValue(13)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.hide.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.resizeWebContentsView.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.show.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.setIframeSrc.mockResolvedValue(undefined)
+  const state = {
+    ...ViewletSimpleBrowser.create(7, 'simple-browser-history://', 10, 20, 300, 200),
+    tabs: [{ browserViewId: 0, iframeSrc: 'simple-browser-history://', inputValue: 'simple-browser-history://', title: 'History' }],
+  }
+  const destination = 'https://history.example.test/path?exact=value'
+
+  const newState = await ViewletSimpleBrowser.setUrl(state, destination)
+
+  expect(ElectronWebContentsViewFunctions.setIframeSrc).toHaveBeenCalledWith(13, destination)
+  expect(newState).toMatchObject({
+    browserViewId: 13,
+    iframeSrc: destination,
+    inputValue: destination,
+    tabs: [{ browserViewId: 13, iframeSrc: destination, inputValue: destination }],
+  })
+})
+
+test('setUrl opens cookie import urls as a main-area view', async () => {
+  const state = { ...ViewletSimpleBrowser.create(), browserViewId: 12 }
+
+  const newState = await ViewletSimpleBrowser.setUrl(state, 'cookie-import-view:///firefox/default')
+
+  expect(Command.execute).toHaveBeenCalledWith('Main.openUri', 'cookie-import-view:///firefox/default')
+  expect(ElectronWebContentsViewFunctions.setIframeSrc).not.toHaveBeenCalled()
+  expect(newState).toMatchObject({ inputValue: 'cookie-import-view:///firefox/default' })
+})
+
+test('handleDidNavigate refreshes navigation state', async () => {
+  const state = { ...ViewletSimpleBrowser.create(), browserViewId: 12, isLoading: true }
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.getStats.mockResolvedValueOnce({ canGoBack: true, canGoForward: false })
+
+  const newState = await ViewletSimpleBrowser.handleDidNavigate(state, 12, 'https://example.com/one')
+
+  expect(ElectronWebContentsViewFunctions.getStats).toHaveBeenCalledWith(12)
+  expect(newState).toMatchObject({
+    canGoBack: true,
+    canGoForward: false,
+    iframeSrc: 'https://example.com/one',
+    inputValue: 'https://example.com/one',
+    isLoading: false,
+  })
+})
+
+test('keeps the internal new tab URL out of the address state', async () => {
+  const state = { ...ViewletSimpleBrowser.create(), browserViewId: 12 }
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.getStats.mockResolvedValueOnce({ canGoBack: false, canGoForward: false })
+
+  const loadingState = await ViewletSimpleBrowser.handleWillNavigate(state, 12, SimpleBrowserNewTabPage.url)
+  const loadedState = await ViewletSimpleBrowser.handleDidNavigate(loadingState, 12, SimpleBrowserNewTabPage.url)
+
+  expect(loadingState).toMatchObject({ iframeSrc: '', isLoading: true })
+  expect(loadedState).toMatchObject({ iframeSrc: '', inputValue: '', isLoading: false })
+})
+
+test.each(['https://example.com', ''])('showOverlay captures the WebContentsView for %j before hiding it', async (iframeSrc) => {
+  const png = new Uint8Array([137, 80, 78, 71])
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.capturePage.mockResolvedValue(png)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.hide.mockResolvedValue(undefined)
+  // @ts-ignore
+  SimpleBrowserSnapshot.create.mockReturnValue('blob:https://example.com/snapshot')
+  const state = { ...ViewletSimpleBrowser.create(), browserViewId: 12, iframeSrc }
+
+  const newState = await ViewletSimpleBrowser.showOverlay(state, 'quick-pick')
+
+  expect(newState).toMatchObject({
+    overlayIds: ['quick-pick'],
+    snapshot: 'blob:https://example.com/snapshot',
+  })
+  expect(ElectronWebContentsViewFunctions.capturePage).toHaveBeenCalledWith(12)
+  expect(SimpleBrowserSnapshot.create).toHaveBeenCalledWith(png)
+  expect(ElectronWebContentsViewFunctions.hide).not.toHaveBeenCalled()
+})
+
+test('afterRender hides the WebContentsView once the snapshot is rendered', async () => {
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.hide.mockResolvedValue(undefined)
+  const oldState = { ...ViewletSimpleBrowser.create(), browserViewId: 12, iframeSrc: 'https://example.com' }
+  const newState = {
+    ...oldState,
+    overlayIds: ['tab-hover'],
+    snapshot: 'blob:https://example.com/snapshot',
+  }
+
+  await ViewletSimpleBrowser.afterRender(oldState, newState)
+
+  expect(ElectronWebContentsViewFunctions.hide).toHaveBeenCalledWith(12)
+})
+
+test('overlays keep a cached page preview in place while its WebContentsView loads', async () => {
+  const pageSnapshot = {
+    css: '.page { color: red; }',
+    dom: [{ type: 4, className: 'page', childCount: 0 }],
+    key: 'webcontents-snapshot-example-com',
+  }
+  const state = {
+    ...ViewletSimpleBrowser.create(7),
+    browserViewId: 18,
+    iframeSrc: 'https://example.com',
+    tabs: [{ browserViewId: 18, pageSnapshot }],
+  }
+
+  const withOverlay = await ViewletSimpleBrowser.showOverlay(state, 'menu')
+  await ViewletSimpleBrowser.afterRender(state, withOverlay)
+  const restored = await ViewletSimpleBrowser.hideOverlay(withOverlay, 'menu')
+
+  expect(withOverlay).toMatchObject({ overlayIds: ['menu'], snapshot: '' })
+  expect(restored).toMatchObject({ overlayIds: [], snapshot: '' })
+  expect(ElectronWebContentsViewFunctions.capturePage).not.toHaveBeenCalled()
+  expect(ElectronWebContentsViewFunctions.hide).not.toHaveBeenCalled()
+  expect(ElectronWebContentsViewFunctions.show).not.toHaveBeenCalled()
+})
+
+test('overlays share one snapshot and restore after the last overlay closes', async () => {
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.capturePage.mockResolvedValue(new Uint8Array([137, 80, 78, 71]))
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.hide.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.show.mockResolvedValue(undefined)
+  // @ts-ignore
+  SimpleBrowserSnapshot.create.mockReturnValue('blob:https://example.com/snapshot')
+  const state = { ...ViewletSimpleBrowser.create(), browserViewId: 12, iframeSrc: 'https://example.com' }
+
+  const withQuickPick = await ViewletSimpleBrowser.showOverlay(state, 'quick-pick')
+  await ViewletSimpleBrowser.afterRender(state, withQuickPick)
+  const withBoth = await ViewletSimpleBrowser.showOverlay(withQuickPick, 'menu')
+  const withMenu = await ViewletSimpleBrowser.hideOverlay(withBoth, 'quick-pick')
+  const restored = await ViewletSimpleBrowser.hideOverlay(withMenu, 'menu')
+
+  expect(ElectronWebContentsViewFunctions.capturePage).toHaveBeenCalledTimes(1)
+  expect(SimpleBrowserSnapshot.create).toHaveBeenCalledTimes(1)
+  expect(ElectronWebContentsViewFunctions.hide).toHaveBeenCalledTimes(1)
+  expect(ElectronWebContentsViewFunctions.show).toHaveBeenCalledTimes(1)
+  expect(SimpleBrowserSnapshot.dispose).toHaveBeenCalledTimes(1)
+  expect(SimpleBrowserSnapshot.dispose).toHaveBeenCalledWith('blob:https://example.com/snapshot')
+  expect(restored).toMatchObject({
+    overlayIds: [],
+    snapshot: '',
+  })
+})
+
+test('afterRender logs when hiding the WebContentsView fails', async () => {
+  const consoleError = jest.spyOn(console, 'error').mockImplementation(() => {})
+  try {
+    // @ts-ignore
+    ElectronWebContentsViewFunctions.hide.mockRejectedValue(new Error('Failed to hide'))
+    const oldState = { ...ViewletSimpleBrowser.create(), browserViewId: 12, iframeSrc: 'https://example.com' }
+    const newState = {
+      ...oldState,
+      overlayIds: ['quick-pick'],
+      snapshot: 'blob:https://example.com/snapshot',
+    }
+
+    await ViewletSimpleBrowser.afterRender(oldState, newState)
+
+    expect(consoleError).toHaveBeenCalledWith('[renderer-worker] Failed to hide Simple Browser page', new Error('Failed to hide'))
+  } finally {
+    consoleError.mockRestore()
+  }
+})
+
+test('hideOverlay revokes the snapshot when restoring the WebContentsView fails', async () => {
+  const consoleError = jest.spyOn(console, 'error').mockImplementation(() => {})
+  try {
+    // @ts-ignore
+    ElectronWebContentsViewFunctions.show.mockRejectedValue(new Error('Failed to show'))
+    const state = {
+      ...ViewletSimpleBrowser.create(),
+      browserViewId: 12,
+      overlayIds: ['quick-pick'],
+      snapshot: 'blob:https://example.com/snapshot',
+    }
+
+    const newState = await ViewletSimpleBrowser.hideOverlay(state, 'quick-pick')
+
+    expect(newState).toMatchObject({ overlayIds: [], snapshot: '' })
+    expect(SimpleBrowserSnapshot.dispose).toHaveBeenCalledWith('blob:https://example.com/snapshot')
+  } finally {
+    consoleError.mockRestore()
+  }
+})
+
+test('showTabHover captures the page and shows the full title and memory usage', async () => {
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.capturePage.mockResolvedValue(new Uint8Array([137, 80, 78, 71]))
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.hide.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.getStats.mockResolvedValue({ memory: 42_000_000, title: 'A complete page title' })
+  // @ts-ignore
+  SimpleBrowserSnapshot.create.mockReturnValue('blob:https://example.com/snapshot')
+  const state = {
+    ...ViewletSimpleBrowser.create(7, 'simple-browser://12', 10, 20, 500, 300),
+    browserViewId: 12,
+    iframeSrc: 'https://example.com',
+    tabHoverEnabled: true,
+    tabs: [{ browserViewId: 12, title: 'Example' }],
+  }
+
+  const newState = await ViewletSimpleBrowser.showTabHover(state, 0, 25, 180, 0)
+
+  expect(ElectronWebContentsViewFunctions.getStats).toHaveBeenCalledWith(12, true)
+  expect(newState).toMatchObject({
+    overlayIds: ['tab-hover'],
+    snapshot: 'blob:https://example.com/snapshot',
+    tabHover: {
+      index: 0,
+      left: 25,
+      statusLabel: 'Memory usage: 42 MB',
+      tabLeft: 25,
+      tabWidth: 180,
+      title: 'A complete page title',
+    },
+  })
+})
+
+test('showTabHover does nothing when tab hovers are disabled', async () => {
+  const state = {
+    ...ViewletSimpleBrowser.create(7, 'simple-browser://12', 0, 0, 500, 300),
+    browserViewId: 12,
+    tabs: [{ browserViewId: 12, title: 'Example' }],
+  }
+
+  await expect(ViewletSimpleBrowser.showTabHover(state, 0, 0, 180, 0)).resolves.toBe(state)
+  expect(ElectronWebContentsViewFunctions.capturePage).not.toHaveBeenCalled()
+  expect(ElectronWebContentsViewFunctions.getStats).not.toHaveBeenCalled()
+})
+
+test('showTabHover shows the saved title for an unloaded tab without requesting memory', async () => {
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.capturePage.mockResolvedValue(new Uint8Array([137, 80, 78, 71]))
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.hide.mockResolvedValue(undefined)
+  // @ts-ignore
+  SimpleBrowserSnapshot.create.mockReturnValue('blob:https://example.com/snapshot')
+  const state = {
+    ...ViewletSimpleBrowser.create(7, 'simple-browser://12', 10, 20, 500, 300),
+    browserViewId: 12,
+    iframeSrc: 'https://selected.example.com',
+    selectedTabIndex: 0,
+    tabHoverEnabled: true,
+    tabs: [
+      { browserViewId: 12, title: 'Selected tab' },
+      { browserViewId: 0, title: 'Unloaded complete title' },
+    ],
+  }
+
+  const newState = await ViewletSimpleBrowser.showTabHover(state, 1, 205, 180, 0)
+
+  expect(ElectronWebContentsViewFunctions.getStats).not.toHaveBeenCalled()
+  expect(newState.tabHover).toMatchObject({
+    index: 1,
+    statusLabel: 'Tab is unloaded',
+    title: 'Unloaded complete title',
+  })
+})
+
+test('hideTabHover ignores pointer transitions inside the hovered tab', async () => {
+  const state = {
+    ...ViewletSimpleBrowser.create(7, 'simple-browser://12', 10, 20, 500, 300),
+    browserViewId: 12,
+    overlayIds: ['tab-hover'],
+    snapshot: 'blob:https://example.com/snapshot',
+    tabHover: { index: 0, left: 25, statusLabel: 'Memory usage: 42 MB', tabLeft: 25, tabWidth: 180, title: 'Example' },
+  }
+
+  await expect(ViewletSimpleBrowser.hideTabHover(state, 0, 50, 30)).resolves.toBe(state)
+  expect(ElectronWebContentsViewFunctions.show).not.toHaveBeenCalled()
+})
+
+test('hideTabHover restores the page after the pointer leaves the tab', async () => {
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.show.mockResolvedValue(undefined)
+  const state = {
+    ...ViewletSimpleBrowser.create(7, 'simple-browser://12', 10, 20, 500, 300),
+    browserViewId: 12,
+    overlayIds: ['tab-hover'],
+    snapshot: 'blob:https://example.com/snapshot',
+    tabHover: { index: 0, left: 25, statusLabel: 'Memory usage: 42 MB', tabLeft: 25, tabWidth: 180, title: 'Example' },
+  }
+
+  const newState = await ViewletSimpleBrowser.hideTabHover(state, 0, 50, 80)
+
+  expect(ElectronWebContentsViewFunctions.show).toHaveBeenCalledWith(12)
+  expect(SimpleBrowserSnapshot.dispose).toHaveBeenCalledWith('blob:https://example.com/snapshot')
+  expect(newState).toMatchObject({ overlayIds: [], snapshot: '' })
+  expect(newState.tabHover).toBeUndefined()
+})
+
+test('handleInput does not request suggestions when disabled', async () => {
+  const state = { ...ViewletSimpleBrowser.create(7), suggestionsEnabled: false }
+
+  const newState = await ViewletSimpleBrowser.handleInput(state, 'what is')
+
+  expect(newState.inputValue).toBe('what is')
+  expect(BrowserSearchSuggestions.get).not.toHaveBeenCalled()
+})
+
+test('handleInput requests suggestions when enabled', async () => {
+  jest.useFakeTimers()
+  // @ts-ignore
+  BrowserSearchSuggestions.get.mockResolvedValue(['what is my ip'])
+  // @ts-ignore
+  Command.execute.mockResolvedValue(undefined)
+  const state = { ...ViewletSimpleBrowser.create(7), suggestionsEnabled: true }
+
+  const newState = await ViewletSimpleBrowser.handleInput(state, 'what is')
+  expect(BrowserSearchSuggestions.get).not.toHaveBeenCalled()
+  await jest.advanceTimersByTimeAsync(150)
+
+  expect(newState).toMatchObject({ inputValue: 'what is', selectedSuggestionIndex: -1 })
+  expect(BrowserSearchSuggestions.get).toHaveBeenCalledWith('what is')
+  expect(Viewlet.executeViewletCommand).toHaveBeenCalledWith(7, 'applySuggestions', 7, 'what is', ['what is my ip'], undefined, expect.any(Number))
+})
+
+test('handleInput replaces partial search suggestions when the input becomes a URL', async () => {
+  const localSuggestion = {
+    favicon: 'https://soundcloud.com/favicon.ico',
+    type: 'url',
+    value: 'https://soundcloud.com',
+  }
+  // @ts-ignore
+  BrowserVisitedSites.getSuggestions.mockReturnValue([localSuggestion])
+  const state = {
+    ...ViewletSimpleBrowser.create(7),
+    hasSuggestionsOverlay: true,
+    inputValue: 'soundcloud.c',
+    overlayIds: ['search-suggestions'],
+    suggestions: [{ favicon: '', type: 'search', value: 'soundcloud.c' }, localSuggestion],
+    suggestionsEnabled: true,
+  }
+
+  const typed = ViewletSimpleBrowser.handleInput(state, 'soundcloud.com')
+  const newState = await ViewletSimpleBrowser.applySuggestions(typed, 7, 'soundcloud.com', [], undefined, typed.suggestionSessionId)
+
+  expect(BrowserSearchSuggestions.get).not.toHaveBeenCalled()
+  expect(BrowserVisitedSites.getSuggestions).toHaveBeenCalledWith([], 'soundcloud.com')
+  expect(Command.execute).not.toHaveBeenCalled()
+  expect(newState).toMatchObject({ inputValue: 'soundcloud.com', selectedSuggestionIndex: -1, suggestions: [localSuggestion] })
+})
+
+test('applySuggestions ignores stale results', async () => {
+  const state = {
+    ...ViewletSimpleBrowser.create(7),
+    browserViewId: 12,
+    inputValue: 'new query',
+    suggestionsEnabled: true,
+  }
+
+  const newState = await ViewletSimpleBrowser.applySuggestions(state, 7, 'old query', ['old query result'])
+
+  expect(newState).toBe(state)
+  expect(ElectronWebContentsViewFunctions.capturePage).not.toHaveBeenCalled()
+})
+
+test('applySuggestions captures the page and shows provider results', async () => {
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.capturePage.mockResolvedValue(new Uint8Array([137, 80, 78, 71]))
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.hide.mockResolvedValue(undefined)
+  // @ts-ignore
+  SimpleBrowserSnapshot.create.mockReturnValue('blob:https://example.com/snapshot')
+  const state = {
+    ...ViewletSimpleBrowser.create(7),
+    browserViewId: 12,
+    iframeSrc: 'https://example.com',
+    inputValue: 'what is',
+    suggestionsEnabled: true,
+  }
+
+  const newState = await ViewletSimpleBrowser.applySuggestions(state, 7, 'what is', ['what is my ip', 'what is love'])
+
+  expect(newState).toMatchObject({
+    hasSuggestionsOverlay: true,
+    overlayIds: ['search-suggestions'],
+    selectedSuggestionIndex: -1,
+    snapshot: 'blob:https://example.com/snapshot',
+    suggestions: [
+      { favicon: '', type: 'search', value: 'what is' },
+      { favicon: '', type: 'search', value: 'what is my ip' },
+      { favicon: '', type: 'search', value: 'what is love' },
+    ],
+  })
+})
+
+test('applySuggestions captures the built-in new-tab page', async () => {
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.hide.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.capturePage.mockResolvedValue(new Uint8Array([137, 80, 78, 71]))
+  // @ts-ignore
+  SimpleBrowserSnapshot.create.mockReturnValue('blob:https://example.com/new-tab')
+  const state = {
+    ...ViewletSimpleBrowser.create(7),
+    browserViewId: 12,
+    inputValue: 'what is',
+    suggestionsEnabled: true,
+  }
+
+  const newState = await ViewletSimpleBrowser.applySuggestions(state, 7, 'what is', ['what is my ip'])
+
+  expect(newState).toMatchObject({
+    hasSuggestionsOverlay: true,
+    overlayIds: ['search-suggestions'],
+    selectedSuggestionIndex: -1,
+    snapshot: 'blob:https://example.com/new-tab',
+    suggestions: [
+      { favicon: '', type: 'search', value: 'what is' },
+      { favicon: '', type: 'search', value: 'what is my ip' },
+    ],
+  })
+  expect(ElectronWebContentsViewFunctions.capturePage).toHaveBeenCalledWith(12)
+  expect(ElectronWebContentsViewFunctions.hide).not.toHaveBeenCalled()
+
+  await ViewletSimpleBrowser.afterRender(state, newState)
+
+  expect(ElectronWebContentsViewFunctions.hide).toHaveBeenCalledWith(12)
+})
+
+test('applySuggestions preserves an existing popup after a provider failure', async () => {
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.show.mockResolvedValue(undefined)
+  const state = {
+    ...ViewletSimpleBrowser.create(7),
+    browserViewId: 12,
+    hasSuggestionsOverlay: true,
+    inputValue: 'what is',
+    overlayIds: ['search-suggestions'],
+    selectedSuggestionIndex: 0,
+    snapshot: 'blob:https://example.com/snapshot',
+    suggestions: ['what is'],
+    suggestionsEnabled: true,
+  }
+
+  const newState = await ViewletSimpleBrowser.applySuggestions(state, 7, 'what is', [])
+
+  expect(newState).toMatchObject({
+    hasSuggestionsOverlay: true,
+    overlayIds: ['search-suggestions'],
+    selectedSuggestionIndex: 0,
+    snapshot: 'blob:https://example.com/snapshot',
+    suggestions: [{ favicon: '', type: 'search', value: 'what is' }],
+  })
+  expect(ElectronWebContentsViewFunctions.show).not.toHaveBeenCalled()
+  expect(SimpleBrowserSnapshot.dispose).not.toHaveBeenCalled()
+})
+
+test('suggestion selection wraps from the first result to the last', () => {
+  const state = {
+    ...ViewletSimpleBrowser.create(7),
+    hasSuggestionsOverlay: true,
+    selectedSuggestionIndex: 0,
+    suggestions: ['one', 'two'],
+  }
+
+  const second = ViewletSimpleBrowser.selectNextSuggestion(state)
+  const stillSecond = ViewletSimpleBrowser.selectNextSuggestion(second)
+  const first = ViewletSimpleBrowser.selectPreviousSuggestion(stillSecond)
+  const last = ViewletSimpleBrowser.selectPreviousSuggestion(first)
+
+  expect(second.selectedSuggestionIndex).toBe(1)
+  expect(stillSecond.selectedSuggestionIndex).toBe(1)
+  expect(first.selectedSuggestionIndex).toBe(0)
+  expect(last.selectedSuggestionIndex).toBe(1)
+})
+
+test('suggestion selection does not change for zero or one result', () => {
+  const zeroState = { ...ViewletSimpleBrowser.create(7), hasSuggestionsOverlay: true, selectedSuggestionIndex: 0, suggestions: [] }
+  const oneState = { ...ViewletSimpleBrowser.create(7), hasSuggestionsOverlay: true, selectedSuggestionIndex: 0, suggestions: ['one'] }
+
+  expect(ViewletSimpleBrowser.selectPreviousSuggestion(zeroState)).toBe(zeroState)
+  expect(ViewletSimpleBrowser.selectPreviousSuggestion(oneState)).toBe(oneState)
+})
+
+test('applySuggestions places matching visited sites before provider results', async () => {
+  const localSuggestion = {
+    favicon: 'https://soundcloud.com/favicon.ico',
+    type: 'url',
+    value: 'https://soundcloud.com',
+  }
+  // @ts-ignore
+  BrowserVisitedSites.getSuggestions.mockReturnValue([localSuggestion])
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.hide.mockResolvedValue(undefined)
+  const state = {
+    ...ViewletSimpleBrowser.create(7),
+    browserViewId: 12,
+    inputValue: 'soundcloud',
+    suggestionsEnabled: true,
+  }
+
+  const newState = await ViewletSimpleBrowser.applySuggestions(state, 7, 'soundcloud', ['soundcloud music'])
+
+  expect(newState.suggestions).toEqual([
+    localSuggestion,
+    { favicon: '', type: 'search', value: 'soundcloud' },
+    { favicon: '', type: 'search', value: 'soundcloud music' },
+  ])
+})
+
+test('applySuggestions places matching recent searches first', async () => {
+  const historySuggestion = { favicon: '', type: 'history', value: 'cheeseburger' }
+  const visitedSuggestion = { favicon: 'https://cheese.example/favicon.ico', type: 'url', value: 'https://cheese.example' }
+  // @ts-ignore
+  BrowserSearchHistory.getSuggestions.mockReturnValue([historySuggestion])
+  // @ts-ignore
+  BrowserVisitedSites.getSuggestions.mockReturnValue([visitedSuggestion])
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.hide.mockResolvedValue(undefined)
+  const state = {
+    ...ViewletSimpleBrowser.create(7),
+    browserViewId: 12,
+    inputValue: 'cheese',
+    searchHistory: ['cheeseburger'],
+    suggestionsEnabled: true,
+  }
+
+  const newState = await ViewletSimpleBrowser.applySuggestions(state, 7, 'cheese', ['cheese recipes'])
+
+  expect(newState.suggestions).toEqual([
+    historySuggestion,
+    visitedSuggestion,
+    { favicon: '', type: 'search', value: 'cheese' },
+    { favicon: '', type: 'search', value: 'cheese recipes' },
+  ])
+})
+
+test('handleInput shows matching search history before the provider responds', async () => {
+  const historySuggestion = { favicon: '', type: 'history', value: 'cheeseburger' }
+  // @ts-ignore
+  BrowserSearchHistory.getSuggestions.mockReturnValue([historySuggestion])
+  // @ts-ignore
+  BrowserSearchSuggestions.get.mockReturnValue(new Promise(() => {}))
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.hide.mockResolvedValue(undefined)
+  const state = {
+    ...ViewletSimpleBrowser.create(7),
+    browserViewId: 12,
+    inputValue: '',
+    searchHistory: ['cheeseburger'],
+    suggestionsEnabled: true,
+  }
+
+  const typed = ViewletSimpleBrowser.handleInput(state, 'cheese')
+  const newState = await ViewletSimpleBrowser.applySuggestions(typed, 7, 'cheese', [], undefined, typed.suggestionSessionId)
+
+  expect(BrowserSearchHistory.getSuggestions).toHaveBeenCalledWith(['cheeseburger'], 'cheese')
+  expect(newState).toMatchObject({ hasSuggestionsOverlay: true, selectedSuggestionIndex: -1, suggestions: [historySuggestion] })
+})
+
+test('go saves a submitted search in recent history', async () => {
+  // @ts-ignore
+  BrowserSearchHistory.add.mockReturnValue(['cheeseburger'])
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.focus.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.setIframeSrc.mockResolvedValue(undefined)
+  const state = {
+    ...ViewletSimpleBrowser.create(7),
+    browserViewId: 12,
+    inputValue: 'cheeseburger',
+    searchHistory: [],
+  }
+
+  const newState = await ViewletSimpleBrowser.go(state)
+
+  expect(BrowserSearchHistory.add).toHaveBeenCalledWith([], 'cheeseburger')
+  expect(BrowserSearchHistory.save).toHaveBeenCalledWith(['cheeseburger'])
+  expect(newState.searchHistory).toEqual(['cheeseburger'])
+})
+
+test('go does not save a submitted URL in search history', async () => {
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.focus.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.setIframeSrc.mockResolvedValue(undefined)
+  const state = {
+    ...ViewletSimpleBrowser.create(7),
+    browserViewId: 12,
+    inputValue: 'example.com',
+    searchHistory: ['cheeseburger'],
+  }
+
+  await ViewletSimpleBrowser.go(state)
+
+  expect(BrowserSearchHistory.add).not.toHaveBeenCalled()
+  expect(BrowserSearchHistory.save).not.toHaveBeenCalled()
+})
+
+test('acceptSuggestion restores the page and navigates', async () => {
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.show.mockResolvedValue(undefined)
+  const state = {
+    ...ViewletSimpleBrowser.create(7),
+    browserViewId: 12,
+    hasSuggestionsOverlay: true,
+    overlayIds: ['search-suggestions'],
+    selectedSuggestionIndex: 1,
+    snapshot: 'blob:https://example.com/snapshot',
+    suggestions: [
+      { favicon: '', type: 'search', value: 'what is' },
+      { favicon: '', type: 'search', value: 'what is my ip' },
+    ],
+    suggestionsEnabled: true,
+  }
+
+  const newState = await ViewletSimpleBrowser.acceptSuggestion(state)
+
+  expect(newState).toMatchObject({
+    hasSuggestionsOverlay: false,
+    iframeSrc: 'https://www.google.com/search?q=what+is+my+ip',
+    inputValue: 'what is my ip',
+    isLoading: true,
+    snapshot: '',
+    suggestions: [],
+  })
+  expect(ElectronWebContentsViewFunctions.show).toHaveBeenCalledWith(12)
+  expect(SimpleBrowserSnapshot.dispose).toHaveBeenCalledWith('blob:https://example.com/snapshot')
+  expect(ElectronWebContentsViewFunctions.setIframeSrc).toHaveBeenCalledWith(12, 'https://www.google.com/search?q=what+is+my+ip')
+})
+
+test('acceptSuggestion navigates directly to a visited URL suggestion', async () => {
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.show.mockResolvedValue(undefined)
+  const state = {
+    ...ViewletSimpleBrowser.create(7),
+    browserViewId: 12,
+    hasSuggestionsOverlay: true,
+    overlayIds: ['search-suggestions'],
+    selectedSuggestionIndex: 0,
+    suggestions: [
+      {
+        favicon: 'https://soundcloud.com/favicon.ico',
+        type: 'url',
+        value: 'https://soundcloud.com',
+      },
+    ],
+    suggestionsEnabled: true,
+  }
+
+  const newState = await ViewletSimpleBrowser.acceptSuggestion(state)
+
+  expect(newState).toMatchObject({ iframeSrc: 'https://soundcloud.com', inputValue: 'https://soundcloud.com', isLoading: true })
+  expect(ElectronWebContentsViewFunctions.setIframeSrc).toHaveBeenCalledWith(12, 'https://soundcloud.com')
+})
+
+test('go closes suggestions and submits the input value', async () => {
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.focus.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.setIframeSrc.mockResolvedValue(undefined)
+  // @ts-ignore
+  ElectronWebContentsViewFunctions.show.mockResolvedValue(undefined)
+  const state = {
+    ...ViewletSimpleBrowser.create(7),
+    browserViewId: 12,
+    hasSuggestionsOverlay: true,
+    inputValue: 'example.com',
+    overlayIds: ['search-suggestions'],
+    selectedSuggestionIndex: -1,
+    snapshot: 'blob:https://example.com/snapshot',
+    suggestions: [{ favicon: '', type: 'search', value: 'example website' }],
+    suggestionsEnabled: true,
+  }
+
+  const newState = await ViewletSimpleBrowser.go(state)
+
+  expect(newState).toMatchObject({
+    hasSuggestionsOverlay: false,
+    iframeSrc: 'https://example.com',
+    inputValue: 'example.com',
+    isLoading: true,
+    snapshot: '',
+    suggestions: [],
+  })
+  expect(ElectronWebContentsViewFunctions.show).toHaveBeenCalledWith(12)
+  expect(SimpleBrowserSnapshot.dispose).toHaveBeenCalledWith('blob:https://example.com/snapshot')
+  expect(ElectronWebContentsViewFunctions.setIframeSrc).toHaveBeenCalledWith(12, 'https://example.com')
+})
+
+test('opens each terminal URL in a new selected tab without replacing existing tabs', async () => {
+  // @ts-ignore
+  ElectronWebContentsView.createWebContentsView.mockResolvedValueOnce(14).mockResolvedValueOnce(15)
+  const state = createTwoTabState()
+  const uri = 'http://localhost:3333/'
+
+  const first = await ViewletSimpleBrowser.openTab(state, uri, 'foreground-tab')
+  const second = await ViewletSimpleBrowser.openTab(first, uri, 'foreground-tab')
+
+  expect(second.tabs).toHaveLength(4)
+  expect(second.tabs.slice(0, 2)).toEqual(state.tabs)
+  expect(first).toMatchObject({ browserViewId: 14, inputValue: uri, iframeSrc: uri, selectedTabIndex: 2 })
+  expect(second).toMatchObject({ browserViewId: 15, inputValue: uri, iframeSrc: uri, selectedTabIndex: 3 })
+  expect(ElectronWebContentsViewFunctions.setIframeSrc).toHaveBeenCalledWith(14, uri)
+  expect(ElectronWebContentsViewFunctions.setIframeSrc).toHaveBeenCalledWith(15, uri)
+  expect(ElectronWebContentsViewFunctions.focus).toHaveBeenLastCalledWith(15)
+  expect(ElectronWebContentsView.disposeWebContentsView).not.toHaveBeenCalled()
+})
+
+test('selects a tab on primary pointer down', async () => {
+  const state = createTwoTabState()
+
+  const newState = await ViewletSimpleBrowser.handleTabPointerDown(state, '1', 0)
+
+  expect(newState.selectedTabIndex).toBe(1)
+  expect(ElectronWebContentsViewFunctions.show).toHaveBeenCalledWith(13)
+})
+
+test.each([1, 2])('does not select a tab on pointer down with button %s', async (button) => {
+  const state = createTwoTabState()
+
+  await expect(ViewletSimpleBrowser.handleTabPointerDown(state, '1', button)).resolves.toBe(state)
+  expect(ElectronWebContentsViewFunctions.show).not.toHaveBeenCalled()
+})
+
+test('freezes tab width while the pointer is over the tab list', () => {
+  const state = { ...createTwoTabState(), width: 400 }
+
+  const frozen = ViewletSimpleBrowser.handleTabsPointerOver(state, 98)
+
+  expect(frozen.tabWidth).toBe(98)
+  expect(ViewletSimpleBrowser.handleTabsPointerOver(frozen, 147)).toBe(frozen)
+})
+
+test.each([undefined, NaN, Infinity, 0, -1])('does not freeze an invalid measured tab width (%s)', (tabWidth) => {
+  const state = createTwoTabState()
+  expect(ViewletSimpleBrowser.handleTabsPointerOver(state, tabWidth)).toBe(state)
+})
+
+test('restores tab sizing only after the pointer leaves the tab list', () => {
+  const state = { ...createTwoTabState(), tabWidth: 150, width: 500, x: 10, y: 20 }
+
+  expect(ViewletSimpleBrowser.handleTabsPointerOut(state, 100, 30)).toBe(state)
+  expect(ViewletSimpleBrowser.handleTabsPointerOut(state, 100, 60)).toMatchObject({ tabWidth: undefined })
+})
+
+test('closing a tab preserves the frozen tab width', async () => {
+  // @ts-ignore
+  ElectronWebContentsView.disposeWebContentsView.mockResolvedValue(undefined)
+  const state = { ...createTwoTabState(), tabWidth: 150 }
+
+  const newState = await ViewletSimpleBrowser.closeTab(state, 1)
+
+  expect(newState.tabs).toHaveLength(1)
+  expect(newState.tabWidth).toBe(150)
+})
+
+test('pointer down dismisses the hover even when the tab is already selected', async () => {
+  const state = { ...createTwoTabState(), tabHover: { index: 0 }, overlayIds: ['tab-hover'] }
+
+  const newState = await ViewletSimpleBrowser.handleTabPointerDown(state, '0', 0)
+
+  expect(newState.selectedTabIndex).toBe(0)
+  expect(newState.tabHover).toBeUndefined()
+  expect(newState.overlayIds).toEqual([])
+})
+
+test('provider arrivals preserve an explicitly selected local suggestion', async () => {
+  const local = { value: 'known site', favicon: '', type: 'search' }
+  jest.mocked(BrowserSearchHistory.getSuggestions).mockReturnValue([local] as never)
+  const state = {
+    ...ViewletSimpleBrowser.create(7),
+    inputValue: 'known',
+    suggestionsEnabled: true,
+    suggestions: [local],
+    selectedSuggestionIndex: 0,
+    hasSuggestionsOverlay: true,
+    overlayIds: ['search-suggestions'],
+  }
+  const next = await ViewletSimpleBrowser.applySuggestions(state, 7, 'known', ['known answer'])
+  expect(next.suggestions[next.selectedSuggestionIndex]).toEqual(local)
+})
+
+test('dismissed results cannot reopen suggestions even when the query matches', async () => {
+  const state = { ...ViewletSimpleBrowser.create(7), inputValue: 'known', suggestionsEnabled: true }
+  const id = BrowserSuggestionRequests.begin(7, state.browserViewId, 'known', undefined, undefined)
+  await ViewletSimpleBrowser.closeSuggestions(state)
+  expect(await ViewletSimpleBrowser.applySuggestions(state, 7, 'known', ['known answer'], undefined, id)).toBe(state)
+})
+
+test('Ctrl+L from the active embedded tab selects its address', async () => {
+  const state = { ...ViewletSimpleBrowser.create(7), browserViewId: 12 }
+  await ViewletSimpleBrowser.handleKeyBinding(state, 12, KeyModifier.CtrlCmd | KeyCode.KeyL)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Window.focusBrowserAddress', 7)
+  expect(ElectronWindow.focus).toHaveBeenCalled()
+})
+
+test('typing commits before a pending page capture and preserves newer short input', async () => {
+  const capture = Promise.withResolvers<Uint8Array>()
+  jest.mocked(ElectronWebContentsViewFunctions.capturePage).mockReturnValue(capture.promise as never)
+  jest.mocked(BrowserSearchHistory.getSuggestions).mockReturnValue([{ value: 'known', type: 'history', favicon: '' }] as never)
+  const state = { ...ViewletSimpleBrowser.create(7), browserViewId: 12, iframeSrc: 'https://example.com', suggestionsEnabled: true }
+  const typed = ViewletSimpleBrowser.handleInput(state, 'known')
+  expect(typed).not.toBeInstanceOf(Promise)
+  expect(typed.inputValue).toBe('known')
+  const pending = ViewletSimpleBrowser.applySuggestions(typed, 7, 'known', [], undefined, typed.suggestionSessionId)
+  const shortened = ViewletSimpleBrowser.handleInput(typed, 'k')
+  capture.resolve(new Uint8Array())
+  expect(await pending).toBe(typed)
+  expect(shortened.inputValue).toBe('k')
+})
+
+test.each(['switch', 'close'])('pending suggestions do not alter a tab after %s', async (action) => {
+  const capture = Promise.withResolvers<Uint8Array>()
+  jest.mocked(ElectronWebContentsViewFunctions.capturePage).mockReturnValue(capture.promise as never)
+  const state = { ...createTwoTabState(), suggestionsEnabled: true }
+  const typed = ViewletSimpleBrowser.handleInput(state, 'known')
+  const pending = ViewletSimpleBrowser.applySuggestions(typed, 7, 'known', ['known result'], undefined, typed.suggestionSessionId)
+  const changed = action === 'switch' ? ViewletSimpleBrowser.selectTab(typed, 1) : ViewletSimpleBrowser.closeTab(typed, 0)
+  capture.resolve(new Uint8Array())
+  expect(await pending).toBe(typed)
+  expect((await changed).browserViewId).toBe(13)
+})
+
+test('a delayed local popup cannot overwrite a provider popup', async () => {
+  const capture = Promise.withResolvers<Uint8Array>()
+  jest
+    .mocked(ElectronWebContentsViewFunctions.capturePage)
+    .mockReturnValueOnce(capture.promise as never)
+    .mockResolvedValueOnce(new Uint8Array() as never)
+  const state = { ...ViewletSimpleBrowser.create(7), browserViewId: 12, iframeSrc: 'https://example.com', suggestionsEnabled: true }
+  const typed = ViewletSimpleBrowser.handleInput(state, 'known')
+  const local = ViewletSimpleBrowser.applySuggestions(
+    typed,
+    7,
+    'known',
+    [],
+    [{ value: 'known local', favicon: '', type: 'history' }],
+    typed.suggestionSessionId,
+  )
+  const provider = await ViewletSimpleBrowser.applySuggestions(typed, 7, 'known', ['known result'], undefined, typed.suggestionSessionId)
+  capture.resolve(new Uint8Array())
+  expect(await local).toBe(typed)
+  expect(provider.suggestions.some((item) => item.value === 'known result')).toBe(true)
+})
+
+test('rendering does not wait for suggestions queued behind its own command', async () => {
+  const state = { ...ViewletSimpleBrowser.create(7), suggestionsEnabled: true }
+  const typed = ViewletSimpleBrowser.handleInput(state, 'known')
+  const pending = Promise.withResolvers<void>()
+  jest.mocked(Viewlet.executeViewletCommand).mockReturnValue(pending.promise as never)
+  try {
+    await ViewletSimpleBrowser.afterRender(state, typed)
+    expect(Viewlet.executeViewletCommand).toHaveBeenCalled()
+  } finally {
+    pending.resolve()
+  }
+})
+
+test('rendering committed input starts local suggestions without waiting for the provider', async () => {
+  const state = { ...ViewletSimpleBrowser.create(7), suggestionsEnabled: true }
+  const typed = ViewletSimpleBrowser.handleInput(state, 'known')
+  await ViewletSimpleBrowser.afterRender(state, typed)
+  expect(Viewlet.executeViewletCommand).toHaveBeenCalledWith(7, 'applySuggestions', 7, 'known', [], [], typed.suggestionSessionId)
+  expect(BrowserSearchSuggestions.get).not.toHaveBeenCalled()
+})
+
+
+test('address focus updates synchronously while selection is computed by the browser worker', async () => {
+  const pendingSelection = Promise.withResolvers()
+  jest.mocked(SimpleBrowserWorker.invoke).mockReturnValue(pendingSelection.promise)
+  const state = { ...ViewletSimpleBrowser.create(7), fullWidthAddressSelection: { start: 2, end: 8 } }
+  const focused = ViewletSimpleBrowser.handleAddressFocus(state, 'https://example.com')
+  expect(focused).not.toBeInstanceOf(Promise)
+  expect(focused.fullWidthAddressSelection).toBeUndefined()
+  expect(SimpleBrowserWorker.invoke).toHaveBeenCalledWith('SimpleBrowser.getAddressSelection', true, 'https://example.com', false, { start: 2, end: 8 })
+  pendingSelection.resolve({ start: 2, end: 8 })
+  await pendingSelection.promise
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.sendMultiple', [
+    ['Viewlet.setSelectionByName', 7, 'simple-browser-address', 2, 8, 'https://example.com'],
+  ])
+})
+
+test('address blur asks the browser worker to clear selection and dismisses suggestions', async () => {
+  jest.mocked(SimpleBrowserWorker.invoke).mockResolvedValue({ start: 0, end: 0 })
+  const state = { ...ViewletSimpleBrowser.create(7), inputValue: 'https://example.com', suggestions: ['example'] }
+  const blurred = await ViewletSimpleBrowser.handleAddressBlur(state)
+  expect(blurred.suggestions).toEqual([])
+  expect(blurred.inputValue).toBe(state.inputValue)
+  expect(SimpleBrowserWorker.invoke).toHaveBeenCalledWith('SimpleBrowser.getAddressSelection', false, state.inputValue, true, undefined)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.sendMultiple', [
+    ['Viewlet.setSelectionByName', 7, 'simple-browser-address', 0, 0, state.inputValue],
+  ])
+})
+
+test('typing keeps the dimmed snapshot through local and provider suggestion updates', async () => {
+  jest.useFakeTimers()
+  const state = {
+    ...ViewletSimpleBrowser.create(7),
+    browserViewId: 12,
+    hasSuggestionsOverlay: true,
+    inputValue: 'what is',
+    overlayIds: ['search-suggestions'],
+    snapshot: 'blob:https://example.com/snapshot',
+    suggestions: [{ favicon: '', type: 'search', value: 'what is love' }],
+    suggestionsEnabled: true,
+  }
+  const typed = ViewletSimpleBrowser.handleInput(state, 'what is l')
+  expect(typed.suggestions).toBe(state.suggestions)
+  const local = await ViewletSimpleBrowser.applySuggestions(typed, 7, 'what is l', [], [], typed.suggestionSessionId)
+  expect(local.suggestions).toBe(state.suggestions)
+  const provider = await ViewletSimpleBrowser.applySuggestions(local, 7, 'what is l', ['what is love'], undefined, typed.suggestionSessionId)
+  expect(provider.suggestions.map((item) => item.value)).toEqual(['what is l', 'what is love'])
+  for (const next of [typed, local, provider]) {
+    expect(next.snapshot).toBe(state.snapshot)
+    expect(next.overlayIds).toEqual(['search-suggestions'])
+    const dom = GetSimpleBrowserVirtualDom.getSimpleBrowserVirtualDom(false, false, false, next.inputValue, next.snapshot, next.suggestions)
+    expect(dom).toContainEqual(
+      expect.objectContaining({
+        className: 'SimpleBrowserSnapshot SimpleBrowserSnapshotSearchSuggestions',
+        src: state.snapshot,
+      }),
+    )
+    await ViewletSimpleBrowser.afterRender(state, next)
+  }
+  expect(ElectronWebContentsViewFunctions.capturePage).not.toHaveBeenCalled()
+  expect(ElectronWebContentsViewFunctions.hide).not.toHaveBeenCalled()
+  expect(ElectronWebContentsViewFunctions.show).not.toHaveBeenCalled()
+  expect(SimpleBrowserSnapshot.dispose).not.toHaveBeenCalled()
+  const closed = await ViewletSimpleBrowser.handleAddressBlur(provider)
+  expect(closed.snapshot).toBe('')
+  expect(closed.overlayIds).toEqual([])
+  expect(ElectronWebContentsViewFunctions.show).toHaveBeenCalledWith(12)
+})
+
+test('reopens closed tabs in reverse close order with fresh views and their original positions', async () => {
+  for (const name of ['hide', 'show', 'focus', 'resizeWebContentsView', 'setIframeSrc']) {
+    ElectronWebContentsViewFunctions[name].mockResolvedValue(undefined)
+  }
+  jest.mocked(ElectronWebContentsView.disposeWebContentsView).mockResolvedValue(undefined as never)
+  jest
+    .mocked(ElectronWebContentsView.createWebContentsView)
+    .mockResolvedValueOnce(40 as never)
+    .mockResolvedValueOnce(41 as never)
+  const state = createTabsState()
+  const firstClose = await ViewletSimpleBrowser.closeTab(state, 1)
+  const secondClose = await ViewletSimpleBrowser.closeTab(firstClose, 1)
+  const reopened = await ViewletSimpleBrowser.handleKeyBinding(
+    secondClose,
+    secondClose.browserViewId,
+    KeyModifier.CtrlCmd | KeyModifier.Shift | KeyCode.KeyT,
+  )
+  expect(reopened.tabs.map((tab) => tab.title)).toEqual(['One', 'Three', 'Four'])
+  expect(reopened.browserViewId).toBe(40)
+  const restored = await ViewletSimpleBrowser.reopenClosedTab(reopened)
+  expect(restored.tabs.map((tab) => tab.title)).toEqual(['One', 'Two', 'Three', 'Four'])
+  expect(restored.browserViewId).toBe(41)
+  expect(restored.closedTabs).toEqual([])
+  expect(ElectronWebContentsViewFunctions.setIframeSrc).toHaveBeenCalledWith(41, 'https://two.example')
+  expect(await ViewletSimpleBrowser.reopenClosedTab(restored)).toBe(restored)
+  expect(state.closedTabs).toEqual([])
+})
+
+test('does not reopen tabs when browser tabs are disabled', async () => {
+  const state = {
+    ...ViewletSimpleBrowser.create(),
+    tabsEnabled: false,
+    closedTabs: [{ iframeSrc: 'https://example.com', title: 'Example', index: 0 }],
+  }
+  expect(await ViewletSimpleBrowser.reopenClosedTab(state)).toBe(state)
+})
+
+test.each(['closeTabsToTheLeft', 'closeTabsToTheRight', 'closeOtherTabs'])('restores original order after %s', async (command) => {
+  for (const name of ['hide', 'show', 'focus', 'resizeWebContentsView', 'setIframeSrc']) {
+    ElectronWebContentsViewFunctions[name].mockResolvedValue(undefined)
+  }
+  jest.mocked(ElectronWebContentsView.disposeWebContentsView).mockResolvedValue(undefined as never)
+  let id = 40
+  jest.mocked(ElectronWebContentsView.createWebContentsView).mockImplementation(async () => ++id as never)
+  const state = createTabsState()
+  let restored = await ViewletSimpleBrowser[command](state, 2)
+  while (restored.closedTabs.length) {
+    restored = await ViewletSimpleBrowser.reopenClosedTab(restored)
+  }
+  expect(restored.tabs.map((tab) => tab.title)).toEqual(state.tabs.map((tab) => tab.title))
+})
+
+test('reopens the last closed tab alongside the replacement new tab', async () => {
+  for (const name of ['hide', 'show', 'focus', 'resizeWebContentsView', 'setIframeSrc']) {
+    ElectronWebContentsViewFunctions[name].mockResolvedValue(undefined)
+  }
+  jest.mocked(ElectronWebContentsView.disposeWebContentsView).mockResolvedValue(undefined as never)
+  jest
+    .mocked(ElectronWebContentsView.createWebContentsView)
+    .mockResolvedValueOnce(40 as never)
+    .mockResolvedValueOnce(41 as never)
+  const initial = createTabsState()
+  const state = { ...initial, tabs: initial.tabs.slice(0, 1) }
+  const closed = await ViewletSimpleBrowser.closeTab(state, 0)
+  const reopened = await ViewletSimpleBrowser.reopenClosedTab(closed)
+  expect(reopened.tabs).toHaveLength(2)
+  expect(reopened).toMatchObject({ browserViewId: 40, iframeSrc: 'https://one.example', selectedTabIndex: 0, closedTabs: [] })
+})
+
+test('openOrRevealTab selects an existing background tab without navigation', async () => {
+  const state = createTwoTabState()
+  const url = state.tabs[1].iframeSrc
+  const result = await ViewletSimpleBrowser.openOrRevealTab(state, url)
+  expect(result.selectedTabIndex).toBe(1)
+  expect(result.tabs).toHaveLength(2)
+  expect(ElectronWebContentsViewFunctions.setIframeSrc).not.toHaveBeenCalled()
+})
+
+test('openOrRevealTab preserves existing tabs when opening a new remote', async () => {
+  // @ts-ignore
+  ElectronWebContentsView.createWebContentsView.mockResolvedValue(14)
+  const state = createTwoTabState()
+  const url = 'https://github.com/owner/repo'
+  const result = await ViewletSimpleBrowser.openOrRevealTab(state, url)
+  expect(result.tabs).toHaveLength(3)
+  expect(result.tabs.slice(0, 2)).toEqual(state.tabs)
+  expect(result.iframeSrc).toBe(url)
+})
+
+test('synchronizes the address after a page starts and finishes navigation', async () => {
+  const state = { ...ViewletSimpleBrowser.create(), browserViewId: 12, inputValue: 'https://example.com', iframeSrc: 'https://example.com' }
+  const loadingState = await ViewletSimpleBrowser.handleWillNavigate(state, 12, 'https://example.com/next')
+  jest.mocked(ElectronWebContentsViewFunctions.getStats).mockResolvedValueOnce({ canGoBack: true, canGoForward: false })
+  const loadedState = await ViewletSimpleBrowser.handleDidNavigate(loadingState, 12, 'https://example.com/next')
+
+  expect(loadingState.iframeSrc).toBe('https://example.com/next')
+  expect(loadedState.inputValue).toBe('https://example.com/next')
+  expect(loadedState.addressValueVersion).toBe(loadingState.addressValueVersion + 1)
+})
+
+test('background navigation preserves the selected address value version', async () => {
+  const state = {
+    ...ViewletSimpleBrowser.create(),
+    browserViewId: 12,
+    inputValue: 'unfinished input',
+    tabs: [{ browserViewId: 12 }, { browserViewId: 13 }],
+  }
+  jest.mocked(ElectronWebContentsViewFunctions.getStats).mockResolvedValueOnce({ canGoBack: true, canGoForward: false })
+  const loadedState = await ViewletSimpleBrowser.handleDidNavigate(state, 13, 'https://example.com/next')
+
+  expect(loadedState.inputValue).toBe('unfinished input')
+  expect(loadedState.addressValueVersion).toBe(state.addressValueVersion)
+})
+
+test.each([true, false])('same-document navigation preserves only the focused browser address (%s)', async (ownsFocus) => {
+  const ViewletStates = await import('../src/parts/ViewletStates/ViewletStates.js')
+  const state = { ...createTabsState(), uid: 7, inputValue: 'unfinished address', isLoading: false }
+  FocusState.set(WhenExpression.FocusSimpleBrowserInput)
+  ViewletStates.setFocusedInstanceByType(ownsFocus ? 7 : 8, ViewletModuleId.SimpleBrowser)
+  jest.mocked(ElectronWebContentsViewFunctions.getStats).mockResolvedValueOnce({ canGoBack: true, canGoForward: false })
+  const result = await ViewletSimpleBrowser.handleDidNavigate(state, state.browserViewId, 'https://one.example/pushed')
+  expect(result.iframeSrc).toBe('https://one.example/pushed')
+  expect(result.inputValue).toBe(ownsFocus ? 'unfinished address' : 'https://one.example/pushed')
+})
+
+test('late navigation events cannot replace a newer native page or finish its pending load', async () => {
+  const state = { ...createTabsState(), inputValue: 'https://one.example/new', iframeSrc: 'https://one.example/new', isLoading: true }
+  jest.mocked(ElectronWebContentsViewFunctions.getStats).mockResolvedValueOnce({
+    canGoBack: true,
+    canGoForward: false,
+    url: 'https://one.example/new',
+  })
+  const result = await ViewletSimpleBrowser.handleDidNavigate(state, state.browserViewId, 'https://one.example/old')
+  expect(result).toBe(state)
+})
+
+test('native page focus overrides stale address focus context during navigation', async () => {
+  const ViewletStates = await import('../src/parts/ViewletStates/ViewletStates.js')
+  const state = { ...createTabsState(), uid: 7, inputValue: 'https://one.example/old', isLoading: false }
+  FocusState.set(WhenExpression.FocusSimpleBrowserInput)
+  ViewletStates.setFocusedInstanceByType(7, ViewletModuleId.SimpleBrowser)
+  jest.mocked(ElectronWebContentsViewFunctions.getStats).mockResolvedValueOnce({
+    canGoBack: true,
+    canGoForward: false,
+    isFocused: true,
+    url: 'https://one.example/new',
+  })
+  const result = await ViewletSimpleBrowser.handleDidNavigate(state, state.browserViewId, 'https://one.example/new')
+  expect(result.inputValue).toBe('https://one.example/new')
+})
+
+test('entering full width preserves command palette focus acquired while showing the native page', async () => {
+  jest.mocked(ElectronWebContentsViewFunctions.show).mockImplementation(async () => {
+    FocusState.set(WhenExpression.FocusQuickPickInput)
+  })
+  jest.mocked(ElectronWebContentsViewFunctions.focus).mockResolvedValue(undefined as never)
+  jest.mocked(RendererProcess.invoke).mockResolvedValue(undefined as never)
+  const state = { ...ViewletSimpleBrowser.create(7), browserViewId: 12, iframeSrc: 'https://example.com' }
+  await ViewletSimpleBrowser.afterRender(state, { ...state, fullWidth: true })
+  expect(ElectronWebContentsViewFunctions.show).toHaveBeenCalledWith(12)
+  expect(ElectronWebContentsViewFunctions.focus).not.toHaveBeenCalled()
+})
+
+test('entering full width preserves a command palette before its asynchronous focus event arrives', async () => {
+  const ViewletStates = await import('../src/parts/ViewletStates/ViewletStates.js')
+  const palette = { uid: 800001 }
+  jest.mocked(ElectronWebContentsViewFunctions.show).mockImplementation(async () => {
+    ViewletStates.set(palette.uid, { factory: {}, moduleId: ViewletModuleId.QuickPick, renderedState: palette, state: palette })
+  })
+  jest.mocked(ElectronWebContentsViewFunctions.focus).mockResolvedValue(undefined as never)
+  jest.mocked(RendererProcess.invoke).mockResolvedValue(undefined as never)
+  const state = { ...ViewletSimpleBrowser.create(7), browserViewId: 12, iframeSrc: 'https://example.com' }
+  try {
+    await ViewletSimpleBrowser.afterRender(state, { ...state, fullWidth: true })
+    expect(ElectronWebContentsViewFunctions.focus).not.toHaveBeenCalled()
+  } finally {
+    delete ViewletStates.state.instances[palette.uid]
+  }
+})
+
+test('entering full width preserves a palette whose module is still loading', async () => {
+  const QuickPickOpening = await import('../src/parts/QuickPickOpening/QuickPickOpening.js')
+  jest.mocked(ElectronWebContentsViewFunctions.show).mockResolvedValue(undefined as never)
+  jest.mocked(ElectronWebContentsViewFunctions.focus).mockResolvedValue(undefined as never)
+  jest.mocked(RendererProcess.invoke).mockResolvedValue(undefined as never)
+  const state = { ...ViewletSimpleBrowser.create(7), browserViewId: 12, iframeSrc: 'https://example.com' }
+  await QuickPickOpening.run(undefined, async () => {
+    await ViewletSimpleBrowser.afterRender(state, { ...state, fullWidth: true })
+    expect(ElectronWebContentsViewFunctions.focus).not.toHaveBeenCalled()
+  })
+})
+
+test('keeps the selected tab visible after a title update rerenders the tab strip', async () => {
+  const oldState = createTabsState()
+  const newState = await ViewletSimpleBrowser.handleTitleUpdated(oldState, oldState.browserViewId, 'Loaded title')
+  expect(newState.selectedTabIndex).toBe(oldState.selectedTabIndex)
+  await ViewletSimpleBrowser.afterRender(oldState, newState)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Window.revealBrowserTab', newState.uid)
+})
+
+test('preview tabs use independent child viewlets and never allocate native views', async () => {
+  let uid = 100
+  jest.mocked(SimpleBrowserPreview.materialize).mockImplementation(async (_state, tab) => (tab.previewUid ? tab : { ...tab, previewUid: ++uid }))
+  const url = 'html-preview:///file%3A%2F%2F%2Fhello%20%23%25.html'
+  const initial = await ViewletSimpleBrowser.loadContent(ViewletSimpleBrowser.create(7, url, 0, 0, 300, 200))
+  expect(initial.tabs[0].previewUid).toBe(101)
+  const second = await ViewletSimpleBrowser.openTab(initial, url, 'foreground-tab')
+  expect(second.tabs[1].previewUid).toBe(102)
+  const first = await ViewletSimpleBrowser.selectTab(second, 0)
+  expect(first.tabs[0].previewUid).toBe(101)
+  await ViewletSimpleBrowser.reloadTab(first, 0)
+  expect(SimpleBrowserPreview.reload).toHaveBeenCalledWith(first.tabs[0])
+  const closed = await ViewletSimpleBrowser.closeTab(first, 0)
+  expect(SimpleBrowserPreview.dispose).toHaveBeenCalledWith(first.tabs[0])
+  expect(closed.tabs[0].previewUid).toBe(102)
+  expect(ElectronWebContentsView.createWebContentsView).not.toHaveBeenCalled()
+  expect(ElectronWebContentsViewFunctions.setIframeSrc).not.toHaveBeenCalled()
+  const saved = ViewletSimpleBrowser.saveState(closed)
+  expect(saved.tabs[0]).not.toHaveProperty('previewUid')
+  const restored = await ViewletSimpleBrowser.loadContent(ViewletSimpleBrowser.create(8, 'simple-browser://', 0, 0, 300, 200), saved)
+  expect(restored.tabs[0].iframeSrc).toBe(url)
+  expect(restored.tabs[0].previewUid).toBe(103)
+})
+
+test('switching between native and preview tabs preserves the native view and disposes preview on navigation', async () => {
+  jest.mocked(SimpleBrowserPreview.materialize).mockImplementation(async (_state, tab) => ({ ...tab, previewUid: 101 }))
+  jest.mocked(ElectronWebContentsViewFunctions.hide).mockResolvedValue(undefined)
+  jest.mocked(ElectronWebContentsViewFunctions.show).mockResolvedValue(undefined)
+  jest.mocked(ElectronWebContentsViewFunctions.focus).mockResolvedValue(undefined)
+  jest.mocked(ElectronWebContentsViewFunctions.resizeWebContentsView).mockResolvedValue(undefined)
+  // @ts-ignore
+  jest.mocked(ElectronWebContentsViewFunctions.setIframeSrc).mockResolvedValue({})
+  jest.mocked(ElectronWebContentsView.createWebContentsView).mockResolvedValue(22)
+  const initial = {
+    ...ViewletSimpleBrowser.create(7, '', 0, 0, 300, 200),
+    browserViewId: 21,
+    tabs: [{ browserViewId: 21, iframeSrc: 'https://example.com', title: 'Example' }],
+  }
+  const preview = await ViewletSimpleBrowser.openTab(initial, 'html-preview:///a.html', 'foreground-tab')
+  expect(ElectronWebContentsViewFunctions.hide).toHaveBeenCalledWith(21)
+  expect(ElectronWebContentsView.createWebContentsView).not.toHaveBeenCalled()
+  const native = await ViewletSimpleBrowser.selectTab(preview, 0)
+  expect(native.browserViewId).toBe(21)
+  expect(ElectronWebContentsViewFunctions.show).toHaveBeenCalledWith(21)
+  const selectedPreview = await ViewletSimpleBrowser.selectTab(native, 1)
+  const navigated = await ViewletSimpleBrowser.setUrl(selectedPreview, 'https://example.org')
+  expect(SimpleBrowserPreview.dispose).toHaveBeenCalledWith(expect.objectContaining({ previewUid: 101 }))
+  expect(navigated.browserViewId).toBe(22)
+  expect(navigated.tabs[1]).not.toHaveProperty('previewUid')
+})

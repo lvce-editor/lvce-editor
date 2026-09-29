@@ -1,5 +1,7 @@
 import * as Assert from '../Assert/Assert.ts'
 import * as DomEventListenersFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.js'
+import * as PreviewOrientation from '../PreviewOrientation/PreviewOrientation.js'
+import * as SashType from '../SashType/SashType.js'
 import type { LayoutState } from './LayoutState.ts'
 import * as ViewletLayoutRenderDom from './ViewletLayoutRenderDom.ts'
 
@@ -92,9 +94,11 @@ export const hasFunctionalEvents = true
 const renderDom = {
   isEqual(oldState: LayoutState, newState: LayoutState) {
     return (
+      oldState.browserFullWidth === newState.browserFullWidth &&
       oldState.mainVisible === newState.mainVisible &&
       oldState.mainId === newState.mainId &&
       oldState.titleBarVisible === newState.titleBarVisible &&
+      oldState.titleBarless === newState.titleBarless &&
       oldState.titleBarId === newState.titleBarId &&
       oldState.activityBarVisible === newState.activityBarVisible &&
       oldState.activityBarId === newState.activityBarId &&
@@ -110,9 +114,17 @@ const renderDom = {
       oldState.panelSashVisible === newState.panelSashVisible &&
       oldState.sideBarSashVisible === newState.sideBarSashVisible &&
       oldState.previewVisible === newState.previewVisible &&
+      oldState.previewOrientation === newState.previewOrientation &&
       oldState.previewSashVisible === newState.previewSashVisible &&
       oldState.previewId === newState.previewId &&
-      oldState.secondarySideBarVisible === newState.secondarySideBarVisible
+      oldState.previewActionsUid === newState.previewActionsUid &&
+      oldState.secondaryPreviewVisible === newState.secondaryPreviewVisible &&
+      oldState.secondaryPreviewSashVisible === newState.secondaryPreviewSashVisible &&
+      oldState.secondaryPreviewId === newState.secondaryPreviewId &&
+      oldState.secondaryPreviewActionsUid === newState.secondaryPreviewActionsUid &&
+      oldState.secondarySideBarVisible === newState.secondarySideBarVisible &&
+      oldState.widgetReferences === newState.widgetReferences &&
+      oldState.mountedViewletsBySource === newState.mountedViewletsBySource
     )
   },
   apply(oldState: LayoutState, newState: LayoutState) {
@@ -131,36 +143,77 @@ const getRoundedPixelValue = (value: number) => {
 }
 
 const getCss = (newState: LayoutState) => {
+  const explicitBounds = newState.explicitBounds
+  const windowWidth = newState.windowWidth
+  const windowHeight = newState.windowHeight
   const sideBarWidth = newState.sideBarWidth
   const activityBarWidth = newState.activityBarWidth
   const panelHeight = newState.panelHeight
+  const panelWidth = newState.panelWidth
   const secondarySideBarWidth = newState.secondarySideBarWidth
   const titleBarHeight = newState.titleBarHeight
   const previewLeft = newState.previewLeft
+  const previewHeight = newState.previewHeight
   const previewWidth = newState.previewWidth
+  const secondaryPreviewLeft = newState.secondaryPreviewLeft
+  const secondaryPreviewTop = newState.secondaryPreviewTop
+  const secondaryPreviewHeight = newState.secondaryPreviewHeight
+  const secondaryPreviewWidth = newState.secondaryPreviewWidth
+  const previewAreasWidth =
+    newState.previewOrientation === PreviewOrientation.Vertical ? Math.max(previewWidth, secondaryPreviewWidth) : previewWidth + secondaryPreviewWidth
+  const previewVisible = !newState.browserFullWidth && (newState.previewVisible || newState.secondaryPreviewVisible)
   const sashSideBarLeft = newState.sideBarLeft
   const secondarySideBarLeft = newState.secondarySideBarLeft
+  const sashPanelTop = newState.panelTop
   Assert.number(activityBarWidth)
   Assert.number(panelHeight)
+  Assert.number(panelWidth)
   Assert.number(sideBarWidth)
   Assert.number(secondarySideBarWidth)
   Assert.number(titleBarHeight)
   Assert.number(previewLeft)
+  Assert.number(previewHeight)
   Assert.number(previewWidth)
+  Assert.number(secondaryPreviewLeft)
+  Assert.number(secondaryPreviewTop)
+  Assert.number(secondaryPreviewHeight)
+  Assert.number(secondaryPreviewWidth)
+  Assert.number(previewAreasWidth)
   Assert.number(sashSideBarLeft)
   Assert.number(secondarySideBarLeft)
+  Assert.number(sashPanelTop)
+  if (explicitBounds) {
+    Assert.number(windowWidth)
+    Assert.number(windowHeight)
+  }
   const sashSecondarySideBarLeft = secondarySideBarLeft + secondarySideBarWidth
   Assert.number(sashSecondarySideBarLeft)
+  const appWidth = explicitBounds ? getPixelValue(windowWidth) : '100%'
+  const appHeight = explicitBounds ? getPixelValue(windowHeight) : '100%'
   return `:root {
+  --AppWidth: ${appWidth};
+  --AppHeight: ${appHeight};
   --ActivityBarWidth: ${getPixelValue(activityBarWidth)};
   --PanelHeight: ${getPixelValue(panelHeight)};
+  --PanelWidth: ${getPixelValue(panelWidth)};
   --SideBarWidth: ${getRoundedPixelValue(sideBarWidth)};
   --SecondarySideBarWidth: ${getRoundedPixelValue(secondarySideBarWidth)};
   --TitleBarHeight: ${getPixelValue(titleBarHeight)};
+  --TitleBarLeft: ${getPixelValue(newState.titleBarLeft)};
+  --TitleBarWidth: ${getPixelValue(newState.titleBarWidth)};
   --SashPreviewLeft: ${getRoundedPixelValue(previewLeft)};
+  --NotificationRight: ${previewVisible ? `calc(100vw - ${getPixelValue(previewLeft)} + 30px)` : '30px'};
+  --NotificationMaxWidth: ${previewVisible ? `min(250px, calc(${getPixelValue(previewLeft)} - 60px), calc(100vw - 60px))` : 'min(250px, calc(100vw - 60px))'};
+  --PreviewAreasWidth: ${getPixelValue(previewAreasWidth)};
+  --PreviewHeight: ${getPixelValue(previewHeight)};
   --PreviewWidth: ${getPixelValue(previewWidth)};
+  --SashSecondaryPreviewLeft: ${getRoundedPixelValue(secondaryPreviewLeft)};
+  --SashSecondaryPreviewTop: ${getRoundedPixelValue(secondaryPreviewTop)};
+  --SecondaryPreviewHeight: ${getPixelValue(secondaryPreviewHeight)};
+  --SecondaryPreviewWidth: ${getPixelValue(secondaryPreviewWidth)};
   --SashSideBarLeft: ${getRoundedPixelValue(sashSideBarLeft)};
   --SashSecondarySideBarLeft: ${getRoundedPixelValue(sashSecondarySideBarLeft)};
+  --SashPanelTop: ${getRoundedPixelValue(sashPanelTop)};
 }`
 }
 
@@ -179,8 +232,24 @@ const renderCss = {
 export const renderEventListeners = () => {
   return [
     {
+      name: DomEventListenersFunctions.HandleClickClose,
+      params: ['hidePreview'],
+    },
+    {
+      name: DomEventListenersFunctions.HandleClickCloseSecondaryPreview,
+      params: ['hideSecondaryPreview'],
+    },
+    {
       name: DomEventListenersFunctions.HandleContextMenu,
       params: ['handleContextMenu'],
+    },
+    {
+      name: DomEventListenersFunctions.HandleSashDoubleClick,
+      params: ['handleSashDoubleClick', SashType.SideBar],
+    },
+    {
+      name: DomEventListenersFunctions.HandleSashPreviewDoubleClick,
+      params: ['handleSashDoubleClick', SashType.Preview],
     },
     {
       name: DomEventListenersFunctions.HandleSashSideBarPointerDown,
@@ -224,6 +293,11 @@ export const renderEventListeners = () => {
     {
       name: DomEventListenersFunctions.HandleSashPreviewPointerDown,
       params: ['handleSashPreviewPointerDown'],
+      trackPointerEvents: [DomEventListenersFunctions.HandleSashSideBarPointerMove, DomEventListenersFunctions.HandleSashSideBarPointerUp],
+    },
+    {
+      name: DomEventListenersFunctions.HandleSashSecondaryPreviewPointerDown,
+      params: ['handleSashSecondaryPreviewPointerDown'],
       trackPointerEvents: [DomEventListenersFunctions.HandleSashSideBarPointerMove, DomEventListenersFunctions.HandleSashSideBarPointerUp],
     },
   ]

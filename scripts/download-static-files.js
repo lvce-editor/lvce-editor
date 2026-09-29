@@ -1,1 +1,1 @@
-import '../packages/build/src/parts/DownloadStaticFiles/DownloadStaticFiles.js'
+import '../packages/build/src/parts/DownloadStaticFiles/DownloadStaticFiles.ts'

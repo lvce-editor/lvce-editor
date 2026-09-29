@@ -1,5 +1,5 @@
 import { expect, test } from '@jest/globals'
-import * as HtmlConfig from '../src/parts/HtmlConfig/HtmlConfig.js'
+import * as HtmlConfig from '../src/parts/HtmlConfig/HtmlConfig.ts'
 
 test('injects escaped config before closing head', () => {
   const html = '<html><head><title>Test</title></head></html>'

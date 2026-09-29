@@ -1,0 +1,26 @@
+import minimist from 'minimist'
+import * as JsonFile from '../JsonFile/JsonFile.ts'
+import * as Process from '../Process/Process.ts'
+
+export const getElectronVersion = async () => {
+  const options = minimist(Process.argv.slice(0))
+  if (options.electronVersion) {
+    return {
+      electronVersion: `${options.electronVersion}`,
+      isInstalled: false,
+    }
+  }
+  if (options['electron-version']) {
+    return {
+      electronVersion: `${options['electron-version']}`,
+      isInstalled: false,
+    }
+  }
+  const packageJson = await JsonFile.readJson('packages/main-process/node_modules/electron/package.json')
+  return {
+    electronVersion: packageJson.version,
+    isInstalled: true,
+    installedArch: process.arch,
+    installedPlatform: process.platform,
+  }
+}

@@ -5,18 +5,20 @@ import { createServer } from 'node:http'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { Worker } from 'node:worker_threads'
+import * as ArgvConfig from './argvConfig.js'
+import { getRemoteSshOptions, isAuthenticatedRemoteRequest } from './remoteSshOptions.js'
+import { sendSocket } from './sendSocket.js'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const ROOT = resolve(__dirname, '../../../')
 
 const { argv, env } = process
-
-const PORT = env.PORT ? parseInt(env.PORT) : 3000
-
-let argv2 = argv[2]
+const configArguments = await ArgvConfig.load(ArgvConfig.getArgvConfigPath())
+ArgvConfig.prepend(argv, configArguments)
 
 // TODO pass argv to shared process instead of using environment variables / global variables
 const argvSliced = argv.slice(2)
+let argv2 = ArgvConfig.getWorkspaceArgument(argvSliced)
 for (const arg of argvSliced) {
   if (arg.startsWith('--only-extension=')) {
     process.env['ONLY_EXTENSION'] = arg.slice('--only-extension='.length)
@@ -30,6 +32,30 @@ if (!argv2) {
 }
 
 const isPublic = argv.includes('--public')
+const remoteSshOptions = getRemoteSshOptions(argvSliced, env)
+const PORT = remoteSshOptions.port
+let remoteClientCount = 0
+let remoteIdleTimer
+
+const scheduleRemoteIdleShutdown = () => {
+  if (!remoteSshOptions.enabled || remoteClientCount !== 0) {
+    return
+  }
+  clearTimeout(remoteIdleTimer)
+  remoteIdleTimer = setTimeout(() => {
+    server.close(() => process.exit(0))
+  }, remoteSshOptions.idleTimeout)
+  remoteIdleTimer.unref()
+}
+
+const trackRemoteClient = (socket) => {
+  clearTimeout(remoteIdleTimer)
+  remoteClientCount++
+  socket.once('close', () => {
+    remoteClientCount--
+    scheduleRemoteIdleShutdown()
+  })
+}
 
 /**
  * @enum {string}
@@ -38,6 +64,7 @@ const ErrorCodes = {
   ERR_STREAM_PREMATURE_CLOSE: 'ERR_STREAM_PREMATURE_CLOSE',
   EISDIR: 'EISDIR',
   ECONNRESET: 'ECONNRESET',
+  EPIPE: 'EPIPE',
   ENOENT: 'ENOENT',
   EADDRINUSE: 'EADDRINUSE',
 }
@@ -79,7 +106,7 @@ const isStatic = (url) => {
   if (url.startsWith('/manifest.json')) {
     return true
   }
-  if (url.startsWith('/auth/')) {
+  if (url === '/auth/callback' || url.startsWith('/auth/callback?')) {
     return true
   }
   if (url.startsWith('/packages') && url.endsWith('.js')) {
@@ -89,10 +116,15 @@ const isStatic = (url) => {
 }
 
 const handleRequest = (req, res) => {
-  if (isStatic(req.url)) {
-    return handleResponseViaStaticServer(req, res, 'StaticServer.getResponse')
+  if (remoteSshOptions.enabled) {
+    res.statusCode = 404
+    res.end()
+    return
   }
-  return sendHandleSharedProcess(req, res.socket, 'HandleRequest.handleRequest')
+  if (isStatic(req.url)) {
+    return handleResponseViaProcess(req, res, getOrCreateStaticServerPathProcess, 'StaticServer.getResponse')
+  }
+  return handleResponseViaProcess(req, res, getOrCreateSharedProcess, 'HandleRequest.handleRequest')
 }
 
 const state = {
@@ -181,6 +213,7 @@ const launchProcess = async (processPath, execArgv) => {
         ...process.env,
       },
       execArgv: [],
+      serialization: 'advanced',
     })
     childProcess.on('exit', handleExit)
     childProcess.on('disconnect', handleSharedProcessDisconnect)
@@ -194,8 +227,10 @@ const launchProcess = async (processPath, execArgv) => {
  * @returns {Promise<ChildProcess>}
  */
 const launchSharedProcess = async () => {
-  const sharedProcessPath = join(ROOT, 'packages', 'shared-process', 'src', 'sharedProcessMain.js')
-  return launchProcess(sharedProcessPath, ['--enable-source-maps', '--ipc-type=node-forked-process', ...argvSliced])
+  const sharedProcessPath = join(ROOT, 'packages', 'shared-process', 'src', 'sharedProcessMain.ts')
+  const ipc = await launchProcess(sharedProcessPath, ['--enable-source-maps', '--ipc-type=node-forked-process', ...argvSliced])
+  ipc.on('message', handleMessage)
+  return ipc
 }
 
 /**
@@ -214,7 +249,7 @@ const getOrCreateSharedProcess = () => {
  * @returns {Promise<ChildProcess>}
  */
 const launchStaticServerProcess = async () => {
-  const staticServerPath = join(ROOT, 'packages', 'static-server', 'src', 'static-server.js')
+  const staticServerPath = join(ROOT, 'packages', 'static-server', 'src', 'static-server.ts')
   const ipc = await launchProcess(staticServerPath, ['--ipc-type=node-worker', ...argvSliced])
   ipc.on('message', handleMessage)
 
@@ -243,44 +278,42 @@ const getHandleMessage = (request) => {
     httpVersionMajor: request.httpVersionMajor,
     httpVersionMinor: request.httpVersionMinor,
     query: request.query,
+    remoteAuthorityAuthenticated: remoteSshOptions.enabled,
   }
+}
+
+const isExpectedConnectionError = (error) => {
+  return error && (error.code === ErrorCodes.ECONNRESET || error.code === ErrorCodes.EPIPE)
 }
 
 const handleRequestError = (error) => {
-  if (error && error.code === 'ECONNRESET') {
-    // ignore
-    return
+  if (!isExpectedConnectionError(error)) {
+    console.info('[info]: request error', error)
   }
-  console.info('[info]: request upgrade error', error)
-}
-
-const handleSocketUpgradeError = (error) => {
-  // @ts-ignore
-  console.info('[info] request socket upgrade error', error)
 }
 
 const handleSocketError = (error) => {
-  if (error && error.code === 'ECONNRESET') {
-    return
+  if (!isExpectedConnectionError(error)) {
+    // @ts-ignore
+    console.info('[info] request socket error', error)
   }
-  // @ts-ignore
-  console.info('[info] request socket error', error)
 }
 
 const sendHandleSharedProcess = async (request, socket, method, ...params) => {
   request.on('error', handleRequestError)
-  socket.on('error', handleSocketUpgradeError)
+  if (!socket) {
+    return
+  }
+  socket.on('error', handleSocketError)
   const sharedProcess = await getOrCreateSharedProcess()
-  sharedProcess.send(
+  sendSocket(
+    sharedProcess,
     {
       jsonrpc: '2.0',
       method,
       params: [getHandleMessage(request), ...params],
     },
     socket,
-    {
-      keepOpen: false,
-    },
   )
 }
 
@@ -318,26 +351,28 @@ const handleMessage = (message) => {
 
 const hasErrorListener = new WeakSet()
 
-const handleResponseViaStaticServer = async (request, res, method, ...params) => {
-  request.on('error', handleRequestError)
-  if (!hasErrorListener.has(res.socket)) {
-    res.socket.on('error', handleSocketError)
-    hasErrorListener.add(res.socket)
-  }
-  const staticServerProcess = await getOrCreateStaticServerPathProcess()
+const invoke = async (ipc, method, ...params) => {
   const { id, promise } = registerCallback()
-  // TODO use rpc and invoke
-  staticServerProcess.send({
+  ipc.send({
     jsonrpc: '2.0',
     id,
     method,
-    params: [getHandleMessage(request), ...params],
+    params,
   })
   const response = await promise
-  const { result } = response
+  if (response.error) {
+    throw new Error(response.error.message)
+  }
+  return response.result
+}
+
+const sendResponse = (res, result) => {
   const { status, headers, body, hasBody } = result
   if (!status) {
     throw new Error('invalid status')
+  }
+  if (res.destroyed) {
+    return
   }
   res.statusCode = status
   setHeaders(res, headers)
@@ -348,12 +383,31 @@ const handleResponseViaStaticServer = async (request, res, method, ...params) =>
   }
 }
 
+const handleResponseViaProcess = async (request, res, getProcess, method, ...params) => {
+  request.on('error', handleRequestError)
+  res.on('error', handleSocketError)
+  if (res.socket && !hasErrorListener.has(res.socket)) {
+    res.socket.on('error', handleSocketError)
+    hasErrorListener.add(res.socket)
+  }
+  const ipc = await getProcess()
+  const result = await invoke(ipc, method, getHandleMessage(request), ...params)
+  sendResponse(res, result)
+}
+
 /**
  *
  * @param {import('http').IncomingMessage} request
  * @param {import('net').Socket} socket
  */
 const handleUpgrade = (request, socket) => {
+  if (remoteSshOptions.enabled && !isAuthenticatedRemoteRequest(request, remoteSshOptions)) {
+    socket.end('HTTP/1.1 401 Unauthorized\r\nConnection: close\r\n\r\n')
+    return
+  }
+  if (remoteSshOptions.enabled) {
+    trackRemoteClient(socket)
+  }
   sendHandleSharedProcess(request, socket, 'HandleWebSocket.handleWebSocket')
 }
 
@@ -366,11 +420,16 @@ const handleServerError = (error) => {
   }
 }
 
+const server = createServer(handleRequest)
+
 const handleAppReady = () => {
+  scheduleRemoteIdleShutdown()
   if (process.send) {
     process.send('ready')
   } else {
-    console.info(`[server] listening on http://localhost:${PORT}`)
+    const address = server.address()
+    const port = typeof address === 'object' && address ? address.port : PORT
+    console.info(`[server] listening on http://${remoteSshOptions.host}:${port}`)
   }
 }
 
@@ -382,11 +441,10 @@ const handleUncaughtExceptionMonitor = (error, origin) => {
 const main = () => {
   process.on('message', handleMessageFromParent)
   process.on('uncaughtExceptionMonitor', handleUncaughtExceptionMonitor)
-  const server = createServer(handleRequest)
   server.on('listening', handleAppReady)
   server.on('upgrade', handleUpgrade)
   server.on('error', handleServerError)
-  const host = isPublic ? undefined : 'localhost'
+  const host = remoteSshOptions.enabled ? remoteSshOptions.host : isPublic ? undefined : remoteSshOptions.host
   server.listen(PORT, host)
 }
 

@@ -1,0 +1,129 @@
+import { homedir } from 'node:os'
+import { isAbsolute, join, resolve } from 'node:path'
+import { fileURLToPath, pathToFileURL } from 'node:url'
+import * as Env from '../Env/Env.ts'
+import * as GetWorkspaceId from '../GetWorkspaceId/GetWorkspaceId.ts'
+import * as IsAbsolutePath from '../IsAbsolutePath/IsAbsolutePath.ts'
+import * as IsElectron from '../IsElectron/IsElectron.ts'
+import * as IsProduction from '../IsProduction/IsProduction.ts'
+import * as IsPromptMode from '../IsPromptMode/IsPromptMode.ts'
+import * as ParentIpc from '../MainProcess/MainProcess.ts'
+import * as PlatformPaths from '../PlatformPaths/PlatformPaths.ts'
+import * as Root from '../Root/Root.ts'
+import * as WorkspaceSource from '../WorkspaceSource/WorkspaceSource.ts'
+
+const pathSeparator = '/'
+
+const getAbsolutePath = (path: any): any => {
+  if (IsAbsolutePath.isAbsolutePath(path)) {
+    return path
+  }
+  if (path.startsWith('${cwd}')) {
+    path = Root.root + path.slice(5)
+  } else if (path.startsWith('~')) {
+    path = `${homedir()}${path.slice(1)}`
+  }
+  path = resolve(path)
+  return path
+}
+
+const toUri = (path: any): any => {
+  return pathToFileURL(path).toString()
+}
+
+interface WindowWorkspace {
+  readonly path: string
+  readonly uri: string
+}
+
+const getWindowWorkspace = (href: string): WindowWorkspace | undefined => {
+  if (!href) {
+    return undefined
+  }
+  const workspaceUri = new URL(href).searchParams.get('workspace')
+  if (!workspaceUri) {
+    return undefined
+  }
+  const url = new URL(workspaceUri)
+  if (url.protocol === 'file:') {
+    return {
+      path: fileURLToPath(url),
+      uri: url.href,
+    }
+  }
+  return {
+    path: url.href,
+    uri: url.href,
+  }
+}
+
+export const resolveRoot = async (href = ''): Promise<any> => {
+  if (IsElectron.isElectron) {
+    const windowWorkspace = getWindowWorkspace(href)
+    if (windowWorkspace) {
+      return {
+        homeDir: PlatformPaths.getHomeDir(),
+        homeDirUri: toUri(PlatformPaths.getHomeDir()),
+        path: windowWorkspace.path,
+        pathSeparator,
+        source: WorkspaceSource.SharedProcessCliArg,
+        uri: windowWorkspace.uri,
+        workspaceId: GetWorkspaceId.getWorkspaceId(windowWorkspace.uri),
+      }
+    }
+    const argv = await ParentIpc.invoke('Process.getArgv')
+    const relevantArgv = argv.slice(1)
+    const last = relevantArgv.at(-1)
+    if (IsPromptMode.isPromptMode(relevantArgv) || (last && last === '.')) {
+      const actual = process.cwd()
+      return {
+        homeDir: PlatformPaths.getHomeDir(),
+        homeDirUri: toUri(PlatformPaths.getHomeDir()),
+        path: actual,
+        pathSeparator,
+        source: WorkspaceSource.SharedProcessCliArg,
+        uri: toUri(actual),
+        workspaceId: GetWorkspaceId.getWorkspaceId(actual),
+      }
+    }
+    if (last && isAbsolute(last)) {
+      return {
+        homeDir: PlatformPaths.getHomeDir(),
+        homeDirUri: toUri(PlatformPaths.getHomeDir()),
+        path: last,
+        pathSeparator,
+        source: WorkspaceSource.SharedProcessCliArg,
+        uri: toUri(last),
+        workspaceId: GetWorkspaceId.getWorkspaceId(last),
+      }
+    }
+  }
+
+  // TODO shared process should have no logic, this should probably be somewhere else
+  const folder = Env.getFolder()
+  if (!folder) {
+    const path = IsElectron.isElectron && IsProduction.isProduction ? '' : join(Root.root, 'playground')
+    return {
+      homeDir: PlatformPaths.getHomeDir(),
+      homeDirUri: toUri(PlatformPaths.getHomeDir()),
+      path,
+      pathSeparator,
+      source: WorkspaceSource.SharedProcessEnv,
+      uri: path ? toUri(path) : '',
+      workspaceId: GetWorkspaceId.getWorkspaceId(path),
+    }
+  }
+  const absolutePath = getAbsolutePath(folder)
+  const workspaceId = GetWorkspaceId.getWorkspaceId(absolutePath)
+  // TODO this slows down startup a lot (~30-50ms)
+  // const workspaceStorage = await getWorkspaceStorage(workspaceId)
+  return {
+    homeDir: PlatformPaths.getHomeDir(),
+    homeDirUri: toUri(PlatformPaths.getHomeDir()),
+    path: absolutePath,
+    pathSeparator,
+    source: WorkspaceSource.SharedProcessDefault,
+    uri: toUri(absolutePath),
+    workspaceId,
+  }
+}

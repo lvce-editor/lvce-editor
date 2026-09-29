@@ -5,7 +5,7 @@
 }
 
 .Panel {
-  background: var(--PanelBackground);
+  background: var(--ModernUiPanelBackground, var(--PanelBackground));
 }
 
 .PanelHeader {

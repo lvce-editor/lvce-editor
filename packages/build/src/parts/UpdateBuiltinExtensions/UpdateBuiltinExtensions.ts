@@ -1,0 +1,145 @@
+import { VError } from '@lvce-editor/verror'
+import { writeFile } from 'fs/promises'
+import got, { HTTPError } from 'got'
+import { join } from 'node:path'
+import { performance } from 'node:perf_hooks'
+import builtinExtensions from '../DownloadBuiltinExtensions/builtinExtensions.json' with { type: 'json' }
+import * as ExitCode from '../ExitCode/ExitCode.ts'
+import { getBuiltinExtensionRepository } from '../GetBuiltinExtensionRepository/GetBuiltinExtensionRepository.ts'
+import * as Logger from '../Logger/Logger.ts'
+import * as Process from '../Process/Process.ts'
+import * as Root from '../Root/Root.ts'
+import { computeUrlSha256, isSha256 } from '../Sha256/Sha256.ts'
+
+/**
+ *
+ * @param {HTTPError} error
+ */
+const getHttpErrorMessage = (error) => {
+  try {
+    const body = error.response.body
+    if (error.response.url.includes('api.github.com') && typeof body === 'string') {
+      const json = JSON.parse(body)
+      if (json.message) {
+        const message = json.message
+        if (message.includes('rate limit exceeded')) {
+          const reset = error.response.headers['x-ratelimit-reset']
+          const limit = error.response.headers['x-ratelimit-limit']
+          if (reset && typeof reset === 'string' && typeof limit === 'string') {
+            const resetDate = new Date(parseInt(reset) * 1000)
+            const limitAmount = parseInt(limit)
+            return `GitHub rate limit of ${limitAmount} requests per hour execeeded, resets at ${resetDate}`
+          }
+        }
+        return json.message
+      }
+    }
+  } catch {}
+  return `${error.message}`
+}
+
+const parseVersionFromUrl = (url, repository) => {
+  if (!url.includes('releases/tag')) {
+    if (url.endsWith('/releases')) {
+      throw new Error(`no releases found for ${repository}`)
+    }
+    throw new Error(`cannot parse release version from url ${url}`)
+  }
+  const slashIndex = url.lastIndexOf('/')
+  const version = url.slice(slashIndex + 1)
+  if (version.startsWith('v')) {
+    return version.slice(1)
+  }
+  return version
+}
+
+const getLatestReleaseVersion = async (repository) => {
+  try {
+    const json = await got.head(`https://github.com/${repository}/releases/latest`)
+    const finalUrl = json.url
+    const version = parseVersionFromUrl(finalUrl, repository)
+    return version
+  } catch (error) {
+    if (error instanceof HTTPError) {
+      const httpErrorMessage = getHttpErrorMessage(error)
+      throw new VError(`Failed to get latest release for ${repository}: ${httpErrorMessage}`)
+    }
+    throw new VError(error, `Failed to get latest release for ${repository}`)
+  }
+}
+
+const getDiffCount = (arrayA, arrayB) => {
+  const length = arrayA.length
+  let diffCount = 0
+  for (let i = 0; i < length; i++) {
+    if (arrayA[i].version !== arrayB[i].version || arrayA[i].sha256 !== arrayB[i].sha256) {
+      diffCount++
+    }
+  }
+  return diffCount
+}
+
+const getNewBuiltinExtensions = async (builtinExtensions, versions) => {
+  return Promise.all(
+    builtinExtensions.map(async (extension, i) => {
+      const version = versions[i]
+      if (extension.version === version && isSha256(extension.sha256)) {
+        return extension
+      }
+      const repositoryName = getBuiltinExtensionRepository(extension)
+      const baseName = repositoryName.slice(repositoryName.lastIndexOf('/') + 1)
+      const assetName = extension.version === version && extension.assetName ? extension.assetName : `${baseName}-v${version}.tar.br`
+      const url = `https://github.com/${repositoryName}/releases/download/v${version}/${assetName}`
+      const sha256 = await computeUrlSha256(url, got.stream)
+      const updatedExtension = {
+        ...extension,
+        version,
+        sha256,
+      }
+      if (extension.version !== version) {
+        delete updatedExtension.assetName
+      }
+      return updatedExtension
+    }),
+  )
+}
+
+const updateBuiltinExtensions = async () => {
+  const start = performance.now()
+  const repositories = builtinExtensions.map(getBuiltinExtensionRepository)
+  const newVersions = await Promise.all(repositories.map(getLatestReleaseVersion))
+  const newBuiltinExtensions = await getNewBuiltinExtensions(builtinExtensions, newVersions)
+  const end = performance.now()
+  const duration = end - start
+  const diffCount = getDiffCount(builtinExtensions, newBuiltinExtensions)
+  if (diffCount === 0) {
+    Logger.info(`All releases are up to date in ${duration}ms`)
+  } else {
+    const builtinExtensionsPath = join(Root.root, 'packages', 'build', 'src', 'parts', 'DownloadBuiltinExtensions', 'builtinExtensions.json')
+    await writeFile(builtinExtensionsPath, JSON.stringify(newBuiltinExtensions, null, 2) + '\n')
+    // TODO print which releases were updated
+    if (diffCount === 1) {
+      Logger.info(`Updated ${diffCount} release in ${duration}ms`)
+    } else {
+      Logger.info(`Updated ${diffCount} releases in ${duration}ms`)
+    }
+    await import('../DownloadBuiltinExtensions/DownloadBuiltinExtensions.ts')
+  }
+}
+
+const main = async () => {
+  try {
+    await updateBuiltinExtensions()
+  } catch (error) {
+    if (error && error instanceof Error && error.message.includes('rate limit')) {
+      console.error(error.message)
+    } else if (error && error instanceof Error && error.message.includes('no releases found for')) {
+      console.error(error.message)
+    } else {
+      console.error(error)
+    }
+    Process.exit(ExitCode.Error)
+  }
+}
+
+main()

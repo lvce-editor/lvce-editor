@@ -1,7 +1,7 @@
 import { beforeEach, expect, test } from '@jest/globals'
 import { join } from 'node:path'
-import * as Root from '../src/parts/Root/Root.js'
 import * as GetTestPath from '../src/parts/GetTestPath/GetTestPath.js'
+import * as Root from '../src/parts/Root/Root.js'
 
 const originalTestPath = process.env.TEST_PATH
 const originalArgv = process.argv

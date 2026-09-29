@@ -4,6 +4,7 @@ import * as TestWorker from '../TestWorker/TestWorker.js'
 import * as JsonRpc from '../JsonRpc/JsonRpc.js'
 
 const map = Object.create(null)
+const ids = new WeakMap()
 
 export const handleEvent = async (id, event) => {
   const eventTarget = map[id]
@@ -29,9 +30,21 @@ export const handleEvent = async (id, event) => {
 
 export const watch = async (options) => {
   const id = Id.create()
-  map[id] = new EventTarget()
+  const target = new EventTarget()
+  map[id] = target
+  ids.set(target, id)
   await SharedProcess.invoke('FileWatcher.watch', id, options)
-  return map[id]
+  return target
+}
+
+export const dispose = async (target) => {
+  const id = ids.get(target)
+  if (id === undefined) {
+    return
+  }
+  ids.delete(target)
+  delete map[id]
+  await SharedProcess.invoke('FileWatcher.dispose', id)
 }
 
 const map2 = Object.create(null)

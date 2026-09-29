@@ -1,5 +1,6 @@
 import { assetDir } from '../AssetDir/AssetDir.js'
 import * as ExtensionManagementWorker from '../ExtensionManagementWorker/ExtensionManagementWorker.js'
+import { getExtensionAbsolutePath } from '../GetExtensionAbsolutePath/GetExtensionAbsolutePath.js'
 import { getPlatform } from '../Platform/Platform.js'
 
 export interface ExtensionViewIframe {
@@ -9,19 +10,113 @@ export interface ExtensionViewIframe {
   readonly src: string
 }
 
+export interface DomEventListener {
+  readonly capture?: boolean
+  readonly name: string | number
+  readonly params: readonly string[]
+  readonly passive?: boolean
+  readonly preventDefault?: boolean
+  readonly stopPropagation?: boolean
+}
+
 export interface ExtensionView {
+  readonly displayName?: string
+  readonly css?: string
+  readonly eventListeners?: readonly DomEventListener[]
   readonly extensionId: string
   readonly icon: string
   readonly id: string
   readonly iframe?: ExtensionViewIframe
+  readonly kind?: string
+  readonly name?: string
+  readonly preferredLocation?: 'preview' | 'secondaryPreview' | 'sideBar'
+  readonly selector?: readonly string[]
+  readonly showSideBarHeader?: boolean
   readonly title: string
+  readonly type?: string
 }
 
-export const getExtensionViews = async (): Promise<readonly ExtensionView[]> => {
-  return ExtensionManagementWorker.invoke('Extensions.getViews', assetDir, getPlatform())
+interface ManifestView {
+  readonly css?: string
+  readonly id?: string
 }
 
-export const getExtensionView = async (id: string): Promise<ExtensionView | undefined> => {
-  const views = await getExtensionViews()
-  return views.find((view) => view.id === id)
+interface ExtensionManifest {
+  readonly builtin?: boolean
+  readonly id?: string
+  readonly isWeb?: boolean
+  readonly path?: string
+  readonly uri?: string
+  readonly views?: readonly ManifestView[]
+}
+
+const getOrigin = (): string => {
+  return globalThis.location?.origin || 'http://localhost'
+}
+
+const getManifestView = (extension: ExtensionManifest, viewId: string): ManifestView | undefined => {
+  return extension.views?.find((view) => view.id === viewId)
+}
+
+const getCss = (extension: ExtensionManifest, view: ExtensionView): string => {
+  const manifestView = getManifestView(extension, view.id)
+  const css = manifestView?.css
+  if (typeof css !== 'string' || css.length === 0) {
+    return ''
+  }
+  return getExtensionAbsolutePath(
+    extension.id || view.extensionId,
+    extension.isWeb === true,
+    extension.builtin === true,
+    extension.path || extension.uri || '',
+    css,
+    getOrigin(),
+    getPlatform(),
+  )
+}
+
+const mergeCss = (views: readonly ExtensionView[], extensions: readonly ExtensionManifest[]): readonly ExtensionView[] => {
+  return views.map((view) => {
+    if (view.css) {
+      return view
+    }
+    const extension = extensions.find((extension) => extension.id === view.extensionId)
+    if (!extension) {
+      return view
+    }
+    const css = getCss(extension, view)
+    if (!css) {
+      return view
+    }
+    return {
+      ...view,
+      css,
+    }
+  })
+}
+
+export const getExtensionViews = async (applicationId?: string): Promise<readonly ExtensionView[]> => {
+  const invoke = (command: string, ...args: readonly unknown[]): Promise<any> =>
+    applicationId === undefined
+      ? ExtensionManagementWorker.invoke(command, ...args)
+      : ExtensionManagementWorker.invoke('Extensions.invokeForApplication', applicationId, command, ...args)
+  const [views, extensions] = await Promise.all([
+    invoke('Extensions.getViews', assetDir, getPlatform()) as Promise<readonly ExtensionView[]>,
+    invoke('Extensions.getAllExtensions', assetDir, getPlatform()) as Promise<readonly ExtensionManifest[]>,
+  ])
+  return mergeCss(views, extensions)
+}
+
+export const findExtensionView = (views: readonly ExtensionView[], idOrUri: string): ExtensionView | undefined => {
+  const exactMatch = views.find((view) => view.id === idOrUri)
+  if (exactMatch) {
+    return exactMatch
+  }
+  const normalizedUri = idOrUri.toLowerCase()
+  return views.find((view) => view.type === 'preview' && view.selector?.some((selector) => normalizedUri.endsWith(selector.toLowerCase())))
+}
+
+export const getExtensionView = async (idOrUri: string, applicationId?: string): Promise<ExtensionView | undefined> => {
+  const views = await getExtensionViews(applicationId)
+  return findExtensionView(views, idOrUri)
 }

@@ -3,6 +3,8 @@ import * as SourceControlWorker from '../SourceControlWorker/SourceControlWorker
 
 export const hasFunctionalRender = true
 
+export const hasDirectRender = true
+
 export const hasFunctionalRootRender = true
 
 export const hasFunctionalEvents = true

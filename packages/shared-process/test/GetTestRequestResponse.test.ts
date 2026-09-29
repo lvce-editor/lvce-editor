@@ -1,4 +1,6 @@
-import { beforeEach, expect, jest, test } from '@jest/globals'
+import { afterEach, beforeEach, expect, jest, test } from '@jest/globals'
+import { mkdtemp, rm, writeFile } from 'node:fs/promises'
+import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 
 beforeEach(() => {
@@ -32,6 +34,14 @@ const GetTestPath = await import('../src/parts/GetTestPath/GetTestPath.js')
 const CreateTestOverview = await import('../src/parts/CreateTestOverview/CreateTestOverview.js')
 const GetPathName = await import('../src/parts/GetPathName/GetPathName.js')
 
+const temporaryDirectories: string[] = []
+
+afterEach(async () => {
+  const directories = [...temporaryDirectories]
+  temporaryDirectories.length = 0
+  await Promise.all(directories.map((directory: any) => rm(directory, { force: true, recursive: true })))
+})
+
 test('getTestRequestResponse', async () => {
   const request = {
     url: '/tests/',
@@ -55,6 +65,51 @@ test('getTestRequestResponse', async () => {
     },
   })
   expect(CreateTestOverview.createTestOverview).toHaveBeenCalledWith(join('/test', 'src'))
+})
+
+test('getTestRequestResponse - redirects the test overview without a trailing slash', async () => {
+  const request = {
+    url: '/tests?filter=chat',
+  }
+  jest.spyOn(GetPathName, 'getPathName').mockReturnValue('/tests')
+
+  const result = await GetTestRequestResponse.getTestRequestResponse(request, '/test/index.html')
+
+  expect(result).toEqual({
+    body: '',
+    init: {
+      headers: {
+        Location: '/tests/?filter=chat',
+      },
+      status: 308,
+    },
+  })
+  expect(CreateTestOverview.createTestOverview).not.toHaveBeenCalled()
+})
+
+test('getTestRequestResponse - _all.html serves index html', async () => {
+  const tmpDir = await mkdtemp(join(tmpdir(), 'lvce-test-request-'))
+  temporaryDirectories.push(tmpDir)
+  const indexHtmlPath = join(tmpDir, 'index.html')
+  await writeFile(indexHtmlPath, '<!doctype html><title>Tests</title>')
+  const request = {
+    url: '/tests/_all.html',
+  }
+  jest.spyOn(GetPathName, 'getPathName').mockReturnValue('/tests/_all.html')
+
+  const result = await GetTestRequestResponse.getTestRequestResponse(request, indexHtmlPath)
+
+  expect(result).toMatchObject({
+    init: {
+      headers: {
+        'Content-Security-Policy': expect.stringContaining(`style-src 'self' 'unsafe-inline'`),
+        'Content-Type': 'text/html',
+      },
+      status: 200,
+    },
+  })
+  expect(result.init.headers['Content-Security-Policy']).toContain(`media-src 'self' blob:`)
+  expect(result.body).toContain('<title>Tests</title>')
 })
 
 test('getTestRequestResponse - error in createTestOverview', async () => {

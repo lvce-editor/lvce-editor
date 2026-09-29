@@ -27,21 +27,43 @@
   white-space: nowrap;
   overflow: hidden;
   margin: 0;
-  gap: 10px;
 }
 
 .ExtensionDetailNameBadge {
-  padding-left: 10px;
   font-size: 10px;
   font-style: italic;
-  contain: content;
+  margin-left: 10px;
 }
 
 .ExtensionDetailDescription {
+  color: var(--DescriptionForeground, color-mix(in srgb, var(--WorkbenchForeground) 76%, transparent));
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
   padding-top: 10px;
+}
+
+.ExtensionDetailMetadata {
+  color: var(--DescriptionForeground, color-mix(in srgb, var(--WorkbenchForeground) 76%, transparent));
+  display: flex;
+  gap: 16px;
+  padding-top: 8px;
+}
+
+.ExtensionDetailStatistic {
+  align-items: center;
+  display: inline-flex;
+  font-size: 12px;
+  gap: 4px;
+}
+
+.ExtensionDetailDownloadCount::before {
+  content: '↓';
+}
+
+.ExtensionDetailRating::before {
+  color: var(--ExtensionIconStarForeground, #ffcc00);
+  content: '★';
 }
 
 .ExtensionDetailIcon {
@@ -56,4 +78,32 @@
   contain: content;
   gap: 10px;
   padding-top: 10px;
+}
+
+.ExtensionDetailHeaderActions [name='Disable'],
+.ExtensionDetailHeaderActions [name='Enable'] {
+  user-select: none;
+}
+
+.ExtensionEnablementSplitButton {
+  display: inline-flex;
+}
+
+.ExtensionEnablementSplitButtonPrimary {
+  border-bottom-right-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.ExtensionEnablementSplitButtonDropDown {
+  border-bottom-left-radius: 0;
+  border-left: 1px solid color-mix(in srgb, currentColor 35%, transparent);
+  border-top-left-radius: 0;
+  min-width: 24px;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+.ExtensionEnablementSplitButtonDropDown > .MaskIcon {
+  height: 16px;
+  width: 16px;
 }

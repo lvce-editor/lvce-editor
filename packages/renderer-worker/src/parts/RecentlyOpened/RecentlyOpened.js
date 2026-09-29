@@ -6,6 +6,7 @@ import * as Workspace from '../Workspace/Workspace.js'
 export * from '../AddToRecentlyOpened/AddToRecentlyOpened.js'
 export * from '../ClearRecentlyOpened/ClearRecentlyOpened.js'
 export * from '../GetRecentlyOpened/GetRecentlyOpened.js'
+export * from '../RemoveRecentlyOpened/RemoveRecentlyOpened.js'
 export * from '../SetRecentlyOpened/SetRecentlyOpened.js'
 
 const addWorkspacePathToRecentlyOpened = async () => {

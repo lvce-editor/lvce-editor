@@ -2,7 +2,7 @@
   "name": "@lvce-editor/static-server",
   "version": "0.0.0-dev",
   "description": "Serve static files",
-  "main": "src/static-server.js",
+  "main": "src/static-server.ts",
   "type": "module",
   "scripts": {
     "test": "node --unhandled-rejections=warn --experimental-vm-modules ../../node_modules/jest/bin/jest.js --detectOpenHandles --forceExit",
@@ -41,9 +41,12 @@
     }
   },
   "dependencies": {
-    "@lvce-editor/assert": "^1.5.1",
-    "@lvce-editor/rpc": "^6.4.0",
-    "@lvce-editor/verror": "^1.7.0",
-    "@lvce-editor/rpc-registry": "^9.25.0"
+    "@lvce-editor/rpc": "^6.21.1"
+  },
+  "devDependencies": {
+    "@jest/globals": "^30.5.2"
+  },
+  "allowScripts": {
+    "@parcel/watcher@2.6.0": true
   }
 }
