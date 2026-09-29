@@ -219,6 +219,7 @@ export const commandMap = {
   'FilePicker.showSaveFilePicker': lazy('FilePicker.showSaveFilePicker'),
   'FileSystem.chmod': lazy('FileSystem.chmod'),
   'FileSystem.copy': lazy('FileSystem.copy'),
+  'FileSystem.createFile': lazy('FileSystem.createFile'),
   'FileSystemMemory.chmod': lazy('FileSystemMemory.chmod'),
   'FileSystemMemory.copy': lazy('FileSystemMemory.copy'),
   'FileSystemMemory.createFile': lazy('FileSystemMemory.createFile'),
