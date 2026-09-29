@@ -7,7 +7,6 @@ export const getKeyBindings = () => {
     {
       key: KeyCode.Period,
       command: 'Workspace.openRemote',
-      when: WhenExpression.FocusExplorer,
     },
     {
       key: KeyCode.Escape,
@@ -35,6 +34,11 @@ export const getKeyBindings = () => {
     },
     {
       key: KeyModifier.CtrlCmd | KeyCode.Backquote,
+      command: 'Layout.togglePanel',
+      args: ['Terminals'],
+    },
+    {
+      key: KeyModifier.CtrlCmd | KeyCode.KeyJ,
       command: 'Layout.togglePanel',
       args: ['Terminals'],
     },
@@ -69,7 +73,7 @@ export const getKeyBindings = () => {
     {
       key: KeyModifier.CtrlCmd | KeyModifier.Shift | KeyCode.KeyX,
       command: 'Layout.openSideBarViewlet',
-      args: ['Extensions'],
+      args: ['Extensions', true],
     },
     {
       key: KeyModifier.CtrlCmd | KeyModifier.Shift | KeyCode.KeyG,

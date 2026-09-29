@@ -16,13 +16,13 @@
 .SideBarTitleAreaTitle {
   font-size: 11px;
   cursor: default;
-  font-weight: 400;
+  font-weight: var(--SideBarTitleFontWeight, 400);
   margin: 0;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
   text-transform: uppercase;
-  padding-left: 12px;
+  padding-left: var(--SideBarTitlePaddingLeft, 12px);
   contain: strict;
   flex: 1;
 }

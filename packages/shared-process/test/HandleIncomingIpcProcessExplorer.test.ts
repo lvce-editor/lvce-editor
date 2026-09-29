@@ -4,9 +4,13 @@ import * as IpcId from '../src/parts/IpcId/IpcId.js'
 const error = new Error('Transfer failed')
 const applyIncomingIpcResponse = jest.fn(async () => error)
 const decreaseRefCount = jest.fn()
+const release = jest.fn()
+const complete = jest.fn()
 const getModule = jest.fn(() => ({}))
 const isSocket = jest.fn(() => true)
 const handleIncomingIpcWebSocket = jest.fn(async () => ({
+  complete,
+  release,
   response: {
     method: 'HandleWebSocket.handleWebSocket',
     params: [],
@@ -71,5 +75,14 @@ test('handleIncomingIpc - rejects other unexpected handles', async () => {
     'Unexpected ipc handle: Object',
   )
 
+  spy.mockRestore()
+})
+
+
+test('terminal transfer failure releases the connection and forwarding reservations', async () => {
+  const spy = jest.spyOn(console, 'error').mockImplementation(() => {})
+  await HandleIncomingIpc.handleIncomingIpc(IpcId.TerminalProcess, {}, {})
+  expect(complete).toHaveBeenCalledTimes(1)
+  expect(release).toHaveBeenCalledTimes(1)
   spy.mockRestore()
 })

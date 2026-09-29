@@ -9,6 +9,7 @@ const kSendMultiple = 'Viewlet.sendMultiple'
 const kSetCss = 'Viewlet.setCss'
 const kSetPatches = 'Viewlet.setPatches'
 const minimumFrameDuration = 16
+const maximumFrameWait = 100
 
 export const state = {
   frameCount: 0,
@@ -32,14 +33,27 @@ const waitForEligibleFrame = () => {
     return Promise.resolve(Timestamp.now())
   }
   return new Promise((resolve) => {
-    const handleFrame = (timestamp) => {
-      if (timestamp - state.lastFrameTime < minimumFrameDuration) {
-        RequestAnimationFrame.requestAnimationFrame(handleFrame)
-        return
-      }
+    let settled = false
+    let frameId
+    const finish = (timestamp) => {
+      if (settled) return
+      settled = true
+      clearTimeout(timer)
+      RequestAnimationFrame.cancelAnimationFrame(frameId)
       resolve(timestamp)
     }
-    RequestAnimationFrame.requestAnimationFrame(handleFrame)
+    const handleFrame = (timestamp) => {
+      if (settled) return
+      if (timestamp - state.lastFrameTime < minimumFrameDuration) {
+        frameId = RequestAnimationFrame.requestAnimationFrame(handleFrame)
+        return
+      }
+      finish(timestamp)
+    }
+    // Chromium can suspend worker animation frames during window startup or occlusion.
+    // Keep the ordered RPC queue live even when no paint callback arrives.
+    const timer = setTimeout(() => finish(Timestamp.now()), maximumFrameWait)
+    frameId = RequestAnimationFrame.requestAnimationFrame(handleFrame)
   })
 }
 

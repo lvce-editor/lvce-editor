@@ -7,3 +7,13 @@ test('cookie import view should let the main area own its tab title', () => {
   expect(worker).toBeDefined()
   expect(worker?.viewlet?.title).toBeUndefined()
 })
+
+test('workers view resize forwards its width and height', () => {
+  const worker = Workers.getWorkers().find(({ id }) => id === 'workersView')
+
+  expect(worker?.viewlet?.methods?.resize?.parameters).toEqual([
+    { source: 'state', name: 'uid' },
+    { source: 'argument', name: 'dimensions', index: 'width' },
+    { source: 'argument', name: 'dimensions', index: 'height' },
+  ])
+})

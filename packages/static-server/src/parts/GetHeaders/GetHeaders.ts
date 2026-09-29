@@ -36,8 +36,9 @@ export const getHeaders = ({
   if (absolutePath.endsWith('index.html')) {
     return GetHeadersDocument.getHeadersDocument({ mime, etag, isForElectronProduction, applicationName })
   }
+  const normalizedPath = absolutePath.replaceAll('\\', '/')
   const worker = workers.find((item) => {
-    return absolutePath.endsWith(item.fileName)
+    return normalizedPath.endsWith(item.fileName)
   })
   if (worker) {
     const csp = workerHeaders[worker.fileName]

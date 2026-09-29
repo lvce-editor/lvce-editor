@@ -26,7 +26,7 @@ const saveViewletStateAs = async (instanceId, storageId) => {
   if (applicationId === undefined) {
     await InstanceStorage.setJson(getStorageKey(storageId), savedState)
   } else {
-    ApplicationRegistry.setSavedState(applicationId, storageId, savedState)
+    await ApplicationRegistry.setSavedState(applicationId, storageId, savedState)
   }
   if (instance && instance.factory.saveChildState) {
     const childIds = instance.factory.saveChildState(instance.state)

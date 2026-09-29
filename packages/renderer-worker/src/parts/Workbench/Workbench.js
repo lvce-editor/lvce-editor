@@ -27,6 +27,7 @@ import * as LifeCycle from '../LifeCycle/LifeCycle.js'
 import * as LifeCyclePhase from '../LifeCyclePhase/LifeCyclePhase.js'
 import * as Location from '../Location/Location.js'
 import * as Module from '../Module/Module.js'
+import * as ModernUi from '../ModernUi/ModernUi.js'
 import * as OpenInitialUri from '../OpenInitialUri/OpenInitialUri.js'
 import * as OnLoadCommands from '../OnLoadCommands/OnLoadCommands.js'
 import * as Performance from '../Performance/Performance.js'
@@ -147,6 +148,7 @@ export const startup = async (platform, assetDir) => {
 
   Performance.mark(PerformanceMarkerType.WillLoadPreferences)
   await Preferences.hydrate()
+  await ModernUi.hydrate()
   if (promptOptions?.backendUrl) {
     PreferencesState.set('layout.backendUrl', promptOptions.backendUrl)
   }
