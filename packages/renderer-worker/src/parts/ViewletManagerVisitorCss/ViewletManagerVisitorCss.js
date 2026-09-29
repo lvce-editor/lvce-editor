@@ -1,4 +1,5 @@
 import * as Css from '../Css/Css.js'
+import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
@@ -39,3 +40,5 @@ export const reloadDynamicCss = async () => {
   }
   await Promise.all(promises)
 }
+
+GlobalEventBus.addListener('preferences.changed', reloadDynamicCss)

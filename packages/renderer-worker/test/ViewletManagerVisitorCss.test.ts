@@ -19,6 +19,7 @@ jest.unstable_mockModule('../src/parts/ViewletStates/ViewletStates.js', () => ({
 }))
 
 const ViewletManagerVisitorCss = await import('../src/parts/ViewletManagerVisitorCss/ViewletManagerVisitorCss.js')
+const GlobalEventBus = await import('../src/parts/GlobalEventBus/GlobalEventBus.js')
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -51,4 +52,20 @@ test('reloadDynamicCss updates each acquired dynamic stylesheet once', async () 
   expect(reloadDynamicCss).toHaveBeenCalledTimes(2)
   expect(reloadDynamicCss).toHaveBeenNthCalledWith(1, 'Editor', editorGetDynamicCss, preferencesState)
   expect(reloadDynamicCss).toHaveBeenNthCalledWith(2, 'DiffView', diffEditorGetDynamicCss, preferencesState)
+})
+
+test('preferences.changed reloads dynamic stylesheets', async () => {
+  const editorGetDynamicCss = jest.fn()
+  preferencesState['editor.fontSize'] = 22
+  getValues.mockReturnValue([
+    {
+      factory: { getDynamicCss: editorGetDynamicCss },
+      moduleId: 'Editor',
+    },
+  ])
+
+  await GlobalEventBus.emitEvent('preferences.changed')
+
+  expect(reloadDynamicCss).toHaveBeenCalledWith('Editor', editorGetDynamicCss, preferencesState)
+  expect(preferencesState['editor.fontSize']).toBe(22)
 })
