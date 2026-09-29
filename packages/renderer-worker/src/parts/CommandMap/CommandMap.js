@@ -299,6 +299,7 @@ export const commandMap = {
   'Main.handleDragOver': lazy('Main.handleDragOver'),
   'Main.handleTabContextMenu': lazy('Main.handleTabContextMenu'),
   'Main.openBackgroundTab': lazy('Main.openBackgroundTab'),
+  'Main.openInput': lazy('Main.openInput'),
   'Main.openKeyBindings': lazy('Main.openKeyBindings'),
   'Main.openUri': lazy('Main.openUri'),
   'Main.reopenEditorWith': lazy('Main.reopenEditorWith'),
