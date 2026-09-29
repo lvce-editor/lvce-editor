@@ -120,7 +120,7 @@
 
 .EditorCursor {
   width: 2px;
-  height: var(--EditorLineHeight);
+  height: var(--EditorRowHeight, var(--EditorLineHeight));
   position: absolute;
   top: 0;
   left: 0;
