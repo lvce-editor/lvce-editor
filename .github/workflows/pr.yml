@@ -240,6 +240,11 @@ jobs:
         run: node src/_all.js --ci --headless --test-name-prefix=viewlet.quick-pick-open-workers-view
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0
+      - name: Test switching between Workers and Process Explorer
+        working-directory: ./packages/extension-host-worker-tests
+        run: npm run e2e:headless -- --test-name-prefix=viewlet.workers-process-explorer-switch
+        env:
+          PLAYWRIGHT_BROWSERS_PATH: 0
       - name: Test Open Recent removal
         if: matrix.os == 'ubuntu-24.04'
         working-directory: ./packages/extension-host-worker-tests
