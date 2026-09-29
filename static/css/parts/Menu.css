@@ -44,11 +44,18 @@
   color: var(--MenuItemDisabledForeground, var(--vscode-disabledForeground, rgb(204 204 204 / 50%)));
 }
 
+.MenuItemDisabled.MenuItemFocused,
+.MenuItem[disabled].MenuItemFocused,
+.MenuItem[aria-disabled='true'].MenuItemFocused {
+  background: transparent;
+}
+
 .MenuItemSubMenuArrowRight {
   width: 16px;
   height: 16px;
   display: block;
   mask-image: url(/icons/chevron-right.svg);
+  mask-mode: alpha;
   mask-repeat: no-repeat;
   mask-position: center;
   mask-size: 100%;

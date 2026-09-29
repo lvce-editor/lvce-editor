@@ -38,6 +38,43 @@ test('bundleCss does not add filename comment to App.css', async () => {
   }
 }, 30_000)
 
+test('bundleCss scopes debug chat resizer styles', async () => {
+  const dir = await mkdtemp(join(tmpdir(), 'lvce-bundle-css-'))
+
+  try {
+    await bundleCss({
+      outDir: dir,
+      assetDir: '',
+    })
+
+    const css = await readFile(join(dir, 'App.css'), 'utf8')
+    const settingsCss = await readFile(join(dir, 'parts', 'ViewletSettings.css'), 'utf8')
+
+    expect(css).toContain('\n.ChatDebugView .Resizer {')
+    expect(css).not.toContain(`
+.Resizer {
+  background: transparent;
+  border: 0;
+  bottom: 0;
+  cursor: col-resize;
+  margin: 0;
+  padding: 0;
+  pointer-events: auto;
+  position: absolute;
+  top: 0;
+  transform: translateX(calc(-0.5 * var(--ChatDebugViewSashWidth)));
+  width: var(--ChatDebugViewSashWidth);
+}`)
+    expect(settingsCss).toContain(`.SettingsMain > .SettingsResizer {
+  background: var(--ExtensionDetailTabsBorder);
+  flex: 0 0 var(--SashSize);
+  position: relative;
+}`)
+  } finally {
+    await rm(dir, { recursive: true, force: true })
+  }
+}, 30_000)
+
 test('bundleCss styles settings checkboxes like compact editor controls', async () => {
   const dir = await mkdtemp(join(tmpdir(), 'lvce-bundle-css-'))
 
@@ -148,6 +185,30 @@ test('bundleCss strictly contains the simple browser snapshot wrapper', async ()
   }
 }, 30_000)
 
+test('bundleCss preserves the simple browser snapshot aspect ratio', async () => {
+  const dir = await mkdtemp(join(tmpdir(), 'lvce-bundle-css-'))
+
+  try {
+    await bundleCss({
+      outDir: dir,
+      assetDir: '',
+    })
+
+    const css = await readFile(join(dir, 'parts', 'ViewletSimpleBrowser.css'), 'utf8')
+
+    expect(css).toContain(`.SimpleBrowserSnapshot {
+  display: block;
+  filter: brightness(0.8);
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+  width: 100%;
+}`)
+  } finally {
+    await rm(dir, { recursive: true, force: true })
+  }
+}, 30_000)
+
 test('bundleCss keeps extra space between the simple browser favicon and tab title', async () => {
   const dir = await mkdtemp(join(tmpdir(), 'lvce-bundle-css-'))
 
@@ -159,10 +220,13 @@ test('bundleCss keeps extra space between the simple browser favicon and tab tit
 
     const css = await readFile(join(dir, 'parts', 'ViewletSimpleBrowser.css'), 'utf8')
 
+    expect(css).toContain(`.SimpleBrowserTabFaviconWrapper {
+  align-items: center;
+  display: flex;
+  flex: 0 0 18px;
+}`)
     expect(css).toContain(`.SimpleBrowserTabFavicon {
-  flex: 0 0 16px;
   height: 16px;
-  margin-inline-end: 2px;
   object-fit: contain;
   width: 16px;
 }`)
@@ -194,7 +258,7 @@ test('bundleCss fades overflowing simple browser tab titles', async () => {
   }
 }, 30_000)
 
-test('bundleCss keeps the preview sash transparent', async () => {
+test('bundleCss renders a visible preview sash border', async () => {
   const dir = await mkdtemp(join(tmpdir(), 'lvce-bundle-css-'))
 
   try {
@@ -217,6 +281,7 @@ test('bundleCss keeps the preview sash transparent', async () => {
 }`)
     expect(css).toContain(`.SashPreview {
   left: var(--SashPreviewLeft);
+  border-left: 1px solid var(--SashBorder, gray);
 }`)
     expect(css).toContain(`.SashSecondaryPreview {
   left: var(--SashSecondaryPreviewLeft);
@@ -281,7 +346,7 @@ test('bundleCss keeps the main workbench column separate from the full-height pr
   }
 }, 30_000)
 
-test('bundleCss centers quick pick in the non-preview area', async () => {
+test('bundleCss constrains and centers quick pick in the non-preview area', async () => {
   const dir = await mkdtemp(join(tmpdir(), 'lvce-bundle-css-'))
 
   try {
@@ -292,7 +357,9 @@ test('bundleCss centers quick pick in the non-preview area', async () => {
 
     const css = await readFile(join(dir, 'App.css'), 'utf8')
 
+    expect(css).toContain('width: min(600px, calc(100% - var(--PreviewAreasWidth, 0px) - 32px));')
     expect(css).toContain('left: calc((100% - var(--PreviewAreasWidth, 0px)) / 2);')
+    expect(css).toContain('transform: translateX(-50%);')
   } finally {
     await rm(dir, { recursive: true, force: true })
   }
@@ -412,7 +479,7 @@ test('bundleCss preserves the extension runtime status layout', async () => {
 
     expect(css).toContain(`.RuntimeStatusDefinitionList {
   align-items: baseline;
-  column-gap: 24px;
+  column-gap: 12px;
   contain: content;
   display: grid;
   grid-template-columns: max-content minmax(0, 1fr);

@@ -51,6 +51,9 @@ export const validateWorkerViewletConfig = (workerId, viewlet) => {
   if (viewlet.workspaceChangeEventPrepend !== undefined && typeof viewlet.workspaceChangeEventPrepend !== 'boolean') {
     throw new TypeError(`invalid ${workerId} viewlet workspaceChangeEventPrepend`)
   }
+  if (viewlet.workspaceProgressEvent !== undefined && typeof viewlet.workspaceProgressEvent !== 'string') {
+    throw new TypeError(`invalid ${workerId} viewlet workspaceProgressEvent`)
+  }
   for (const lifecycleName of requiredMethods) {
     validateMethod(workerId, lifecycleName, viewlet.methods?.[lifecycleName])
   }

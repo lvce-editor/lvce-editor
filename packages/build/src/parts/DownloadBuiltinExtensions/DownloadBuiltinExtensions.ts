@@ -1,5 +1,4 @@
-import got from 'got'
-import { createReadStream, createWriteStream, existsSync } from 'node:fs'
+import { createReadStream, existsSync } from 'node:fs'
 import { mkdir, rm } from 'node:fs/promises'
 import { pipeline } from 'node:stream/promises'
 import { createBrotliDecompress } from 'node:zlib'
@@ -12,19 +11,8 @@ import * as JsonFile from '../JsonFile/JsonFile.ts'
 import * as Path from '../Path/Path.ts'
 import * as Process from '../Process/Process.ts'
 import { computeFileSha256, isSha256 } from '../Sha256/Sha256.ts'
+import { downloadUrl } from '../DownloadUrl/DownloadUrl.ts'
 import extensions from './builtinExtensions.json' with { type: 'json' }
-
-const downloadUrl = async (url, outFile) => {
-  try {
-    await mkdir(Path.dirname(outFile), { recursive: true })
-    await pipeline(got.stream(url), createWriteStream(outFile))
-  } catch (error) {
-    try {
-      await rm(outFile)
-    } catch {}
-    throw new VError(error, `Failed to download "${url}"`)
-  }
-}
 
 const downloadExtension = async (extension) => {
   try {

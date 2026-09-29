@@ -22,6 +22,10 @@ export const getQuickPickMenuEntries = () => {
       id: 'Main.reopenEditorWith',
       label: 'Main: Reopen Editor With',
     },
+    {
+      id: 'Main.saveWithoutFormatting',
+      label: 'File: Save without Formatting',
+    },
   ]
 }
 

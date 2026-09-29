@@ -130,6 +130,8 @@ export const LanguageModels = 'LanguageModels'
 
 export const RunningExtensions = 'RunningExtensions'
 
+export const Workers = 'Workers'
+
 export const Secrets = 'Secrets'
 
 export const Confirm = 'Confirm'

@@ -44,6 +44,10 @@ test('running extensions', async () => {
   expect(await ViewletMap.getModuleId('running-extensions://')).toBe(ViewletModuleId.RunningExtensions)
 })
 
+test('workers view', async () => {
+  expect(await ViewletMap.getModuleId('workers:///1')).toBe(ViewletModuleId.Workers)
+})
+
 test('cookie import view', async () => {
   expect(await ViewletMap.getModuleId('cookie-import-view:///firefox/default')).toBe(ViewletModuleId.CookieImport)
 })

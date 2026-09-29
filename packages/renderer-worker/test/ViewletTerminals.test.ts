@@ -113,7 +113,7 @@ test('loadContent creates the xterm terminal view with the requested cwd', async
     0,
     {
       height: 400,
-      width: 800,
+      width: 710,
       x: 10,
       y: 20,
     },
@@ -165,11 +165,11 @@ test('loadContent reuses running terminals when the panel is reopened', async ()
   expect(commandExecute).not.toHaveBeenCalled()
   expect(viewletResize).toHaveBeenCalledWith(41, {
     height: 400,
-    width: 800,
+    width: 710,
     x: 10,
     y: 20,
   })
-  expect(rendererProcessInvoke).toHaveBeenCalledWith('Viewlet.sendMultiple', [['Viewlet.setBounds', 41, { height: 400, width: 800, x: 10, y: 20 }]])
+  expect(rendererProcessInvoke).toHaveBeenCalledWith('Viewlet.sendMultiple', [['Viewlet.setBounds', 41, { height: 400, width: 710, x: 10, y: 20 }]])
   expect(viewletStatesRemove).toHaveBeenCalledWith(7)
   expect(newState).toMatchObject({
     childUid: 41,
@@ -264,22 +264,29 @@ test('renderActions wires terminal toolbar buttons to handleClickAction', () => 
 })
 
 test('renderEventListeners routes terminal toolbar clicks and stops panel event delegation', () => {
-  expect(ViewletTerminalsRender.renderEventListeners()).toEqual([
-    {
-      name: 'handleClickTab',
-      params: ['handleClickTab', 'event.currentTarget.dataset.index'],
-    },
-    {
-      name: 'handleClickTerminalTabAction',
-      params: ['handleClickTerminalTabAction', 'event.currentTarget.dataset.index', 'event.currentTarget.dataset.command'],
-      stopPropagation: true,
-    },
-    {
-      name: 'handleClickAction',
-      params: ['handleClickAction', 'event.target.dataset.command'],
-      stopPropagation: true,
-    },
-  ])
+  expect(ViewletTerminalsRender.renderEventListeners()).toEqual(
+    expect.arrayContaining([
+      {
+        name: 'handleClickTab',
+        params: ['handleClickTab', 'event.currentTarget.dataset.index', 'event.currentTarget.dataset.terminalUid'],
+      },
+      {
+        name: 'handleClickTerminalTabAction',
+        params: [
+          'handleClickTerminalTabAction',
+          'event.currentTarget.dataset.index',
+          'event.currentTarget.dataset.command',
+          'event.currentTarget.dataset.terminalUid',
+        ],
+        stopPropagation: true,
+      },
+      {
+        name: 'handleClickAction',
+        params: ['handleClickAction', 'event.target.dataset.command'],
+        stopPropagation: true,
+      },
+    ]),
+  )
 })
 
 test('handleClickAction routes a functional action-root split event', async () => {
@@ -303,8 +310,8 @@ test('splitTerminal opens a new terminal to the right of the active terminal', a
     0,
     {
       height: 400,
-      width: 400,
-      x: 410,
+      width: 355,
+      x: 365,
       y: 20,
     },
     '',
@@ -312,7 +319,7 @@ test('splitTerminal opens a new terminal to the right of the active terminal', a
   )
   expect(viewletResize).toHaveBeenCalledWith(41, {
     height: 400,
-    width: 400,
+    width: 355,
     x: 10,
     y: 20,
   })
@@ -342,7 +349,7 @@ test('splitTerminal inserts the new terminal directly after the active split', a
     ViewletModuleId.Terminal2,
     42,
     0,
-    expect.objectContaining({ x: 10 + (800 / 3) * 2 }),
+    expect.objectContaining({ x: 10 + (710 / 3) * 2 }),
     '',
     [terminalSpawnOptions],
   )
@@ -411,7 +418,7 @@ test('killTerminal disposes the active split and expands the remaining split', a
   expect(viewletDisposeFunctional).toHaveBeenCalledWith(42)
   expect(viewletResize).toHaveBeenCalledWith(41, {
     height: 400,
-    width: 800,
+    width: 710,
     x: 10,
     y: 20,
   })
@@ -438,7 +445,7 @@ test('handleTerminalExit disposes an exited split and keeps the active split foc
   expect(viewletDisposeFunctional).toHaveBeenCalledWith(41)
   expect(viewletResize).toHaveBeenCalledWith(42, {
     height: 400,
-    width: 800,
+    width: 710,
     x: 10,
     y: 20,
   })
@@ -552,6 +559,38 @@ test('handleClickTab selects a terminal from its DOM dataset index', async () =>
   })
 })
 
+test('handleClickTab focuses the split identified by its DOM dataset', async () => {
+  const state = {
+    ...createLoadedState(),
+    activeTerminalUids: [41],
+    childUid: 41,
+    childUids: [41, 42],
+    tabs: [{ icon: 'terminal-bash', label: 'bash', terminalUids: [41, 42], uid: 41 }],
+  }
+
+  const newState = await ViewletTerminals.handleClickTab(state, '0', '42')
+
+  expect(newState).toMatchObject({
+    activeTerminalUids: [42],
+    childUid: 42,
+    childUids: [41, 42],
+    selectedIndex: 0,
+  })
+})
+
+test('renderDom updates split selection when the focused terminal changes', () => {
+  const state = {
+    ...createLoadedState(),
+    activeTerminalUids: [41],
+    childUid: 41,
+    childUids: [41, 42],
+    tabs: [{ icon: 'terminal-bash', label: 'bash', terminalUids: [41, 42], uid: 41 }],
+  }
+  const newState = { ...state, activeTerminalUids: [42], childUid: 42 }
+
+  expect(ViewletTerminalsRender.render[0].isEqual(state, newState)).toBe(false)
+})
+
 test('handleClickTerminalTabAction disposes the clicked terminal tab and focuses the previous tab', async () => {
   const state = {
     ...createLoadedState(),
@@ -583,6 +622,28 @@ test('handleClickTerminalTabAction disposes the clicked terminal tab and focuses
   })
 })
 
+test('handleClickTerminalTabAction disposes only the clicked split', async () => {
+  const state = {
+    ...createLoadedState(),
+    activeTerminalUids: [42],
+    childUid: 42,
+    childUids: [41, 42],
+    selectedIndex: 0,
+    tabs: [{ icon: 'terminal-bash', label: 'bash', terminalUids: [41, 42], uid: 41 }],
+  }
+
+  const newState = await ViewletTerminals.handleClickTerminalTabAction(state, '0', 'killTerminalSplit', '42')
+
+  expect(viewletDisposeFunctional).toHaveBeenCalledWith(42)
+  expect(newState).toMatchObject({
+    activeTerminalUids: [41],
+    childUid: 41,
+    childUids: [41],
+    selectedIndex: 0,
+    tabs: [{ terminalUids: [41] }],
+  })
+})
+
 test('killTerminalTab expands the remaining terminal when the sidebar becomes hidden', async () => {
   const state = {
     ...createLoadedState(),
@@ -601,7 +662,7 @@ test('killTerminalTab expands the remaining terminal when the sidebar becomes hi
   expect(viewletDisposeFunctional).toHaveBeenCalledWith(42)
   expect(viewletResize).toHaveBeenCalledWith(41, {
     height: 400,
-    width: 800,
+    width: 710,
     x: 10,
     y: 20,
   })
@@ -665,4 +726,37 @@ test('afterRender does not hide the panel for a terminal exit', async () => {
   const newState = await ViewletTerminals.handleTerminalExit(state, 41)
   await ViewletTerminals.afterRender(state, newState)
   expect(commandExecute).not.toHaveBeenCalled()
+})
+
+test('detaching a split preserves the running viewlet and leaves the other split active', async () => {
+  const state = {
+    ...ViewletTerminals.create(1, '', 10, 20, 800, 400),
+    terminalTabsEnabled: true,
+    tabs: [{ uid: 41, terminalUids: [41, 42], label: 'bash', icon: 'terminal-bash' }],
+    selectedIndex: 0,
+    activeTerminalUids: [41],
+    childUid: 41,
+    childUids: [41, 42],
+  }
+  const detached = await ViewletTerminals.detachTerminal(state, 41)
+  expect(detached.childUids).toEqual([42])
+  expect(viewletDisposeFunctional).not.toHaveBeenCalled()
+  const restored = await ViewletTerminals.attachTerminal(detached, { uid: 41, groupUid: 41, label: 'bash', icon: 'terminal-bash' }, 0, 0)
+  expect(restored.tabs).toEqual(state.tabs)
+  expect(restored.childUids).toEqual([41, 42])
+  expect(commandExecute).not.toHaveBeenCalled()
+})
+
+test('terminal drag data contains no file or plain text fallback', async () => {
+  const state = { ...ViewletTerminals.create(1, '', 0, 0, 800, 400), tabs: [{ uid: 41, label: 'bash', icon: 'terminal-bash' }] }
+  await ViewletTerminals.handleTabPointerDown(state, '41')
+  expect(rendererProcessInvoke).toHaveBeenCalledWith('Viewlet.sendMultiple', [
+    [
+      'Viewlet.setDragData',
+      1,
+      { items: [{ type: 'application/x-lvce-terminal', data: 'lvce-terminal:{"sourceUid":1,"terminalUid":41}' }], label: 'bash' },
+    ],
+  ])
+  await ViewletTerminals.handleDragEnd(state)
+  expect(rendererProcessInvoke).toHaveBeenLastCalledWith('Viewlet.sendMultiple', [['Viewlet.setDragData', 1, { items: [], label: '' }]])
 })

@@ -18,6 +18,9 @@ test('renders split terminals in order and forwards terminal presses', () => {
 
   expect(dom).toEqual([
     {
+      'data-uid': undefined,
+      onDragOver: 'handleDragOver',
+      onDrop: 'handleDrop',
       childCount: 2,
       className: MergeClassNames.mergeClassNames('Viewlet', 'Terminals'),
       onMouseDown: DomEventListenerFunctions.HandleMouseDown,
@@ -59,7 +62,7 @@ test('renders terminal tabs with switch commands', () => {
   expect(dom).toContainEqual(
     expect.objectContaining({
       'data-index': 1,
-      className: 'TerminalTab TerminalTabSelected',
+      className: 'TerminalTab TerminalTabSelected TerminalTabGroupStart',
       onClick: DomEventListenerFunctions.HandleClickTab,
     }),
   )
@@ -79,7 +82,66 @@ test('renders terminal tabs with switch commands', () => {
   )
 })
 
-test('hides terminal tabs when only one terminal tab exists', () => {
+test('renders split terminal tabs as connected rows and selects the focused split', () => {
+  const dom = GetTerminalsDom.getTerminalsDom({
+    activeTerminalUids: [42, 44],
+    childUids: [41, 42, 43],
+    height: 400,
+    selectedIndex: 0,
+    tabs: [
+      { icon: 'terminal-bash', label: 'bash', terminalUids: [41, 42, 43], uid: 41 },
+      { icon: 'terminal-bash', label: 'bash', terminalUids: [44], uid: 44 },
+    ],
+    tabsWidth: 90,
+    terminalTabsEnabled: true,
+    width: 800,
+    y: 20,
+  })
+
+  const rows = dom.filter((entry) => (entry.className === 'TerminalTab' || entry.className?.startsWith('TerminalTab ')) && 'data-index' in entry)
+  expect(rows).toEqual([
+    expect.objectContaining({
+      className: 'TerminalTab TerminalTabSplit TerminalTabSplitFirst',
+      'data-index': 0,
+      'data-terminalUid': 41,
+    }),
+    expect.objectContaining({
+      className: 'TerminalTab TerminalTabSelected TerminalTabSplit TerminalTabSplitMiddle',
+      'data-index': 0,
+      'data-terminalUid': 42,
+    }),
+    expect.objectContaining({
+      className: 'TerminalTab TerminalTabSplit TerminalTabSplitLast',
+      'data-index': 0,
+      'data-terminalUid': 43,
+    }),
+    expect.objectContaining({
+      className: 'TerminalTab TerminalTabGroupStart',
+      'data-index': 1,
+      'data-terminalUid': 44,
+    }),
+  ])
+})
+
+test('shows terminal tabs for a single split group', () => {
+  const dom = GetTerminalsDom.getTerminalsDom({
+    activeTerminalUids: [42],
+    childUids: [41, 42],
+    height: 400,
+    selectedIndex: 0,
+    tabs: [{ icon: 'terminal-bash', label: 'bash', terminalUids: [41, 42], uid: 41 }],
+    tabsWidth: 90,
+    terminalTabsEnabled: true,
+    width: 800,
+    y: 20,
+  })
+
+  expect(dom[0]).toMatchObject({ childCount: 3 })
+  expect(dom).toContainEqual(expect.objectContaining({ className: 'TerminalTab TerminalTabSplit TerminalTabSplitFirst' }))
+  expect(dom).toContainEqual(expect.objectContaining({ className: 'TerminalTab TerminalTabSelected TerminalTabSplit TerminalTabSplitLast' }))
+})
+
+test('shows a draggable terminal tab for a single terminal', () => {
   const dom = GetTerminalsDom.getTerminalsDom({
     childUids: [41],
     height: 400,
@@ -91,16 +153,7 @@ test('hides terminal tabs when only one terminal tab exists', () => {
     y: 20,
   })
 
-  expect(dom).toEqual([
-    {
-      childCount: 1,
-      className: MergeClassNames.mergeClassNames('Viewlet', 'Terminals'),
-      onMouseDown: DomEventListenerFunctions.HandleMouseDown,
-      type: VirtualDomElements.Div,
-    },
-    {
-      type: VirtualDomElements.Reference,
-      uid: 41,
-    },
-  ])
+  expect(dom[0]).toMatchObject({ childCount: 2, onDrop: 'handleDrop', onDragOver: 'handleDragOver' })
+  expect(dom).toContainEqual(expect.objectContaining({ className: 'TerminalTab TerminalTabSelected', draggable: true }))
+  expect(dom).toContainEqual({ type: VirtualDomElements.Reference, uid: 41 })
 })

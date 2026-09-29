@@ -8,13 +8,18 @@ jest.unstable_mockModule('../src/parts/LocalStorage/LocalStorage.js', () => ({
   getJson: jest.fn(),
   setJson: jest.fn(),
 }))
+jest.unstable_mockModule('../src/parts/IndexedDbKeyValueStorage/IndexedDbKeyValueStorage.js', () => ({
+  get: jest.fn(),
+  set: jest.fn(),
+}))
 
 const BrowserHistory = await import('../src/parts/BrowserHistory/BrowserHistory.js')
 const LocalStorage = await import('../src/parts/LocalStorage/LocalStorage.js')
+const IndexedDbKeyValueStorage = await import('../src/parts/IndexedDbKeyValueStorage/IndexedDbKeyValueStorage.js')
 
 test('loads valid entries sorted from newest to oldest', async () => {
   // @ts-ignore
-  LocalStorage.getJson.mockResolvedValue([
+  IndexedDbKeyValueStorage.get.mockResolvedValue([
     { date: 100, url: 'https://older.example/path' },
     { date: 300, url: 'https://newer.example/path' },
     { date: 200, url: 'file:///tmp/private.txt' },
@@ -25,7 +30,7 @@ test('loads valid entries sorted from newest to oldest', async () => {
     { date: 300, url: 'https://newer.example/path' },
     { date: 100, url: 'https://older.example/path' },
   ])
-  expect(LocalStorage.getJson).toHaveBeenCalledWith('simple-browser-history')
+  expect(IndexedDbKeyValueStorage.get).toHaveBeenCalledWith('simple-browser-history-v2')
 })
 
 test('returns an empty list when storage cannot be read', async () => {
@@ -67,13 +72,13 @@ test('ignores an invalid removal index', () => {
 
 test('records an entry against the latest stored history', async () => {
   // @ts-ignore
-  LocalStorage.getJson.mockResolvedValue([{ date: 100, url: 'https://older.example' }])
+  IndexedDbKeyValueStorage.get.mockResolvedValue([{ date: 100, url: 'https://older.example' }])
 
   await expect(BrowserHistory.record('https://newer.example', 200)).resolves.toEqual([
     { date: 200, url: 'https://newer.example' },
     { date: 100, url: 'https://older.example' },
   ])
-  expect(LocalStorage.setJson).toHaveBeenCalledWith('simple-browser-history', [
+  expect(IndexedDbKeyValueStorage.set).toHaveBeenCalledWith('simple-browser-history-v2', [
     { date: 200, url: 'https://newer.example' },
     { date: 100, url: 'https://older.example' },
   ])
@@ -81,7 +86,7 @@ test('records an entry against the latest stored history', async () => {
 
 test('removes the selected entry from the latest stored history', async () => {
   // @ts-ignore
-  LocalStorage.getJson.mockResolvedValue([
+  IndexedDbKeyValueStorage.get.mockResolvedValue([
     { date: 300, url: 'https://newest.example' },
     { date: 200, url: 'https://selected.example' },
     { date: 100, url: 'https://oldest.example' },
@@ -97,7 +102,23 @@ test('storage write failures do not break history recording', async () => {
   // @ts-ignore
   LocalStorage.getJson.mockResolvedValue([])
   // @ts-ignore
-  LocalStorage.setJson.mockRejectedValue(new Error('storage full'))
+  IndexedDbKeyValueStorage.set.mockRejectedValue(new Error('storage full'))
 
   await expect(BrowserHistory.record('https://example.com', 100)).resolves.toEqual([{ date: 100, url: 'https://example.com' }])
+})
+
+test('migrates existing local-storage history into IndexedDB', async () => {
+  // @ts-ignore
+  IndexedDbKeyValueStorage.get.mockResolvedValue(undefined)
+  // @ts-ignore
+  LocalStorage.getJson.mockResolvedValue([{ date: 100, url: 'https://existing.example' }])
+
+  await expect(BrowserHistory.load()).resolves.toEqual([{ date: 100, url: 'https://existing.example' }])
+  expect(IndexedDbKeyValueStorage.set).toHaveBeenCalledWith('simple-browser-history-v2', [{ date: 100, url: 'https://existing.example' }])
+})
+
+test('retains history beyond the previous one thousand entry limit', () => {
+  const entries = Array.from({ length: 100_000 }, (_, index) => ({ date: 100_000 - index, url: `https://example.test/${index}` }))
+
+  expect(BrowserHistory.normalize(entries)).toHaveLength(100_000)
 })

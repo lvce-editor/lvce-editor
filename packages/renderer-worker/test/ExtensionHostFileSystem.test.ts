@@ -78,6 +78,14 @@ test('stat dispatches through isolated file system providers', async () => {
   expect(ExtensionHostShared.executeProvider).not.toHaveBeenCalled()
 })
 
+test('getOpenExternalPath dispatches through isolated file system providers', async () => {
+  invoke.mockResolvedValue({ found: true, result: '\\\\wsl.localhost\\Ubuntu\\workspace' })
+
+  await expect(ExtensionHostFileSystem.getOpenExternalPath('wsl://Ubuntu/workspace')).resolves.toBe('\\\\wsl.localhost\\Ubuntu\\workspace')
+  expect(invoke).toHaveBeenCalledWith('Extensions.executeFileSystemProviderGetOpenExternalPath', 'wsl', 'wsl://Ubuntu/workspace')
+  expect(ExtensionHostShared.executeProvider).not.toHaveBeenCalled()
+})
+
 test('getBlob preserves binary provider content', async () => {
   const audio = new Blob(['recorded audio'], { type: 'audio/webm' })
   invoke.mockResolvedValue({ found: true, result: audio })

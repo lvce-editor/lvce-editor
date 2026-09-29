@@ -4,6 +4,7 @@ export const state = {
   fileNameMap: Object.create(null),
   extensionMap: Object.create(null),
   tokenizerMap: Object.create(null),
+  explicitLanguageMap: Object.create(null),
   /**
    * @type {any[]}
    */
@@ -37,6 +38,18 @@ export const getLanguageByFileName = (fileName) => {
 export const getTokenizeFunctionPath = (languageId) => {
   // TODO what if language.tokenize is not of type string? -> handle error gracefully
   return state.tokenizerMap[languageId] || ''
+}
+
+export const getExplicitLanguageId = (uri) => {
+  return state.explicitLanguageMap[uri]
+}
+
+export const setExplicitLanguageId = (uri, languageId) => {
+  state.explicitLanguageMap[uri] = languageId
+}
+
+export const clearExplicitLanguageId = (uri) => {
+  delete state.explicitLanguageMap[uri]
 }
 
 export const setHydrating = (value) => {

@@ -12,7 +12,8 @@
     "electronVersion": "@@ELECTRON_VERSION@@",
     "nsis": {
       "warningsAsErrors": false,
-      "differentialPackage": false
+      "differentialPackage": false,
+      "preCompressedFileExtensions": []
     },
     "win": {
       "target": "nsis",
