@@ -149,9 +149,6 @@ export const preview = {
       decrement(state) {
         return { ...state, count: state.count - 1 }
       },
-      dispose(state) {
-        return { ...state, disposed: true }
-      },
       increment(state) {
         return { ...state, count: state.count + 1 }
       },
@@ -162,7 +159,7 @@ export const preview = {
       return state
     }
     const layoutState = ViewletStates.getState(ViewletModuleId.Layout)
-    return { ...state, uri: layoutState.previewUri || state.uri }
+    return { ...state, uri: state.uri || layoutState?.previewUri }
   },
   wrapCommand(command, defaultWrapCommand, { worker }) {
     if (command !== 'getRuntimeDiagnostics') {
@@ -322,11 +319,12 @@ export const titleBar = {
       titleBarTitleEnabled: Preferences.get('titleBar.titleEnabled') ?? false,
     }
   },
+  transformRenderedState: TitleBarMenuOverlay.reconcile,
   transformState(state) {
     return {
       ...state,
-      controlsOverlayEnabled: Preferences.get('window.controlsOverlay.enabled') === true,
-      titleBarStyleCustom: Preferences.get('window.titleBarStyle') === 'custom',
+      controlsOverlayEnabled: Preferences.get('window.controlsOverlay.enabled') === true && Preferences.get('window.titleBarless.enabled') !== true,
+      titleBarStyleCustom: Preferences.get('window.titleBarStyle') === 'custom' || Preferences.get('window.titleBarless.enabled') === true,
     }
   },
   wrapCommand: wrapTitleBarCommand,

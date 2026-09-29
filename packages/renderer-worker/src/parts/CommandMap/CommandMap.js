@@ -8,6 +8,23 @@ const lazy =
   }
 
 export const commandMap = {
+  'TerminalTransfer.beginPanelTransfer': lazy('TerminalTransfer.beginPanelTransfer'),
+  'TerminalTransfer.cancelPanelTransfer': lazy('TerminalTransfer.cancelPanelTransfer'),
+
+  'TerminalTransfer.takePanelTerminal': lazy('TerminalTransfer.takePanelTerminal'),
+  'TerminalTransfer.resize': lazy('TerminalTransfer.resize'),
+  'TerminalTransfer.commit': lazy('TerminalTransfer.commit'),
+  'TerminalTransfer.rollback': lazy('TerminalTransfer.rollback'),
+  'TerminalTransfer.attachPanelTerminal': lazy('TerminalTransfer.attachPanelTerminal'),
+
+  'Preview.clearOutput': async () => {
+    const { clearOutput } = await import('../PreviewSandboxOutput/PreviewSandboxOutput.js')
+    await clearOutput()
+  },
+  'Preview.logWarning': async (message) => {
+    const { logWarning } = await import('../PreviewSandboxOutput/PreviewSandboxOutput.js')
+    await logWarning(message)
+  },
   'ShellCommand.install': async () => (await import('../ShellCommand/ShellCommand.js')).install(),
   'PortProvider.getPorts': async (workspaceUri) => (await import('../PortProvider/PortProvider.ts')).getPorts(workspaceUri),
   'Application.create': lazy('Application.create'),
@@ -46,6 +63,7 @@ export const commandMap = {
   'ClipBoard.execCopy': lazy('ClipBoard.execCopy'),
   'ClipBoard.hotReload': lazy('ClipBoard.hotReload'),
   'ClipBoard.readMemoryImage': lazy('ClipBoard.readMemoryImage'),
+  'ClipBoard.readImage': lazy('ClipBoard.readImage'),
   'ClipBoard.readMemoryText': lazy('ClipBoard.readMemoryText'),
   'ClipBoard.readNativeFiles': lazy('ClipBoard.readNativeFiles'),
   'ClipBoard.readText': lazy('ClipBoard.readText'),
@@ -64,6 +82,7 @@ export const commandMap = {
   'ColorTheme.setColorTheme': lazy('ColorTheme.setColorTheme'),
   'ConfirmPrompt.mock': lazy('ConfirmPrompt.mock'),
   'ConfirmPrompt.prompt': lazy('ConfirmPrompt.prompt'),
+  'ConfirmPrompt.prompt3': lazy('ConfirmPrompt.prompt3'),
   'ConfirmPrompt.showErrorMessage': lazy('ConfirmPrompt.showErrorMessage'),
   'ContentTracing.start': lazy('ContentTracing.start'),
   'ContentTracing.stop': lazy('ContentTracing.stop'),
@@ -115,10 +134,12 @@ export const commandMap = {
   'EditorDiagnostics.hydrate': lazy('EditorDiagnostics.hydrate'),
   'EditorError.3900': lazy('EditorError.3900'),
   'ElectronBrowserView.handleAudioStateChanged': lazy('ElectronBrowserView.handleAudioStateChanged'),
+  'ElectronBrowserView.handleDownloadStateChanged': lazy('ElectronBrowserView.handleDownloadStateChanged'),
   'ElectronBrowserView.handleBrowserViewDestroyed': lazy('ElectronBrowserView.handleBrowserViewDestroyed'),
   'ElectronBrowserView.handleContextMenu': lazy('ElectronBrowserView.handleContextMenu'),
   'ElectronBrowserView.handleDidNavigate': lazy('ElectronBrowserView.handleDidNavigate'),
   'ElectronBrowserView.handlePageFaviconUpdated': lazy('ElectronBrowserView.handlePageFaviconUpdated'),
+  'ElectronBrowserView.handleLogin': lazy('ElectronBrowserView.handleLogin'),
   'ElectronBrowserView.handleTitleUpdated': lazy('ElectronBrowserView.handleTitleUpdated'),
   'ElectronBrowserView.handleWillNavigate': lazy('ElectronBrowserView.handleWillNavigate'),
   'ElectronBrowserView.handleWindowOpen': lazy('ElectronBrowserView.handleWindowOpen'),
@@ -134,6 +155,7 @@ export const commandMap = {
   'ElectronWindow.minimize': lazy('ElectronWindow.minimize'),
   'ElectronWindow.openNew': lazy('ElectronWindow.openNew'),
   'ElectronWindow.toggleDevtools': lazy('ElectronWindow.toggleDevtools'),
+  'ElectronWindow.toggleMaximize': lazy('ElectronWindow.toggleMaximize'),
   'ElectronWindow.unmaximize': lazy('ElectronWindow.unmaximize'),
   'ElectronWindow.zoomIn': lazy('ElectronWindow.zoomIn'),
   'ElectronWindow.zoomOut': lazy('ElectronWindow.zoomOut'),
@@ -197,6 +219,7 @@ export const commandMap = {
   'FilePicker.showSaveFilePicker': lazy('FilePicker.showSaveFilePicker'),
   'FileSystem.chmod': lazy('FileSystem.chmod'),
   'FileSystem.copy': lazy('FileSystem.copy'),
+  'FileSystem.createFile': lazy('FileSystem.createFile'),
   'FileSystemMemory.chmod': lazy('FileSystemMemory.chmod'),
   'FileSystemMemory.copy': lazy('FileSystemMemory.copy'),
   'FileSystemMemory.createFile': lazy('FileSystemMemory.createFile'),
@@ -276,11 +299,13 @@ export const commandMap = {
   'Main.handleDragOver': lazy('Main.handleDragOver'),
   'Main.handleTabContextMenu': lazy('Main.handleTabContextMenu'),
   'Main.openBackgroundTab': lazy('Main.openBackgroundTab'),
+  'Main.openInput': lazy('Main.openInput'),
   'Main.openKeyBindings': lazy('Main.openKeyBindings'),
   'Main.openUri': lazy('Main.openUri'),
   'Main.reopenEditorWith': lazy('Main.reopenEditorWith'),
   'Main.save': lazy('Main.save'),
   'Markdown.getVirtualDom': lazy('Markdown.getVirtualDom'),
+  'Markdown.getVirtualDomFromMarkdown': lazy('Markdown.getVirtualDomFromMarkdown'),
   'Markdown.renderMarkdown': lazy('Markdown.renderMarkdown'),
   'MeasureTextHeight.measureTextBlockHeight': lazy('MeasureTextHeight.measureTextBlockHeight'),
   'MeasureTextHeight.measureTextHeight': lazy('MeasureTextHeight.measureTextHeight'),
@@ -452,6 +477,7 @@ export const commandMap = {
   'SimpleBrowser.getDomTree': lazy('SimpleBrowser.getDomTree'),
   'SimpleBrowser.go': lazy('SimpleBrowser.go'),
   'SimpleBrowser.handleAudioStateChanged': lazy('SimpleBrowser.handleAudioStateChanged'),
+  'SimpleBrowser.handleDownloadStateChanged': lazy('SimpleBrowser.handleDownloadStateChanged'),
   'SimpleBrowser.handleDidNavigate': lazy('SimpleBrowser.handleDidNavigate'),
   'SimpleBrowser.handleDidNavigationCancel': lazy('SimpleBrowser.handleDidNavigationCancel'),
   'SimpleBrowser.handleInput': lazy('SimpleBrowser.handleInput'),
@@ -491,6 +517,7 @@ export const commandMap = {
   'Viewlet.2133': lazy('Viewlet.2133'),
   'Viewlet.closeWidget': lazy('Viewlet.closeWidget'),
   'Viewlet.dispose': lazy('Viewlet.dispose'),
+  'Viewlet.hide': lazy('Viewlet.hide'),
   'Viewlet.executeViewletCommand': lazy('Viewlet.executeViewletCommand'),
   'Viewlet.requestRender': lazy('Viewlet.requestRender'),
   'Viewlet.focus': lazy('Viewlet.focus'),

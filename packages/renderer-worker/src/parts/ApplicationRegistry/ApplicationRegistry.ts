@@ -1,16 +1,18 @@
+import * as ApplicationStateStorage from '../ApplicationStateStorage/ApplicationStateStorage.ts'
+
 export interface Application {
+  readonly href: string
   readonly id: string
   readonly layoutUid: number
-  readonly workspaceUri: string
-  readonly workspacePath: string
-  readonly href: string
   readonly textFileExtensions?: readonly string[]
+  readonly workspacePath: string
+  readonly workspaceUri: string
 }
 
 const applications = new Map<string, Application>()
 const owners = new Map<number, string>()
 const applicationUids = new Map<string, Set<number>>()
-const savedStates = new Map<string, Map<string | number, unknown>>()
+const savedStates = new Map<string, Map<string | number, Promise<string>>>()
 const operations = new Map<string, Set<Promise<unknown>>>()
 const closing = new Set<string>()
 
@@ -97,19 +99,36 @@ export const release = (uid: number): void => {
   applicationUids.get(owner)?.delete(uid)
 }
 
-export const getSavedState = (applicationId: string, key: string | number): unknown => {
+export const getSavedState = async (applicationId: string, key: string | number): Promise<unknown> => {
   get(applicationId)
-  return structuredClone(savedStates.get(applicationId)!.get(key))
+  const pending = savedStates.get(applicationId)!.get(key)
+  if (!pending) return undefined
+  return ApplicationStateStorage.read(await pending)
 }
 
-export const setSavedState = (applicationId: string, key: string | number, value: unknown): void => {
+export const setSavedState = async (applicationId: string, key: string | number, value: unknown): Promise<void> => {
   get(applicationId)
-  savedStates.get(applicationId)!.set(key, structuredClone(value))
+  const states = savedStates.get(applicationId)!
+  const previous = states.get(key)
+  const pending = ApplicationStateStorage.write(value)
+  states.set(key, pending)
+  try {
+    await pending
+  } catch (error) {
+    if (states.get(key) === pending) {
+      if (previous) states.set(key, previous)
+      else states.delete(key)
+    }
+    throw error
+  }
+  if (previous) await ApplicationStateStorage.remove(await previous)
 }
 
 // The caller disposes the application's components before removing its ownership.
-export const remove = (applicationId: string): void => {
-  for (const uid of applicationUids.get(applicationId) || []) {
+export const remove = async (applicationId: string): Promise<void> => {
+  const pending = [...(savedStates.get(applicationId)?.values() || [])]
+  const uids = applicationUids.get(applicationId) || []
+  for (const uid of uids) {
     owners.delete(uid)
   }
   applicationUids.delete(applicationId)
@@ -117,4 +136,5 @@ export const remove = (applicationId: string): void => {
   applications.delete(applicationId)
   operations.delete(applicationId)
   closing.delete(applicationId)
+  await Promise.all(pending.map(async (entry: Readonly<Promise<string>>) => ApplicationStateStorage.remove(await entry)))
 }
