@@ -7,6 +7,8 @@ export const create = (id, uri) => {
     loaded: false,
     entries: [],
     searchValue: '',
+    scrollTop: 0,
+    viewportHeight: 1600,
   }
 }
 
@@ -23,7 +25,15 @@ export const handleInput = (state, value) => {
   return {
     ...state,
     searchValue: value,
+    scrollTop: 0,
   }
+}
+
+export const handleScroll = (state, scrollTop, viewportHeight) => {
+  if (state.scrollTop === scrollTop && state.viewportHeight === viewportHeight) {
+    return state
+  }
+  return { ...state, scrollTop, viewportHeight }
 }
 
 export const clearHistory = async (state) => {
@@ -31,6 +41,7 @@ export const clearHistory = async (state) => {
   return {
     ...state,
     entries,
+    scrollTop: 0,
   }
 }
 
@@ -46,5 +57,6 @@ export const removeEntry = async (state, index) => {
   return {
     ...state,
     entries,
+    scrollTop: 0,
   }
 }

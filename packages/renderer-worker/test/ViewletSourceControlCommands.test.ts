@@ -34,6 +34,8 @@ test('renders pending source control worker state without replaying a command', 
         return [['Viewlet.setDom2', 42, ['div']]]
       case 'SourceControl.getBadgeCount':
         return 2
+      case 'SourceControl.renderActions':
+        return ['actions']
       default:
         throw new Error(`unexpected method ${method}`)
     }
@@ -44,13 +46,41 @@ test('renders pending source control worker state without replaying a command', 
   expect(Object.keys(ViewletSourceControlCommands.Commands)).not.toContain('__renderPending')
   expect(sourceControlWorkerInvoke.mock.calls).toEqual([
     ['SourceControl.diff2', 42],
+    ['SourceControl.renderActions', 42],
     ['SourceControl.render2', 42, [1]],
     ['SourceControl.getBadgeCount', 42, [1]],
   ])
   expect(result).toEqual({
     ...state,
+    actionsDom: ['actions'],
     commands: [['Viewlet.setDom2', 42, ['div']]],
   })
+})
+
+test('refreshes source control title actions when component state does not change', async () => {
+  const state = {
+    actionsDom: ['view-as-tree'],
+    commands: [['stale-render-command']],
+    uid: 42,
+  }
+  sourceControlWorkerInvoke.mockImplementation((method) => {
+    switch (method) {
+      case 'SourceControl.diff2':
+        return []
+      case 'SourceControl.renderActions':
+        return ['view-as-list']
+      default:
+        throw new Error(`unexpected method ${method}`)
+    }
+  })
+
+  const result = await ViewletSourceControlCommands.Commands.__renderPending(state)
+
+  expect(result).toEqual({ ...state, actionsDom: ['view-as-list'], commands: [] })
+  expect(sourceControlWorkerInvoke.mock.calls).toEqual([
+    ['SourceControl.diff2', 42],
+    ['SourceControl.renderActions', 42],
+  ])
 })
 
 test('reloads source control contributions when extensions change', async () => {
@@ -71,7 +101,7 @@ test('reloads source control contributions when extensions change', async () => 
         return [1]
       case 'SourceControl.render2':
         return [['Viewlet.setDom2', 42, ['div']]]
-      case 'SourceControl.renderActions2':
+      case 'SourceControl.renderActions':
         return ['new-actions']
       case 'SourceControl.getBadgeCount':
         return 0
@@ -86,7 +116,7 @@ test('reloads source control contributions when extensions change', async () => 
     ['SourceControl.loadContent', 42, { inputValue: 'message' }],
     ['SourceControl.diff2', 42],
     ['SourceControl.render2', 42, [1]],
-    ['SourceControl.renderActions2', 42],
+    ['SourceControl.renderActions', 42],
     ['SourceControl.getBadgeCount', 42],
   ])
   expect(result).toEqual({
@@ -122,6 +152,8 @@ test('gets and sets authoritative source control component state', async () => {
         return componentState
       case 'SourceControl.render2':
         return [['Viewlet.setDom2', 42, ['div']]]
+      case 'SourceControl.renderActions':
+        return ['actions']
       case 'SourceControl.setComponentState':
         return undefined
       default:
@@ -132,6 +164,12 @@ test('gets and sets authoritative source control component state', async () => {
   await expect(ViewletSourceControl.getComponentState(rendererState)).resolves.toBe(componentState)
   await expect(ViewletSourceControl.setComponentState(rendererState, componentState)).resolves.toEqual({
     ...rendererState,
+    actionsDom: ['actions'],
     commands: [['Viewlet.setDom2', 42, ['div']]],
   })
+})
+
+test('retains the parent view for source control toolbar updates', () => {
+  const state = ViewletSourceControl.create(42, '', 0, 0, 200, 300, undefined, 7)
+  expect(state.parentUid).toBe(7)
 })

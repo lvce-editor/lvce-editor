@@ -12,7 +12,9 @@ const setZoomLevel = async (state, zoomLevel) => {
   if (zoomLevel === state.zoomLevel) {
     return state
   }
-  await ElectronWebContentsViewFunctions.setZoomLevel(state.browserViewId, zoomLevel)
+  if (state.browserViewId) {
+    await ElectronWebContentsViewFunctions.setZoomLevel(state.browserViewId, zoomLevel)
+  }
   return updateZoomLevel(state, zoomLevel)
 }
 

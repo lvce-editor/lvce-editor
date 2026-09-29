@@ -1,4 +1,5 @@
 import { expect, test } from '@jest/globals'
+import * as Module from '../src/parts/Module/Module.js'
 import * as ModuleId from '../src/parts/ModuleId/ModuleId.js'
 import * as ModuleMap from '../src/parts/ModuleMap/ModuleMap.js'
 
@@ -30,6 +31,14 @@ test('getModuleId - IpcTrace.append', () => {
 
 test('getModuleId - LanguageServer.disposeAll', () => {
   expect(ModuleMap.getModuleId('LanguageServer.disposeAll')).toBe(ModuleId.LanguageServer)
+})
+
+test('getModuleId - PtyHost.release', () => {
+  expect(ModuleMap.getModuleId('PtyHost.release')).toBe(ModuleId.PtyHost)
+})
+
+test('load - PtyHost', async () => {
+  expect(await Module.load(ModuleId.PtyHost)).toMatchObject({ name: 'PtyHost' })
 })
 
 test('getModuleId - HandleMessagePortForExtensionNodeProcess.handleMessagePortForExtensionNodeProcess', () => {

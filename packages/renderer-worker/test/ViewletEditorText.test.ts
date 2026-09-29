@@ -92,7 +92,7 @@ test('loadContent - renders before diagnostics are requested by loadContentLater
     '/tokenize-typescript.js',
     true,
   )
-  expect(editorWorkerInvoke).toHaveBeenCalledWith('Editor.loadContent', 1, undefined)
+  expect(editorWorkerInvoke).toHaveBeenCalledWith('Editor.loadContent', 1, undefined, false)
   expect(editorWorkerInvoke).toHaveBeenCalledWith('Editor.setSelections2', 1, selections)
   const editorMethods = editorWorkerInvoke.mock.calls
     .map(([method]) => method)
@@ -130,7 +130,7 @@ test('loadContent - restores the editor worker state', async () => {
 
   await ViewletEditorText.loadContent(state, { editorState }, {})
 
-  expect(editorWorkerInvoke).toHaveBeenCalledWith('Editor.loadContent', 1, editorState)
+  expect(editorWorkerInvoke).toHaveBeenCalledWith('Editor.loadContent', 1, editorState, false)
 })
 
 test('saveState - saves editor history under a URI-scoped key', async () => {
@@ -453,4 +453,12 @@ test('resize - increase height while scrolled clamps visible rows to bottom', as
       scrollBarHeight: 80,
     }),
   )
+})
+
+test('confirmed large files are read only by editor worker in reduced mode', async () => {
+  editorWorkerInvoke.mockImplementation((method) => (method === 'Editor.diff2' || method === 'Editor.render2' ? [] : undefined))
+  const state = ViewletEditorText.create(1, '/tmp/snapshot.heapsnapshot', 0, 0, 800, 600)
+  await ViewletEditorText.loadContent(state, undefined, { largeFile: true })
+  expect(getTextEditorContent).not.toHaveBeenCalled()
+  expect(editorWorkerInvoke).toHaveBeenCalledWith('Editor.loadContent', 1, undefined, true)
 })

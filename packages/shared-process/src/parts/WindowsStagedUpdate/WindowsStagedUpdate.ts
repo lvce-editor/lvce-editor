@@ -33,6 +33,9 @@ const RE_VERSION = /^\d+\.\d+\.\d+$/
 const RE_DIGEST = /^sha256:[a-f0-9]{64}$/
 const RE_TAG = /^v/
 const RE_TOKEN = /^[a-f0-9]{32}$/
+const MINIMUM_STAGED_UPDATE_VERSION = '0.116.2'
+
+export const supportsStagedUpdate = (version: string): boolean => CompareVersion.isGreater(version, MINIMUM_STAGED_UPDATE_VERSION) || version === MINIMUM_STAGED_UPDATE_VERSION
 
 export const validateAsset = (asset: { name: string; browser_download_url: string; digest: string }, version: string, arch: string): void => {
   if (!RE_VERSION.test(version) || !['x64', 'arm64'].includes(arch)) {
@@ -161,9 +164,8 @@ export const check = async (silent: boolean, windowId: number): Promise<boolean>
       }
       return true
     }
-    const capability = release.assets.some((item: any) => item.name === `Lvce-Stage-v${version}-${process.arch}-v2.json`)
     const asset = release.assets.find((item: any) => item.name === `Lvce-Setup-v${version}-${process.arch}.exe`)
-    if (!capability || !asset) {
+    if (!supportsStagedUpdate(version) || !asset) {
       return false
     }
     if (!silent) {

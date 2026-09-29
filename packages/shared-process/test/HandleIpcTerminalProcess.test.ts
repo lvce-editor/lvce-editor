@@ -4,7 +4,7 @@ import * as HandleIpcTerminalProcess from '../src/parts/HandleIpcTerminalProcess
 test('upgradeMessagePort', () => {
   const port: Record<string, any> = {}
   expect(HandleIpcTerminalProcess.upgradeMessagePort(port)).toEqual({
-    method: 'HandleElectronMessagePort.handleElectronMessagePort',
+    method: 'HandleElectronMessagePort.handleTerminalMessagePort',
     params: [port],
     type: 'send',
   })

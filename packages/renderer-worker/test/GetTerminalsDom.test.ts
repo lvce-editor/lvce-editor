@@ -18,6 +18,9 @@ test('renders split terminals in order and forwards terminal presses', () => {
 
   expect(dom).toEqual([
     {
+      'data-uid': undefined,
+      onDragOver: 'handleDragOver',
+      onDrop: 'handleDrop',
       childCount: 2,
       className: MergeClassNames.mergeClassNames('Viewlet', 'Terminals'),
       onMouseDown: DomEventListenerFunctions.HandleMouseDown,
@@ -138,7 +141,7 @@ test('shows terminal tabs for a single split group', () => {
   expect(dom).toContainEqual(expect.objectContaining({ className: 'TerminalTab TerminalTabSelected TerminalTabSplit TerminalTabSplitLast' }))
 })
 
-test('hides terminal tabs when only one terminal tab exists', () => {
+test('shows a draggable terminal tab for a single terminal', () => {
   const dom = GetTerminalsDom.getTerminalsDom({
     childUids: [41],
     height: 400,
@@ -150,16 +153,7 @@ test('hides terminal tabs when only one terminal tab exists', () => {
     y: 20,
   })
 
-  expect(dom).toEqual([
-    {
-      childCount: 1,
-      className: MergeClassNames.mergeClassNames('Viewlet', 'Terminals'),
-      onMouseDown: DomEventListenerFunctions.HandleMouseDown,
-      type: VirtualDomElements.Div,
-    },
-    {
-      type: VirtualDomElements.Reference,
-      uid: 41,
-    },
-  ])
+  expect(dom[0]).toMatchObject({ childCount: 2, onDrop: 'handleDrop', onDragOver: 'handleDragOver' })
+  expect(dom).toContainEqual(expect.objectContaining({ className: 'TerminalTab TerminalTabSelected', draggable: true }))
+  expect(dom).toContainEqual({ type: VirtualDomElements.Reference, uid: 41 })
 })

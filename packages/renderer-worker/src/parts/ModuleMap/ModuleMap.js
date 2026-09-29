@@ -22,6 +22,8 @@ export const getModuleId = (commandId) => {
     throw new CommandNotFoundError(commandId)
   }
   switch (prefix) {
+    case 'TerminalTransfer':
+      return ModuleId.TerminalTransfer
     case 'About':
       return ModuleId.About
     case 'Exec':
