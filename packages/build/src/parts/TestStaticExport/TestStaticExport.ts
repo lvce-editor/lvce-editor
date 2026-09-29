@@ -1,3 +1,4 @@
+import { existsSync } from 'node:fs'
 import { VError } from '@lvce-editor/verror'
 import assert from 'node:assert/strict'
 import { join } from 'node:path'
@@ -83,10 +84,12 @@ const main = async () => {
     })
   }
   await TranspileFiles.transpileFiles(Path.absolute(`packages/build/.tmp/export-test/dist/${commitHash}/packages/extension-host-worker-tests/src`))
-  await Copy.copy({
-    from: `packages/extension-host-worker-tests/fixtures`,
-    to: `packages/build/.tmp/export-test/dist/${commitHash}/packages/extension-host-worker-tests/fixtures`,
-  })
+  if (existsSync(Path.absolute('packages/extension-host-worker-tests/fixtures'))) {
+    await Copy.copy({
+      from: `packages/extension-host-worker-tests/fixtures`,
+      to: `packages/build/.tmp/export-test/dist/${commitHash}/packages/extension-host-worker-tests/fixtures`,
+    })
+  }
 }
 
 main()
