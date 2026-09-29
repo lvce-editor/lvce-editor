@@ -1,3 +1,4 @@
+import * as HtmlPreviewUrl from '../HtmlPreviewUrl/HtmlPreviewUrl.js'
 import * as BrowserFullWidth from '../BrowserFullWidth/BrowserFullWidth.js'
 import * as ActivityBarWorker from '../ActivityBarWorker/ActivityBarWorker.js'
 import * as ApplicationRegistry from '../ApplicationRegistry/ApplicationRegistry.ts'
@@ -42,6 +43,7 @@ import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletMap from '../ViewletMap/ViewletMap.js'
 import * as ViewletManagerVisitor from '../ViewletManagerVisitor/ViewletManagerVisitor.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
+import * as UpdateDynamicFocusContext from '../UpdateDynamicFocusContext/UpdateDynamicFocusContext.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
@@ -1270,6 +1272,17 @@ export const showPreview = async (
   uri: string = initialState.previewUri,
   previewViewletId: string = getPreviewViewletId(uri),
 ) => {
+  if (previewViewletId === ViewletModuleId.Preview && /\.html?(?:[?#].*)?$/i.test(uri)) {
+    return showPreview(initialState, HtmlPreviewUrl.encode(uri), ViewletModuleId.SimpleBrowser)
+  }
+  if (HtmlPreviewUrl.isHtmlPreviewUrl(uri)) {
+    previewViewletId = ViewletModuleId.SimpleBrowser
+    if (initialState.previewVisible && initialState.previewViewletId === ViewletModuleId.SimpleBrowser) {
+      await Viewlet.executeViewletCommand(initialState.previewId, 'openTab', uri, 'foreground-tab')
+      return { newState: initialState, commands: [] }
+    }
+  }
+
   if (
     initialState.previewVisible &&
     initialState.previewId !== -1 &&
@@ -2885,10 +2898,16 @@ const getActiveSideBarExtensionId = (state: LayoutState): string => {
 
 export const handleExtensionsChanged = async (state: LayoutState, extensionId?: string, disabled?: boolean): Promise<LayoutStateResult> => {
   const globalEventResult = await callGlobalEvent(state, 'handleExtensionsChanged')
+  // Workers have already queued these transactions. Commit them before an extension
+  // provider query can delay every subsequent direct render of the same views.
+  UpdateDynamicFocusContext.updateDynamicFocusContext(globalEventResult.commands)
+  if (globalEventResult.commands.length > 0) {
+    await RendererProcess.invoke('Viewlet.sendMultiple', globalEventResult.commands)
+  }
   const sourceControlBadgeResult = await refreshSourceControlBadgeCount(globalEventResult.newState)
   const extensionChangeResult = {
     newState: sourceControlBadgeResult.newState,
-    commands: [...globalEventResult.commands, ...sourceControlBadgeResult.commands],
+    commands: sourceControlBadgeResult.commands,
   }
   if (!disabled || !extensionId || getActiveSideBarExtensionId(extensionChangeResult.newState) !== extensionId) {
     return extensionChangeResult

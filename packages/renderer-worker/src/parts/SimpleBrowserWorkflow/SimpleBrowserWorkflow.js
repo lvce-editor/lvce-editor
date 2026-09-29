@@ -20,7 +20,7 @@ export const executeWorkflow = async (id) => {
     for (const task of tasks) {
       if (task.type === 'open-simple-browser-tab') {
         await Command.execute('Layout.showPreview', 'simple-browser://')
-        await Command.execute('SimpleBrowser.createNewTab', false)
+        await Command.execute('SimpleBrowser.createNewTab', false, true)
         instance = ViewletStates.getInstance('SimpleBrowser')
         browserViewId = instance?.state.browserViewId
         if (!browserViewId) {

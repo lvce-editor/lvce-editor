@@ -32,10 +32,7 @@
     "build:electron:app-image": "node packages/build/bin/build.ts --target=electron-builder-app-image",
     "build:electron:app-image:x64": "node packages/build/bin/build.ts --target=electron-builder-app-image --arch=x64",
     "test-static-export": "node packages/build/src/parts/TestStaticExport/TestStaticExport.ts",
-    "test:gpu-diagnostics": "node --test scripts/test/diagnose-gpu-process.test.mjs",
-    "e2e:ci": "node packages/extension-host-worker-tests/src/_all.js --ci",
-    "test:component-heap-snapshot": "node scripts/test-component-heap-snapshot.mjs",
-    "test:process-explorer-renderer-heap-snapshot": "node scripts/test-process-explorer-renderer-heap-snapshot.mjs"
+    "test:gpu-diagnostics": "node --test scripts/test/diagnose-gpu-process.test.mjs"
   },
   "keywords": [],
   "author": "",
@@ -48,7 +45,7 @@
     "node": ">=24"
   },
   "devDependencies": {
-    "@lvce-editor/eslint-config": "^18.14.1",
+    "@lvce-editor/eslint-config": "^18.14.2",
     "@types/jest": "^30.0.0",
     "@types/node": "^25.0.1",
     "eslint": "^10.11.0",
@@ -57,7 +54,7 @@
     "knip": "^6.38.0",
     "nodemon": "^3.1.14",
     "prettier": "^3.9.9",
-    "ts-jest": "^29.4.13",
+    "ts-jest": "^29.4.14",
     "typescript": "^6.0.3"
   },
   "prettier": {
