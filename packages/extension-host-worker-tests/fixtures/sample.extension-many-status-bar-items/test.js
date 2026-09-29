@@ -15,11 +15,16 @@ export const testManyStatusBarItems = async ({ Command, Extension, expect, Locat
     await Command.execute('ExtensionHost.executeCommand', `manyStatusBarItems${count}.create`)
     await Command.execute('StatusBar.handleExtensionsChanged')
 
-    const items = Locator('.StatusBarItem[name^="many-status-bar-items-"]')
-    await expect(items).toHaveCount(count)
     await expect(Locator('.StatusBarItem[name="many-status-bar-items-0"]')).toHaveText('Item 0')
-    await expect(Locator(`.StatusBarItem[name="many-status-bar-items-${count - 1}"]`)).toHaveText(`Item ${count - 1}`)
-    await expect(Locator('.StatusBarItem[name="Problems"]')).toHaveCount(1)
+
+    if (count > 20) {
+      await Command.execute('Layout.handleResize', 800, 720)
+      await expect(Locator(`.StatusBarItem[name="many-status-bar-items-${count - 1}"]`)).toHaveCount(0)
+      await expect(Locator('.StatusBarItem[name="many-status-bar-items-20"]')).toHaveCount(0)
+
+      await Command.execute('Layout.handleResize', 1600, 720)
+      await expect(Locator('.StatusBarItem[name="many-status-bar-items-20"]')).toHaveCount(1)
+    }
   } finally {
     await Extension.disableWorkspace(extensionId)
     await Command.execute('StatusBar.handleExtensionsChanged')
