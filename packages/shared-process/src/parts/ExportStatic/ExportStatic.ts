@@ -10,6 +10,9 @@ import * as Path from '../Path/Path.ts'
 
 const testFileExtensionRegex = /\.(js|ts)$/
 const backslashRegex = /\\/g
+const importFromTsRegex = /(from\s+['"][^'"]+)\.ts(['"])/g
+const sideEffectImportTsRegex = /(import\s+['"][^'"]+)\.ts(['"])/g
+const dynamicImportTsRegex = /(import\(\s*['"][^'"]+)\.ts(['"]\s*\))/g
 
 const staticContentSecurityPolicy = GetContentSecurityPolicy.getContentSecurityPolicy([
   `default-src 'none'`,
@@ -529,8 +532,12 @@ const getTestFiles = (testFilesRaw: any): any => {
   return testFilesRaw.filter(isTestFile).map(getName)
 }
 
+const fixImports = (content: string): string => {
+  return content.replaceAll(importFromTsRegex, '$1.js$2').replaceAll(sideEffectImportTsRegex, '$1.js$2').replaceAll(dynamicImportTsRegex, '$1.js$2')
+}
+
 export const transpileFile = (content: any): any => {
-  return stripTypeScriptTypes(content)
+  return fixImports(stripTypeScriptTypes(content))
 }
 
 const transpileFiles = async (folder: any): Promise<any> => {

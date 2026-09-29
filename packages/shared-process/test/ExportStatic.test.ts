@@ -12,6 +12,19 @@ export const getValue = (): number => value
   expect(transpileFile(content)).toContain(`export const getValue = ()         => value`)
 })
 
+test('transpileFile rewrites relative typescript imports to javascript imports', () => {
+  const content = `import { helper } from './helper.ts'
+export { helper as staticHelper } from './helper.ts'
+const loadHelper = () => import('./helper.ts')
+`
+
+  const result = transpileFile(content)
+
+  expect(result).toContain(`from './helper.js'`)
+  expect(result).toContain(`import('./helper.js')`)
+  expect(result).not.toContain('.ts')
+})
+
 test('mergeExtensionManifests replaces existing extension with matching id', () => {
   const builtinCobalt = {
     id: 'builtin.theme-cobalt2',
