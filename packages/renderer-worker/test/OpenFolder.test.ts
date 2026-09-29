@@ -32,7 +32,7 @@ test.skip('openFolder', async () => {
 })
 
 test('openFolder - electron', async () => {
-  const folderPath = '/home/simon/Downloads/aegypten/2025 Ägypten'
+  const uri = 'file:///home/simon/Downloads/aegypten/2025%20%C3%84gypten'
   jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
     return {
       platform: PlatformType.Electron,
@@ -50,7 +50,7 @@ test('openFolder - electron', async () => {
   jest.unstable_mockModule('../src/parts/ElectronDialog/ElectronDialog.js', () => {
     return {
       showOpenDialog: jest.fn(() => {
-        return [folderPath]
+        return uri
       }),
       showMessageBox: jest.fn(() => {
         throw new Error('not implemented')
@@ -70,5 +70,19 @@ test('openFolder - electron', async () => {
   await OpenFolder.openFolder()
   expect(ElectronDialog.showOpenDialog).toHaveBeenCalledTimes(1)
   expect(ElectronDialog.showOpenDialog).toHaveBeenCalledWith('Open Folder', ['openDirectory', 'dontAddToRecent', 'showHiddenFiles'])
-  expect(Command.execute).toHaveBeenCalledWith('Workspace.setUri', 'file:///home/simon/Downloads/aegypten/2025%20%C3%84gypten')
+  expect(Command.execute).toHaveBeenCalledWith('Workspace.setUri', uri)
+})
+
+test('openFolder - electron does nothing when the dialog is canceled', async () => {
+  jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => ({
+    getPlatform: () => PlatformType.Electron,
+    assetDir: '',
+  }))
+  const showOpenDialog = jest.fn().mockResolvedValue(undefined)
+  jest.unstable_mockModule('../src/parts/ElectronDialog/ElectronDialog.js', () => ({ showOpenDialog }))
+  const execute = jest.fn()
+  jest.unstable_mockModule('../src/parts/Command/Command.js', () => ({ execute }))
+  const OpenFolder = await import('../src/parts/OpenFolderElectron/OpenFolderElectron.js')
+  await expect(OpenFolder.openFolder()).resolves.toBeUndefined()
+  expect(execute).not.toHaveBeenCalled()
 })

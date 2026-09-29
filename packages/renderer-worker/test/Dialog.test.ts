@@ -121,6 +121,36 @@ test('openFile - web - canceled', async () => {
   })
 })
 
+test('openFile - electron opens the selected file URI', async () => {
+  const uri = 'file:///tmp/a%20file%20%231%25.heapsnapshot'
+  const showOpenDialog = jest.fn().mockResolvedValue(uri)
+  const execute = jest.fn()
+  jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => ({
+    getPlatform: () => PlatformType.Electron,
+    assetDir: '',
+  }))
+  jest.unstable_mockModule('../src/parts/ElectronDialog/ElectronDialog.js', () => ({ showOpenDialog }))
+  jest.unstable_mockModule('../src/parts/Command/Command.js', () => ({ execute }))
+  const Dialog = await import('../src/parts/Dialog/Dialog.js')
+  await Dialog.openFile()
+  expect(showOpenDialog).toHaveBeenCalledWith('Open File', ['openFile', 'dontAddToRecent', 'showHiddenFiles'])
+  expect(execute).toHaveBeenCalledWith('Main.openUri', uri, true, {})
+})
+
+test('openFile - electron does not open when the dialog is canceled', async () => {
+  const showOpenDialog = jest.fn().mockResolvedValue(undefined)
+  const execute = jest.fn()
+  jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => ({
+    getPlatform: () => PlatformType.Electron,
+    assetDir: '',
+  }))
+  jest.unstable_mockModule('../src/parts/ElectronDialog/ElectronDialog.js', () => ({ showOpenDialog }))
+  jest.unstable_mockModule('../src/parts/Command/Command.js', () => ({ execute }))
+  const Dialog = await import('../src/parts/Dialog/Dialog.js')
+  await expect(Dialog.openFile()).resolves.toBeUndefined()
+  expect(execute).not.toHaveBeenCalled()
+})
+
 test.skip('close - web', async () => {
   jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
     return {
