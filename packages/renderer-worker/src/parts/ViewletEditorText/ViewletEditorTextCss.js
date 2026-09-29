@@ -1,5 +1,6 @@
 import * as CssPxVariable from '../CssPxVariable/CssPxVariable.js'
 import * as CssVariable from '../CssVariable/CssVariable.js'
+import * as EditorPreferences from '../EditorPreferences/EditorPreferences.js'
 import * as JoinLines from '../JoinLines/JoinLines.js'
 import * as SupportsLetterSpacing from '../SupportsLetterSpacing/SupportsLetterSpacing.js'
 
@@ -45,10 +46,8 @@ export const getDynamicCss = (preferences) => {
   if (fontFamily) {
     styles.push(CssVariable.create('EditorFontFamily', fontFamily))
   }
-  const lineHeight = preferences['editor.lineHeight']
-  if (lineHeight) {
-    styles.push(CssPxVariable.create('EditorLineHeight', lineHeight))
-  }
+  const lineHeight = EditorPreferences.getRowHeight(preferences)
+  styles.push(CssPxVariable.create('EditorLineHeight', lineHeight))
   const letterSpacing = preferences['editor.letterSpacing']
   if (typeof letterSpacing === 'number') {
     if (SupportsLetterSpacing.supportsLetterSpacing()) {

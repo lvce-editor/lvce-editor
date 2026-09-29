@@ -71,6 +71,12 @@ test.skip('openSettingsJson', async () => {
   expect(Main.openUri).toHaveBeenCalledWith('app:///settings.json')
 })
 
+test('openSettingsUi', async () => {
+  await Preferences.openSettingsUi()
+  expect(OpenUri.openUri).toHaveBeenCalledTimes(1)
+  expect(OpenUri.openUri).toHaveBeenCalledWith('settings:///')
+})
+
 test('openKeyBindingsJson', async () => {
   await Preferences.openKeyBindingsJson()
   expect(OpenUri.openUri).toHaveBeenCalledTimes(1)
