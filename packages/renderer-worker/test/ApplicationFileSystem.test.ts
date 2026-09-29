@@ -2,6 +2,35 @@ import { expect, jest, test } from '@jest/globals'
 // @ts-ignore Node APIs are available in Jest but excluded from the web worker types.
 import { createHash } from 'node:crypto'
 
+// The worker owns storage; renderer tests exercise routing and hashing through RPC.
+const memory = new Map<string, string>()
+const invokeFileSystem = jest.fn(async (command: string, id: string, method?: string, uri?: string, content?: string) => {
+  const key = `${id}:${uri}`
+  if (command === 'ApplicationFileSystem.dispose') {
+    for (const key of memory.keys()) if (key.startsWith(`${id}:`)) memory.delete(key)
+    return
+  }
+  switch (method) {
+    case 'exists':
+      return memory.has(key)
+    case 'mkdir':
+      return
+    case 'readFile': {
+      if (!memory.has(key)) throw new Error('missing file')
+      return memory.get(key)
+    }
+    case 'remove':
+      memory.delete(key)
+      return
+    case 'writeFile':
+      memory.set(key, content!)
+      return
+    default:
+      throw new Error(`Unexpected filesystem operation ${method}`)
+  }
+})
+jest.unstable_mockModule('../src/parts/FileSystemWorker/FileSystemWorker.js', () => ({ invoke: invokeFileSystem }))
+
 jest.unstable_mockModule('../src/parts/FileSystem/FileSystem.js', () => ({
   readFile: jest.fn(async () => 'http content'),
 }))
@@ -18,10 +47,10 @@ test('identical memory URIs belong to separate applications and disposal preserv
   await FileSystem.execute('preview', 'writeFile', 'memfs:///main.ts', 'preview')
   expect(await FileSystem.execute('source', 'readFile', 'memfs:///main.ts')).toBe('source')
   expect(await FileSystem.execute('preview', 'readFile', 'memfs:///main.ts')).toBe('preview')
-  FileSystem.dispose('preview')
+  await FileSystem.dispose('preview')
   expect(await FileSystem.execute('source', 'readFile', 'memfs:///main.ts')).toBe('source')
   expect(await FileSystem.execute('preview', 'exists', 'memfs:///main.ts')).toBe(false)
-  FileSystem.dispose('source')
+  await FileSystem.dispose('source')
 })
 
 test('custom schemes use only the owning application runtime', async () => {
@@ -54,8 +83,8 @@ test('batch hashes preserve URI order, content changes, missing files, and appli
     expect(await FileSystem.execute('source', 'getFileHashes', [uris[0]])).toEqual([null])
     expect(await FileSystem.execute('source', 'getFileHashes', [])).toEqual([])
   } finally {
-    FileSystem.dispose('source')
-    FileSystem.dispose('preview')
+    await FileSystem.dispose('source')
+    await FileSystem.dispose('preview')
   }
 })
 
@@ -85,7 +114,7 @@ test('batch hashes support HTTP assets alongside application memory files', asyn
     ])
     expect(SharedFileSystem.readFile).toHaveBeenLastCalledWith('https://example.com/eslint.js')
   } finally {
-    FileSystem.dispose('source')
+    await FileSystem.dispose('source')
   }
 })
 

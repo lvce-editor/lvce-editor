@@ -1219,8 +1219,13 @@
         },
         "renderActions": { "name": "Output.renderActions", "parameters": [{ "source": "state", "name": "uid" }] },
         "saveState": { "name": "Output.saveState", "parameters": [{ "source": "state", "name": "uid" }] },
+        "setComponentState": { "name": "Output.setComponentState", "parameters": [
+          { "source": "state", "name": "id" }, { "source": "argument", "name": "componentState" }
+        ] },
         "terminate": { "name": "Output.terminate", "parameters": [] },
         "getCommandIds": { "name": "Output.getCommandIds", "parameters": [] },
+        "getComponentDom": { "name": "Output.getComponentDom", "parameters": [{ "source": "state", "name": "id" }] },
+        "getComponentState": { "name": "Output.getComponentState", "parameters": [{ "source": "state", "name": "id" }] },
         "renderEventListeners": { "name": "Output.renderEventListeners", "parameters": [] }
       },
       "outputs": [{ "stateField": "actionsDom", "method": { "name": "Output.renderActions", "parameters": [{ "source": "state", "name": "uid" }] } }],
@@ -1291,6 +1296,12 @@
         "saveState": { "name": "Panel.saveState", "parameters": [{ "source": "state", "name": "uid" }] },
         "terminate": { "name": "Panel.terminate", "parameters": [] },
         "getCommandIds": { "name": "Panel.getCommandIds", "parameters": [] },
+        "getMenuEntryIds": { "name": "Panel.getMenuIds", "parameters": [] },
+        "getMenuEntries": { "name": "Panel.getMenuEntries2", "parameters": [{ "source": "argument", "name": "args", "spread": true }] },
+        "getComponentState": { "name": "Panel.getComponentState", "parameters": [{ "source": "state", "name": "uid" }] },
+        "setComponentState": { "name": "Panel.setComponentState", "parameters": [
+          { "source": "state", "name": "uid" }, { "source": "argument", "name": "componentState" }
+        ] },
         "renderEventListeners": { "name": "Panel.renderEventListeners", "parameters": [] }
       },
       "capabilities": { "directRender": true, "events": true, "render": true, "resize": true, "rootRender": true },
@@ -1490,7 +1501,7 @@
     "hotReloadCommand": "ProcessExplorer.hotReload",
     "viewlet": {
       "name": "ProcessExplorer",
-      "css": ["/css/parts/ViewletProcessExplorer.css"],
+      "css": ["/css/parts/MaskIcon.css", "/css/parts/ViewletProcessExplorer.css"],
       "state": { "idKey": "uid", "fields": ["parentUid", "uri", "x", "y", "width", "height"], "contextFields": ["platform", "assetDir"] },
       "commandPrefix": "ProcessExplorer",
       "methods": {
@@ -1624,6 +1635,61 @@
       },
       "extraCommands": [{ "name": "handleExtensionsChanged", "method": "refresh" }],
       "capabilities": { "directRender": true, "events": true, "render": true, "rootRender": true },
+      "renderComparison": "emptyCommands"
+    }
+  },
+  {
+    "id": "workersView",
+    "fileName": "workersViewMain.js",
+    "contentSecurityPolicy": ["default-src 'none'"],
+    "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/workers-view/dist/workersViewMain.js",
+    "productionPath": "/packages/workers-view/dist/workersViewMain.js",
+    "settingName": "develop.workersViewPath",
+    "viewlet": {
+      "name": "Workers",
+      "title": "Workers",
+      "css": ["/css/parts/ViewletWorkers.css"],
+      "state": {
+        "idKey": "uid",
+        "fields": ["uri", "x", "y", "width", "height"],
+        "contextFields": ["platform", "assetDir"],
+        "defaults": { "title": "Workers" }
+      },
+      "commandPrefix": "Workers",
+      "methods": {
+        "create": {
+          "name": "Workers.create",
+          "parameters": [
+            { "source": "state", "name": "uid" }, { "source": "state", "name": "uri" }, { "source": "state", "name": "x" },
+            { "source": "state", "name": "y" }, { "source": "state", "name": "width" }, { "source": "state", "name": "height" },
+            { "source": "state", "name": "platform" }, { "source": "state", "name": "assetDir" }
+          ]
+        },
+        "loadContent": { "name": "Workers.loadContent", "parameters": [{ "source": "state", "name": "uid" }] },
+        "refresh": { "name": "Workers.refresh", "parameters": [{ "source": "state", "name": "uid" }] },
+        "diff": { "name": "Workers.diff2", "parameters": [{ "source": "state", "name": "uid" }] },
+        "render": {
+          "name": "Workers.render2",
+          "parameters": [{ "source": "state", "name": "uid" }, { "source": "result", "name": "diff" }]
+        },
+        "dispose": { "name": "Workers.dispose", "parameters": [{ "source": "state", "name": "uid" }] },
+        "resize": {
+          "name": "Workers.resize",
+          "parameters": [
+            { "source": "state", "name": "uid" },
+            { "source": "argument", "name": "dimensions", "index": "width" },
+            { "source": "argument", "name": "dimensions", "index": "height" }
+          ]
+        },
+        "getCommandIds": { "name": "Workers.getCommandIds", "parameters": [] },
+        "getComponentState": { "name": "Workers.getComponentState", "parameters": [{ "source": "state", "name": "uid" }] },
+        "setComponentState": {
+          "name": "Workers.setComponentState",
+          "parameters": [{ "source": "state", "name": "uid" }, { "source": "argument", "name": "componentState" }]
+        },
+        "renderEventListeners": { "name": "Workers.renderEventListeners", "parameters": [] }
+      },
+      "capabilities": { "directRender": true, "events": true, "render": true, "resize": true, "rootRender": true },
       "renderComparison": "emptyCommands"
     }
   },
@@ -1769,7 +1835,7 @@
     "productionPath": "/packages/source-control-worker/dist/sourceControlWorkerMain.js",
     "settingName": "develop.sourceControlWorkerPath",
     "hotReloadCommand": "Source Control.hotReload",
-    "contentSecurityPolicy": ["default-src 'none'"]
+    "contentSecurityPolicy": ["default-src 'none'", "script-src 'self'"]
   },
   {
     "id": "statusBar",

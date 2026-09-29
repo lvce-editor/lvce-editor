@@ -9,6 +9,7 @@ export const Commands = {
   getSelectionText: ClipBoard.getSelectionText,
   hotReload: ClipBoard.hotReload,
   readMemoryImage: ClipBoard.readMemoryImage,
+  readImage: ClipBoard.readImage,
   readMemoryText: ClipBoard.readMemoryText,
   readNativeFiles: ClipBoard.readNativeFiles,
   readText: ClipBoard.readText,

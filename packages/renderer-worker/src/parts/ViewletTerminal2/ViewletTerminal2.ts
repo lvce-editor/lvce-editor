@@ -59,7 +59,12 @@ export const loadContentLater = async (state) => {
 }
 
 const showError = async (state, message) => {
-  const text = `${message}\r\nCheck the shell, working directory, and workspace connection. Create a new terminal to retry.\r\n`
+  const workspaceChanged = message.includes('Workspace changed while starting the terminal.')
+  const diagnostic = workspaceChanged ? message.replace(' Create a new terminal to retry.', '') : message
+  const recovery = workspaceChanged
+    ? 'Create a new terminal to retry.'
+    : 'Check the shell, working directory, and workspace connection. Create a new terminal to retry.'
+  const text = `${diagnostic}\r\n${recovery}\r\n`
   await handleData(state, new TextEncoder().encode(`\r\n${text}`))
 }
 

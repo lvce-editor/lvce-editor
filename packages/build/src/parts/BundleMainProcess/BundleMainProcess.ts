@@ -1,6 +1,9 @@
 import * as Copy from '../Copy/Copy.ts'
 import * as Path from '../Path/Path.ts'
+import * as PatchDefaultElectronCliArgs from '../PatchDefaultElectronCliArgs/PatchDefaultElectronCliArgs.ts'
+import * as ReadFile from '../ReadFile/ReadFile.ts'
 import * as Replace from '../Replace/Replace.ts'
+import * as WriteFile from '../WriteFile/WriteFile.ts'
 
 export const bundleMainProcess = async ({
   cachePath,
@@ -56,6 +59,12 @@ export const bundleMainProcess = async ({
     path: `${cachePath}/dist/mainProcessMain.js`,
     occurrence: `const root = process.env.LVCE_ROOT || join(__dirname$1, '../../../../..')`,
     replacement: `const root = join(__dirname$1, '../../..')`,
+  })
+  const mainProcessPath = `${cachePath}/dist/mainProcessMain.js`
+  const mainProcessSource = await ReadFile.readFile(mainProcessPath)
+  await WriteFile.writeFile({
+    to: mainProcessPath,
+    content: PatchDefaultElectronCliArgs.patchDefaultElectronCliArgs(mainProcessSource),
   })
   await Replace.replace({
     path: `${cachePath}/dist/mainProcessMain.js`,

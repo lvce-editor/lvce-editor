@@ -1,8 +1,17 @@
 import { expect, test } from '@jest/globals'
 import { commandMap } from '../src/parts/CommandMap/CommandMap.js'
+import * as ClipBoardIpc from '../src/parts/ClipBoard/ClipBoard.ipc.js'
 
 test('registers the go-to-line quick pick command', () => {
   expect(commandMap['QuickPick.openGoToLine']).toBeDefined()
+})
+
+test('registers the exclusive file creation command', () => {
+  expect(commandMap['FileSystem.createFile']).toBeDefined()
+})
+
+test('registers the clipboard image read command', () => {
+  expect(ClipBoardIpc.Commands.readImage).toBeDefined()
 })
 
 test('registers the viewlet focus-selector bridge command', () => {
