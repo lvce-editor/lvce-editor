@@ -6,11 +6,18 @@ import { FileNotFoundError } from '../FileNotFoundError/FileNotFoundError.js'
 import * as FileSystemDirectoryHandle from '../FileSystemDirectoryHandle/FileSystemDirectoryHandle.js'
 import * as FileSystemFileHandle from '../FileSystemFileHandle/FileSystemFileHandle.js'
 import * as FileSytemHandlePermission from '../FileSystemHandlePermission/FileSystemHandlePermission.js'
+import * as GetDirectoryHandle from '../GetDirectoryHandle/GetDirectoryHandle.js'
 import * as GetFileHandle from '../GetFileHandle/GetFileHandle.js'
+import * as Path from '../Path/Path.js'
 import * as PersistentFileHandle from '../PersistentFileHandle/PersistentFileHandle.js'
 import { VError } from '../VError/VError.js'
 
 const pathSeparator = '/'
+
+export const exists = async (uri) => {
+  const handle = await PersistentFileHandle.getHandle(uri)
+  return Boolean(handle)
+}
 
 const getDirent = (handle) => {
   const { name, kind } = handle
@@ -107,7 +114,9 @@ export const readFile = async (uri) => {
 
 export const writeFile = async (uri, content) => {
   try {
-    const handle = await GetFileHandle.getFileHandle(uri)
+    const handle = await GetFileHandle.getFileHandle(uri, {
+      create: true,
+    })
     if (!handle) {
       throw new VError(`File not found ${uri}`)
     }
@@ -117,8 +126,79 @@ export const writeFile = async (uri, content) => {
   }
 }
 
-export const getPathSeparator = () => {
-  return pathSeparator
+export const writeBlob = async (uri, blob) => {
+  try {
+    const handle = await GetFileHandle.getFileHandle(uri, {
+      create: true,
+    })
+    if (!handle) {
+      throw new VError(`File not found ${uri}`)
+    }
+    await FileSystemFileHandle.write(handle, blob)
+  } catch (error) {
+    throw new VError(error, 'Failed to save file')
+  }
+}
+
+export const remove = async (uri) => {
+  try {
+    const dirname = Path.dirname(pathSeparator, uri)
+    const parentHandle = await GetDirectoryHandle.getDirectoryHandle(dirname)
+    if (!parentHandle) {
+      throw new FileNotFoundError(uri)
+    }
+    const existingHandle = await PersistentFileHandle.getHandle(uri)
+    const baseName = Path.getBaseName(pathSeparator, uri)
+    if (existingHandle?.kind === 'directory') {
+      await parentHandle.removeEntry(baseName, {
+        recursive: true,
+      })
+    } else {
+      await parentHandle.removeEntry(baseName)
+    }
+    PersistentFileHandle.removeHandle(uri)
+  } catch (error) {
+    if (error instanceof FileNotFoundError || BrowserErrorTypes.isNotFoundError(error)) {
+      throw new FileNotFoundError(uri)
+    }
+    throw new VError(error, 'Failed to remove')
+  }
+}
+
+const ensureDirectoryHandle = async (uri) => {
+  const existingHandle = await PersistentFileHandle.getHandle(uri)
+  if (existingHandle) {
+    if (existingHandle.kind !== 'directory') {
+      throw new VError(`Expected directory at ${uri}`)
+    }
+    return existingHandle
+  }
+  const dirname = Path.dirname(pathSeparator, uri)
+  if (uri === dirname) {
+    throw new VError(`Directory handle not found for ${uri}`)
+  }
+  let parentHandle = await GetDirectoryHandle.getDirectoryHandle(dirname)
+  if (!parentHandle) {
+    parentHandle = await ensureDirectoryHandle(dirname)
+  }
+  const baseName = Path.getBaseName(pathSeparator, uri)
+  const directoryHandle = await parentHandle.getDirectoryHandle(baseName, {
+    create: true,
+  })
+  await PersistentFileHandle.addHandle(uri, directoryHandle)
+  return directoryHandle
+}
+
+export const mkdir = async (uri) => {
+  try {
+    await ensureDirectoryHandle(uri)
+  } catch (error) {
+    throw new VError(error, 'Failed to create directory')
+  }
+}
+
+export const isReadonly = () => {
+  return false
 }
 
 export const getBlobSrc = async (uri) => {

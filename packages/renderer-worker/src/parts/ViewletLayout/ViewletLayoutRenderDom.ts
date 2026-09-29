@@ -1,5 +1,5 @@
 import { getLayoutVirtualDom } from '../GetLayoutVirtualDom/GetLayoutVirtualDom.ts'
-import { LayoutState } from './LayoutState.ts'
+import type { LayoutState } from './LayoutState.ts'
 
 export const renderDom = (oldState, newState: LayoutState) => {
   const dom = getLayoutVirtualDom(newState)

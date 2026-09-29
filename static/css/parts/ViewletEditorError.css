@@ -2,8 +2,13 @@
   --IconErrorForeground: rgb(182, 78, 78);
 }
 
+.Viewlet.Error {
+  flex: 1;
+}
+
 .TextEditorError {
   display: flex;
+  flex: 1;
   flex-direction: column;
   align-items: center;
   justify-content: center;
@@ -12,6 +17,14 @@
   color: rgb(156, 162, 160);
   padding-left: 16px;
   padding-right: 16px;
+  user-select: text;
+}
+
+.TextEditorErrorMessage {
+  max-width: 100%;
+  overflow: auto;
+  font-family: var(--EditorFontFamily);
+  white-space: pre;
 }
 
 .EditorTextIcon {
@@ -23,8 +36,4 @@
 
 .EditorTextIconError {
   color: var(--IconErrorForeground);
-}
-
-.Viewlet.Error {
-  user-select: text;
 }

@@ -1,3 +1,5 @@
+import * as Platform from '../Platform/Platform.js'
+import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 
 export const version = '0.0.0-dev'
@@ -46,4 +48,23 @@ export const getDate = () => {
 
 export const getArch = () => {
   return SharedProcess.invoke('Process.getArch')
+}
+
+export const getArgvCommand = (platform) => {
+  if (platform !== PlatformType.Electron) {
+    return 'Process.getArgv'
+  }
+  return 'ElectronProcess.getArgv'
+}
+
+export const getArgv = () => {
+  return SharedProcess.invoke(getArgvCommand(Platform.getPlatform()))
+}
+
+export const writeStderr = (value) => {
+  return SharedProcess.invoke('ElectronProcess.writeStderr', value)
+}
+
+export const writeStdout = (value) => {
+  return SharedProcess.invoke('ElectronProcess.writeStdout', value)
 }

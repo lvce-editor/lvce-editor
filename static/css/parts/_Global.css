@@ -1,6 +1,18 @@
 @font-face {
   font-family: 'Fira Code';
   src: url(/fonts/FiraCode-VariableFont.ttf) format('truetype');
+  font-display: block;
+}
+
+.App.ModernUi {
+  --MainTabActiveBackground: color-mix(in srgb, var(--TabActiveBackground) 88%, var(--TabsBackground));
+  --MainTabBorderRadius: 6px;
+  --ModernUiPanelBackground: color-mix(in srgb, var(--PanelBackground) 94%, var(--WorkbenchForeground) 6%);
+  --PanelTabBorderRadius: 20px;
+  --PanelTabPadding: 0 12px;
+  --PanelTabSelectedBackground: color-mix(in srgb, var(--PanelTabActiveForeground) 10%, var(--PanelBackground));
+  --SideBarTitleFontWeight: 600;
+  --SideBarTitlePaddingLeft: 16px;
 }
 
 /* TODO check if contain strict also makes sense for html and body */
@@ -19,4 +31,37 @@ body {
     sans-serif;
   user-select: none;
   color: var(--WorkbenchForeground);
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--vscode-scrollbarSlider-background) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: var(--vscode-scrollbarSlider-background);
+  border: 2px solid transparent;
+  border-radius: 999px;
+  background-clip: content-box;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: var(--vscode-scrollbarSlider-hoverBackground);
+}
+
+*::-webkit-scrollbar-thumb:active {
+  background: var(--vscode-scrollbarSlider-activeBackground);
 }

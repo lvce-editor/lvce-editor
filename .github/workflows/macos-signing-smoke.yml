@@ -1,0 +1,95 @@
+name: macos-signing-smoke
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  macos-signing-smoke:
+    strategy:
+      fail-fast: false
+      matrix:
+        product: [lvce, lvce-oss]
+    name: macos-signing-smoke (${{ matrix.product }})
+    runs-on: macos-26
+    timeout-minutes: 80
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: '.nvmrc'
+          registry-url: 'https://registry.npmjs.org'
+      - name: Setup Python 3
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+      - name: Compute node modules cache key
+        id: nodeModulesCacheKey
+        run: echo "value=$(node packages/build/src/parts/ComputeNodeModulesCacheKey/ComputeNodeModulesCacheKey.ts)" >> $GITHUB_OUTPUT
+        shell: bash
+      - uses: actions/cache@v6
+        id: npm-cache
+        env:
+          PLAYWRIGHT_BROWSERS_PATH: 0
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-cacheNodeModules-${{ steps.nodeModulesCacheKey.outputs.value }}
+      - uses: actions/cache@v6
+        id: electron-builder-cache
+        with:
+          path: '~/.cache/electron-builder'
+          key: ${{ runner.os }}-cacheElectronBuilder-${{ steps.nodeModulesCacheKey.outputs.value }}
+      - uses: actions/cache@v6
+        id: build-cache
+        with:
+          path: 'packages/build/.tmp/cachedDependencies'
+          key: ${{ runner.os }}-build-cache-${{ steps.nodeModulesCacheKey.outputs.value }}
+      - name: npm ci
+        run: node packages/build/src/parts/InstallDependencies/InstallDependencies.ts
+        if: steps.npm-cache.outputs.cache-hit != 'true'
+        env:
+          DOWNLOAD_BUILTIN_EXTENSIONS: 0
+      - name: Compute builtin extensions cache key
+        id: builtinExtensionsCacheKey
+        run: echo "value=$(node packages/build/src/parts/ComputeBuiltinExtensionsCacheKey/ComputeBuiltinExtensionsCacheKey.ts)" >> $GITHUB_OUTPUT
+        shell: bash
+      - uses: actions/cache@v6
+        id: builtin-extensions-cache
+        with:
+          path: extensions
+          key: builtinExtensions-${{ steps.builtinExtensionsCacheKey.outputs.value }}
+      - name: Download Builtin Extensions
+        run: node packages/build/src/parts/DownloadBuiltinExtensions/DownloadBuiltinExtensions.ts
+        if: steps.builtin-extensions-cache.outputs.cache-hit != 'true'
+      - run: npm run type-check
+      - run: npm test
+      - name: Prepare Apple signing credentials
+        shell: bash
+        env:
+          APPLE_API_KEY_BASE64: ${{ secrets.APPLE_API_KEY_BASE64 }}
+          APPLE_API_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
+          APPLE_API_ISSUER: ${{ secrets.APPLE_API_ISSUER }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          CSC_LINK: ${{ secrets.CSC_LINK }}
+          CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
+        run: bash packages/build/scripts/github-actions/prepare-macos-signing.sh required
+      - name: Build signed macOS DMG
+        run: npm run build:electron:mac:arm64 -- --product=${{ matrix.product }}
+        env:
+          CSC_KEYCHAIN: ${{ env.CSC_KEYCHAIN_PATH }}
+          APPLE_API_KEY: ${{ env.APPLE_API_KEY_PATH }}
+          APPLE_API_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
+          APPLE_API_ISSUER: ${{ secrets.APPLE_API_ISSUER }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+      - name: Notarize macOS DMG
+        shell: bash
+        env:
+          APPLE_API_KEY: ${{ env.APPLE_API_KEY_PATH }}
+          APPLE_API_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
+          APPLE_API_ISSUER: ${{ secrets.APPLE_API_ISSUER }}
+        run: bash packages/build/scripts/github-actions/notarize-macos-dmg.sh packages/build/.tmp/releases/${{ matrix.product }}-arm64.dmg
+      - name: Verify signing and notarization
+        shell: bash
+        run: bash packages/build/scripts/github-actions/verify-macos-dmg.sh packages/build/.tmp/releases/${{ matrix.product }}-arm64.dmg ${{ matrix.product }}

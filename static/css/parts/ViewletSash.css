@@ -1,3 +1,6 @@
+:root {
+  --SashBorder: #444444;
+}
 .Sash {
   position: absolute;
   contain: strict;
@@ -6,22 +9,33 @@
   border: 0;
   z-index: 1;
   background: transparent;
+  display: flex;
 }
 
 .Sash:active {
   background: var(--SashHoverBorder, #3d5252);
 }
 
+.Sash:active .SashBorder {
+  background: var(--SashHoverBorder, #3d5252);
+}
+
+.SashVertical:active .SashBorder {
+  width: 100%;
+}
+
 .SashHorizontal {
   height: 4px;
   cursor: row-resize;
   width: 100%;
+  align-items: center;
 }
 
 .SashVertical {
   width: 4px;
   cursor: col-resize;
   height: 100%;
+  justify-content: center;
 }
 
 .SashVisible {
@@ -41,4 +55,70 @@
 
 .SashSideBar {
   left: var(--SashSideBarLeft);
+}
+
+.SashPreview {
+  left: var(--SashPreviewLeft);
+  border-left: 1px solid var(--SashBorder, gray);
+}
+
+.SashSecondaryPreview {
+  left: var(--SashSecondaryPreviewLeft);
+}
+
+.SashHorizontal.SashSecondaryPreview {
+  left: 0;
+  top: calc(var(--SashSecondaryPreviewTop) - 2px);
+}
+
+.SashSecondarySideBar {
+  left: var(--SashSecondarySideBarLeft);
+}
+
+.SashPanel {
+  top: calc(var(--SashPanelTop) - 2px);
+  width: var(--PanelWidth);
+}
+
+.SashBorder {
+  height: 100%;
+  width: 1px;
+  background: var(--SashBorder, gray);
+}
+
+.SashBorderHorizontal {
+  width: 100%;
+  height: 1px;
+}
+
+.SashBorderVertical {
+  width: 1px;
+  height: 100%;
+}
+
+.SashCorner {
+  position: absolute;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 12px;
+  height: 12px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: all-scroll;
+  transform: translate(-50%, -50%);
+}
+
+.SashCorner::after {
+  content: '';
+  width: 4px;
+  height: 4px;
+  background: var(--SashBorder, gray);
+}
+
+.SashCorner:hover::after,
+.SashCorner:active::after {
+  background: var(--SashHoverBorder, #3d5252);
 }

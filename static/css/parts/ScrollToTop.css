@@ -1,19 +1,11 @@
-:root {
-  --ScrollToTopBackground: #3a3d41;
-  --ScrollToTopHoverBackground: #45494e;
-  --ScrollToTopShadow: 1px 1px 1px rgba(0, 0, 0, 0.25);
-  --ScrollToTopHoverShadow: 2px 2px 2px rgba(0, 0, 0, 0.25);
-  --ScrollToTopForeground: white;
-}
-
 .ScrollToTopButton {
   position: absolute;
   align-items: center;
-  background: var(--ScrollToTopBackground);
+  background: var(--ButtonSecondaryBackground, color-mix(in srgb, var(--WorkbenchForeground) 14%, var(--MainBackground)));
   border-radius: 50%;
   border: none;
   bottom: 0;
-  box-shadow: var(--ScrollToTopShadow);
+  box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.25);
   contain: strict;
   cursor: pointer;
   display: flex;
@@ -22,10 +14,13 @@
   right: 0;
   width: 32px;
   z-index: 1;
-  color: var(--ScrollToTopForeground);
+  color: var(--ButtonSecondaryForeground, var(--WorkbenchForeground));
 }
 
 .ScrollToTopButton:hover {
-  background: var(--ScrollToTopHoverBackground);
-  box-shadow: var(--ScrollToTopHoverShadow);
+  background: var(
+    --ButtonSecondaryHoverBackground,
+    var(--ListHoverBackground, color-mix(in srgb, var(--WorkbenchForeground) 20%, var(--MainBackground)))
+  );
+  box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.25);
 }

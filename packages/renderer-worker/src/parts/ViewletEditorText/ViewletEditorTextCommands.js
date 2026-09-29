@@ -1,15 +1,197 @@
+import * as BrowserKey from '../BrowserKey/BrowserKey.js'
+import * as Command from '../Command/Command.js'
 import * as EditorWorker from '../EditorWorker/EditorWorker.ts'
-import * as ViewletStatusBar from '../ViewletStatusBar/ViewletStatusBar.js'
-import { wrapEditorCommand } from '../WrapEditorCommand/WrapEditorCommand.ts'
+import * as Focus from '../Focus/Focus.js'
+import * as WhenExpression from '../WhenExpression/WhenExpression.js'
+import * as GetTokenizePath from '../GetTokenizePath/GetTokenizePath.js'
+import * as Languages from '../Languages/Languages.js'
+import * as LanguagesState from '../LanguagesState/LanguagesState.js'
+import * as RendererProcess from '../RendererProcess/RendererProcess.js'
+import * as SaveState from '../SaveState/SaveState.js'
+import * as WrapEditorCommands from '../WrapEditorCommands/WrapEditorCommands.js'
+
+const subWidgetCommandIds = [
+  'ColorPicker.handleColorAreaPointerDown',
+  'ColorPicker.handleColorAreaPointerMove',
+  'ColorPicker.handleColorAreaPointerUp',
+  'ColorPicker.handleContextMenu',
+  'ColorPicker.handleSliderKeyDown',
+  'ColorPicker.handleSliderPointerDown',
+  'ColorPicker.handleSliderPointerMove',
+  'ColorPicker.handleSliderPointerUp',
+  'EditorCodeGenerator.accept',
+  'EditorCompletion.close',
+  'EditorCompletion.closeDetails',
+  'EditorCompletion.dispose',
+  'EditorCompletion.focusFirst',
+  'EditorCompletion.focusIndex',
+  'EditorCompletion.focusLast',
+  'EditorCompletion.focusNext',
+  'EditorCompletion.focusNextPage',
+  'EditorCompletion.focusPrevious',
+  'EditorCompletion.focusPreviousPage',
+  'EditorCompletion.handleClickAt',
+  'EditorCompletion.handlePointerDown',
+  'EditorCompletion.handleScrollBarCaptureLost',
+  'EditorCompletion.handleScrollBarClick',
+  'EditorCompletion.handleScrollBarMove',
+  'EditorCompletion.handleScrollBarThumbPointerMove',
+  'EditorCompletion.handleWheel',
+  'EditorCompletion.openDetails',
+  'EditorCompletion.scrollDown',
+  'EditorCompletion.selectCurrent',
+  'EditorCompletion.selectIndex',
+  'EditorCompletion.toggleDetails',
+  'EditorRename.accept',
+  'EditorRename.handleBlur',
+  'EditorRename.handleInput',
+  'EditorRename.close',
+  'EditorSourceActions.close',
+  'EditorSourceActions.focusFirst',
+  'EditorSourceActions.focusLast',
+  'EditorSourceActions.focusNext',
+  'EditorSourceActions.focusPrevious',
+  'EditorSourceActions.selectCurrent',
+  'FindWidget.close',
+  'FindWidget.focusNextElement',
+  'FindWidget.focusPreviousElement',
+  'FindWidget.focusCloseButton',
+  'FindWidget.focusFind',
+  'FindWidget.focusNext',
+  'FindWidget.focusNextMatchButton',
+  'FindWidget.focusPrevious',
+  'FindWidget.focusPreviousMatchButton',
+  'FindWidget.focusReplace',
+  'FindWidget.focusReplaceAllButton',
+  'FindWidget.focusReplaceButton',
+  'FindWidget.focusToggleReplace',
+  'FindWidget.handleBlur',
+  'FindWidget.handleFocus',
+  'FindWidget.handleFocusClose',
+  'FindWidget.handleFocusNext',
+  'FindWidget.handleFocusPrevious',
+  'FindWidget.handleFocusReplaceAll',
+  'FindWidget.handleInput',
+  'FindWidget.handleReplaceFocus',
+  'FindWidget.handleReplaceInput',
+  'FindWidget.handleToggleReplaceFocus',
+  'FindWidget.replace',
+  'FindWidget.replaceAll',
+  'FindWidget.toggleMatchCase',
+  'FindWidget.toggleMatchWholeWord',
+  'FindWidget.toggleReplace',
+  'FindWidget.toggleUseRegularExpression',
+  'FindWidget.togglePreserveCase',
+  'EditorSourceAction.close',
+  'EditorSourceAction.closeDetails',
+  'EditorSourceAction.focusFirst',
+  'EditorSourceAction.focusIndex',
+  'EditorSourceAction.focusNext',
+  'EditorSourceAction.focusPrevious',
+  'EditorSourceAction.handleWheel',
+  'EditorSourceAction.selectCurrent',
+  'EditorSourceAction.selectIndex',
+  'EditorSourceAction.selectItem',
+  'EditorSourceAction.toggleDetails',
+]
 
 export const Commands = {}
 
-export const getCommands = async () => {
-  const commands = await EditorWorker.invoke('Editor.getCommandIds')
-  for (const command of commands) {
-    Commands[command] = wrapEditorCommand(command)
-  }
-  Commands['hotReload'] = ViewletStatusBar.hotReload
+const showOverlayMessage = async (state, editor, ...args) => {
+  await RendererProcess.invoke(...args)
+  return state
+}
 
+const hotReload = async (state, editor, ...args) => {
+  // @ts-ignore
+  await EditorWorker.invoke(`Editor.hotReload`)
+  return state
+}
+
+const handleUriChange = async (editor, editorUidOrNewUri, maybeNewUri) => {
+  const newUri = maybeNewUri ?? editorUidOrNewUri
+  LanguagesState.clearExplicitLanguageId(editor.uri)
+  await EditorWorker.invoke('Editor.handleUriChange', editor.uid, newUri)
+  const languageId = Languages.getLanguageId(newUri)
+  if (languageId !== editor.languageId) {
+    const tokenizePath = GetTokenizePath.getTokenizePath(languageId)
+    await EditorWorker.invoke('Editor.setLanguageId', editor.uid, languageId, tokenizePath)
+  }
+  return {
+    ...editor,
+    languageId,
+    uri: newUri,
+  }
+}
+
+const loadContentLater = async (editor) => {
+  await Command.execute('Viewlet.executeViewletCommand', editor.uid, 'updateDiagnostics')
+}
+
+const loadEditorContent = WrapEditorCommands.wrapEditorCommand('Editor.loadContent')
+const loadEditorContentPreservingFocus = WrapEditorCommands.wrapEditorCommand('Editor.loadContent', { preserveFocus: true })
+
+const loadContent = (editor, savedState, context) => {
+  const load = context?.preserveFocus ? loadEditorContentPreservingFocus : loadEditorContent
+  return load(editor, savedState)
+}
+
+const updateDiagnostics = WrapEditorCommands.wrapEditorCommand('Editor.updateDiagnostics', { preserveFocus: true })
+const setLanguageId = async (editor, languageId, tokenizePath, isExplicit) => {
+  const result = await WrapEditorCommands.wrapEditorCommand('Editor.setLanguageId')(editor, languageId, tokenizePath, isExplicit)
+  if (isExplicit) {
+    LanguagesState.setExplicitLanguageId(editor.uri, languageId)
+    await SaveState.saveViewletState(editor.uid)
+  } else {
+    LanguagesState.clearExplicitLanguageId(editor.uri)
+  }
+  return result
+}
+
+const renderPending = Object.assign(WrapEditorCommands.renderPendingEditors, { targetUid: true })
+const handleEditorFocus = WrapEditorCommands.wrapEditorCommand('Editor.handleFocus')
+const handleFocus = (editor, ...args) => {
+  if (editor.applicationId !== undefined) Focus.setFocus(WhenExpression.FocusEditorText, undefined, editor.uid, 'Editor')
+  return handleEditorFocus(editor, ...args)
+}
+
+const executeWidgetCommand = WrapEditorCommands.wrapEditorCommand('Editor.executeWidgetCommand')
+const closeColorPicker = WrapEditorCommands.wrapEditorCommand('Editor.closeColorPicker')
+
+const handleColorPickerSliderKeyDown = (editor, ...args) => {
+  const key = args[args.length - 1]
+  if (key === BrowserKey.Escape) {
+    return closeColorPicker(editor)
+  }
+  return executeWidgetCommand(editor, ...args)
+}
+
+const refreshGutterDecorationsAll = Object.assign(() => EditorWorker.invoke('Editor.refreshGutterDecorationsAll'), { requiresInstance: false })
+
+export const getCommands = async () => {
+  const commandIds = await EditorWorker.invoke('Editor.getCommandIds')
+  Object.assign(Commands, WrapEditorCommands.wrapEditorCommands(commandIds), WrapEditorCommands.wrapEditorCommands(subWidgetCommandIds), {
+    'Editor.save': Object.assign(WrapEditorCommands.wrapEditorCommand('Editor.save'), { acceptsTargetUid: true }),
+    __renderPending: renderPending,
+    handleFocus,
+    handleUriChange,
+    loadContent,
+    loadContentLater,
+    renderPending,
+    refreshGutterDecorationsAll,
+    setLanguageId,
+    showOverlayMessage,
+    updateDiagnostics,
+    hotReload,
+    'ColorPicker.handleSliderKeyDown': handleColorPickerSliderKeyDown,
+  })
   return Commands
+}
+
+export const CommandsWithSideEffectsLazy = {
+  typeWithAutoClosing: () => {
+    return {
+      typeWithAutoClosing: WrapEditorCommands.wrapEditorCommand('typeWithAutoClosing'),
+    }
+  },
 }

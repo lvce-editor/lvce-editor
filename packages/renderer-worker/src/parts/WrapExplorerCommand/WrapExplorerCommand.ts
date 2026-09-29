@@ -1,20 +1,66 @@
 import * as ExplorerViewWorker from '../ExplorerViewWorker/ExplorerViewWorker.js'
 
-export const wrapExplorerCommand = (key: string) => {
-  const fn = async (state, ...args) => {
-    await ExplorerViewWorker.invoke(`Explorer.${key}`, state.uid, ...args)
-    const diffResult = await ExplorerViewWorker.invoke('Explorer.diff2', state.uid)
-    if (diffResult.length === 0) {
-      return state
+interface ExplorerCommandDependencies {
+  readonly getTitle: (uid: number) => Promise<string>
+  readonly invoke: (command: string, ...args: readonly unknown[]) => Promise<unknown>
+}
+
+interface ExplorerViewState {
+  readonly actionsDom: readonly unknown[]
+  readonly [key: string]: unknown
+  readonly title: string
+  readonly uid: number
+}
+
+type ExplorerCommand = (state: ExplorerViewState, ...args: readonly unknown[]) => Promise<ExplorerViewState>
+
+const defaultDependencies: ExplorerCommandDependencies = {
+  async getTitle(uid) {
+    try {
+      return (await ExplorerViewWorker.invoke('Explorer.getTitle', uid)) as string
+    } catch {
+      return 'Explorer'
     }
-    const commands = await ExplorerViewWorker.invoke('Explorer.render2', state.uid, diffResult)
+  },
+  invoke: ExplorerViewWorker.invoke,
+}
+
+const updateActionsAndTitle = (state: ExplorerViewState, actionsDom: readonly unknown[], title: string): ExplorerViewState => {
+  const { actionsDom: oldActionsDom, title: oldTitle } = state
+  if (oldTitle === title && JSON.stringify(oldActionsDom) === JSON.stringify(actionsDom)) {
+    return state
+  }
+  return {
+    ...state,
+    actionsDom,
+    title,
+  }
+}
+
+export const wrapExplorerCommandWithDependencies = (key: string, dependencies: ExplorerCommandDependencies): ExplorerCommand => {
+  const { getTitle, invoke } = dependencies
+  const fn: ExplorerCommand = async (state, ...args) => {
+    const { uid } = state
+    await invoke(`Explorer.${key}`, uid, ...args)
+    const diffResult = (await invoke('Explorer.diff2', uid)) as readonly unknown[]
+    const title = await getTitle(uid)
+    const actionsDom = (await invoke('Explorer.renderActions2', uid)) as readonly unknown[]
+    const updatedState = updateActionsAndTitle(state, actionsDom, title)
+    if (diffResult.length === 0) {
+      return updatedState
+    }
+    const commands = (await invoke('Explorer.render2', uid, diffResult)) as readonly unknown[]
     if (commands.length === 0) {
-      return state
+      return updatedState
     }
     return {
-      ...state,
+      ...updatedState,
       commands,
     }
   }
   return fn
+}
+
+export const wrapExplorerCommand = (key: string): ExplorerCommand => {
+  return wrapExplorerCommandWithDependencies(key, defaultDependencies)
 }

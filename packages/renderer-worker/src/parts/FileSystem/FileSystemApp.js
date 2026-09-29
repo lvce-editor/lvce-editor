@@ -1,6 +1,17 @@
-import * as PathSeparatorType from '../PathSeparatorType/PathSeparatorType.js'
-
 export const name = 'App'
+
+const appPrefix = 'app://'
+const readonlyPaths = new Set(['memory-usage', 'session.json', 'startup-performance'])
+
+const getPath = (uri) => {
+  if (uri.startsWith(`${appPrefix}/`)) {
+    return uri.slice(appPrefix.length + 1)
+  }
+  if (uri.startsWith(appPrefix)) {
+    return uri.slice(appPrefix.length)
+  }
+  return uri
+}
 
 const getModule = (uri) => {
   switch (uri) {
@@ -22,18 +33,18 @@ const getModule = (uri) => {
 }
 
 export const readFile = async (uri) => {
-  const module = await getModule(uri)
+  const module = await getModule(getPath(uri))
   return module.readFile()
 }
 
 export const readJson = async (uri) => {
-  const module = await getModule(uri)
+  const module = await getModule(getPath(uri))
   // @ts-ignore
   return module.readJson()
 }
 
 export const writeFile = async (uri, content) => {
-  const module = await getModule(uri)
+  const module = await getModule(getPath(uri))
   return module.writeFile(content)
 }
 
@@ -53,8 +64,8 @@ export const mkdir = async (path) => {
   throw new Error('not allowed')
 }
 
-export const getPathSeparator = () => {
-  return PathSeparatorType.Slash
+export const isReadonly = (uri) => {
+  return readonlyPaths.has(getPath(uri))
 }
 
 export const canBeRestored = true

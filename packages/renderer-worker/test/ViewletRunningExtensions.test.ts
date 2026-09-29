@@ -1,0 +1,104 @@
+import { beforeEach, expect, jest, test } from '@jest/globals'
+
+let shouldFail = false
+
+jest.unstable_mockModule('../src/parts/RunningExtensionsViewWorker/RunningExtensionsViewWorker.ts', () => ({
+  invoke: jest.fn(async (command) => {
+    if (shouldFail) {
+      throw new Error('Failed to load worker')
+    }
+    if (command === 'RunningExtensions.diff2' || command === 'RunningExtensions.render2') {
+      return []
+    }
+    if (command === 'RunningExtensions.getMenuEntryIds') {
+      return [32]
+    }
+    if (command === 'RunningExtensions.getMenuEntries') {
+      return [{ command: 'RunningExtensions.copyId', id: 'copy-id', label: 'Copy id (test.extension)' }]
+    }
+    if (command === 'RunningExtensions.getCommandIds') {
+      return ['copyId']
+    }
+    return undefined
+  }),
+}))
+
+jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => ({
+  getPlatform: jest.fn(() => 2),
+}))
+
+jest.unstable_mockModule('../src/parts/AssetDir/AssetDir.js', () => ({
+  assetDir: '/test-assets',
+}))
+
+const RunningExtensionsViewWorker = await import('../src/parts/RunningExtensionsViewWorker/RunningExtensionsViewWorker.ts')
+const ViewletRunningExtensions = await import('../src/parts/ViewletRunningExtensions/ViewletRunningExtensions.ipc.ts')
+
+beforeEach(() => {
+  jest.clearAllMocks()
+  shouldFail = false
+})
+
+test('provides the side bar name and title', () => {
+  const state = ViewletRunningExtensions.create(1, 'RunningExtensions', 10, 20, 800, 600)
+
+  expect(ViewletRunningExtensions.name).toBe('RunningExtensions')
+  expect(ViewletRunningExtensions.getTitle()).toBe('Running Extensions')
+  expect(ViewletRunningExtensions.renderTitle.apply(state, state)).toBe('Running Extensions')
+})
+
+test('loadContent passes the platform and asset directory to the view worker', async () => {
+  const state = ViewletRunningExtensions.create(1, 'running-extensions://', 10, 20, 800, 600)
+
+  await ViewletRunningExtensions.loadContent(state)
+
+  expect(RunningExtensionsViewWorker.invoke).toHaveBeenNthCalledWith(
+    1,
+    'RunningExtensions.create',
+    1,
+    'running-extensions://',
+    10,
+    20,
+    800,
+    600,
+    2,
+    '/test-assets',
+  )
+})
+
+test('handleExtensionsChanged reloads and renders running extensions', async () => {
+  const state = ViewletRunningExtensions.create(1, 'running-extensions://', 10, 20, 800, 600)
+
+  const result = await ViewletRunningExtensions.handleExtensionsChanged(state)
+
+  expect(RunningExtensionsViewWorker.invoke).toHaveBeenNthCalledWith(1, 'RunningExtensions.loadContent', 1)
+  expect(RunningExtensionsViewWorker.invoke).toHaveBeenNthCalledWith(2, 'RunningExtensions.diff2', 1)
+  expect(RunningExtensionsViewWorker.invoke).toHaveBeenNthCalledWith(3, 'RunningExtensions.render2', 1, [])
+  expect(result).toEqual({
+    ...state,
+    commands: [],
+  })
+})
+
+test('getCommands includes the extension change handler', async () => {
+  await ViewletRunningExtensions.getCommands()
+
+  expect(typeof ViewletRunningExtensions.Commands['handleExtensionsChanged']).toBe('function')
+})
+
+test('getMenus provides running extensions menu entries', async () => {
+  const menus = await ViewletRunningExtensions.getMenus()
+
+  expect(menus).toHaveLength(1)
+  expect(menus[0].id).toBe(32)
+
+  const entries = await menus[0].getMenuEntries(0)
+  expect(entries).toEqual([{ command: 'RunningExtensions.copyId', id: 'copy-id', label: 'Copy id (test.extension)' }])
+  expect(RunningExtensionsViewWorker.invoke).toHaveBeenLastCalledWith('RunningExtensions.getMenuEntries', 0)
+})
+
+test('getMenus returns an empty array when the view worker is unavailable', async () => {
+  shouldFail = true
+
+  await expect(ViewletRunningExtensions.getMenus()).resolves.toEqual([])
+})

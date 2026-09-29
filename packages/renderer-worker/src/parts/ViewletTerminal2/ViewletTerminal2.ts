@@ -1,0 +1,153 @@
+import * as TerminalTransfer from '../TerminalTransfer/TerminalTransfer.js'
+import * as Assert from '../Assert/Assert.ts'
+import * as Command from '../Command/Command.js'
+import * as Focus from '../Focus/Focus.js'
+import * as GetTerminalSpawnOptions from '../GetTerminalSpawnOptions/GetTerminalSpawnOptions.js'
+import * as Preferences from '../Preferences/Preferences.js'
+import * as RendererProcess from '../RendererProcess/RendererProcess.js'
+import * as TerminalWorker from '../TerminalWorker/TerminalWorker.js'
+import * as Viewlet from '../Viewlet/Viewlet.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+import * as ViewletStates from '../ViewletStates/ViewletStates.js'
+import * as WhenExpression from '../WhenExpression/WhenExpression.js'
+import * as Workspace from '../Workspace/Workspace.js'
+
+const defaultBackend = 'real'
+
+const getBackend = () => {
+  return Preferences.get('terminal.backend') || defaultBackend
+}
+
+export const create = (id, cwd = '') => {
+  Assert.number(id)
+  return {
+    disposed: false,
+    id: 0,
+    uid: id,
+    separateConnection: true,
+    command: '',
+    args: [],
+    setBounds: false,
+    columns: 80,
+    cwd,
+    rows: 24,
+    xtermMounted: false,
+  }
+}
+
+export const loadContent = async (state, _savedState?: any, configuredSpawnOptions?: any) => {
+  const { command, args, cwd = state.cwd } = configuredSpawnOptions || (await GetTerminalSpawnOptions.getTerminalSpawnOptions(state.cwd))
+  return {
+    ...state,
+    command,
+    args,
+    cwd,
+    xtermMounted: true,
+  }
+}
+
+export const loadContentLater = async (state) => {
+  const { args, command, cwd, uid } = state
+  try {
+    await TerminalWorker.invoke('Terminal.create', uid, cwd || Workspace.state.workspacePath, command, args, {
+      backend: getBackend(),
+    })
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error)
+    await showError(state, `Failed to start terminal: ${message}`)
+  }
+}
+
+const showError = async (state, message) => {
+  const workspaceChanged = message.includes('Workspace changed while starting the terminal.')
+  const diagnostic = workspaceChanged ? message.replace(' Create a new terminal to retry.', '') : message
+  const recovery = workspaceChanged
+    ? 'Create a new terminal to retry.'
+    : 'Check the shell, working directory, and workspace connection. Create a new terminal to retry.'
+  const text = `${diagnostic}\r\n${recovery}\r\n`
+  await handleData(state, new TextEncoder().encode(`\r\n${text}`))
+}
+
+export const handleInput = async (state, data) => {
+  await TerminalWorker.invoke('Terminal.write', state.uid, data)
+  return state
+}
+
+export const handleLink = async (state, uri) => {
+  Assert.string(uri)
+  if (!URL.canParse(uri) || !/^https?:\/\//i.test(uri)) {
+    return state
+  }
+  await Command.execute('Layout.showPreview', 'simple-browser://')
+  const { previewId } = ViewletStates.getState(ViewletModuleId.Layout)
+  await Viewlet.executeViewletCommand(previewId, 'openTab', uri, 'foreground-tab')
+  return state
+}
+
+export const handleData = async (state, data) => {
+  await RendererProcess.invoke('Viewlet.send', state.uid, 'write', data)
+  return state
+}
+
+export const handleExit = async (state, event?: { exitCode?: number; signal?: number }) => {
+  if (event?.exitCode || event?.signal) {
+    const message = event.signal
+      ? `The terminal process exited with signal ${event.signal}.`
+      : `The terminal process exited with code ${event.exitCode}.`
+    await showError(state, message)
+    return state
+  }
+  if (!(await TerminalTransfer.handleExit(state.uid))) {
+    await Command.execute('Terminals.handleTerminalExit', state.uid)
+  }
+  return state
+}
+
+export const handleBlur = (state) => {
+  return state
+}
+
+export const dispose = async (state) => {
+  TerminalTransfer.forget(state.uid)
+  await TerminalWorker.invoke('Terminal.dispose', state.uid)
+  return {
+    ...state,
+    disposed: true,
+  }
+}
+
+export const handleKeyDown = (state) => {
+  return state
+}
+
+export const handleMouseDown = (state) => {
+  Focus.setFocus(WhenExpression.FocusTerminal)
+  return state
+}
+
+export const hasFunctionalResize = true
+
+export const resize = (state, dimensions) => {
+  return {
+    ...state,
+    ...dimensions,
+  }
+}
+
+export const resizeEffect = async (state) => {
+  const columns = state.columns || Math.max(2, Math.floor(state.width / 9))
+  const rows = state.rows || Math.max(2, Math.floor(state.height / 17))
+  await TerminalWorker.invoke('Terminal.resize', state.uid, columns, rows)
+}
+
+export const focus = (state) => {
+  return {
+    ...state,
+    focused: true,
+  }
+}
+
+export const clear = async (state) => {
+  await RendererProcess.invoke('Viewlet.send', state.uid, 'write', new TextEncoder().encode('\u001Bc'))
+  return state
+}

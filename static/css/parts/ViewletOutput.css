@@ -1,3 +1,11 @@
+.Output {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+}
+
 .Output:focus {
   outline: 1px solid red;
   outline-offset: -1px;
@@ -6,12 +14,73 @@
 .ViewletOutput {
   white-space: pre;
   overflow-y: scroll;
-  color: white;
+  color: var(--vscode-foreground, #cccccc);
 }
 
 .OutputContent {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
   white-space: pre;
   user-select: text;
   cursor: text;
-  overflow-y: auto;
+  overflow: auto;
+}
+
+.OutputContent a {
+  color: var(--vscode-textLink-foreground, dodgerblue);
+}
+
+.OutputContent a:hover {
+  color: var(--vscode-textLink-activeForeground, #4daafc);
+}
+
+.Output .Line {
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  width: max-content;
+  min-width: 100%;
+  min-height: 18px;
+  padding-inline: 6px;
+}
+
+.Output .Line.error {
+  background: color-mix(in srgb, var(--vscode-errorForeground, #f48771) 18%, var(--vscode-editor-background, #1e1e1e));
+}
+
+.Output .Line.warning {
+  background: color-mix(in srgb, var(--vscode-editorWarning-foreground, #cca700) 18%, var(--vscode-editor-background, #1e1e1e));
+}
+
+.OutputRepeatCount {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-width: 14px;
+  height: 14px;
+  margin-inline-end: 5px;
+  padding-inline: 3px;
+  border-radius: 7px;
+  color: var(--vscode-badge-foreground, #ffffff);
+  background: var(--vscode-badge-background, #4d4d4d);
+  font-size: 10px;
+  font-variant-numeric: tabular-nums;
+  line-height: 14px;
+}
+
+.OutputSourceLink {
+  flex: none;
+  margin-inline-start: auto;
+  padding-inline-start: 16px;
+  color: var(--vscode-textLink-foreground, #3794ff);
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.OutputSourceLink:hover {
+  color: var(--vscode-textLink-activeForeground, #4daafc);
+  text-decoration: underline;
 }

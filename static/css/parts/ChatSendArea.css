@@ -1,0 +1,95 @@
+:root {
+  --ToolBarHoverBackground: rgba(90, 93, 94, 0.31);
+  --SendButtonDisabledForeground: rgba(204, 204, 204, 0.5);
+  --ChatSendAreaBorder: 1px solid #37413f;
+  --ChatSendAreaFocusedBorderColor: #3d5252;
+}
+
+.ChatSendArea {
+  display: flex;
+  gap: 10px;
+  padding: var(--ChatSendAreaPaddingTop, 10px) var(--ChatSendAreaPaddingRight, 10px) var(--ChatSendAreaPaddingBottom, 10px)
+    var(--ChatSendAreaPaddingLeft, 10px);
+  flex-direction: column;
+  height: var(--ChatSendAreaHeight, 90px);
+  contain: strict;
+}
+
+.ChatSendAreaContent {
+  position: relative;
+  background: var(--InputBoxBackground, var(--vscode-input-background, var(--vscode-editorWidget-background, transparent)));
+  border-radius: 5px;
+  padding: 10px;
+  flex: 1;
+  contain: strict;
+}
+
+.ChatSendAreaContent {
+  border: var(--ChatSendAreaBorder);
+}
+
+.ChatSendAreaContentFocused {
+  border-color: var(--ChatSendAreaFocusedBorderColor);
+}
+
+.InputInvalid {
+  border-color: var(--InputValidationErrorBorder, red);
+}
+
+.ChatSendArea .MultilineInputBox {
+  height: var(--ChatTextAreaHeight, var(--ChatInputBoxHeight, 20px));
+  min-height: var(--ChatTextAreaHeight, var(--ChatInputBoxHeight, 20px));
+  padding: var(--ChatTextAreaPaddingTop, 0) var(--ChatTextAreaPaddingRight, 0) var(--ChatTextAreaPaddingBottom, 0) var(--ChatTextAreaPaddingLeft, 0);
+}
+
+.ChatSendAreaBottom {
+  align-items: center;
+  display: flex;
+  contain: strict;
+  gap: 8px;
+  height: 20px;
+  justify-content: space-between;
+}
+
+.ChatSendAreaPrimaryControls {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ChatInputBox {
+  width: 100%;
+  margin: 0;
+  border: none;
+  outline: none;
+  flex: 1;
+  background: var(--InputBoxBackground, var(--vscode-input-background, var(--vscode-editorWidget-background, transparent)));
+  color: var(--InputBoxForeground, var(--vscode-input-foreground, var(--vscode-foreground, inherit)));
+  font-family: inherit;
+  font-size: 13px;
+  height: 24px;
+  line-height: 24px;
+  contain: strict;
+  resize: none;
+  overflow: hidden;
+  white-space: pre;
+  text-overflow: ellipsis;
+}
+
+.ChatInputBox::selection {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.ChatInputBox::-moz-selection {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.ChatSendArea:focus-within {
+  border-color: darkcyan;
+}
+
+.SendButtonDisabled {
+  color: var(--SendButtonDisabledForeground);
+  cursor: default;
+}

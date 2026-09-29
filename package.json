@@ -4,16 +4,35 @@
   "description": "",
   "main": "index.js",
   "type": "module",
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
-    "postinstall": "lerna bootstrap --ci && node scripts/postinstall.js",
-    "test": "lerna run test",
+    "postinstall": "node scripts/postinstall.js",
+    "test": "npm test --workspaces --if-present",
     "dev": "nodemon",
-    "e2e": "lerna run e2e",
-    "electron": "node packages/build/src/parts/RunElectron/RunElectron.js",
-    "type-check": "lerna run type-check",
-    "build:server": " node packages/build/bin/build.js --target=server",
-    "test-static-export": "node packages/build/src/parts/TestStaticExport/TestStaticExport.js",
-    "e2e:ci": "node packages/extension-host-worker-tests/src/_all.js --ci"
+    "diagnose:gpu": "node scripts/diagnose-gpu-process.mjs",
+    "e2e": "npm run e2e --workspaces --if-present",
+    "lint": "eslint \"packages/shared-process/**/*.{ts,js}\" && knip --no-config-hints",
+    "electron": "node packages/build/src/parts/RunElectron/RunElectron.ts",
+    "type-check": "npm run type-check --workspaces --if-present",
+    "build:static": "node packages/build/bin/build.ts --target=static",
+    "build:static:ignore-icon-theme": "node packages/build/bin/build.ts --target=static --ignore-icon-theme",
+    "build:server": "node packages/build/bin/build.ts --target=server",
+    "test:server": "node packages/build/src/parts/TestServer/TestServer.ts",
+    "build:electron:deb": "node packages/build/bin/build.ts --target=electron-deb",
+    "build:electron:deb:x64": "node packages/build/bin/build.ts --target=electron-deb --arch=x64",
+    "build:electron:deb:arm64": "node packages/build/bin/build.ts --target=electron-deb --arch=arm64",
+    "build:electron:deb:armhf": "node packages/build/bin/build.ts --target=electron-deb --arch=armhf",
+    "build:electron:mac:x64": "node packages/build/bin/build.ts --target=electron-builder-mac --arch=x64",
+    "build:electron:mac:arm64": "node packages/build/bin/build.ts --target=electron-builder-mac --arch=arm64",
+    "build:electron:windows:exe": "node packages/build/bin/build.ts --target=electron-builder-windows-exe",
+    "build:electron:windows:exe:x64": "node packages/build/bin/build.ts --target=electron-builder-windows-exe --arch=x64",
+    "build:electron:windows:exe:arm64": "node packages/build/bin/build.ts --target=electron-builder-windows-exe --arch=arm64",
+    "build:electron:app-image": "node packages/build/bin/build.ts --target=electron-builder-app-image",
+    "build:electron:app-image:x64": "node packages/build/bin/build.ts --target=electron-builder-app-image --arch=x64",
+    "test-static-export": "node packages/build/src/parts/TestStaticExport/TestStaticExport.ts",
+    "test:gpu-diagnostics": "node --test scripts/test/diagnose-gpu-process.test.mjs"
   },
   "keywords": [],
   "author": "",
@@ -26,16 +45,17 @@
     "node": ">=24"
   },
   "devDependencies": {
-    "@lerna/legacy-package-management": "^8.2.4",
+    "@lvce-editor/eslint-config": "^18.14.2",
     "@types/jest": "^30.0.0",
     "@types/node": "^25.0.1",
+    "eslint": "^10.11.0",
     "jest": "^30.2.0",
     "jest-environment-jsdom": "^30.2.0",
-    "lerna": "^8.2.4",
-    "nodemon": "^3.1.11",
-    "prettier": "^3.8.1",
-    "ts-jest": "^29.4.6",
-    "typescript": "^5.9.3"
+    "knip": "^6.38.0",
+    "nodemon": "^3.1.14",
+    "prettier": "^3.9.9",
+    "ts-jest": "^29.4.14",
+    "typescript": "^6.0.3"
   },
   "prettier": {
     "semi": false,
@@ -57,9 +77,18 @@
       "**/extensions/**",
       "**/renderer-worker/**",
       "**/renderer-process/**",
-      "**/extension-host-worker/**",
       "**/.tmp/**"
     ],
     "exec": "node packages/server/bin/server.js"
+  },
+  "allowScripts": {
+    "nx@20.8.4": true,
+    "nx@21.6.11": true,
+    "@parcel/watcher@2.6.0": true,
+    "unrs-resolver@1.12.2": true,
+    "fsevents@2.3.3": true
+  },
+  "overrides": {
+    "yauzl": "^3.4.0"
   }
 }

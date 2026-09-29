@@ -75,11 +75,6 @@ export const toElectronMenuItem = (entry) => {
         label: entry.label,
         role: ElectronMenuItemRole.SelectAll,
       }
-    case UiStrings.ToggleDeveloperTools:
-      return {
-        label: entry.label,
-        role: ElectronMenuItemRole.ToggleDevTools,
-      }
     default:
       break
   }

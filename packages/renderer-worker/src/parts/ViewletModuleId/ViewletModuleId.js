@@ -10,7 +10,11 @@ export const ColorPicker = 'ColorPicker'
 
 export const Counter = 'Counter'
 
+export const Chat = 'Chat'
+
 export const DebugConsole = 'Debug Console'
+
+export const Terminal2 = 'Terminal2'
 
 export const DefineKeyBinding = 'DefineKeyBinding'
 
@@ -18,7 +22,7 @@ export const IframeInspector = 'IframeInspector'
 
 export const Dialog = 'Dialog'
 
-export const DiffEditor = 'DiffEditor'
+export const DiffEditor = 'DiffView'
 
 export const InlineDiffEditor = 'InlineDiffEditor'
 
@@ -35,6 +39,10 @@ export const EmptyEditor = 'EmptyEditor'
 export const Explorer = 'Explorer'
 
 export const ExtensionDetail = 'ExtensionDetail'
+
+export const ExtensionView = 'ExtensionView'
+
+export const ChatDebug = 'ChatDebug'
 
 export const Extensions = 'Extensions'
 
@@ -62,7 +70,13 @@ export const Output = 'Output'
 
 export const Panel = 'Panel'
 
+export const Ports = 'Ports'
+
 export const Problems = 'Problems'
+
+export const ProcessExplorer = 'ProcessExplorer'
+
+export const FileWatcherExplorer = 'FileWatcherExplorer'
 
 export const QuickPick = 'QuickPick'
 
@@ -76,15 +90,19 @@ export const Search = 'Search'
 
 export const SideBar = 'SideBar'
 
+export const SecondarySideBar = 'SecondarySideBar'
+
+export const SecondaryPreview = 'SecondaryPreview'
+
 export const SimpleBrowser = 'SimpleBrowser'
+
+export const SimpleBrowserHistory = 'SimpleBrowserHistory'
 
 export const SourceControl = 'Source Control'
 
 export const StatusBar = 'StatusBar'
 
 export const Storage = 'Storage'
-
-export const Terminal = 'Terminal'
 
 export const Terminals = 'Terminals'
 
@@ -100,9 +118,9 @@ export const TitleBarMenuBar = 'TitleBarMenuBar'
 
 export const TodoList = 'TodoList'
 
-export const Video = 'Video'
-
 export const About = 'About'
+
+export const NotificationCenter = 'NotificationCenter'
 
 export const EditorSourceActions = 'EditorSourceActions'
 
@@ -110,7 +128,15 @@ export const MarkDownPreview = 'MarkDownPreview'
 
 export const LanguageModels = 'LanguageModels'
 
+export const RunningExtensions = 'RunningExtensions'
+
+export const Workers = 'Workers'
+
+export const Secrets = 'Secrets'
+
 export const Confirm = 'Confirm'
+
+export const CookieImport = 'CookieImport'
 
 export const E2eTests = 'E2eTests'
 
@@ -123,3 +149,5 @@ export const EditorTextError = 'EditorTextError'
 export const Settings = 'Settings'
 
 export const Preview = 'Preview'
+
+export const ComponentState = 'ComponentState'

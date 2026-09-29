@@ -1,12 +1,30 @@
 import * as Assert from '../Assert/Assert.ts'
 import * as Command from '../Command/Command.js'
 import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
+import * as GetPathDirName from '../GetPathDirName/GetPathDirName.js'
 import * as LocalStorage from '../LocalStorage/LocalStorage.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import { VError } from '../VError/VError.js'
-import * as Workspace from '../Workspace/Workspace.js'
 import * as FileSystem from './FileSystem.js'
+
+const isEnoentError = (error) => {
+  if (!error) {
+    return false
+  }
+  if (error.code === ErrorCodes.ENOENT) {
+    return true
+  }
+  if (!error.message) {
+    return false
+  }
+  return (
+    error.message.includes('File not found:') ||
+    error.message.includes('ENOENT') ||
+    error.message.includes('The system cannot find the file specified.') ||
+    error.message.includes('The system cannot find the path specified.')
+  )
+}
 
 const readFileWeb = async (path, defaultContent) => {
   const content = await LocalStorage.getText(path)
@@ -24,10 +42,9 @@ const readFileNode = async (path, defaultContent) => {
     const userSettingsContent = await FileSystem.readFile(path)
     return userSettingsContent
   } catch (error) {
-    // @ts-ignore
-    if (error && error.code === ErrorCodes.ENOENT) {
+    if (isEnoentError(error)) {
       try {
-        const dirname = Workspace.pathDirName(path)
+        const dirname = GetPathDirName.getPathDirName(path)
         await FileSystem.mkdir(dirname)
         await FileSystem.writeFile(path, defaultContent)
         return defaultContent
@@ -45,10 +62,9 @@ const readJsonNode = async (path, defaultContent) => {
     const userSettingsContent = await FileSystem.readJson(path)
     return userSettingsContent
   } catch (error) {
-    // @ts-ignore
-    if (error && error.code === ErrorCodes.ENOENT) {
+    if (isEnoentError(error)) {
       try {
-        const dirname = Workspace.pathDirName(path)
+        const dirname = GetPathDirName.getPathDirName(path)
         await FileSystem.mkdir(dirname)
         await FileSystem.writeFile(path, defaultContent)
         return defaultContent
@@ -93,10 +109,9 @@ const writeFileNode = async (path, content) => {
   } catch (error) {
     // TODO error should just have enoent code that could be checked
 
-    // @ts-ignore
-    if (error && error.code === ErrorCodes.ENOENT) {
+    if (isEnoentError(error)) {
       try {
-        const dirname = Workspace.pathDirName(path)
+        const dirname = GetPathDirName.getPathDirName(path)
         await FileSystem.mkdir(dirname)
         await FileSystem.writeFile(path, content)
         return

@@ -15,3 +15,8 @@ test('valid query parameters', () => {
   const url = '/?type=shared-process'
   expect(GetTypeFromUrl.getTypeFromUrl(url)).toBe('shared-process')
 })
+
+test('valid path with authentication query parameter', () => {
+  const url = '/websocket/file-system-process?token=secret'
+  expect(GetTypeFromUrl.getTypeFromUrl(url)).toBe('file-system-process')
+})

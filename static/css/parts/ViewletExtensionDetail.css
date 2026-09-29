@@ -14,6 +14,48 @@
   gap: 20px;
 }
 
+.ExtensionDetailError {
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+}
+
+.ExtensionDetailErrorCard {
+  background: var(--SideBarBackground, color-mix(in srgb, var(--WorkbenchForeground) 5%, var(--MainBackground)));
+  border: 1px solid var(--PanelBorderTopColor, color-mix(in srgb, var(--WorkbenchForeground) 22%, transparent));
+  border-radius: 8px;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.18);
+  contain: content;
+  display: grid;
+  gap: 8px 16px;
+  grid-template-columns: 40px minmax(0, 1fr);
+  max-width: 560px;
+  padding: 28px;
+  width: 100%;
+}
+
+.ExtensionDetailErrorIcon {
+  --MaskIconSize: 32px;
+  color: var(--InputValidationWarningBorder, #cca700);
+  grid-row: 1 / span 2;
+  height: 40px;
+  width: 40px;
+}
+
+.ExtensionDetailErrorTitle {
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.3;
+  margin: 0;
+}
+
+.ExtensionDetailErrorMessage {
+  color: var(--DescriptionForeground, color-mix(in srgb, var(--WorkbenchForeground) 76%, transparent));
+  line-height: 1.5;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
 .ExtensionDetail::-webkit-scrollbar {
   width: 14px;
 }
@@ -49,12 +91,53 @@
 
 /* TODO use separate classname and avoid nesting */
 .ExtensionDetail .Markdown {
+  flex: 1;
+  min-width: 0;
   overflow: auto;
 }
 
 .RuntimeStatusDefinitionList {
+  align-items: baseline;
+  column-gap: 12px;
   contain: content;
-  display: flex;
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  margin: 0;
+  max-width: 640px;
+  row-gap: 12px;
+}
+
+.RuntimeStatusDefinitionList > dt {
+  color: var(--DescriptionForeground, color-mix(in srgb, var(--WorkbenchForeground) 76%, transparent));
+  font-weight: 600;
+}
+
+.RuntimeStatusDefinitionList > dd {
+  margin: 0;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.SecurityDefinitionList {
+  align-items: baseline;
+  column-gap: 24px;
+  contain: content;
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  margin: 0;
+  max-width: 640px;
+  row-gap: 12px;
+}
+
+.SecurityDefinitionList > dt {
+  color: var(--DescriptionForeground, color-mix(in srgb, var(--WorkbenchForeground) 76%, transparent));
+  font-weight: 600;
+}
+
+.SecurityDefinitionList > dd {
+  margin: 0;
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .Resource {
@@ -74,4 +157,11 @@
   height: 20px;
   contain: strict;
   color: inherit;
+  display: flex;
+}
+
+/* TODO change this maybe */
+.ExtensionDetail .Sash {
+  border-left: 1px solid var(--SashBorder, gray);
+  position: relative;
 }

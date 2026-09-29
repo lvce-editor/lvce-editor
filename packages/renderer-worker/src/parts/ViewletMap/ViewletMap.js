@@ -1,16 +1,30 @@
 import * as Path from '../Path/Path.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+import * as GetExtensionViews from '../GetExtensionViews/GetExtensionViews.ts'
 import * as GetWebViews from '../GetWebViews/GetWebViews.ts'
 
 // TODO move this all to extensions
 
 const mapExtToEditorType = {
   '.mp3': ViewletModuleId.Audio,
-  '.mp4': ViewletModuleId.Video,
-  '.mkv': ViewletModuleId.Video,
-  '.webm': ViewletModuleId.Video,
   '.ogg': ViewletModuleId.Audio,
   '.opus': ViewletModuleId.Audio,
+  '.weba': ViewletModuleId.Audio,
+}
+
+const getModuleIdForOpener = async (opener) => {
+  if (!opener) {
+    return undefined
+  }
+  const extensionViews = await GetExtensionViews.getExtensionViews()
+  if (GetExtensionViews.findExtensionView(extensionViews, opener)) {
+    return ViewletModuleId.ExtensionView
+  }
+  const webViews = await GetWebViews.getWebViews()
+  if (webViews.some((webView) => webView?.id === opener)) {
+    return ViewletModuleId.WebView
+  }
+  return undefined
 }
 
 export const getModuleId = async (uri, opener) => {
@@ -21,14 +35,41 @@ export const getModuleId = async (uri, opener) => {
   if (uri.startsWith('extension-detail://')) {
     return ViewletModuleId.ExtensionDetail
   }
+  if (uri.startsWith('chat-debug://')) {
+    return ViewletModuleId.ChatDebug
+  }
+  if (uri.startsWith('cookie-import-view:///')) {
+    return ViewletModuleId.CookieImport
+  }
   if (uri.startsWith('language-models://')) {
     return ViewletModuleId.LanguageModels
   }
   if (uri.startsWith('settings://')) {
     return ViewletModuleId.Settings
   }
-  if (uri.startsWith('simple-browser://')) {
+  if (uri.startsWith('process-explorer://')) {
+    return ViewletModuleId.ProcessExplorer
+  }
+  if (uri.startsWith('file-watcher-explorer://')) {
+    return ViewletModuleId.FileWatcherExplorer
+  }
+  if (uri.startsWith('running-extensions://')) {
+    return ViewletModuleId.RunningExtensions
+  }
+  if (uri.startsWith('workers:///')) {
+    return ViewletModuleId.Workers
+  }
+  if (uri.startsWith('secrets://')) {
+    return ViewletModuleId.Secrets
+  }
+  if (uri.startsWith('search-editor://')) {
+    return ViewletModuleId.Search
+  }
+  if (uri.startsWith('simple-browser://') || uri.startsWith('html-preview:///')) {
     return ViewletModuleId.SimpleBrowser
+  }
+  if (uri.startsWith('simple-browser-history://')) {
+    return ViewletModuleId.SimpleBrowserHistory
   }
   if (uri.startsWith('storage-overview://')) {
     return ViewletModuleId.Storage
@@ -40,7 +81,7 @@ export const getModuleId = async (uri, opener) => {
     return ViewletModuleId.DiffEditor
   }
   if (uri.startsWith('inline-diff://')) {
-    return ViewletModuleId.InlineDiffEditor
+    return ViewletModuleId.DiffEditor
   }
   if (uri.startsWith('browser-view-overview://')) {
     return ViewletModuleId.BrowserViewOverview
@@ -57,17 +98,22 @@ export const getModuleId = async (uri, opener) => {
   if (uri.startsWith('iframe-inspector://')) {
     return ViewletModuleId.IframeInspector
   }
+  const openerModuleId = await getModuleIdForOpener(opener)
+  if (openerModuleId) {
+    return openerModuleId
+  }
   if (uri.endsWith('.css') || uri.endsWith('.json') || uri.endsWith('.js') || uri.endsWith('.ts')) {
     return ViewletModuleId.EditorText
+  }
+
+  const extensionViews = await GetExtensionViews.getExtensionViews()
+  if (GetExtensionViews.findExtensionView(extensionViews, uri)) {
+    return ViewletModuleId.ExtensionView
   }
 
   // TODO only request webviews once
   const webViews = await GetWebViews.getWebViews()
   for (const webView of webViews) {
-    if (webView && webView.id === opener) {
-      // TODO can return webview directly here?
-      return ViewletModuleId.WebView
-    }
     for (const selector of webView.selector || []) {
       if (uri.endsWith(selector)) {
         // TODO configure webviews so that some open by default (video, image)

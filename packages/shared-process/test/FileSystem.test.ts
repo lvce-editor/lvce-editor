@@ -32,10 +32,10 @@ jest.unstable_mockModule('node:fs/promises', () => {
     rename: jest.fn(() => {
       throw new Error('not implemented')
     }),
-    writeFile: jest.fn(() => {
+    rm: jest.fn(() => {
       throw new Error('not implemented')
     }),
-    rm: jest.fn(() => {
+    writeFile: jest.fn(() => {
       throw new Error('not implemented')
     }),
   }
@@ -53,7 +53,7 @@ const Trash = await import('../src/parts/Trash/Trash.js')
 const fs = await import('node:fs/promises')
 
 class NodeError extends Error {
-  constructor(code, message = code) {
+  constructor(code: any, message: any = code) {
     super(message)
     this.code = code
   }
@@ -71,7 +71,7 @@ test('copy - file', async () => {
 
 test('copy - error - source does not exist', async () => {
   // @ts-ignore
-  fs.cp.mockImplementation((source) => {
+  fs.cp.mockImplementation((source: any) => {
     throw new Error(`ENOENT: no such file or directory, lstat '${source}'`)
   })
   await expect(FileSystem.copy('/test-1/a.txt', '/test-2/a.txt')).rejects.toThrow(
@@ -81,7 +81,7 @@ test('copy - error - source does not exist', async () => {
 
 test('copy - to self', async () => {
   // @ts-ignore
-  fs.cp.mockImplementation((source) => {
+  fs.cp.mockImplementation((source: any) => {
     throw new Error(`Invalid src or dest: cp returned EINVAL (src and dest cannot be the same)`)
   })
   await expect(FileSystem.copy('/test/a.txt', '/test/a.txt')).rejects.toThrow(
@@ -99,7 +99,7 @@ test('createFile', async () => {
 
 test('createFile - should throw error if file already exists', async () => {
   // @ts-ignore
-  fs.writeFile.mockImplementation((path) => {
+  fs.writeFile.mockImplementation((path: any) => {
     throw new Error(`EEXIST: file already exists, open '${path}'`)
   })
   expect(FileSystem.createFile('/test/a.txt')).rejects.toThrow(`Failed to create file "/test/a.txt": EEXIST: file already exists, open '/test/a.txt'`)
@@ -115,7 +115,7 @@ test('create folder', async () => {
 
 test('create folder - should fail if folder already exists', async () => {
   // @ts-ignore
-  fs.mkdir.mockImplementation((path) => {
+  fs.mkdir.mockImplementation((path: any) => {
     throw new Error(`EEXIST: file already exists, mkdir '${path}'`)
   })
   expect(FileSystem.createFolder('/test/a')).rejects.toThrow(`Failed to create folder "/test/a": EEXIST: file already exists, mkdir '/test/a'`)
@@ -137,6 +137,14 @@ test('writeFile - nonexistent file', async () => {
     throw new NodeError(ErrorCodes.ENOENT)
   })
   await expect(FileSystem.writeFile('/test/non-existing-file.txt', 'Hello World')).rejects.toThrow(`File not found: '/test/non-existing-file.txt'`)
+})
+
+test('readFile - windows file not found message', async () => {
+  // @ts-ignore
+  fs.readFile.mockImplementation(() => {
+    throw new Error('The system cannot find the file specified.')
+  })
+  await expect(FileSystem.readFile('/test/non-existing-file.txt')).rejects.toThrow(`File not found: '/test/non-existing-file.txt'`)
 })
 
 test.skip('writeFile - parallel write on different files works', async () => {
@@ -271,8 +279,8 @@ test('rename - error - new path in non-existing nested directory', async () => {
   )
 })
 
-const waitForWatcherReady = async (watcher) => {
-  await new Promise((resolve) => {
+const waitForWatcherReady = async (watcher: any): Promise<any> => {
+  await new Promise((resolve: any) => {
     watcher.once('ready', async () => {
       // try to fix tests on macos through timeout :/
       await setTimeout(100)
@@ -286,18 +294,18 @@ const waitForWatcherReady = async (watcher) => {
 test.skip('watch - add', async () => {
   const tmpDir = await getTmpDir()
   const watcher = FileSystem.watch(tmpDir)
-  const events = []
+  const events: any[] = []
   let _resolve
   let i = 0
   await waitForWatcherReady(watcher)
-  watcher.on('all', (...args) => {
+  watcher.on('all', (...args: any) => {
     events.push([args[0], args[1]])
     i++
     if (i === 2) {
       _resolve()
     }
   })
-  const resolvePromise = new Promise((resolve) => {
+  const resolvePromise = new Promise((resolve: any) => {
     _resolve = resolve
   })
   await fs.promises.writeFile(join(tmpDir, 'abc.txt'), 'sample text')
@@ -315,18 +323,18 @@ test.skip('watch - remove', async () => {
   const tmpDir = await getTmpDir()
   await fs.promises.writeFile(join(tmpDir, 'abc.txt'), 'sample text')
   const watcher = FileSystem.watch(tmpDir)
-  const events = []
+  const events: any[] = []
   let _resolve
   let i = 0
   await waitForWatcherReady(watcher)
-  watcher.on('all', (...args) => {
+  watcher.on('all', (...args: any) => {
     events.push([args[0], args[1]])
     i++
     if (i === 1) {
       _resolve()
     }
   })
-  const resolvePromise = new Promise((resolve) => {
+  const resolvePromise = new Promise((resolve: any) => {
     _resolve = resolve
   })
   await fs.promises.rm(join(tmpDir, 'abc.txt'))
@@ -340,18 +348,18 @@ test.skip('watch - rename', async () => {
   const tmpDir = await getTmpDir()
   await fs.promises.writeFile(join(tmpDir, 'abc.txt'), 'sample text')
   const watcher = FileSystem.watch(tmpDir)
-  const events = []
+  const events: any[] = []
   let _resolve
   let i = 0
   await waitForWatcherReady(watcher)
-  watcher.on('all', (...args) => {
+  watcher.on('all', (...args: any) => {
     events.push([args[0], args[1]])
     i++
     if (i === 2) {
       _resolve()
     }
   })
-  const resolvePromise = new Promise((resolve) => {
+  const resolvePromise = new Promise((resolve: any) => {
     _resolve = resolve
   })
   await fs.promises.rename(join(tmpDir, 'abc.txt'), join(tmpDir, 'def.txt'))
@@ -364,10 +372,6 @@ test.skip('watch - rename', async () => {
   watcher.close()
 })
 
-test('getPathSeparator', () => {
-  expect(FileSystem.getPathSeparator()).toEqual(expect.any(String))
-})
-
 test('getRealPath', async () => {
   // @ts-ignore
   fs.realpath.mockImplementation(() => {
@@ -378,7 +382,7 @@ test('getRealPath', async () => {
 
 test('getRealPath - error - broken symlink - file not found', async () => {
   // @ts-ignore
-  fs.realpath.mockImplementation((source) => {
+  fs.realpath.mockImplementation((source: any) => {
     throw new NodeError(ErrorCodes.ENOENT)
   })
   // @ts-ignore
@@ -390,7 +394,7 @@ test('getRealPath - error - broken symlink - file not found', async () => {
 
 test('getRealPath - error - broken symlink and error with readlink', async () => {
   // @ts-ignore
-  fs.realpath.mockImplementation((source) => {
+  fs.realpath.mockImplementation((source: any) => {
     throw new NodeError(ErrorCodes.ENOENT)
   })
   // @ts-ignore

@@ -2,7 +2,12 @@ import * as JsonRpc from '../JsonRpc/JsonRpc.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as TestWorker from '../TestWorker/TestWorker.js'
 
+let _openFolderSupported = true
+
 export const showDirectoryPicker = async (options) => {
+  if (!_openFolderSupported) {
+    throw new Error('showDirectoryPicker not supported on this browser')
+  }
   try {
     return await RendererProcess.invoke('FilePicker.showDirectoryPicker', options)
   } catch (error) {
@@ -17,8 +22,19 @@ export const showDirectoryPicker = async (options) => {
   }
 }
 
-export const showFilePicker = (options) => {
-  return RendererProcess.invoke('FilePicker.showFilePicker', options)
+export const showFilePicker = async (options) => {
+  try {
+    return await RendererProcess.invoke('FilePicker.showFilePicker', options)
+  } catch (error) {
+    if (
+      error &&
+      // @ts-ignore
+      (error.message === 'window.showOpenFilePicker is not a function' || error.message === 'window.showFilePicker is not a function')
+    ) {
+      throw new Error('showFilePicker not supported on this browser')
+    }
+    throw error
+  }
 }
 
 const doShowSaveFilePicker = async (options) => {
@@ -53,4 +69,8 @@ export const showSaveFilePicker = async (options) => {
 
 export const mockSaveFilePicker = async (mockId) => {
   _mockId = mockId
+}
+
+export const setOpenFolderSupported = (supported) => {
+  _openFolderSupported = supported
 }

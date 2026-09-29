@@ -5,9 +5,9 @@ import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import { VError } from '../VError/VError.js'
 
-const openUrlWeb = async (url) => {
+const openUrlWeb = async (url, useRedirect) => {
   try {
-    await RendererProcess.invoke(/* Open.openUrl */ 'Open.openUrl', /* url */ url)
+    await RendererProcess.invoke(/* Open.openUrl */ 'Open.openUrl', /* url */ url, useRedirect)
   } catch (error) {
     throw new VError(error, `Failed to open url ${url}`)
   }
@@ -17,12 +17,12 @@ const openUrlElectron = async (url) => {
   await ElectronWindow.openNew(url)
 }
 
-export const openUrl = async (url) => {
+export const openUrl = async (url, useRedirect) => {
   switch (Platform.getPlatform()) {
     case PlatformType.Electron:
       return openUrlElectron(url)
     default:
-      return openUrlWeb(url)
+      return openUrlWeb(url, useRedirect)
   }
 }
 

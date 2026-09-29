@@ -7,3 +7,7 @@ export const show = (x, y, id, ...args) => {
 export const show2 = (uid, menuId, x, y, ...args) => {
   return ElectronContextMenu.openContextMenu2(x, y, uid, menuId, ...args)
 }
+
+export const show2Below = (uid, menuId, x, y, ...args) => {
+  return ElectronContextMenu.openContextMenu2(x, y, uid, menuId, ...args)
+}

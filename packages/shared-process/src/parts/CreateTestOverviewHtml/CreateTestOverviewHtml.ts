@@ -1,0 +1,42 @@
+const testFileExtensionRegex = /\.(js|ts)$/
+
+const isTestFile = (dirent: any): any => {
+  if (dirent.startsWith('_')) {
+    return false
+  }
+  return dirent.endsWith('.js') || dirent.endsWith('.ts')
+}
+
+const toTestName = (dirent: any): any => {
+  return dirent.replace(testFileExtensionRegex, '')
+}
+
+export const createTestOverviewHtml = (dirents: any): any => {
+  const pre = `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tests</title>
+  </head>
+  <body>
+    <h1>Tests</h1>
+    <p>Available Tests</p>
+    <ul>
+`
+  let middle = ``
+  // TODO properly escape name
+  for (const dirent of dirents) {
+    if (isTestFile(dirent)) {
+      const name = toTestName(dirent)
+      middle += `      <li><a href="./${name}.html">${name}</a></li>
+`
+    }
+  }
+
+  const post = `    </ul>
+  </body>
+</html>
+`
+  return pre + middle + post
+}

@@ -3,10 +3,11 @@ import * as GetKeyBindingsString from '../GetKeyBindingsString/GetKeyBindingsStr
 import * as KeyBindingsStrings from '../KeyBindingStrings/KeyBindingStrings.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 
-export const create = (id, uri, x, y, width, height) => {
+export const create = (id, uri, x, y, width, height, args = []) => {
   return {
     id,
     uri,
+    parentUid: args[0],
     value: '',
     focused: false,
     message: '',
@@ -21,23 +22,23 @@ export const loadContent = (state) => {
   }
 }
 
-const dispose = (state, value) => {
+const dispose = async (state, value) => {
   const { uid } = state
-  Viewlet.disposeWidgetWithValue(uid, value)
+  await Viewlet.disposeWidgetWithValue(uid, value)
   return state
 }
 
-export const handleBlur = (state) => {
+export const handleBlur = async (state) => {
   return dispose(state, '')
 }
 
-export const handleKeyDown = (state, key, altKey, ctrlKey, shiftKey, metaKey) => {
+export const handleKeyDown = async (state, key, altKey, ctrlKey, shiftKey, metaKey) => {
   // TODO handle with keybindings?
   if (key === BrowserKey.Control || key === BrowserKey.Shift || key === BrowserKey.Alt) {
     return state
   }
   if (key === BrowserKey.Enter) {
-    return dispose(state, key)
+    return dispose(state, state.value)
   }
   if (key === BrowserKey.Escape) {
     return dispose(state, '')

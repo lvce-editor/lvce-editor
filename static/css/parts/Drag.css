@@ -4,6 +4,9 @@
   background: var(--SideBarBackground); /* TODO */
   position: absolute;
   padding: 0 4px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   translate: -999px -999px;
   willchange: translate;
   contain: strict;

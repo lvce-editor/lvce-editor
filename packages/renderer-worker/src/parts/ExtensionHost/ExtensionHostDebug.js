@@ -75,11 +75,11 @@ export const setPauseOnExceptions = (debugId, value) => {
   })
 }
 
-export const start = (debugId) => {
+export const start = (debugId, webSocketDebuggerUrl) => {
   return ExtensionHostShared.executeProvider({
     event: `onDebug:${debugId}`,
     method: 'ExtensionHostDebug.start',
-    params: [debugId],
+    params: webSocketDebuggerUrl === undefined ? [debugId] : [debugId, webSocketDebuggerUrl],
     noProviderFoundMessage: 'no debug provider found',
   })
 }

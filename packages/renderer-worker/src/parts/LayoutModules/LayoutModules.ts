@@ -45,6 +45,17 @@ export const SideBar: LayoutModule = {
   kReady: 'sideBarVisible',
 }
 
+export const SecondarySideBar: LayoutModule = {
+  moduleId: ViewletModuleId.SecondarySideBar,
+  kVisible: LayoutKeys.SecondarySideBarVisible,
+  kTop: LayoutKeys.SecondarySideBarTop,
+  kLeft: LayoutKeys.SecondarySideBarLeft,
+  kWidth: LayoutKeys.SecondarySideBarWidth,
+  kHeight: LayoutKeys.SecondarySideBarHeight,
+  kId: 'secondarySideBarId',
+  kReady: 'secondarySideBarVisible',
+}
+
 export const TitleBar: LayoutModule = {
   moduleId: ViewletModuleId.TitleBar,
   kVisible: LayoutKeys.TitleBarVisible,
@@ -87,4 +98,15 @@ export const Preview: LayoutModule = {
   kHeight: LayoutKeys.PreviewHeight,
   kId: 'previewId',
   kReady: 'previewVisible',
+}
+
+export const SecondaryPreview: LayoutModule = {
+  moduleId: ViewletModuleId.SecondaryPreview,
+  kVisible: LayoutKeys.SecondaryPreviewVisible,
+  kTop: LayoutKeys.SecondaryPreviewTop,
+  kLeft: LayoutKeys.SecondaryPreviewLeft,
+  kWidth: LayoutKeys.SecondaryPreviewWidth,
+  kHeight: LayoutKeys.SecondaryPreviewHeight,
+  kId: 'secondaryPreviewId',
+  kReady: 'secondaryPreviewVisible',
 }

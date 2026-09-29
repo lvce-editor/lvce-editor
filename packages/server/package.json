@@ -5,7 +5,9 @@
   "main": "index.js",
   "bin": "bin/server.js",
   "type": "module",
-  "scripts": {},
+  "scripts": {
+    "test": "node --test \"test/**/*.test.js\""
+  },
   "keywords": [
     "Lvce Editor",
     "Server"
@@ -20,5 +22,7 @@
   "engines": {
     "node": ">=24"
   },
-  "dependencies": {}
+  "dependencies": {
+    "@lvce-editor/jsonc-parser": "^1.5.2"
+  }
 }

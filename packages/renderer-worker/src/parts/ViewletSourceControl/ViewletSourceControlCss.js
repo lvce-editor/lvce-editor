@@ -6,6 +6,8 @@ export const Css = [
   '/css/parts/InputBox.css',
   '/css/parts/Label.css',
   '/css/parts/MaskIcon.css',
+  '/css/parts/Progress.css',
+  '/css/parts/SourceControlListItem.css',
   '/css/parts/SplitButton.css',
   '/css/parts/TreeItem.css',
   '/css/parts/ViewletSourceControl.css',

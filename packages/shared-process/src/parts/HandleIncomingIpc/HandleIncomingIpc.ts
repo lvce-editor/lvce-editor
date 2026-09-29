@@ -1,0 +1,57 @@
+import * as ApplyIncomingIpcResponse from '../ApplyIncomingIpcResponse/ApplyIncomingIpcResponse.ts'
+import * as Assert from '../Assert/Assert.ts'
+import * as FileWatcherExplorer from '../FileWatcherExplorer/FileWatcherExplorer.ts'
+import * as HandleIncomingIpcMessagePort from '../HandleIncomingIpcMessagePort/HandleIncomingIpcMessagePort.ts'
+import * as HandleIncomingIpcWebSocket from '../HandleIncomingIpcWebSocket/HandleIncomingIpcWebSocket.ts'
+import * as HandleIpcModule from '../HandleIpcModule/HandleIpcModule.ts'
+import * as IpcId from '../IpcId/IpcId.ts'
+import * as IsMessagePortMain from '../IsMessagePortMain/IsMessagePortMain.ts'
+import * as IsSocket from '../IsSocket/IsSocket.ts'
+import * as ProcessExplorer from '../ProcessExplorer/ProcessExplorer.ts'
+
+const strinfyHandle = (handle: any): any => {
+  if (!handle) {
+    return `${handle}`
+  }
+  console.log({ handle })
+  if (handle.constructor && handle.constructor.name) {
+    return `${handle.constructor.name}`
+  }
+  return `${handle}`
+}
+
+const getIpcAndResponse = (module: any, handle: any, message: any): any => {
+  if (IsMessagePortMain.isMessagePortMain(handle)) {
+    return HandleIncomingIpcMessagePort.handleIncomingIpcMessagePort(module, handle, message)
+  }
+  if (IsSocket.isSocket(handle)) {
+    return HandleIncomingIpcWebSocket.handleIncomingIpcWebSocket(module, handle, message)
+  }
+  if (handle?.constructor === Object && Object.keys(handle).length === 0) {
+    return undefined
+  }
+  throw new Error(`Unexpected ipc handle: ${strinfyHandle(handle)}`)
+}
+
+export const handleIncomingIpc = async (ipcId: any, handle: any, message: any): Promise<any> => {
+  Assert.number(ipcId)
+  const module = HandleIpcModule.getModule(ipcId)
+  const ipcAndResponse = await getIpcAndResponse(module, handle, message)
+  if (!ipcAndResponse) {
+    return
+  }
+  const { complete, release, response, target } = ipcAndResponse
+  const error = await ApplyIncomingIpcResponse.applyIncomingIpcResponse(target, response, ipcId)
+  complete?.()
+  if (!error) {
+    return
+  }
+  release?.()
+  if (ipcId === IpcId.ProcessExplorer) {
+    ProcessExplorer.decreaseRefCount()
+  }
+  if (ipcId === IpcId.FileWatcherExplorer) {
+    FileWatcherExplorer.decreaseRefCount()
+  }
+  console.error(error)
+}

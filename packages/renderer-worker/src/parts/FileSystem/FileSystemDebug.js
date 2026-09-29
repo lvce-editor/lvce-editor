@@ -1,5 +1,4 @@
 import * as DebugWorker from '../DebugWorker/DebugWorker.js'
-import * as PathSeparatorType from '../PathSeparatorType/PathSeparatorType.js'
 
 export const name = 'Debug'
 
@@ -15,8 +14,8 @@ export const mkdir = (uri) => {
   throw new Error('not implemented')
 }
 
-export const getPathSeparator = () => {
-  return PathSeparatorType.Slash
+export const isReadonly = () => {
+  return true
 }
 
 export const remove = (uri) => {

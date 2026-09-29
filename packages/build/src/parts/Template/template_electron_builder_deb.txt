@@ -1,5 +1,7 @@
 {
   "name": "@@NAME@@",
+  "productName": "@@PRODUCT_NAME@@",
+  "desktopName": "@@NAME@@.desktop",
   "main": "@@MAIN@@",
   "author": "@@AUTHOR@@",
   "description": "abc",
@@ -8,17 +10,13 @@
   "homepage": "@@HOMEPAGE@@",
   "build": {
     "publish": [],
-    "asar": false,
-    "includeSubNodeModules": true,
+    "asar": @@ASAR@@,
     "electronVersion": "@@ELECTRON_VERSION@@",
+    "icon": "./build/icons/",
     "linux": {
+      "executableName": "@@NAME@@",
       "category": "Utility;TextEditor;Development;IDE;",
-      "desktop": {
-        "GenericName": "Text Editor",
-        "StartupNotify": "false",
-        "StartupWMClass": "@@NAME@@",
-        "Keywords": "@@NAME@@;"
-      },
+      "mimeTypes": ["inode/directory"],
       "synopsis": "A very short description, like a slogan",
       "description": "A description of the application on what it does.",
       "target": [

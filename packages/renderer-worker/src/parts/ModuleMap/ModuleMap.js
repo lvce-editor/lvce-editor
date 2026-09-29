@@ -14,11 +14,16 @@ const getPrefix = (commandId) => {
 }
 
 export const getModuleId = (commandId) => {
+  if (commandId === 'SimpleBrowser.executeWorkflow' || commandId === 'SimpleBrowser.openHistory') {
+    return ModuleId.SimpleBrowserWorkflow
+  }
   const prefix = getPrefix(commandId)
   if (!prefix) {
     throw new CommandNotFoundError(commandId)
   }
   switch (prefix) {
+    case 'TerminalTransfer':
+      return ModuleId.TerminalTransfer
     case 'About':
       return ModuleId.About
     case 'Exec':
@@ -55,6 +60,10 @@ export const getModuleId = (commandId) => {
       return ModuleId.ContentTracing
     case 'ContextMenu':
       return ModuleId.ContextMenu
+    case 'ComponentState':
+      return ModuleId.ComponentState
+    case 'Application':
+      return ModuleId.Application
     case 'DebugSharedProcess':
       return ModuleId.DebugSharedProcess
     case 'Developer':
@@ -81,14 +90,20 @@ export const getModuleId = (commandId) => {
       return ModuleId.Exit
     case 'ExtensionHost':
       return ModuleId.ExtensionHostCode
+    case 'ExtensionHotReload':
+      return ModuleId.ExtensionHotReload
     case 'ExtensionMeta':
       return ModuleId.ExtensionMeta
+    case 'ExtensionNodeRpc':
+      return ModuleId.ExtensionNodeRpc
     case 'Extensions':
       return ModuleId.Extensions
     case 'FilePicker':
       return ModuleId.FilePicker
     case 'FileSystem':
       return ModuleId.FileSystem
+    case 'FileSystemMemory':
+      return ModuleId.FileSystemMemory
     case 'Format':
       return ModuleId.Format
     case 'Focus':
@@ -105,6 +120,10 @@ export const getModuleId = (commandId) => {
       return ModuleId.KeyBindings
     case 'KeyBindingsInitial':
       return ModuleId.KeyBindingsInitial
+    case 'Layout':
+      return ModuleId.Layout
+    case 'LaunchIsolatedExtensionHostWorker':
+      return ModuleId.LaunchIsolatedExtensionHostWorker
     case 3444:
       return ModuleId.Listener
     case 'LocalStorage':
@@ -121,12 +140,15 @@ export const getModuleId = (commandId) => {
       return ModuleId.Notification
     case 'Open':
       return ModuleId.Open
+    case 'OAuthServer':
+      return ModuleId.OAuthServer
     case 'OpenNativeFolder':
       return ModuleId.OpenNativeFolder
     case 'PersistentFileHandle':
       return ModuleId.PersistentFileHandle
     case 'Preferences':
       return ModuleId.Preferences
+    case 'Platform':
     case 'PlatformPaths':
       return ModuleId.PlatformPaths
     case 'Prompt':
@@ -137,6 +159,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.RebuildNodePty
     case 'RecentlyOpened':
       return ModuleId.RecentlyOpened
+    case 'RevealInExplorer':
+      return ModuleId.RevealInExplorer
     case 'Reload':
       return ModuleId.Reload
     case 'SaveFileAs':
@@ -162,6 +186,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.Workbench
     case 'Workspace':
       return ModuleId.Workspace
+    case 'WebSocketCapability':
+      return ModuleId.WebSocketCapability
     case 'WindowTitle':
       return ModuleId.WindowTitle
     case 'PointerCapture':
@@ -184,12 +210,16 @@ export const getModuleId = (commandId) => {
       return ModuleId.ExtensionHostWorkerContentSecurityPolicy
     case 'SendMessagePortToElectron':
       return ModuleId.SendMessagePortToElectron
+    case 'SendMessagePortToMainProcess':
+      return ModuleId.SendMessagePortToMainProcess
     case 'ExtensionHostBraceCompletion':
       return ModuleId.ExtensionHostBraceCompletion
     case 'OffscreenCanvas':
       return ModuleId.OffscreenCanvas
     case 'Languages':
       return ModuleId.Languages
+    case 'License':
+      return ModuleId.License
     case 'FileWatcher':
       return ModuleId.FileWatcher
     case 'ExtensionHostTypeDefinition':
@@ -210,8 +240,6 @@ export const getModuleId = (commandId) => {
       return ModuleId.SendMessagePortToExtensionHostWorker
     case 'SendMessagePortToSyntaxHighlightingWorker':
       return ModuleId.SendMessagePortToSyntaxHighlightingWorker
-    case 'ExtensionHostManagement':
-      return ModuleId.ExtensionHostManagement
     case 'Transferrable':
       return ModuleId.Transferrable
     case 'WebView':
@@ -230,8 +258,12 @@ export const getModuleId = (commandId) => {
       return ModuleId.ElectronDialog
     case 'Process':
       return ModuleId.Process
+    case 'ExtensionHostManagement':
+    case 'ExtensionHostSourceControl':
     case 'ExtensionManagement':
       return ModuleId.ExtensionManagement
+    case 'ExtensionHostTextDocument':
+      return ModuleId.ExtensionHostCode
     case 'Markdown':
       return ModuleId.Markdown
     case 'MeasureTextHeight':

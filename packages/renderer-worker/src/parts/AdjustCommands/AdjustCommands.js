@@ -1,3 +1,11 @@
+import * as ViewletStates from '../ViewletStates/ViewletStates.js'
+
+const focusContextCommands = new Set([
+  'Viewlet.setAdditionalFocus',
+  'Viewlet.setFocusContext',
+  'Viewlet.unsetAdditionalFocus',
+])
+
 export const apply = (oldState, newState) => {
   const commands = newState.commands
   newState.commands = []
@@ -5,9 +13,16 @@ export const apply = (oldState, newState) => {
     return []
   }
   const adjustedCommands = commands.map((command) => {
+    if (command[0] === 'Viewlet.dispose') {
+      ViewletStates.remove(command[1])
+    }
+    if (command.length === 2 && focusContextCommands.has(command[0])) {
+      return [command[0], newState.uid, command[1]]
+    }
     if (command[1] === newState.uid || typeof command[1] === 'number') {
       return command
     }
+
     if (command[0] === 'Viewlet.setDom2') {
       return ['Viewlet.setDom2', newState.uid, ...command.slice(1)]
     }

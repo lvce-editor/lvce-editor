@@ -1,5 +1,7 @@
 {
   "name": "@@SNAP_NAME@@",
+  "productName": "@@PRODUCT_NAME@@",
+  "desktopName": "@@NAME@@.desktop",
   "main": "@@MAIN@@",
   "author": "@@AUTHOR@@",
   "description": "abc",
@@ -8,17 +10,13 @@
   "homepage": "@@HOMEPAGE@@",
   "build": {
     "publish": "never",
-    "asar": false,
-    "includeSubNodeModules": true,
+    "asar": @@ASAR@@,
     "electronVersion": "@@ELECTRON_VERSION@@",
+    "icon": "./build/icons/",
     "linux": {
+      "executableName": "@@NAME@@",
       "category": "Utility;TextEditor;Development;IDE;",
-       "desktop": {
-        "GenericName": "Text Editor",
-        "StartupNotify": "false",
-        "StartupWMClass": "@@NAME@@",
-        "Keywords": "@@SNAP_NAME@@;"
-      },
+      "mimeTypes": ["inode/directory"],
       "target": [
         {
           "target": "snap"

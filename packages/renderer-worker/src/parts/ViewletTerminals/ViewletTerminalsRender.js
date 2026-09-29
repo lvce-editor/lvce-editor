@@ -1,19 +1,66 @@
-import * as GetTerminalTabsDom from '../GetTerminalTabsDom/GetTerminalTabsDom.js'
+import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.js'
+import * as GetTerminalsDom from '../GetTerminalsDom/GetTerminalsDom.js'
 
 export const hasFunctionalRender = true
 
-const renderTabs = {
+export const hasFunctionalRootRender = true
+
+export const renderEventListeners = () => {
+  return [
+    { name: 'handleTabPointerDown', params: ['handleTabPointerDown', 'event.currentTarget.dataset.terminalUid'] },
+    { name: 'handleDragStart', params: ['handleDragStart'], dragEffect: 'move' },
+    { name: 'handleDragEnd', params: ['handleDragEnd'] },
+    { name: 'handleDragOver', params: ['handleDragOver'], preventDefault: true },
+    { name: 'handleDrop', params: ['handleDrop', 'event.dropId'], preventDefault: true },
+    {
+      name: DomEventListenerFunctions.HandleClickTab,
+      params: ['handleClickTab', 'event.currentTarget.dataset.index', 'event.currentTarget.dataset.terminalUid'],
+    },
+    {
+      name: DomEventListenerFunctions.HandleClickTerminalTabAction,
+      params: [
+        'handleClickTerminalTabAction',
+        'event.currentTarget.dataset.index',
+        'event.currentTarget.dataset.command',
+        'event.currentTarget.dataset.terminalUid',
+      ],
+      stopPropagation: true,
+    },
+    {
+      name: DomEventListenerFunctions.HandleClickAction,
+      params: ['handleClickAction', 'event.target.dataset.command'],
+      stopPropagation: true,
+    },
+  ]
+}
+
+const renderDom = {
   isEqual(oldState, newState) {
-    return oldState.tabs === newState.tabs && oldState.selectedIndex === newState.selectedIndex
+    return (
+      oldState.tabs === newState.tabs &&
+      oldState.childUids === newState.childUids &&
+      oldState.activeTerminalUids === newState.activeTerminalUids &&
+      oldState.selectedIndex === newState.selectedIndex &&
+      oldState.terminalTabsEnabled === newState.terminalTabsEnabled
+    )
   },
   apply(oldState, newState) {
-    const { y, width, height, tabsWidth, tabs, selectedIndex, terminalTabsEnabled } = newState
-    if (!terminalTabsEnabled) {
-      return []
-    }
-    const dom = GetTerminalTabsDom.getTerminalTabsDom(tabs, width - tabsWidth, y, tabsWidth, height, selectedIndex)
-    return ['setTabsDom', dom]
+    const dom = GetTerminalsDom.getTerminalsDom(newState)
+    return ['Viewlet.setDom2', dom]
   },
 }
 
-export const render = [renderTabs]
+export const renderFocus = {
+  isEqual(oldState, newState) {
+    return oldState.focusVersion === newState.focusVersion
+  },
+  apply(oldState, newState) {
+    if (newState.childUid === -1) {
+      return []
+    }
+    return [['Viewlet.focus', newState.childUid]]
+  },
+  multiple: true,
+}
+
+export const render = [renderDom, renderFocus]

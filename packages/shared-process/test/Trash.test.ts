@@ -4,6 +4,12 @@ afterEach(() => {
   jest.resetAllMocks()
 })
 
+jest.unstable_mockModule('../src/parts/IsElectron/IsElectron.js', () => {
+  return {
+    isElectron: false,
+  }
+})
+
 jest.unstable_mockModule('trash', () => {
   return {
     default: jest.fn(() => {

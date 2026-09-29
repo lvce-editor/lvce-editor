@@ -98,6 +98,13 @@ export const contentLoaded = async () => {
   return []
 }
 
+export const focus = (state) => {
+  return {
+    ...state,
+    commands: [['Viewlet.focus', state.uid]],
+  }
+}
+
 // TODO maybe store scope chain elements as tree
 // TODO when collapsing, store collapsed elements by parent id in cache
 // TODO when expanding, retrieve items from cache by parent id first

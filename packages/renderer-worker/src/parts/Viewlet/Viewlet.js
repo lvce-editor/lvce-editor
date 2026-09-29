@@ -1,17 +1,54 @@
+import * as QuickPickOpening from '../QuickPickOpening/QuickPickOpening.js'
 import * as Assert from '../Assert/Assert.ts'
+import * as ApplicationRegistry from '../ApplicationRegistry/ApplicationRegistry.ts'
+import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.js'
 import * as ElectronBrowserView from '../ElectronBrowserView/ElectronBrowserView.js'
+import * as FilterFocusCommands from '../FilterFocusCommands/FilterFocusCommands.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as Id from '../Id/Id.js'
 import * as KeyBindingsState from '../KeyBindingsState/KeyBindingsState.js'
+import * as LayoutWidgets from '../LayoutWidgets/LayoutWidgets.ts'
 import * as Logger from '../Logger/Logger.js'
+import * as RebaseState from '../RebaseState/RebaseState.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
+import * as SaveState from '../SaveState/SaveState.js'
 import * as UpdateDynamicFocusContext from '../UpdateDynamicFocusContext/UpdateDynamicFocusContext.js'
 import { VError } from '../VError/VError.js'
+import * as ViewletCommandQueue from '../ViewletCommandQueue/ViewletCommandQueue.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
+import * as ViewletManagerVisitor from '../ViewletManagerVisitor/ViewletManagerVisitor.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as ViewletElectron from './ViewletElectron.js'
+
+const getKeyBindingSetId = (instance, fallback) => {
+  return instance.moduleId || fallback
+}
+
+const getCssDisposeCommands = (instance) => {
+  if (!instance.cssLoaded) {
+    return []
+  }
+  instance.cssLoaded = false
+  return ViewletManagerVisitor.disposeInstance(instance.moduleId, instance.factory)
+}
+
+export const getTitle = (id) => {
+  const instance = ViewletStates.getInstance(id)
+  if (!instance || typeof instance.factory.getTitle !== 'function') {
+    return undefined
+  }
+  return instance.factory.getTitle(instance.state.uid)
+}
+
+export const getDragData = () => {
+  return RendererProcess.invoke('Viewlet.getDragData')
+}
+
+export const focusSelector = (id, selector) => {
+  return RendererProcess.invoke('Viewlet.focusSelector', id, selector)
+}
 
 export const focus = async (id) => {
   const instance = ViewletStates.getInstance(id)
@@ -80,6 +117,47 @@ export const refresh = async (id) => {
   await refreshInstance(instance, id)
 }
 
+export const reload = async (id) => {
+  const instance = ViewletStates.getInstance(id)
+  if (!instance || instance.status === 'reloading' || instance.status === 'disposed' || typeof instance.factory.loadContent !== 'function') {
+    return
+  }
+  instance.status = 'reloading'
+  try {
+    const oldState = instance.state
+    const savedState = instance.factory.saveState ? await instance.factory.saveState(oldState) : undefined
+    if (instance.factory.dispose) {
+      await instance.factory.dispose(oldState)
+    }
+    const newState = await instance.factory.loadContent(oldState, savedState, { preserveFocus: true })
+    Assert.object(newState)
+    if (ViewletStates.getInstance(id) !== instance) {
+      return
+    }
+    const commands = [...ViewletManager.render(instance.factory, instance.renderedState, newState)]
+    if (instance.factory.contentLoaded) {
+      const contentLoadedCommands = await instance.factory.contentLoaded(newState)
+      Assert.array(contentLoadedCommands)
+      commands.push(...contentLoadedCommands)
+    }
+    ViewletStates.setRenderedState(id, newState)
+    const backgroundCommands = FilterFocusCommands.filterFocusCommands(commands)
+    if (backgroundCommands.length > 0) {
+      await RendererProcess.invoke('Viewlet.sendMultiple', backgroundCommands)
+    }
+    instance.loadContentLaterStarted = false
+    instance.loadContentLaterPromise = undefined
+    ViewletManager.runLoadContentLater(id)
+    if (instance.factory.contentLoadedEffects) {
+      await instance.factory.contentLoadedEffects(newState)
+    }
+    instance.status = 'loaded'
+  } catch (error) {
+    instance.status = 'error'
+    throw error
+  }
+}
+
 /**
  * @deprecated
  */
@@ -98,7 +176,7 @@ export const send = (id, method, ...args) => {
 /**
  * @deprecated
  */
-export const dispose = async (id) => {
+export const dispose = async (id, deferDom = false) => {
   if (!id) {
     console.warn('no instance to dispose')
     return
@@ -111,14 +189,28 @@ export const dispose = async (id) => {
   const instanceUid = instance.state.uid
   // TODO status should have enum
   instance.status = 'disposing'
+  let deferredCommands
   try {
     if (!instance.factory) {
       throw new Error(`${id} is missing a factory function`)
     }
-    instance.factory.dispose(instance.state)
-    await RendererProcess.invoke(/* Viewlet.dispose */ 'Viewlet.dispose', /* id */ instanceUid)
+    const widgetDisposeCommands = LayoutWidgets.removeOwnedWidgets(instanceUid)
+    if (instance.factory.saveState) {
+      await SaveState.saveViewletState(id)
+    }
+    if (instance.factory.dispose) {
+      await instance.factory.dispose(instance.state)
+    }
+    const cssDisposeCommands = getCssDisposeCommands(instance)
+    if (deferDom) {
+      deferredCommands = [...widgetDisposeCommands, ['Viewlet.dispose', instanceUid], ...cssDisposeCommands]
+    } else if (widgetDisposeCommands.length > 0 || cssDisposeCommands.length > 0) {
+      await RendererProcess.invoke('Viewlet.sendMultiple', [...widgetDisposeCommands, ['Viewlet.dispose', instanceUid], ...cssDisposeCommands])
+    } else {
+      await RendererProcess.invoke(/* Viewlet.dispose */ 'Viewlet.dispose', /* id */ instanceUid)
+    }
     if (instance.factory.getKeyBindings) {
-      KeyBindingsState.removeKeyBindings(instanceUid)
+      KeyBindingsState.removeKeyBindings(getKeyBindingSetId(instance, instanceUid))
     }
   } catch (error) {
     console.error(error)
@@ -128,6 +220,18 @@ export const dispose = async (id) => {
   instance.status = 'disposed'
   ViewletStates.remove(id)
   await GlobalEventBus.emitEvent(`Viewlet.dispose.${id}`)
+  return deferredCommands
+}
+
+// Hidden runtime views can retain live sessions while releasing their container DOM.
+export const hide = async (id) => {
+  const instance = ViewletStates.getInstance(id)
+  if (!instance?.factory.hide) {
+    return (await dispose(id, true)) || []
+  }
+  await instance.factory.hide(instance.state)
+  instance.status = 'hidden'
+  return [['Viewlet.dispose', instance.state.uid], ...getCssDisposeCommands(instance)]
 }
 
 export const disposeFunctional = (id) => {
@@ -151,17 +255,31 @@ export const disposeFunctional = (id) => {
     }
     const uid = instance.state.uid
     Assert.number(uid)
-    const commands = [[/* Viewlet.dispose */ 'Viewlet.dispose', /* id */ uid]]
+    const commands = [
+      ...LayoutWidgets.removeOwnedWidgets(uid),
+      [/* Viewlet.dispose */ 'Viewlet.dispose', /* id */ uid],
+      ...getCssDisposeCommands(instance),
+    ]
 
     if (instance.factory.getKeyBindings) {
-      KeyBindingsState.removeKeyBindings(id)
+      KeyBindingsState.removeKeyBindings(getKeyBindingSetId(instance, id))
     }
     if (instance.factory.getChildren) {
       const children = instance.factory.getChildren(instance.state)
       for (const child of children) {
         if (child.id) {
-          commands.push(...disposeFunctional(child.id))
+          const applicationId = ApplicationRegistry.getOwner(uid)
+          const childId = applicationId === undefined ? child.id : child.uid || ViewletStates.getInstance(child.id, applicationId)?.state.uid
+          if (childId) {
+            commands.push(...disposeFunctional(childId))
+          }
         }
+      }
+    }
+    if (instance.factory.getOwnedViewletIds) {
+      const ownedViewletIds = instance.factory.getOwnedViewletIds(instance.state)
+      for (const ownedViewletId of ownedViewletIds) {
+        commands.push(...disposeFunctional(ownedViewletId))
       }
     }
     instance.status = 'disposed'
@@ -175,8 +293,12 @@ export const disposeFunctional = (id) => {
   }
 }
 
-export const showFunctional = (id) => {
+export const showFunctional = async (id) => {
   const instance = ViewletStates.getInstance(id)
+  if (!instance.cssLoaded) {
+    await ViewletManagerVisitor.loadInstance(instance.moduleId, instance.factory)
+    instance.cssLoaded = true
+  }
   const initialState = instance.factory.create()
   // TODO resize
   const commands = ViewletManager.render(instance.factory, initialState, instance.state)
@@ -208,17 +330,22 @@ export const hideFunctional = (id) => {
     }
     if (instance.factory.hide) {
       instance.factory.hide(instance.state)
-      return []
+      instance.status = 'hidden'
+      return getCssDisposeCommands(instance)
     }
     if (instance.factory.dispose) {
       instance.factory.dispose(instance.state)
     }
     const uid = instance.state.uid
     Assert.number(uid)
-    const commands = [[/* Viewlet.dispose */ 'Viewlet.dispose', /* id */ uid]]
+    const commands = [
+      ...LayoutWidgets.removeOwnedWidgets(uid),
+      [/* Viewlet.dispose */ 'Viewlet.dispose', /* id */ uid],
+      ...getCssDisposeCommands(instance),
+    ]
 
     if (instance.factory.getKeyBindings) {
-      KeyBindingsState.removeKeyBindings(id)
+      KeyBindingsState.removeKeyBindings(getKeyBindingSetId(instance, id))
     }
     if (instance.factory.getChildren) {
       const children = instance.factory.getChildren(instance.state)
@@ -226,6 +353,12 @@ export const hideFunctional = (id) => {
         if (child.id) {
           commands.push(...disposeFunctional(child.id))
         }
+      }
+    }
+    if (instance.factory.getOwnedViewletIds) {
+      const ownedViewletIds = instance.factory.getOwnedViewletIds(instance.state)
+      for (const ownedViewletId of ownedViewletIds) {
+        commands.push(...disposeFunctional(ownedViewletId))
       }
     }
     instance.status = 'disposed'
@@ -249,13 +382,17 @@ export const resize = async (id, dimensions) => {
   Assert.object(dimensions)
   const instance = ViewletStates.getInstance(id)
   if (!instance || !instance.factory || (!instance.factory.resize && !instance.factory?.Commands?.resize)) {
+    if (!instance) {
+      ViewletStates.setPendingResize(id, dimensions)
+      return []
+    }
     console.warn('cannot resize', id)
     return []
   }
   const resizeFn = instance.factory?.Commands?.resize || instance.factory.resize
   const oldState = instance.state
-  let newState
-  let commands
+  let newState = oldState
+  let commands = []
   if (instance.factory.hasFunctionalResize) {
     newState = await resizeFn(oldState, dimensions)
     if ('newState' in newState) {
@@ -263,10 +400,10 @@ export const resize = async (id, dimensions) => {
     }
     if (instance.factory.resizeEffect) {
       // TODO handle promise rejection gracefully
-      instance.factory.resizeEffect(newState)
+      await instance.factory.resizeEffect(newState)
     }
-    commands = ViewletManager.render(instance.factory, instance.state, newState)
-  } else {
+    commands = [...ViewletManager.render(instance.factory, instance.state, newState)]
+  } else if (typeof instance.factory.resize === 'function') {
     // deprecated
     const result = await instance.factory.resize(oldState, dimensions)
     newState = result.newState
@@ -323,18 +460,39 @@ export const getAllStates = () => {
   return states
 }
 
-export const openWidget = async (moduleId, ...args) => {
-  const hasInstance = ViewletStates.hasInstance(moduleId)
+export const openWidget = (moduleId, ...args) => {
+  const focusedLayoutUid = ViewletStates.getFocusedInstanceByType(ViewletModuleId.Layout)
+  const layout = ViewletStates.getState(focusedLayoutUid ?? ViewletModuleId.Layout)
+  return openWidgetWithLayout(layout, moduleId, ...args)
+}
+
+export const openWidgetForApplication = (applicationId, moduleId, ...args) => {
+  return openWidgetWithLayout(ViewletStates.getState(ViewletModuleId.Layout, applicationId), moduleId, ...args)
+}
+
+const openWidgetWithLayout = (layout, moduleId, ...args) => {
+  if (moduleId === ViewletModuleId.QuickPick) {
+    return QuickPickOpening.run(layout?.applicationId, () => loadWidgetWithLayout(layout, moduleId, ...args))
+  }
+  return loadWidgetWithLayout(layout, moduleId, ...args)
+}
+
+const loadWidgetWithLayout = async (layout, moduleId, ...args) => {
+  const applicationId = moduleId === ViewletModuleId.QuickPick || moduleId === ViewletModuleId.Dialog ? layout?.applicationId : undefined
+  const existingInstance = ViewletStates.getInstance(moduleId, applicationId)
   const type = args[0]
   if (ElectronBrowserView.isOpen() && moduleId === ViewletModuleId.QuickPick) {
     // TODO recycle quickpick instance
-    if (hasInstance) {
-      await ViewletElectron.closeWidgetElectronQuickPick()
+    if (existingInstance) {
+      await ViewletElectron.closeWidgetElectronQuickPick(false)
     }
     return ViewletElectron.openElectronQuickPick(...args)
   }
+  const isOwnedWidget = moduleId === ViewletModuleId.DefineKeyBinding && typeof args[0] === 'number'
+  const disposeCommands = existingInstance && !isOwnedWidget ? disposeFunctional(existingInstance.state.uid) : []
   const childUid = Id.create()
   const commands = await ViewletManager.load({
+    ...(applicationId !== undefined && { applicationId }),
     getModule: ViewletModule.load,
     id: moduleId,
     type: 0,
@@ -349,17 +507,27 @@ export const openWidget = async (moduleId, ...args) => {
     throw new Error('expected commands to be of type array')
   }
 
-  if (hasInstance) {
-    commands.unshift(['Viewlet.dispose', moduleId])
+  if (disposeCommands.length > 0) {
+    commands.unshift(...disposeCommands)
   }
-  const layout = ViewletStates.getState(ViewletModuleId.Layout)
-  const focusByNameIndex = commands.findIndex((command) => command[0] === 'Viewlet.focusElementByName')
+  const appendBeforeIndex = commands.findIndex((command) => {
+    return (
+      command[0] === 'Viewlet.commitPending' ||
+      command[0] === 'Viewlet.focusElementByName' ||
+      command[0] === 'Viewlet.focusSelector' ||
+      command[0] === 'Viewlet.focusSelectorAfterRender'
+    )
+  })
 
-  const append = ['Viewlet.append', layout.uid, childUid]
-  if (focusByNameIndex !== -1) {
-    commands.splice(focusByNameIndex, 0, append)
+  if (isOwnedWidget) {
+    commands.splice(0, commands.length, ...LayoutWidgets.declareWidget(args[0], childUid, commands))
   } else {
-    commands.push(['Viewlet.append', layout.uid, childUid])
+    const append = ['Viewlet.append', layout.uid, childUid]
+    if (appendBeforeIndex !== -1) {
+      commands.splice(appendBeforeIndex, 0, append)
+    } else {
+      commands.push(['Viewlet.append', layout.uid, childUid])
+    }
   }
 
   // TODO send focus changes to renderer process together with other message
@@ -381,7 +549,12 @@ export const closeWidget = async (id) => {
     const childUid = child.uid
     const commands = disposeFunctional(childUid)
     await RendererProcess.invoke(/* Viewlet.dispose */ 'Viewlet.sendMultiple', commands)
-    // TODO restore focus
+    if (childInstance.moduleId === ViewletModuleId.QuickPick) {
+      const mainInstance = ViewletStates.getInstance(ViewletModuleId.Main)
+      if (mainInstance) {
+        await executeViewletCommand(mainInstance.state.uid, 'focus')
+      }
+    }
   } catch (error) {
     throw new VError(error, `Failed to close widget ${id}`)
   }
@@ -395,6 +568,15 @@ const getLazyImport = (module, fnName) => {
     return module.CommandsWithSideEffectsLazy[fnName]
   }
   return undefined
+}
+
+const hasFn = (module, fnName) => {
+  return Boolean(
+    module.Commands?.[fnName] ||
+    module.CommandsWithSideEffects?.[fnName] ||
+    module.LazyCommands?.[fnName] ||
+    module.CommandsWithSideEffectsLazy?.[fnName],
+  )
 }
 
 const getFn = async (module, fnName) => {
@@ -416,32 +598,65 @@ const getFn = async (module, fnName) => {
   return lazyFn
 }
 
-export const executeViewletCommand = async (uid, fnName, ...args) => {
+export const getFocusCommands = async (id) => {
+  const instance = ViewletStates.getInstance(id)
+  if (!instance || !hasFn(instance.factory, 'focus')) {
+    return []
+  }
+  const focus = await getFn(instance.factory, 'focus')
+  const oldState = instance.state
+  const newState = await focus(oldState)
+  if (oldState === newState) {
+    return []
+  }
+  const commands = ViewletManager.render(instance.factory, instance.renderedState, newState)
+  ViewletStates.setRenderedState(id, newState)
+  return commands
+}
+
+const executeViewletCommandInternal = async (uid, fnName, ...args) => {
   const instance = ViewletStates.getInstance(uid)
   if (!instance) {
-    Logger.warn(`cannot execute ${fnName} instance not found ${uid}`)
+    // Worker render notifications can arrive or leave the command queue after disposal.
+    if (fnName !== DomEventListenerFunctions.HandleBlur && fnName !== '__renderPending' && fnName !== 'updateGitIgnoredUris') {
+      Logger.warn(`cannot execute ${fnName} instance not found ${uid}`)
+    }
     return
   }
   const fn = await getFn(instance.factory, fnName)
   const oldState = instance.state
   const newState = await fn(oldState, ...args)
-  const actualNewState = 'newState' in newState ? newState.newState : newState
+  if (newState === oldState) return
+  const actualNewState = RebaseState.rebaseState(oldState, instance.state, 'newState' in newState ? newState.newState : newState)
   if (oldState === actualNewState) {
     return
   }
-  if (!ViewletStates.hasInstance(uid)) {
+  if (!ViewletStates.getByUid(uid) && !ViewletStates.hasInstance(uid)) {
     return
   }
-  const commands = ViewletManager.render(instance.factory, instance.renderedState, actualNewState)
-  if ('newState' in newState) {
-    commands.push(...newState.commands)
-  }
+  const commands = 'newState' in newState ? [...newState.commands] : []
+  const renderedState = instance.renderedState
+  commands.push(...ViewletManager.render(instance.factory, renderedState, actualNewState))
   UpdateDynamicFocusContext.updateDynamicFocusContext(commands)
   ViewletStates.setRenderedState(uid, actualNewState)
-  if (commands.length === 0) {
-    return
+  if (commands.length > 0) {
+    await RendererProcess.invoke(/* Viewlet.sendMultiple */ 'Viewlet.sendMultiple', /* commands */ commands)
   }
-  await RendererProcess.invoke(/* Viewlet.sendMultiple */ 'Viewlet.sendMultiple', /* commands */ commands)
+  if (ViewletStates.getInstance(uid) === instance && instance.factory.afterRender) {
+    await instance.factory.afterRender(renderedState, actualNewState)
+  }
+}
+
+export const executeViewletCommand = (uid, fnName, ...args) => {
+  const instance = ViewletStates.getInstance(uid)
+  if (instance?.factory.serializeCommands && !instance.factory.concurrentCommands?.includes(fnName)) {
+    return ViewletCommandQueue.enqueue(uid, () => executeViewletCommandInternal(uid, fnName, ...args))
+  }
+  return executeViewletCommandInternal(uid, fnName, ...args)
+}
+
+export const requestRender = (uid) => {
+  return executeViewletCommand(uid, '__renderPending')
 }
 
 // @ts-ignore
@@ -464,11 +679,11 @@ export const disposeWidgetWithValue = async (id, value) => {
     if (instance.factory.dispose) {
       instance.factory.dispose(instance.state)
     }
-    const uid = instance.state.uid
+    const { parentUid, uid } = instance.state
     Assert.number(uid)
-    const commands = [[/* Viewlet.dispose */ 'Viewlet.dispose', /* id */ uid]]
+    const commands = [...LayoutWidgets.removeWidget(uid), ...getCssDisposeCommands(instance)]
     if (instance.factory.getKeyBindings) {
-      KeyBindingsState.removeKeyBindings(uid)
+      KeyBindingsState.removeKeyBindings(getKeyBindingSetId(instance, uid))
     }
     if (instance.factory.getChildren) {
       const children = instance.factory.getChildren(instance.state)
@@ -478,17 +693,25 @@ export const disposeWidgetWithValue = async (id, value) => {
         }
       }
     }
+    if (instance.factory.getOwnedViewletIds) {
+      const ownedViewletIds = instance.factory.getOwnedViewletIds(instance.state)
+      for (const ownedViewletId of ownedViewletIds) {
+        commands.push(...disposeFunctional(ownedViewletId))
+      }
+    }
     instance.status = 'disposed'
     ViewletStates.remove(id)
     ViewletStates.remove(uid)
     await RendererProcess.invoke('Viewlet.sendMultiple', commands)
     // return commands
-    const parentInstance = ViewletStates.getInstance(ViewletModuleId.KeyBindings)
+    const parentInstance = ViewletStates.getByUid(parentUid) || ViewletStates.getInstance(ViewletModuleId.KeyBindings)
     if (!parentInstance) {
       return
     }
-    // @ts-ignore
-    const newState = parentInstance.factory.handleDefineKeyBindingDisposed(parentInstance.state, value)
+    if (!hasFn(parentInstance.factory, 'handleDefineKeyBindingDisposed')) {
+      return
+    }
+    await executeViewletCommand(parentInstance.state.uid, 'handleDefineKeyBindingDisposed', value)
   } catch (error) {
     console.error(error)
     // TODO use Error.cause once proper stack traces are supported by chrome

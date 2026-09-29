@@ -1,5 +1,5 @@
-import * as AboutViewWorker from '../AboutViewWorker/AboutViewWorker.js'
+import * as ElectronWindowAbout from '../ElectronWindowAbout/ElectronWindowAbout.js'
 
 export const showAboutElectron = async () => {
-  return AboutViewWorker.invoke('About.showAboutElectron')
+  return ElectronWindowAbout.open()
 }

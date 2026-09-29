@@ -1,5 +1,18 @@
-export const getQuickPickMenuEntries = () => {
+import * as ShellCommand from '../ShellCommand/ShellCommand.js'
+
+export const getQuickPickMenuEntries = async () => {
   return [
+    ...(await ShellCommand.getMenuEntries()),
+    {
+      id: 'Layout.signIn',
+      label: 'Account: Sign In',
+      aliases: ['Sign In', 'Log In', 'Account Login'],
+    },
+    {
+      id: 'Layout.signOut',
+      label: 'Account: Sign Out',
+      aliases: ['Sign Out', 'Log Out', 'Account Logout'],
+    },
     {
       id: 'AutoUpdater.checkForUpdates',
       label: 'Updater: Check for Updates',
@@ -14,6 +27,29 @@ export const getQuickPickMenuEntries = () => {
       label: 'Layout: Toggle Side Bar',
     },
     {
+      id: 'Layout.resetViewLocations',
+      label: 'Layout: Reset View Locations',
+      aliases: ['View: Reset View Locations'],
+    },
+    {
+      id: 'Layout.openChat',
+      label: 'Layout: Open Chat',
+      aliases: ['Show Chat'],
+    },
+    {
+      id: 'Layout.closeChat',
+      label: 'Layout: Close Chat',
+      aliases: ['Hide Chat'],
+    },
+    {
+      id: 'Layout.showSecondarySideBar',
+      label: 'Layout: Show Secondary Side Bar',
+    },
+    {
+      id: 'Layout.hideSecondarySideBar',
+      label: 'Layout: Hide Secondary Side Bar',
+    },
+    {
       id: 'Developer.openIframeInspector',
       label: 'Developer: Open Iframe Inspector',
     },
@@ -22,12 +58,33 @@ export const getQuickPickMenuEntries = () => {
       label: 'Layout: Toggle Panel',
     },
     {
+      id: 'Layout.maximizePanel',
+      label: 'Layout: Maximize Panel',
+    },
+    {
+      id: 'Layout.unmaximizePanel',
+      label: 'Layout: Unmaximize Panel',
+    },
+    {
       id: 'Layout.toggleActivityBar',
       label: 'Layout: Toggle Activity Bar',
     },
     {
+      id: 'Layout.toggleMenuBar',
+      label: 'View: Toggle Menu Bar',
+    },
+    {
+      id: 'Layout.toggleStatusBar',
+      label: 'Layout: Toggle Status Bar',
+    },
+    {
       id: 'Layout.togglePreview',
       label: 'Layout: Toggle Preview',
+    },
+    {
+      id: 'Layout.togglePreviewOrientation',
+      label: 'Preview: Toggle Orientation',
+      aliases: ['Toggle Preview Orientation', 'Stack Preview Areas'],
     },
     {
       id: 'Layout.hidePreview',
@@ -36,6 +93,18 @@ export const getQuickPickMenuEntries = () => {
     {
       id: 'Layout.showPreview',
       label: 'Layout: Show Preview',
+    },
+    {
+      id: 'Layout.toggleSecondaryPreview',
+      label: 'Layout: Toggle Secondary Preview',
+    },
+    {
+      id: 'Layout.hideSecondaryPreview',
+      label: 'Layout: Hide Secondary Preview',
+    },
+    {
+      id: 'Layout.showSecondaryPreview',
+      label: 'Layout: Show Secondary Preview',
     },
     {
       id: 'Layout.toggleSideBarPosition',
@@ -135,11 +204,12 @@ export const getQuickPickMenuEntries = () => {
       label: 'Focus: Extensions',
     },
     {
-      id: 'Preferences.openUserKeyBindings',
-      label: 'Preferences: Open User Key Bindings',
+      id: 'Preferences.openKeyBindingsJson',
+      label: 'Preferences: Open Keyboard Shortcuts (JSON)',
+      aliases: ['Open User Key Bindings', 'Keyboard Shortcuts', 'Key Bindings'],
     },
     {
-      id: 'Preferences.openDefaultKeyBindings',
+      id: 'Main.openKeyBindings',
       label: 'Preferences: Open Default Key Bindings',
       aliases: ['Set Key Bindings', 'Key Map', 'Key Mapping'],
     },
@@ -178,6 +248,11 @@ export const getQuickPickMenuEntries = () => {
     {
       id: 'Developer.downloadViewletState',
       label: 'Developer: Download Viewlets',
+    },
+    {
+      id: 'Developer.openComponentState',
+      label: 'Developer: Open Component State',
+      aliases: ['Edit Component State', 'Inspect Component State'],
     },
     {
       id: 'Developer.allocateMemoryInSharedProcess',
@@ -219,6 +294,10 @@ export const getQuickPickMenuEntries = () => {
       id: 'QuickPick.showColorTheme',
       label: 'Preferences: Color Theme',
       aliases: ['Select Color Theme', 'Switch Color Theme', 'Theme Color'],
+    },
+    {
+      id: 'Developer.measureExtensionManagementWorkerLatency',
+      label: 'Developer: Measure Extension Management Worker Latency',
     },
     {
       id: 'Developer.measureLatencyBetweenExtensionHostAndSharedProcess',
@@ -282,7 +361,7 @@ export const getQuickPickMenuEntries = () => {
       label: 'Main: Close Editor',
     },
     {
-      id: 'Main.CloseAllEditors',
+      id: 'Main.closeAllEditors',
       label: 'Main: Close all Editors',
     },
     {
@@ -290,7 +369,7 @@ export const getQuickPickMenuEntries = () => {
       label: 'File: Open Folder',
     },
     {
-      id: 'file.openRecent',
+      id: 'QuickPick.showRecent',
       label: 'File: Open Recent',
     },
     {
@@ -302,16 +381,32 @@ export const getQuickPickMenuEntries = () => {
       label: 'Audio: Play Bell',
     },
     {
-      id: 'serviceWorker.uninstall',
-      label: 'Service Worker: Uninstall',
-    },
-    {
       id: 'Developer.openLogsFolder',
       label: 'Developer: Open Logs Folder',
     },
     {
       id: 'Developer.openProcessExplorer',
       label: 'Developer: Open Process Explorer',
+    },
+    {
+      id: 'Main.openUri',
+      label: 'Developer: Show Running Extensions',
+      args: ['running-extensions://'],
+    },
+    {
+      id: 'Main.openUri',
+      label: 'Developer: Open Workers View',
+      args: ['workers:///1'],
+    },
+    {
+      id: 'Main.openUri',
+      label: 'Preferences: Open Secrets',
+      args: ['secrets://'],
+      aliases: ['Manage Secrets'],
+    },
+    {
+      id: 'Developer.showGpuInfo',
+      label: 'Developer: Show GPU Info',
     },
     {
       id: 'Developer.openStorageOverview',
@@ -381,14 +476,32 @@ export const getQuickPickMenuEntries = () => {
       id: 'Window.zoomReset',
       label: 'Window: Reset Zoom',
     },
+    { id: 'Workspace.openRemote', label: 'Git: Open Remote in Simple Browser' },
+    { id: 'Layout.toggleSimpleBrowserFullWidth', label: 'Simple Browser: Toggle Full Width' },
     {
       id: 'Main.openUri',
       label: 'Simple Browser: Open',
       args: ['simple-browser://'],
     },
     {
+      id: 'Layout.showPreview',
+      label: 'Simple Browser: Open in Preview Area',
+      args: ['simple-browser://'],
+    },
+    {
+      id: 'SimpleBrowser.openHistory',
+      label: 'Simple Browser: Open History',
+      aliases: ['Open Browser History'],
+    },
+    {
       id: 'SimpleBrowser.openDevtools',
       label: 'Simple Browser: Open Dev Devtools',
+    },
+    {
+      id: 'Main.openUri',
+      label: 'Simple Browser: Import Cookies from Firefox',
+      args: ['cookie-import-view:///'],
+      aliases: ['Open Cookie Importer'],
     },
     {
       id: 'Workspace.close',

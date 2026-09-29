@@ -1,0 +1,276 @@
+import { beforeEach, expect, jest, test } from '@jest/globals'
+
+beforeEach(() => {
+  jest.resetAllMocks()
+})
+
+jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
+  return {
+    invoke: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+  }
+})
+
+const Languages = await import('../src/parts/Languages/Languages.js')
+const LanguagesState = await import('../src/parts/LanguagesState/LanguagesState.js')
+const SharedProcess = await import('../src/parts/SharedProcess/SharedProcess.js')
+
+beforeEach(() => {
+  LanguagesState.state.loaded = false
+  LanguagesState.state.fileNameMap = Object.create(null)
+  LanguagesState.state.extensionMap = Object.create(null)
+  LanguagesState.state.tokenizerMap = Object.create(null)
+  LanguagesState.state.explicitLanguageMap = Object.create(null)
+  LanguagesState.state.firstLines = []
+})
+
+test('getLanguageConfiguration - error - languages must be loaded before requesting language configuration', async () => {
+  LanguagesState.setLoaded(true)
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation((method, ...parameters) => {
+    switch (method) {
+      case 'ExtensionHost.getLanguageConfiguration':
+        return {
+          comments: {
+            blockComment: ['<!--', '-->'],
+          },
+        }
+      default:
+        throw new Error('unexpected message')
+    }
+  })
+  expect(
+    await Languages.getLanguageConfiguration({
+      uri: '',
+      languageId: 'html',
+    }),
+  ).toEqual({
+    comments: {
+      blockComment: ['<!--', '-->'],
+    },
+  })
+})
+
+test('getLanguageConfiguration - uses file name language over extension language', async () => {
+  await Languages.addLanguages([
+    {
+      id: 'json',
+      extensions: ['.json'],
+    },
+    {
+      id: 'jsonc',
+      fileNames: ['settings.json'],
+    },
+  ])
+  LanguagesState.setLoaded(true)
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation((method, languageId) => {
+    if (method === 'ExtensionHost.getLanguageConfiguration' && languageId === 'jsonc') {
+      return {
+        comments: {
+          lineComment: '//',
+        },
+      }
+    }
+    throw new Error('unexpected message')
+  })
+  const editor = {
+    uri: 'app:///settings.json',
+    languageId: 'json',
+  }
+  expect(await Languages.getLanguageConfiguration(editor)).toEqual({
+    comments: {
+      lineComment: '//',
+    },
+  })
+  expect(editor.languageId).toBe('jsonc')
+})
+
+test('getLanguageConfiguration - preserves a restored explicit language mode', async () => {
+  await Languages.addLanguages([
+    {
+      id: 'plaintext',
+      extensions: ['.txt'],
+      tokenize: '/tokenizePlaintext.js',
+    },
+    {
+      id: 'javascript',
+      extensions: ['.js'],
+      tokenize: '/tokenizeJavaScript.js',
+    },
+  ])
+  LanguagesState.setLoaded(true)
+  LanguagesState.setExplicitLanguageId('app:///script.txt', 'javascript')
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation((method, languageId) => {
+    if (method === 'ExtensionHost.getLanguageConfiguration' && languageId === 'javascript') {
+      return {
+        comments: {
+          lineComment: '//',
+        },
+      }
+    }
+    throw new Error('unexpected message')
+  })
+  const editor = {
+    uri: 'app:///script.txt',
+    languageId: 'javascript',
+  }
+  expect(await Languages.getLanguageConfiguration(editor)).toEqual({
+    comments: {
+      lineComment: '//',
+    },
+  })
+  expect(editor.languageId).toBe('javascript')
+})
+
+test('getLanguageConfiguration - error - languages must be loaded before requesting language configuration', async () => {
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation((method, ...parameters) => {
+    switch (method) {
+      case 'ExtensionHost.getLanguageConfiguration':
+        return {
+          comments: {
+            blockComment: ['<!--', '-->'],
+          },
+        }
+      default:
+        throw new Error('unexpected message')
+    }
+  })
+  await expect(Languages.getLanguageConfiguration('html')).rejects.toThrow(
+    new Error('languages must be loaded before requesting language configuration'),
+  )
+})
+
+test.skip('hydrate', async () => {
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation((method, ...parameters) => {
+    switch (method) {
+      case 'ExtensionHost.getLanguages':
+        return {
+          id: 'html',
+          extensions: ['.html'],
+          tokenize: '/tmp/src/tokenizeHtml.js',
+          configuration: '/tmp/languageConfiguration.json',
+        }
+      default:
+        throw new Error('unexpected message')
+    }
+  })
+  await Languages.hydrate()
+  expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(SharedProcess.invoke).toHaveBeenCalledWith('ExtensionHost.getLanguages')
+})
+
+test('getLanguageId - by extension', async () => {
+  await Languages.addLanguages([
+    {
+      id: 'plaintext',
+      extensions: ['.txt'],
+    },
+  ])
+  expect(Languages.getLanguageId('/test/index.txt')).toBe('plaintext')
+})
+
+test('getLanguageId - by second file extension', async () => {
+  await Languages.addLanguages([
+    {
+      id: 'json',
+      extensions: ['.js.map'],
+    },
+  ])
+  expect(Languages.getLanguageId('/test/index.js.map')).toBe('json')
+})
+
+test('getLanguageId - by PascalCase file extension', async () => {
+  await Languages.addLanguages([
+    {
+      id: 'dockerfile',
+      extensions: ['.dockerfile'],
+    },
+  ])
+  expect(Languages.getLanguageId('/test/test.Dockerfile')).toBe('dockerfile')
+})
+
+test('getLanguageId - by file name', async () => {
+  await Languages.addLanguages([
+    {
+      id: 'dockerfile',
+      fileNames: ['Dockerfile'],
+    },
+  ])
+  expect(Languages.getLanguageId('Dockerfile')).toBe('dockerfile')
+})
+
+test('getLanguageId - file name has priority over extension', async () => {
+  await Languages.addLanguages([
+    {
+      id: 'json',
+      extensions: ['.json'],
+    },
+    {
+      id: 'jsonc',
+      fileNames: ['settings.json'],
+    },
+  ])
+  expect(Languages.getLanguageId('settings.json')).toBe('jsonc')
+})
+
+test('getLanguageId - by file name in uri', async () => {
+  await Languages.addLanguages([
+    {
+      id: 'json',
+      extensions: ['.json'],
+    },
+    {
+      id: 'jsonc',
+      fileNames: ['settings.json'],
+    },
+  ])
+  expect(Languages.getLanguageId('app:///settings.json')).toBe('jsonc')
+})
+
+test("addLanguage - don't override tokenize path", async () => {
+  await Languages.addLanguages([
+    {
+      id: 'html',
+      tokenize: 'src/tokenizeHtml.js',
+    },
+    {
+      id: 'html',
+    },
+  ])
+  expect(LanguagesState.getTokenizeFunctionPath('html')).toBe('src/tokenizeHtml.js')
+})
+
+// TODO this could be even more accurate with exact line numbers
+// and reading exact extension.json file
+test('addLanguage - error - lower case filename property', () => {
+  const spy = jest.spyOn(console, 'warn').mockImplementation(() => {})
+  Languages.addLanguage({
+    id: 'test',
+    filenames: ['Test'],
+  })
+  expect(spy).toHaveBeenCalledTimes(1)
+  expect(spy).toHaveBeenCalledWith(
+    `Please use \"fileNames\" instead of \"filenames\" for language test
+  1 | {
+  2 |   \"id\": \"test\",
+> 3 |   \"filenames\": [
+    |    ^^^^^^^^^
+  4 |     \"Test\"
+  5 |   ]
+  6 | }
+`,
+  )
+  expect(LanguagesState.state.fileNameMap).toEqual({ test: 'test' })
+})
+
+test('getLanguageByFirstLine', () => {
+  const regex = '^#!.*\\bnode'
+  const languageId = 'javascript'
+  LanguagesState.addFirstLine(regex, languageId)
+  expect(Languages.getLanguageIdByFirstLine('#!/usr/bin/env node')).toBe('javascript')
+})

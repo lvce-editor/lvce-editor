@@ -1,0 +1,41 @@
+.ChatModelPickerItem {
+  align-items: center;
+  background: transparent;
+  border: none;
+  color: var(--vscode-foreground);
+  cursor: pointer;
+  display: flex;
+  font: inherit;
+  gap: 8px;
+  height: 28px;
+  justify-content: flex-start;
+  padding: 0 10px;
+  text-align: left;
+  width: 100%;
+}
+
+.ChatModelPickerItemLabel {
+  min-width: 0;
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ChatModelPickerItemUsageCost {
+  margin-left: auto;
+  color: var(--vscode-descriptionForeground);
+  opacity: 0.6;
+}
+
+.ChatModelPickerItem:hover,
+.ChatModelPickerItemSelected {
+  background: var(--ListHoverBackground);
+  color: var(--ListHoverForeground);
+}
+
+/*
+.ChatModelPickerItem > * {
+  pointer-events: none;
+}
+*/

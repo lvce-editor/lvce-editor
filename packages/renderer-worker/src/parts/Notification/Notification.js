@@ -7,13 +7,11 @@ export const state = {
 export const create = async (type, text) => {
   // @ts-ignore
   state.notifications.push({ type, text })
-  await RendererProcess.invoke(/* Notification.create */ 'Notification.create', /* type */ type, /* text */ text)
+  return RendererProcess.invoke(/* Notification.create */ 'Notification.create', /* type */ type, /* text */ text)
 }
 
 export const showWithOptions = async (type, text, options) => {
-  // @ts-ignore
-  state.notifications.push({ type, text, options })
-  await RendererProcess.invoke(/* Notification.createWithOptions */ 993, /* type */ type, /* text */ text, /* options */ options)
+  return RendererProcess.invoke('Notification.showWithOptions', type, text, options)
 }
 
 export const handleClick = (index) => {

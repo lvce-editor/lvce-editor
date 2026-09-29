@@ -7,8 +7,11 @@ import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as SharedProcessCommandType from '../SharedProcessCommandType/SharedProcessCommandType.js'
 import { state } from '../IsTest/IsTest.js'
 
-const getResolvedRootFromSharedProcess = async () => {
-  const resolvedRoot = await SharedProcess.invoke(/* Workspace.resolveRoot */ SharedProcessCommandType.WorkspaceResolveRoot)
+const SharedProcessCliArgSource = 'shared-process-cli-arg'
+const TestHomeDir = '/home/test'
+
+const getResolvedRootFromSharedProcess = async (href) => {
+  const resolvedRoot = await SharedProcess.invoke(/* Workspace.resolveRoot */ SharedProcessCommandType.WorkspaceResolveRoot, href)
   return resolvedRoot
 }
 
@@ -30,13 +33,13 @@ const getResolveRootFromSessionStorage = async () => {
   return resolvedRoot
 }
 
-const getResolvedRootFromRendererProcess = async (href) => {
+const getResolvedRootFromRendererProcess = async (href, resolvedRootFromSharedProcess) => {
   const url = new URL(href)
   if (href.includes('tests/')) {
     state.isTest = true
     return {
       path: href,
-      homeDir: '',
+      homeDir: resolvedRootFromSharedProcess?.homeDir || TestHomeDir,
       pathSeparator: PathSeparatorType.Slash,
       source: 'test',
     }
@@ -70,11 +73,15 @@ const getResolvedRootFromRendererProcess = async (href) => {
 }
 
 const getResolvedRootRemote = async (href) => {
-  const resolvedRootFromRendererProcess = await getResolvedRootFromRendererProcess(href)
+  const resolvedRootFromSharedProcess = await getResolvedRootFromSharedProcess(href)
+  if (resolvedRootFromSharedProcess?.source === SharedProcessCliArgSource) {
+    return resolvedRootFromSharedProcess
+  }
+  const resolvedRootFromRendererProcess = await getResolvedRootFromRendererProcess(href, resolvedRootFromSharedProcess)
   if (resolvedRootFromRendererProcess) {
     return resolvedRootFromRendererProcess
   }
-  return getResolvedRootFromSharedProcess()
+  return resolvedRootFromSharedProcess
 }
 
 export const getResolvedRoot = async (href) => {

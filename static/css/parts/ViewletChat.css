@@ -1,0 +1,751 @@
+:root {
+  --ChatForeground: rgb(188, 190, 190);
+  --ChatListPaddingInline: 6px;
+  --ChatMessageContentBackground: rgba(108, 81, 110, 0.13);
+}
+
+.Chat {
+  contain: strict;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  color: var(--ChatForeground);
+}
+
+.ChatActions {
+  contain: content;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.ChatActions .MaskIcon {
+  width: 16px;
+  height: 16px;
+  contain: strict;
+}
+
+.ChatList {
+  contain: strict;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow-y: auto;
+  padding-left: var(--ChatListPaddingInline);
+  padding-right: var(--ChatListPaddingInline);
+  outline: none;
+}
+
+.ChatDetails {
+  contain: strict;
+  display: flex;
+  min-height: 0;
+  padding: 8px;
+}
+
+.ChatDetailsContent {
+  contain: strict;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex: 1;
+  min-height: 0;
+  gap: 10px;
+}
+
+.ChatWelcomeMessage {
+  contain: content;
+  padding: 8px;
+  display: flex;
+  flex: 1;
+}
+
+.ChatName {
+  flex: 1;
+  display: flex;
+  contain: strict;
+  align-items: center;
+}
+
+.ChatMessages {
+  flex: 1;
+  contain: strict;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  scrollbar-color: var(--EditorScrollBarBackground, rgba(57, 71, 71, 0.6)) transparent;
+  scrollbar-width: thin;
+  contain: strict;
+  user-select: text;
+}
+
+/* TODO conflict with message.css */
+.Chat .Message {
+  display: flex;
+  contain: content;
+  flex-direction: column;
+  padding-right: 3px;
+  cursor: text;
+  word-wrap: break-word;
+  contain: content;
+  height: auto;
+}
+
+.MessageUser {
+  align-self: flex-end;
+  padding-right: 10px;
+}
+
+.MessageAssistant {
+  align-self: stretch;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.ChatMessageContent {
+  contain: content;
+  background: var(--ChatMessageContentBackground);
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  line-height: 19.5px;
+  color: var(--ChatMessageForeground, #bcbebe);
+}
+
+.MessageAssistant .ChatMessageContent:not(.ChatImageMessageContent) {
+  background: transparent;
+  border-radius: 0;
+  color: var(--vscode-editor-foreground, var(--ChatForeground));
+  max-inline-size: 100%;
+  padding: 0;
+}
+
+.ChatMessageContent .Markdown {
+  color: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  contain: content;
+}
+
+.ChatAttachments {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.ChatAttachment {
+  align-items: center;
+  display: inline-flex;
+  gap: 6px;
+  max-width: 100%;
+  min-width: 0;
+  overflow: hidden;
+  border-radius: 999px;
+  border: 1px solid var(--vscode-widget-border, var(--vscode-panel-border));
+  padding: 4px 10px;
+  background: var(--vscode-badge-background, color-mix(in srgb, var(--vscode-editor-background) 88%, white));
+  color: var(--vscode-badge-foreground, var(--vscode-foreground));
+  font-size: 12px;
+}
+
+.ChatAttachmentLabel {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ChatAttachmentPreview {
+  width: 20px;
+  height: 20px;
+  flex: none;
+  border-radius: 4px;
+  object-fit: cover;
+}
+
+.ChatAttachmentImage {
+  border-color: var(--vscode-charts-blue);
+}
+
+.ChatAttachmentInvalidImage {
+  border-color: var(--vscode-inputValidation-errorBorder, var(--vscode-errorForeground));
+  color: var(--vscode-errorForeground, var(--vscode-foreground));
+}
+
+.ChatAttachmentTextFile {
+  border-color: var(--vscode-charts-green, var(--vscode-widget-border, var(--vscode-panel-border)));
+}
+
+.ChatImageMessageContent {
+  padding: 6px;
+  border: 1px solid var(--vscode-widget-border, var(--vscode-panel-border));
+  border-radius: 12px;
+  background: var(--vscode-editorWidget-background, var(--vscode-editor-background));
+  overflow: hidden;
+}
+
+.ChatMessageImage {
+  display: block;
+  max-width: min(320px, 100%);
+  max-height: min(320px, calc(100vh - 220px));
+  border-radius: 8px;
+  object-fit: contain;
+  background: color-mix(in srgb, var(--vscode-editor-background) 88%, black);
+}
+
+.ChatListEmpty {
+  contain: strict;
+  flex: 1;
+}
+
+.Message .Markdown {
+  margin: 0;
+}
+
+.ChatMessageLink {
+  color: #4d94ff;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.Message .Actions {
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.Chat {
+  position: relative;
+}
+
+.ChatViewDropOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border: 1px dashed transparent;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--vscode-editor-foreground);
+  font-size: 13px;
+  font-weight: 600;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 10;
+  transition:
+    opacity 120ms ease-in-out,
+    border-color 120ms ease-in-out,
+    background-color 120ms ease-in-out;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ChatOverlays {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+/*
+.ChatOverlays > * {
+  pointer-events: auto;
+}
+*/
+
+.ChatViewDropOverlayActive {
+  opacity: 1;
+  pointer-events: auto;
+  border-color: var(--vscode-focusBorder);
+  background: color-mix(in srgb, var(--vscode-focusBorder) 12%, transparent);
+}
+
+.ChatMessageLink {
+  color: #4d94ff;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.ChatOrderedList,
+.ChatUnorderedList {
+  margin: 6px 0;
+  padding-inline-start: 20px;
+}
+
+.ChatOrderedListItem,
+.ChatUnorderedListItem {
+  margin: 2px 0;
+}
+
+.MarkdownTable {
+  width: 100%;
+  margin: 6px 0;
+  border-collapse: collapse;
+  border: 1px solid var(--vscode-editorWidget-border);
+}
+
+.MarkdownTable th,
+.MarkdownTable td {
+  border: 1px solid var(--vscode-editorWidget-border);
+  padding: 4px 8px;
+  text-align: left;
+}
+
+.MarkdownTable th {
+  background: var(--vscode-editorWidget-background);
+}
+
+.Viewlet.Chat.ChatFocus {
+  background: linear-gradient(180deg, var(--ColorViewBackground, #1d2229) 0%, #1f252d 100%);
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  grid-template-rows: auto 1fr auto;
+}
+
+.Chat.ChatFocus .ChatHeader {
+  grid-column: 1 / 3;
+}
+
+.Chat.ChatFocus .ProjectSidebar {
+  background: color-mix(in srgb, var(--ColorSideBarBackground, #232b35) 88%, #1f2b38 12%);
+  border-right: 1px solid var(--ColorBorder, #3a3d41);
+  box-shadow: inset -1px 0 0 rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  grid-column: 1;
+  grid-row: 2 / 4;
+  min-height: 0;
+}
+
+.Chat.ChatFocus .ProjectList {
+  min-height: 0;
+  overflow: auto;
+  padding: 10px 8px 12px;
+  scrollbar-color: color-mix(in srgb, var(--ColorScrollBarSliderBackground, #4b5563) 78%, transparent)
+    color-mix(in srgb, var(--ColorSideBarBackground, #232b35) 92%, transparent);
+  scrollbar-width: thin;
+}
+
+.Chat.ChatFocus .ProjectList::-webkit-scrollbar {
+  height: 10px;
+  width: 10px;
+}
+
+.Chat.ChatFocus .ProjectList::-webkit-scrollbar-track {
+  background: color-mix(in srgb, var(--ColorSideBarBackground, #232b35) 94%, transparent);
+  border-radius: 999px;
+}
+
+.Chat.ChatFocus .ProjectList::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--ColorScrollBarSliderBackground, #4b5563) 70%, transparent);
+  border: 2px solid color-mix(in srgb, var(--ColorSideBarBackground, #232b35) 94%, transparent);
+  border-radius: 999px;
+}
+
+.Chat.ChatFocus .ProjectList::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in srgb, var(--ColorScrollBarSliderHoverBackground, #667284) 80%, transparent);
+}
+
+.ProjectListGroup {
+  border: 1px solid transparent;
+  border-radius: 8px;
+  margin-bottom: 6px;
+  overflow: hidden;
+}
+
+.ProjectListItem {
+  align-items: center;
+  display: flex;
+  gap: 6px;
+  min-height: calc(var(--ChatListItemHeight) - 2px);
+}
+
+.ProjectListItemLabel {
+  align-items: center;
+  border-radius: 6px;
+  color: var(--ColorForeground, #d5dbe3);
+  cursor: pointer;
+  display: flex;
+  flex: 1;
+  font-weight: 500;
+  gap: 2px;
+  overflow: hidden;
+  padding: 0 10px;
+  text-overflow: ellipsis;
+  transition:
+    background-color 80ms ease,
+    color 80ms ease;
+  white-space: nowrap;
+}
+
+.ProjectListChevron {
+  color: color-mix(in srgb, var(--ColorForeground, #c8d0da) 70%, transparent);
+  display: inline-block;
+  flex: 0 0 12px;
+  font-size: 11px;
+  margin-right: 4px;
+  text-align: center;
+  width: 12px;
+}
+
+.ProjectListItemSelected {
+  background: color-mix(in srgb, var(--ColorListInactiveSelectionBackground, #39424d) 84%, #2f3741 16%);
+}
+
+.ProjectListItem:not(.ProjectListItemSelected):hover,
+.ProjectListItem:not(.ProjectListItemSelected):focus-within {
+  background: color-mix(in srgb, var(--ColorListHoverBackground, #38414b) 50%, transparent);
+}
+
+.ProjectListItemSelected .ProjectListItemLabel {
+  color: var(--ColorListInactiveSelectionForeground, #e5ebf2);
+}
+
+.ProjectListItemActions {
+  display: flex;
+  padding-right: 6px;
+}
+
+.ProjectListItemAddChatButton {
+  align-items: center;
+  background: color-mix(in srgb, var(--ColorButtonSecondaryBackground, #3a434f) 76%, transparent);
+  border: 0;
+  border-radius: 5px;
+  color: var(--ColorForeground, #d0d8e2);
+  cursor: pointer;
+  display: inline-flex;
+  font-size: 13px;
+  font-weight: 500;
+  height: 18px;
+  justify-content: center;
+  opacity: 0;
+  padding: 0;
+  transition:
+    opacity 90ms ease,
+    background-color 90ms ease;
+  visibility: hidden;
+  width: 18px;
+}
+
+.ProjectListItem:hover .ProjectListItemAddChatButton,
+.ProjectListItem:focus-within .ProjectListItemAddChatButton {
+  opacity: 1;
+  visibility: visible;
+}
+
+.ProjectListItemAddChatButton:hover,
+.ProjectListItemAddChatButton:focus-visible {
+  background: color-mix(in srgb, var(--ColorButtonSecondaryHoverBackground, #4a5460) 82%, transparent);
+}
+
+.ProjectSessionItem {
+  align-items: center;
+  display: flex;
+  min-height: calc(var(--ChatListItemHeight) - 5px);
+}
+
+.ProjectSessionItemLabel {
+  border-radius: 6px;
+  color: color-mix(in srgb, var(--ColorForeground, #cfd7df) 92%, transparent);
+  cursor: pointer;
+  display: block;
+  flex: 1;
+  font-size: 12.5px;
+  overflow: hidden;
+  padding: 0 10px 0 28px;
+  text-overflow: ellipsis;
+  transition:
+    background-color 80ms ease,
+    color 80ms ease;
+  white-space: nowrap;
+}
+
+.ProjectSessionItemSelected {
+  background: color-mix(in srgb, var(--ColorListInactiveSelectionBackground, #353f4a) 86%, #2c3540 14%);
+}
+
+.ProjectSessionItem:not(.ProjectSessionItemSelected):hover,
+.ProjectSessionItem:not(.ProjectSessionItemSelected):focus-within {
+  background: color-mix(in srgb, var(--ColorListHoverBackground, #38414c) 46%, transparent);
+}
+
+.ProjectSessionItemSelected .ProjectSessionItemLabel {
+  color: var(--ColorListInactiveSelectionForeground, #f2f6fc);
+}
+
+.Chat.ChatFocus .ProjectAddButton {
+  background: color-mix(in srgb, var(--ColorButtonSecondaryBackground, #21252c) 72%, transparent);
+  border: 0;
+  border-top: 1px solid color-mix(in srgb, var(--ColorBorder, #3a3d41) 70%, transparent);
+  color: var(--ColorForeground, #d2d9e2);
+  cursor: pointer;
+  font-size: 12.5px;
+  letter-spacing: 0.01em;
+  margin-top: auto;
+  min-height: var(--ChatListItemHeight);
+  padding: 0 12px;
+  text-align: left;
+  transition: background-color 80ms ease;
+}
+
+.Chat.ChatFocus .ProjectAddButton:hover,
+.Chat.ChatFocus .ProjectAddButton:focus-visible {
+  background: color-mix(in srgb, var(--ColorButtonSecondaryHoverBackground, #2a3039) 78%, transparent);
+}
+
+.ChatListEmpty,
+.ChatMessages {
+  margin: 0;
+  min-height: 0;
+}
+
+.ChatFocus .ChatMessages > .Message,
+.ChatFocus .ChatSendAreaContent {
+  width: min(100%, var(--ChatFocusContentMaxWidth, 100%));
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.ChatFocus .ChatMessages > .Message > .ChatMessageContent {
+  max-inline-size: 100%;
+}
+
+.Chat .Select {
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  appearance: none;
+  background-image:
+    linear-gradient(45deg, transparent 50%, color-mix(in srgb, var(--ColorForeground, #d5dbe3) 84%, transparent) 50%),
+    linear-gradient(135deg, color-mix(in srgb, var(--ColorForeground, #d5dbe3) 84%, transparent) 50%, transparent 50%);
+  background-position:
+    calc(100% - 10px) 50%,
+    calc(100% - 6px) 50%;
+  background-repeat: no-repeat;
+  background-size:
+    4px 4px,
+    4px 4px;
+  max-width: 60px;
+  padding-right: 16px;
+}
+
+.MarkdownMathInline {
+  display: inline-block;
+  max-width: 100%;
+  vertical-align: middle;
+}
+
+.MarkdownQuote {
+  border-left: 3px solid var(--ColorBorder, #3a3d41);
+  margin: 8px 0;
+  padding-left: 12px;
+}
+
+.MarkdownMathBlock {
+  margin: 8px 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.ChatMessageContent hr {
+  border: 0;
+  border-top: 1px solid color-mix(in srgb, var(--ColorBorder, #3a3d41) 78%, transparent);
+  display: block;
+  height: 0;
+  margin: 12px 0;
+  width: 100%;
+}
+
+/* syntax highlight token colors */
+.TokenComment {
+  color: var(--ColorSymbolIconColorForeground, #7f8794);
+}
+
+.TokenString {
+  color: var(--ColorChartsGreen, #a6d189);
+}
+
+.TokenNumber,
+.TokenValue {
+  color: var(--ColorChartsBlue, #8caaee);
+}
+
+.TokenKeyword,
+.TokenTag {
+  color: var(--ColorChartsPurple, #ca9ee6);
+}
+
+.TokenAttribute,
+.TokenProperty {
+  color: var(--ColorChartsOrange, #ef9f76);
+}
+
+.ChatMessageContent p + p {
+  margin-top: 0.75em;
+}
+
+.MissingApiKeyForm {
+  padding-top: 10px;
+}
+
+a.Button {
+  text-decoration: none;
+}
+
+.ChatOrderedListItem {
+  display: flex;
+  contain: content;
+  flex-wrap: wrap;
+  gap: 3px;
+}
+
+.ChatOrderedListItem .FileIcon {
+  display: none;
+}
+
+.ChatOrderedList {
+  padding: 0;
+  margin: 0;
+}
+
+.Chat .Insertion {
+  color: green;
+  contain: content;
+}
+
+.Chat .Deletion {
+  color: red;
+  contain: content;
+}
+
+:root {
+  --WidgetBorder: white;
+  --ChatScrollbarThickness: 10px;
+  --ChatScrollbarTrack: transparent;
+  --ChatScrollbarThumb: var(--vscode-scrollbarSlider-background, rgba(121, 121, 121, 0.4));
+  --ChatScrollbarThumbHover: var(--vscode-scrollbarSlider-hoverBackground, rgba(100, 100, 100, 0.7));
+  --ChatScrollbarThumbActive: var(--vscode-scrollbarSlider-activeBackground, rgba(191, 191, 191, 0.4));
+}
+
+.ChatList,
+.ProjectList,
+.ChatMessages {
+  scrollbar-width: thin;
+  scrollbar-color: var(--ChatScrollbarThumb) var(--ChatScrollbarTrack);
+}
+
+.ChatList::-webkit-scrollbar,
+.ProjectList::-webkit-scrollbar,
+.ChatMessages::-webkit-scrollbar {
+  width: var(--ChatScrollbarThickness);
+  height: var(--ChatScrollbarThickness);
+}
+
+.ChatList::-webkit-scrollbar-track,
+.ProjectList::-webkit-scrollbar-track,
+.ChatMessages::-webkit-scrollbar-track {
+  background: var(--ChatScrollbarTrack);
+}
+
+.ChatList::-webkit-scrollbar-thumb,
+.ProjectList::-webkit-scrollbar-thumb,
+.ChatMessages::-webkit-scrollbar-thumb {
+  background: var(--ChatScrollbarThumb);
+  border: 2px solid transparent;
+  border-radius: 999px;
+  background-clip: padding-box;
+}
+
+.ChatList::-webkit-scrollbar-thumb:hover,
+.ProjectList::-webkit-scrollbar-thumb:hover,
+.ChatMessages::-webkit-scrollbar-thumb:hover {
+  background: var(--ChatScrollbarThumbHover);
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+.ChatList::-webkit-scrollbar-thumb:active,
+.ProjectList::-webkit-scrollbar-thumb:active,
+.ChatMessages::-webkit-scrollbar-thumb:active {
+  background: var(--ChatScrollbarThumbActive);
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+.ChatList::-webkit-scrollbar-corner,
+.ProjectList::-webkit-scrollbar-corner,
+.ChatMessages::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+.ChatListMoreToggle {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  min-height: var(--ChatListItemHeight);
+  padding: 0 6px;
+}
+
+.ChatListMoreToggleButton {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+  min-height: 22px;
+  padding: 0 6px 0 4px;
+  border-radius: 4px;
+  color: var(--vscode-descriptionForeground, var(--vscode-foreground));
+  cursor: pointer;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  line-height: 1.4;
+  text-transform: uppercase;
+  user-select: none;
+}
+
+.ChatListMoreToggleButton:hover {
+  background: var(--vscode-list-hoverBackground, rgba(255, 255, 255, 0.06));
+  color: var(--vscode-list-hoverForeground, var(--vscode-foreground));
+}
+
+.ChatListMoreToggleButton:focus {
+  background: var(--vscode-list-hoverBackground, rgba(255, 255, 255, 0.06));
+  box-shadow: inset 0 0 0 1px var(--vscode-focusBorder, #007fd4);
+  color: var(--vscode-list-hoverForeground, var(--vscode-foreground));
+  outline: none;
+}
+
+.ChatListMoreToggleChevron {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  opacity: 0.9;
+}
+
+.ChatListMoreToggleLabel {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+
+.LoadingText {
+  background: linear-gradient(90deg, #888 25%, /* dim color  */ #fff 45%, /* bright peak */ #888 55%, #888 75%);
+  background-size: 200% auto;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 2s linear infinite;
+}

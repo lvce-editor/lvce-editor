@@ -1,0 +1,28 @@
+import { expect, test } from '@jest/globals'
+import * as GetHeadersDocument from '../src/parts/GetHeadersDocument/GetHeadersDocument.ts'
+
+test('uses default application name when missing', () => {
+  const headers = GetHeadersDocument.getHeadersDocument({
+    mime: 'text/html',
+    etag: 'test-etag',
+    isForElectronProduction: false,
+  })
+
+  expect(headers['Content-Security-Policy']).toContain(`frame-src 'self' lvce-oss-webview: http://localhost:3001 http://localhost:3002`)
+  expect(headers['Content-Security-Policy']).toContain(`style-src 'self' 'unsafe-inline'`)
+  expect(headers['Content-Security-Policy']).toContain(`connect-src 'self' https: wss:`)
+  expect(headers['Content-Security-Policy']).toContain(`ws://127.0.0.1:* ws://localhost:*`)
+  expect(headers['Content-Security-Policy']).toContain(`media-src 'self' blob:`)
+  expect(headers['Content-Security-Policy']).not.toContain('undefined-webview:')
+})
+
+test('preserves explicit application name', () => {
+  const headers = GetHeadersDocument.getHeadersDocument({
+    mime: 'text/html',
+    etag: 'test-etag',
+    isForElectronProduction: false,
+    applicationName: 'lvce',
+  })
+
+  expect(headers['Content-Security-Policy']).toContain(`frame-src 'self' lvce-webview: http://localhost:3001 http://localhost:3002`)
+})

@@ -6,6 +6,10 @@ export const readText = async () => {
   return await ClipBoardWorker.invoke('ClipBoard.readText')
 }
 
+export const readImage = async () => {
+  return await ClipBoardWorker.invoke('ClipBoard.readImage')
+}
+
 export const writeText = async (text) => {
   return await ClipBoardWorker.invoke('ClipBoard.writeText', text)
 }
@@ -16,6 +20,10 @@ export const enableMemoryClipBoard = async () => {
 
 export const readMemoryText = async () => {
   return await ClipBoardWorker.invoke('ClipBoard.readMemoryText')
+}
+
+export const readMemoryImage = async () => {
+  return await ClipBoardWorker.invoke('ClipBoard.readMemoryImage')
 }
 
 export const disableMemoryClipBoard = async () => {
@@ -34,12 +42,24 @@ export const readNativeFiles = async () => {
   return await ClipBoardWorker.invoke('ClipBoard.readNativeFiles')
 }
 
+export const getSelectionText = async () => {
+  return await RendererProcess.invoke('Css.getSelectionText')
+}
+
 export const writeImage = async (blob) => {
   try {
-    return await RendererProcess.invoke('ClipBoard.writeImage', blob)
+    return await ClipBoardWorker.invoke('ClipBoard.writeImage', blob)
   } catch (error) {
     throw new VError(error, 'Failed to write image to clipboard')
   }
+}
+
+export const writeImageUrl = async (url, fetchImage = globalThis.fetch) => {
+  const response = await fetchImage(url)
+  if (!response.ok) {
+    throw new Error(response.statusText)
+  }
+  return writeImage(await response.blob())
 }
 
 export const execCopy = async () => {

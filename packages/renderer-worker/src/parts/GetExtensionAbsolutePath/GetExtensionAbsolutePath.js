@@ -8,6 +8,11 @@ export const getExtensionAbsolutePath = (id, isWeb, isBuiltin, path, relativePat
     }
     return new URL(relativePath, path + '/').toString()
   }
+  if (path.startsWith('file://')) {
+    const baseUrl = path.endsWith('/') ? path : `${path}/`
+    const absolutePath = new URL(relativePath, baseUrl).pathname
+    return new URL('/remote' + absolutePath, origin).toString()
+  }
   if (!path.startsWith('/')) {
     path = '/' + path
   }
@@ -18,7 +23,8 @@ export const getExtensionAbsolutePath = (id, isWeb, isBuiltin, path, relativePat
     return path + '/' + relativePath
   }
   if (isBuiltin) {
-    return `${AssetDir.assetDir}/extensions/${id}/${relativePath}`
+    const folderName = path.split(/[/\\]/).findLast(Boolean) || id
+    return `${AssetDir.assetDir}/extensions/${folderName}/${relativePath}`
   }
   return new URL('/remote' + path + '/' + relativePath, origin).toString()
 }

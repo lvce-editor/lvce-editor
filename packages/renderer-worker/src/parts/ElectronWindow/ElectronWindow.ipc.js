@@ -8,6 +8,8 @@ export const Commands = {
   minimize: ElectronWindow.minimize,
   openNew: ElectronWindow.openNew,
   toggleDevtools: ElectronWindow.toggleDevtools,
+  toggleFullScreen: ElectronWindow.toggleFullScreen,
+  toggleMaximize: ElectronWindow.toggleMaximize,
   unmaximize: ElectronWindow.unmaximize,
   zoomIn: ElectronWindow.zoomIn,
   zoomOut: ElectronWindow.zoomOut,
