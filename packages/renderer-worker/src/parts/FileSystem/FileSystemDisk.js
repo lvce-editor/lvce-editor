@@ -16,6 +16,11 @@ export const copy = (source, target) => {
   return FileSystemWorker.invoke('FileSystem.copy', /* source */ source, /* target */ target)
 }
 
+export const createFile = (path) => {
+  path = toUri(path)
+  return FileSystemWorker.invoke('FileSystem.createFile', /* path */ path)
+}
+
 export const readFile = (path, encoding) => {
   path = toUri(path)
   return FileSystemWorker.invoke('FileSystem.readFile', /* path */ path, /* encoding */ encoding)

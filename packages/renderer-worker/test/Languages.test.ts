@@ -21,6 +21,7 @@ beforeEach(() => {
   LanguagesState.state.fileNameMap = Object.create(null)
   LanguagesState.state.extensionMap = Object.create(null)
   LanguagesState.state.tokenizerMap = Object.create(null)
+  LanguagesState.state.explicitLanguageMap = Object.create(null)
   LanguagesState.state.firstLines = []
 })
 
@@ -84,6 +85,44 @@ test('getLanguageConfiguration - uses file name language over extension language
     },
   })
   expect(editor.languageId).toBe('jsonc')
+})
+
+test('getLanguageConfiguration - preserves a restored explicit language mode', async () => {
+  await Languages.addLanguages([
+    {
+      id: 'plaintext',
+      extensions: ['.txt'],
+      tokenize: '/tokenizePlaintext.js',
+    },
+    {
+      id: 'javascript',
+      extensions: ['.js'],
+      tokenize: '/tokenizeJavaScript.js',
+    },
+  ])
+  LanguagesState.setLoaded(true)
+  LanguagesState.setExplicitLanguageId('app:///script.txt', 'javascript')
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation((method, languageId) => {
+    if (method === 'ExtensionHost.getLanguageConfiguration' && languageId === 'javascript') {
+      return {
+        comments: {
+          lineComment: '//',
+        },
+      }
+    }
+    throw new Error('unexpected message')
+  })
+  const editor = {
+    uri: 'app:///script.txt',
+    languageId: 'javascript',
+  }
+  expect(await Languages.getLanguageConfiguration(editor)).toEqual({
+    comments: {
+      lineComment: '//',
+    },
+  })
+  expect(editor.languageId).toBe('javascript')
 })
 
 test('getLanguageConfiguration - error - languages must be loaded before requesting language configuration', async () => {

@@ -56,13 +56,16 @@ export const getModuleId = async (uri, opener) => {
   if (uri.startsWith('running-extensions://')) {
     return ViewletModuleId.RunningExtensions
   }
+  if (uri.startsWith('workers:///')) {
+    return ViewletModuleId.Workers
+  }
   if (uri.startsWith('secrets://')) {
     return ViewletModuleId.Secrets
   }
   if (uri.startsWith('search-editor://')) {
     return ViewletModuleId.Search
   }
-  if (uri.startsWith('simple-browser://')) {
+  if (uri.startsWith('simple-browser://') || uri.startsWith('html-preview:///')) {
     return ViewletModuleId.SimpleBrowser
   }
   if (uri.startsWith('simple-browser-history://')) {

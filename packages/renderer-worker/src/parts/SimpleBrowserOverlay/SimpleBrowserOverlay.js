@@ -2,6 +2,8 @@ import * as Command from '../Command/Command.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
+export const SettingsMenu = 'settings-menu'
+
 const run = async (method, overlayId) => {
   const instances = new Set(ViewletStates.getValues())
   for (const instance of instances) {

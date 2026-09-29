@@ -1,6 +1,7 @@
 import { describe, expect, test } from '@jest/globals'
 import { execFile, spawn } from 'node:child_process'
-import { chmod, mkdir, mkdtemp, readFile, realpath, rm, symlink, writeFile } from 'node:fs/promises'
+import { access, chmod, mkdir, mkdtemp, readFile, realpath, rm, symlink, writeFile } from 'node:fs/promises'
+import { constants } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { basename, dirname, join } from 'node:path'
 import { promisify } from 'node:util'
@@ -55,6 +56,7 @@ describe('linux cli templates', () => {
     const completion = await readTemplate('bash_completion')
 
     expect(completion).toContain('--transient')
+    expect(completion).toContain('--electron-version')
   })
 
   test('prints the packaged version without Electron', async () => {
@@ -107,7 +109,7 @@ writeFileSync(process.env.LVCE_TEST_RESULT, JSON.stringify({
       await chmod(fakeElectronPath, 0o755)
       const cli = (await readTemplate('linux_cli_js'))
         .replaceAll('@@APPLICATION_NAME@@', 'lvce')
-        .replace('spawn(process.execPath, args, {', `spawn(${JSON.stringify(fakeElectronPath)}, args, {`)
+        .replace('spawn(executablePath, launchArgs, {', `spawn(${JSON.stringify(fakeElectronPath)}, launchArgs, {`)
       const cliPath = join(binPath, 'cli.js')
       await writeFile(cliPath, cli)
 
@@ -165,8 +167,8 @@ setInterval(() => {}, 1000)
       )
       await chmod(fakeElectronPath, 0o755)
       const cli = (await readTemplate('linux_cli_js')).replace(
-        'spawn(process.execPath, args, {',
-        `spawn(${JSON.stringify(fakeElectronPath)}, args, {`,
+        'spawn(executablePath, launchArgs, {',
+        `spawn(${JSON.stringify(fakeElectronPath)}, launchArgs, {`,
       )
       const cliPath = join(binPath, 'cli.js')
       await writeFile(cliPath, cli)
@@ -225,5 +227,115 @@ setInterval(() => {}, 1000)
 
     expect(cli).toContain('const electronDiagnosticPattern = /^\\[\\d+:\\d+\\/\\d+\\.\\d+:(?:ERROR|WARNING):/')
     expect(cli).toContain('child.stderr.pipe(process.stderr)')
+  })
+
+  testPosix('downloads the requested Electron version and forwards app arguments', async () => {
+    const root = await mkdtemp(join(tmpdir(), 'lvce-linux-cli-electron-version-'))
+    const binPath = join(root, 'bin')
+    const mainProcessPath = join(root, 'packages', 'main-process')
+    const artifactDir = join(root, 'electron-artifact')
+    const fakeElectronPath =
+      process.platform === 'darwin'
+        ? join(artifactDir, 'Electron.app', 'Contents', 'MacOS', 'Electron')
+        : join(artifactDir, 'electron')
+    const downloadResultPath = join(root, 'download.json')
+    const launchResultPath = join(root, 'launch.json')
+    const cachePath = join(root, 'cache')
+    try {
+      await mkdir(binPath, { recursive: true })
+      await mkdir(join(mainProcessPath, 'node_modules', '@electron', 'get'), { recursive: true })
+      await mkdir(join(mainProcessPath, 'node_modules', '@electron-internal', 'extract-zip'), { recursive: true })
+      await mkdir(dirname(fakeElectronPath), { recursive: true })
+      await writeFile(join(mainProcessPath, 'package.json'), JSON.stringify({ type: 'module' }))
+      await writeFile(
+        join(mainProcessPath, 'node_modules', '@electron', 'get', 'package.json'),
+        JSON.stringify({ main: 'index.cjs' }),
+      )
+      await writeFile(
+        join(mainProcessPath, 'node_modules', '@electron', 'get', 'index.cjs'),
+        `exports.downloadArtifact = async (options) => {
+  const { appendFileSync } = require('node:fs')
+  appendFileSync(process.env.LVCE_TEST_DOWNLOAD_RESULT, JSON.stringify(options) + '\\n')
+  return process.env.LVCE_TEST_ELECTRON_ARTIFACT
+}
+`,
+      )
+      await writeFile(
+        join(mainProcessPath, 'node_modules', '@electron-internal', 'extract-zip', 'package.json'),
+        JSON.stringify({ main: 'index.cjs' }),
+      )
+      await writeFile(
+        join(mainProcessPath, 'node_modules', '@electron-internal', 'extract-zip', 'index.cjs'),
+        `const { cpSync } = require('node:fs')
+module.exports = async (_zipPath, { dir }) => {
+  if (process.env.LVCE_TEST_FAIL_EXTRACTION) throw new Error('fixture extraction failed')
+  cpSync(process.env.LVCE_TEST_ELECTRON_ARTIFACT_DIR, dir, { recursive: true })
+}
+`,
+      )
+      await writeFile(
+        fakeElectronPath,
+        `#!/usr/bin/env node
+const { writeFileSync } = require('node:fs')
+writeFileSync(process.env.LVCE_TEST_LAUNCH_RESULT, JSON.stringify({ args: process.argv.slice(2), runAsNode: process.env.ELECTRON_RUN_AS_NODE }))
+`,
+      )
+      await chmod(fakeElectronPath, 0o755)
+      const cliPath = join(binPath, 'cli.js')
+      await writeFile(cliPath, (await readTemplate('linux_cli_js')).replaceAll('@@APPLICATION_NAME@@', 'lvce'))
+
+      const env = {
+        ...process.env,
+        ELECTRON_RUN_AS_NODE: '1',
+        LVCE_TEST_DOWNLOAD_RESULT: downloadResultPath,
+        LVCE_TEST_ELECTRON_ARTIFACT: fakeElectronPath,
+        LVCE_TEST_ELECTRON_ARTIFACT_DIR: artifactDir,
+        LVCE_TEST_LAUNCH_RESULT: launchResultPath,
+        XDG_CACHE_HOME: cachePath,
+      }
+      const { stderr } = await execFileAsync(process.execPath, [cliPath, '--electron-version', '44.1.2', '--wait'], { env })
+      const download = JSON.parse((await readFile(downloadResultPath, 'utf8')).trim())
+      const launch = JSON.parse(await readFile(launchResultPath, 'utf8'))
+      const realAppRoot = await realpath(root)
+
+      expect(download).toMatchObject({ version: '44.1.2', platform: process.platform, artifactName: 'electron' })
+      expect(launch.args).toEqual([realAppRoot, '--wait'])
+      expect(launch.runAsNode).toBeUndefined()
+      expect(stderr).toBe('')
+      const cachedExecutablePath =
+        process.platform === 'darwin'
+          ? join(cachePath, 'lvce', 'electron', `44.1.2-${process.platform}-${process.arch}`, 'Electron.app', 'Contents', 'MacOS', 'Electron')
+          : join(cachePath, 'lvce', 'electron', `44.1.2-${process.platform}-${process.arch}`, 'electron')
+      await expect(access(cachedExecutablePath, constants.X_OK)).resolves.toBeUndefined()
+
+      await execFileAsync(process.execPath, [cliPath, '--electron-version=44.1.2', '--wait'], { env })
+      expect((await readFile(downloadResultPath, 'utf8')).trim().split('\n')).toHaveLength(1)
+
+      await expect(
+        execFileAsync(process.execPath, [cliPath, '--electron-version=45.0.0', '--wait'], {
+          env: { ...env, LVCE_TEST_FAIL_EXTRACTION: '1' },
+        }),
+      ).rejects.toMatchObject({ code: 1, stderr: expect.stringContaining('fixture extraction failed') })
+      await expect(
+        access(join(cachePath, 'lvce', 'electron', `45.0.0-${process.platform}-${process.arch}`, 'electron')),
+      ).rejects.toMatchObject({ code: 'ENOENT' })
+    } finally {
+      await rm(root, { recursive: true, force: true })
+    }
+  })
+
+  testPosix('rejects invalid Electron versions without launching', async () => {
+    const root = await mkdtemp(join(tmpdir(), 'lvce-linux-cli-invalid-electron-version-'))
+    try {
+      const cliPath = join(root, 'cli.js')
+      await writeFile(cliPath, await readTemplate('linux_cli_js'))
+
+      await expect(execFileAsync(process.execPath, [cliPath, '--electron-version', 'latest'])).rejects.toMatchObject({
+        code: 1,
+        stderr: expect.stringContaining('--electron-version requires a valid Electron version'),
+      })
+    } finally {
+      await rm(root, { recursive: true, force: true })
+    }
   })
 })

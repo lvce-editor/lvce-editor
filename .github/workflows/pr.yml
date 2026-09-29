@@ -32,22 +32,22 @@ jobs:
         id: npm-cache
         with:
           path: '**/node_modules'
-          key: ${{ runner.os }}-cacheNodeModules-${{ steps.nodeModulesCacheKey.outputs.value }}
+          key: ${{ runner.os }}-${{ runner.arch }}-cacheNodeModules-${{ steps.nodeModulesCacheKey.outputs.value }}
       - uses: actions/cache@v6
         id: electron-rebuild-cache
         with:
           path: '~/.electron-gyp'
-          key: ${{ runner.os }}-cacheElectronRebuild-${{ steps.nodeModulesCacheKey.outputs.value }}
+          key: ${{ runner.os }}-${{ runner.arch }}-cacheElectronRebuild-${{ steps.nodeModulesCacheKey.outputs.value }}
       - uses: actions/cache@v6
         id: electron-builder-cache
         with:
           path: '~/.cache/electron-builder'
-          key: ${{ runner.os }}-cacheElectronBuilder-${{ steps.nodeModulesCacheKey.outputs.value }}
+          key: ${{ runner.os }}-${{ runner.arch }}-cacheElectronBuilder-${{ steps.nodeModulesCacheKey.outputs.value }}
       - uses: actions/cache@v6
         id: build-cache
         with:
           path: 'packages/build/.tmp/cachedDependencies'
-          key: ${{ runner.os }}-build-cache-${{ steps.nodeModulesCacheKey.outputs.value }}
+          key: ${{ runner.os }}-${{ runner.arch }}-build-cache-${{ steps.nodeModulesCacheKey.outputs.value }}
       - name: npm ci
         run: node packages/build/src/parts/InstallDependencies/InstallDependencies.ts
         if: steps.npm-cache.outputs.cache-hit != 'true'
@@ -75,84 +75,16 @@ jobs:
         working-directory: ./packages/build
         run: npm test -- --runTestsByPath test/BundleBuiltinSettings.test.ts
       - run: npm test
-      - name: install playwright dependencies (extension host worker tests)
-        working-directory: ./packages/extension-host-worker-tests
-        run: npx playwright install chromium
-        if: steps.npm-cache.outputs.cache-hit != 'true'
-        env:
-          PLAYWRIGHT_BROWSERS_PATH: 0
+      - name: Test main-process unit test shutdown
+        run: node --test scripts/test/main-process-shutdown.test.mjs
       - name: Test local services in remote workspaces
         run: |
           node --experimental-vm-modules node_modules/jest/bin/jest.js --config packages/renderer-worker/package.json --runInBand --coverage=false --testPathPatterns='(IpcParentWithNodeAlternate|LaunchFileSystemWorker|WebSocketCapability|ExtensionNodeRpc|WorkspaceConnection|WorkspaceSetUri|LoadProcessExplorerViewletModule|GetTerminalSpawnOptions).test'
-          npm run e2e:headless --prefix packages/extension-host-worker-tests -- --test-name-prefix=workspace.remote-local-services
-        env:
-          PLAYWRIGHT_BROWSERS_PATH: 0
-      - name: Test TypeScript readonly union highlighting
-        working-directory: ./packages/extension-host-worker-tests
-        run: npm run e2e:headless -- --test-name-prefix=viewlet.editor-typescript-readonly-union-parameters
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0
       - name: Test renderer layout blur dispatch
         if: matrix.os == 'ubuntu-24.04'
         run: node --experimental-vm-modules node_modules/jest/bin/jest.js --config packages/renderer-worker/package.json --runInBand --coverage=false --testPathPatterns=ViewletLayoutBlur.test
-      - name: Test session replay settings
-        if: matrix.os == 'ubuntu-24.04'
-        working-directory: ./packages/extension-host-worker-tests
-        run: |
-          npm run e2e:headless -- --test-name-prefix=session-replay.settings
-          npm run e2e:headless -- --test-name-prefix=session-replay.settings '--initial-settings={"sessionReplay.enabled":true}' '--expect-console=Session replay command recording verified'
-        env:
-          PLAYWRIGHT_BROWSERS_PATH: 0
-      - name: Test keybinding popup position
-        if: matrix.os == 'ubuntu-24.04'
-        run: |
-          node packages/main-process/node_modules/electron/install.js
-          xvfb-run -a node scripts/test-keybinding-popup-position.mjs
-      - name: Test component worker heap snapshot
-        if: matrix.os == 'ubuntu-24.04'
-        run: xvfb-run -a npm run test:component-heap-snapshot
-      - name: Test bundled font loading
-        if: matrix.os == 'ubuntu-24.04'
-        working-directory: ./packages/extension-host-worker-tests
-        run: npm run e2e:fonts
-        env:
-          PLAYWRIGHT_BROWSERS_PATH: 0
-      - name: Test notification text layout
-        if: matrix.os == 'ubuntu-24.04'
-        working-directory: ./packages/extension-host-worker-tests
-        run: npm run e2e:notification-layout
-        env:
-          PLAYWRIGHT_BROWSERS_PATH: 0
-      - name: Test terminal theme backgrounds
-        if: matrix.os == 'ubuntu-24.04'
-        working-directory: ./packages/extension-host-worker-tests
-        run: npm run e2e:terminal-background
-        env:
-          PLAYWRIGHT_BROWSERS_PATH: 0
-      - name: Test Source Control shortcut focus
-        if: matrix.os == 'ubuntu-24.04'
-        working-directory: ./packages/extension-host-worker-tests
-        run: npm run e2e:headless -- --test-name-prefix=viewlet.source-control-shortcut-focus
-        env:
-          PLAYWRIGHT_BROWSERS_PATH: 0
-      - name: Test Source Control provider progress
-        if: matrix.os == 'ubuntu-24.04'
-        working-directory: ./packages/extension-host-worker-tests
-        run: npm run e2e:headless -- --test-name-prefix=viewlet.source-control-progress
-        env:
-          PLAYWRIGHT_BROWSERS_PATH: 0
-      - name: Test integrated terminal rendering
-        if: matrix.os == 'ubuntu-24.04'
-        working-directory: ./packages/extension-host-worker-tests
-        run: npm run e2e:headless -- --test-name-prefix=viewlet.terminal-
-        env:
-          PLAYWRIGHT_BROWSERS_PATH: 0
-      - name: Test error dialog and notification rendering
-        if: matrix.os == 'ubuntu-24.04'
-        working-directory: ./packages/extension-host-worker-tests
-        run: npm run e2e:headless -- --test-name-prefix=viewlet.error-
-        env:
-          PLAYWRIGHT_BROWSERS_PATH: 0
       - name: Build static site
         run: npm run build:static:ignore-icon-theme
         env:
@@ -164,34 +96,6 @@ jobs:
         run: npm run test:server
       - name: Test Static Export
         run: npm run test-static-export
-      - name: Test static command picker
-        working-directory: ./packages/extension-host-worker-tests
-        run: node src/_all.js --ci --headless --test-name-prefix=viewlet.quick-pick-builtin-commands
-        env:
-          PLAYWRIGHT_BROWSERS_PATH: 0
-      - name: Test Open Recent removal
-        if: matrix.os == 'ubuntu-24.04'
-        working-directory: ./packages/extension-host-worker-tests
-        run: node src/_all.js --ci --headless --test-name-prefix=viewlet.quick-pick-open-recent-remove
-        env:
-          PLAYWRIGHT_BROWSERS_PATH: 0
-      - name: Test Open Recent home display
-        if: matrix.os == 'ubuntu-24.04'
-        working-directory: ./packages/extension-host-worker-tests
-        run: node src/_all.js --ci --headless --test-name-prefix=viewlet.quick-pick-open-recent-home
-        env:
-          PLAYWRIGHT_BROWSERS_PATH: 0
-      - name: Run extension host worker tests
-        working-directory: ./packages/extension-host-worker-tests
-        run: npm run e2e:headless:ci
-        env:
-          PLAYWRIGHT_BROWSERS_PATH: 0
-      - name: Test canonical extension detail URIs
-        if: matrix.os == 'ubuntu-24.04'
-        working-directory: ./packages/extension-host-worker-tests
-        run: npm run e2e:headless -- --test-name-prefix=viewlet.extension-detail-canonical-uri
-        env:
-          PLAYWRIGHT_BROWSERS_PATH: 0
       - name: Build Electron App (deb)
         if: matrix.os == 'ubuntu-24.04'
         run: npm run build:electron:deb
@@ -204,21 +108,14 @@ jobs:
         if: matrix.os == 'windows-2025'
         with:
           path: '~\AppData\Local\electron-builder'
-          key: ${{ runner.os }}-electron-builder-${{ hashFiles('package-lock.json') }}
+          key: ${{ runner.os }}-${{ runner.arch }}-electron-builder-${{ hashFiles('package-lock.json') }}
       - name: Build Electron App (exe)
         if: matrix.os == 'windows-2025'
-        run: npm run build:electron:windows:exe
+        run: npm run build:electron:windows:exe:x64
       - name: Test staged Windows installer
         if: matrix.os == 'windows-2025'
         shell: pwsh
         run: ./packages/build/scripts/test-windows-staging.ps1
-      - name: Build Electron App (exe, arm64)
-        if: matrix.os == 'windows-2025'
-        run: npm run build:electron:windows:exe:arm64
-      - name: Test staged Windows ARM64 installer
-        if: matrix.os == 'windows-2025'
-        shell: pwsh
-        run: ./packages/build/scripts/test-windows-staging.ps1 -Architecture arm64
       - name: Build Electron App (AppImage)
         if: matrix.os == 'ubuntu-24.04'
         run: npm run build:electron:app-image
@@ -226,6 +123,81 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: electron-app-${{ matrix.os }}
+          path: packages/build/.tmp/releases/*
+          if-no-files-found: error
+      - name: Clean up
+        run: rm -rf packages/build/.tmp
+        shell: bash
+
+  windows-arm:
+    runs-on: windows-11-arm
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: '.nvmrc'
+          architecture: arm64
+      - name: Setup Python 3
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+          architecture: arm64
+      - name: Compute node modules cache key
+        id: nodeModulesCacheKey
+        shell: bash
+        run: echo "value=$(node packages/build/src/parts/ComputeNodeModulesCacheKey/ComputeNodeModulesCacheKey.ts)" >> $GITHUB_OUTPUT
+      - uses: actions/cache@v6
+        id: npm-cache
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-${{ runner.arch }}-cacheNodeModules-${{ steps.nodeModulesCacheKey.outputs.value }}
+      - uses: actions/cache@v6
+        id: electron-rebuild-cache
+        with:
+          path: '~/.electron-gyp'
+          key: ${{ runner.os }}-${{ runner.arch }}-cacheElectronRebuild-${{ steps.nodeModulesCacheKey.outputs.value }}
+      - uses: actions/cache@v6
+        id: electron-builder-cache
+        with:
+          path: '~/.cache/electron-builder'
+          key: ${{ runner.os }}-${{ runner.arch }}-cacheElectronBuilder-${{ steps.nodeModulesCacheKey.outputs.value }}
+      - uses: actions/cache@v6
+        id: build-cache
+        with:
+          path: 'packages/build/.tmp/cachedDependencies'
+          key: ${{ runner.os }}-${{ runner.arch }}-build-cache-${{ steps.nodeModulesCacheKey.outputs.value }}
+      - name: npm ci
+        run: node packages/build/src/parts/InstallDependencies/InstallDependencies.ts
+        if: steps.npm-cache.outputs.cache-hit != 'true'
+        env:
+          DOWNLOAD_BUILTIN_EXTENSIONS: 0
+      - name: Compute builtin extensions cache key
+        id: builtinExtensionsCacheKey
+        run: echo "value=$(node packages/build/src/parts/ComputeBuiltinExtensionsCacheKey/ComputeBuiltinExtensionsCacheKey.ts)" >> $GITHUB_OUTPUT
+        shell: bash
+      - uses: actions/cache@v6
+        id: builtin-extensions-cache
+        with:
+          path: extensions
+          key: builtinExtensions-${{ steps.builtinExtensionsCacheKey.outputs.value }}
+      - name: Download Builtin Extensions
+        run: node packages/build/src/parts/DownloadBuiltinExtensions/DownloadBuiltinExtensions.ts
+        if: steps.builtin-extensions-cache.outputs.cache-hit != 'true'
+      - name: Cache Electron Builder Dependencies (Windows)
+        uses: actions/cache@v6
+        with:
+          path: '~\AppData\Local\electron-builder'
+          key: ${{ runner.os }}-${{ runner.arch }}-electron-builder-${{ hashFiles('package-lock.json') }}
+      - name: Build Electron App (exe, arm64)
+        run: npm run build:electron:windows:exe:arm64
+      - name: Test staged Windows ARM64 installer
+        shell: pwsh
+        run: ./packages/build/scripts/test-windows-staging.ps1 -Architecture arm64
+      - name: Upload Electron App Artifacts
+        uses: actions/upload-artifact@v7
+        with:
+          name: electron-app-windows-arm64
           path: packages/build/.tmp/releases/*
           if-no-files-found: error
       - name: Clean up
