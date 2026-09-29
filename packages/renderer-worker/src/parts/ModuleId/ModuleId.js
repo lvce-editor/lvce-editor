@@ -88,7 +88,6 @@ export const ExtensionHostClosingTag = 122
 export const SendMessagePortToRendererProcess = 123
 export const ExtensionHostHover = 124
 export const SendMessagePortToExtensionHostWorker = 125
-export const ExtensionHostManagement = 126
 export const SendMessagePortToSyntaxHighlightingWorker = 127
 export const Transferrable = 128
 export const WebView = 129
@@ -111,3 +110,16 @@ export const Document = 145
 export const Exec = 146
 export const OAuthServer = 147
 export const LaunchIsolatedExtensionHostWorker = 148
+export const ExtensionNodeRpc = 149
+export const License = 150
+export const SendMessagePortToMainProcess = 151
+export const FileSystemMemory = 152
+export const WebSocketCapability = 153
+export const ExtensionHotReload = 154
+export const RevealInExplorer = 155
+export const ComponentState = 156
+export const Application = 157
+
+export const SimpleBrowserWorkflow = 158
+
+export const TerminalTransfer = 159

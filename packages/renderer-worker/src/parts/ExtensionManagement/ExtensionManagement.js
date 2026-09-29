@@ -1,8 +1,13 @@
+import * as AssetDir from '../AssetDir/AssetDir.js'
 import * as Command from '../Command/Command.js'
-import * as ExtensionHostWorker from '../ExtensionHostWorker/ExtensionHostWorker.js'
+import * as ContextMenu from '../ContextMenu/ContextMenu.js'
 import * as ExtensionManagementWorker from '../ExtensionManagementWorker/ExtensionManagementWorker.js'
 import * as ExtensionManifestStatus from '../ExtensionManifestStatus/ExtensionManifestStatus.js'
+import * as ExtensionViewContext from '../ExtensionViewContext/ExtensionViewContext.js'
+import * as GetActiveEditor from '../GetActiveEditor/GetActiveEditor.js'
+import * as IconTheme from '../IconTheme/IconTheme.js'
 import * as InstallExtension from '../InstallExtension/InstallExtension.js'
+import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
@@ -12,23 +17,58 @@ export const handleExtensionStatusUpdate = async () => {
   // TODO inform all viewlets
 }
 
-export const invalidateExtensionsCache = async () => {
+export const activateByEvent = (event, assetDir = AssetDir.assetDir, platform = Platform.getPlatform()) => {
+  return ExtensionManagementWorker.invoke('Extensions.activateByEvent', event, assetDir, platform)
+}
+
+export const doInvalidateExtensionsCache = async () => {
   try {
     await ExtensionManagementWorker.invoke('Extensions.invalidateExtensionsCache')
-    await Command.execute('Layout.handleExtensionsChanged')
   } catch {
     // ignore
   }
 }
 
+export const handleExtensionsCacheInvalidated = async (extensionId, disabled) => {
+  try {
+    const hasExtensionState = typeof extensionId === 'string' && typeof disabled === 'boolean'
+    await Command.execute('KeyBindings.hydrate')
+    await IconTheme.reload()
+    await Command.execute('ColorTheme.reload')
+    if (hasExtensionState) {
+      await Command.execute('Layout.handleExtensionsChanged', extensionId, disabled)
+    } else {
+      await Command.execute('Layout.handleExtensionsChanged')
+    }
+  } catch {
+    // ignore
+  }
+  try {
+    await GetActiveEditor.updateAllDiagnostics()
+  } catch {
+    // Older editor workers do not expose a command for refreshing all diagnostics.
+  }
+}
+
+export const handleViewContextChange = (uid, viewId, context) => {
+  ExtensionViewContext.handleViewContextChange(uid, viewId, context)
+}
+
+export const showViewContextMenu = async (uid, viewId, menuId, x, y) => {
+  await ContextMenu.show2(uid, MenuEntryId.ExtensionView, x, y, {
+    menuId,
+    viewId,
+  })
+}
+
 export const install = async (id) => {
   await InstallExtension.install(id)
-  invalidateExtensionsCache()
+  doInvalidateExtensionsCache()
 }
 
 export const uninstall = async (id) => {
   await SharedProcess.invoke(/* ExtensionManagement.uninstall */ 'ExtensionManagement.uninstall', /* id */ id)
-  invalidateExtensionsCache()
+  doInvalidateExtensionsCache()
 }
 
 export const disable = async (id) => {
@@ -38,7 +78,7 @@ export const disable = async (id) => {
     } else {
       await SharedProcess.invoke(/* ExtensionManagement.disable */ 'ExtensionManagement.disable', /* id */ id)
     }
-    await invalidateExtensionsCache()
+    await doInvalidateExtensionsCache()
     return undefined
   } catch (error) {
     return error
@@ -52,7 +92,7 @@ export const enable = async (id) => {
     } else {
       await SharedProcess.invoke(/* ExtensionManagement.enable */ 'ExtensionManagement.enable', /* id */ id)
     }
-    await invalidateExtensionsCache()
+    await doInvalidateExtensionsCache()
     return undefined
   } catch (error) {
     return error
@@ -79,7 +119,7 @@ export const getExtension = async (id) => {
 let disabledIds = []
 
 export const getExtension2 = async (id) => {
-  const extension = await ExtensionHostWorker.invoke('Extensions.getExtension', id)
+  const extension = await ExtensionManagementWorker.invoke('Extensions.getExtension', id, AssetDir.assetDir, Platform.getPlatform())
   if (disabledIds.includes(id)) {
     return {
       ...extension,
@@ -107,4 +147,8 @@ export const getWorkingExtensions = async () => {
 export const getExtensionsEtag = async () => {
   const etag = await SharedProcess.invoke('ExtensionManagement.getExtensionsEtag')
   return etag
+}
+
+export const getRunningExtensions = async () => {
+  return ExtensionManagementWorker.invoke('Extensions.getRunningExtensions', AssetDir.assetDir, Platform.getPlatform())
 }

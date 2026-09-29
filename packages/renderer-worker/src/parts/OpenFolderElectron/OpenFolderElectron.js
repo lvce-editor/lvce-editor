@@ -2,13 +2,12 @@ import * as Command from '../Command/Command.js'
 import * as ElectronDialog from '../ElectronDialog/ElectronDialog.js'
 
 export const openFolder = async () => {
-  const folders = await ElectronDialog.showOpenDialog(
+  const uri = await ElectronDialog.showOpenDialog(
     /* title */ 'Open Folder',
     /* properties */ ['openDirectory', 'dontAddToRecent', 'showHiddenFiles'],
   )
-  if (!folders || folders.length === 0) {
+  if (!uri) {
     return
   }
-  const path = folders[0]
-  await Command.execute(/* Workspace.setPath */ 'Workspace.setPath', /* path */ path)
+  await Command.execute(/* Workspace.setUri */ 'Workspace.setUri', /* uri */ uri)
 }

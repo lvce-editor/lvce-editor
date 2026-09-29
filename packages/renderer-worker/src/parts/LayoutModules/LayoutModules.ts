@@ -99,3 +99,14 @@ export const Preview: LayoutModule = {
   kId: 'previewId',
   kReady: 'previewVisible',
 }
+
+export const SecondaryPreview: LayoutModule = {
+  moduleId: ViewletModuleId.SecondaryPreview,
+  kVisible: LayoutKeys.SecondaryPreviewVisible,
+  kTop: LayoutKeys.SecondaryPreviewTop,
+  kLeft: LayoutKeys.SecondaryPreviewLeft,
+  kWidth: LayoutKeys.SecondaryPreviewWidth,
+  kHeight: LayoutKeys.SecondaryPreviewHeight,
+  kId: 'secondaryPreviewId',
+  kReady: 'secondaryPreviewVisible',
+}

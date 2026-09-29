@@ -3,14 +3,11 @@ import * as ErrorCodes from '../src/parts/ErrorCodes/ErrorCodes.js'
 import * as ExtensionManifestStatus from '../src/parts/ExtensionManifestStatus/ExtensionManifestStatus.js'
 
 jest.unstable_mockModule('../src/parts/PlatformPaths/PlatformPaths.js', () => ({
-  getExtensionsPath: jest.fn(() => {
-    return '/test/extensions'
-  }),
-  getLinkedExtensionsPath: jest.fn(() => {
-    return '/test/linked-extensions'
-  }),
   getBuiltinExtensionsPath: jest.fn(() => {
     return '/test/builtin-extensions'
+  }),
+  getExtensionsPath: jest.fn(() => {
+    return '/test/extensions'
   }),
 }))
 
@@ -25,7 +22,7 @@ const ExtensionManifests = await import('../src/parts/ExtensionManifests/Extensi
 
 class NodeError extends Error {
   code: any
-  constructor(code, message = code) {
+  constructor(code: any, message: any = code) {
     super(message)
     this.code = code
   }
@@ -56,8 +53,8 @@ test.skip('list - error - manifest json is null', async () => {
   expect(await ExtensionList.list()).toEqual([
     {
       id: 'extension-1',
-      version: 'n/a',
       symlink: '',
+      version: 'n/a',
     },
   ])
 })
@@ -67,16 +64,16 @@ test('list - error - manifest json has no id', async () => {
   ExtensionManifests.getAll.mockImplementation(() => {
     return [
       {
-        status: ExtensionManifestStatus.Resolved,
         path: '/test/extension-1',
+        status: ExtensionManifestStatus.Resolved,
       },
     ]
   })
   expect(await ExtensionList.list()).toEqual([
     {
       id: 'extension-1',
-      version: 'n/a',
       symlink: '',
+      version: 'n/a',
     },
   ])
 })
@@ -86,17 +83,17 @@ test('list - error - manifest version is of type array', async () => {
   ExtensionManifests.getAll.mockImplementation(() => {
     return [
       {
-        version: [],
-        status: ExtensionManifestStatus.Resolved,
         path: '/test/builtin-extensions/extension-1',
+        status: ExtensionManifestStatus.Resolved,
+        version: [],
       },
     ]
   })
   expect(await ExtensionList.list()).toEqual([
     {
       id: 'extension-1',
-      version: 'n/a',
       symlink: '',
+      version: 'n/a',
     },
   ])
 })
@@ -106,20 +103,20 @@ test('list - error - manifest is a directory', async () => {
   ExtensionManifests.getAll.mockImplementation(() => {
     return [
       {
-        status: ExtensionManifestStatus.Rejected,
         reason: new NodeError(ErrorCodes.EISDIR),
+        status: ExtensionManifestStatus.Rejected,
       },
       {
-        status: ExtensionManifestStatus.Resolved,
         path: '/test/extensions/extension-2',
+        status: ExtensionManifestStatus.Resolved,
       },
     ]
   })
   expect(await ExtensionList.list()).toEqual([
     {
       id: 'extension-2',
-      version: 'n/a',
       symlink: '',
+      version: 'n/a',
     },
   ])
 })
@@ -132,16 +129,16 @@ test('list', async () => {
     return [
       {
         id: 'extension-1',
-        version: '0.0.1',
         status: ExtensionManifestStatus.Resolved,
+        version: '0.0.1',
       },
     ]
   })
   expect(await ExtensionList.list()).toEqual([
     {
       id: 'extension-1',
-      version: '0.0.1',
       symlink: '',
+      version: '0.0.1',
     },
   ])
 })
@@ -152,17 +149,17 @@ test('list - with symlink', async () => {
     return [
       {
         id: 'extension-1',
-        version: '0.0.1',
         status: ExtensionManifestStatus.Resolved,
         symlink: '../../../Documents/extension-1',
+        version: '0.0.1',
       },
     ]
   })
   expect(await ExtensionList.list()).toEqual([
     {
       id: 'extension-1',
-      version: '0.0.1',
       symlink: '../../../Documents/extension-1',
+      version: '0.0.1',
     },
   ])
 })

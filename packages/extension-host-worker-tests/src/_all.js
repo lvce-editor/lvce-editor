@@ -1,12 +1,13 @@
 import { chromium, expect } from '@playwright/test'
 import { fork } from 'child_process'
-import { readdir, rm } from 'fs/promises'
+import { mkdir, readdir, rm, writeFile } from 'fs/promises'
 import { mkdtemp } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import express from 'express'
 import cors from 'cors'
+import { waitForServerReady } from '../scripts/wait-for-server-ready.mjs'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const root = join(__dirname, '..', '..', '..')
@@ -28,16 +29,20 @@ const getRelativePath = (testFile) => {
 const getPaths = async () => {
   const testsPath = join(root, 'packages', 'extension-host-worker-tests', 'src')
   const dirents = await readdir(testsPath)
-  const testFiles = dirents.filter(isTestFile)
+  const testNamePrefixArgument = process.argv.find((argument) => argument.startsWith('--test-name-prefix='))
+  const testNamePrefix = testNamePrefixArgument ? testNamePrefixArgument.slice('--test-name-prefix='.length) : ''
+  const testFiles = dirents.filter((dirent) => {
+    return isTestFile(dirent) && dirent.startsWith(testNamePrefix)
+  })
   return testFiles
 }
 
-const testFile = async (page, name) => {
+const testFile = async (page, name, timeout) => {
   const relativePath = getRelativePath(name)
   const url = `http://localhost:3000${relativePath}`
   await page.goto(url)
   const testOverlay = page.locator('#TestOverlay')
-  await expect(testOverlay).toBeVisible({ timeout: 25_000 })
+  await expect(testOverlay).toBeVisible({ timeout })
   const text = await testOverlay.textContent()
   const state = await testOverlay.getAttribute('data-state')
   switch (state) {
@@ -53,11 +58,11 @@ const testFile = async (page, name) => {
 }
 
 const handleConsole = (event) => {
-  console.log(event)
+  console.log(event.text())
 }
 
 const getTmpDir = () => {
-  return mkdtemp(join(tmpdir(), 'foo-'))
+  return mkdtemp(join(tmpdir(), 'lvce-extension-host-worker-tests-'))
 }
 
 const getServerArgs = (argv) => {
@@ -87,11 +92,18 @@ const launchServer = async ({ ci, configDir, cacheDir, dataDir }) => {
   const server = fork(SERVER_PATH, serverArgs, {
     stdio: 'inherit',
     env: {
+      ...process.env,
       XDG_CONFIG_HOME: configDir,
       XDG_CACHE_HOME: cacheDir,
       XDG_DATA_HOME: dataDir,
     },
   })
+  try {
+    await waitForServerReady(server)
+  } catch (error) {
+    server.kill('SIGKILL')
+    throw error
+  }
   return {
     dispose() {
       server.kill('SIGKILL')
@@ -100,6 +112,11 @@ const launchServer = async ({ ci, configDir, cacheDir, dataDir }) => {
 }
 
 const runTests = async () => {
+  const timeoutArgument = process.argv.find((argument) => argument.startsWith('--test-timeout='))
+  const timeout = timeoutArgument ? Number(timeoutArgument.slice('--test-timeout='.length)) : 25_000
+  if (!Number.isSafeInteger(timeout) || timeout <= 0) {
+    throw new Error('--test-timeout must be a positive integer in milliseconds')
+  }
   // TODO use build tmp folder
   const configDir = await getTmpDir()
   const cacheDir = await getTmpDir()
@@ -108,6 +125,13 @@ const runTests = async () => {
   const headless = argv.includes('--headless')
   const ci = argv.includes('--ci')
   const serve = argv.includes('--serve')
+  const initialSettingsArgument = argv.find((argument) => argument.startsWith('--initial-settings='))
+  const initialSettings = initialSettingsArgument ? JSON.parse(initialSettingsArgument.slice('--initial-settings='.length)) : undefined
+  if (initialSettings) {
+    const applicationConfigDir = join(configDir, 'lvce-oss')
+    await mkdir(applicationConfigDir, { recursive: true })
+    await writeFile(join(applicationConfigDir, 'settings.json'), JSON.stringify(initialSettings))
+  }
   const server = await launchServer({
     configDir,
     cacheDir,
@@ -134,13 +158,24 @@ const runTests = async () => {
         }
       : undefined,
   })
+  if (initialSettings) {
+    await context.addInitScript((value) => {
+      if (location.protocol === 'http:' || location.protocol === 'https:') localStorage.setItem('settings', JSON.stringify(value))
+    }, initialSettings)
+  }
   const page = await context.newPage()
   try {
-    page.on('console', handleConsole)
+    const expectedConsole = argv.find((argument) => argument.startsWith('--expect-console='))?.slice('--expect-console='.length)
+    let receivedExpectedConsole = false
+    page.on('console', (event) => {
+      if (event.text() === expectedConsole) receivedExpectedConsole = true
+      handleConsole(event)
+    })
     const testNames = await getPaths()
     for (const testName of testNames) {
-      await testFile(page, testName)
+      await testFile(page, testName, timeout)
     }
+    if (expectedConsole && !receivedExpectedConsole) throw new Error(`Missing test assertion: ${expectedConsole}`)
   } catch (error) {
     throw error
   } finally {
@@ -148,6 +183,11 @@ const runTests = async () => {
     await context.close()
     await browser.close()
     server.dispose()
+    await Promise.all([
+      rm(configDir, { recursive: true, force: true }),
+      rm(cacheDir, { recursive: true, force: true }),
+      rm(dataDir, { recursive: true, force: true }),
+    ])
   }
 }
 

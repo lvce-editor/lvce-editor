@@ -1,4 +1,5 @@
 import * as ErrorWorker from '../ErrorWorker/ErrorWorker.ts'
+import * as GetTokenizePath from '../GetTokenizePath/GetTokenizePath.js'
 
 const serializeError = (error) => {
   if (!error) {
@@ -19,7 +20,8 @@ const serializeError = (error) => {
 export const prepare = async (error) => {
   try {
     const serialized = serializeError(error)
-    const prepared = await ErrorWorker.invoke('Errors.prepare', serialized)
+    const tokenizerPath = GetTokenizePath.getTokenizePath('javascript')
+    const prepared = await ErrorWorker.invoke('Errors.prepare', serialized, { tokenizerPath })
     return prepared
   } catch {
     return error

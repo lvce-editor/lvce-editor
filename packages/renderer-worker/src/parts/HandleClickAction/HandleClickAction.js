@@ -14,6 +14,10 @@ export const handleClickAction = async (state, index, command) => {
     throw new Error(`command is undefined`)
   }
   const currentViewletId = getId(state)
+  if (currentViewletId.includes('.')) {
+    await Command.execute('ExtensionHost.executeCommand', command)
+    return state
+  }
   const fullCommand = `${currentViewletId}.${command}`
   await Command.execute(fullCommand)
   return state

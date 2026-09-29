@@ -1,6 +1,8 @@
 import * as AssetDir from '../AssetDir/AssetDir.js'
+import * as GetWebAssetUrl from '../GetWebAssetUrl/GetWebAssetUrl.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
+import * as Product from '../Product/Product.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 /* istanbul ignore file */
 
@@ -22,6 +24,13 @@ export const getDisabledExtensionsPath = () => {
 
 export const getDisabledExtensionsJsonPath = () => {
   return SharedProcess.invoke(/* Platform.getDisabledExtensionsJsonPath */ 'Platform.getDisabledExtensionsJsonPath')
+}
+
+export const getConfigJsonPath = (platform = Platform.getPlatform(), assetDir = AssetDir.assetDir) => {
+  if (platform === PlatformType.Web) {
+    return GetWebAssetUrl.getWebAssetUrl(assetDir, 'config.json')
+  }
+  return SharedProcess.invoke(/* Platform.getConfigJsonPath */ 'Platform.getConfigJsonPath')
 }
 
 export const getCachedExtensionsPath = () => {
@@ -70,16 +79,19 @@ export const getConfigPath = () => {
   return SharedProcess.invoke(/* Platform.getConfigDir */ 'Platform.getConfigDir')
 }
 
+export const getUserDataDir = (platform = Platform.getPlatform()) => {
+  if (platform === PlatformType.Web) {
+    throw new Error('User data directory is not available on web')
+  }
+  return SharedProcess.invoke(/* Platform.getConfigUri */ 'Platform.getConfigUri')
+}
+
 export const getCachePath = () => {
   return SharedProcess.invoke(/* Platform.getCacheDir */ 'Platform.getCacheDir')
 }
 
 export const getCacheUri = () => {
   return SharedProcess.invoke(/* Platform.getCacheDir */ 'Platform.getCacheUri')
-}
-
-export const getExtensionHostWorkerUrl = () => {
-  return `${AssetDir.assetDir}/packages/extension-host-worker/src/extensionHostWorkerMain.ts`
 }
 
 export const getGithubApiUrl = () => {
@@ -129,6 +141,9 @@ export const getRepository = () => {
   return SharedProcess.invoke('Platform.getRepository')
 }
 
-export const getApplicationName = () => {
+export const getApplicationName = (platform = Platform.getPlatform()) => {
+  if (platform === PlatformType.Web) {
+    return Product.getApplicationName()
+  }
   return SharedProcess.invoke('Platform.getApplicationName')
 }

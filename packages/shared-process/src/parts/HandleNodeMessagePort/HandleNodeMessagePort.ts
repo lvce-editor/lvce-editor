@@ -1,0 +1,11 @@
+import * as HandleIpc from '../HandleIpc/HandleIpc.ts'
+import * as IpcChild from '../IpcChild/IpcChild.ts'
+import * as IpcChildType from '../IpcChildType/IpcChildType.ts'
+
+export const handleNodeMessagePort = async (messagePort: any): Promise<any> => {
+  const ipc = await IpcChild.listen({
+    messagePort,
+    method: IpcChildType.NodeMessagePort,
+  })
+  HandleIpc.handleIpc(ipc)
+}

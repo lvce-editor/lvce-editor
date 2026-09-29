@@ -10,31 +10,43 @@
 }
 
 .Button:where(:focus-visible) {
-  background: var(--SplitButtonHoverBackground, #387674);
+  background: var(
+    --ButtonHoverBackground,
+    var(--SplitButtonHoverBackground, color-mix(in srgb, var(--FocusBorder, var(--WorkbenchForeground)) 24%, transparent))
+  );
   outline: 1px solid var(--FocusBorder);
   outline-offset: 2px;
 }
 
 .ButtonPrimary {
-  background: var(--SplitButtonBackground, rgb(35, 112, 112));
-  color: var(--SplitButtonForeground, white);
+  background: var(
+    --ButtonBackground,
+    var(--SplitButtonBackground, color-mix(in srgb, var(--FocusBorder, var(--WorkbenchForeground)) 34%, var(--MainBackground)))
+  );
+  color: var(--ButtonForeground, var(--SplitButtonForeground, var(--WorkbenchForeground)));
   cursor: pointer;
 }
 
 .ButtonPrimary:where(:hover),
 .ButtonPrimary:where(:focus) {
-  background: var(--SplitButtonHoverBackground, #387674);
+  background: var(
+    --ButtonHoverBackground,
+    var(--SplitButtonHoverBackground, color-mix(in srgb, var(--FocusBorder, var(--WorkbenchForeground)) 44%, var(--MainBackground)))
+  );
 }
 
 .ButtonSecondary {
-  background: var(--ButtonSecondaryBackground, #313131);
-  color: var(--ButtonSecondaryForeground, #cccccc);
+  background: var(--ButtonSecondaryBackground, color-mix(in srgb, var(--WorkbenchForeground) 10%, var(--MainBackground)));
+  color: var(--ButtonSecondaryForeground, var(--WorkbenchForeground));
   cursor: pointer;
 }
 
 .ButtonSecondary:where(:hover),
 .ButtonSecondary:where(:focus) {
-  background: var(--ButtonSecondaryHoverBackground, #45494e);
+  background: var(
+    --ButtonSecondaryHoverBackground,
+    var(--ListHoverBackground, color-mix(in srgb, var(--WorkbenchForeground) 16%, var(--MainBackground)))
+  );
 }
 
 .ButtonNarrow {

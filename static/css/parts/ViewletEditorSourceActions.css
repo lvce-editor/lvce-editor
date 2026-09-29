@@ -23,6 +23,7 @@
   padding: 0 10px;
   line-height: 24px;
   display: flex;
+  column-gap: 4px;
 }
 
 .SourceActionItem:where(:hover) {

@@ -1,18 +1,12 @@
-:root {
-  --CategoryHoverBackground: #2f6260;
-  --CategoryHoverForeground: white;
-  --CategoryBorderColor: rgba(136, 136, 136, 0.45);
-}
-
 .Category {
   background: transparent;
   border: none;
   color: inherit;
-  border: 1px solid var(--CategoryBorderColor);
+  border: 1px solid var(--PanelBorderTopColor, color-mix(in srgb, var(--WorkbenchForeground) 30%, transparent));
   cursor: pointer;
 }
 
 .Category:hover {
-  background: var(--CategoryHoverBackground);
-  color: var(--CategoryHoverForeground);
+  background: var(--ListHoverBackground, color-mix(in srgb, var(--WorkbenchForeground) 8%, transparent));
+  color: var(--ListHoverForeground, var(--WorkbenchForeground));
 }

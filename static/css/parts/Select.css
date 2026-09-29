@@ -10,6 +10,11 @@
   outline: none;
 }
 
+.Select > option {
+  background-color: var(--DropDownBackground, #3c3c3c);
+  color: var(--DropDownForeground, #f0f0f0);
+}
+
 .Select .MaskIcon {
   width: 20px;
 }

@@ -1,5 +1,5 @@
 import { expect, test } from '@jest/globals'
-import * as GetHeaders from '../src/parts/GetHeaders/GetHeaders.js'
+import * as GetHeaders from '../src/parts/GetHeaders/GetHeaders.ts'
 
 test('chat tool worker allows same-origin connections', () => {
   const headers = GetHeaders.getHeaders({

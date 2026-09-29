@@ -1,6 +1,34 @@
-export const name = 'Panel'
+import { createWorkerViewlet } from '../CreateWorkerViewlet/CreateWorkerViewlet.js'
+import * as Command from '../Command/Command.js'
 
-export * from './ViewletPanel.ts'
-export * from './ViewletPanelCommands.ts'
-export * from './ViewletPanelCss.ts'
-export * from './ViewletPanelRender.ts'
+export const contentLoadedEffects = async (): Promise<void> => {
+  await Command.execute('Layout.refreshProblemsSummary')
+}
+
+export const {
+  Commands,
+  Css,
+  Events,
+  Variables,
+  create,
+  dispose,
+  getCommands,
+  getComponentState,
+  getKeyBindings,
+  getMenus,
+  hasDirectRender,
+  hasFunctionalEvents,
+  hasFunctionalRender,
+  hasFunctionalResize,
+  hasFunctionalRootRender,
+  hotReload,
+  loadContent,
+  menus,
+  name,
+  render,
+  renderEventListeners,
+  resize,
+  saveState,
+  setComponentState,
+  workspaceChangeEvent,
+} = createWorkerViewlet({ workerId: 'panel' })

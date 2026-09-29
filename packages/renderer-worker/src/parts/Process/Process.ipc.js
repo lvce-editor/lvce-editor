@@ -3,6 +3,7 @@ import * as Process from './Process.js'
 export const name = 'Process'
 
 export const Commands = {
+  getArgv: Process.getArgv,
   getNodeVersion: Process.getNodeVersion,
   getElectronVersion: Process.getElectronVersion,
   getChromeVersion: Process.getChromeVersion,
@@ -11,4 +12,6 @@ export const Commands = {
   getCommit: Process.getCommit,
   getVersion: Process.getVersion,
   getProductNameLong: Process.getProductNameLong,
+  writeStderr: Process.writeStderr,
+  writeStdout: Process.writeStdout,
 }

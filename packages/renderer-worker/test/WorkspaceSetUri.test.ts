@@ -1,0 +1,286 @@
+import { beforeEach, expect, jest, test } from '@jest/globals'
+import * as PlatformType from '../src/parts/PlatformType/PlatformType.js'
+
+const exists = jest.fn<(uri: string) => Promise<boolean>>(async () => true)
+const createNotification = jest.fn<(type: string, text: string) => Promise<void>>(async () => {})
+const setWindowTitle = jest.fn<(title: string) => Promise<void>>(async () => {})
+const disposeTextSearchWorker = jest.fn<() => Promise<void>>(async () => {})
+const resetTerminalConnection = jest.fn(async () => {})
+const disposeFileSystemWorker = jest.fn<() => Promise<void>>(async () => {})
+const isTest = jest.fn<() => boolean>(() => false)
+const getPlatform = jest.fn(() => PlatformType.Test)
+const setWorkspaceUri = jest.fn(async (_uri: string) => {})
+const startRemoteCli = jest.fn<
+  (connectionKey: string, remoteCliUrl: string, handleOpenRequest: (request: unknown) => Promise<void>) => Promise<void>
+>(async () => {})
+const stopRemoteCli = jest.fn()
+const execute = jest.fn(async (_command: string, _uri: string) => {})
+
+jest.unstable_mockModule('../src/parts/Command/Command.js', () => ({ execute }))
+
+jest.unstable_mockModule('../src/parts/FileSystem/FileSystem.js', () => ({
+  exists,
+}))
+
+jest.unstable_mockModule('../src/parts/Notification/Notification.js', () => ({
+  create: createNotification,
+}))
+
+jest.unstable_mockModule('../src/parts/IsTest/IsTest.js', () => ({
+  isTest,
+  state: {
+    isTest: false,
+  },
+}))
+
+jest.unstable_mockModule('../src/parts/WindowTitle/WindowTitle.js', () => ({
+  set: setWindowTitle,
+}))
+
+jest.unstable_mockModule('../src/parts/Product/Product.js', () => ({
+  getProductNameLong: () => 'Lvce Editor',
+}))
+
+jest.unstable_mockModule('../src/parts/TextSearchWorker/TextSearchWorker.js', () => ({
+  dispose: disposeTextSearchWorker,
+}))
+
+jest.unstable_mockModule('../src/parts/TerminalWorker/TerminalWorker.js', () => ({ resetWorkspaceConnection: resetTerminalConnection }))
+
+jest.unstable_mockModule('../src/parts/FileSystemWorker/FileSystemWorker.js', () => ({
+  dispose: disposeFileSystemWorker,
+}))
+
+jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => ({
+  getPlatform,
+}))
+
+jest.unstable_mockModule('../src/parts/Location/Location.js', () => ({
+  setPathName: jest.fn(async () => {}),
+  setWorkspaceUri,
+}))
+
+jest.unstable_mockModule('../src/parts/RemoteCli/RemoteCli.js', () => ({
+  resolveOpenRequest: jest.fn(),
+  start: startRemoteCli,
+  stop: stopRemoteCli,
+}))
+
+const GlobalEventBus = await import('../src/parts/GlobalEventBus/GlobalEventBus.js')
+const Workspace = await import('../src/parts/Workspace/Workspace.js')
+const WorkspaceConnection = await import('../src/parts/WorkspaceConnection/WorkspaceConnection.js')
+
+beforeEach(() => {
+  execute.mockClear()
+  createNotification.mockClear()
+  exists.mockClear()
+  exists.mockResolvedValue(true)
+  setWindowTitle.mockClear()
+  disposeTextSearchWorker.mockClear()
+  resetTerminalConnection.mockClear()
+  disposeFileSystemWorker.mockClear()
+  isTest.mockClear()
+  isTest.mockReturnValue(false)
+  getPlatform.mockClear()
+  getPlatform.mockReturnValue(PlatformType.Test)
+  setWorkspaceUri.mockClear()
+  startRemoteCli.mockClear()
+  stopRemoteCli.mockClear()
+  GlobalEventBus.state.listenerMap = Object.create(null)
+  Workspace.state.pathSeparator = '/'
+  Workspace.state.workspacePath = ''
+  Workspace.state.workspaceUri = ''
+})
+
+test('delays workspace progress and clears it when the operation finishes', async () => {
+  jest.useFakeTimers()
+  const listener = jest.fn()
+  GlobalEventBus.addListener('workspace.progress', listener)
+
+  const id = Workspace.startProgress('Opening Remote Workspace…')
+  jest.advanceTimersByTime(199)
+  await Promise.resolve()
+  expect(listener).not.toHaveBeenCalled()
+
+  jest.advanceTimersByTime(1)
+  await Promise.resolve()
+  expect(listener).toHaveBeenCalledWith('Opening Remote Workspace…')
+
+  Workspace.endProgress(id)
+  await Promise.resolve()
+  expect(listener).toHaveBeenLastCalledWith('')
+  jest.useRealTimers()
+})
+
+test('ignores completion from a superseded workspace operation', async () => {
+  jest.useFakeTimers()
+  const listener = jest.fn()
+  GlobalEventBus.addListener('workspace.progress', listener)
+
+  const firstId = Workspace.startProgress('First')
+  jest.advanceTimersByTime(200)
+  await Promise.resolve()
+  const secondId = Workspace.startProgress('Second')
+  Workspace.endProgress(firstId)
+  jest.advanceTimersByTime(200)
+  await Promise.resolve()
+
+  expect(listener.mock.calls).toEqual([['First'], [''], ['Second']])
+  Workspace.endProgress(secondId)
+  await Promise.resolve()
+  expect(listener).toHaveBeenLastCalledWith('')
+  jest.useRealTimers()
+})
+
+test('setPath uses the product name for an empty workspace', async () => {
+  await Workspace.setPath('')
+
+  expect(setWindowTitle).toHaveBeenCalledWith('Lvce Editor')
+  expect(Workspace.getWorkspaceUri()).toBe('')
+  expect(disposeTextSearchWorker).not.toHaveBeenCalled()
+  expect(disposeFileSystemWorker).not.toHaveBeenCalled()
+  expect(stopRemoteCli).not.toHaveBeenCalled()
+})
+
+test('setPath uses the folder name for a workspace', async () => {
+  await Workspace.setPath('/home/test/project')
+
+  expect(setWindowTitle).toHaveBeenCalledWith('project')
+  expect(Workspace.getWorkspaceUri()).toBe('file:///home/test/project')
+  expect(disposeTextSearchWorker).not.toHaveBeenCalled()
+  expect(resetTerminalConnection).toHaveBeenCalledTimes(1)
+  expect(disposeFileSystemWorker).not.toHaveBeenCalled()
+  expect(stopRemoteCli).toHaveBeenCalledTimes(1)
+})
+
+test('setPath encodes reserved characters in a local workspace uri', async () => {
+  await Workspace.setPath('/home/test/my folder/#project?')
+
+  expect(Workspace.getWorkspacePath()).toBe('/home/test/my folder/#project?')
+  expect(Workspace.getWorkspaceUri()).toBe('file:///home/test/my%20folder/%23project%3F')
+})
+
+test('setPath preserves a custom workspace uri', async () => {
+  await Workspace.setPath('html:///workspace')
+
+  expect(Workspace.getWorkspacePath()).toBe('html:///workspace')
+  expect(Workspace.getWorkspaceUri()).toBe('html:///workspace')
+})
+
+test('setPath skips folder validation during tests', async () => {
+  isTest.mockReturnValue(true)
+  exists.mockResolvedValue(false)
+
+  await Workspace.setPath('/remote/home/test/project')
+
+  expect(exists).not.toHaveBeenCalled()
+  expect(setWindowTitle).toHaveBeenCalledWith('project')
+})
+
+test('setPath preserves the current workspace when the folder does not exist', async () => {
+  Workspace.state.workspacePath = '/home/test/current'
+  Workspace.state.workspaceUri = 'file:///home/test/current'
+  exists.mockResolvedValue(false)
+
+  await expect(Workspace.setPath('/home/test/missing')).rejects.toThrow(new Error("Workspace folder does not exist: '/home/test/missing'"))
+
+  expect(exists).toHaveBeenCalledWith('/home/test/missing')
+  expect(createNotification).toHaveBeenCalledWith('error', "Workspace folder does not exist: '/home/test/missing'")
+  expect(setWindowTitle).not.toHaveBeenCalled()
+  expect(disposeTextSearchWorker).not.toHaveBeenCalled()
+  expect(Workspace.getWorkspacePath()).toBe('/home/test/current')
+  expect(Workspace.getWorkspaceUri()).toBe('file:///home/test/current')
+})
+
+test('setUri preserves the uri and decodes the workspace path', async () => {
+  await Workspace.setUri('file:///home/test/my%20folder/%23project%3F')
+
+  expect(Workspace.getWorkspacePath()).toBe('/home/test/my folder/#project?')
+  expect(Workspace.getWorkspaceUri()).toBe('file:///home/test/my%20folder/%23project%3F')
+  expect(Workspace.state.pathSeparator).toBe('/')
+  expect(exists).toHaveBeenCalledWith('/home/test/my folder/#project?')
+  expect(setWindowTitle).toHaveBeenCalledWith('#project?')
+  expect(disposeTextSearchWorker).not.toHaveBeenCalled()
+  expect(resetTerminalConnection).toHaveBeenCalledTimes(1)
+  expect(disposeFileSystemWorker).not.toHaveBeenCalled()
+})
+
+test.each([
+  ['file:///C:/Users/test/my%20folder', 'C:/Users/test/my folder'],
+  ['file:///d:/work/%23project%25', 'd:/work/#project%'],
+  ['file://server/share/my%20folder', '//server/share/my folder'],
+])('setUri converts %s to a native workspace path', async (uri, path) => {
+  await Workspace.setUri(uri)
+
+  expect(Workspace.getWorkspacePath()).toBe(path)
+  expect(Workspace.getWorkspaceUri()).toBe(uri)
+  expect(exists).toHaveBeenCalledWith(path)
+})
+
+test('setUri preserves the current workspace when a local folder does not exist', async () => {
+  Workspace.state.workspacePath = '/home/test/current'
+  Workspace.state.workspaceUri = 'file:///home/test/current'
+  exists.mockResolvedValue(false)
+
+  await expect(Workspace.setUri('file:///home/test/missing%20folder')).rejects.toThrow(
+    new Error("Workspace folder does not exist: '/home/test/missing folder'"),
+  )
+
+  expect(exists).toHaveBeenCalledWith('/home/test/missing folder')
+  expect(createNotification).toHaveBeenCalledWith('error', "Workspace folder does not exist: '/home/test/missing folder'")
+  expect(setWindowTitle).not.toHaveBeenCalled()
+  expect(Workspace.getWorkspacePath()).toBe('/home/test/current')
+  expect(Workspace.getWorkspaceUri()).toBe('file:///home/test/current')
+})
+
+test('setUri preserves a custom uri as the workspace path and uses slash separators', async () => {
+  await Workspace.setUri('remote-ssh:///test-folder', '\\')
+
+  expect(Workspace.getWorkspacePath()).toBe('remote-ssh:///test-folder')
+  expect(Workspace.getWorkspaceUri()).toBe('remote-ssh:///test-folder')
+  expect(Workspace.state.pathSeparator).toBe('/')
+})
+
+test('setUri uses the workspace connection path', async () => {
+  await Workspace.setUri('workspace-provider://host/work', {
+    command: 'workspace-provider.getWebSocketUrl',
+    remoteCliUrl: 'wss://workspace.example.com/websocket/shared-process',
+    workspacePath: '/work',
+    terminalSpawnOptions: { command: 'bash', args: ['-i'] },
+  })
+
+  expect(Workspace.getWorkspacePath()).toBe('/work')
+  expect(Workspace.getWorkspaceUri()).toBe('workspace-provider://host/work')
+  expect(Workspace.state.pathSeparator).toBe('/')
+  expect(WorkspaceConnection.getTerminalSpawnOptions()).toEqual({ command: 'bash', args: ['-i'] })
+  expect(startRemoteCli).toHaveBeenCalledWith(
+    'wss://workspace.example.com/websocket/shared-process',
+    'wss://workspace.example.com/websocket/shared-process',
+    expect.any(Function),
+  )
+})
+
+test('setUri persists the workspace uri in an Electron window', async () => {
+  getPlatform.mockReturnValue(PlatformType.Electron)
+
+  await Workspace.setUri('workspace-provider://host/work', {
+    command: 'workspace-provider.getWebSocketUrl',
+    remoteCliUrl: 'wss://workspace.example.com/websocket/shared-process',
+    workspacePath: '/work',
+  })
+
+  expect(setWorkspaceUri).toHaveBeenCalledWith('workspace-provider://host/work')
+})
+
+test('keeps the remote URI for filesystem provider dispatch and leaves remote CLI ownership in the extension', async () => {
+  await Workspace.setUri('remote-ssh://host/work', { command: 'remote-ssh.getWebSocketUrl' })
+  expect(Workspace.getPath()).toBe('remote-ssh://host/work')
+  expect(Workspace.getUri()).toBe('remote-ssh://host/work')
+  expect(startRemoteCli).not.toHaveBeenCalled()
+})
+
+test('opens a requested file after switching workspace', async () => {
+  await Workspace.setUri('remote-ssh://host/work', undefined, undefined, 'remote-ssh://host/work/readme.md')
+  expect(Workspace.getUri()).toBe('remote-ssh://host/work')
+  expect(execute).toHaveBeenCalledWith('Main.openUri', 'remote-ssh://host/work/readme.md')
+})

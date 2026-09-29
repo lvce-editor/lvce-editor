@@ -2,7 +2,7 @@
   "name": "@lvce-editor/shared-process",
   "version": "0.0.0-dev",
   "description": "Utility package for @lvce-editor/server",
-  "main": "src/sharedProcessMain.js",
+  "main": "src/sharedProcessMain.ts",
   "type": "module",
   "scripts": {
     "test": "node --unhandled-rejections=warn --experimental-vm-modules ../../node_modules/jest/bin/jest.js --detectOpenHandles --forceExit",
@@ -23,40 +23,42 @@
     "node": ">=24"
   },
   "dependencies": {
-    "@lvce-editor/assert": "^1.5.1",
-    "@lvce-editor/auth-process": "^1.6.0",
-    "@lvce-editor/ipc": "^16.0.0",
-    "@lvce-editor/json-rpc": "^8.0.0",
-    "@lvce-editor/jsonc-parser": "^1.5.0",
-    "@lvce-editor/pretty-error": "^2.0.0",
-    "@lvce-editor/rpc-registry": "^9.25.0",
+    "@lvce-editor/assert": "^1.9.0",
+    "@lvce-editor/ipc": "^16.12.2",
+    "@lvce-editor/json-rpc": "^8.8.2",
+    "@lvce-editor/jsonc-parser": "^1.5.2",
+    "@lvce-editor/pretty-error": "^2.0.2",
+    "@lvce-editor/rpc-registry": "^9.65.4",
     "@lvce-editor/verror": "^1.7.0",
     "is-object": "^1.0.2",
     "xdg-basedir": "^5.1.0"
   },
   "optionalDependencies": {
-    "@lvce-editor/embeds-process": "^4.4.0",
-    "@lvce-editor/file-system-process": "^5.1.0",
-    "@lvce-editor/file-watcher-process": "^3.6.0",
+    "@lvce-editor/auth-process": "^1.18.0",
+    "@lvce-editor/cookie-import-view": "^0.3.2",
+    "@lvce-editor/embeds-process": "^4.24.0",
+    "@lvce-editor/file-system-process": "^5.17.1",
+    "@lvce-editor/file-watcher-explorer": "^0.1.1",
+    "@lvce-editor/file-watcher-process": "^4.14.0",
     "@lvce-editor/network-process": "^5.2.0",
-    "@lvce-editor/preload": "^1.5.0",
+    "@lvce-editor/preload": "^1.5.1",
     "@lvce-editor/preview-process": "^11.0.0",
-    "@lvce-editor/process-explorer": "^2.4.0",
-    "@lvce-editor/pty-host": "^8.1.0",
-    "@lvce-editor/search-process": "^13.1.0",
-    "@lvce-editor/typescript-compile-process": "^5.1.0",
-    "open": "^11.0.0",
+    "@lvce-editor/process-explorer": "^3.32.1",
+    "@lvce-editor/pty-host": "^8.11.1",
+    "@lvce-editor/search-process": "^15.10.0",
+    "@lvce-editor/typescript-compile-process": "^5.10.2",
+    "open": "^11.0.4",
     "tail": "^2.2.6",
     "tmp-promise": "^3.0.3",
     "trash": "^10.1.1"
   },
   "devDependencies": {
-    "@types/debug": "^4.1.13",
+    "@jest/globals": "^30.5.2",
     "@types/is-object": "^1.0.5",
     "@types/tail": "^2.2.3",
     "@types/tar-fs": "^2.0.4",
     "get-port": "^7.2.0",
-    "tar-fs": "^3.1.2",
+    "tar-fs": "^3.1.3",
     "wait-for-expect": "^4.0.0"
   },
   "xo": {
@@ -120,5 +122,10 @@
         }
       ]
     }
+  },
+  "allowScripts": {
+    "node-pty@1.1.0-beta34": true,
+    "@parcel/watcher@2.6.0": true,
+    "@vscode/windows-process-tree@0.8.0": true
   }
 }

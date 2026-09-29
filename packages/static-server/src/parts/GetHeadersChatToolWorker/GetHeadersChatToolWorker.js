@@ -1,6 +1,0 @@
-import * as ContentSecurityPolicyChatToolWorker from '../ContentSecurityPolicyChatToolWorker/ContentSecurityPolicyChatToolWorker.js'
-import * as GetHeadersWorker from '../GetHeadersWorker/GetHeadersWorker.js'
-
-export const getHeadersChatToolWorker = (mime, etag, defaultCachingHeader) => {
-  return GetHeadersWorker.getHeadersWorker(mime, etag, defaultCachingHeader, ContentSecurityPolicyChatToolWorker.value)
-}

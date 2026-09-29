@@ -4,6 +4,7 @@
   flex-direction: column;
   flex: 1;
   contain: strict;
+  position: relative;
 }
 
 .TextEditor {
@@ -23,4 +24,27 @@
   contain: strict;
   display: flex;
   flex-direction: column;
+}
+
+.EditorLargeFileWarningIcon {
+  color: var(--WarningForeground, #cca700);
+  flex-shrink: 0;
+  height: 48px;
+  width: 48px;
+  --MaskIconSize: 48px;
+}
+
+.EditorContentLargeFile {
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.EditorContentLargeFileActions {
+  display: flex;
+  flex-wrap: wrap;
+  min-width: 0;
+  max-width: 100%;
+  justify-content: center;
+  gap: 8px;
 }

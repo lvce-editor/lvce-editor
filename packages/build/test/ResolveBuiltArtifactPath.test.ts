@@ -1,7 +1,7 @@
 import { describe, expect, test } from '@jest/globals'
 import { join } from 'node:path'
-import * as ElectronBuilderConfigType from '../src/parts/ElectronBuilderConfigType/ElectronBuilderConfigType.js'
-import { resolveBuiltArtifactPath } from '../src/parts/ResolveBuiltArtifactPath/ResolveBuiltArtifactPath.js'
+import * as ElectronBuilderConfigType from '../src/parts/ElectronBuilderConfigType/ElectronBuilderConfigType.ts'
+import { resolveBuiltArtifactPath } from '../src/parts/ResolveBuiltArtifactPath/ResolveBuiltArtifactPath.ts'
 
 describe('resolveBuiltArtifactPath', () => {
   test('returns expected path when the expected artifact exists', () => {

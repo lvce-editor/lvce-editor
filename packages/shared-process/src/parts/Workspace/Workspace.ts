@@ -1,0 +1,28 @@
+import { homedir } from 'node:os'
+import { fileURLToPath } from 'node:url'
+import * as Platform from '../Platform/Platform.ts'
+import * as PlatformPaths from '../PlatformPaths/PlatformPaths.ts'
+import * as ResolveRoot from '../ResolveRoot/ResolveRoot.ts'
+
+/**
+ * @deprecated use platform instead
+ */
+export const getHomeDir = (): any => {
+  if (Platform.isWindows) {
+    return ''
+  }
+  const homeDir = homedir()
+  return homeDir
+}
+
+export const resolveRoot = ResolveRoot.resolveRoot
+
+export const resolveUri = (uri: any): any => {
+  const path = fileURLToPath(uri)
+  return {
+    homeDir: PlatformPaths.getHomeDir(),
+    path,
+    pathSeparator: '/',
+    uri,
+  }
+}

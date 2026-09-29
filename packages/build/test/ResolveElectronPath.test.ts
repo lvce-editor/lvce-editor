@@ -1,6 +1,6 @@
 import { describe, expect, test } from '@jest/globals'
 import { join } from 'path'
-import { resolveElectronLaunch } from '../src/parts/ResolveElectronPath/ResolveElectronPath.js'
+import { resolveElectronLaunch } from '../src/parts/ResolveElectronPath/ResolveElectronPath.ts'
 
 describe('resolveElectronLaunch', () => {
   test('uses electron cli script when available', () => {

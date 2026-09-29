@@ -10,8 +10,8 @@ export const getMenuEntries = () => {
       id: 'newTerminal',
       label: TerminalStrings.newTerminal(),
       flags: MenuItemFlags.None,
-      command: 'Layout.togglePanel',
-      args: ['Terminal'],
+      command: 'Layout.openIntegratedTerminal',
+      args: [''],
     },
   ]
 }

@@ -9,6 +9,7 @@
   height: 100%;
   width: 100%;
   contain: strict;
+  overflow: auto;
 }
 
 .EditorGroupsVertical {
@@ -22,13 +23,14 @@
 .EditorGroup {
   contain: strict;
   display: flex;
-  width: 100%;
   height: 100%;
   flex-direction: column;
+  min-width: 250px;
   outline: none;
+  width: var(--EditorGroupWidth, auto);
 }
 
-.EditorGroup:has(.EmptyGroupCloseButton) {
+.EditorGroupEmpty {
   opacity: var(--EmptyGroupOpacity);
 }
 
@@ -68,7 +70,7 @@
 .EditorGroupHeader {
   display: flex;
   contain: strict;
-  height: 35px;
+  height: var(--EditorGroupHeight);
   justify-content: space-between;
 }
 

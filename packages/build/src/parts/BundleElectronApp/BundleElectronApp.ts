@@ -1,0 +1,367 @@
+import { existsSync } from 'node:fs'
+import * as AddRootPackageJson from '../AddRootPackageJson/AddRootPackageJson.ts'
+import * as Assert from '../Assert/Assert.ts'
+import * as BundleCss from '../BundleCss/BundleCss.ts'
+import * as BundleMainProcessCached from '../BundleMainProcessCached/BundleMainProcessCached.ts'
+import * as BundleOptions from '../BundleOptions/BundleOptions.ts'
+import * as BundleSharedProcessCached from '../BundleSharedProcessCached/BundleSharedProcessCached.ts'
+import * as BundleWorkers from '../BundleWorkers/BundleWorkers.ts'
+import * as CommitHash from '../CommitHash/CommitHash.ts'
+import * as Copy from '../Copy/Copy.ts'
+import * as CopyElectronFileIcons from '../CopyElectronFileIcons/CopyElectronFileIcons.ts'
+import * as CopyElectron from '../CopyElectron/CopyElectron.ts'
+import * as CopyElectronIcons from '../CopyElectronIcons/CopyElectronIcons.ts'
+import * as CopyElectronLicense from '../CopyElectronLicense/CopyElectronLicense.ts'
+import * as GetCommitDate from '../GetCommitDate/GetCommitDate.ts'
+import * as GetElectronVersion from '../GetElectronVersion/GetElectronVersion.ts'
+import * as GetIconThemeEtag from '../GetIconThemeEtag/GetIconThemeEtag.ts'
+import * as Hash from '../Hash/Hash.ts'
+import * as Rename from '../Rename/Rename.ts'
+import * as Logger from '../Logger/Logger.ts'
+import * as Path from '../Path/Path.ts'
+import * as Platform from '../Platform/Platform.ts'
+import * as PrepareElectronCss from '../PrepareElectronCss/PrepareElectronCss.ts'
+import * as PrepareElectronHtmlExtension from '../PrepareElectronHtmlExtension/PrepareElectronHtmlExtension.ts'
+import * as ReadFile from '../ReadFile/ReadFile.ts'
+import * as Remove from '../Remove/Remove.ts'
+import * as RemoveUnusedLocales from '../RemoveUnusedLocales/RemoveUnusedLocales.ts'
+import * as Replace from '../Replace/Replace.ts'
+import * as Root from '../Root/Root.ts'
+import * as Template from '../Template/Template.ts'
+import * as WriteFile from '../WriteFile/WriteFile.ts'
+import { generateConfigJson } from '../GenerateConfigJson/GenerateConfigJson.ts'
+
+const getDependencyCacheHash = async ({ electronVersion, arch, supportsAutoUpdate, isMacos, isArchLinux, isAppImage, bundleMainProcess }) => {
+  const files = [
+    'packages/main-process/package-lock.json',
+    'packages/shared-process/package-lock.json',
+    'packages/build/src/parts/BundleElectronApp/BundleElectronApp.ts',
+    'packages/build/src/parts/BundleElectronAppDependencies/BundleElectronAppDependencies.ts',
+    'packages/build/src/parts/BundleSharedProcessDependencies/BundleSharedProcessDependencies.ts',
+    'packages/build/src/parts/FilterSharedProcessDependencies/FilterSharedProcessDependencies.ts',
+    'packages/build/src/parts/CopyDependencies/CopyDependencies.ts',
+    'packages/build/src/parts/BundleMainProcessDependencies/BundleMainProcessDependencies.ts',
+    'packages/build/src/parts/FilterMainProcessDependencies/FilterMainProcessDependencies.ts',
+    'packages/build/src/parts/NodeModulesIgnoredFiles/NodeModulesIgnoredFiles.ts',
+    'packages/build/src/parts/NpmDependencies/NpmDependencies.ts',
+    'packages/build/src/parts/WalkDependencies/WalkDependencies.ts',
+    'packages/build/src/parts/Rebuild/Rebuild.ts',
+  ]
+  const absolutePaths = files.map(Path.absolute)
+  const contents = await Promise.all(absolutePaths.map(ReadFile.readFile))
+  const hash = Hash.computeHash(
+    contents +
+      electronVersion +
+      arch +
+      String(supportsAutoUpdate) +
+      String(isMacos) +
+      String(isArchLinux) +
+      String(isAppImage) +
+      String(bundleMainProcess),
+  )
+  return hash
+}
+
+const downloadElectron = async ({ platform, arch, electronVersion }) => {
+  const outDir = Path.join(Root.root, 'build', '.tmp', 'cachedElectronVersions', `electron-${electronVersion}-${platform}-${arch}`)
+  const DownloadElectron = await import('../DownloadElectron/DownloadElectron.ts')
+  await DownloadElectron.downloadElectron({
+    electronVersion,
+    outDir,
+    platform,
+    arch,
+  })
+}
+
+const hasInstalledElectronArtifact = ({ platform }) => {
+  const basePath = Path.join(Root.root, 'packages', 'main-process', 'node_modules', 'electron', 'dist')
+  if (platform === 'darwin') {
+    return existsSync(Path.join(basePath, 'Electron.app', 'Contents', 'MacOS', 'Electron'))
+  }
+  if (platform === 'win32') {
+    return existsSync(Path.join(basePath, 'electron.exe'))
+  }
+  return existsSync(Path.join(basePath, 'electron'))
+}
+
+const copyDependencies = async ({ cachePath, resourcesPath }) => {
+  await Copy.copy({
+    from: cachePath,
+    to: `${resourcesPath}/app/packages`,
+  })
+}
+
+const copyExtensions = async ({ resourcesPath, commitHash }) => {
+  const extensionsPath = `${resourcesPath}/app/static/${commitHash}/extensions`
+  await Copy.copy({
+    from: 'extensions',
+    to: extensionsPath,
+    dereference: true,
+  })
+
+  await PrepareElectronHtmlExtension.prepareElectronHtmlExtension({ extensionsPath })
+  await CopyElectronFileIcons.copyElectronFileIcons({ resourcesPath, commitHash })
+}
+
+const copyStaticFiles = async ({ resourcesPath, commitHash }) => {
+  await Copy.copy({
+    from: 'static',
+    to: `${resourcesPath}/app/static/${commitHash}`,
+    ignore: ['config.json', 'css'],
+  })
+  await CopyElectronIcons.copyElectronIcons({ resourcesPath, commitHash })
+  await Rename.rename({
+    from: `${resourcesPath}/app/static/${commitHash}/index.html`,
+    to: `${resourcesPath}/app/static/index.html`,
+  })
+  await Replace.replace({
+    path: `${resourcesPath}/app/static/index.html`,
+    occurrence: 'packages/renderer-worker/node_modules/@lvce-editor/renderer-process/dist/rendererProcessMain.js',
+    replacement: `${commitHash}/packages/renderer-process/dist/rendererProcessMain.js`,
+  })
+  await Replace.replace({
+    path: `${resourcesPath}/app/static/index.html`,
+    occurrence: '/css/App.css',
+    replacement: `/${commitHash}/css/App.css`,
+  })
+  await Replace.replace({
+    path: `${resourcesPath}/app/static/index.html`,
+    occurrence: '\n    <link rel="manifest" href="/manifest.json" crossorigin="use-credentials" />',
+    replacement: ``,
+  })
+  await Replace.replace({
+    path: `${resourcesPath}/app/static/index.html`,
+    occurrence: '\n    <link rel="apple-touch-icon" href="/icons/pwa-icon-192.png" />',
+    replacement: ``,
+  })
+  await Replace.replace({
+    path: `${resourcesPath}/app/static/index.html`,
+    occurrence: '\n    <meta name="theme-color" content="#282e2f" />',
+    replacement: ``,
+  })
+  await Replace.replace({
+    path: `${resourcesPath}/app/static/index.html`,
+    occurrence: '\n    <meta name="description" content="VS Code inspired text editor that mostly runs in a webworker." />',
+    replacement: ``,
+  })
+  await Remove.remove(`${resourcesPath}/app/static/manifest.json`)
+  await Remove.remove(`${resourcesPath}/app/static/favicon.ico`)
+  await Remove.remove(`${resourcesPath}/app/static/images`)
+  await Remove.remove(`${resourcesPath}/app/static/sounds`)
+  await Remove.remove(`${resourcesPath}/app/static/lib-css/modern-normalize.css`)
+}
+
+const copyCss = async ({ resourcesPath, commitHash }) => {
+  await BundleCss.bundleCss({
+    outDir: `${resourcesPath}/app/static/${commitHash}/css`,
+    assetDir: `/${commitHash}`,
+  })
+}
+
+const removeUnusedCode = async ({ resourcesPath }) => {
+  await Remove.remove(Path.absolute(`${resourcesPath}/app/packages/test-worker`))
+}
+
+export const build = async ({
+  product,
+  version = '0.0.0-dev',
+  supportsAutoUpdate = false,
+  shouldRemoveUnusedLocales = false,
+  arch = process.arch,
+  platform = process.platform,
+  isMacos = process.platform === 'darwin',
+  isArchLinux = false,
+  isAppImage = false,
+  target,
+}) => {
+  Assert.object(product)
+  Assert.string(version)
+  const { electronVersion, isInstalled, installedArch, installedPlatform } = await GetElectronVersion.getElectronVersion()
+  const bundleMainProcess = BundleOptions.bundleMainProcess
+  const dependencyCacheHash = await getDependencyCacheHash({
+    electronVersion,
+    arch,
+    supportsAutoUpdate,
+    isMacos,
+    isArchLinux,
+    isAppImage,
+    bundleMainProcess,
+  })
+  const dependencyCachePath = Path.join(Path.absolute('packages/build/.tmp/cachedDependencies'), dependencyCacheHash)
+  const dependencyCachePathFinished = Path.join(dependencyCachePath, 'finished')
+  const commitHash = await CommitHash.getCommitHash()
+  const date = await GetCommitDate.getCommitDate(commitHash)
+  const bundleSharedProcess = BundleOptions.bundleSharedProcess
+  const isLinux = Platform.isLinux()
+  // Language-basics extensions are now copied individually
+  const resourcesPath = isMacos
+    ? `packages/build/.tmp/electron-bundle/${arch}/${product.applicationName}.app/Contents/Resources`
+    : `packages/build/.tmp/electron-bundle/${arch}/resources`
+
+  const useInstalledElectronVersion =
+    isInstalled && installedArch === arch && installedPlatform === platform && hasInstalledElectronArtifact({ platform })
+  if (!useInstalledElectronVersion) {
+    console.time('downloadElectron')
+    await downloadElectron({
+      arch,
+      electronVersion,
+      platform,
+    })
+    console.timeEnd('downloadElectron')
+  }
+
+  if (existsSync(dependencyCachePath) && existsSync(dependencyCachePathFinished)) {
+    Logger.info('[build step skipped] bundleElectronAppDependencies')
+  } else {
+    console.time('bundleElectronAppDependencies')
+    await Remove.remove(Path.absolute('packages/build/.tmp/cachedDependencies'))
+    const BundleElectronAppDependencies = await import('../BundleElectronAppDependencies/BundleElectronAppDependencies.ts')
+    await BundleElectronAppDependencies.bundleElectronAppDependencies({
+      cachePath: dependencyCachePath,
+      arch,
+      electronVersion,
+      product,
+      supportsAutoUpdate,
+      bundleMainProcess,
+      platform,
+      target,
+    })
+    console.timeEnd('bundleElectronAppDependencies')
+  }
+
+  console.time('copyElectron')
+  await CopyElectron.copyElectron({
+    arch,
+    electronVersion,
+    useInstalledElectronVersion,
+    product,
+    platform,
+    version,
+  })
+  console.timeEnd('copyElectron')
+
+  if (isMacos) {
+    await Template.write('macos_cli', `${resourcesPath}/app/bin/${product.applicationName}`, {}, 755)
+    await Template.write('linux_cli_js', `${resourcesPath}/app/bin/cli.js`, {
+      '@@APPLICATION_NAME@@': product.applicationName,
+    })
+  }
+
+  console.time('copyLicense')
+  await CopyElectronLicense.copyElectronLicense({ resourcesPath })
+  console.timeEnd('copyLicense')
+
+  if (shouldRemoveUnusedLocales) {
+    console.time('removeUnusedLocales')
+    await RemoveUnusedLocales.removeUnusedLocales({ arch, isMacos, product })
+    console.timeEnd('removeUnusedLocales')
+  }
+
+  console.time('copyDependencies')
+  await copyDependencies({
+    cachePath: dependencyCachePath,
+    resourcesPath,
+  })
+  console.timeEnd('copyDependencies')
+
+  const mainProcessCachePath = await BundleMainProcessCached.bundleMainProcessCached({
+    commitHash,
+    product,
+    version,
+    bundleMainProcess,
+    bundleSharedProcess,
+    isArchLinux,
+    isAppImage,
+    isLinux,
+  })
+
+  console.time('copyMainProcessFiles')
+  await Copy.copy({
+    from: mainProcessCachePath,
+    to: `${resourcesPath}/app/packages/main-process`,
+  })
+  console.timeEnd('copyMainProcessFiles')
+
+  const sharedProcessCachePath = await BundleSharedProcessCached.bundleSharedProcessCached({
+    commitHash,
+    product,
+    version,
+    bundleSharedProcess,
+    date,
+    target,
+    isArchLinux,
+    isAppImage,
+  })
+
+  console.time('copySharedProcessFiles')
+  await Copy.copy({
+    from: sharedProcessCachePath,
+    to: `${resourcesPath}/app/packages/shared-process`,
+  })
+  console.timeEnd('copySharedProcessFiles')
+
+  console.time('copyExtensions')
+  await copyExtensions({ resourcesPath, commitHash })
+  console.timeEnd('copyExtensions')
+
+  console.time('prepareElectronCss')
+  await PrepareElectronCss.prepareElectronCss({ resourcesPath, commitHash })
+  console.timeEnd('prepareElectronCss')
+
+  console.time('copyStaticFiles')
+  await copyStaticFiles({ resourcesPath, commitHash })
+  console.timeEnd('copyStaticFiles')
+
+  console.time('copyCss')
+  await copyCss({ resourcesPath, commitHash })
+  console.timeEnd('copyCss')
+
+  const assetDir = `/${commitHash}`
+  const toRoot = `${resourcesPath}/app/static/${commitHash}`
+  const iconThemeEtag = await GetIconThemeEtag.getIconThemeEtag()
+
+  await BundleWorkers.bundleWorkers({
+    platform: 'electron',
+    assetDir,
+    commitHash,
+    version,
+    date,
+    toRoot,
+    product,
+    iconThemeEtag,
+  })
+
+  const etag = `W/"${commitHash}"`
+
+  await generateConfigJson({
+    etag,
+    configRoot: Path.absolute(`${resourcesPath}/app`),
+    staticRoot: Path.absolute(`${resourcesPath}/app`),
+    applicationName: product.applicationName,
+    name: product.applicationName,
+    productName: product.nameLong,
+    version,
+    electronVersion,
+    commitHash,
+    date,
+  })
+
+  console.time('addRootPackageJson')
+  await AddRootPackageJson.addRootPackageJson({
+    electronVersion,
+    product,
+    cachePath: Path.absolute(`${resourcesPath}/app`),
+    bundleMainProcess,
+    version,
+  })
+  console.timeEnd('addRootPackageJson')
+
+  await removeUnusedCode({
+    resourcesPath,
+  })
+
+  await WriteFile.writeFile({
+    to: dependencyCachePathFinished,
+    content: '1',
+  })
+}

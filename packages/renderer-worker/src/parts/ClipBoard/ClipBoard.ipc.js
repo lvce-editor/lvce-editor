@@ -8,10 +8,13 @@ export const Commands = {
   execCopy: ClipBoard.execCopy,
   getSelectionText: ClipBoard.getSelectionText,
   hotReload: ClipBoard.hotReload,
+  readMemoryImage: ClipBoard.readMemoryImage,
+  readImage: ClipBoard.readImage,
   readMemoryText: ClipBoard.readMemoryText,
   readNativeFiles: ClipBoard.readNativeFiles,
   readText: ClipBoard.readText,
   writeImage: ClipBoard.writeImage,
+  writeImageUrl: ClipBoard.writeImageUrl,
   writeNativeFiles: ClipBoard.writeNativeFiles,
   writeText: ClipBoard.writeText,
 }

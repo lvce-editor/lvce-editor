@@ -1,10 +1,12 @@
 import * as ElectronBrowserView from '../ElectronBrowserView/ElectronBrowserView.js'
 import * as ElectronBrowserViewQuickPick from '../ElectronBrowserViewQuickPick/ElectronBrowserViewQuickPick.js'
 import * as ElectronWindow from '../ElectronWindow/ElectronWindow.js'
+import * as GetQuickPickKeyBindings from '../GetQuickPickKeyBindings/GetQuickPickKeyBindings.ts'
 import * as IpcParent from '../IpcParent/IpcParent.js'
 import * as IpcParentType from '../IpcParentType/IpcParentType.js'
 import * as KeyBindings from '../KeyBindings/KeyBindings.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
+import * as RestoreMainFocus from '../RestoreMainFocus/RestoreMainFocus.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
@@ -13,14 +15,6 @@ import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.js'
 
 export const state = {
   isQuickPickOpen: false,
-}
-
-const isQuickPickKeyBinding = (keyBinding) => {
-  return keyBinding.when === 'focus.quickPickInput'
-}
-
-const getQuickPickKeyBindings = (keyBindings) => {
-  return keyBindings.filter(isQuickPickKeyBinding)
 }
 
 export const isQuickPickOpen = () => {
@@ -39,7 +33,7 @@ export const openElectronQuickPick = async (...args) => {
   const y = 50
   // @ts-ignore
   const keyBindings = await KeyBindings.getKeyBindings()
-  const quickPickKeyBindings = getQuickPickKeyBindings(keyBindings)
+  const quickPickKeyBindings = GetQuickPickKeyBindings.getQuickPickKeyBindings(keyBindings)
   await ElectronBrowserViewQuickPick.createBrowserViewQuickPick(x, y, width, height)
   const ipc = await IpcParent.create({
     method: IpcParentType.ElectronMessagePort,
@@ -87,7 +81,7 @@ export const openWidget = async (id, ...args) => {
   if (ElectronBrowserView.isOpen() && id === 'QuickPick') {
     // TODO recycle quickpick instance
     if (hasInstance) {
-      await closeWidgetElectronQuickPick()
+      await closeWidgetElectronQuickPick(false)
     }
     return openElectronQuickPick(...args)
   }
@@ -117,11 +111,13 @@ export const openWidget = async (id, ...args) => {
   //
 }
 
-export const closeWidgetElectronQuickPick = async () => {
+export const closeWidgetElectronQuickPick = async (restoreFocus = true) => {
   const id = ViewletModuleId.QuickPick
   state.isQuickPickOpen = false
   ViewletStates.remove(id)
   await ElectronBrowserViewQuickPick.disposeBrowserViewQuickPick()
-  // TODO restore focus to previously focused element
   await ElectronWindow.focus()
+  if (restoreFocus) {
+    await RestoreMainFocus.restoreMainFocus()
+  }
 }

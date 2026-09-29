@@ -12,8 +12,16 @@ export const showOverlay = (...args) => {
   return RendererProcess.invoke('TestFrameWork.showOverlay', ...args)
 }
 
+export const showTestResults = (...args) => {
+  return RendererProcess.invoke('TestFrameWork.showTestResults', ...args)
+}
+
 export const performAction = (...args) => {
   return RendererProcess.invoke('TestFrameWork.performAction', ...args)
+}
+
+export const performKeyBoardAction = (...args) => {
+  return RendererProcess.invoke('TestFrameWork.performKeyBoardAction', ...args)
 }
 
 export const checkConditionError = (...args) => {

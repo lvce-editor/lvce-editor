@@ -45,7 +45,8 @@
   background: var(--ToolBarHoverBackground);
 }
 
-.Badge {
+.SearchBadge,
+.Search .Badge {
   display: var(--SearchBadgeDisplay);
 }
 

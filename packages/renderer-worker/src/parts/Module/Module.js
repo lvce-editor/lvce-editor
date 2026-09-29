@@ -6,6 +6,8 @@ export const load = (moduleId) => {
       return import('../About/About.ipc.js')
     case ModuleId.Ajax:
       return import('../Ajax/Ajax.ipc.js')
+    case ModuleId.SimpleBrowserWorkflow:
+      return import('../SimpleBrowserWorkflow/SimpleBrowserWorkflow.ipc.js')
     case ModuleId.Audio:
       return import('../Audio/Audio.ipc.js')
     case ModuleId.AutoUpdater:
@@ -42,6 +44,10 @@ export const load = (moduleId) => {
       return import('../ContentTracing/ContentTracing.ipc.js')
     case ModuleId.ContextMenu:
       return import('../ContextMenu/ContextMenu.ipc.js')
+    case ModuleId.ComponentState:
+      return import('../ComponentState/ComponentState.ipc.js')
+    case ModuleId.Application:
+      return import('../Application/Application.ipc.js')
     case ModuleId.Debug:
       return import('../Debug/Debug.ipc.js')
     case ModuleId.DebugSharedProcess:
@@ -72,6 +78,8 @@ export const load = (moduleId) => {
       return import('../ExtensionHost/ExtensionHostCore.ipc.js')
     case ModuleId.ExtensionMeta:
       return import('../ExtensionMeta/ExtensionMeta.ipc.js')
+    case ModuleId.ExtensionNodeRpc:
+      return import('../ExtensionNodeRpc/ExtensionNodeRpc.ipc.js')
     case ModuleId.Extensions:
       return import('../Extensions/Extensions.ipc.js')
     case ModuleId.FilePicker:
@@ -92,6 +100,10 @@ export const load = (moduleId) => {
       return import('../KeyBindings/KeyBindings.ipc.js')
     case ModuleId.KeyBindingsInitial:
       return import('../KeyBindingsInitial/KeyBindingsInitial.ipc.js')
+    case ModuleId.Layout:
+      return import('../Layout/Layout.ipc.js')
+    case ModuleId.License:
+      return import('../License/License.ipc.js')
     case ModuleId.LaunchIsolatedExtensionHostWorker:
       return import('../LaunchIsolatedExtensionHostWorker/LaunchIsolatedExtensionHostWorker.ipc.js')
     case ModuleId.Listener:
@@ -160,6 +172,8 @@ export const load = (moduleId) => {
       return import('../ExtensionHost/ExtensionHostWorkerContentSecurityPolicy.ipc.js')
     case ModuleId.SendMessagePortToElectron:
       return import('../SendMessagePortToElectron/SendMessagePortToElectron.ipc.js')
+    case ModuleId.SendMessagePortToMainProcess:
+      return import('../SendMessagePortToMainProcess/SendMessagePortToMainProcess.ipc.js')
     case ModuleId.OffscreenCanvas:
       return import('../OffscreenCanvas/OffscreenCanvas.ipc.js')
     case ModuleId.Timeout:
@@ -190,8 +204,6 @@ export const load = (moduleId) => {
       return import('../ExtensionHost/ExtensionHostHover.ipc.js')
     case ModuleId.SendMessagePortToExtensionHostWorker:
       return import('../SendMessagePortToExtensionHostWorker/SendMessagePortToExtensionHostWorker.ipc.js')
-    case ModuleId.ExtensionHostManagement:
-      return import('../ExtensionHostManagement/ExtensionHostManagement.ipc.js')
     case ModuleId.SendMessagePortToSyntaxHighlightingWorker:
       // TODO move this to transferrable module instead
       return import('../SendMessagePortToSyntaxHighlightingworker/SendMessagePortToSyntaxHighlightingWorker.ipc.js')
@@ -215,8 +227,18 @@ export const load = (moduleId) => {
       return import('../ExtensionManagement/ExtensionManagement.ipc.js')
     case ModuleId.Markdown:
       return import('../Markdown/Markdown.ipc.js')
+    case ModuleId.TerminalTransfer:
+      return import('../TerminalTransfer/TerminalTransfer.ipc.js')
     case ModuleId.MeasureTextHeight:
       return import('../MeasureTextHeight/MeasureTextHeight.ipc.js')
+    case ModuleId.FileSystemMemory:
+      return import('../FileSystem/FileSystemMemory.ipc.js')
+    case ModuleId.WebSocketCapability:
+      return import('../WebSocketCapability/WebSocketCapability.ipc.js')
+    case ModuleId.ExtensionHotReload:
+      return import('../ExtensionHotReload/ExtensionHotReload.ipc.js')
+    case ModuleId.RevealInExplorer:
+      return import('../RevealInExplorer/RevealInExplorer.ipc.ts')
     default:
       throw new Error(`module ${moduleId} not found`)
   }

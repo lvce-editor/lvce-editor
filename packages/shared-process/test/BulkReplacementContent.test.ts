@@ -1,9 +1,9 @@
-import * as BulkReplacementContent from '../src/parts/BulkReplacementContent/BulkReplacementContent.js'
 import { jest, beforeEach, test, expect } from '@jest/globals'
+import * as BulkReplacementContent from '../src/parts/BulkReplacementContent/BulkReplacementContent.js'
 
 test('getNewContent - no ranges', () => {
   const content = 'a'
-  const ranges = []
+  const ranges: any[] = []
   const replacement = 'b'
   expect(BulkReplacementContent.getNewContent(content, ranges, replacement)).toBe('a')
 })

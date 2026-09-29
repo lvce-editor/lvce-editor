@@ -86,6 +86,6 @@ export const insertCss = (id, css) => {
   return EmbedsWorker.invoke('ElectronWebContentsView.insertCss', id, css)
 }
 
-export const insertJavaScript = (id, css) => {
-  return EmbedsWorker.invoke('ElectronWebContentsView.insertJavaScript', id, css)
+export const insertJavaScript = (id, code, userGesture = false) => {
+  return EmbedsWorker.invoke('ElectronWebContentsView.insertJavaScript', id, code, userGesture)
 }

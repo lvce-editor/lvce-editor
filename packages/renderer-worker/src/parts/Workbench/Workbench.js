@@ -1,31 +1,48 @@
 import * as Bounds from '../Bounds/Bounds.js'
+import * as Application from '../Application/Application.ts'
 import * as ColorTheme from '../ColorTheme/ColorTheme.js'
 import * as Command from '../Command/Command.js'
 import * as CleanAuthCallbackUrl from '../CleanAuthCallbackUrl/CleanAuthCallbackUrl.js'
+import * as CleanExpiredCacheEntries from '../CleanExpiredCacheEntries/CleanExpiredCacheEntries.js'
+import * as CleanUpWorkersAfterLoad from '../CleanUpWorkersAfterLoad/CleanUpWorkersAfterLoad.js'
 import * as DevelopFileWatcher from '../DevelopFileWatcher/DevelopFileWatcher.js'
 import * as ExecuteCurrentTest from '../ExecuteCurrentTest/ExecuteCurrentTest.js'
+import * as ExtensionManagementWorker from '../ExtensionManagementWorker/ExtensionManagementWorker.js'
 import * as FileSystemMap from '../FileSystemMap/FileSystemMap.js'
 import * as FileSystemState from '../FileSystemState/FileSystemState.js'
 import * as Focus from '../Focus/Focus.js'
+import * as GetRendererOptions from '../GetRendererOptions/GetRendererOptions.js'
 import * as HasCodeQueryParam from '../HasCodeQueryParam/HasCodeQueryParam.js'
+import * as HeadlessLayout from '../HeadlessLayout/HeadlessLayout.js'
 import * as IconTheme from '../IconTheme/IconTheme.js'
 import * as Id from '../Id/Id.js'
 import * as InitData from '../InitData/InitData.js'
 import * as IpcState from '../IpcState/IpcState.js'
+import * as IpcTrace from '../IpcTrace/IpcTrace.js'
+import * as KeyBindings from '../KeyBindings/KeyBindings.js'
 import * as Languages from '../Languages/Languages.js'
 import * as LaunchSharedProcess from '../LaunchSharedProcess/LaunchSharedProcess.js'
+import * as LaunchTestWorker from '../LaunchTestWorker/LaunchTestWorker.ts'
 import * as LifeCycle from '../LifeCycle/LifeCycle.js'
 import * as LifeCyclePhase from '../LifeCyclePhase/LifeCyclePhase.js'
 import * as Location from '../Location/Location.js'
 import * as Module from '../Module/Module.js'
+import * as ModernUi from '../ModernUi/ModernUi.js'
+import * as OpenInitialUri from '../OpenInitialUri/OpenInitialUri.js'
+import * as OnLoadCommands from '../OnLoadCommands/OnLoadCommands.js'
 import * as Performance from '../Performance/Performance.js'
 import * as PerformanceMarkerType from '../PerformanceMarkerType/PerformanceMarkerType.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as Preferences from '../Preferences/Preferences.js'
+import * as PreferencesFileWatcher from '../PreferencesFileWatcher/PreferencesFileWatcher.js'
+import * as PreferencesState from '../PreferencesState/PreferencesState.js'
+import * as PromptMode from '../PromptMode/PromptMode.js'
 import * as RecentlyOpened from '../RecentlyOpened/RecentlyOpened.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
+import * as RuntimeWorkerPaths from '../RuntimeWorkerPaths/RuntimeWorkerPaths.ts'
 import * as SaveState from '../SaveState/SaveState.js'
 import * as SessionReplay from '../SessionReplay/SessionReplay.js'
+import { shouldInitializeAuth } from '../ShouldInitializeAuth/ShouldInitializeAuth.ts'
 import * as StartupAuth from '../StartupAuth/StartupAuth.js'
 import * as UnhandledErrorHandling from '../UnhandledErrorHandling/UnhandledErrorHandling.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
@@ -35,6 +52,7 @@ import * as ViewletModuleInternal from '../ViewletModuleInternal/ViewletModuleIn
 import * as ViewletModuleMap from '../ViewletModuleMap/ViewletModuleMap.js'
 import * as WatchFilesForHotReload from '../WatchFilesForHotReload/WatchFilesForHotReload.js'
 import * as Workspace from '../Workspace/Workspace.js'
+import * as WorkspaceFileWatcher from '../WorkspaceFileWatcher/WorkspaceFileWatcher.js'
 
 const actions = [
   async () => {
@@ -75,7 +93,7 @@ const actions = [
   },
 
   async () => {
-    await Command.execute('Layout.loadPreviewIfVisible')
+    await Promise.all([Command.execute('Layout.loadPreviewIfVisible'), Command.execute('Layout.loadSecondaryPreviewIfVisible')])
   },
   async (platform, assetDir) => {
     LifeCycle.mark(LifeCyclePhase.Eleven)
@@ -98,9 +116,6 @@ const actions = [
   },
 ]
 
-const loadMainAction = actions[0]
-const deferredActions = actions.slice(1)
-
 // TODO lazyload parts one by one (Main, SideBar, ActivityBar, TitleBar, StatusBar)
 export const startup = async (platform, assetDir) => {
   onunhandledrejection = UnhandledErrorHandling.handleUnhandledRejection
@@ -114,53 +129,70 @@ export const startup = async (platform, assetDir) => {
 
   Performance.mark(PerformanceMarkerType.WillStartupWorkbench)
   await RendererProcess.listen()
+  const initData = await InitData.getInitData()
+  Location.initialize(initData.Location.href)
   if (platform !== PlatformType.Web) {
     await LaunchSharedProcess.launchSharedProcess()
+    await IpcTrace.initialize()
   }
 
   LifeCycle.mark(LifeCyclePhase.One)
 
-  const initData = await InitData.getInitData()
-
   IpcState.setConfig(initData.Config?.shouldLaunchMultipleWorkers)
+  RuntimeWorkerPaths.initialize(initData.Config?.workerUrls)
+  ExtensionManagementWorker.hydrate()
 
-  if (initData.Location.href.includes('?replayId')) {
-    const url = new URL(initData.Location.href)
-    const replayId = url.searchParams.get('replayId')
-    await SessionReplay.replaySession(replayId)
-    return
-  }
-
-  if (initData.Location.href.startsWith('http://localhost:3001/tests/')) {
-    // TODO aquire port from other renderer worker
-  }
+  const promptOptions = platform === PlatformType.Electron ? await PromptMode.getPromptOptions() : undefined
 
   Bounds.set(initData.Layout.bounds.windowWidth, initData.Layout.bounds.windowHeight)
 
   Performance.mark(PerformanceMarkerType.WillLoadPreferences)
   await Preferences.hydrate()
-  Performance.mark(PerformanceMarkerType.DidLoadPreferences)
-
-  // TODO only load this if session replay is enabled in preferences
-  if (Preferences.get('sessionReplay.enabled')) {
-    Performance.mark(PerformanceMarkerType.WillLoadSessionReplay)
-    await SessionReplay.startRecording()
-    Performance.mark(PerformanceMarkerType.DidLoadSessionReplay)
+  await ModernUi.hydrate()
+  if (promptOptions?.backendUrl) {
+    PreferencesState.set('layout.backendUrl', promptOptions.backendUrl)
   }
+  Performance.mark(PerformanceMarkerType.DidLoadPreferences)
+  await RendererProcess.invoke('VirtualDom.configure', GetRendererOptions.getRendererOptions())
 
-  let authState
-  if (HasCodeQueryParam.hasCodeQueryParam(initData.Location.href)) {
+  LaunchTestWorker.preloadTestWorker(initData.Location.href, promptOptions !== undefined)
+
+  const hasAuthCallback = HasCodeQueryParam.hasCodeQueryParam(initData.Location.href)
+  if (hasAuthCallback) {
     await CleanAuthCallbackUrl.cleanAuthCallbackUrl(initData.Location.href)
   }
-  authState = await StartupAuth.initializeAuth(platform, initData.Location.href)
+  const authState = shouldInitializeAuth(hasAuthCallback, promptOptions !== undefined)
+    ? await StartupAuth.initializeAuth(platform, initData.Location.href)
+    : undefined
+
+  if (promptOptions === undefined) {
+    Performance.mark(PerformanceMarkerType.WillLoadSessionReplay)
+    try {
+      await SessionReplay.initialize(authState)
+    } catch (error) {
+      console.warn('Failed to start session replay', error)
+    }
+    Performance.mark(PerformanceMarkerType.DidLoadSessionReplay)
+  }
 
   LifeCycle.mark(LifeCyclePhase.Twelve)
 
   Performance.mark(PerformanceMarkerType.WillOpenWorkspace)
-  await Workspace.hydrate(initData.Location)
+  const isApplicationHost = platform === PlatformType.Web && new URL(initData.Location.href).searchParams.has('applicationHost')
+  if (!isApplicationHost) await Workspace.hydrate(initData.Location)
   Performance.mark(PerformanceMarkerType.DidOpenWorkspace)
 
+  if (promptOptions !== undefined) {
+    await HeadlessLayout.initialize(initData)
+    await Command.execute('Layout.setAuthState', authState)
+    await PromptMode.run(promptOptions, authState)
+    return
+  }
+
+  const isTestRun = Workspace.isTest() || initData.Location.href.includes('/tests/')
+
   await Focus.hydrate()
+  await KeyBindings.hydrate()
 
   LifeCycle.mark(LifeCyclePhase.Three)
 
@@ -169,6 +201,14 @@ export const startup = async (platform, assetDir) => {
   Performance.mark(PerformanceMarkerType.DidLoadColorTheme)
 
   LifeCycle.mark(LifeCyclePhase.Four)
+
+  if (isApplicationHost) {
+    await Languages.hydrate(platform, assetDir)
+    await IconTheme.hydrate(platform, assetDir)
+    Application.markHostReady()
+    LifeCycle.mark(LifeCyclePhase.Fifteen)
+    return
+  }
 
   Performance.mark(PerformanceMarkerType.WillShowLayout)
   const layout = ViewletManager.create(ViewletModule.load, ViewletModuleId.Layout, 0, '', 0, 0, 0, 0)
@@ -187,7 +227,7 @@ export const startup = async (platform, assetDir) => {
     },
     false,
     false,
-    { ...initData, ...layoutState },
+    { ...initData, ...layoutState, restore: !isTestRun },
   )
   commands.splice(1, 1)
 
@@ -197,7 +237,9 @@ export const startup = async (platform, assetDir) => {
   // commands.push(...placeholderCommands)
   commands.push(['Viewlet.appendToBody', layout.uid])
   await RendererProcess.invoke('Viewlet.executeCommands', commands)
-  await Command.execute('Layout.setAuthState', authState)
+  if (authState) {
+    await Command.execute('Layout.setAuthState', authState)
+  }
   // await Layout.hydrate(initData)
   Performance.mark(PerformanceMarkerType.DidShowLayout)
 
@@ -207,8 +249,14 @@ export const startup = async (platform, assetDir) => {
 
   LifeCycle.mark(LifeCyclePhase.Five)
 
-  await loadMainAction(platform, assetDir)
-  await Promise.all(deferredActions.map((action) => action(platform, assetDir)))
+  await Promise.all(actions.map((action) => action(platform, assetDir)))
+  await OpenInitialUri.openInitialUri(initData.Location.href)
+  await OnLoadCommands.run(assetDir, platform)
+  await CleanUpWorkersAfterLoad.cleanUpWorkersAfterLoad()
+
+  if (!isTestRun) {
+    void CleanExpiredCacheEntries.cleanExpiredCacheEntries()
+  }
 
   LifeCycle.mark(LifeCyclePhase.Fifteen)
 
@@ -226,13 +274,16 @@ export const startup = async (platform, assetDir) => {
   await RecentlyOpened.hydrate()
   Performance.mark(PerformanceMarkerType.DidLoadRecentlyOpened)
 
-  // TODO tree shake out service worker in electron build
-
   Performance.mark(PerformanceMarkerType.WillLoadLocation)
   await Location.hydrate()
   Performance.mark(PerformanceMarkerType.DidLoadLocation)
 
-  const watcherPromises = Promise.all([DevelopFileWatcher.hydrate(), WatchFilesForHotReload.watchFilesForHotReload()])
+  const watcherPromises = Promise.all([
+    DevelopFileWatcher.hydrate(),
+    PreferencesFileWatcher.hydrate(),
+    WatchFilesForHotReload.watchFilesForHotReload(),
+    WorkspaceFileWatcher.hydrate(),
+  ])
 
   Performance.measure(PerformanceMarkerType.OpenWorkspace, PerformanceMarkerType.WillOpenWorkspace, PerformanceMarkerType.DidOpenWorkspace)
   Performance.measure(PerformanceMarkerType.LoadMain, PerformanceMarkerType.WillLoadMain, PerformanceMarkerType.DidLoadMain)

@@ -1,6 +1,9 @@
+import * as ApplicationRegistry from '../ApplicationRegistry/ApplicationRegistry.ts'
+import * as BrowserWorkspaceFocus from '../BrowserWorkspaceFocus/BrowserWorkspaceFocus.js'
 import * as Assert from '../Assert/Assert.ts'
 import * as Browser from '../Browser/Browser.js'
 import * as Context from '../Context/Context.js'
+import * as ExtensionViewContext from '../ExtensionViewContext/ExtensionViewContext.js'
 import * as FocusState from '../FocusState/FocusState.js'
 import * as KeyBindingsState from '../KeyBindingsState/KeyBindingsState.js'
 import * as WhenExpression from '../WhenExpression/WhenExpression.js'
@@ -15,6 +18,7 @@ import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 export const setFocus = (focusKey, additionalFocusKey, uid, viewletModuleId) => {
   Assert.number(focusKey)
   Context.reset()
+  ExtensionViewContext.restore()
   FocusState.set(focusKey)
   Context.set(FocusState.get(), true)
   if (additionalFocusKey) {
@@ -24,8 +28,22 @@ export const setFocus = (focusKey, additionalFocusKey, uid, viewletModuleId) => 
   // Track the focused viewlet instance if provided
   if (typeof uid === 'number' && typeof viewletModuleId === 'string') {
     ViewletStates.setFocusedInstanceByType(uid, viewletModuleId)
+    BrowserWorkspaceFocus.record(ApplicationRegistry.getOwner(uid), uid, viewletModuleId)
   }
 
+  KeyBindingsState.update()
+}
+
+/**
+ * @param {number} focusKey
+ */
+export const clearFocus = (focusKey) => {
+  Assert.number(focusKey)
+  if (FocusState.get() !== focusKey) {
+    return
+  }
+  Context.remove(focusKey)
+  FocusState.set(WhenExpression.Empty)
   KeyBindingsState.update()
 }
 
@@ -40,6 +58,7 @@ export const setAdditionalFocus = (key, uid, viewletModuleId) => {
   // Track the focused viewlet instance if provided
   if (typeof uid === 'number' && typeof viewletModuleId === 'string') {
     ViewletStates.setFocusedInstanceByType(uid, viewletModuleId)
+    BrowserWorkspaceFocus.record(ApplicationRegistry.getOwner(uid), uid, viewletModuleId)
   }
 
   KeyBindingsState.update()

@@ -5,30 +5,297 @@
 }
 
 .DiffEditor {
-  display: flex;
   color: rgb(188, 190, 190);
   contain: strict;
+  display: flex;
   flex: 1;
+  position: relative;
+  width: 100%;
+}
+
+.DiffEditorWithSearch {
+  flex-direction: column;
+}
+
+.DiffEditorBody {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  min-width: 0;
+}
+
+.DiffSearchHeader {
+  align-items: center;
+  box-sizing: border-box;
+  display: flex;
+  flex-shrink: 0;
+  height: 40px;
+  padding: 6px 12px;
+}
+
+.DiffSearchInput {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 4px;
+  box-sizing: border-box;
+  font: 13px system-ui, sans-serif;
+  height: 28px;
+  max-width: 320px;
+  min-width: 120px;
+  outline: none;
+  padding: 0 8px;
+  width: 100%;
+}
+
+.DiffSearchInput:focus {
+  border-color: rgba(116, 178, 255, 0.72);
+}
+
+.DiffEditorButtons {
+  align-items: center;
+  display: inline-flex;
+  gap: 8px;
+  position: absolute;
+  right: 14px;
+  top: 8px;
+  z-index: 2;
+}
+
+.DiffEditorModeToggle,
+.DiffEditorWhitespaceToggle {
+  align-items: center;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 4px;
+  cursor: pointer;
+  display: inline-flex;
+  font: 12px system-ui, sans-serif;
+  height: 28px;
+  padding: 0 10px;
+}
+
+.DiffEditorModeToggle:hover,
+.DiffEditorWhitespaceToggle:hover {
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.DiffEditorWhitespaceToggleActive {
+  background: rgba(74, 144, 226, 0.24);
+  border-color: rgba(116, 178, 255, 0.58);
+}
+
+.DiffEditorHorizontal {
+  flex-direction: row;
+}
+
+.DiffEditorVertical {
+  flex-direction: column;
+}
+
+.DiffEditorWithSearch.DiffEditorHorizontal,
+.DiffEditorWithSearch.DiffEditorVertical {
+  flex-direction: column;
+}
+
+.DiffEditorBody.DiffEditorVertical {
+  flex-direction: column;
+}
+
+.DiffEditorBody.DiffEditorHorizontal {
+  flex-direction: row;
 }
 
 .DiffEditorContent {
   contain: strict;
+  display: flex;
   flex: 1;
+  flex-direction: row;
+  height: 100%;
+  overflow: hidden;
+  position: relative !important;
+  user-select: text;
+}
+
+.DiffEditorContentLeft,
+.DiffEditorContentRight {
+  align-items: stretch;
+  display: flex;
+  min-height: 0;
+  min-width: 0;
+  overflow: hidden;
+  position: relative;
+}
+
+.DiffEditorGutter {
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  position: relative !important;
+  flex-shrink: 0;
+  font-family: monospace;
+  font-variant-numeric: tabular-nums;
+  overflow: hidden;
+  text-align: right;
+  user-select: none;
 }
 
-.Deletion {
-  background: var(--DeletionBackground);
+.DiffEditorLineNumber {
+  border-left: 2px solid transparent;
+  box-sizing: border-box;
+  padding: 0 10px 0 6px;
+  white-space: pre;
 }
 
-.Insertion {
-  background: var(--InsertionBackground);
+.DiffEditor .DiffEditorLineNumberMeta {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.DiffEditorLineNumberEmpty {
+  background-image: repeating-linear-gradient(135deg, transparent 0, transparent 5px, rgba(255, 255, 255, 0.06) 5px, rgba(255, 255, 255, 0.06) 6px);
+  box-sizing: border-box;
+  flex-shrink: 0;
+}
+
+.DiffEditorRows {
+  contain: layout paint style;
+  cursor: text;
+  flex: 1 1 auto;
+  font-family: monospace;
+  height: 100%;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.DiffEditor .EditorRow {
+  box-sizing: border-box;
+  padding: 0 12px;
+  white-space: pre;
+}
+
+.DiffEditorSelections {
+  inset: 0;
+  pointer-events: none;
+  position: absolute;
+  z-index: 1;
+}
+
+.DiffEditor .EditorCursor {
+  background: red;
+  position: absolute;
+  width: 2px;
+}
+
+.DiffEditorInputWrapper {
+  contain: strict;
+  height: 0;
+  position: absolute;
+  width: 0;
+  z-index: 1;
+}
+
+.DiffEditorInput {
+  background: transparent;
+  border: 0;
+  color: transparent;
+  cursor: text;
+  height: 0;
+  outline: none;
+  padding: 0;
+  position: absolute;
+  width: 0;
+}
+
+.DiffEditor .Deletion {
+  background: rgba(248, 81, 73, 0.18);
+}
+
+.DiffEditor .Insertion {
+  background: rgba(46, 160, 67, 0.18);
+}
+
+.DiffEditor .GitButtons {
+  background: rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 12px;
+}
+
+.DiffEditor .IncomingChange {
+  background: rgba(46, 160, 67, 0.16);
+  color: rgba(183, 247, 192, 0.95);
+  font-size: 12px;
+}
+
+.DiffEditor .DiffToken--changed {
+  background: rgba(245, 158, 11, 0.22);
+  border-radius: 4px;
+}
+
+.DiffEditorLineMissing {
+  background-image: repeating-linear-gradient(135deg, transparent 0, transparent 5px, rgba(255, 255, 255, 0.06) 5px, rgba(255, 255, 255, 0.06) 6px);
+  box-shadow: none;
+}
+
+.ImageContent {
+  align-items: center;
+  display: flex;
+  height: 100%;
+  justify-content: center;
+  overflow: auto;
+}
+
+.ImageElement {
+  display: block;
+  max-height: 100%;
+  max-width: 100%;
+  object-fit: contain;
 }
 
 .DiffEditorContentRight {
   box-shadow: -6px 0 5px -5px var(--ScrollBarShadow);
+}
+
+.DiffEditorError {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.DiffEditorErrorMessage {
+  font-weight: 600;
+}
+
+.Sash {
+  flex-shrink: 0;
+}
+
+.SashVertical {
+  cursor: col-resize;
+}
+
+.SashHorizontal {
+  cursor: row-resize;
+}
+
+.DiffScrollBar {
+  background-color: rgba(128, 128, 128, 0.15);
+  border-radius: 4px;
+  height: 100%;
+  position: absolute;
+  right: 2px;
+  top: 0;
+  width: 8px;
+}
+
+.DiffScrollBarThumb {
+  background: rgba(128, 128, 128, 0.45);
+  border-radius: 4px;
+  cursor: pointer;
+  position: absolute;
+  width: 100%;
+}
+
+.DiffEditor .Sash {
+  position: relative;
 }
 
 .DiffEditorErrorCodeFrame,

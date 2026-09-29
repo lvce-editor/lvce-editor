@@ -1,5 +1,9 @@
 .DragOverlay {
   position: absolute;
+  left: var(--DragOverlayLeft);
+  top: var(--DragOverlayTop);
+  width: var(--DragOverlayWidth);
+  height: var(--DragOverlayHeight);
   background: rgba(83, 89, 93, 0.5);
   z-index: 1;
   pointer-events: none;

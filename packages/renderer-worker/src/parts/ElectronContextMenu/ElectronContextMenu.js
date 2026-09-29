@@ -5,15 +5,22 @@ import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 
 const convertMenuItem = (menuItem) => {
-  const { flags, label } = menuItem
+  const { flags, label, role } = menuItem
   switch (flags) {
     case MenuItemFlags.Separator:
       return {
         type: ElectronMenuItemFlags.Separator,
       }
+    case MenuItemFlags.Disabled:
+      return {
+        enabled: false,
+        label,
+        ...(role ? { role } : {}),
+      }
     default:
       return {
         label,
+        ...(role ? { role } : {}),
       }
   }
 }
@@ -42,7 +49,7 @@ export const openContextMenu = async (x, y, id, ...args) => {
     return
   }
   const item = getItem(entries, event.data)
-  if (!item) {
+  if (!item || item.flags === MenuItemFlags.Disabled) {
     return
   }
   const commandArgs = item.args || []
@@ -57,9 +64,18 @@ export const openContextMenu2 = async (x, y, uid, menuId, ...args) => {
     return
   }
   const item = getItem(entries, event.data)
-  if (!item) {
+  if (!item || item.flags === MenuItemFlags.Disabled) {
     return
   }
   const commandArgs = item.args || []
   await Command.execute(item.command, ...commandArgs)
+}
+
+export const openBrowserContextMenu = async (x, y, entries, browserViewId) => {
+  const event = await SharedProcess.invoke('ElectronContextMenu.openContextMenu', convertMenuItems(entries), x, y, browserViewId)
+  if (event.type === 'close') return
+  const item = getItem(entries, event.data)
+  // Native editing actions have already executed against the captured WebContents.
+  if (!item || item.role || item.flags === MenuItemFlags.Disabled || !item.command) return
+  await Command.execute(item.command, ...(item.args || []))
 }

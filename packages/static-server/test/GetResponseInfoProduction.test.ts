@@ -1,9 +1,9 @@
 import { expect, test } from '@jest/globals'
-import * as GetResponseInfoProduction from '../src/parts/GetResponseInfoProduction/GetResponseInfoProduction.js'
-import * as HttpHeader from '../src/parts/HttpHeader/HttpHeader.js'
-import * as HttpStatusCode from '../src/parts/HttpStatusCode/HttpStatusCode.js'
+import * as GetResponseInfoProduction from '../src/parts/GetResponseInfoProduction/GetResponseInfoProduction.ts'
+import * as HttpHeader from '../src/parts/HttpHeader/HttpHeader.ts'
+import * as HttpStatusCode from '../src/parts/HttpStatusCode/HttpStatusCode.ts'
 
-const normalizePath = (path) => path.replaceAll('\\', '/')
+const normalizePath = (path: string): string => path.replaceAll('\\', '/')
 
 test('returns config etag for head request in production', () => {
   const response = GetResponseInfoProduction.getResponseInfoProduction({

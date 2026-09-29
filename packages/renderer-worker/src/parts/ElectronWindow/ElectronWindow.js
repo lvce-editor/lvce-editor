@@ -14,6 +14,8 @@ export const minimize = forward('ElectronWindow.minimize')
 
 export const unmaximize = forward('ElectronWindow.unmaximize')
 
+export const toggleMaximize = forward('ElectronWindow.toggleMaximize')
+
 export const maximize = forward('ElectronWindow.maximize')
 
 export const close = forward('ElectronWindow.close')
@@ -22,6 +24,8 @@ export const openNew = forward('ElectronWindow.openNew')
 
 export const toggleDevtools = forward('ElectronWindow.toggleDevtools')
 
+export const toggleFullScreen = forward('ElectronWindow.toggleFullScreen')
+
 export const zoomIn = forward('ElectronWindow.zoomIn')
 
 export const zoomOut = forward('ElectronWindow.zoomOut')
@@ -29,3 +33,5 @@ export const zoomOut = forward('ElectronWindow.zoomOut')
 export const zoomReset = forward('ElectronWindow.zoomReset')
 
 export const focus = forward('ElectronWindow.focus')
+
+export const setBrowserFullWidthGestureEnabled = forward('ElectronWindow.setBrowserFullWidthGestureEnabled')

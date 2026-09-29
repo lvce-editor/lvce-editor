@@ -1,0 +1,18 @@
+#!/bin/sh
+set -eu
+
+# Resolve symlinks without GNU readlink -f (not available on older macOS).
+CLI_PATH=$0
+while [ -L "$CLI_PATH" ]; do
+  CLI_DIR=$(CDPATH= cd -- "$(dirname -- "$CLI_PATH")" && pwd)
+  CLI_PATH=$(readlink "$CLI_PATH")
+  case "$CLI_PATH" in
+    /*) ;;
+    *) CLI_PATH="$CLI_DIR/$CLI_PATH" ;;
+  esac
+done
+
+APP_ROOT=$(CDPATH= cd -- "$(dirname -- "$CLI_PATH")/.." && pwd)
+CONTENTS_ROOT=$(CDPATH= cd -- "$APP_ROOT/../.." && pwd)
+
+ELECTRON_RUN_AS_NODE=1 exec "$CONTENTS_ROOT/MacOS/Electron" "$APP_ROOT/bin/cli.js" "$@"

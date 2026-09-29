@@ -12,41 +12,43 @@ import { writeJson } from '../src/parts/JsonFile/JsonFile.js'
 import { VError } from '../src/parts/VError/VError.js'
 
 jest.unstable_mockModule('../src/parts/PlatformPaths/PlatformPaths.js', () => ({
-  getExtensionsPath: jest.fn(() => {
-    throw new Error('not implemented')
-  }),
   getBuiltinExtensionsPath: jest.fn(() => {
     throw new Error('not implemented')
   }),
-  getDisabledExtensionsPath: jest.fn(() => {
+  getCachedExtensionsPath: jest.fn(() => {
     throw new Error('not implemented')
   }),
   getDisabledExtensionsJsonPath: jest.fn(() => {
     throw new Error('not implemented')
   }),
+  getDisabledExtensionsPath: jest.fn(() => {
+    throw new Error('not implemented')
+  }),
+  getExtensionsPath: jest.fn(() => {
+    throw new Error('not implemented')
+  }),
   getMarketplaceUrl: jest.fn(() => {
     return marketplaceUrl
-  }),
-  getCachedExtensionsPath: jest.fn(() => {
-    throw new Error('not implemented')
   }),
   getOnlyExtensionPath: jest.fn(() => {
     throw new Error('not implemented')
   }),
-  getLinkedExtensionsPath: jest.fn(() => {
-    throw new Error('not implemented')
-  }),
+}))
+
+jest.unstable_mockModule('../src/parts/Trash/Trash.js', () => ({
+  trash: jest.fn((path: string) => rm(path, { recursive: true })),
 }))
 
 const ExtensionManagement = await import('../src/parts/ExtensionManagement/ExtensionManagement.js')
 const PlatformPaths = await import('../src/parts/PlatformPaths/PlatformPaths.js')
 const originalArgv = process.argv
+const uninstallMissingExtensionErrorRegex = /^Failed to uninstall extension "test-author.test-extension": ENOENT: no such file or directory/
 
-const getTmpDir = () => {
+const getTmpDir = (): any => {
   return mkdtemp(join(tmpdir(), 'foo-'))
 }
 
-const exists = async (path) => {
+const exists = async (path: any): Promise<any> => {
   try {
     await access(path)
     return true
@@ -59,7 +61,7 @@ const exists = async (path) => {
  * @param {string} inDir
  * @param {string} outFile
  */
-export const compress = async (inDir, outFile) => {
+export const compress = async (inDir: any, outFile: any): Promise<any> => {
   await mkdir(dirname(outFile), { recursive: true })
   await pipeline(
     tar.pack(inDir),
@@ -72,7 +74,7 @@ export const compress = async (inDir, outFile) => {
   )
 }
 
-const createExtensionTarBr = async (files) => {
+const createExtensionTarBr = async (files: any): Promise<any> => {
   const folder = '/tmp/extension-test/test-author.test-extension'
   await rm(folder, { force: true, recursive: true })
   await mkdir(folder, { recursive: true })
@@ -83,15 +85,15 @@ const createExtensionTarBr = async (files) => {
   await compress(folder, `${folder}.tar.br`)
 }
 
-let server
-let handler
-let marketplaceUrl
+let server: any
+let handler: any
+let marketplaceUrl: any
 
 beforeAll(async () => {
-  server = http.createServer((request, response) => {
+  server = http.createServer((request: any, response: any) => {
     handler(request, response)
   })
-  await new Promise((resolve) => {
+  await new Promise((resolve: any) => {
     server.listen(0, '127.0.0.1', () => {
       resolve(undefined)
     })
@@ -127,9 +129,7 @@ test("uninstall should fail when extension doesn't exist", async () => {
   const tmpDir = await getTmpDir()
   // @ts-ignore
   PlatformPaths.getExtensionsPath.mockImplementation(() => tmpDir)
-  await expect(ExtensionManagement.uninstall('test-author.test-extension')).rejects.toThrow(
-    /^Failed to uninstall extension "test-author.test-extension": ENOENT: no such file or directory/,
-  )
+  await expect(ExtensionManagement.uninstall('test-author.test-extension')).rejects.toThrow(uninstallMissingExtensionErrorRegex)
 })
 
 // TODO test for extension main not found (extension host)
@@ -159,18 +159,16 @@ test.skip('getExtensions', async () => {
   PlatformPaths.getDisabledExtensionsPath.mockImplementation(() => tmpDir3)
   // @ts-ignore
   PlatformPaths.getOnlyExtensionPath.mockImplementation(() => undefined)
-  // @ts-ignore
-  PlatformPaths.getLinkedExtensionsPath.mockImplementation(() => undefined)
   expect(await ExtensionManagement.getExtensions()).toEqual([
     {
-      status: ExtensionManifestStatus.Resolved,
       id: 'test-extension',
       path: join(tmpDir1, 'test-extension'),
+      status: ExtensionManifestStatus.Resolved,
     },
     {
-      status: ExtensionManifestStatus.Resolved,
       id: 'builtin-extension',
       path: join(tmpDir2, 'builtin-extension'),
+      status: ExtensionManifestStatus.Resolved,
     },
   ])
 })
@@ -193,10 +191,9 @@ test('getExtensions - invalid extension.json', async () => {
   PlatformPaths.getDisabledExtensionsJsonPath.mockImplementation(() => join(tmpDir3, 'disabled-extensions.json'))
   // @ts-ignore
   PlatformPaths.getOnlyExtensionPath.mockImplementation(() => undefined)
-  // @ts-ignore
-  PlatformPaths.getLinkedExtensionsPath.mockImplementation(() => undefined)
   expect(await ExtensionManagement.getExtensions()).toEqual([
     {
+      disabled: false,
       path: join(tmpDir1, 'test-extension'),
       reason: new VError(
         `Failed to load extension manifest for test-extension: Failed to parse json at ${join(
@@ -206,7 +203,6 @@ test('getExtensions - invalid extension.json', async () => {
         )}: SyntaxError: Expected property name or '}' in JSON at position 1 (line 1 column 2)`,
       ),
       status: ExtensionManifestStatus.Rejected,
-      disabled: false,
     },
   ])
 })
@@ -228,16 +224,14 @@ test('getExtensions ignores files in extension folders', async () => {
   PlatformPaths.getDisabledExtensionsJsonPath.mockImplementation(() => join(tmpDir3, 'disabled-extensions.json'))
   // @ts-ignore
   PlatformPaths.getOnlyExtensionPath.mockImplementation(() => undefined)
-  // @ts-ignore
-  PlatformPaths.getLinkedExtensionsPath.mockImplementation(() => undefined)
   expect(await ExtensionManagement.getExtensions()).toEqual([
     {
-      status: ExtensionManifestStatus.Resolved,
-      id: 'test-extension',
-      path: join(tmpDir1, 'test-extension'),
-      uri: expect.any(String),
       disabled: false,
+      id: 'test-extension',
       isBuiltin: false,
+      path: join(tmpDir1, 'test-extension'),
+      status: ExtensionManifestStatus.Resolved,
+      uri: expect.any(String),
     },
   ])
 })
@@ -260,22 +254,112 @@ test('getExtensions - includes transient linked extension from --link', async ()
   PlatformPaths.getDisabledExtensionsJsonPath.mockImplementation(() => join(tmpDir3, 'disabled-extensions.json'))
   // @ts-ignore
   PlatformPaths.getOnlyExtensionPath.mockImplementation(() => undefined)
-  // @ts-ignore
-  PlatformPaths.getLinkedExtensionsPath.mockImplementation(() => undefined)
   process.argv = [...originalArgv, '--link', transientRoot]
 
   expect(await ExtensionManagement.getExtensions()).toEqual([
     {
-      status: ExtensionManifestStatus.Resolved,
-      id: 'transient-extension',
-      version: '1.0.0',
-      path: transientExtensionPath,
-      uri: expect.any(String),
-      symlink: transientRoot,
       disabled: false,
+      id: 'transient-extension',
       isBuiltin: false,
+      linked: true,
+      path: transientExtensionPath,
+      status: ExtensionManifestStatus.Resolved,
+      symlink: transientRoot,
+      uri: expect.any(String),
+      version: '1.0.0',
     },
   ])
+})
+
+test('getExtensions - transient linked extension overrides builtin extension', async () => {
+  const installedExtensionsPath = await getTmpDir()
+  const builtinExtensionsPath = await getTmpDir()
+  const disabledExtensionsPath = await getTmpDir()
+  const linkedExtensionPath = await getTmpDir()
+  const extensionId = 'builtin.test-extension'
+  await mkdir(join(builtinExtensionsPath, extensionId))
+  await writeFile(join(builtinExtensionsPath, extensionId, 'extension.json'), JSON.stringify({ id: extensionId, name: 'Bundled Extension' }))
+  await writeFile(join(linkedExtensionPath, 'extension.json'), JSON.stringify({ id: extensionId, name: 'Linked Extension' }))
+  // @ts-ignore
+  PlatformPaths.getExtensionsPath.mockImplementation(() => installedExtensionsPath)
+  // @ts-ignore
+  PlatformPaths.getBuiltinExtensionsPath.mockImplementation(() => builtinExtensionsPath)
+  // @ts-ignore
+  PlatformPaths.getDisabledExtensionsPath.mockImplementation(() => disabledExtensionsPath)
+  // @ts-ignore
+  PlatformPaths.getDisabledExtensionsJsonPath.mockImplementation(() => join(disabledExtensionsPath, 'disabled-extensions.json'))
+  // @ts-ignore
+  PlatformPaths.getOnlyExtensionPath.mockImplementation(() => undefined)
+  process.argv = [...originalArgv, '--link', linkedExtensionPath]
+
+  const extensions = await ExtensionManagement.getExtensions()
+
+  expect(extensions).toHaveLength(1)
+  expect(extensions[0]).toMatchObject({
+    disabled: false,
+    id: extensionId,
+    isBuiltin: true,
+    linked: true,
+    name: 'Linked Extension',
+    path: linkedExtensionPath,
+    symlink: linkedExtensionPath,
+  })
+})
+
+test('getExtensions - explicit enable overrides a builtin disabled by default', async () => {
+  const installedExtensionsPath = await getTmpDir()
+  const builtinExtensionsPath = await getTmpDir()
+  const disabledExtensionsPath = await getTmpDir()
+  const disabledExtensionsJsonPath = join(disabledExtensionsPath, 'disabled-extensions.json')
+  const extensionId = 'builtin.gpt-voice'
+  await mkdir(join(builtinExtensionsPath, extensionId))
+  await writeFile(join(builtinExtensionsPath, extensionId, 'extension.json'), JSON.stringify({ disabled: true, id: extensionId }))
+  await writeFile(disabledExtensionsJsonPath, JSON.stringify({ disabledExtensions: [], enabledExtensions: [extensionId] }))
+  // @ts-ignore
+  PlatformPaths.getExtensionsPath.mockImplementation(() => installedExtensionsPath)
+  // @ts-ignore
+  PlatformPaths.getBuiltinExtensionsPath.mockImplementation(() => builtinExtensionsPath)
+  // @ts-ignore
+  PlatformPaths.getDisabledExtensionsPath.mockImplementation(() => disabledExtensionsPath)
+  // @ts-ignore
+  PlatformPaths.getDisabledExtensionsJsonPath.mockImplementation(() => disabledExtensionsJsonPath)
+  // @ts-ignore
+  PlatformPaths.getOnlyExtensionPath.mockImplementation(() => undefined)
+  const extensions = await ExtensionManagement.getExtensions()
+
+  expect(extensions).toHaveLength(1)
+  expect(extensions[0]).toMatchObject({
+    disabled: false,
+    id: extensionId,
+    isBuiltin: true,
+  })
+})
+
+test('bundled notebook keeps explicit enablement when manifests are loaded again', async () => {
+  const installedExtensionsPath = await getTmpDir()
+  const builtinExtensionsPath = await getTmpDir()
+  const disabledExtensionsPath = await getTmpDir()
+  const disabledExtensionsJsonPath = join(disabledExtensionsPath, 'disabled-extensions.json')
+  const extensionId = 'builtin.notebook'
+  const manifest = await readFile(new URL('../../../extensions/builtin.notebook/extension.json', import.meta.url), 'utf8')
+  await mkdir(join(builtinExtensionsPath, extensionId))
+  await writeFile(join(builtinExtensionsPath, extensionId, 'extension.json'), manifest)
+  // @ts-ignore
+  PlatformPaths.getExtensionsPath.mockReturnValue(installedExtensionsPath)
+  // @ts-ignore
+  PlatformPaths.getBuiltinExtensionsPath.mockReturnValue(builtinExtensionsPath)
+  // @ts-ignore
+  PlatformPaths.getDisabledExtensionsPath.mockReturnValue(disabledExtensionsPath)
+  // @ts-ignore
+  PlatformPaths.getDisabledExtensionsJsonPath.mockReturnValue(disabledExtensionsJsonPath)
+  // @ts-ignore
+  PlatformPaths.getOnlyExtensionPath.mockReturnValue(undefined)
+
+  expect(await ExtensionManagement.getExtensions()).toEqual([expect.objectContaining({ disabled: true, id: extensionId, isBuiltin: true })])
+  await ExtensionManagement.enable(extensionId)
+  expect(JSON.parse(await readFile(disabledExtensionsJsonPath, 'utf8')).enabledExtensions).toContain(extensionId)
+  expect(await ExtensionManagement.getExtensions()).toEqual([expect.objectContaining({ disabled: false, id: extensionId, isBuiltin: true })])
+  expect(JSON.parse(await readFile(join(builtinExtensionsPath, extensionId, 'extension.json'), 'utf8')).disabled).toBe(true)
 })
 
 test('disable', async () => {
@@ -290,10 +374,12 @@ test('disable', async () => {
   PlatformPaths.getDisabledExtensionsPath.mockImplementation(() => tmpDir2)
   // @ts-ignore
   PlatformPaths.getDisabledExtensionsJsonPath.mockImplementation(() => join(tmpDir3, 'disabled-extensions.json'))
+  await writeFile(join(tmpDir3, 'disabled-extensions.json'), JSON.stringify({ disabledExtensions: [], enabledExtensions: ['test-extension'] }))
   await ExtensionManagement.disable('test-extension')
   const content = await readFile(join(tmpDir3, 'disabled-extensions.json'), 'utf8')
   const parsed = JSON.parse(content)
   expect(parsed.disabledExtensions).toEqual(['test-extension'])
+  expect(parsed.enabledExtensions).toEqual([])
 })
 
 test('enable', async () => {
@@ -306,6 +392,7 @@ test('enable', async () => {
   const content = await readFile(disabledExtensionsJsonPath, 'utf8')
   const parsed = JSON.parse(content)
   expect(parsed.disabledExtensions).toEqual(['test-extension-2'])
+  expect(parsed.enabledExtensions).toEqual(['test-extension-1'])
 })
 
 test('enable - extension not in disabled list', async () => {
@@ -318,6 +405,7 @@ test('enable - extension not in disabled list', async () => {
   const content = await readFile(disabledExtensionsJsonPath, 'utf8')
   const parsed = JSON.parse(content)
   expect(parsed.disabledExtensions).toEqual(['test-extension-1'])
+  expect(parsed.enabledExtensions).toEqual(['test-extension-2'])
 })
 
 test.skip('disable should fail if enabled extension path does not exist', async () => {
@@ -350,8 +438,8 @@ test.skip('getExtensions - empty object', async () => {
   PlatformPaths.getCachedExtensionsPath.mockImplementation(() => tmpDir3)
   expect(await ExtensionManagement.getExtensions()).toEqual([
     {
-      status: ExtensionManifestStatus.Resolved,
       path: join(tmpDir1, '/test-extension-1'),
+      status: ExtensionManifestStatus.Resolved,
     },
   ])
 })
@@ -367,9 +455,9 @@ test.skip('getExtensions - error - invalid value - empty array', async () => {
   PlatformPaths.getExtensionsPath.mockImplementation(() => tmpDir2)
   expect(await ExtensionManagement.getExtensions()).toEqual([
     {
-      status: ExtensionManifestStatus.Resolved,
-
       path: join(tmpDir1, 'test-extension-1'),
+
+      status: ExtensionManifestStatus.Resolved,
     },
   ])
 })
@@ -385,15 +473,13 @@ test('getExtensions - error - invalid value - null', async () => {
   PlatformPaths.getExtensionsPath.mockImplementation(() => tmpDir2)
   // @ts-ignore
   PlatformPaths.getOnlyExtensionPath.mockImplementation(() => undefined)
-  // @ts-ignore
-  PlatformPaths.getLinkedExtensionsPath.mockImplementation(() => undefined)
   expect(await ExtensionManagement.getExtensions()).toEqual([
     {
-      status: ExtensionManifestStatus.Rejected,
-      reason: new VError('Failed to load extension manifest for test-extension-1: Invalid manifest file: Not an JSON object.'),
-      path: join(tmpDir1, 'test-extension-1'),
       builtin: true,
       disabled: false,
+      path: join(tmpDir1, 'test-extension-1'),
+      reason: new VError('Failed to load extension manifest for test-extension-1: Invalid manifest file: Not an JSON object.'),
+      status: ExtensionManifestStatus.Rejected,
     },
   ])
 })
@@ -409,15 +495,13 @@ test('getExtensions - error - invalid value - string', async () => {
   PlatformPaths.getExtensionsPath.mockImplementation(() => tmpDir2)
   // @ts-ignore
   PlatformPaths.getOnlyExtensionPath.mockImplementation(() => undefined)
-  // @ts-ignore
-  PlatformPaths.getLinkedExtensionsPath.mockImplementation(() => undefined)
   expect(await ExtensionManagement.getExtensions()).toEqual([
     {
-      status: ExtensionManifestStatus.Rejected,
-      reason: new VError('Failed to load extension manifest for test-extension-1: Invalid manifest file: Not an JSON object.'),
-      path: join(tmpDir1, 'test-extension-1'),
       builtin: true,
       disabled: false,
+      path: join(tmpDir1, 'test-extension-1'),
+      reason: new VError('Failed to load extension manifest for test-extension-1: Invalid manifest file: Not an JSON object.'),
+      status: ExtensionManifestStatus.Rejected,
     },
   ])
 })
@@ -433,15 +517,13 @@ test('getExtensions - error - invalid value - number', async () => {
   PlatformPaths.getExtensionsPath.mockImplementation(() => tmpDir2)
   // @ts-ignore
   PlatformPaths.getOnlyExtensionPath.mockImplementation(() => undefined)
-  // @ts-ignore
-  PlatformPaths.getLinkedExtensionsPath.mockImplementation(() => undefined)
   expect(await ExtensionManagement.getExtensions()).toEqual([
     {
-      status: ExtensionManifestStatus.Rejected,
-      reason: new VError('Failed to load extension manifest for test-extension-1: Invalid manifest file: Not an JSON object.'),
-      path: join(tmpDir1, 'test-extension-1'),
       builtin: true,
       disabled: false,
+      path: join(tmpDir1, 'test-extension-1'),
+      reason: new VError('Failed to load extension manifest for test-extension-1: Invalid manifest file: Not an JSON object.'),
+      status: ExtensionManifestStatus.Rejected,
     },
   ])
 })
@@ -457,15 +539,13 @@ test('getExtensions - error - invalid value - boolean', async () => {
   PlatformPaths.getDisabledExtensionsPath.mockImplementation(() => tmpDir2)
   // @ts-ignore
   PlatformPaths.getOnlyExtensionPath.mockImplementation(() => undefined)
-  // @ts-ignore
-  PlatformPaths.getLinkedExtensionsPath.mockImplementation(() => undefined)
   expect(await ExtensionManagement.getExtensions()).toEqual([
     {
-      status: ExtensionManifestStatus.Rejected,
-      reason: new VError('Failed to load extension manifest for test-extension-1: Invalid manifest file: Not an JSON object.'),
-      path: join(tmpDir1, 'test-extension-1'),
       builtin: true,
       disabled: false,
+      path: join(tmpDir1, 'test-extension-1'),
+      reason: new VError('Failed to load extension manifest for test-extension-1: Invalid manifest file: Not an JSON object.'),
+      status: ExtensionManifestStatus.Rejected,
     },
   ])
 })
@@ -482,10 +562,11 @@ test('getExtensions - error - invalid json', async () => {
   PlatformPaths.getExtensionsPath.mockImplementation(() => tmpDir2)
   // @ts-ignore
   PlatformPaths.getOnlyExtensionPath.mockImplementation(() => undefined)
-  // @ts-ignore
-  PlatformPaths.getLinkedExtensionsPath.mockImplementation(() => undefined)
   expect(await ExtensionManagement.getExtensions()).toEqual([
     {
+      builtin: true,
+      disabled: false,
+      path: join(tmpDir1, 'test-extension-1'),
       reason: new VError(
         `Failed to load extension manifest for test-extension-1: Failed to parse json at ${join(
           tmpDir1,
@@ -494,9 +575,6 @@ test('getExtensions - error - invalid json', async () => {
         )}: SyntaxError: Expected property name or '}' in JSON at position 1 (line 1 column 2)`,
       ),
       status: ExtensionManifestStatus.Rejected,
-      path: join(tmpDir1, 'test-extension-1'),
-      builtin: true,
-      disabled: false,
     },
   ])
 })
@@ -511,14 +589,12 @@ test.skip('getExtensions - error - manifest not found', async () => {
   PlatformPaths.getExtensionsPath.mockImplementation(() => tmpDir2)
   // @ts-ignore
   PlatformPaths.getOnlyExtensionPath.mockImplementation(() => undefined)
-  // @ts-ignore
-  PlatformPaths.getLinkedExtensionsPath.mockImplementation(() => '')
   const manifestPath = join(tmpDir1, 'test-extension-1', 'extension.json')
   expect(await ExtensionManagement.getExtensions()).toEqual([
     {
-      status: ExtensionManifestStatus.Rejected,
-      reason: new VError(`Failed to load extension "test-extension-1": Failed to load extension manifest: File not found '${manifestPath}'`),
       path: join(tmpDir1, 'test-extension-1'),
+      reason: new VError(`Failed to load extension "test-extension-1": Failed to load extension manifest: File not found '${manifestPath}'`),
+      status: ExtensionManifestStatus.Rejected,
     },
   ])
 })
@@ -545,8 +621,6 @@ test.skip('getExtensions - with only extension and builtin extensions', async ()
   PlatformPaths.getExtensionsPath.mockImplementation(() => tmpDir2)
   // @ts-ignore
   PlatformPaths.getOnlyExtensionPath.mockImplementation(() => tmpDir3)
-  // @ts-ignore
-  PlatformPaths.getLinkedExtensionsPath.mockImplementation(() => '')
   expect(await ExtensionManagement.getExtensions()).toEqual([
     {
       id: 'language-basics-xyz',

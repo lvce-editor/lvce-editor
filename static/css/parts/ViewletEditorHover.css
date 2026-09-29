@@ -36,20 +36,20 @@
 
 .HoverEditorRow {
   display: block;
-  height: var(--EditorLineHeight);
   line-height: var(--EditorLineHeight);
+  min-height: var(--EditorLineHeight);
   /* contain: strict; */
 }
 
 .HoverDisplayString {
-  white-space: pre;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
   /* contain: content; */
   font-family: var(--EditorFontFamily);
   font-size: var(--EditorFontSize);
   letter-spacing: var(--EditorLetterSpacing);
   font-feature-settings: var(--EditorFontFeatureSettings);
   tab-size: var(--EditorTabSize);
-  font-display: block;
   padding: 4px 8px;
 }
 
@@ -65,9 +65,34 @@
   padding: 4px 8px;
 }
 
+.HoverDocumentation p {
+  margin: 0;
+}
+
+.HoverDocumentation p + p {
+  margin-top: 8px;
+}
+
+.HoverDocumentation a {
+  color: var(--TextLinkForeground, #3794ff);
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.HoverDocumentation pre {
+  background: rgba(0, 0, 0, 0.2);
+  overflow-x: auto;
+  padding: 6px 8px;
+}
+
+.HoverDocumentation code {
+  font-family: var(--EditorFontFamily, monospace);
+}
+
 .HoverProblem {
   contain: content;
   display: flex;
+  flex-wrap: wrap;
 }
 
 .HoverProblemMessage {

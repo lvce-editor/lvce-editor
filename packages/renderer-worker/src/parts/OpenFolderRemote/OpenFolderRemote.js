@@ -1,4 +1,5 @@
 import * as Command from '../Command/Command.js'
+import * as PathToFileUri from '../PathToFileUri/PathToFileUri.js'
 import * as Prompt from '../Prompt/Prompt.js'
 
 export const openFolder = async () => {
@@ -6,5 +7,6 @@ export const openFolder = async () => {
   if (!path) {
     return
   }
-  await Command.execute(/* Workspace.setPath */ 'Workspace.setPath', /* path */ path)
+  const uri = PathToFileUri.pathToFileUri(path)
+  await Command.execute(/* Workspace.setUri */ 'Workspace.setUri', /* uri */ uri)
 }
