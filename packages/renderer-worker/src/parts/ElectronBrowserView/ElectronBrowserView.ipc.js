@@ -4,6 +4,7 @@ export const name = 'ElectronBrowserView'
 
 export const Commands = {
   handleAudioStateChanged: ElectronBrowserView.handleAudioStateChanged,
+  handleDownloadStateChanged: ElectronBrowserView.handleDownloadStateChanged,
   handleBrowserViewDestroyed: ElectronBrowserView.handleBrowserViewDestroyed,
   handleContextMenu: ElectronBrowserView.handleContextMenu,
   handleDidNavigate: ElectronBrowserView.handleDidNavigate,

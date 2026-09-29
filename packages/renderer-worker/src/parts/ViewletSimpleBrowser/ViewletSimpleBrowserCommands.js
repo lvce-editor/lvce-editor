@@ -23,6 +23,7 @@ export const Commands = {
   handleWindowOpen: SimpleBrowser.handleWindowOpen,
   handleContextMenuAction: ContextMenuAction.handleContextMenuAction,
   handleAddressBlur: SimpleBrowser.handleAddressBlur,
+  handleAddressFocus: SimpleBrowser.handleAddressFocus,
   handleSuggestionPointerDown: SimpleBrowser.handleSuggestionPointerDown,
   handleFaviconError: SimpleBrowser.handleFaviconError,
   prepareFullWidth: SimpleBrowser.prepareFullWidth,
@@ -51,6 +52,7 @@ export const Commands = {
   getDomTree: ViewletSimpleBrowserGetDomTree.getDomTree,
   go: SimpleBrowser.go,
   handleAudioStateChanged: SimpleBrowser.handleAudioStateChanged,
+  handleDownloadStateChanged: SimpleBrowser.handleDownloadStateChanged,
   handleColorThemeChanged: SimpleBrowser.handleColorThemeChanged,
   handleSettingsChanged: SimpleBrowser.handleSettingsChanged,
   handleDidNavigate: SimpleBrowser.handleDidNavigate,
@@ -102,6 +104,7 @@ export const LazyCommands = {
   openDevtools: () => import('./ViewletSimpleBrowserOpenDevtools.js'),
   reload: () => import('./ViewletSimpleBrowserReload.js'),
   showMenu: () => import('./ViewletSimpleBrowserShowMenu.js'),
+  showDownloadsMenu: () => import('./ViewletSimpleBrowserShowDownloadsMenu.js'),
   toggleDevTools: () => import('./ViewletSimpleBrowserToggleDevTools.js'),
   resetZoom: () => import('./ViewletSimpleBrowserZoom.js'),
   zoomIn: () => import('./ViewletSimpleBrowserZoom.js'),
@@ -111,6 +114,7 @@ export const LazyCommands = {
 
 export const Events = {
   'browser-view-audio-state-changed': SimpleBrowser.handleAudioStateChanged,
+  'browser-view-download-state-changed': SimpleBrowser.handleDownloadStateChanged,
   'browser-view-destroyed': SimpleBrowser.handleBrowserViewDestroyed,
   'browser-view-context-menu': ViewletSimpleBrowserHandleContextMenu.handleContextMenu,
   'browser-view-did-navigate': SimpleBrowser.handleDidNavigate,

@@ -1,3 +1,4 @@
+import * as SimpleBrowserWorker from '../SimpleBrowserWorker/SimpleBrowserWorker.js'
 import * as HtmlPreviewUrl from '../HtmlPreviewUrl/HtmlPreviewUrl.js'
 import * as SimpleBrowserPreview from '../SimpleBrowserPreview/SimpleBrowserPreview.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
@@ -201,6 +202,7 @@ export const create = (id, uri, x, y, width, height) => {
     canGoBack: true,
     isAudioPlaying: false,
     isLoading: false,
+    downloadStates: {},
     muted: false,
     hasSuggestionsOverlay: false,
     selectedSuggestionIndex: -1,
@@ -227,6 +229,8 @@ export const create = (id, uri, x, y, width, height) => {
     visitedSites: [],
     history: [],
     historySearchValue: '',
+    historyScrollTop: 0,
+    historyViewportHeight: 1600,
   }
 }
 
@@ -1141,7 +1145,15 @@ export const handleHistoryInput = (state, value) => {
   return {
     ...state,
     historySearchValue: value,
+    historyScrollTop: 0,
   }
+}
+
+export const handleHistoryScroll = (state, scrollTop, viewportHeight) => {
+  if (state.historyScrollTop === scrollTop && state.historyViewportHeight === viewportHeight) {
+    return state
+  }
+  return { ...state, historyScrollTop: scrollTop, historyViewportHeight: viewportHeight }
 }
 
 export const clearHistory = async (state) => {
@@ -1149,6 +1161,7 @@ export const clearHistory = async (state) => {
   return {
     ...state,
     history,
+    historyScrollTop: 0,
   }
 }
 
@@ -1164,6 +1177,7 @@ export const removeHistoryEntry = async (state, index) => {
   return {
     ...state,
     history,
+    historyScrollTop: 0,
   }
 }
 
@@ -1258,7 +1272,28 @@ export const closeSuggestions = (state) => {
   return dismissSuggestions(state)
 }
 
-export const handleAddressBlur = closeSuggestions
+const renderAddressSelection = async (state, focused, value = state.inputValue) => {
+  const selection = await SimpleBrowserWorker.invoke(
+    'SimpleBrowser.getAddressSelection',
+    focused,
+    value,
+    state.suggestions.length > 0,
+    focused ? state.fullWidthAddressSelection : undefined,
+  )
+  await RendererProcess.invoke('Viewlet.sendMultiple', [
+    ['Viewlet.setSelectionByName', state.uid, InputName.SimpleBrowserAddress, selection.start, selection.end, value],
+  ])
+}
+
+export const handleAddressFocus = (state, value) => {
+  void renderAddressSelection(state, true, value)
+  return { ...state, fullWidthAddressSelection: undefined }
+}
+
+export const handleAddressBlur = (state) => {
+  void renderAddressSelection(state, false)
+  return closeSuggestions(state)
+}
 export const handleSuggestionPointerDown = (state) => state
 
 export const selectNextSuggestion = (state) => {
@@ -1569,6 +1604,26 @@ export const handlePageFaviconUpdated = (state, browserViewId, favicons) => {
 export const handleAudioStateChanged = (state, browserViewId, audible) => {
   const [actualBrowserViewId, isAudioPlaying] = parseWebContentsEvent(state, browserViewId, audible)
   return updateTab(state, actualBrowserViewId, { isAudioPlaying: Boolean(isAudioPlaying) })
+}
+
+export const handleDownloadStateChanged = (state, browserViewId, downloadId, status) => {
+  const [actualBrowserViewId, actualDownloadId] = parseWebContentsEvent(state, browserViewId, downloadId)
+  if (!state.tabs.some((tab) => tab.browserViewId === actualBrowserViewId) || !actualDownloadId) {
+    return state
+  }
+  const downloadStates = { ...state.downloadStates }
+  if (status === 'started') {
+    downloadStates[actualDownloadId] = 'downloading'
+  } else {
+    if (downloadStates[actualDownloadId] !== 'downloading') {
+      return state
+    }
+    delete downloadStates[actualDownloadId]
+    if (status === 'completed') {
+      downloadStates.completed = 'completed'
+    }
+  }
+  return { ...state, downloadStates }
 }
 
 export const dispose = async (state) => {

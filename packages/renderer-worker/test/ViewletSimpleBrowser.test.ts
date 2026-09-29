@@ -29,11 +29,14 @@ const getFaviconSource = (favicon: unknown): string => {
 
 beforeEach(() => {
   jest.resetAllMocks()
+  jest.mocked(SimpleBrowserWorker.invoke).mockResolvedValue({ start: 0, end: 0 })
   jest.mocked(Viewlet.executeViewletCommand).mockResolvedValue(undefined as never)
   jest.mocked(SimpleBrowserFavicon.create).mockImplementation((favicon) => (typeof favicon === 'string' ? favicon : 'blob:created-favicon'))
   jest.mocked(SimpleBrowserFavicon.getSource).mockImplementation(getFaviconSource)
   FocusState.set(0)
 })
+
+jest.unstable_mockModule('../src/parts/SimpleBrowserWorker/SimpleBrowserWorker.js', () => ({ invoke: jest.fn() }))
 
 jest.unstable_mockModule('../src/parts/ElectronWebContentsViewFunctions/ElectronWebContentsViewFunctions.js', () => {
   return {
@@ -178,6 +181,7 @@ const KeyBindingsInitial = await import('../src/parts/KeyBindingsInitial/KeyBind
 const KeyBindingsState = await import('../src/parts/KeyBindingsState/KeyBindingsState.js')
 const KeyModifier = await import('../src/parts/KeyModifier/KeyModifier.js')
 const Preferences = await import('../src/parts/Preferences/Preferences.js')
+const SimpleBrowserWorker = await import('../src/parts/SimpleBrowserWorker/SimpleBrowserWorker.js')
 const RendererProcess = await import('../src/parts/RendererProcess/RendererProcess.js')
 const SimpleBrowserNewTabPage = await import('../src/parts/SimpleBrowserNewTabPage/SimpleBrowserNewTabPage.js')
 const SimpleBrowserSnapshot = await import('../src/parts/SimpleBrowserSnapshot/SimpleBrowserSnapshot.js')
@@ -1398,6 +1402,24 @@ test('updates audio state for the selected tab', () => {
   expect(paused).toMatchObject({ isAudioPlaying: false, tabs: [{ browserViewId: 12, isAudioPlaying: false }] })
 })
 
+test('tracks concurrent browser downloads and ignores updates for removed tabs', () => {
+  const state = {
+    ...ViewletSimpleBrowser.create(),
+    browserViewId: 12,
+    tabs: [{ browserViewId: 12 }, { browserViewId: 13 }],
+  }
+
+  const firstStarted = ViewletSimpleBrowser.handleDownloadStateChanged(state, 12, 1, 'started')
+  const secondStarted = ViewletSimpleBrowser.handleDownloadStateChanged(firstStarted, 13, 2, 'started')
+  const firstCompleted = ViewletSimpleBrowser.handleDownloadStateChanged(secondStarted, 12, 1, 'completed')
+  const secondFailed = ViewletSimpleBrowser.handleDownloadStateChanged(firstCompleted, 13, 2, 'failed')
+
+  expect(firstStarted.downloadStates).toEqual({ 1: 'downloading' })
+  expect(firstCompleted.downloadStates).toEqual({ 2: 'downloading', completed: 'completed' })
+  expect(secondFailed.downloadStates).toEqual({ completed: 'completed' })
+  expect(ViewletSimpleBrowser.handleDownloadStateChanged(state, 99, 3, 'completed')).toBe(state)
+})
+
 test('closing a tab disposes only its web contents view', async () => {
   // @ts-ignore
   ElectronWebContentsView.disposeWebContentsView.mockResolvedValue(undefined)
@@ -2560,6 +2582,34 @@ test('rendering committed input starts local suggestions without waiting for the
   await ViewletSimpleBrowser.afterRender(state, typed)
   expect(Viewlet.executeViewletCommand).toHaveBeenCalledWith(7, 'applySuggestions', 7, 'known', [], [], typed.suggestionSessionId)
   expect(BrowserSearchSuggestions.get).not.toHaveBeenCalled()
+})
+
+
+test('address focus updates synchronously while selection is computed by the browser worker', async () => {
+  const pendingSelection = Promise.withResolvers()
+  jest.mocked(SimpleBrowserWorker.invoke).mockReturnValue(pendingSelection.promise)
+  const state = { ...ViewletSimpleBrowser.create(7), fullWidthAddressSelection: { start: 2, end: 8 } }
+  const focused = ViewletSimpleBrowser.handleAddressFocus(state, 'https://example.com')
+  expect(focused).not.toBeInstanceOf(Promise)
+  expect(focused.fullWidthAddressSelection).toBeUndefined()
+  expect(SimpleBrowserWorker.invoke).toHaveBeenCalledWith('SimpleBrowser.getAddressSelection', true, 'https://example.com', false, { start: 2, end: 8 })
+  pendingSelection.resolve({ start: 2, end: 8 })
+  await pendingSelection.promise
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.sendMultiple', [
+    ['Viewlet.setSelectionByName', 7, 'simple-browser-address', 2, 8, 'https://example.com'],
+  ])
+})
+
+test('address blur asks the browser worker to clear selection and dismisses suggestions', async () => {
+  jest.mocked(SimpleBrowserWorker.invoke).mockResolvedValue({ start: 0, end: 0 })
+  const state = { ...ViewletSimpleBrowser.create(7), inputValue: 'https://example.com', suggestions: ['example'] }
+  const blurred = await ViewletSimpleBrowser.handleAddressBlur(state)
+  expect(blurred.suggestions).toEqual([])
+  expect(blurred.inputValue).toBe(state.inputValue)
+  expect(SimpleBrowserWorker.invoke).toHaveBeenCalledWith('SimpleBrowser.getAddressSelection', false, state.inputValue, true, undefined)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.sendMultiple', [
+    ['Viewlet.setSelectionByName', 7, 'simple-browser-address', 0, 0, state.inputValue],
+  ])
 })
 
 test('typing keeps the dimmed snapshot through local and provider suggestion updates', async () => {

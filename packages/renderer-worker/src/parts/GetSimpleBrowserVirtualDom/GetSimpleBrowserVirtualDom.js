@@ -104,10 +104,26 @@ export const getSimpleBrowserVirtualDom = (
   historyEntries = [],
   historySearchValue = '',
   loginChallenge,
+  historyScrollTop = 0,
+  historyViewportHeight = 1600,
+  undimmedSnapshot = false,
+  downloadStates = {},
 ) => {
   const inlineSuggestion = getInlineSuggestion(value, suggestions)
-  const historyDom = historyTab ? GetSimpleBrowserHistoryVirtualDom.getSimpleBrowserHistoryVirtualDom(historyEntries, historySearchValue) : []
+  const historyDom = historyTab
+    ? GetSimpleBrowserHistoryVirtualDom.getSimpleBrowserHistoryVirtualDom(
+        historyEntries,
+        historySearchValue,
+        historySearchValue,
+        historyScrollTop,
+        historyViewportHeight,
+      )
+    : []
   const selectedTab = tabs[selectedTabIndex]
+  const downloadStatuses = Object.values(downloadStates)
+  const isDownloading = downloadStatuses.includes('downloading')
+  const hasCompletedDownload = downloadStatuses.includes('completed')
+  const showDownloadsButton = isDownloading || hasCompletedDownload
   const isNewTab = Boolean(selectedTab && !selectedTab.browserViewId && !selectedTab.iframeSrc && !historyTab)
   /** @type {any[]} */
   const dom = [
@@ -339,7 +355,7 @@ export const getSimpleBrowserVirtualDom = (
     inputType: HtmlInputType.Url,
     enterKeyHint: 'Go',
     onInput: DomEventListenerFunctions.HandleInput,
-    onFocus: DomEventListenerFunctions.HandleFocus,
+    onFocus: DomEventListenerFunctions.HandleFocusSimpleBrowserAddress,
     name: InputName.SimpleBrowserAddress,
     onBlur: DomEventListenerFunctions.HandleBlurSimpleBrowserAddress,
   })
@@ -370,7 +386,7 @@ export const getSimpleBrowserVirtualDom = (
     {
       type: VirtualDomElements.Div,
       className: 'SimpleBrowserButtonsRight',
-      childCount: 3,
+      childCount: 3 + (showDownloadsButton ? 1 : 0),
     },
     {
       type: VirtualDomElements.Button,
@@ -384,6 +400,19 @@ export const getSimpleBrowserVirtualDom = (
       childCount: 0,
       onClick: DomEventListenerFunctions.HandleClickOpenExternal,
     },
+    ...(showDownloadsButton
+      ? [
+          {
+            type: VirtualDomElements.Button,
+            className: `IconButton SimpleBrowserDownloadButton${isDownloading ? ' SimpleBrowserDownloadButtonDownloading' : ' SimpleBrowserDownloadButtonComplete'}`,
+            ariaLabel: 'Downloads',
+            title: 'Downloads',
+            onClick: DomEventListenerFunctions.HandleClickSimpleBrowserDownloads,
+            childCount: 1,
+          },
+          { type: VirtualDomElements.Div, className: 'MaskIcon MaskIconArrowDown', childCount: 0 },
+        ]
+      : []),
     {
       type: VirtualDomElements.Button,
       className: 'IconButton SimpleBrowserFullWidthButton',
@@ -427,7 +456,7 @@ export const getSimpleBrowserVirtualDom = (
       },
       {
         type: VirtualDomElements.Img,
-        className: suggestions.length > 0 ? 'SimpleBrowserSnapshot SimpleBrowserSnapshotSearchSuggestions' : 'SimpleBrowserSnapshot',
+        className: `SimpleBrowserSnapshot${suggestions.length > 0 ? ' SimpleBrowserSnapshotSearchSuggestions' : ''}${undimmedSnapshot ? ' SimpleBrowserSnapshotSettingsMenu' : ''}`,
         src: snapshot,
         draggable: false,
         childCount: 0,

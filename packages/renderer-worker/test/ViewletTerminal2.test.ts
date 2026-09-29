@@ -250,9 +250,23 @@ test('startup failures remain visible in the terminal instead of removing its ta
   const state = { ...ViewletTerminal2.create(301), command: 'bash' }
   await ViewletTerminal2.loadContentLater(state)
   const data = rendererProcessInvoke.mock.calls.find((call) => call[2] === 'write')?.[3] as Uint8Array
-  expect(new TextDecoder().decode(data)).toContain('SSH connection refused')
-  expect(new TextDecoder().decode(data)).toContain('Create a new terminal to retry')
+  expect(new TextDecoder().decode(data)).toBe(
+    '\r\nFailed to start terminal: SSH connection refused\r\nCheck the shell, working directory, and workspace connection. Create a new terminal to retry.\r\n',
+  )
   expect(commandExecute).not.toHaveBeenCalledWith('Terminals.handleTerminalExit', 301)
+})
+
+test('workspace changes show one terminal retry instruction', async () => {
+  terminalWorkerInvoke.mockRejectedValueOnce(new Error('Workspace changed while starting the terminal. Create a new terminal to retry.'))
+  const state = { ...ViewletTerminal2.create(303), command: 'bash' }
+  await ViewletTerminal2.loadContentLater(state)
+  const data = rendererProcessInvoke.mock.calls.find((call) => call[2] === 'write')?.[3] as Uint8Array
+  const output = new TextDecoder().decode(data)
+  expect(output).toBe(
+    '\r\nFailed to start terminal: Workspace changed while starting the terminal.\r\nCreate a new terminal to retry.\r\n',
+  )
+  expect(output.match(/Create a new terminal to retry/g)).toHaveLength(1)
+  expect(commandExecute).not.toHaveBeenCalledWith('Terminals.handleTerminalExit', 303)
 })
 
 test('nonzero process exit keeps its diagnostic visible', async () => {

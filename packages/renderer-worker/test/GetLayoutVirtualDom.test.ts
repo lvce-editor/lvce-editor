@@ -83,6 +83,7 @@ test('getLayoutVirtualDom renders sashes with tabIndex -1', () => {
     type: 100,
     uid: 6,
   })
+  expect(dom).toContainEqual(expect.objectContaining({ className: 'PreviewAreaContent', childCount: 1 }))
 })
 
 test('getLayoutVirtualDom does not render the preview close button when preview is hidden', () => {
@@ -223,7 +224,8 @@ test.each([
   expect(body.children.map(({ node }) => node.className)).toEqual(['WorkbenchMain', 'Viewlet Sash SashVertical SashPreview', 'PreviewArea'])
   expect(mainColumn.children.map(({ node }) => node.uid ?? node.className)).toEqual(['ContentArea', 4, 5])
   expect(contentArea.children.map(({ node }) => node.uid)).toEqual([1])
-  expect(previewArea.children.map(({ node }) => node.uid ?? node.className)).toEqual([2, 3, 'IconButton PreviewCloseButton'])
+  expect(previewArea.children.map(({ node }) => node.uid ?? node.className)).toEqual(['PreviewAreaContent', 3, 'IconButton PreviewCloseButton'])
+  expect(previewArea.children[0].children.map(({ node }) => node.uid)).toEqual([2])
 })
 
 test('getLayoutVirtualDom renders an independently closable secondary preview', () => {
