@@ -45,6 +45,7 @@ const createWorkspaceCompatibilityLinks = async () => {
       await ensureLink(target, source)
     }
   }
+  await ensureLink(join(root, 'packages/main-process/pages'), join(root, 'packages/main-process/node_modules/@lvce-editor/main-process/pages'))
   const electronTarget = join(root, 'packages/main-process/node_modules/electron')
   const electronSource = join(root, 'node_modules/electron')
   await ensureLink(electronTarget, electronSource)

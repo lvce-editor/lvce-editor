@@ -2,7 +2,7 @@ import * as IpcId from '../IpcId/IpcId.ts'
 import * as IsElectron from '../IsElectron/IsElectron.ts'
 import * as LaunchProcess from '../LaunchProcess/LaunchProcess.ts'
 import * as PtyHostPath from '../PtyHostPath/PtyHostPath.ts'
-import * as PtyHostState from '../PtyHostState/PtyHostState.ts'
+import * as ShutdownTerminalProcess from '../ShutdownTerminalProcess/ShutdownTerminalProcess.ts'
 
 export const launchPtyHost = async (method: any): Promise<any> => {
   const ipc = await LaunchProcess.launchProcess({
@@ -12,6 +12,6 @@ export const launchPtyHost = async (method: any): Promise<any> => {
     settingName: 'develop.ptyHostPath',
     targetRpcId: IpcId.TerminalProcess,
   })
-  PtyHostState.state.ipc = ipc
+  ipc.dispose = (): Promise<void> => ShutdownTerminalProcess.shutdownTerminalProcess(ipc)
   return ipc
 }

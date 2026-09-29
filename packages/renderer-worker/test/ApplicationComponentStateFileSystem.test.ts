@@ -26,7 +26,7 @@ const setup = () => {
 
 test('reads and writes owned state, DOM and schema files through the built-in provider', async () => {
   setup()
-  for (const path of ['201.json', 'dom/201.json', 'schemas/201.json']) {
+  for (const path of ['201.json', 'dom/201.json', 'saved/201.json', 'schemas/201.json']) {
     const uri = `live-component-state:///${path}`
     expect(await FileSystem.execute('preview', 'readFile', uri)).toBe('{"uid":201}')
     expect(Provider.readFile).toHaveBeenLastCalledWith(uri)

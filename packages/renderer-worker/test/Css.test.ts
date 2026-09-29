@@ -141,3 +141,35 @@ test('reloadDynamicCss updates an acquired stylesheet without changing its owner
   expect(CssState.has(id)).toBe(true)
   expect(CssState.state.references[id]).toBe(2)
 })
+
+// Panel workers commit disposal commands on their direct renderer connection.
+// Exercise the scheduler too: mocking only RendererProcess misses its CSS cache.
+test.each(['static', 'dynamic'])('reacquires %s CSS after removal on a direct renderer connection', async (kind) => {
+  const RendererFrameScheduler = await import('../src/parts/RendererFrameScheduler/RendererFrameScheduler.js')
+  const sheets = new Map<string, string>()
+  const rpc = {
+    invoke: jest.fn(async (method: string, id: string, text?: string) => {
+      if (method === 'Css.addCssStyleSheet') sheets.set(id, text!)
+      if (method === 'Css.removeCssStyleSheet') sheets.delete(id)
+    }),
+  }
+  RendererFrameScheduler.reset(rpc)
+  jest.mocked(RendererProcess.invoke).mockImplementation(RendererFrameScheduler.invoke)
+  const path = '/css/parts/ViewletOutput.css'
+  const id = kind === 'static' ? 'CssViewletOutput' : 'Output'
+  globalThis.fetch = jest.fn(async () => ({ ok: true, text: async () => '.Output { flex: 1; }' }) as Response)
+  const acquire = () => (kind === 'static' ? Css.acquireCssStyleSheet(path) : Css.acquireDynamicCss(id, () => '.Output { flex: 1; }', {}))
+  const release = () => (kind === 'static' ? Css.releaseCssStyleSheet(path) : Css.releaseDynamicCss(id))
+
+  await acquire()
+  await acquire()
+  expect(sheets.has(id)).toBe(true)
+  expect(release()).toEqual([])
+  expect(rpc.invoke).toHaveBeenCalledTimes(1)
+  for (const [method, sheetId] of release()) {
+    await rpc.invoke(method, sheetId)
+  }
+  expect(sheets.has(id)).toBe(false)
+  await acquire()
+  expect(sheets.has(id)).toBe(true)
+})
