@@ -293,7 +293,7 @@ writeFileSync(process.env.LVCE_TEST_LAUNCH_RESULT, JSON.stringify({ args: proces
         LVCE_TEST_LAUNCH_RESULT: launchResultPath,
         XDG_CACHE_HOME: cachePath,
       }
-      const { stderr } = await execFileAsync(process.execPath, [cliPath, '--electron-version', '44.1.2', '--wait'], { env })
+      const { stdout, stderr } = await execFileAsync(process.execPath, [cliPath, '--electron-version', '44.1.2', '--wait'], { env })
       const download = JSON.parse((await readFile(downloadResultPath, 'utf8')).trim())
       const launch = JSON.parse(await readFile(launchResultPath, 'utf8'))
       const realAppRoot = await realpath(root)
@@ -301,6 +301,7 @@ writeFileSync(process.env.LVCE_TEST_LAUNCH_RESULT, JSON.stringify({ args: proces
       expect(download).toMatchObject({ version: '44.1.2', platform: process.platform, artifactName: 'electron' })
       expect(launch.args).toEqual([realAppRoot, '--wait'])
       expect(launch.runAsNode).toBeUndefined()
+      expect(stdout).toContain('Downloading Electron 44.1.2...')
       expect(stderr).toBe('')
       const cachedExecutablePath =
         process.platform === 'darwin'
@@ -308,8 +309,12 @@ writeFileSync(process.env.LVCE_TEST_LAUNCH_RESULT, JSON.stringify({ args: proces
           : join(cachePath, 'lvce', 'electron', `44.1.2-${process.platform}-${process.arch}`, 'electron')
       await expect(access(cachedExecutablePath, constants.X_OK)).resolves.toBeUndefined()
 
-      await execFileAsync(process.execPath, [cliPath, '--electron-version=44.1.2', '--wait'], { env })
+      const { stdout: cachedStdout } = await execFileAsync(process.execPath, [cliPath, '--electron-version=44.1.2', '--wait'], { env })
+      expect(cachedStdout).not.toContain('Downloading Electron')
       expect((await readFile(downloadResultPath, 'utf8')).trim().split('\n')).toHaveLength(1)
+
+      const { stdout: detachedStdout } = await execFileAsync(process.execPath, [cliPath, '--electron-version=44.2.0'], { env })
+      expect(detachedStdout).toContain('Downloading Electron 44.2.0...')
 
       await expect(
         execFileAsync(process.execPath, [cliPath, '--electron-version=45.0.0', '--wait'], {

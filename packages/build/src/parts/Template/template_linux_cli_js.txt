@@ -70,6 +70,7 @@ const ensureElectronRuntime = async (electronVersion) => {
     const extractZipPath = mainProcessRequire.resolve('@electron-internal/extract-zip')
     const electronGet = await import(electronGetPath)
     const extractZipModule = await import(extractZipPath)
+    console.log(`Downloading Electron ${electronVersion}...`)
     const zipPath = await electronGet.downloadArtifact({
       version: electronVersion,
       platform: process.platform,
