@@ -529,8 +529,15 @@ const getTestFiles = (testFilesRaw: any): any => {
   return testFilesRaw.filter(isTestFile).map(getName)
 }
 
+const fixImports = (content: string): string => {
+  return content
+    .replaceAll(/(from\s+['"][^'"]+)\.ts(['"])/g, '$1.js$2')
+    .replaceAll(/(import\s+['"][^'"]+)\.ts(['"])/g, '$1.js$2')
+    .replaceAll(/(import\(\s*['"][^'"]+)\.ts(['"]\s*\))/g, '$1.js$2')
+}
+
 export const transpileFile = (content: any): any => {
-  return stripTypeScriptTypes(content)
+  return fixImports(stripTypeScriptTypes(content))
 }
 
 const transpileFiles = async (folder: any): Promise<any> => {
