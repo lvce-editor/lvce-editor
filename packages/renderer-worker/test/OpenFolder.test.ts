@@ -78,7 +78,7 @@ test('openFolder - electron does nothing when the dialog is canceled', async () 
     getPlatform: () => PlatformType.Electron,
     assetDir: '',
   }))
-  const showOpenDialog = jest.fn().mockResolvedValue(undefined)
+  const showOpenDialog = jest.fn<(title: string, properties: string[]) => Promise<string | undefined>>().mockResolvedValue(undefined)
   jest.unstable_mockModule('../src/parts/ElectronDialog/ElectronDialog.js', () => ({ showOpenDialog }))
   const execute = jest.fn()
   jest.unstable_mockModule('../src/parts/Command/Command.js', () => ({ execute }))

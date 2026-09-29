@@ -123,7 +123,7 @@ test('openFile - web - canceled', async () => {
 
 test('openFile - electron opens the selected file URI', async () => {
   const uri = 'file:///tmp/a%20file%20%231%25.heapsnapshot'
-  const showOpenDialog = jest.fn().mockResolvedValue(uri)
+  const showOpenDialog = jest.fn<(title: string, properties: string[]) => Promise<string | undefined>>().mockResolvedValue(uri)
   const execute = jest.fn()
   jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => ({
     getPlatform: () => PlatformType.Electron,
@@ -138,7 +138,7 @@ test('openFile - electron opens the selected file URI', async () => {
 })
 
 test('openFile - electron does not open when the dialog is canceled', async () => {
-  const showOpenDialog = jest.fn().mockResolvedValue(undefined)
+  const showOpenDialog = jest.fn<(title: string, properties: string[]) => Promise<string | undefined>>().mockResolvedValue(undefined)
   const execute = jest.fn()
   jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => ({
     getPlatform: () => PlatformType.Electron,
