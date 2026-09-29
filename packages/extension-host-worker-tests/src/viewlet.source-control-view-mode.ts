@@ -20,6 +20,8 @@ export const test: Test = async ({ ActivityBar, Command, expect, Extension, File
   await viewAsTree.click()
 
   await expect(rows).toHaveCount(7)
+  const tree = Locator('.Viewlet.SourceControl .ListItems.SourceControlItems[role="tree"]')
+  await expect(tree).toHaveAttribute('tabindex', '0')
   await expect(viewAsList).toBeVisible()
   await expect(rows.nth(1).locator('.Label')).toHaveText('src')
   await expect(rows.nth(2).locator('.Label')).toHaveText('nested')
