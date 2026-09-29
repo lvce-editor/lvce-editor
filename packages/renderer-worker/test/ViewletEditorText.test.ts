@@ -49,6 +49,7 @@ jest.unstable_mockModule('../src/parts/Tokenizer/Tokenizer.js', () => ({
   removeConnectedEditor: tokenizerRemoveConnectedEditor,
 }))
 
+const ViewletEditorTextRender = await import('../src/parts/ViewletEditorText/ViewletEditorTextRender.js')
 const ViewletEditorText = await import('../src/parts/ViewletEditorText/ViewletEditorText.js')
 const ViewletEditorTextIpc = await import('../src/parts/ViewletEditorText/ViewletEditorText.ipc.js')
 const ViewletEditorTextSaveState = await import('../src/parts/ViewletEditorText/ViewletEditorTextSaveState.js')
@@ -303,7 +304,7 @@ test('resize - increase height', async () => {
     width: 800,
     differences: [0, 0, 0, 0],
   }
-  const newState = await ViewletEditorText.resize(state, {
+  const newState = await ViewletEditorTextRender.resize(state, {
     x: 200,
     y: 200,
     width: 200,
@@ -352,7 +353,7 @@ test('resize - same height', async () => {
     width: 800,
     differences: [0, 0, 0, 0],
   }
-  const newState = await ViewletEditorText.resize(state, {
+  const newState = await ViewletEditorTextRender.resize(state, {
     x: 200,
     y: 200,
     width: 200,
@@ -393,7 +394,7 @@ test('resize - reduce height', async () => {
     width: 800,
     differences: [0, 0, 0, 0],
   }
-  const newState = await ViewletEditorText.resize(state, {
+  const newState = await ViewletEditorTextRender.resize(state, {
     x: 200,
     y: 200,
     width: 200,
@@ -437,7 +438,7 @@ test('resize - increase height while scrolled clamps visible rows to bottom', as
     width: 100,
     differences: [0, 0, 0, 0],
   }
-  const newState = await ViewletEditorText.resize(state, {
+  const newState = await ViewletEditorTextRender.resize(state, {
     x: 0,
     y: 0,
     width: 100,
