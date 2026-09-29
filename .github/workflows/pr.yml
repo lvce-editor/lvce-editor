@@ -176,6 +176,12 @@ jobs:
         run: npm run e2e:headless -- --test-name-prefix=viewlet.source-control-shortcut-focus
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0
+      - name: Test extension view Explorer focus handoff
+        if: matrix.os == 'ubuntu-24.04'
+        working-directory: ./packages/extension-host-worker-tests
+        run: npm run e2e:headless -- --test-name-prefix=viewlet.extension-view-explorer-focus
+        env:
+          PLAYWRIGHT_BROWSERS_PATH: 0
       - name: Test Extensions shortcut focus
         if: matrix.os == 'ubuntu-24.04'
         working-directory: ./packages/extension-host-worker-tests
