@@ -14,6 +14,7 @@
 .EditorMessageText {
   padding: 5px;
   border: 1px solid var(--InfoMessageBorder);
+  background: var(--HoverWidgetBackground, #282e2f);
 }
 
 .EditorMessageTriangle {

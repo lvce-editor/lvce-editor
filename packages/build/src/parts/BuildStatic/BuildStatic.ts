@@ -451,10 +451,12 @@ const copyTestFiles = async ({ pathPrefix, commitHash }) => {
     ignore: ['videos'],
   })
   await TranspileFiles.transpileFiles(Path.absolute(`packages/build/.tmp/dist/${commitHash}/packages/extension-host-worker-tests/src`))
-  await Copy.copy({
-    from: 'packages/extension-host-worker-tests/fixtures',
-    to: `packages/build/.tmp/dist/${commitHash}/packages/extension-host-worker-tests/fixtures`,
-  })
+  if (existsSync(Path.absolute('packages/extension-host-worker-tests/fixtures'))) {
+    await Copy.copy({
+      from: 'packages/extension-host-worker-tests/fixtures',
+      to: `packages/build/.tmp/dist/${commitHash}/packages/extension-host-worker-tests/fixtures`,
+    })
+  }
 
   const testFilesRaw = await ReadDir.readDirWithFileTypes('packages/extension-host-worker-tests/src')
   const testFiles = getTestFiles(testFilesRaw)

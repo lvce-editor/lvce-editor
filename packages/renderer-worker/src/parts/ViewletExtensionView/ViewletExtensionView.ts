@@ -11,6 +11,9 @@ import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as WhenExpression from '../WhenExpression/WhenExpression.js'
 import type { ViewletExtensionViewState } from './ViewletExtensionViewState.ts'
 
+// Keep extension state changes, DOM patches, and focus updates in event order.
+export const serializeCommands = true
+
 interface ViewRenderResult {
   readonly css?: string
   readonly dom?: readonly unknown[]
@@ -187,8 +190,12 @@ export const create = (
   }
 }
 
-export const loadContent = async (state: ViewletExtensionViewState, savedState: unknown): Promise<ViewletExtensionViewState> => {
-  const view = await GetExtensionViews.getExtensionView(state.uri, state.applicationId)
+export const loadContent = async (
+  state: ViewletExtensionViewState,
+  savedState: unknown,
+  options: { readonly opener?: string } = {},
+): Promise<ViewletExtensionViewState> => {
+  const view = await GetExtensionViews.getExtensionView(options.opener || state.uri, state.applicationId)
   if (!view) {
     throw new Error(`view ${state.uri} not found`)
   }
