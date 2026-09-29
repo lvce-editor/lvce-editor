@@ -47,6 +47,10 @@ jest.unstable_mockModule('../src/parts/SecretsViewWorker/SecretsViewWorker.ts', 
   }
 })
 
+jest.unstable_mockModule('../src/parts/WorkersViewWorker/WorkersViewWorker.ts', () => ({
+  invokeAndTransfer: jest.fn(),
+}))
+
 jest.unstable_mockModule('../src/parts/WorkspaceConnection/WorkspaceConnection.js', () => {
   return {
     connectMessagePort: jest.fn(async () => false),
@@ -65,6 +69,7 @@ const ExplorerViewWorker = await import('../src/parts/ExplorerViewWorker/Explore
 const HandleDialogWorkerMessagePort = await import('../src/parts/HandleDialogWorkerMessagePort/HandleDialogWorkerMessagePort.ts')
 const MainAreaWorker = await import('../src/parts/MainAreaWorker/MainAreaWorker.js')
 const SecretsViewWorker = await import('../src/parts/SecretsViewWorker/SecretsViewWorker.ts')
+const WorkersViewWorker = await import('../src/parts/WorkersViewWorker/WorkersViewWorker.ts')
 const SettingsWorker = await import('../src/parts/SettingsWorker/SettingsWorker.js')
 const SharedProcess = await import('../src/parts/SharedProcess/SharedProcess.js')
 const WorkspaceConnection = await import('../src/parts/WorkspaceConnection/WorkspaceConnection.js')
@@ -155,6 +160,14 @@ test('sendMessagePortToViewWorker forwards to the secrets view worker', async ()
   await SendMessagePortToExtensionHostWorker.sendMessagePortToViewWorker(port, 'SecretsView')
 
   expect(SecretsViewWorker.invokeAndTransfer).toHaveBeenCalledWith('SecretsView.handleMessagePort', port, false)
+})
+
+test('sendMessagePortToViewWorker forwards to the workers view worker', async () => {
+  const port = {}
+
+  await SendMessagePortToExtensionHostWorker.sendMessagePortToViewWorker(port, 'Workers')
+
+  expect(WorkersViewWorker.invokeAndTransfer).toHaveBeenCalledWith('Workers.handleMessagePort', port, false)
 })
 
 test('sendMessagePortToViewWorker rejects unknown workers', async () => {

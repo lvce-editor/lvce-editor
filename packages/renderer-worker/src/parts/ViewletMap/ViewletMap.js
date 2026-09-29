@@ -56,6 +56,9 @@ export const getModuleId = async (uri, opener) => {
   if (uri.startsWith('running-extensions://')) {
     return ViewletModuleId.RunningExtensions
   }
+  if (uri.startsWith('workers:///')) {
+    return ViewletModuleId.Workers
+  }
   if (uri.startsWith('secrets://')) {
     return ViewletModuleId.Secrets
   }

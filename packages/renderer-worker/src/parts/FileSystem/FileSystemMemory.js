@@ -4,6 +4,10 @@ export const name = 'Memory'
 export const readFile = (uri) => FileSystemWorker.invoke('FileSystem.readFile', uri)
 export const exists = (uri) => FileSystemWorker.invoke('FileSystem.exists', uri)
 export const writeFile = (uri, content) => FileSystemWorker.invoke('FileSystem.writeFile', uri, content)
+export const writeBlob = async (uri, blob) => {
+  const content = new TextDecoder('utf-8', { fatal: true }).decode(await blob.arrayBuffer())
+  return FileSystemWorker.invoke('FileSystem.writeFile', uri, content)
+}
 export const createFile = (uri) => FileSystemWorker.invoke('FileSystem.createFile', uri)
 export const mkdir = (uri) => FileSystemWorker.invoke('FileSystem.mkdir', uri)
 export const isReadonly = () => false
