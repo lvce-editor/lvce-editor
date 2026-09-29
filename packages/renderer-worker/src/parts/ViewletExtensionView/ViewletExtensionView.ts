@@ -2,10 +2,13 @@ import { assetDir } from '../AssetDir/AssetDir.js'
 import * as ActionType from '../ActionType/ActionType.js'
 import * as Command from '../Command/Command.js'
 import * as ExtensionManagementWorker from '../ExtensionManagementWorker/ExtensionManagementWorker.js'
+import * as Focus from '../Focus/Focus.js'
 import * as GetActionsVirtualDom from '../GetActionsVirtualDom/GetActionsVirtualDom.js'
 import * as GetExtensionViews from '../GetExtensionViews/GetExtensionViews.ts'
 import type { ExtensionView } from '../GetExtensionViews/GetExtensionViews.ts'
 import { getPlatform } from '../Platform/Platform.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+import * as WhenExpression from '../WhenExpression/WhenExpression.js'
 import type { ViewletExtensionViewState } from './ViewletExtensionViewState.ts'
 
 interface ViewRenderResult {
@@ -275,6 +278,9 @@ export const handleViewEvent = (
   name: string,
   value?: unknown,
 ): Promise<ViewletExtensionViewState> => {
+  if (state.kind === 'virtualDom' && (type === 'click' || type === 'focus')) {
+    Focus.setFocus(WhenExpression.Empty, undefined, state.uid, ViewletModuleId.ExtensionView)
+  }
   return dispatchEvent(state, {
     name,
     type,
