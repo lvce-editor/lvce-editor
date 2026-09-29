@@ -1,63 +1,345 @@
 {
+  "activity-bar-worker": [
+    "packages/extension-host-worker-tests/src/viewlet.activity-bar-keyboard-navigation.ts",
+    "packages/extension-host-worker-tests/src/viewlet.activity-bar-panel-resize.ts",
+    "packages/extension-host-worker-tests/src/viewlet.activity-bar-source-control-badge-updates-on-save.ts",
+    "packages/extension-host-worker-tests/src/viewlet.activity-bar-source-control-nested-icon.ts",
+    "packages/extension-host-worker-tests/src/viewlet.activity-bar-source-control-repeated.ts",
+    "packages/extension-host-worker-tests/src/viewlet.activity-bar-source-control-selected-with-badge.ts",
+    "packages/extension-host-worker-tests/src/viewlet.activity-bar-window-resize.ts"
+  ],
   "codespaces": [
     "packages/extension-host-worker-tests/src/viewlet.ports-codespaces.ts"
+  ],
+  "color-picker-worker": [
+    "packages/extension-host-worker-tests/src/viewlet.editor-color-picker-outline.ts"
+  ],
+  "completion-worker": [
+    "packages/extension-host-worker-tests/src/editor.completion-popup-width.ts"
   ],
   "component-state-worker": [
     "packages/extension-host-worker-tests/src/viewlet.component-state-*.ts"
   ],
+  "cookie-import-view": [
+    "packages/extension-host-worker-tests/src/viewlet.cookie-import-view-command.ts",
+    "packages/extension-host-worker-tests/src/viewlet.cookie-import-view-not-implemented.ts",
+    "packages/extension-host-worker-tests/src/viewlet.cookie-import-view-open.ts",
+    "packages/extension-host-worker-tests/src/viewlet.cookie-import-view-simple-browser-url.ts"
+  ],
+  "csv-viewer": [
+    "packages/extension-host-worker-tests/src/viewlet.extension-view-explorer-focus.ts"
+  ],
+  "dialog-worker": [
+    "packages/extension-host-worker-tests/src/viewlet.error-dialog.ts"
+  ],
+  "diff-view": [
+    "packages/extension-host-worker-tests/src/viewlet.diff-editor-deletion.ts",
+    "packages/extension-host-worker-tests/src/viewlet.diff-editor-inline.ts",
+    "packages/extension-host-worker-tests/src/viewlet.diff-editor-insertion-at-start-and-end.ts",
+    "packages/extension-host-worker-tests/src/viewlet.diff-editor-insertion.ts",
+    "packages/extension-host-worker-tests/src/viewlet.diff-editor-scrolling.ts",
+    "packages/extension-host-worker-tests/src/viewlet.diff-editor-syntax-highlighting.ts",
+    "packages/extension-host-worker-tests/src/viewlet.diff-editor.ts"
+  ],
   "editor-worker": [
-    "packages/extension-host-worker-tests/src/viewlet.editor-language-mode-persistence.ts"
+    "packages/extension-host-worker-tests/scripts/test-font-loading.mjs",
+    "packages/extension-host-worker-tests/src/sample.language.ts",
+    "packages/extension-host-worker-tests/src/sample.type-definition-provider-not-registered.ts",
+    "packages/extension-host-worker-tests/src/viewlet.editor-active-line-number.ts",
+    "packages/extension-host-worker-tests/src/viewlet.editor-breadcrumbs-chevron-separators.ts",
+    "packages/extension-host-worker-tests/src/viewlet.editor-breadcrumbs-disabled.ts",
+    "packages/extension-host-worker-tests/src/viewlet.editor-breadcrumbs-file-path.ts",
+    "packages/extension-host-worker-tests/src/viewlet.editor-breadcrumbs-follow-cursor.ts",
+    "packages/extension-host-worker-tests/src/viewlet.editor-breadcrumbs-json-icons.ts",
+    "packages/extension-host-worker-tests/src/viewlet.editor-breadcrumbs-nested-symbols.ts",
+    "packages/extension-host-worker-tests/src/viewlet.editor-breadcrumbs-toggle-setting.ts",
+    "packages/extension-host-worker-tests/src/viewlet.editor-breadcrumbs-typescript-symbol.ts",
+    "packages/extension-host-worker-tests/src/viewlet.editor-copy-line-down.ts",
+    "packages/extension-host-worker-tests/src/viewlet.editor-cursor-character-left.ts",
+    "packages/extension-host-worker-tests/src/viewlet.editor-cursor-character-right.ts",
+    "packages/extension-host-worker-tests/src/viewlet.editor-cursor-down.ts",
+    "packages/extension-host-worker-tests/src/viewlet.editor-cursor-up.ts",
+    "packages/extension-host-worker-tests/src/viewlet.editor-cursor-word-left.ts",
+    "packages/extension-host-worker-tests/src/viewlet.editor-cursor-word-right.ts",
+    "packages/extension-host-worker-tests/src/viewlet.editor-extensionless-shebang-syntax-highlighting.ts",
+    "packages/extension-host-worker-tests/src/viewlet.editor-insert-line-break.ts",
+    "packages/extension-host-worker-tests/src/viewlet.editor-language-mode-persistence.ts",
+    "packages/extension-host-worker-tests/src/viewlet.editor-large-line-numbers.ts",
+    "packages/extension-host-worker-tests/src/viewlet.editor-minimap-disabled.ts",
+    "packages/extension-host-worker-tests/src/viewlet.editor-minimap-enabled.ts",
+    "packages/extension-host-worker-tests/src/viewlet.editor-minimap-toggle-and-scroll.ts",
+    "packages/extension-host-worker-tests/src/viewlet.editor-package-lock-scrolling.ts",
+    "packages/extension-host-worker-tests/src/viewlet.editor-scrolling.ts"
+  ],
+  "error-worker": [
+    "packages/extension-host-worker-tests/src/viewlet.error-syntax-highlighting.ts"
+  ],
+  "explorer-view": [
+    "packages/extension-host-worker-tests/src/viewlet.explorer-icon-theme-disabled.ts",
+    "packages/extension-host-worker-tests/src/viewlet.explorer-panel-hide-resize.ts",
+    "packages/extension-host-worker-tests/src/viewlet.explorer-preview-replacement.ts",
+    "packages/extension-host-worker-tests/src/viewlet.explorer-rename-open-file-updates-tab-title.ts",
+    "packages/extension-host-worker-tests/src/viewlet.file-watcher-explorer.ts"
   ],
   "extension-detail-view": [
+    "packages/extension-host-worker-tests/src/viewlet.extension-detail-canonical-uri.ts",
+    "packages/extension-host-worker-tests/src/viewlet.extension-detail-json-validation-table-alignment.ts",
+    "packages/extension-host-worker-tests/src/viewlet.extension-detail-more-info-margin.ts",
+    "packages/extension-host-worker-tests/src/viewlet.extension-detail-readme-inline-code.ts",
+    "packages/extension-host-worker-tests/src/viewlet.extension-detail-security-layout.ts",
     "packages/extension-host-worker-tests/src/viewlet.extension-detail-sidebar-resize.ts"
+  ],
+  "extension-host-sub-worker": [
+    "packages/extension-host-worker-tests/src/sample.webview-provider-message-modern.ts",
+    "packages/extension-host-worker-tests/src/sample.webview-provider-modern-to-have-class.ts",
+    "packages/extension-host-worker-tests/src/sample.webview-provider-modern-to-have-css.ts"
   ],
   "extension-host-worker": [
     "packages/extension-host-worker-tests/src/viewlet.main-save-extension-filesystem.ts"
   ],
+  "extension-management-worker": [
+    "packages/extension-host-worker-tests/src/extension.disable-hides-activity-bar-item.ts",
+    "packages/extension-host-worker-tests/src/extension.disable-hides-status-bar-item.ts",
+    "packages/extension-host-worker-tests/src/extension.disable-refreshes-source-control-contributions.ts",
+    "packages/extension-host-worker-tests/src/extension.disable-removes-running-extension.ts",
+    "packages/extension-host-worker-tests/src/extension.disable-switches-active-sidebar-to-explorer.ts",
+    "packages/extension-host-worker-tests/src/extension.enable-restores-running-extension.ts",
+    "packages/extension-host-worker-tests/src/extension.enable-shows-activity-bar-item.ts",
+    "packages/extension-host-worker-tests/src/extension.enable-shows-status-bar-item.ts",
+    "packages/extension-host-worker-tests/src/extension.workspace-disable-menu.ts",
+    "packages/extension-host-worker-tests/src/extension.workspace-disable-removes-running-extension.ts",
+    "packages/extension-host-worker-tests/src/extension.workspace-disable-updates-buttons.ts",
+    "packages/extension-host-worker-tests/src/extension.workspace-enable-menu.ts",
+    "packages/extension-host-worker-tests/src/extension.workspace-enable-overrides-global-disable.ts",
+    "packages/extension-host-worker-tests/src/extension.workspace-enable-restores-running-extension.ts",
+    "packages/extension-host-worker-tests/src/extension.workspace-enable-updates-buttons.ts",
+    "packages/extension-host-worker-tests/src/extension.workspace-storage-does-not-clutter-project.ts"
+  ],
+  "extension-search-view": [
+    "packages/extension-host-worker-tests/src/extension-search.disable-removes-running-extension.ts",
+    "packages/extension-host-worker-tests/src/extension-search.heading-updates.ts",
+    "packages/extension-host-worker-tests/src/viewlet.extension-search-context-menu-after-detail.ts",
+    "packages/extension-host-worker-tests/src/viewlet.extensions-shortcut-focus.ts"
+  ],
+  "file-system-worker": [
+    "packages/extension-host-worker-tests/src/workspace.local-uri-path.ts",
+    "packages/extension-host-worker-tests/src/workspace.remote-local-services.ts"
+  ],
+  "find-widget-worker": [
+    "packages/extension-host-worker-tests/src/viewlet.editor-find-widget-accessibility.ts",
+    "packages/extension-host-worker-tests/src/viewlet.editor-find-widget-font-size.ts",
+    "packages/extension-host-worker-tests/src/viewlet.editor-find-widget-resize.ts",
+    "packages/extension-host-worker-tests/src/viewlet.editor-find-widget.ts"
+  ],
   "git": [
     "scripts/test-open-remote.mjs"
+  ],
+  "icon-theme-worker": [
+    "packages/extension-host-worker-tests/src/sample.icon-theme-error-invalid-json.ts",
+    "packages/extension-host-worker-tests/src/sample.icon-theme-error-no-file-names.ts",
+    "packages/extension-host-worker-tests/src/sample.icon-theme-error-no-icon-definitions.ts",
+    "packages/extension-host-worker-tests/src/sample.icon-theme-error-not-found.ts",
+    "packages/extension-host-worker-tests/src/sample.icon-theme.ts"
+  ],
+  "keybindings-view": [
+    "packages/extension-host-worker-tests/src/viewlet.key-bindings-accessibility.ts",
+    "packages/extension-host-worker-tests/src/viewlet.key-bindings-open-string-binding.ts"
+  ],
+  "language-basics-html": [
+    "packages/extension-host-worker-tests/src/viewlet.editor-html-empty-style-rendered.ts"
+  ],
+  "language-basics-typescript": [
+    "packages/extension-host-worker-tests/src/viewlet.editor-typescript-destructured-async-default-parameters.ts",
+    "packages/extension-host-worker-tests/src/viewlet.editor-typescript-readonly-union-parameters.ts"
   ],
   "language-features-markdown": [
     "packages/extension-host-worker-tests/src/viewlet.editor-paste-image-markdown.ts"
   ],
+  "language-features-typescript": [
+    "packages/extension-host-worker-tests/src/typescript.diagnostics-enabled.ts",
+    "packages/extension-host-worker-tests/src/viewlet.editor-typescript-memory-statistics.ts"
+  ],
   "main-area-worker": [
-    "packages/extension-host-worker-tests/src/viewlet.main-area-split-hide-explorer.ts"
+    "packages/extension-host-worker-tests/src/viewlet.main-area-split-hide-explorer.ts",
+    "packages/extension-host-worker-tests/src/viewlet.main-close-all-editors-command.ts",
+    "packages/extension-host-worker-tests/src/viewlet.main-long-tab-title.ts",
+    "packages/extension-host-worker-tests/src/viewlet.main-open-not-found-create-file.ts",
+    "packages/extension-host-worker-tests/src/viewlet.main-open-not-found-no-json-problem.ts",
+    "packages/extension-host-worker-tests/src/viewlet.main-open-not-found.ts",
+    "packages/extension-host-worker-tests/src/viewlet.main-open-side-by-side.ts",
+    "packages/extension-host-worker-tests/src/viewlet.main-restore-closed-tab-keyboard-after-opening-another.ts",
+    "packages/extension-host-worker-tests/src/viewlet.main-restore-closed-tab-keyboard-close-restored-again.ts",
+    "packages/extension-host-worker-tests/src/viewlet.main-restore-closed-tab-keyboard-consumes-entry.ts",
+    "packages/extension-host-worker-tests/src/viewlet.main-restore-closed-tab-keyboard-empty-stack.ts",
+    "packages/extension-host-worker-tests/src/viewlet.main-restore-closed-tab-keyboard-lifo.ts",
+    "packages/extension-host-worker-tests/src/viewlet.main-restore-closed-tab-keyboard-original-position.ts",
+    "packages/extension-host-worker-tests/src/viewlet.main-restore-closed-tab-keyboard-recreates-group.ts",
+    "packages/extension-host-worker-tests/src/viewlet.main-restore-closed-tab-keyboard-single.ts",
+    "packages/extension-host-worker-tests/src/viewlet.main-same-file-close-one-of-many.ts",
+    "packages/extension-host-worker-tests/src/viewlet.main-same-file-delete.ts",
+    "packages/extension-host-worker-tests/src/viewlet.main-same-file-edit-bidirectional.ts",
+    "packages/extension-host-worker-tests/src/viewlet.main-same-file-edit-left.ts",
+    "packages/extension-host-worker-tests/src/viewlet.main-same-file-edit-right.ts",
+    "packages/extension-host-worker-tests/src/viewlet.main-same-file-many-groups-bidirectional.ts",
+    "packages/extension-host-worker-tests/src/viewlet.main-same-file-many-groups-isolate-other-file.ts",
+    "packages/extension-host-worker-tests/src/viewlet.main-same-file-mixed-layout.ts",
+    "packages/extension-host-worker-tests/src/viewlet.main-same-file-multiline-edit.ts",
+    "packages/extension-host-worker-tests/src/viewlet.main-same-file-one-hundred-groups-vertical.ts",
+    "packages/extension-host-worker-tests/src/viewlet.main-same-file-one-hundred-groups.ts",
+    "packages/extension-host-worker-tests/src/viewlet.main-same-file-open-after-unsaved-edit.ts",
+    "packages/extension-host-worker-tests/src/viewlet.main-same-file-save-from-other-group.ts",
+    "packages/extension-host-worker-tests/src/viewlet.main-same-file-three-groups-horizontal.ts",
+    "packages/extension-host-worker-tests/src/viewlet.main-same-file-three-groups-vertical.ts",
+    "packages/extension-host-worker-tests/src/viewlet.main-same-file-two-groups.ts",
+    "packages/extension-host-worker-tests/src/viewlet.main-same-file-undo-redo.ts",
+    "packages/extension-host-worker-tests/src/viewlet.main-split-down-line-numbers.ts",
+    "packages/extension-host-worker-tests/src/viewlet.main-split-right.ts"
+  ],
+  "media-preview": [
+    "packages/extension-host-worker-tests/src/viewlet.editor-audio-error.ts",
+    "packages/extension-host-worker-tests/src/viewlet.editor-image-error.ts",
+    "packages/extension-host-worker-tests/src/viewlet.editor-image.ts"
   ],
   "notebook": [
     "packages/extension-host-worker-tests/scripts/test-notebook-defaults.mjs",
     "packages/extension-host-worker-tests/src/extension.notebook-disabled-by-default.ts"
   ],
   "notification-center-view": [
+    "packages/extension-host-worker-tests/scripts/test-notification-layout.mjs",
     "packages/extension-host-worker-tests/src/notification*.ts",
+    "packages/extension-host-worker-tests/src/notification-center.extension-notification.ts",
+    "packages/extension-host-worker-tests/src/notification.options.ts",
     "packages/extension-host-worker-tests/src/viewlet.error-notification*.ts",
-    "packages/extension-host-worker-tests/scripts/test-notification-layout.mjs"
+    "packages/extension-host-worker-tests/src/viewlet.error-notification-dispose.ts",
+    "packages/extension-host-worker-tests/src/viewlet.error-notification.ts"
   ],
   "output-view": [
+    "packages/extension-host-worker-tests/src/viewlet.output-component-state.ts",
     "packages/extension-host-worker-tests/src/viewlet.output-open-channel.ts"
   ],
+  "panel-worker": [
+    "packages/extension-host-worker-tests/src/viewlet.panel-drag-reveal.ts",
+    "packages/extension-host-worker-tests/src/viewlet.panel-tab-context-menu.ts"
+  ],
+  "performance-profile-view": [
+    "packages/extension-host-worker-tests/src/viewlet.performance-profile-view-opens-worker-trace.ts"
+  ],
+  "preview-worker": [
+    "packages/extension-host-worker-tests/src/viewlet.layout-html-preview.ts"
+  ],
   "process-explorer": [
-    "packages/extension-host-worker-tests/src/viewlet.process-explorer-error-style.ts"
+    "packages/extension-host-worker-tests/src/viewlet.process-explorer-error-style.ts",
+    "scripts/test-process-explorer-renderer-heap-snapshot.mjs"
+  ],
+  "quick-pick-worker": [
+    "packages/extension-host-worker-tests/src/viewlet.quick-pick-accessibility.ts",
+    "packages/extension-host-worker-tests/src/viewlet.quick-pick-builtin-commands.ts",
+    "packages/extension-host-worker-tests/src/viewlet.quick-pick-escape-restores-editor-focus.ts",
+    "packages/extension-host-worker-tests/src/viewlet.quick-pick-hides-disabled-extension-commands.ts",
+    "packages/extension-host-worker-tests/src/viewlet.quick-pick-keyboard-navigation.ts",
+    "packages/extension-host-worker-tests/src/viewlet.quick-pick-layout.ts",
+    "packages/extension-host-worker-tests/src/viewlet.quick-pick-open-keybindings-json.ts",
+    "packages/extension-host-worker-tests/src/viewlet.quick-pick-open-recent-home.ts",
+    "packages/extension-host-worker-tests/src/viewlet.quick-pick-open-recent-remove.ts",
+    "packages/extension-host-worker-tests/src/viewlet.quick-pick-open-workers-view.ts",
+    "packages/extension-host-worker-tests/src/viewlet.quick-pick-responsive-layout.ts",
+    "packages/extension-host-worker-tests/src/viewlet.quick-pick-toggle-menu-bar.ts"
+  ],
+  "rename-worker": [
+    "packages/extension-host-worker-tests/src/viewlet.editor-rename-error.ts",
+    "packages/extension-host-worker-tests/src/viewlet.editor-rename.ts"
+  ],
+  "running-extensions-view": [
+    "packages/extension-host-worker-tests/src/running-extensions.isolated-healthy.ts",
+    "packages/extension-host-worker-tests/src/running-extensions.live-view-activation.ts",
+    "packages/extension-host-worker-tests/src/running-extensions.live-view-disposes-worker.ts",
+    "packages/extension-host-worker-tests/src/running-extensions.live-view-metadata.ts",
+    "packages/extension-host-worker-tests/src/running-extensions.live-view-no-duplicate.ts",
+    "packages/extension-host-worker-tests/src/running-extensions.live-view-preserves-existing-row.ts",
+    "packages/extension-host-worker-tests/src/running-extensions.live-view-row-count.ts",
+    "packages/extension-host-worker-tests/src/running-extensions.live-view-stays-open.ts",
+    "packages/extension-host-worker-tests/src/running-extensions.terminates-after-100ms.ts",
+    "packages/extension-host-worker-tests/src/running-extensions.terminates-after-one-second.ts",
+    "packages/extension-host-worker-tests/src/running-extensions.terminates-immediately.ts",
+    "packages/extension-host-worker-tests/src/viewlet.running-extensions-narrow-width.ts"
+  ],
+  "session-replay-worker": [
+    "packages/extension-host-worker-tests/src/session-replay.settings.ts"
+  ],
+  "settings-view": [
+    "packages/extension-host-worker-tests/src/viewlet.settings-boolean-item.ts"
   ],
   "simple-browser-view": [
     "packages/extension-host-worker-tests/src/viewlet.simple-browser-*.ts",
     "scripts/test-simple-browser-*.mjs"
   ],
   "source-control-view": [
-    "packages/extension-host-worker-tests/src/viewlet.source-control*.ts"
+    "packages/extension-host-worker-tests/src/viewlet.source-control*.ts",
+    "packages/extension-host-worker-tests/src/viewlet.source-control-progress.ts",
+    "packages/extension-host-worker-tests/src/viewlet.source-control-shortcut-focus.ts",
+    "packages/extension-host-worker-tests/src/viewlet.source-control-view-mode.ts"
   ],
   "status-bar-worker": [
     "packages/extension-host-worker-tests/src/status-bar.*.ts",
-    "packages/extension-host-worker-tests/src/viewlet.status-bar*.ts"
+    "packages/extension-host-worker-tests/src/status-bar.extension-many-items-10.ts",
+    "packages/extension-host-worker-tests/src/status-bar.extension-many-items-100.ts",
+    "packages/extension-host-worker-tests/src/status-bar.extension-many-items-1000.ts",
+    "packages/extension-host-worker-tests/src/status-bar.extension-many-items-10000.ts",
+    "packages/extension-host-worker-tests/src/status-bar.extension-many-items-100000.ts",
+    "packages/extension-host-worker-tests/src/status-bar.problems-diagnostic-counts.ts",
+    "packages/extension-host-worker-tests/src/viewlet.status-bar*.ts",
+    "packages/extension-host-worker-tests/src/viewlet.status-bar-icon-spacing.ts",
+    "packages/extension-host-worker-tests/src/viewlet.status-bar-selected-char-count.ts"
   ],
   "terminal-worker": [
-    "packages/extension-host-worker-tests/src/viewlet.terminal*.ts",
     "packages/extension-host-worker-tests/scripts/test-terminal-background.mjs",
+    "packages/extension-host-worker-tests/src/viewlet.terminal*.ts",
+    "packages/extension-host-worker-tests/src/viewlet.terminal-process-reopen.ts",
+    "packages/extension-host-worker-tests/src/viewlet.terminals-component-state.ts",
     "scripts/test-terminal-process-lifecycle.mjs"
   ],
   "text-search-view": [
-    "packages/extension-host-worker-tests/src/viewlet.search-open-in-editor.ts"
+    "packages/extension-host-worker-tests/src/viewlet.search-actions-update.ts",
+    "packages/extension-host-worker-tests/src/viewlet.search-editor-accessibility.ts",
+    "packages/extension-host-worker-tests/src/viewlet.search-editor-close.ts",
+    "packages/extension-host-worker-tests/src/viewlet.search-editor-context-lines.ts",
+    "packages/extension-host-worker-tests/src/viewlet.search-editor-independent-input.ts",
+    "packages/extension-host-worker-tests/src/viewlet.search-editor-keyboard-navigation.ts",
+    "packages/extension-host-worker-tests/src/viewlet.search-editor-new-each-time.ts",
+    "packages/extension-host-worker-tests/src/viewlet.search-editor-open.ts",
+    "packages/extension-host-worker-tests/src/viewlet.search-editor-preserve-tab-state.ts",
+    "packages/extension-host-worker-tests/src/viewlet.search-editor-replace-all-accessibility.ts",
+    "packages/extension-host-worker-tests/src/viewlet.search-editor-restore-previous-editor.ts",
+    "packages/extension-host-worker-tests/src/viewlet.search-include-directory.ts",
+    "packages/extension-host-worker-tests/src/viewlet.search-input-icon-color.ts",
+    "packages/extension-host-worker-tests/src/viewlet.search-open-in-editor.ts",
+    "packages/extension-host-worker-tests/src/viewlet.search-result-cursor-visible.ts",
+    "packages/extension-host-worker-tests/src/viewlet.search-shortcut-editor-selection.ts",
+    "packages/extension-host-worker-tests/src/viewlet.search-shortcut-no-editor.ts",
+    "packages/extension-host-worker-tests/src/viewlet.search-view-mode.ts"
   ],
   "title-bar-worker": [
-    "packages/extension-host-worker-tests/src/viewlet.title-bar-menu-close-on-application-blur.ts"
+    "packages/extension-host-worker-tests/scripts/test-menu-mouse-leave.mjs",
+    "packages/extension-host-worker-tests/scripts/test-titlebar-reference.mjs",
+    "packages/extension-host-worker-tests/scripts/test-titlebarless.mjs",
+    "packages/extension-host-worker-tests/src/viewlet.title-bar-accessibility.ts",
+    "packages/extension-host-worker-tests/src/viewlet.title-bar-app-regions.ts",
+    "packages/extension-host-worker-tests/src/viewlet.title-bar-editor-layout-split-down.ts",
+    "packages/extension-host-worker-tests/src/viewlet.title-bar-editor-layout-split-left.ts",
+    "packages/extension-host-worker-tests/src/viewlet.title-bar-editor-layout-split-right.ts",
+    "packages/extension-host-worker-tests/src/viewlet.title-bar-editor-layout-split-up.ts",
+    "packages/extension-host-worker-tests/src/viewlet.title-bar-file-menu-save-disabled.ts",
+    "packages/extension-host-worker-tests/src/viewlet.title-bar-menu-bar-accessibility.ts",
+    "packages/extension-host-worker-tests/src/viewlet.title-bar-menu-bar-keyboard-navigation.ts",
+    "packages/extension-host-worker-tests/src/viewlet.title-bar-menu-clear-highlight-on-focus-out.ts",
+    "packages/extension-host-worker-tests/src/viewlet.title-bar-menu-close-on-application-blur.ts",
+    "packages/extension-host-worker-tests/src/viewlet.title-bar-menu-help-about-closes-menu.ts",
+    "packages/extension-host-worker-tests/src/viewlet.title-bar-open-folder-unsupported.ts",
+    "packages/extension-host-worker-tests/src/viewlet.title-bar-view-license.ts"
+  ],
+  "workers-view": [
+    "packages/extension-host-worker-tests/src/viewlet.workers-component-state.ts",
+    "packages/extension-host-worker-tests/src/viewlet.workers-process-explorer-switch.ts",
+    "scripts/test-workers-memory.mjs"
   ]
 }
