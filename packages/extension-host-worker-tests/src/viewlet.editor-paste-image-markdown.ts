@@ -4,8 +4,10 @@ export const name = 'viewlet.editor-paste-image-markdown'
 
 export const test: Test = async ({ ClipBoard, Command, Editor, FileSystem, Main, Workspace }) => {
   const tmpDir = await FileSystem.getTmpDir({ scheme: 'file' })
-  const markdownUri = `${tmpDir}/notes.md`
-  const imageUri = `${tmpDir}/image.png`
+  const markdownDir = `${tmpDir}/notes%20with%20spaces%20%23`
+  const markdownUri = `${markdownDir}/notes.md`
+  const imageUri = `${markdownDir}/image.png`
+  await FileSystem.mkdir(markdownDir)
   await FileSystem.writeFile(markdownUri, '')
   await Workspace.setPath(tmpDir)
   await Main.openUri(markdownUri)
@@ -33,5 +35,5 @@ export const test: Test = async ({ ClipBoard, Command, Editor, FileSystem, Main,
   if (savedFirstImageContents !== firstImageContents) {
     throw new Error('Pasting a second image must preserve the existing image file')
   }
-  await FileSystem.readFile(`${tmpDir}/image-1.png`)
+  await FileSystem.readFile(`${markdownDir}/image-1.png`)
 }
