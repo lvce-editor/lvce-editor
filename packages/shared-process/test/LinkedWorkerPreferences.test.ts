@@ -2,6 +2,7 @@ import { afterEach, expect, test } from '@jest/globals'
 import { mkdir, mkdtemp, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
+import { pathToFileURL } from 'node:url'
 import * as LinkedWorkerPreferences from '../src/parts/LinkedWorkerPreferences/LinkedWorkerPreferences.ts'
 
 const originalArgv = process.argv
@@ -38,6 +39,18 @@ test('getLinkedWorkerPreferences - resolves the simple browser worker package', 
 
   await expect(LinkedWorkerPreferences.getLinkedWorkerPreferences()).resolves.toEqual({
     'develop.simpleBrowserWorkerPath': join(root, 'dist', 'simpleBrowserViewWorkerMain.js'),
+  })
+})
+
+test('getLinkedWorkerPreferences - resolves a linked worker file URI', async () => {
+  const root = await createPackage({
+    main: 'dist/mainAreaWorkerMain.js',
+    name: '@lvce-editor/main-area-worker',
+  })
+  process.argv = [...originalArgv, `--link=${pathToFileURL(root).href}`]
+
+  await expect(LinkedWorkerPreferences.getLinkedWorkerPreferences()).resolves.toEqual({
+    'develop.mainAreaWorkerPath': join(root, 'dist', 'mainAreaWorkerMain.js'),
   })
 })
 

@@ -1,4 +1,5 @@
 .ActivityBarItem {
+  display: flex;
   position: relative;
   outline: none;
   width: 48px;

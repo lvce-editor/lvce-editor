@@ -10,6 +10,8 @@ const state = {
   entries,
   loaded: true,
   searchValue: '',
+  scrollTop: 0,
+  viewportHeight: 300,
   uid: 42,
 }
 
@@ -43,4 +45,14 @@ test('updates filtering and empty state incrementally', () => {
   expect(fromEmptyCommand[1]).not.toHaveLength(0)
   expect(toEmptyCommand[1]).not.toContainEqual(expect.objectContaining({ key: 'value' }))
   expect(fromEmptyCommand[1]).not.toContainEqual(expect.objectContaining({ key: 'value' }))
+})
+
+test('updates the rendered window when the history viewport scrolls', () => {
+  const scrollState = { ...state, entries: Array.from({ length: 100 }, (_, index) => ({ date: 100 - index, url: `https://example.test/${index}` })) }
+  const newState = { ...scrollState, scrollTop: 2_800 }
+
+  const command = ViewletSimpleBrowserHistoryRender.render[0].apply(scrollState, newState)
+
+  expect(command[0]).toBe('Viewlet.setTreePatches')
+  expect(command[1]).not.toHaveLength(0)
 })

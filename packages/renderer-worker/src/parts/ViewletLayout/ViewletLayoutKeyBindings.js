@@ -38,6 +38,11 @@ export const getKeyBindings = () => {
       args: ['Terminals'],
     },
     {
+      key: KeyModifier.CtrlCmd | KeyCode.KeyJ,
+      command: 'Layout.togglePanel',
+      args: ['Terminals'],
+    },
+    {
       key: KeyModifier.CtrlCmd | KeyModifier.Shift | KeyCode.Backquote,
       command: 'Layout.openIntegratedTerminal',
       args: [''],
@@ -68,7 +73,7 @@ export const getKeyBindings = () => {
     {
       key: KeyModifier.CtrlCmd | KeyModifier.Shift | KeyCode.KeyX,
       command: 'Layout.openSideBarViewlet',
-      args: ['Extensions'],
+      args: ['Extensions', true],
     },
     {
       key: KeyModifier.CtrlCmd | KeyModifier.Shift | KeyCode.KeyG,

@@ -219,6 +219,16 @@ const isEditable = (instance) => {
   return typeof instance.factory.getComponentState === 'function' && typeof instance.factory.setComponentState === 'function'
 }
 
+const hasComponentDom = (instance) => {
+  if (typeof instance.factory.getComponentDom !== 'function') {
+    return false
+  }
+  if (typeof instance.factory.isComponentDomAvailable === 'function') {
+    return instance.factory.isComponentDomAvailable(instance.state)
+  }
+  return true
+}
+
 const getInstance = (uid) => {
   const instance = ViewletStates.getByUid(uid)
   if (!instance) {
@@ -244,10 +254,11 @@ export const getComponents = (viewUid = undefined) => {
     const displayName = moduleId === 'ExtensionView' ? `${instance.state?.title || instance.state?.viewId || moduleId} (extension)` : moduleId
     components.push({
       displayName,
-      domAvailable: typeof instance.factory.getComponentDom === 'function',
+      domAvailable: hasComponentDom(instance),
       editable: isEditable(instance),
       heapSnapshotAvailable: Platform.getPlatform() === PlatformType.Electron,
       moduleId,
+      savedStateAvailable: typeof instance.factory.saveState === 'function',
       uid,
     })
   }
@@ -265,9 +276,24 @@ export const getState = async (uid) => {
   return instance.state
 }
 
+export const getSavedState = async (uid) => {
+  const instance = getInstance(uid)
+  if (instance.status === 'disposed') {
+    throw new Error(`Component is disposed: ${uid}`)
+  }
+  if (typeof instance.factory.saveState !== 'function') {
+    throw new Error(`Saved component state API not available: ${instance.moduleId}`)
+  }
+  const savedState = await instance.factory.saveState(instance.state)
+  if (savedState === undefined) {
+    throw new Error(`Saved component state is undefined: ${instance.moduleId}`)
+  }
+  return savedState
+}
+
 export const getDom = async (uid) => {
   const instance = getInstance(uid)
-  if (typeof instance.factory.getComponentDom !== 'function') {
+  if (!hasComponentDom(instance)) {
     throw new Error(`Component DOM API not available: ${instance.moduleId}`)
   }
   const preview = await RendererProcess.invoke('Viewlet.getComponentDom', uid)
@@ -313,7 +339,7 @@ export const setState = async (uid, newComponentState) => {
 
 export const setDom = async (uid, dom) => {
   const instance = getInstance(uid)
-  if (typeof instance.factory.getComponentDom !== 'function') {
+  if (!hasComponentDom(instance)) {
     throw new Error(`Component DOM API not available: ${instance.moduleId}`)
   }
   if (!Array.isArray(dom) || dom.length === 0) {
@@ -368,7 +394,9 @@ export const getWorkerName = async (uid) => {
   }
   const workerName = ComponentWorkerNames.getName(instance.factory, instance.moduleId)
   if (workerName) {
-    return workerName
+    const workers = await RendererProcess.invoke('Workers.getWorkers')
+    const worker = workers.find((item) => item.name === workerName)
+    return worker?.runtimeName ?? workerName
   }
   return globalThis.name
 }

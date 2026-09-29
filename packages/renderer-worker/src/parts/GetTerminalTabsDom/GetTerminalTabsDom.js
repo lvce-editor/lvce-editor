@@ -37,6 +37,10 @@ const createTabDom = (tab, index, terminalUid, splitIndex, splitCount, isSelecte
   return [
     div(
       {
+        draggable: true,
+        onPointerDown: 'handleTabPointerDown',
+        onDragStart: 'handleDragStart',
+        onDragEnd: 'handleDragEnd',
         'data-index': index,
         'data-terminalUid': terminalUid,
         className,
@@ -81,7 +85,7 @@ const createTabDom = (tab, index, terminalUid, splitIndex, splitCount, isSelecte
 }
 
 export const hasVisibleTabs = (tabs) => {
-  return tabs.length > 1 || tabs.some((tab) => getTerminalUids(tab).length > 1)
+  return tabs.length > 0
 }
 
 export const getTerminalTabsDom = (tabs, x, y, width, height, selectedIndex, activeTerminalUids = []) => {

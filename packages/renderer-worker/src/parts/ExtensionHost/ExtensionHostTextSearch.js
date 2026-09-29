@@ -87,7 +87,7 @@ export const textSearchHtml = async (scheme, root, query, options = {}) => {
 export const textSearchMemory2 = async (scheme, root, query, options = {}) => {
   const relativeRoot = root.slice('memfs://'.length)
   const allResults = []
-  for (const [path, value] of Object.entries(FileSystemMemory.getFiles())) {
+  for (const [path, value] of Object.entries(await FileSystemMemory.getFiles())) {
     if (value.type !== DirentType.File || !path.startsWith(relativeRoot)) {
       continue
     }

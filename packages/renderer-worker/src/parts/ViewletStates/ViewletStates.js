@@ -8,6 +8,7 @@ import * as ApplicationRegistry from '../ApplicationRegistry/ApplicationRegistry
 export const state = {
   /** @type {Record<string, any>} */
   instances: Object.create(null),
+  pendingResizes: new Map(),
   /**
    * @type {any}
    */
@@ -125,6 +126,7 @@ export const hasInstance = (key) => {
 }
 
 export const remove = (key) => {
+  state.pendingResizes.delete(key)
   const instance = state.instances[key]
   delete state.instances[key]
   if (instance) {
@@ -134,6 +136,16 @@ export const remove = (key) => {
       emit('remove', instance)
     }
   }
+}
+
+export const setPendingResize = (key, dimensions) => {
+  state.pendingResizes.set(key, dimensions)
+}
+
+export const takePendingResize = (key) => {
+  const dimensions = state.pendingResizes.get(key)
+  state.pendingResizes.delete(key)
+  return dimensions
 }
 
 export const dispose = async (key) => {
@@ -204,6 +216,7 @@ export const reset = () => {
     emit('remove', instance)
   }
   state.instances = Object.create(null)
+  state.pendingResizes.clear()
   state.focusedInstanceByType = Object.create(null)
 }
 

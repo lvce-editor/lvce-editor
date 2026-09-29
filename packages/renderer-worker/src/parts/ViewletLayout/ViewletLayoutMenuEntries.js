@@ -395,6 +395,11 @@ export const getQuickPickMenuEntries = async () => {
     },
     {
       id: 'Main.openUri',
+      label: 'Developer: Open Workers View',
+      args: ['workers:///1'],
+    },
+    {
+      id: 'Main.openUri',
       label: 'Preferences: Open Secrets',
       args: ['secrets://'],
       aliases: ['Manage Secrets'],

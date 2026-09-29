@@ -4,6 +4,9 @@ import * as Id from '../src/parts/Id/Id.js'
 import * as ViewletStates from '../src/parts/ViewletStates/ViewletStates.js'
 
 jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () => ({ invoke: jest.fn(async () => {}) }))
+jest.unstable_mockModule('../src/parts/FileSystemWorker/FileSystemWorker.js', () => ({
+  invoke: jest.fn(async (_command: string, _applicationId: string, method?: string) => (method === 'exists' ? false : undefined)),
+}))
 jest.unstable_mockModule('../src/parts/ExtensionManagementWorker/ExtensionManagementWorker.js', () => ({ invoke: jest.fn(async () => {}) }))
 jest.unstable_mockModule('../src/parts/ViewletModule/ViewletModule.js', () => ({ load: jest.fn() }))
 jest.unstable_mockModule('../src/parts/Viewlet/Viewlet.js', () => ({
@@ -23,6 +26,7 @@ jest.unstable_mockModule('../src/parts/ViewletManager/ViewletManager.js', () => 
 
 const Application = await import('../src/parts/Application/Application.ts')
 const RendererProcess = await import('../src/parts/RendererProcess/RendererProcess.js')
+const FileSystemWorker = await import('../src/parts/FileSystemWorker/FileSystemWorker.js')
 const ViewletManager = await import('../src/parts/ViewletManager/ViewletManager.js')
 const Viewlet = await import('../src/parts/Viewlet/Viewlet.js')
 const ExtensionManagementWorker = await import('../src/parts/ExtensionManagementWorker/ExtensionManagementWorker.js')
@@ -43,9 +47,9 @@ beforeEach(() => {
   ViewletStates.reset()
 })
 
-afterEach(() => {
-  ApplicationRegistry.remove('source')
-  ApplicationRegistry.remove('preview')
+afterEach(async () => {
+  await ApplicationRegistry.remove('source')
+  await ApplicationRegistry.remove('preview')
   ViewletStates.reset()
 })
 
@@ -98,6 +102,8 @@ test('concurrent disposal shares one teardown and preserves the sibling layout',
   expect(ApplicationRegistry.getOwner(preview)).toBeUndefined()
   expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.dispose', preview)
   expect(RendererProcess.invoke).not.toHaveBeenCalledWith('Viewlet.dispose', source)
+  expect(FileSystemWorker.invoke).toHaveBeenCalledWith('ApplicationFileSystem.dispose', 'preview')
+  expect(FileSystemWorker.invoke).not.toHaveBeenCalledWith('ApplicationFileSystem.dispose', 'source')
   await expect(Application.executeForView(preview, 'Main.openInput')).rejects.toThrow('Component not found')
 })
 
@@ -142,6 +148,8 @@ test('creating and copying source files refreshes only the source application', 
   })
   expect(RendererProcess.invoke).toHaveBeenLastCalledWith('ApplicationHost.fileSaved', 'source', 'memfs:///copied.ts')
   expect(await Application.execute('preview', 'FileSystem.exists', 'memfs:///copied.ts')).toBe(false)
+  expect(FileSystemWorker.invoke).toHaveBeenCalledWith('ApplicationFileSystem.execute', 'source', 'copy', 'memfs:///created.ts', 'memfs:///copied.ts')
+  expect(FileSystemWorker.invoke).toHaveBeenCalledWith('ApplicationFileSystem.execute', 'preview', 'exists', 'memfs:///copied.ts')
 })
 
 test('text editor associations are scoped to the source application', async () => {
@@ -215,6 +223,20 @@ test('loads workspace ports before the initial panel is registered', async () =>
     'onPorts:codespaces',
     'ExtensionApi.providePorts',
     'codespaces://test/app',
+  )
+})
+
+test('routes Remote SSH forwarding through the owning workspace application', async () => {
+  await Application.create({ ...options('preview'), workspaceUri: 'remote-ssh://host/work' })
+  jest.mocked(ExtensionManagementWorker.invoke).mockResolvedValueOnce({ localPort: 3000 })
+  await expect(Application.execute('preview', 'PortProvider.forwardPort', 3000)).resolves.toEqual({ localPort: 3000 })
+  expect(ExtensionManagementWorker.invoke).toHaveBeenCalledWith(
+    'Extensions.invokeForApplication',
+    'preview',
+    'Extensions.executeCommand',
+    'remote-ssh.forwardPort',
+    'remote-ssh://host/work',
+    3000,
   )
 })
 
