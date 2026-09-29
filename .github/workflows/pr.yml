@@ -96,24 +96,9 @@ jobs:
           npm run e2e:headless --prefix packages/extension-host-worker-tests -- --test-name-prefix=workspace.local-uri-path
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0
-      - name: Test process explorer error presentation
-        working-directory: ./packages/extension-host-worker-tests
-        run: npm run e2e:headless -- --test-name-prefix=viewlet.process-explorer-error-style
-        env:
-          PLAYWRIGHT_BROWSERS_PATH: 0
       - name: Test editor breadcrumbs
         working-directory: ./packages/extension-host-worker-tests
         run: npm run e2e:headless -- --test-name-prefix=viewlet.editor-breadcrumbs
-        env:
-          PLAYWRIGHT_BROWSERS_PATH: 0
-      - name: Test Markdown image paste
-        working-directory: ./packages/extension-host-worker-tests
-        run: npm run e2e:headless -- --test-name-prefix=viewlet.editor-paste-image-markdown
-        env:
-          PLAYWRIGHT_BROWSERS_PATH: 0
-      - name: Test source control tree and list toolbar actions
-        working-directory: ./packages/extension-host-worker-tests
-        run: npm run e2e:headless -- --test-name-prefix=viewlet.source-control-view-mode
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0
       - name: Test TypeScript readonly union highlighting
@@ -124,11 +109,6 @@ jobs:
       - name: Test TypeScript destructured async defaults
         working-directory: ./packages/extension-host-worker-tests
         run: npm run e2e:headless -- --test-name-prefix=viewlet.editor-typescript-destructured-async-default-parameters
-        env:
-          PLAYWRIGHT_BROWSERS_PATH: 0
-      - name: Test explicit editor language mode persistence
-        working-directory: ./packages/extension-host-worker-tests
-        run: npm run e2e:headless -- --test-name-prefix=viewlet.editor-language-mode-persistence
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0
       - name: Test renderer layout blur dispatch
@@ -148,39 +128,9 @@ jobs:
         run: npm run e2e:fonts
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0
-      - name: Test notification option selection and dismissal
-        working-directory: ./packages/extension-host-worker-tests
-        run: npm run e2e:headless -- --test-name-prefix=notification.options
-        env:
-          PLAYWRIGHT_BROWSERS_PATH: 0
-      - name: Test notification text layout
-        if: matrix.os == 'ubuntu-24.04'
-        working-directory: ./packages/extension-host-worker-tests
-        run: npm run e2e:notification-layout
-        env:
-          PLAYWRIGHT_BROWSERS_PATH: 0
       - name: Test Workers view memory polling in Electron
         if: matrix.os == 'ubuntu-24.04'
         run: xvfb-run -a npm run test:workers-memory
-      - name: Test terminal process lifecycle in Electron and browser
-        if: matrix.os == 'ubuntu-24.04'
-        run: |
-          xvfb-run -a node scripts/test-terminal-process-lifecycle.mjs
-          npm run e2e:headless --prefix packages/extension-host-worker-tests -- --test-name-prefix=viewlet.terminal-process-reopen
-        env:
-          PLAYWRIGHT_BROWSERS_PATH: 0
-      - name: Test terminal theme backgrounds
-        if: matrix.os == 'ubuntu-24.04'
-        working-directory: ./packages/extension-host-worker-tests
-        run: npm run e2e:terminal-background
-        env:
-          PLAYWRIGHT_BROWSERS_PATH: 0
-      - name: Test Source Control shortcut focus
-        if: matrix.os == 'ubuntu-24.04'
-        working-directory: ./packages/extension-host-worker-tests
-        run: npm run e2e:headless -- --test-name-prefix=viewlet.source-control-shortcut-focus
-        env:
-          PLAYWRIGHT_BROWSERS_PATH: 0
       - name: Test extension view Explorer focus handoff
         if: matrix.os == 'ubuntu-24.04'
         working-directory: ./packages/extension-host-worker-tests
@@ -193,22 +143,7 @@ jobs:
         run: npm run e2e:headless -- --test-name-prefix=viewlet.extensions-shortcut-focus
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0
-      - name: Test Source Control provider progress
-        if: matrix.os == 'ubuntu-24.04'
-        working-directory: ./packages/extension-host-worker-tests
-        run: npm run e2e:headless -- --test-name-prefix=viewlet.source-control-progress
-        env:
-          PLAYWRIGHT_BROWSERS_PATH: 0
-      - name: Test status bar with many extension items
-        working-directory: ./packages/extension-host-worker-tests
-        # Rendering 100,000 items takes ~22s locally and exceeds the default
-        # 25s on macOS CI. Keep a bounded stress-test window for every platform.
-        run: >-
-          npm run e2e:headless -- --test-name-prefix=status-bar.extension-many-items --test-timeout=120000
-          '--initial-settings={"statusBar.itemsVisible":true,"statusBar.builtinProblemsEnabled":true,"statusBar.builtinNotificationsEnabled":true}'
-        env:
-          PLAYWRIGHT_BROWSERS_PATH: 0
-      - name: Test error dialog and notification rendering
+      - name: Test error dialog rendering
         if: matrix.os == 'ubuntu-24.04'
         working-directory: ./packages/extension-host-worker-tests
         run: npm run e2e:headless -- --test-name-prefix=viewlet.error-
@@ -316,12 +251,6 @@ jobs:
         if: matrix.os == 'ubuntu-24.04'
         working-directory: ./packages/extension-host-worker-tests
         run: npm run e2e:headless -- --test-name-prefix=viewlet.output-component-state
-        env:
-          PLAYWRIGHT_BROWSERS_PATH: 0
-      - name: Test Terminals live component state
-        if: matrix.os == 'ubuntu-24.04'
-        working-directory: ./packages/extension-host-worker-tests
-        run: npm run e2e:headless -- --test-name-prefix=viewlet.terminals-component-state
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0
       - name: Test Workers live component state

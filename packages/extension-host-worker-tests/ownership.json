@@ -5,6 +5,9 @@
   "component-state-worker": [
     "packages/extension-host-worker-tests/src/viewlet.component-state-*.ts"
   ],
+  "editor-worker": [
+    "packages/extension-host-worker-tests/src/viewlet.editor-language-mode-persistence.ts"
+  ],
   "extension-detail-view": [
     "packages/extension-host-worker-tests/src/viewlet.extension-detail-sidebar-resize.ts"
   ],
@@ -14,6 +17,9 @@
   "git": [
     "scripts/test-open-remote.mjs"
   ],
+  "language-features-markdown": [
+    "packages/extension-host-worker-tests/src/viewlet.editor-paste-image-markdown.ts"
+  ],
   "main-area-worker": [
     "packages/extension-host-worker-tests/src/viewlet.main-area-split-hide-explorer.ts"
   ],
@@ -21,12 +27,32 @@
     "packages/extension-host-worker-tests/scripts/test-notebook-defaults.mjs",
     "packages/extension-host-worker-tests/src/extension.notebook-disabled-by-default.ts"
   ],
+  "notification-center-view": [
+    "packages/extension-host-worker-tests/src/notification*.ts",
+    "packages/extension-host-worker-tests/src/viewlet.error-notification*.ts",
+    "packages/extension-host-worker-tests/scripts/test-notification-layout.mjs"
+  ],
   "output-view": [
     "packages/extension-host-worker-tests/src/viewlet.output-open-channel.ts"
+  ],
+  "process-explorer": [
+    "packages/extension-host-worker-tests/src/viewlet.process-explorer-error-style.ts"
   ],
   "simple-browser-view": [
     "packages/extension-host-worker-tests/src/viewlet.simple-browser-*.ts",
     "scripts/test-simple-browser-*.mjs"
+  ],
+  "source-control-view": [
+    "packages/extension-host-worker-tests/src/viewlet.source-control*.ts"
+  ],
+  "status-bar-worker": [
+    "packages/extension-host-worker-tests/src/status-bar.*.ts",
+    "packages/extension-host-worker-tests/src/viewlet.status-bar*.ts"
+  ],
+  "terminal-worker": [
+    "packages/extension-host-worker-tests/src/viewlet.terminal*.ts",
+    "packages/extension-host-worker-tests/scripts/test-terminal-background.mjs",
+    "scripts/test-terminal-process-lifecycle.mjs"
   ],
   "text-search-view": [
     "packages/extension-host-worker-tests/src/viewlet.search-open-in-editor.ts"
