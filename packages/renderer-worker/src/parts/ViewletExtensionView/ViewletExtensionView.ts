@@ -11,6 +11,9 @@ import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as WhenExpression from '../WhenExpression/WhenExpression.js'
 import type { ViewletExtensionViewState } from './ViewletExtensionViewState.ts'
 
+// Keep extension state changes, DOM patches, and focus updates in event order.
+export const serializeCommands = true
+
 interface ViewRenderResult {
   readonly css?: string
   readonly dom?: readonly unknown[]
