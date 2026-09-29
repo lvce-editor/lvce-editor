@@ -2,8 +2,8 @@
   {
     "name": "builtin.performance-profile-view",
     "repository": "github.com/lvce-editor/performance-profile-view",
-    "version": "0.1.0",
-    "sha256": "f1d97122e80fb362fbcccebb09bb8aae4040d99416e208fe1908e8548c440e66",
+    "version": "0.1.1",
+    "sha256": "9660dffd1eca59dfe266e187a53a7211ebbdc701d83274306e15875ae031f167",
     "created": "2026-09-29"
   },
   {
