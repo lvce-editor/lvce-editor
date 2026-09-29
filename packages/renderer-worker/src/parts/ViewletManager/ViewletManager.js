@@ -1,10 +1,14 @@
 // @ts-nocheck
+import * as InvokeViewletEvent from '../InvokeViewletEvent/InvokeViewletEvent.js'
 import * as Assert from '../Assert/Assert.ts'
+import * as ApplicationRegistry from '../ApplicationRegistry/ApplicationRegistry.ts'
+import * as FilterFocusCommands from '../FilterFocusCommands/FilterFocusCommands.js'
 import * as Command from '../Command/Command.js'
 import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
 import { CancelationError } from '../Errors/CancelationError.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as GetViewletErrorMessage from '../GetViewletErrorMessage/GetViewletErrorMessage.js'
+import * as GetViewletErrorVirtualDom from '../GetViewletErrorVirtualDom/GetViewletErrorVirtualDom.js'
 import * as Id from '../Id/Id.js'
 import * as KeyBindingsState from '../KeyBindingsState/KeyBindingsState.js'
 import * as LayoutWidgets from '../LayoutWidgets/LayoutWidgets.ts'
@@ -16,6 +20,7 @@ import * as RebaseState from '../RebaseState/RebaseState.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SaveState from '../SaveState/SaveState.js'
 import { updateDynamicFocusContext } from '../UpdateDynamicFocusContext/UpdateDynamicFocusContext.js'
+import * as ViewletCommandQueue from '../ViewletCommandQueue/ViewletCommandQueue.js'
 import * as ViewletManagerVisitor from '../ViewletManagerVisitor/ViewletManagerVisitor.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
@@ -81,14 +86,18 @@ const kAppendViewlet = 'Viewlet.appendViewlet'
 const kHandleError = 'Viewlet.handleError'
 const kDispose = 'Viewlet.dispose'
 
-const runFn = async (instance, id, key, fn, args) => {
+const runFnInternal = async (instance, id, key, fn, args) => {
   if (!instance) {
     console.info(`cannot execute viewlet command ${id}.${key}: no active instance for ${id}`)
     return
   }
+  id = instance.state.uid
   if (instance.factory && instance.factory.hasFunctionalRender) {
     const oldState = instance.state
     const newState = await fn(oldState, ...args)
+    if (ViewletStates.getByUid(id) !== instance) {
+      return
+    }
 
     if (
       key === 'getActiveSideBarView' ||
@@ -122,23 +131,32 @@ const runFn = async (instance, id, key, fn, args) => {
     if (oldState === newState) {
       return
     }
-    const commands = render(instance.factory, oldState, newState, newState.uid || id)
+    const renderedState = instance.renderedState
+    const rebasedState = RebaseState.rebaseState(oldState, instance.state, newState)
+    const commands = render(instance.factory, renderedState, rebasedState, rebasedState.uid || id)
     updateDynamicFocusContext(commands)
-    ViewletStates.setRenderedState(id, newState)
+    ViewletStates.setRenderedState(id, rebasedState)
     await RendererProcess.invoke(/* Viewlet.sendMultiple */ kSendMultiple, /* commands */ commands)
     runLoadContentLaterForCreatedViewlets(commands)
+    if (ViewletStates.getInstance(id) === instance && instance.factory.afterRender) {
+      await instance.factory.afterRender(renderedState, rebasedState)
+    }
   } else {
     return fn(instance.state, ...args)
   }
 }
 
-const runFnWithSideEffect = async (instance, id, key, fn, ...args) => {
+const runFnWithSideEffectInternal = async (instance, id, key, fn, ...args) => {
   if (!instance) {
     console.info(`cannot execute viewlet command ${id}.${key}: no active instance for ${id}`)
     return
   }
+  id = instance.state.uid
   const oldState = instance.state
   const result = await fn(oldState, ...args)
+  if (ViewletStates.getByUid(id) !== instance) {
+    return
+  }
   const { newState, commands } = result
   Assert.object(newState)
   const latestState = instance.state
@@ -154,7 +172,25 @@ const runFnWithSideEffect = async (instance, id, key, fn, ...args) => {
   updateDynamicFocusContext(commands)
   await RendererProcess.invoke(/* Viewlet.sendMultiple */ kSendMultiple, /* commands */ commands)
   runLoadContentLaterForCreatedViewlets(commands)
+  if (ViewletStates.getByUid(id) === instance && instance.factory.afterRender) {
+    await instance.factory.afterRender(oldState, rebasedState)
+  }
 }
+
+// Named commands, shortcuts, and DOM commands must finish rendering and effects in one queue.
+const runWithCommandQueue = (instance, key, callback) => {
+  if (!instance?.factory?.serializeCommands || instance.factory.concurrentCommands?.includes(key)) return callback()
+  const uid = instance.state.uid
+  return ViewletCommandQueue.enqueue(uid, () => {
+    if (ViewletStates.getByUid(uid) !== instance) return
+    return callback()
+  })
+}
+
+const runFn = (instance, id, key, fn, args) => runWithCommandQueue(instance, key, () => runFnInternal(instance, id, key, fn, args))
+
+const runFnWithSideEffect = (instance, id, key, fn, ...args) =>
+  runWithCommandQueue(instance, key, () => runFnWithSideEffectInternal(instance, id, key, fn, ...args))
 
 // TODO maybe wrapViewletCommand should accept module instead of id string
 // then check if instance.factory matches module -> only compare reference (int) instead of string
@@ -162,6 +198,16 @@ const runFnWithSideEffect = async (instance, id, key, fn, ...args) => {
 const wrapViewletCommand = (id, key, fn) => {
   Assert.string(id)
   Assert.fn(fn)
+  if (fn.requiresInstance === false) {
+    return fn
+  }
+  if (fn.targetUid) {
+    return async (uid, ...args) => {
+      const instance = ViewletStates.getByUid(uid)
+      if (!instance || instance.factory.Commands?.[key] !== fn) return
+      return runFn(instance, uid, key, fn, args)
+    }
+  }
   if (fn.returnValue) {
     const wrappedViewletCommand = async (...args) => {
       // Get the focused instance of this type, or fall back to first instance
@@ -180,6 +226,12 @@ const wrapViewletCommand = (id, key, fn) => {
     return wrappedViewletCommand
   }
   const wrappedViewletCommand = async (...args) => {
+    if (fn.acceptsTargetUid && typeof args[0] === 'number') {
+      const [uid, ...commandArgs] = args
+      const instance = ViewletStates.getByUid(uid)
+      if (!instance || instance.factory.Commands?.[key] !== fn) return
+      return runFn(instance, uid, key, fn, commandArgs)
+    }
     // Get the focused instance of this type, or fall back to first instance
     const focusedUid = ViewletStates.getFocusedInstanceByType(id)
     let activeInstance
@@ -241,6 +293,33 @@ const wrapViewletCommandWithSideEffectLazy = (id, key, importFn) => {
   }
   NameAnonymousFunction.nameAnonymousFunction(lazyCommand, `${id}/lazy/${key}`)
   return lazyCommand
+}
+
+export const executeForApplication = async (applicationId, command, ...args) => {
+  ApplicationRegistry.get(applicationId)
+  const separator = command.indexOf('.')
+  const moduleId = command.slice(0, separator)
+  const key = command.slice(separator + 1)
+  const instance = ViewletStates.getInstance(moduleId, applicationId)
+  if (!instance) {
+    throw new Error(`No ${moduleId} instance in application ${applicationId}`)
+  }
+  const module = instance.factory
+  const lazyImport = module.LazyCommands?.[key] || module.CommandsWithSideEffectsLazy?.[key]
+  const fn = module.Commands?.[key] || module.CommandsWithSideEffects?.[key] || (lazyImport && (await lazyImport())[key])
+  if (typeof fn !== 'function') {
+    throw new Error(`Viewlet command not found: ${command}`)
+  }
+  if (ViewletStates.getInstance(instance.state.uid, applicationId) !== instance) {
+    throw new CancelationError()
+  }
+  if (fn.returnValue) {
+    return fn(instance.state, ...args)
+  }
+  if (module.CommandsWithSideEffects?.[key] || module.CommandsWithSideEffectsLazy?.[key]) {
+    return runFnWithSideEffect(instance, instance.state.uid, key, fn, ...args)
+  }
+  return runFn(instance, instance.state.uid, key, fn, args)
 }
 /**
  *
@@ -325,7 +404,7 @@ const getRenderCommands = (module, oldState, newState, uid = newState.uid || mod
             newParentRenderedState.parentUid,
           ),
         )
-      } else {
+      } else if (!parentInstance || parentInstance.factory?.setTitle) {
         commands.push(['Viewlet.send', parentId, 'setTitle', title])
       }
     }
@@ -449,9 +528,9 @@ const maybeRegisterEvents = (module) => {
         return
       }
       const savedState = await SaveState.getSavedViewletState(module.name)
-      const newState = await value(instance.state, ...params, savedState)
+      const newState = await InvokeViewletEvent.invokeViewletEvent(module.name, instance, value, ...params, savedState)
       if (!newState) {
-        throw new Error('newState must be defined')
+        return
       }
       if (module.shouldApplyNewstate && !module.shouldApplyNewState(newState)) {
         console.log('[viewlet manager] return', newState)
@@ -462,9 +541,36 @@ const maybeRegisterEvents = (module) => {
       const commands = render(instance.factory, instance.renderedState, newState, uid, newState.parentUid)
       instance.state = newState
       instance.renderedState = newState
+      updateDynamicFocusContext(commands)
       await RendererProcess.invoke(/* Viewlet.sendMultiple */ kSendMultiple, /* commands */ commands)
     }
     GlobalEventBus.addListener(module.workspaceChangeEvent || 'workspace.change', handleUpdate, { prepend: module.workspaceChangeEventPrepend })
+  }
+
+  if (module.Commands && module.Commands.handleWorkspaceProgress && module.workspaceProgressEvent) {
+    const value = module.Commands.handleWorkspaceProgress
+    const handleUpdate = async (...params) => {
+      const instance = ViewletStates.getInstance(module.name)
+      if (!instance) {
+        return
+      }
+      const newState = await InvokeViewletEvent.invokeViewletEvent(module.name, instance, value, ...params)
+      if (!newState) {
+        return
+      }
+      if (module.shouldApplyNewstate && !module.shouldApplyNewState(newState)) {
+        console.log('[viewlet manager] return', newState)
+        return
+      }
+      const uid = instance.uid || instance.state.uid
+      Assert.number(uid)
+      const commands = render(instance.factory, instance.renderedState, newState, uid, newState.parentUid)
+      instance.state = newState
+      instance.renderedState = newState
+      updateDynamicFocusContext(commands)
+      await RendererProcess.invoke(/* Viewlet.sendMultiple */ kSendMultiple, /* commands */ commands)
+    }
+    GlobalEventBus.addListener(module.workspaceProgressEvent, handleUpdate)
   }
 
   // deprecated, use commands instead
@@ -476,20 +582,23 @@ const maybeRegisterEvents = (module) => {
         if (!instance) {
           return
         }
-        const newState = await value(instance.state, ...params)
-        if (!newState) {
-          throw new Error('newState must be defined')
-        }
-        if (module.shouldApplyNewstate && !module.shouldApplyNewState(newState)) {
-          console.log('[viewlet manager] return', newState)
-          return
-        }
-        const uid = instance.uid || instance.state.uid
-        Assert.number(uid)
-        const commands = render(instance.factory, instance.renderedState, newState, uid, newState.parentUid)
-        instance.state = newState
-        instance.renderedState = newState
-        await RendererProcess.invoke(/* Viewlet.sendMultiple */ kSendMultiple, /* commands */ commands)
+        return runWithCommandQueue(instance, key, async () => {
+          const newState = await InvokeViewletEvent.invokeViewletEvent(module.name, instance, value, ...params)
+          if (!newState) {
+            return
+          }
+          if (module.shouldApplyNewstate && !module.shouldApplyNewState(newState)) {
+            console.log('[viewlet manager] return', newState)
+            return
+          }
+          const uid = instance.uid || instance.state.uid
+          Assert.number(uid)
+          const commands = render(instance.factory, instance.renderedState, newState, uid, newState.parentUid)
+          instance.state = newState
+          instance.renderedState = newState
+          updateDynamicFocusContext(commands)
+          await RendererProcess.invoke(/* Viewlet.sendMultiple */ kSendMultiple, /* commands */ commands)
+        })
       }
       GlobalEventBus.addListener(key, handleUpdate)
     }
@@ -554,7 +663,33 @@ export const backgroundLoad = async ({ getModule, id, x, y, width, height, props
  * @param {{getModule:()=>any, type:number, id:string, disposed:boolean }} viewlet
  * @returns
  */
+const pendingLoads = new Set()
+
+/**
+ * @param {any} viewlet
+ * @param {boolean} focus
+ * @param {boolean} restore
+ * @param {any} restoreState
+ */
 export const load = async (viewlet, focus = false, restore = false, restoreState = undefined) => {
+  const applicationId = viewlet.applicationId ?? ApplicationRegistry.getOwner(viewlet.parentUid)
+  if (applicationId === undefined) {
+    return loadInternal(viewlet, focus, restore, restoreState)
+  }
+  const uid = viewlet.uid || Id.create()
+  if (pendingLoads.has(uid) || ViewletStates.getByUid(uid)) {
+    throw new Error(`Component uid is already in use: ${uid}`)
+  }
+  viewlet.uid = uid
+  pendingLoads.add(uid)
+  try {
+    return await ApplicationRegistry.track(applicationId, () => loadInternal(viewlet, focus, restore, restoreState))
+  } finally {
+    pendingLoads.delete(uid)
+  }
+}
+
+const loadInternal = async (viewlet, focus, restore, restoreState) => {
   // console.time(`load/${viewlet.id}`)
   // TODO
   if (
@@ -577,7 +712,15 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
   let state = ViewletState.Default
   // @ts-ignore
   const viewletUid = viewlet.uid || Id.create()
+  const applicationId = viewlet.applicationId ?? ApplicationRegistry.getOwner(viewlet.parentUid)
+  if (applicationId !== undefined) {
+    if (ViewletStates.getByUid(viewletUid)) {
+      throw new Error(`Component uid is already in use: ${viewletUid}`)
+    }
+    ApplicationRegistry.own(applicationId, viewletUid)
+  }
   let module
+  let partialState
   try {
     viewlet.type = 1
     if (viewlet.disposed) {
@@ -603,6 +746,10 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
     }
 
     const initialViewletState = module.create(viewletUid, viewlet.uri, x, y, width, height, viewlet.args, parentUid)
+    partialState = initialViewletState
+    if (applicationId !== undefined) {
+      initialViewletState.applicationId = applicationId
+    }
 
     let viewletState = initialViewletState
     viewletState.uid ||= viewletUid
@@ -610,7 +757,10 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
     let instanceSavedState
     if (restore) {
       const storageKey = module.getStorageKey ? module.getStorageKey(viewletState) : viewlet.id
-      instanceSavedState = await SaveState.getSavedViewletState(storageKey)
+      instanceSavedState =
+        applicationId === undefined
+          ? await SaveState.getSavedViewletState(storageKey)
+          : await SaveState.getSavedViewletState(storageKey, applicationId)
     } else if (restoreState) {
       instanceSavedState = restoreState
     }
@@ -694,6 +844,7 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
     if (viewlet.disposed) {
       return
     }
+    await ViewletManagerVisitor.loadInstance(viewlet.id, module)
     state = ViewletState.ContentLoaded
     if (viewlet.show === false) {
     } else {
@@ -712,16 +863,35 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
 
     const instance = {
       actionsUid: viewlet.actionsUid,
+      cssLoaded: true,
       state: newState,
       renderedState: viewletState,
       factory: module,
       moduleId,
     }
     ViewletStates.set(viewletUid, instance)
-    if (viewlet.id === ViewletModuleId.Layout) {
+    const pendingResize = ViewletStates.takePendingResize(viewletUid)
+    const resizeFn = module.Commands?.resize || module.resize
+    if (pendingResize && resizeFn) {
+      if (module.hasFunctionalResize) {
+        const resizedState = await resizeFn(instance.state, pendingResize)
+        instance.state = resizedState
+        if (module.resizeEffect) {
+          await module.resizeEffect(resizedState)
+        }
+      } else {
+        const result = await resizeFn(instance.state, pendingResize)
+        instance.state = result.newState
+        extraCommands.push(...result.commands)
+      }
+      newState = instance.state
+    }
+    if (viewlet.id === ViewletModuleId.Layout && applicationId === undefined) {
       ViewletStates.set(ViewletModuleId.Layout, instance)
     }
-    ViewletStates.setFocusedInstanceByType(viewletUid, moduleId)
+    if (applicationId === undefined || focus) {
+      ViewletStates.setFocusedInstanceByType(viewletUid, moduleId)
+    }
     if (newState.badgeCount) {
       await Command.execute('Layout.handleBadgeCountChange')
     }
@@ -767,12 +937,14 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
         // TODO avoid side effect here
         // instead, let component send commands to renderer process and renderer worker
         // so that those commands are not mixed together
-        updateDynamicFocusContext(allCommands)
-        return allCommands
+        const finalCommands = applicationId !== undefined && !focus ? FilterFocusCommands.filterFocusCommands(allCommands) : allCommands
+        updateDynamicFocusContext(finalCommands)
+        return finalCommands
       }
       commands.push(...extraCommands)
-      updateDynamicFocusContext(commands)
-      await RendererProcess.invoke(/* Viewlet.sendMultiple */ kSendMultiple, /* commands */ commands)
+      const finalCommands = applicationId !== undefined && !focus ? FilterFocusCommands.filterFocusCommands(commands) : commands
+      updateDynamicFocusContext(finalCommands)
+      await RendererProcess.invoke(/* Viewlet.sendMultiple */ kSendMultiple, /* commands */ finalCommands)
       runLoadContentLaterForCreatedViewlets(commands)
     } else if (!module.hasFunctionalEvents && shouldRender) {
       const allCommands = [
@@ -808,6 +980,18 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
 
     return commands
   } catch (error) {
+    if (applicationId !== undefined) {
+      if (!ViewletStates.getByUid(viewletUid)) {
+        try {
+          if (partialState && module?.dispose) {
+            await module.dispose(partialState)
+          }
+        } finally {
+          ApplicationRegistry.release(viewletUid)
+        }
+      }
+      throw error
+    }
     if (error && error instanceof CancelationError) {
       return
     }
@@ -843,7 +1027,12 @@ export const load = async (viewlet, focus = false, restore = false, restoreState
         // TODO
         // const errorCommands=
       } else {
-        commands.push(['Viewlet.send', /* id */ viewletUid, 'setMessage', message])
+        if (Array.isArray(prettyError?.syntaxHighlightedCodeFrame) && prettyError.syntaxHighlightedCodeFrame.length > 0) {
+          const dom = GetViewletErrorVirtualDom.getViewletErrorVirtualDom(prettyError)
+          commands.push(['Viewlet.setDom2', viewletUid, dom])
+        } else {
+          commands.push(['Viewlet.send', /* id */ viewletUid, 'setMessage', message])
+        }
         // @ts-ignore
         if (viewlet.append) {
           commands.push([kAppend, parentUid, viewletUid])

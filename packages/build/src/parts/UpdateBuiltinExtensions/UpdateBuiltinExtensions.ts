@@ -9,6 +9,7 @@ import { getBuiltinExtensionRepository } from '../GetBuiltinExtensionRepository/
 import * as Logger from '../Logger/Logger.ts'
 import * as Process from '../Process/Process.ts'
 import * as Root from '../Root/Root.ts'
+import { computeUrlSha256, isSha256 } from '../Sha256/Sha256.ts'
 
 /**
  *
@@ -71,30 +72,43 @@ const getDiffCount = (arrayA, arrayB) => {
   const length = arrayA.length
   let diffCount = 0
   for (let i = 0; i < length; i++) {
-    if (arrayA[i].version !== arrayB[i].version) {
+    if (arrayA[i].version !== arrayB[i].version || arrayA[i].sha256 !== arrayB[i].sha256) {
       diffCount++
     }
   }
   return diffCount
 }
 
-const getNewBuiltinExtensions = (builtinExtensions, versions) => {
-  const newBuiltinExtensions: any[] = []
-  for (let i = 0; i < builtinExtensions.length; i++) {
-    const extension = builtinExtensions[i]
-    newBuiltinExtensions.push({
-      ...extension,
-      version: versions[i],
-    })
-  }
-  return newBuiltinExtensions
+const getNewBuiltinExtensions = async (builtinExtensions, versions) => {
+  return Promise.all(
+    builtinExtensions.map(async (extension, i) => {
+      const version = versions[i]
+      if (extension.version === version && isSha256(extension.sha256)) {
+        return extension
+      }
+      const repositoryName = getBuiltinExtensionRepository(extension)
+      const baseName = repositoryName.slice(repositoryName.lastIndexOf('/') + 1)
+      const assetName = extension.version === version && extension.assetName ? extension.assetName : `${baseName}-v${version}.tar.br`
+      const url = `https://github.com/${repositoryName}/releases/download/v${version}/${assetName}`
+      const sha256 = await computeUrlSha256(url, got.stream)
+      const updatedExtension = {
+        ...extension,
+        version,
+        sha256,
+      }
+      if (extension.version !== version) {
+        delete updatedExtension.assetName
+      }
+      return updatedExtension
+    }),
+  )
 }
 
 const updateBuiltinExtensions = async () => {
   const start = performance.now()
   const repositories = builtinExtensions.map(getBuiltinExtensionRepository)
   const newVersions = await Promise.all(repositories.map(getLatestReleaseVersion))
-  const newBuiltinExtensions = getNewBuiltinExtensions(builtinExtensions, newVersions)
+  const newBuiltinExtensions = await getNewBuiltinExtensions(builtinExtensions, newVersions)
   const end = performance.now()
   const duration = end - start
   const diffCount = getDiffCount(builtinExtensions, newBuiltinExtensions)

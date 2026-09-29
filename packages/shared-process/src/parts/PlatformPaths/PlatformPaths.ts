@@ -1,5 +1,5 @@
 import { homedir, tmpdir } from 'node:os'
-import { isAbsolute, join, resolve, sep } from 'node:path'
+import { isAbsolute, join, resolve } from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { xdgCache, xdgConfig, xdgData, xdgState } from 'xdg-basedir'
 import * as GetConfigJsonPath from '../GetConfigJsonPath/GetConfigJsonPath.ts'
@@ -66,10 +66,6 @@ export const getMarketplaceUrl = (): any => {
   return env.LVCE_MARKETPLACE_URL || 'https://marketplace.22e924c84de072d4b25b.com'
 }
 
-export const getPathSeparator = (): any => {
-  return sep
-}
-
 export const getStateDir = (): any => {
   return xdgState
 }
@@ -85,10 +81,6 @@ export const getUserSettingsPath = (): any => {
 
 export const getUserKeyBindingsPath = (): any => {
   return Path.join(configDir, 'keybindings.json')
-}
-
-export const getExtensionHostHelperProcessPath = async (): Promise<any> => {
-  return Path.join(Root.root, 'packages', 'extension-host-helper-process', 'src', 'extensionHostHelperProcessMain.js')
 }
 
 export const getWebViewRoot = (relativePath: any): any => {

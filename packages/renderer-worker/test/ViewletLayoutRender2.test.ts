@@ -33,8 +33,11 @@ test('renderCss serializes valid layout bounds', () => {
     titleBarHeight: 35,
     panelTop: 200,
     previewLeft: 799.6,
+    previewHeight: 765,
     previewWidth: 400,
     secondaryPreviewLeft: 1200,
+    secondaryPreviewTop: 35,
+    secondaryPreviewHeight: 765,
     secondaryPreviewWidth: 0,
     sideBarLeft: 48.4,
     secondarySideBarLeft: 700.2,
@@ -55,9 +58,17 @@ test('renderCss serializes valid layout bounds', () => {
   --SideBarWidth: 240px;
   --SecondarySideBarWidth: 300px;
   --TitleBarHeight: 35px;
+  --TitleBarLeft: 0px;
+  --TitleBarWidth: 0px;
   --SashPreviewLeft: 800px;
+  --NotificationRight: 30px;
+  --NotificationMaxWidth: min(250px, calc(100vw - 60px));
+  --PreviewAreasWidth: 400px;
+  --PreviewHeight: 765px;
   --PreviewWidth: 400px;
   --SashSecondaryPreviewLeft: 1200px;
+  --SashSecondaryPreviewTop: 35px;
+  --SecondaryPreviewHeight: 765px;
   --SecondaryPreviewWidth: 0px;
   --SashSideBarLeft: 48px;
   --SashSecondarySideBarLeft: 1000px;
@@ -82,8 +93,12 @@ test('renderCss serializes explicit application bounds', () => {
     titleBarHeight: 35,
     panelTop: 200,
     previewLeft: 799.6,
+    previewHeight: 285,
     previewWidth: 400,
+    previewVisible: true,
     secondaryPreviewLeft: 1200,
+    secondaryPreviewTop: 35,
+    secondaryPreviewHeight: 285,
     secondaryPreviewWidth: 0,
     sideBarLeft: 48.4,
     secondarySideBarLeft: 700.2,
@@ -104,9 +119,17 @@ test('renderCss serializes explicit application bounds', () => {
   --SideBarWidth: 240px;
   --SecondarySideBarWidth: 300px;
   --TitleBarHeight: 35px;
+  --TitleBarLeft: 0px;
+  --TitleBarWidth: 0px;
   --SashPreviewLeft: 800px;
+  --NotificationRight: calc(100vw - 799.6px + 30px);
+  --NotificationMaxWidth: min(250px, calc(799.6px - 60px), calc(100vw - 60px));
+  --PreviewAreasWidth: 400px;
+  --PreviewHeight: 285px;
   --PreviewWidth: 400px;
   --SashSecondaryPreviewLeft: 1200px;
+  --SashSecondaryPreviewTop: 35px;
+  --SecondaryPreviewHeight: 285px;
   --SecondaryPreviewWidth: 0px;
   --SashSideBarLeft: 48px;
   --SashSecondarySideBarLeft: 1000px;
@@ -146,6 +169,16 @@ test('renderEventListeners registers side bar sash double click handler', () => 
   expect(doubleClickListener).toEqual({
     name: 'handleSashDoubleClick',
     params: ['handleSashDoubleClick', 'SideBar'],
+  })
+})
+
+test('renderEventListeners registers preview sash double click handler', () => {
+  const listeners = ViewletLayoutRender2.renderEventListeners()
+  const doubleClickListener = listeners.find((listener) => listener.name === 'handleSashPreviewDoubleClick')
+
+  expect(doubleClickListener).toEqual({
+    name: 'handleSashPreviewDoubleClick',
+    params: ['handleSashDoubleClick', 'Preview'],
   })
 })
 

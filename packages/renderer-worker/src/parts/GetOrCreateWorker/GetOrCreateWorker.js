@@ -11,6 +11,9 @@ const getOrCreate = (fn) => {
 
 export const getOrCreateWorker = (fn) => {
   return {
+    isCreated() {
+      return workers.has(fn)
+    },
     async invoke(method, ...params) {
       const ipc = await getOrCreate(fn)
       return JsonRpc.invoke(ipc, method, ...params)

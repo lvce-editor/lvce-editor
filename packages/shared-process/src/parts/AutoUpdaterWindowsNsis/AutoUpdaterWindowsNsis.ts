@@ -1,11 +1,9 @@
-import { spawn } from 'node:child_process'
 import * as Assert from '../Assert/Assert.ts'
 import * as Download from '../Download/Download.ts'
-import * as FirstNodeWorkerEventType from '../FirstNodeWorkerEventType/FirstNodeWorkerEventType.ts'
-import * as GetFirstSpawnedProcessEvent from '../GetFirstSpawnedProcessEvent/GetFirstSpawnedProcessEvent.ts'
 import * as GetNsisUpdateArgs from '../GetNsisUpdateArgs/GetNsisUpdateArgs.ts'
 import * as GetNsisDownloadPath from '../GetNsisUpdateDownloadPath/GetNsisUpdateDownloadPath.ts'
 import * as GetWindowsNsisDownloadUrl from '../GetWindowsNsisDownloadUrl/GetWindowsNsisDownloadUrl.ts'
+import * as LaunchDetachedUpdate from '../LaunchDetachedUpdate/LaunchDetachedUpdate.ts'
 import * as Logger from '../Logger/Logger.ts'
 import * as Platform from '../Platform/Platform.ts'
 import * as UpdateState from '../UpdateState/UpdateState.ts'
@@ -49,15 +47,8 @@ export const installAndRestart = async (downloadPath: any): Promise<any> => {
     const args = GetNsisUpdateArgs.getNsisUpdateArgs()
     Logger.info(`[shared-process] spawning nsis update: ${downloadPath}`)
     UpdateState.set(UpdateStateType.Updating)
-    const child = spawn(downloadPath, args, {
-      detached: true,
-      stdio: 'inherit',
-    })
-    const { event, type } = await GetFirstSpawnedProcessEvent.getFirstSpawnedProcessEvent(child)
-    if (type === FirstNodeWorkerEventType.Error) {
-      throw new Error(`Child process error: ${event}`)
-    }
-    Logger.info(`[shared-process] finished nsis update`)
+    await LaunchDetachedUpdate.launch(downloadPath, args)
+    Logger.info(`[shared-process] handed off nsis update`)
   } catch (error) {
     throw new VError(error, `Failed to install nsis update`)
   }

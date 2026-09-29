@@ -13,6 +13,7 @@ export const Commands = {
   loadWebExtension: ExtensionMeta.addWebExtension,
   getCommands: ExtensionHostCommands.getCommands,
   executeCommand: ExtensionHostCommands.executeCommand,
+  searchFileWithProvider: ExtensionHostCommands.searchFileWithProvider,
   searchFileWithFetch:ExtensionHostCommands.searchFileWithFetch,
   searchFileWithHtml :ExtensionHostCommands.searchFileWithHtml,
   searchFileWithMemory :ExtensionHostCommands.searchFileWithMemory

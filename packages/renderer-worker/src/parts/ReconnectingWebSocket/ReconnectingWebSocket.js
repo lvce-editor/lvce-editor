@@ -1,21 +1,40 @@
-export const create = (url, args) => {
-  const webSocket = new WebSocket(url, args)
+const createContext = (webSocket, createWebSocket) => {
   const listeners = new Map()
+  let closed = false
+  let reconnectTimer
 
-  const reconnect = () => {
-    const originalOnMessage = context.webSocket.onmessage
-    context.webSocket = new WebSocket(url, args)
-    context.webSocket.onmessage = originalOnMessage
-    context.webSocket.onclose = handleClose
-    for (const [type, typeListeners] of listeners) {
-      for (const listener of typeListeners) {
-        context.webSocket.addEventListener(type, listener)
+  const scheduleReconnect = () => {
+    if (!closed) {
+      reconnectTimer = setTimeout(() => void reconnect(), 2000)
+    }
+  }
+
+  const reconnect = async () => {
+    if (closed) {
+      return
+    }
+    try {
+      const originalOnMessage = context.webSocket.onmessage
+      const nextWebSocket = await createWebSocket()
+      if (closed) {
+        nextWebSocket.close()
+        return
       }
+      context.webSocket = nextWebSocket
+      context.webSocket.onmessage = originalOnMessage
+      context.webSocket.onclose = handleClose
+      for (const [type, typeListeners] of listeners) {
+        for (const listener of typeListeners) {
+          context.webSocket.addEventListener(type, listener)
+        }
+      }
+    } catch {
+      scheduleReconnect()
     }
   }
 
   const handleClose = () => {
-    setTimeout(reconnect, 2000)
+    scheduleReconnect()
   }
 
   const context = {
@@ -28,6 +47,12 @@ export const create = (url, args) => {
     },
     send(message) {
       this.webSocket.send(message)
+    },
+    close() {
+      closed = true
+      clearTimeout(reconnectTimer)
+      this.webSocket.onclose = null
+      this.webSocket.close()
     },
     addEventListener(type, listener) {
       let typeListeners = listeners.get(type)
@@ -50,4 +75,13 @@ export const create = (url, args) => {
 
   webSocket.onclose = handleClose
   return context
+}
+
+export const create = (url, args) => {
+  return createContext(new WebSocket(url, args), () => new WebSocket(url, args))
+}
+
+export const createWithUrlFactory = async (getUrl, args) => {
+  const createWebSocket = async () => new WebSocket(await getUrl(), args)
+  return createContext(await createWebSocket(), createWebSocket)
 }

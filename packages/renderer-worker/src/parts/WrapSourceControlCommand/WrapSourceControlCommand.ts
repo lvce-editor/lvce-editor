@@ -4,18 +4,26 @@ import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
 export const renderPendingSourceControl = async (state) => {
-  const diffResult = await SourceControlWorker.invoke('SourceControl.diff2', state.uid)
+  const [diffResult, actionsDom] = await Promise.all([
+    SourceControlWorker.invoke('SourceControl.diff2', state.uid),
+    SourceControlWorker.invoke('SourceControl.renderActions', state.uid),
+  ])
+  const updatedState = {
+    ...state,
+    actionsDom,
+    commands: [],
+  }
   if (diffResult.length === 0) {
-    return state
+    return updatedState
   }
   const commands = await SourceControlWorker.invoke('SourceControl.render2', state.uid, diffResult)
   const badgeCount = await SourceControlWorker.invoke('SourceControl.getBadgeCount', state.uid, diffResult)
   if (commands.length === 0) {
-    return state
+    return updatedState
   }
   if (state.badgeCount !== badgeCount) {
     const newState = {
-      ...state,
+      ...updatedState,
       commands,
       badgeCount,
     }
@@ -25,7 +33,7 @@ export const renderPendingSourceControl = async (state) => {
     await Command.execute('Layout.setBadgeCount', ViewletModuleId.SourceControl, badgeCount)
   }
   return {
-    ...state,
+    ...updatedState,
     commands,
     badgeCount,
   }

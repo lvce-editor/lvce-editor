@@ -38,8 +38,14 @@ export const getLabel = (uri) => {
   if (uri.startsWith('settings://')) {
     return 'Settings'
   }
+  if (uri.startsWith('cookie-import-view:///')) {
+    return 'Import Firefox Cookies'
+  }
   if (uri.startsWith('simple-browser://')) {
     return 'Simple Browser'
+  }
+  if (uri.startsWith('simple-browser-history://')) {
+    return 'History'
   }
   if (uri.startsWith('language-models://')) {
     return 'Language Models'
@@ -47,8 +53,14 @@ export const getLabel = (uri) => {
   if (uri.startsWith('process-explorer://')) {
     return 'Process Explorer'
   }
+  if (uri.startsWith('file-watcher-explorer://')) {
+    return 'File Watcher Explorer'
+  }
   if (uri.startsWith('running-extensions://')) {
     return 'Running Extensions'
+  }
+  if (uri.startsWith('secrets://')) {
+    return 'Secrets'
   }
   return Workspace.pathBaseName(getDisplayUri(uri))
 }
@@ -65,11 +77,20 @@ export const getFileIcon = (uri) => {
   if (uri.startsWith('extension-detail://')) {
     return `MaskIcon${Icon.Extensions}`
   }
+  if (uri.startsWith('cookie-import-view:///')) {
+    return `MaskIcon${Icon.RecordKey}`
+  }
   if (uri.startsWith('process-explorer://')) {
+    return `MaskIcon${Icon.DebugAlt2}`
+  }
+  if (uri.startsWith('file-watcher-explorer://')) {
     return `MaskIcon${Icon.DebugAlt2}`
   }
   if (uri.startsWith('running-extensions://')) {
     return `MaskIcon${Icon.Extensions}`
+  }
+  if (uri.startsWith('secrets://')) {
+    return `MaskIcon${Icon.RecordKey}`
   }
   const baseName = Workspace.pathBaseName(getDisplayUri(uri))
   const icon = IconTheme.getFileIcon({ name: baseName })

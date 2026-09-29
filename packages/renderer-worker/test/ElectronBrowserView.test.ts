@@ -2,6 +2,7 @@ import { beforeEach, expect, jest, test } from '@jest/globals'
 
 beforeEach(() => {
   jest.resetAllMocks()
+  GlobalEventBus.state.listenerMap = Object.create(null)
 })
 
 jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
@@ -14,6 +15,88 @@ jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
 
 const SharedProcess = await import('../src/parts/SharedProcess/SharedProcess.js')
 const ElectronBrowserView = await import('../src/parts/ElectronBrowserView/ElectronBrowserView.js')
+const ElectronBrowserViewIpc = await import('../src/parts/ElectronBrowserView/ElectronBrowserView.ipc.js')
+const GlobalEventBus = await import('../src/parts/GlobalEventBus/GlobalEventBus.js')
+
+test('registers the audio state handler with the IPC module', () => {
+  expect(ElectronBrowserViewIpc.Commands.handleAudioStateChanged).toBe(ElectronBrowserView.handleAudioStateChanged)
+})
+
+test('registers the download state handler with the IPC module', () => {
+  expect(ElectronBrowserViewIpc.Commands.handleDownloadStateChanged).toBe(ElectronBrowserView.handleDownloadStateChanged)
+})
+
+test('forwards web contents audio state changes through the global event bus', async () => {
+  const listener = jest.fn()
+  GlobalEventBus.addListener('browser-view-audio-state-changed', listener)
+
+  await ElectronBrowserView.handleAudioStateChanged(12, true)
+
+  expect(listener).toHaveBeenCalledWith(12, true)
+})
+
+test('forwards web contents download state changes through the global event bus', async () => {
+  const listener = jest.fn()
+  GlobalEventBus.addListener('browser-view-download-state-changed', listener)
+
+  await ElectronBrowserView.handleDownloadStateChanged(12, 3, 'started')
+
+  expect(listener).toHaveBeenCalledWith(12, 3, 'started')
+})
+
+test('forwards web contents keybindings through the global event bus', async () => {
+  const listener = jest.fn()
+  GlobalEventBus.addListener('browser-view-key-binding', listener)
+
+  await ElectronBrowserView.handleKeyBinding(12, 2050)
+
+  expect(listener).toHaveBeenCalledWith(12, 2050)
+})
+
+test('forwards web contents login challenges through the global event bus', async () => {
+  const listener = jest.fn()
+  const challenge = { host: 'example.com', requestId: '12:1' }
+  GlobalEventBus.addListener('browser-view-login', listener)
+
+  await ElectronBrowserView.handleLogin(12, challenge)
+
+  expect(listener).toHaveBeenCalledWith(12, challenge)
+})
+
+test('forwards web contents context menus through the global event bus', async () => {
+  const listener = jest.fn()
+  const params = { linkURL: 'https://example.com', x: 10, y: 20 }
+  GlobalEventBus.addListener('browser-view-context-menu', listener)
+
+  await ElectronBrowserView.handleContextMenu(params)
+
+  expect(listener).toHaveBeenCalledWith(params)
+})
+
+test('serializes web contents events in arrival order', async () => {
+  const calls: string[] = []
+  let finishNavigation = () => {}
+  const navigationFinished = new Promise<void>((resolve) => {
+    finishNavigation = resolve
+  })
+  GlobalEventBus.addListener('browser-view-did-navigate', async () => {
+    calls.push('navigation-start')
+    await navigationFinished
+    calls.push('navigation-end')
+  })
+  GlobalEventBus.addListener('browser-view-page-favicon-updated', () => {
+    calls.push('favicon')
+  })
+
+  const navigation = ElectronBrowserView.handleDidNavigate(12, 'https://example.com')
+  const favicon = ElectronBrowserView.handlePageFaviconUpdated(12, ['data:image/x-icon;base64,AAEC'])
+  await Promise.resolve()
+
+  expect(calls).toEqual(['navigation-start'])
+  finishNavigation()
+  await Promise.all([navigation, favicon])
+  expect(calls).toEqual(['navigation-start', 'navigation-end', 'favicon'])
+})
 
 test.skip('createBrowserView - error', async () => {
   // @ts-ignore

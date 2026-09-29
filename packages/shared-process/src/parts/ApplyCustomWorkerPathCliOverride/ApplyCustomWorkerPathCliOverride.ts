@@ -2,9 +2,14 @@ import * as Process from '../Process/Process.ts'
 
 const disableCustomWorkerPathsFlag = '--disable-custom-worker-paths'
 
-const workerPathSettingsWithoutWorkerInName = new Set(['develop.languageModelsViewPath', 'develop.runningExtensionsViewPath'])
+const workerPathSettingsWithoutWorkerInName = new Set([
+  'develop.languageModelsViewPath',
+  'develop.portsViewPath',
+  'develop.runningExtensionsViewPath',
+  'develop.workersViewPath',
+])
 
-const isCustomWorkerPathSetting = (key: string): boolean => {
+export const isCustomWorkerPathSetting = (key: string): boolean => {
   const isDevelopmentSetting = key.startsWith('develop.') || key.startsWith('developer.')
   return isDevelopmentSetting && (key.endsWith('WorkerPath') || workerPathSettingsWithoutWorkerInName.has(key))
 }

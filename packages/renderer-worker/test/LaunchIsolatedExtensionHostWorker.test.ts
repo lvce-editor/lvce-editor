@@ -184,3 +184,42 @@ test('disposeIsolatedExtensionHostWorker only disposes a worker once', async () 
 
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
 })
+
+test('disposal during security policy setup prevents worker creation', async () => {
+  const gate = Promise.withResolvers<void>()
+  jest.mocked(ContentSecurityPolicy.set).mockImplementationOnce(() => gate.promise)
+  const close = jest.fn()
+  const launch = LaunchIsolatedExtensionHostWorker.launchIsolatedExtensionHostWorker({ close }, 'preview', '/old.js', '', 'policy')
+  const result = launch.catch((error: unknown) => error)
+  await LaunchIsolatedExtensionHostWorker.disposeIsolatedExtensionHostWorker('preview')
+  gate.resolve()
+  expect(await result).toEqual(expect.objectContaining({ message: 'Extension worker launch canceled: preview' }))
+  expect(RendererProcess.invokeAndTransfer).not.toHaveBeenCalled()
+  expect(close).toHaveBeenCalledTimes(1)
+})
+
+test('a late worker launch cannot overwrite or terminate a replacement', async () => {
+  const started = Promise.withResolvers<void>()
+  const gate = Promise.withResolvers<void>()
+  jest.mocked(RendererProcess.invokeAndTransfer).mockImplementationOnce(async () => {
+    started.resolve()
+    await gate.promise
+  })
+  const old = LaunchIsolatedExtensionHostWorker.launchIsolatedExtensionHostWorker({}, 'preview', '/old.js')
+  const result = old.catch((error: unknown) => error)
+  await started.promise
+  await LaunchIsolatedExtensionHostWorker.disposeIsolatedExtensionHostWorker('preview')
+  jest.mocked(Id.create).mockReturnValue(43)
+  await LaunchIsolatedExtensionHostWorker.launchIsolatedExtensionHostWorker({}, 'preview', '/new.js')
+  gate.resolve()
+  expect(await result).toEqual(expect.objectContaining({ message: 'Extension worker launch canceled: preview' }))
+  expect(RendererProcess.invoke).not.toHaveBeenCalledWith('IpcParent.dispose', 43)
+  await LaunchIsolatedExtensionHostWorker.disposeIsolatedExtensionHostWorker('preview')
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('IpcParent.dispose', 43)
+})
+
+test('rejects duplicate live extension ids without replacing the first worker', async () => {
+  await LaunchIsolatedExtensionHostWorker.launchIsolatedExtensionHostWorker({}, 'preview', '/first.js')
+  await expect(LaunchIsolatedExtensionHostWorker.launchIsolatedExtensionHostWorker({}, 'preview', '/second.js')).rejects.toThrow('already exists')
+  expect(RendererProcess.invokeAndTransfer).toHaveBeenCalledTimes(1)
+})

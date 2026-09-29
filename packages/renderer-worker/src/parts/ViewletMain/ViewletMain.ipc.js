@@ -9,6 +9,8 @@ export const {
   dispose,
   focus,
   getCommands,
+  getComponentDom,
+  getComponentState,
   getKeyBindings,
   getMenus,
   getQuickPickMenuEntries,
@@ -31,5 +33,6 @@ export const {
   renderTitle,
   resize,
   saveState,
+  setComponentState,
   saveWithoutFormatting,
 } = createWorkerViewlet({ workerId: 'mainArea' })

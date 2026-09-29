@@ -1,11 +1,27 @@
 import * as ExtensionManagementWorker from '../ExtensionManagementWorker/ExtensionManagementWorker.js'
 import * as GetIconThemeEtag from '../GetIconThemeEtag/GetIconThemeEtag.js'
+import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as HandleIconThemeChange from '../HandleIconThemeChange/HandleIconThemeChange.js'
 import * as IconThemeWorker from '../IconThemeWorker/IconThemeWorker.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import { VError } from '../VError/VError.js'
 import * as Workspace from '../Workspace/Workspace.js'
+
+const FALLBACK_ICON_THEME_ID = 'vscode-icons'
+
+const state = {
+  assetDir: '',
+  iconThemeId: undefined,
+  platform: PlatformType.Web,
+}
+
+let iconThemeLoad = Promise.resolve()
+
+const getPreferredIconThemeId = () => {
+  const configuredIconThemeId = Preferences.get('workbench.iconTheme')
+  return configuredIconThemeId === undefined ? FALLBACK_ICON_THEME_ID : configuredIconThemeId
+}
 
 export const getIconThemePlatform = (platform, assetDir) => {
   if (platform === PlatformType.Electron && !assetDir) {
@@ -14,10 +30,10 @@ export const getIconThemePlatform = (platform, assetDir) => {
   return platform
 }
 
-export const setIconTheme = async (iconThemeId, platform, assetDir) => {
+const doSetIconTheme = async (iconThemeId, platform, assetDir) => {
   try {
     const useCache = Preferences.get('icon-theme.cache') ?? true
-    const extensions = await ExtensionManagementWorker.invoke('Extensions.getAllExtensions', assetDir, platform)
+    const extensions = iconThemeId === null ? [] : await ExtensionManagementWorker.invoke('Extensions.getAllExtensions', assetDir, platform)
     const iconThemePlatform = getIconThemePlatform(platform, assetDir)
     const etag = GetIconThemeEtag.getIconThemeEtag(iconThemeId)
     await IconThemeWorker.invoke('IconTheme.getIconThemeJson', extensions, iconThemeId, assetDir, iconThemePlatform, useCache, etag)
@@ -31,9 +47,34 @@ export const setIconTheme = async (iconThemeId, platform, assetDir) => {
   }
 }
 
+export const setIconTheme = (iconThemeId, platform, assetDir) => {
+  const promise = iconThemeLoad.then(() => doSetIconTheme(iconThemeId, platform, assetDir))
+  iconThemeLoad = promise.catch(() => {})
+  return promise
+}
+
+export const handlePreferencesChanged = async () => {
+  const iconThemeId = getPreferredIconThemeId()
+  const { assetDir, iconThemeId: currentIconThemeId, platform } = state
+  if (iconThemeId === currentIconThemeId) {
+    return
+  }
+  state.iconThemeId = iconThemeId
+  await setIconTheme(iconThemeId, platform, assetDir)
+}
+
+export const reload = async () => {
+  const { assetDir, iconThemeId, platform } = state
+  await setIconTheme(iconThemeId, platform, assetDir)
+}
+
 export const hydrate = async (platform, assetDir) => {
   // TODO do this all in worker
-  const iconThemeId = Preferences.get('workbench.iconTheme') || 'vscode-icons'
+  state.platform = platform
+  state.assetDir = assetDir
+  GlobalEventBus.addListener('preferences.changed', handlePreferencesChanged)
+  const iconThemeId = getPreferredIconThemeId()
+  state.iconThemeId = iconThemeId
   await setIconTheme(iconThemeId, platform, assetDir)
 }
 

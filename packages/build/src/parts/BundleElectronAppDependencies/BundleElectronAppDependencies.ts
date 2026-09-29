@@ -1,13 +1,25 @@
 // @ts-nocheck
-import * as BundleExtensionHostHelperProcessDependencies from '../BundleExtensionHostHelperProcessDependencies/BundleExtensionHostHelperProcessDependencies.ts'
 import * as BundleMainProcessDependencies from '../BundleMainProcessDependencies/BundleMainProcessDependencies.ts'
 import * as BundleSharedProcessDependencies from '../BundleSharedProcessDependencies/BundleSharedProcessDependencies.ts'
+import * as CopyDependencies from '../CopyDependencies/CopyDependencies.ts'
+import * as NpmDependencies from '../NpmDependencies/NpmDependencies.ts'
 
-const copyExtensionHostHelperProcessFiles = async ({ cachePath }) => {
-  await BundleExtensionHostHelperProcessDependencies.bundleExtensionHostHelperProcessDependencies({
-    to: `${cachePath}/extension-host-helper-process`,
-    exclude: ['ws', '@lvce-editor/web-socket-server'],
-  })
+const electronVersionDependencyNames = new Set(['@electron/get', 'extract-zip'])
+
+const copyElectronVersionDependencies = async (cachePath) => {
+  const rawDependencies = await NpmDependencies.getNpmDependenciesRawJson('packages/main-process')
+  const dependencyPaths = []
+  const visit = (dependency, include = false) => {
+    const includeDependency = include || electronVersionDependencyNames.has(dependency.name)
+    if (includeDependency && dependency.path && dependency.name && !dependency.name.includes('@types')) {
+      dependencyPaths.push(dependency.path)
+    }
+    for (const child of Object.values(dependency.dependencies || {})) {
+      visit(child, includeDependency)
+    }
+  }
+  visit(rawDependencies)
+  await CopyDependencies.copyDependencies('packages/main-process', `${cachePath}/main-process`, dependencyPaths)
 }
 
 const copySharedProcessFiles = async ({ cachePath, arch, electronVersion, platform }) => {
@@ -40,12 +52,6 @@ export const bundleElectronAppDependencies = async ({
   platform,
   target,
 }) => {
-  console.time('copyExtensionHostHelperProcessFiles')
-  await copyExtensionHostHelperProcessFiles({
-    cachePath,
-  })
-  console.timeEnd('copyExtensionHostHelperProcessFiles')
-
   console.time('copySharedProcessFiles')
   await copySharedProcessFiles({
     cachePath,
@@ -64,4 +70,10 @@ export const bundleElectronAppDependencies = async ({
     bundleMainProcess,
   })
   console.timeEnd('copyMainProcessFiles')
+
+  if (bundleMainProcess) {
+    console.time('copyElectronVersionDependencies')
+    await copyElectronVersionDependencies(cachePath)
+    console.timeEnd('copyElectronVersionDependencies')
+  }
 }

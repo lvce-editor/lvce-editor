@@ -2,10 +2,9 @@ import * as ComputeCacheKey from '../ComputeCacheKey/ComputeCacheKey.ts'
 
 const locations = [
   '.nvmrc',
-  'lerna.json',
+  'package.json',
   'package-lock.json',
   'packages/build/package-lock.json',
-  'packages/extension-host-helper-process/package-lock.json',
   'packages/extension-host-worker-tests/package-lock.json',
   'packages/main-process/package-lock.json',
   'packages/renderer-worker/package-lock.json',

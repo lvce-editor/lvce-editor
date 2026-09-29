@@ -27,6 +27,8 @@ class MockWebSocket extends EventTarget {
   }
 
   send(): void {}
+
+  close(): void {}
 }
 
 beforeEach(() => {
@@ -83,6 +85,32 @@ test('removes event listeners before reconnecting', async () => {
   expect(listener).not.toHaveBeenCalled()
 })
 
+test('requests a fresh URL when reconnecting', async () => {
+  const getUrl = jest.fn(async () => `wss://remote.example.com/?ticket=${getUrl.mock.calls.length}`)
+  const webSocket = await ReconnectingWebSocket.createWithUrlFactory(getUrl)
+
+  MockWebSocket.instances[0].emitClose()
+  await jest.advanceTimersByTimeAsync(2000)
+
+  expect(webSocket.webSocket).toBe(MockWebSocket.instances[1])
+  expect(getUrl).toHaveBeenCalledTimes(2)
+})
+
+test('retries when refreshing a reconnect URL fails', async () => {
+  const getUrl = jest
+    .fn<() => Promise<string>>()
+    .mockResolvedValueOnce('wss://remote.example.com/?ticket=1')
+    .mockRejectedValueOnce(new Error('session refresh failed'))
+    .mockResolvedValueOnce('wss://remote.example.com/?ticket=2')
+  const webSocket = await ReconnectingWebSocket.createWithUrlFactory(getUrl)
+
+  MockWebSocket.instances[0].emitClose()
+  await jest.advanceTimersByTimeAsync(4000)
+
+  expect(webSocket.webSocket).toBe(MockWebSocket.instances[1])
+  expect(getUrl).toHaveBeenCalledTimes(3)
+})
+
 test('waits for the existing websocket to reconnect during startup', async () => {
   const ipcPromise = IpcParentWithWebSocket.create({
     type: 'shared-process',
@@ -95,4 +123,14 @@ test('waits for the existing websocket to reconnect during startup', async () =>
   const webSocket = await ipcPromise
   expect(MockWebSocket.instances).toHaveLength(2)
   expect(webSocket.webSocket).toBe(MockWebSocket.instances[1])
+})
+
+test('does not reconnect after being closed', async () => {
+  const webSocket = ReconnectingWebSocket.create('ws://localhost:3000')
+
+  webSocket.close()
+  MockWebSocket.instances[0].emitClose()
+  await jest.advanceTimersByTimeAsync(2000)
+
+  expect(MockWebSocket.instances).toHaveLength(1)
 })

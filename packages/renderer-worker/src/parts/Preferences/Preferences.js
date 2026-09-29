@@ -13,15 +13,15 @@ import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as SharedProcessCommandType from '../SharedProcessCommandType/SharedProcessCommandType.js'
 
 export const openSettingsJson = async () => {
-  await OpenUri.openUri('app://settings.json')
+  await OpenUri.openUri('app:///settings.json')
 }
 
 export const openSettingsUi = async () => {
-  await OpenUri.openUri('settings://')
+  await OpenUri.openUri('settings:///')
 }
 
 export const openKeyBindingsJson = async () => {
-  await OpenUri.openUri('app://keyBindings.json')
+  await OpenUri.openUri('app://keybindings.json')
 }
 
 // TODO command for opening workspace settings
@@ -44,15 +44,29 @@ const getPreferences = async () => {
   return preferences
 }
 
+const load = async () => {
+  const preferences = await getPreferences()
+  PreferencesState.setAll(preferences)
+}
+
 export const hydrate = async () => {
   try {
     // TODO should configuration be together with all other preferences (e.g. selecting color theme code is not needed on startup)
     // TODO probably not all preferences need to be kept in memory
-    const preferences = await getPreferences()
-    PreferencesState.setAll(preferences)
+    await load()
   } catch (error) {
     ErrorHandling.logError(error)
   }
+}
+
+export const reload = async () => {
+  try {
+    await load()
+  } catch (error) {
+    ErrorHandling.logError(error)
+    return
+  }
+  await GlobalEventBus.emitEvent('preferences.changed')
 }
 
 export const get = (key) => {
@@ -77,7 +91,7 @@ export const set = async (key, value) => {
     return
   }
   const content = Json.stringify(PreferencesState.getAll())
-  await FileSystem.writeFile('app://settings.json', content)
+  await FileSystem.writeFile('app:///settings.json', content)
 }
 
 export const update = async (settings) => {
@@ -85,14 +99,14 @@ export const update = async (settings) => {
   const content = Json.stringify(newSettings)
   PreferencesState.setAll(newSettings)
   if (!isTest()) {
-    await FileSystem.writeFile('app://settings.json', content)
+    await FileSystem.writeFile('app:///settings.json', content)
   }
   await GlobalEventBus.emitEvent('preferences.changed')
 }
 
 export const toggleAutoSave = async () => {
   const autoSave = PreferencesState.get('files.autoSave')
-  const nextAutoSave = autoSave === 'off' ? 'afterDelay' : 'off'
+  const nextAutoSave = autoSave === 'off' ? 'onFocusChange' : 'off'
   await update({ 'files.autoSave': nextAutoSave })
 }
 

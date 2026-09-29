@@ -16,10 +16,54 @@
   letter-spacing: var(--EditorLetterSpacing);
   font-feature-settings: var(--EditorFontFeatureSettings);
   tab-size: var(--EditorTabSize);
-  font-display: block;
   cursor: text;
   font-weight: var(--EditorFontWeight);
   display: flex;
+  position: relative;
+}
+
+.EditorBreadcrumbs {
+  align-items: center;
+  color: var(--EditorForeground, #cccccc);
+  contain: strict;
+  display: flex;
+  font-family: sans-serif;
+  font-size: 13px;
+  height: 22px;
+  inset: 0 0 auto;
+  line-height: 22px;
+  overflow: hidden;
+  padding: 0 8px;
+  position: absolute;
+  user-select: none;
+  white-space: nowrap;
+}
+
+.EditorBreadcrumb {
+  align-items: center;
+  display: inline-flex;
+  gap: 4px;
+  flex-shrink: 0;
+  max-width: 240px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.EditorBreadcrumbSymbol {
+  color: var(--EditorBreadcrumbSymbolForeground, #e0e0e0);
+}
+
+.EditorBreadcrumbSeparator {
+  --MaskIconSize: 14px;
+
+  color: var(--EditorBreadcrumbSeparatorForeground, #858585);
+  flex: 0 0 16px;
+  height: 16px;
+}
+
+.EditorBreadcrumbsOffset {
+  height: calc(100% - 22px);
+  margin-top: 22px;
 }
 
 .EditorContent {
@@ -60,9 +104,10 @@
 
 .EditorRow {
   display: block;
-  height: var(--EditorLineHeight);
-  line-height: var(--EditorLineHeight);
-  contain: strict;
+  flex: none;
+  height: var(--EditorRowHeight, var(--EditorLineHeight));
+  line-height: var(--EditorRowHeight, var(--EditorLineHeight));
+  contain: var(--EditorRowContain, strict);
 }
 
 .EditorRowHighlighted {
@@ -90,13 +135,24 @@
   bottom: 0;
   position: absolute;
   width: 14px;
+  pointer-events: none;
+  z-index: 1;
 }
 
 .ScrollBarDiagnostic {
-  height: 5px;
-  background: red;
-  width: 100%;
+  right: 1px;
+  width: 3px;
   position: absolute;
+  border-radius: 1px;
+  contain: strict;
+}
+
+.ScrollBarDiagnosticError {
+  background: var(--EditorErrorForeground, #f14c4c);
+}
+
+.ScrollBarDiagnosticWarning {
+  background: var(--EditorWarningForeground, #cca700);
 }
 
 .EditorInput {
@@ -132,6 +188,10 @@
   left: 0;
   pointer-events: none;
   background: var(--EditorSelectionBackground);
+}
+
+.SelectionUnfocused {
+  background: var(--EditorInactiveSelectionBackground, color-mix(in srgb, var(--EditorSelectionBackground) 50%, transparent));
 }
 
 .Token {
@@ -194,7 +254,9 @@
 .LineNumber,
 .DiffEditorLineNumber {
   color: var(--EditorLineNumberForeground, rgba(155, 162, 160, 0.3));
+  display: flex;
   flex-shrink: 0;
+  justify-content: flex-end;
   margin-right: 1px;
   height: var(--EditorLineHeight);
   text-align: right;
@@ -202,6 +264,13 @@
 
 .LineNumber {
   contain: content;
+  flex: none;
+  height: var(--EditorRowHeight, var(--EditorLineHeight));
+  position: relative;
+}
+
+.LineNumberActive {
+  color: var(--EditorLineNumberActiveForeground, rgba(155, 162, 160, 0.7));
 }
 
 .LineNumberLightBulb {
@@ -215,4 +284,12 @@
 
 .DiffEditorLineNumber {
   contain: strict;
+}
+
+.EditorBreadcrumbIcon {
+  --MaskIconSize: 16px;
+
+  flex: 0 0 16px;
+  height: 16px;
+  width: 16px;
 }

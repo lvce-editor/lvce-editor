@@ -48,7 +48,6 @@ jobs:
             { os: macos-26, arch: arm64 },
             { os: ubuntu-24.04, arch: x64 },
             { os: ubuntu-24.04, arch: arm64 },
-            { os: ubuntu-24.04, arch: armhf },
           ]
     runs-on: ${{ matrix.versions.os }}
     timeout-minutes: 80
@@ -73,7 +72,6 @@ jobs:
         with:
           path: '**/node_modules'
           key: ${{ runner.os }}-cacheNodeModules-${{ steps.nodeModulesCacheKey.outputs.value }}
-          restore-keys: ${{ runner.os }}-cacheNodeModules-
       - uses: actions/cache@v6
         id: electron-builder-cache
         with:
@@ -113,7 +111,7 @@ jobs:
         if: matrix.versions.os == 'windows-2025'
         with:
           path: '~\AppData\Local\electron-builder'
-          key: ${{ runner.os }}-electron-builder-${{ hashFiles('packages/build/package-lock.json') }}
+          key: ${{ runner.os }}-electron-builder-${{ hashFiles('package-lock.json') }}
       - name: Install Cloudsmith CLI
         if: matrix.versions.os == 'ubuntu-24.04'
         uses: cloudsmith-io/cloudsmith-cli-action@159f1619275d5d3147f059c3cc110938ec221d16
@@ -170,28 +168,6 @@ jobs:
       - name: Publish Electron App (deb, arm64) to Cloudsmith
         if: matrix.versions.os == 'ubuntu-24.04' && matrix.versions.arch == 'arm64'
         run: cloudsmith push deb lvce-editor/lvce-editor-2/any-distro/any-version "${{ env.ASSET_DEB_ARM64 }}"
-      - name: Build Electron App (deb, armhf)
-        if: matrix.versions.os == 'ubuntu-24.04' && matrix.versions.arch == 'armhf'
-        run: npm run build:electron:deb:armhf -- --product=lvce
-        env:
-          HIGHEST_COMPRESSION: 1
-      - name: Rename Electron App (deb, armhf)
-        if: matrix.versions.os == 'ubuntu-24.04' && matrix.versions.arch == 'armhf'
-        shell: bash
-        run: |
-          staging="lvce-${{ needs.create-release.outputs.rg_version }}_armhf.deb"
-          mv "packages/build/.tmp/releases/lvce-armhf.deb" "$staging"
-          echo "ASSET_DEB_ARMHF=$staging" >> $GITHUB_ENV
-      - name: Release Electron App (deb, armhf)
-        uses: actions/upload-release-asset@v1.0.1
-        if: matrix.versions.os == 'ubuntu-24.04' && matrix.versions.arch == 'armhf'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ needs.create-release.outputs.upload_url }}
-          asset_path: ${{ env.ASSET_DEB_ARMHF }}
-          asset_name: ${{ env.ASSET_DEB_ARMHF }}
-          asset_content_type: application/octet-stream
       # - name: Build Electron App (Macos dmg, x64)
       #   if: matrix.versions.os == 'macos-26'
       #   run: npm run build:electron:mac:x64 -- --product=lvce
@@ -212,45 +188,38 @@ jobs:
       #     asset_path: ${{ env.ASSET_DMG_X64 }}
       #     asset_name: ${{ env.ASSET_DMG_X64 }}
       #     asset_content_type: application/octet-stream
-      - name: Configure optional macOS signing
-        id: macos-signing
+      - name: Prepare Apple signing credentials
         if: matrix.versions.os == 'macos-26' && matrix.versions.arch == 'arm64'
         shell: bash
         env:
-          APPLE_API_KEY_BASE64: ${{ secrets.APPLE_API_KEY }}
+          APPLE_API_KEY_BASE64: ${{ secrets.APPLE_API_KEY_BASE64 }}
           APPLE_API_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
           APPLE_API_ISSUER: ${{ secrets.APPLE_API_ISSUER }}
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
-          MAC_CSC_LINK: ${{ secrets.MAC_CSC_LINK }}
-          MAC_CSC_KEY_PASSWORD: ${{ secrets.MAC_CSC_KEY_PASSWORD }}
-        run: |
-          for secret in APPLE_API_KEY_BASE64 APPLE_API_KEY_ID APPLE_API_ISSUER APPLE_TEAM_ID MAC_CSC_LINK MAC_CSC_KEY_PASSWORD; do
-            if [ -z "${!secret}" ]; then
-              echo "macOS signing is disabled because one or more signing secrets are unavailable."
-              echo "enabled=false" >> "$GITHUB_OUTPUT"
-              exit 0
-            fi
-          done
-          api_key_path="$RUNNER_TEMP/AuthKey_${APPLE_API_KEY_ID}.p8"
-          printf '%s' "$APPLE_API_KEY_BASE64" | base64 -D > "$api_key_path"
-          chmod 600 "$api_key_path"
-          echo "APPLE_API_KEY_PATH=$api_key_path" >> $GITHUB_ENV
-          echo "enabled=true" >> "$GITHUB_OUTPUT"
-      - name: Build Electron App (Macos dmg, arm64, unsigned)
-        if: matrix.versions.os == 'macos-26' && matrix.versions.arch == 'arm64' && steps.macos-signing.outputs.enabled != 'true'
+          CSC_LINK: ${{ secrets.CSC_LINK }}
+          CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
+        run: bash packages/build/scripts/github-actions/prepare-macos-signing.sh required
+      - name: Build signed Electron App (Macos dmg, arm64)
+        if: matrix.versions.os == 'macos-26' && matrix.versions.arch == 'arm64'
         run: npm run build:electron:mac:arm64 -- --product=lvce
         env:
-          CSC_IDENTITY_AUTO_DISCOVERY: 'false'
-      - name: Build Electron App (Macos dmg, arm64, signed)
-        if: matrix.versions.os == 'macos-26' && matrix.versions.arch == 'arm64' && steps.macos-signing.outputs.enabled == 'true'
-        run: npm run build:electron:mac:arm64 -- --product=lvce
-        env:
-          CSC_LINK: ${{ secrets.MAC_CSC_LINK }}
-          CSC_KEY_PASSWORD: ${{ secrets.MAC_CSC_KEY_PASSWORD }}
+          CSC_KEYCHAIN: ${{ env.CSC_KEYCHAIN_PATH }}
           APPLE_API_KEY: ${{ env.APPLE_API_KEY_PATH }}
           APPLE_API_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
           APPLE_API_ISSUER: ${{ secrets.APPLE_API_ISSUER }}
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+      - name: Notarize macOS installer
+        if: matrix.versions.os == 'macos-26' && matrix.versions.arch == 'arm64'
+        shell: bash
+        env:
+          APPLE_API_KEY: ${{ env.APPLE_API_KEY_PATH }}
+          APPLE_API_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
+          APPLE_API_ISSUER: ${{ secrets.APPLE_API_ISSUER }}
+        run: bash packages/build/scripts/github-actions/notarize-macos-dmg.sh
+      - name: Verify signed and notarized macOS installer
+        if: matrix.versions.os == 'macos-26' && matrix.versions.arch == 'arm64'
+        shell: bash
+        run: bash packages/build/scripts/github-actions/verify-macos-dmg.sh
       - name: Rename Electron App (Macos dmg, arm64)
         if: matrix.versions.os == 'macos-26' && matrix.versions.arch == 'arm64'
         shell: bash
@@ -312,6 +281,10 @@ jobs:
           asset_path: ${{ env.ASSET_WINDOWS_EXE_ARM64 }}
           asset_name: ${{ env.ASSET_WINDOWS_EXE_ARM64 }}
           asset_content_type: application/octet-stream
+      - name: Test staged Windows installer
+        if: matrix.versions.os == 'windows-2025'
+        shell: pwsh
+        run: ./packages/build/scripts/test-windows-staging.ps1 -Installer '${{ env.ASSET_WINDOWS_EXE_X64 || env.ASSET_WINDOWS_EXE_ARM64 }}' -Architecture '${{ matrix.versions.arch }}'
       - name: Build Electron App (AppImage, x64)
         if: matrix.versions.os == 'ubuntu-24.04' && matrix.versions.arch == 'x64'
         run: npm run build:electron:app-image:x64 -- --product=lvce
@@ -353,8 +326,6 @@ jobs:
         with:
           node-version-file: '.nvmrc'
           registry-url: 'https://registry.npmjs.org'
-      - run: npm publish --access public
-        working-directory: ./packages/build/.tmp/server/extension-host-helper-process
       - run: npm publish --access public
         working-directory: ./packages/build/.tmp/server/static-server
       - run: npm publish --access public

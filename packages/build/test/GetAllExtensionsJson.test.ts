@@ -116,3 +116,11 @@ test('excludes extensions that are not web compatible', async () => {
 
   expect(extensions.some((item) => item.id === 'builtin.git')).toBe(false)
 })
+test('includes the built-in Notebook extension disabled by default', async () => {
+  const extensions = await getAllExtensionsJson({ commitHash: 'test-commit', pathPrefix: '/test-prefix' })
+  expect(extensions.find((item) => item.id === 'builtin.notebook')).toMatchObject({
+    builtin: true,
+    disabled: true,
+    path: '/test-prefix/test-commit/extensions/builtin.notebook',
+  })
+})

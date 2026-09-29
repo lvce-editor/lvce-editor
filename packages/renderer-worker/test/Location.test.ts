@@ -92,3 +92,15 @@ test('setPathName - falls back to renderer process before initialization', async
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
   expect(RendererProcess.invoke).toHaveBeenCalledWith('Location.setPathName', '/')
 })
+
+test('setWorkspaceUri updates the renderer URL once', async () => {
+  // @ts-ignore
+  RendererProcess.invoke.mockResolvedValue(undefined)
+  Location.initialize('lvce-oss://-/?workspace=file%3A%2F%2F%2Ftmp%2Flocal')
+
+  await Location.setWorkspaceUri('remote-ssh://user@example.com/home')
+  await Location.setWorkspaceUri('remote-ssh://user@example.com/home')
+
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Location.setWorkspaceUri', 'remote-ssh://user@example.com/home')
+})

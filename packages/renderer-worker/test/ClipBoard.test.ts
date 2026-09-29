@@ -43,6 +43,15 @@ test('readMemoryImage', async () => {
   expect(ClipBoardWorker.invoke).toHaveBeenCalledWith('ClipBoard.readMemoryImage')
 })
 
+test('readImage', async () => {
+  const image = new Blob(['image'], { type: 'image/png' })
+  // @ts-ignore
+  ClipBoardWorker.invoke.mockResolvedValue(image)
+
+  await expect(ClipBoard.readImage()).resolves.toBe(image)
+  expect(ClipBoardWorker.invoke).toHaveBeenCalledWith('ClipBoard.readImage')
+})
+
 test.skip('readText', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {
@@ -190,7 +199,12 @@ test.skip('writeImage', async () => {
 
 test('writeImageUrl fetches and writes the image blob', async () => {
   const blob = new Blob(['image'], { type: 'image/png' })
-  const fetchImage = jest.fn<typeof fetch>(async () => new Response(blob))
+  const fetchImage = jest.fn<typeof fetch>(async () => {
+    return {
+      blob: async () => blob,
+      ok: true,
+    } as Response
+  })
   // @ts-ignore
   ClipBoardWorker.invoke.mockResolvedValue(undefined)
 

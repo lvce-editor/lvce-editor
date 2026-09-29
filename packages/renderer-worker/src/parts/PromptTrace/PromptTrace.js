@@ -29,7 +29,7 @@ export const createId = () => {
 }
 
 export const write = async (trace) => {
-  const separator = await FileSystemDisk.getPathSeparator()
+  const separator = '/'
   const directory = join(separator, trace.cwd, '.agent-logs')
   const path = join(separator, directory, `trace-${trace.id}.json`)
   await FileSystemDisk.mkdir(directory)

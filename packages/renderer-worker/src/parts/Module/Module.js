@@ -6,6 +6,8 @@ export const load = (moduleId) => {
       return import('../About/About.ipc.js')
     case ModuleId.Ajax:
       return import('../Ajax/Ajax.ipc.js')
+    case ModuleId.SimpleBrowserWorkflow:
+      return import('../SimpleBrowserWorkflow/SimpleBrowserWorkflow.ipc.js')
     case ModuleId.Audio:
       return import('../Audio/Audio.ipc.js')
     case ModuleId.AutoUpdater:
@@ -42,6 +44,10 @@ export const load = (moduleId) => {
       return import('../ContentTracing/ContentTracing.ipc.js')
     case ModuleId.ContextMenu:
       return import('../ContextMenu/ContextMenu.ipc.js')
+    case ModuleId.ComponentState:
+      return import('../ComponentState/ComponentState.ipc.js')
+    case ModuleId.Application:
+      return import('../Application/Application.ipc.js')
     case ModuleId.Debug:
       return import('../Debug/Debug.ipc.js')
     case ModuleId.DebugSharedProcess:
@@ -221,12 +227,18 @@ export const load = (moduleId) => {
       return import('../ExtensionManagement/ExtensionManagement.ipc.js')
     case ModuleId.Markdown:
       return import('../Markdown/Markdown.ipc.js')
+    case ModuleId.TerminalTransfer:
+      return import('../TerminalTransfer/TerminalTransfer.ipc.js')
     case ModuleId.MeasureTextHeight:
       return import('../MeasureTextHeight/MeasureTextHeight.ipc.js')
     case ModuleId.FileSystemMemory:
       return import('../FileSystem/FileSystemMemory.ipc.js')
     case ModuleId.WebSocketCapability:
       return import('../WebSocketCapability/WebSocketCapability.ipc.js')
+    case ModuleId.ExtensionHotReload:
+      return import('../ExtensionHotReload/ExtensionHotReload.ipc.js')
+    case ModuleId.RevealInExplorer:
+      return import('../RevealInExplorer/RevealInExplorer.ipc.ts')
     default:
       throw new Error(`module ${moduleId} not found`)
   }

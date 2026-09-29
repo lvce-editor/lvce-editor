@@ -19,12 +19,14 @@ const getObjectDependencies = (obj) => {
   return [obj, ...Object.values(obj.dependencies).flatMap(getObjectDependencies)]
 }
 
-export const getServerIsStaticReplacement = (commitHash: string): string => `const isStatic = (url) => {
+export const getServerIsStaticReplacement = (commitHash: string): string => `const hasLinkedExtensions = argvSliced.some((arg) => arg === '--link' || arg.startsWith('--link='))
+
+const isStatic = (url) => {
   if (url === '/' || url.startsWith('/?')) {
-    return true
+    return !hasLinkedExtensions
   }
   if (url === '/index.html' || url.startsWith('/index.html?')) {
-    return true
+    return !hasLinkedExtensions
   }
   if (url.startsWith('/${commitHash}')) {
     return true
@@ -46,6 +48,7 @@ const copyServerFiles = async ({ commitHash, product }) => {
     from: 'packages/server',
     to: 'packages/build/.tmp/server/server',
     ignore: ['tsconfig.json', 'package-lock.json'],
+    dereference: true,
   })
   await Copy.copyFile({
     from: 'LICENSE',
@@ -64,7 +67,7 @@ const copyServerFiles = async ({ commitHash, product }) => {
   await Replace.replace({
     path: 'packages/build/.tmp/server/server/src/server.js',
     occurrence: `const sharedProcessPath = join(ROOT, 'packages', 'shared-process', 'src', 'sharedProcessMain.ts')`,
-    replacement: `const sharedProcessUrl = new URL('src/sharedProcessMain.js', import.meta.resolve('@lvce-editor/shared-process')).toString()
+    replacement: `const sharedProcessUrl = new URL('../../shared-process/src/sharedProcessMain.js', import.meta.url).toString()
   const sharedProcessPath = fileURLToPath(sharedProcessUrl)`,
   })
   await Replace.replace({
@@ -119,7 +122,7 @@ const copyServerFiles = async ({ commitHash, product }) => {
   await Replace.replace({
     path: 'packages/build/.tmp/server/server/src/server.js',
     occurrence: `const staticServerPath = join(ROOT, 'packages', 'static-server', 'src', 'static-server.ts')`,
-    replacement: `const staticServerPath = fileURLToPath(import.meta.resolve('@lvce-editor/static-server'))`,
+    replacement: `const staticServerPath = fileURLToPath(new URL('../../static-server/dist/static-server.js', import.meta.url))`,
   })
 
   const content = getThirdPartyNoticesContent({ commitHash })
@@ -129,24 +132,11 @@ const copyServerFiles = async ({ commitHash, product }) => {
   })
 }
 
-const copyExtensionHostHelperProcessFiles = async () => {
-  await Copy.copy({
-    from: 'packages/extension-host-helper-process',
-    to: 'packages/build/.tmp/server/extension-host-helper-process',
-    ignore: ['tsconfig.json', 'node_modules', 'distmin', 'example', 'test', 'package-lock.json'],
-  })
-  await Copy.copyFile({
-    from: 'LICENSE',
-    to: 'packages/build/.tmp/server/extension-host-helper-process/LICENSE',
-  })
-}
-
 const sortObject = (object) => {
   return JSON.parse(JSON.stringify(object, Object.keys(object).sort()))
 }
 
 const serverPackageJsonFiles = [
-  'packages/build/.tmp/server/extension-host-helper-process/package.json',
   'packages/build/.tmp/server/server/package.json',
   'packages/build/.tmp/server/shared-process/package.json',
   'packages/build/.tmp/server/static-server/package.json',
@@ -170,19 +160,20 @@ export const setVersionsAndDependencies = async ({ version, files = serverPackag
     }
     if (json.name === '@lvce-editor/shared-process') {
       json.dependencies ||= {}
-      json.dependencies['@lvce-editor/extension-host-helper-process'] = version
       const processExplorerVersion = json.optionalDependencies?.['@lvce-editor/process-explorer']
       if (processExplorerVersion) {
         json.dependencies['@lvce-editor/process-explorer'] = processExplorerVersion
         delete json.optionalDependencies['@lvce-editor/process-explorer']
       }
+      const fileWatcherExplorerVersion = json.optionalDependencies?.['@lvce-editor/file-watcher-explorer']
+      if (fileWatcherExplorerVersion) {
+        json.dependencies['@lvce-editor/file-watcher-explorer'] = fileWatcherExplorerVersion
+        delete json.optionalDependencies['@lvce-editor/file-watcher-explorer']
+      }
       json.optionalDependencies ||= {}
     }
     if (json.dependencies && json.dependencies['@lvce-editor/shared-process']) {
       json.dependencies['@lvce-editor/shared-process'] = version
-    }
-    if (json.dependencies && json.dependencies['@lvce-editor/extension-host-helper-process']) {
-      json.dependencies['@lvce-editor/extension-host-helper-process'] = version
     }
     if (json.dependencies) {
       json.dependencies = sortObject(json.dependencies)
@@ -236,10 +227,6 @@ export const build = async ({ product }) => {
     to: 'packages/build/.tmp/server/shared-process',
   })
   console.timeEnd('copySharedProcessFiles')
-
-  console.time('copyExtensionHostHelperProcessFiles')
-  await copyExtensionHostHelperProcessFiles()
-  console.timeEnd('copyExtensionHostHelperProcessFiles')
 
   console.time('setVersions')
   await setVersionsAndDependencies({ version })

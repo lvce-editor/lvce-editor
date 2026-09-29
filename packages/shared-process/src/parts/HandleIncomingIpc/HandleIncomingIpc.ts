@@ -1,5 +1,6 @@
 import * as ApplyIncomingIpcResponse from '../ApplyIncomingIpcResponse/ApplyIncomingIpcResponse.ts'
 import * as Assert from '../Assert/Assert.ts'
+import * as FileWatcherExplorer from '../FileWatcherExplorer/FileWatcherExplorer.ts'
 import * as HandleIncomingIpcMessagePort from '../HandleIncomingIpcMessagePort/HandleIncomingIpcMessagePort.ts'
 import * as HandleIncomingIpcWebSocket from '../HandleIncomingIpcWebSocket/HandleIncomingIpcWebSocket.ts'
 import * as HandleIpcModule from '../HandleIpcModule/HandleIpcModule.ts'
@@ -39,13 +40,18 @@ export const handleIncomingIpc = async (ipcId: any, handle: any, message: any): 
   if (!ipcAndResponse) {
     return
   }
-  const { response, target } = ipcAndResponse
+  const { complete, release, response, target } = ipcAndResponse
   const error = await ApplyIncomingIpcResponse.applyIncomingIpcResponse(target, response, ipcId)
+  complete?.()
   if (!error) {
     return
   }
+  release?.()
   if (ipcId === IpcId.ProcessExplorer) {
     ProcessExplorer.decreaseRefCount()
+  }
+  if (ipcId === IpcId.FileWatcherExplorer) {
+    FileWatcherExplorer.decreaseRefCount()
   }
   console.error(error)
 }

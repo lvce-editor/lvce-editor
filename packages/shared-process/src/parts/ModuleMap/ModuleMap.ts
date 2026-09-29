@@ -7,8 +7,13 @@ export const getModuleId = (commandId: any): any => {
       return ModuleId.TextDocument
     case 'AttachDebugger.attachDebugger':
       return ModuleId.AttachDebugger
+    case 'AutoUpdater.checkWindowsUpdate':
     case 'AutoUpdater.getAutoUpdateType':
     case 'AutoUpdater.getLatestVersion':
+    case 'AutoUpdater.getPlatform':
+    case 'AutoUpdater.restartMacUpdate':
+    case 'AutoUpdater.stageMacUpdate':
+    case 'AutoUpdater.writeLog':
       return ModuleId.AutoUpdater
     case 'AutoUpdaterAppImage.downloadUpdate':
     case 'AutoUpdaterAppImage.installAndRestart':
@@ -16,11 +21,11 @@ export const getModuleId = (commandId: any): any => {
     case 'AutoUpdaterWindowsNsis.downloadUpdate':
     case 'AutoUpdaterWindowsNsis.installAndRestart':
       return ModuleId.AutoUpdaterWindowsNsis
+    case 'BrowserFind.find':
+    case 'BrowserFind.stop':
+      return ModuleId.BrowserFind
     case 'BulkReplacement.applyBulkReplacement':
       return ModuleId.BulkReplacement
-    case 'ChromeCookieImport.getInfo':
-    case 'ChromeCookieImport.importCookies':
-      return ModuleId.ChromeCookieImport
     case 'ChromeExtension.install':
     case 'ChromeExtension.uninstall':
       return ModuleId.ChromeExtension
@@ -52,6 +57,7 @@ export const getModuleId = (commandId: any): any => {
     case 'ElectronContentTracing.startRecording':
     case 'ElectronContentTracing.stopRecording':
       return ModuleId.ElectronContentTracing
+    case 'ElectronContextMenu.copyImage':
     case 'ElectronContextMenu.openContextMenu':
       return ModuleId.ElectronContextMenu
     case 'ElectronDeveloper.getPerformanceEntries':
@@ -76,10 +82,6 @@ export const getModuleId = (commandId: any): any => {
     case 'ElectronProcess.writeStderr':
     case 'ElectronProcess.writeStdout':
       return ModuleId.ElectronProcess
-    case 'ElectronSafeStorage.decryptString':
-    case 'ElectronSafeStorage.encryptString':
-    case 'ElectronSafeStorage.isEncryptionAvailable':
-      return ModuleId.ElectronSafeStorage
     case 'ElectronWindow.close':
     case 'ElectronWindow.focus':
     case 'ElectronWindow.getZoom':
@@ -88,8 +90,10 @@ export const getModuleId = (commandId: any): any => {
     case 'ElectronWindow.openNew':
     case 'ElectronWindow.openNewWithUri':
     case 'ElectronWindow.reload':
+    case 'ElectronWindow.setBrowserFullWidthGestureEnabled':
     case 'ElectronWindow.toggleDevtools':
     case 'ElectronWindow.toggleFullScreen':
+    case 'ElectronWindow.toggleMaximize':
     case 'ElectronWindow.unmaximize':
     case 'ElectronWindow.zoomIn':
     case 'ElectronWindow.zoomOut':
@@ -118,6 +122,7 @@ export const getModuleId = (commandId: any): any => {
     case 'ExtensionManagement.getAllExtensions':
     case 'ExtensionManagement.getExtensions':
     case 'ExtensionManagement.getExtensionsEtag':
+    case 'ExtensionManagement.getLinkedExtensionDevelopmentConfig':
     case 'ExtensionManagement.install':
     case 'ExtensionManagement.uninstall':
       return ModuleId.ExtensionManagement
@@ -126,7 +131,6 @@ export const getModuleId = (commandId: any): any => {
     case 'FileSystem.createFile':
     case 'FileSystem.createFolder':
     case 'FileSystem.ensureFile':
-    case 'FileSystem.getPathSeparator':
     case 'FileSystem.getRealUri':
     case 'FileSystem.mkdir':
     case 'FileSystem.readDirWithFileTypes':
@@ -140,7 +144,6 @@ export const getModuleId = (commandId: any): any => {
     case 'FileSystemDisk.chmod':
     case 'FileSystemDisk.copy':
     case 'FileSystemDisk.getFolderSize':
-    case 'FileSystemDisk.getPathSeparator':
     case 'FileSystemDisk.mkdir':
     case 'FileSystemDisk.readDirWithFileTypes':
     case 'FileSystemDisk.readFile':
@@ -154,9 +157,8 @@ export const getModuleId = (commandId: any): any => {
     case 'FileWatcher.watch':
     case 'FileWatcher.watchFile2':
       return ModuleId.FileWatcher
-    case 'FirefoxCookieImport.getInfo':
-    case 'FirefoxCookieImport.importCookies':
-      return ModuleId.FirefoxCookieImport
+    case 'FileWatcherExplorer.decreaseRefCount':
+      return ModuleId.FileWatcherExplorer
     case 'GetElectronFileResponse.getElectronFileResponse':
     case 'GetElectronFileResponse.resolveElectronFileUri':
       return ModuleId.GetElectronFileResponse
@@ -181,14 +183,17 @@ export const getModuleId = (commandId: any): any => {
       return ModuleId.HandleMessagePortForAuthProcess
     case 'HandleMessagePortForClipBoardProcess.handleMessagePortForClipBoardProcess':
       return ModuleId.HandleMessagePortForClipBoardProcess
+    case 'HandleMessagePortForCookieImportProcess.handleMessagePortForCookieImportProcess':
+      return ModuleId.HandleMessagePortForCookieImportProcess
     case 'HandleMessagePortForEmbedsProcess.handleEmbedsProcessIpcClosed':
     case 'HandleMessagePortForEmbedsProcess.handleMessagePortForEmbedsProcess':
       return ModuleId.HandleMessagePortForEmbedsProcess
-    case 'HandleMessagePortForExtensionHostHelperProcess.handleMessagePortForExtensionHostHelperProcess':
-    case 'HandleMessagePortForExtensionHostHelperProcess.handlePreloadedMessagePortForExtensionHostHelperProcess':
-      return ModuleId.HandleMessagePortForExtensionHostHelperProcess
+    case 'HandleMessagePortForExtensionNodeProcess.handleMessagePortForExtensionNodeProcess':
+      return ModuleId.HandleMessagePortForExtensionNodeProcess
     case 'HandleMessagePortForFileSystemProcess.handleMessagePortForFileSystemProcess':
       return ModuleId.HandleMessagePortForFileSystemProcess
+    case 'HandleMessagePortForFileWatcherExplorer.handleMessagePortForFileWatcherExplorer':
+      return ModuleId.HandleMessagePortForFileWatcherExplorer
     case 'HandleMessagePortForProcessExplorer.handleMessagePortForProcessExplorer':
       return ModuleId.HandleMessagePortForProcessExplorer
     case 'HandleMessagePortForSearchProcess.handleMessagePortForSearchProcess':
@@ -197,12 +202,8 @@ export const getModuleId = (commandId: any): any => {
       return ModuleId.HandleMessagePortForTerminalProcess
     case 'HandleNodeMessagePort.handleNodeMessagePort':
       return ModuleId.HandleNodeMessagePort
-    case 'HandleRemoteRequest.handleRemoteRequest':
-      return ModuleId.HandleRemoteRequest
     case 'HandleRequest.handleRequest':
       return ModuleId.HandleRequest
-    case 'HandleRequestTest.handleRequestTest':
-      return ModuleId.HandleRequestTest
     case 'HandleWebSocket.handleWebSocket':
       return ModuleId.HandleWebSocket
     case 'HandleWindowAllClosed.handleWindowAllClosed':
@@ -219,6 +220,7 @@ export const getModuleId = (commandId: any): any => {
     case 'LanguageServer.diagnostic':
     case 'LanguageServer.dispose':
     case 'LanguageServer.disposeAll':
+    case 'LanguageServer.documentSymbols':
     case 'LanguageServer.format':
     case 'LanguageServer.references':
       return ModuleId.LanguageServer
@@ -285,20 +287,24 @@ export const getModuleId = (commandId: any): any => {
     case 'ProcessId.getMainProcessId':
     case 'ProcessId.getSharedProcessId':
       return ModuleId.ProcessId
+    case 'PtyHost.release':
+      return ModuleId.PtyHost
     case 'RebuildNodePty.rebuildNodePty':
       return ModuleId.RebuildNodePty
     case 'RecentlyOpened.addPath':
       return ModuleId.RecentlyOpened
+    case 'RemoteCli.open':
+    case 'RemoteCli.waitForOpenRequest':
+      return ModuleId.RemoteCli
     case 'Screen.getBounds':
     case 'Screen.getHeight':
     case 'Screen.getWidth':
       return ModuleId.Screen
-    case 'SecretStorage.delete':
-    case 'SecretStorage.get':
-    case 'SecretStorage.store':
-      return ModuleId.SecretStorage
     case 'SendMessagePortToMainProcess.sendMessagePortToMainProcess':
       return ModuleId.SendMessagePortToMainProcess
+    case 'ShellCommand.getMenuEntries':
+    case 'ShellCommand.install':
+      return ModuleId.ShellCommand
     case 'TemporaryMessagePort.getPortTuple2':
     case 'TemporaryMessagePort.getPortTuple3':
     case 'TemporaryMessagePort.handlePorts':
@@ -319,6 +325,7 @@ export const getModuleId = (commandId: any): any => {
     case 'WebViewServer.setInfo2':
     case 'WebViewServer.start':
       return ModuleId.WebViewServer
+    case 'Workspace.getGitRemote':
     case 'Workspace.getHomeDir':
     case 'Workspace.resolveRoot':
       return ModuleId.Workspace

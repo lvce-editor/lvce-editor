@@ -16,6 +16,14 @@ export const getChangedFiles = (providerId) => {
   return executeProvider(providerId, 'executeSourceControlGetChangedFiles')
 }
 
+export const getCurrentBranch = (providerId, path) => {
+  return executeProvider(providerId, 'executeSourceControlGetCurrentBranch', path)
+}
+
+export const getDefaultCommitMessage = (providerId, path) => {
+  return executeProvider(providerId, 'executeSourceControlGetDefaultCommitMessage', path)
+}
+
 export const generateCommitMessage = (providerId) => {
   return executeProvider(providerId, 'executeSourceControlGenerateCommitMessage')
 }
@@ -53,3 +61,7 @@ export const getEnabledProviderIds = (scheme, root) => {
 }
 
 export const getIconDefinitions = () => []
+
+export const getProgress = (providerId) => {
+  return executeProvider(providerId, 'executeSourceControlGetProgress')
+}

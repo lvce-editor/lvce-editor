@@ -2,6 +2,7 @@ import { chmod, readFile, readdir, rm, stat, writeFile } from 'fs/promises'
 import { join } from 'path'
 import * as BundleJs from '../BundleJsRollup/BundleJsRollup.ts'
 import * as Copy from '../Copy/Copy.ts'
+import * as CopySharedProcessWorkerManifest from '../CopySharedProcessWorkerManifest/CopySharedProcessWorkerManifest.ts'
 import * as JsonFile from '../JsonFile/JsonFile.ts'
 import * as Path from '../Path/Path.ts'
 import * as Platform from '../Platform/Platform.ts'
@@ -91,6 +92,7 @@ export const bundleSharedProcess = async ({
     to: `${cachePath}/package.json`,
   })
   await transpileTypescriptDirectory(`${cachePath}/src`)
+  await CopySharedProcessWorkerManifest.copySharedProcessWorkerManifest(cachePath)
   await Replace.replace({
     path: `${cachePath}/src/parts/PreloadUrl/PreloadUrl.js`,
     occurrence: `join(Root.root, 'packages', 'shared-process', 'node_modules', '@lvce-editor', 'preload', 'src', 'index.js')`,
@@ -148,13 +150,6 @@ export const getExtraHeaders = ({ pathName, fileExtension }) => {
     path: `${cachePath}/src/parts/Platform/Platform.js`,
     occurrence: `export const isProduction = false`,
     replacement: `export const isProduction = true`,
-  })
-  await WriteFile.writeFile({
-    to: `${cachePath}/src/parts/AddCustomPathsToIndexHtml/AddCustomPathsToIndexHtml.js`,
-    content: `export const addCustomPathsToIndexHtml = async (content) => {
-    return content
-}
-`,
   })
   if (isArchLinux) {
     await Replace.replace({
@@ -226,10 +221,6 @@ export const getBuiltinExtensionsPath = () => {
     })
   }
   if (target === 'server') {
-    await Copy.copyFile({
-      from: 'packages/renderer-worker/src/parts/Workers/Workers.json',
-      to: `${cachePath}/src/parts/Workers/Workers.json`,
-    })
     await Replace.replace({
       path: `${cachePath}/src/parts/ExportStatic/ExportStatic.js`,
       occurrence: `../../../../renderer-worker/src/parts/Workers/Workers.json`,
@@ -271,20 +262,26 @@ export const getBuiltinExtensionsPath = () => {
       replacement: `const isElectron = false`,
     })
     await Replace.replace({
-      path: `${cachePath}/src/parts/PlatformPaths/PlatformPaths.js`,
-      occurrence: `export const getExtensionHostHelperProcessPath = async () => {
-  return Path.join(Root.root, 'packages', 'extension-host-helper-process', 'src', 'extensionHostHelperProcessMain.js')
-}
+      path: `${cachePath}/src/parts/CookieImportProcessPath/CookieImportProcessPath.js`,
+      occurrence: `import * as Path from '../Path/Path.js'
+import * as Root from '../Root/Root.js'
+
+export const cookieImportProcessPath = Path.join(
+  Root.root,
+  'packages',
+  'shared-process',
+  'node_modules',
+  '@lvce-editor',
+  'cookie-import-view',
+  'dist',
+  'cookieImportProcessMain.js',
+)
 `,
-      replacement: `export const getExtensionHostHelperProcessPath = async () => {
-  const { extensionHostHelperProcessPath } = await import(
-    '@lvce-editor/extension-host-helper-process'
-  )
-  return extensionHostHelperProcessPath
-}
+      replacement: `import * as ResolveBin from '../ResolveBin/ResolveBin.js'
+
+export const cookieImportProcessPath = ResolveBin.resolveBin('@lvce-editor/cookie-import-view')
 `,
     })
-
     await Replace.replace({
       path: `${cachePath}/src/parts/SearchProcessPath/SearchProcessPath.js`,
       occurrence: `import * as Path from '../Path/Path.js'
@@ -442,6 +439,27 @@ export const processExplorerPath = Path.join(
       replacement: `import * as ResolveBin from '../ResolveBin/ResolveBin.js'
 
 export const processExplorerPath = ResolveBin.resolveBin('@lvce-editor/process-explorer')
+`,
+    })
+    await Replace.replace({
+      path: `${cachePath}/src/parts/FileWatcherExplorerPath/FileWatcherExplorerPath.js`,
+      occurrence: `import * as Path from '../Path/Path.js'
+import * as Root from '../Root/Root.js'
+
+export const fileWatcherExplorerPath = Path.join(
+  Root.root,
+  'packages',
+  'shared-process',
+  'node_modules',
+  '@lvce-editor',
+  'file-watcher-explorer',
+  'dist',
+  'index.js',
+)
+`,
+      replacement: `import * as ResolveBin from '../ResolveBin/ResolveBin.js'
+
+export const fileWatcherExplorerPath = ResolveBin.resolveBin('@lvce-editor/file-watcher-explorer')
 `,
     })
     await Copy.copyFile({

@@ -1,9 +1,11 @@
+import * as Command from '../Command/Command.js'
 import * as NameAnonymousFunction from '../NameAnonymousFunction/NameAnonymousFunction.js'
 import * as ProblemsWorker from '../ProblemsWorker/ProblemsWorker.ts'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
 interface ProblemsCommandDependencies {
+  readonly clearProblemsSummary?: () => Promise<unknown>
   readonly getState: () => ProblemsViewState
   readonly invoke: (command: string, ...args: readonly unknown[]) => Promise<unknown>
 }
@@ -17,6 +19,7 @@ interface ProblemsViewState {
 type ProblemsCommand = (state: ProblemsViewState, ...args: readonly unknown[]) => Promise<ProblemsViewState>
 
 const defaultDependencies: ProblemsCommandDependencies = {
+  clearProblemsSummary: () => Command.execute('Layout.clearProblemsSummary'),
   getState: () => ViewletStates.getState(ViewletModuleId.Problems) as ProblemsViewState,
   invoke: ProblemsWorker.invoke,
 }
@@ -26,10 +29,13 @@ const areActionsEqual = (oldActionsDom: readonly unknown[] | undefined, newActio
 }
 
 export const wrapProblemsCommandWithDependencies = (key: string, dependencies: ProblemsCommandDependencies): ProblemsCommand => {
-  const { getState, invoke } = dependencies
+  const { clearProblemsSummary = async () => {}, getState, invoke } = dependencies
   const fn: ProblemsCommand = async (state, ...args) => {
     const { actionsDom: oldActionsDom, uid } = state
     await invoke(`Problems.${key}`, uid, ...args)
+    if (key === 'handleWorkspaceChange') {
+      await clearProblemsSummary()
+    }
     const diffResult = (await invoke('Problems.diff2', uid)) as readonly unknown[]
     const actionsDom = (await invoke('Problems.renderActions', uid)) as readonly unknown[]
     const actionsChanged = !areActionsEqual(oldActionsDom, actionsDom)

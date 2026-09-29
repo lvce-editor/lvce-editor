@@ -3,13 +3,12 @@ import { pathToFileURL } from 'node:url'
 const windowsFileUriRegex = /^file:\/\/\/([a-z])(?::|%3a)(?=\/|$)/i
 
 const normalizeRemoteFileUrl = (uri: string): string | undefined => {
-  try {
-    const url = new URL(uri)
-    if ((url.protocol === 'http:' || url.protocol === 'https:') && url.pathname.startsWith('/remote/')) {
-      return `file://${url.pathname.slice('/remote'.length)}`
-    }
-  } catch {
+  if (!URL.canParse(uri)) {
     return undefined
+  }
+  const url = new URL(uri)
+  if ((url.protocol === 'http:' || url.protocol === 'https:') && url.pathname.startsWith('/remote/')) {
+    return `file://${url.pathname.slice('/remote'.length)}`
   }
   return undefined
 }

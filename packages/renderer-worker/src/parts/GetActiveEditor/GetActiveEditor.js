@@ -1,6 +1,9 @@
 import * as Command from '../Command/Command.js'
 import * as EditorWorker from '../EditorWorker/EditorWorker.ts'
+import * as GetSelectionPairs from '../GetSelectionPairs/GetSelectionPairs.js'
+import * as JoinLines from '../JoinLines/JoinLines.js'
 import * as MainAreaWorker from '../MainAreaWorker/MainAreaWorker.js'
+import * as TextDocument from '../TextDocument/TextDocument.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
@@ -28,6 +31,39 @@ export const getDiagnostics = async () => {
   return getDiagnosticsWithInvoke(EditorWorker.invoke)
 }
 
+export const getTextDocumentWithInvoke = async (invoke, applicationId) => {
+  const instance = ViewletStates.getInstance(ViewletModuleId.EditorText, applicationId)
+  if (!instance) {
+    return undefined
+  }
+  const { id, uri } = instance.state
+  const text = await invoke('Editor.getText', id)
+  return {
+    text,
+    uri,
+  }
+}
+
+export const getTextDocumentWithScroll = async (applicationId) => {
+  const instance = ViewletStates.getInstance(ViewletModuleId.EditorText, applicationId)
+  if (!instance) {
+    return undefined
+  }
+  const { id, uri, deltaY, finalDeltaY, height } = instance.state
+  const text = await EditorWorker.invoke('Editor.getText', id)
+  return {
+    text,
+    uri,
+    scrollTop: deltaY,
+    scrollHeight: finalDeltaY,
+    viewportHeight: height,
+  }
+}
+
+export const getTextDocument = async (applicationId) => {
+  return getTextDocumentWithInvoke(EditorWorker.invoke, applicationId)
+}
+
 export const getSelectionsWithInvoke = async (invoke) => {
   const instance = ViewletStates.getInstance(ViewletModuleId.EditorText)
   if (!instance) {
@@ -39,6 +75,31 @@ export const getSelectionsWithInvoke = async (invoke) => {
 
 export const getSelections = async () => {
   return getSelectionsWithInvoke(EditorWorker.invoke)
+}
+
+export const getSelectionTextWithInvoke = async (invoke) => {
+  const instance = ViewletStates.getInstance(ViewletModuleId.EditorText)
+  if (!instance) {
+    return ''
+  }
+  const [text, selectionsValue] = await Promise.all([invoke('Editor.getText', instance.state.id), invoke('Editor.getSelections2', instance.state.id)])
+  const selections = Array.from(selectionsValue)
+  if (selections.length < 4) {
+    return ''
+  }
+  const [startRowIndex, startColumnIndex, endRowIndex, endColumnIndex] = GetSelectionPairs.getSelectionPairs(selections, 0)
+  const selectedLines = TextDocument.getSelectionText(
+    { lines: text.split('\n') },
+    {
+      end: { columnIndex: endColumnIndex, rowIndex: endRowIndex },
+      start: { columnIndex: startColumnIndex, rowIndex: startRowIndex },
+    },
+  )
+  return JoinLines.joinLines(selectedLines)
+}
+
+export const getSelectionText = async () => {
+  return getSelectionTextWithInvoke(EditorWorker.invoke)
 }
 
 export const getOpenEditorUrisWithInvoke = async (invoke) => {

@@ -10,10 +10,10 @@ export const load = (moduleId: any): any => {
       return import('../AutoUpdaterAppImage/AutoUpdaterAppImage.ipc.ts')
     case ModuleId.AutoUpdaterWindowsNsis:
       return import('../AutoUpdaterWindowsNsis/AutoUpdaterWindowsNsis.ipc.ts')
+    case ModuleId.BrowserFind:
+      return import('../BrowserFind/BrowserFind.ipc.ts')
     case ModuleId.BulkReplacement:
       return import('../BulkReplacement/BulkReplacement.ipc.ts')
-    case ModuleId.ChromeCookieImport:
-      return import('../ChromeCookieImport/ChromeCookieImport.ipc.ts')
     case ModuleId.ClipBoard:
       return import('../ClipBoard/ClipBoard.ipc.ts')
     case ModuleId.ContentSecurityPolicy:
@@ -28,6 +28,8 @@ export const load = (moduleId: any): any => {
       return import('../Download/Download.ipc.ts')
     case ModuleId.ElectronApplicationMenu:
       return import('../ElectronApplicationMenu/ElectronApplicationMenu.ipc.ts')
+    case ModuleId.ElectronClipBoard:
+      return import('../ElectronClipBoard/ElectronClipBoard.ipc.ts')
     case ModuleId.ElectronContentTracing:
       return import('../ElectronContentTracing/ElectronContentTracing.ipc.ts')
     case ModuleId.ElectronContextMenu:
@@ -46,8 +48,6 @@ export const load = (moduleId: any): any => {
       return import('../ElectronPowerSaveBlocker/ElectronPowerSaveBlocker.ipc.ts')
     case ModuleId.ElectronProcess:
       return import('../ElectronProcess/ElectronProcess.ipc.ts')
-    case ModuleId.ElectronSafeStorage:
-      return import('../ElectronSafeStorage/ElectronSafeStorage.ipc.ts')
     case ModuleId.ElectronWindowAbout:
       return import('../ElectronWindowAbout/ElectronWindowAbout.ipc.ts')
     case ModuleId.ElectronWindowProcessExplorer:
@@ -64,8 +64,8 @@ export const load = (moduleId: any): any => {
       return import('../FileSystemDisk/FileSystemDisk.ipc.ts')
     case ModuleId.FileWatcher:
       return import('../FileWatcher/FileWatcher.ipc.ts')
-    case ModuleId.FirefoxCookieImport:
-      return import('../FirefoxCookieImport/FirefoxCookieImport.ipc.ts')
+    case ModuleId.FileWatcherExplorer:
+      return import('../FileWatcherExplorer/FileWatcherExplorer.ipc.ts')
     case ModuleId.GetElectronFileResponse:
       return import('../GetElectronFileResponse/GetElectronFileResponse.ipc.ts')
     case ModuleId.GetExtensions:
@@ -86,12 +86,16 @@ export const load = (moduleId: any): any => {
       return import('../HandleMessagePortForAuthProcess/HandleMessagePortForAuthProcess.ipc.ts')
     case ModuleId.HandleMessagePortForClipBoardProcess:
       return import('../HandleMessagePortForClipBoardProcess/HandleMessagePortForClipBoardProcess.ipc.ts')
+    case ModuleId.HandleMessagePortForCookieImportProcess:
+      return import('../HandleMessagePortForCookieImportProcess/HandleMessagePortForCookieImportProcess.ipc.ts')
     case ModuleId.HandleMessagePortForEmbedsProcess:
       return import('../HandleMessagePortForEmbedsProcess/HandleMessagePortForEmbedsProcess.ipc.ts')
-    case ModuleId.HandleMessagePortForExtensionHostHelperProcess:
-      return import('../HandleMessagePortForExtensionHostHelperProcess/HandleMessagePortForExtensionHostHelperProcess.ipc.ts')
+    case ModuleId.HandleMessagePortForExtensionNodeProcess:
+      return import('../HandleMessagePortForExtensionNodeProcess/HandleMessagePortForExtensionNodeProcess.ipc.ts')
     case ModuleId.HandleMessagePortForFileSystemProcess:
       return import('../HandleMessagePortForFileSystemProcess/HandleMessagePortForFileSystemProcess.ipc.ts')
+    case ModuleId.HandleMessagePortForFileWatcherExplorer:
+      return import('../HandleMessagePortForFileWatcherExplorer/HandleMessagePortForFileWatcherExplorer.ipc.ts')
     case ModuleId.HandleMessagePortForProcessExplorer:
       return import('../HandleMessagePortForProcessExplorer/HandleMessagePortForProcessExplorer.ipc.ts')
     case ModuleId.HandleMessagePortForSearchProcess:
@@ -100,12 +104,8 @@ export const load = (moduleId: any): any => {
       return import('../HandleMessagePortForTerminalProcess/HandleMessagePortForTerminalProcess.ipc.ts')
     case ModuleId.HandleNodeMessagePort:
       return import('../HandleNodeMessagePort/HandleNodeMessagePort.ipc.ts')
-    case ModuleId.HandleRemoteRequest:
-      return import('../HandleRemoteRequest/HandleRemoteRequest.ipc.ts')
     case ModuleId.HandleRequest:
       return import('../HandleRequest/HandleRequest.ipc.ts')
-    case ModuleId.HandleRequestTest:
-      return import('../HandleRequestTest/HandleRequestTest.ipc.ts')
     case ModuleId.HandleWebSocket:
       return import('../HandleWebSocket/HandleWebSocket.ipc.ts')
     case ModuleId.HandleWindowAllClosed:
@@ -140,16 +140,20 @@ export const load = (moduleId: any): any => {
       return import('../ProcessExplorer/ProcessExplorer.ipc.ts')
     case ModuleId.ProcessId:
       return import('../ProcessId/ProcessId.ipc.ts')
+    case ModuleId.PtyHost:
+      return import('../PtyHost/PtyHost.ipc.ts')
     case ModuleId.RebuildNodePty:
       return import('../RebuildNodePty/RebuildNodePty.ipc.ts')
     case ModuleId.RecentlyOpened:
       return import('../RecentlyOpened/RecentlyOpened.ipc.ts')
+    case ModuleId.RemoteCli:
+      return import('../RemoteCli/RemoteCli.ipc.ts')
     case ModuleId.Screen:
       return import('../Screen/Screen.ipc.ts')
-    case ModuleId.SecretStorage:
-      return import('../SecretStorage/SecretStorage.ipc.ts')
     case ModuleId.SendMessagePortToMainProcess:
       return import('../SendMessagePortToMainProcess/SendMessagePortToMainProcess.ipc.ts')
+    case ModuleId.ShellCommand:
+      return import('../ShellCommand/ShellCommand.ipc.ts')
     case ModuleId.TemporaryMessagePort:
       return import('../TemporaryMessagePort/TemporaryMessagePort.ipc.ts')
     case ModuleId.Terminal:

@@ -1,4 +1,5 @@
 import * as AssetDir from '../AssetDir/AssetDir.js'
+import * as ApplicationFileSystem from '../ApplicationFileSystem/ApplicationFileSystem.ts'
 import * as Command from '../Command/Command.js'
 import * as Editor from '../Editor/Editor.js'
 import * as EditorPreferences from '../EditorPreferences/EditorPreferences.js'
@@ -10,6 +11,7 @@ import * as GetTextEditorContent from '../GetTextEditorContent/GetTextEditorCont
 import * as GetTokenizePath from '../GetTokenizePath/GetTokenizePath.js'
 import * as Id from '../Id/Id.js'
 import * as Languages from '../Languages/Languages.js'
+import * as LanguagesState from '../LanguagesState/LanguagesState.js'
 import * as LayoutWidgets from '../LayoutWidgets/LayoutWidgets.ts'
 import * as Platform from '../Platform/Platform.js'
 import * as Preferences from '../Preferences/Preferences.js'
@@ -96,7 +98,13 @@ const getFirstLine = (content) => {
   return content.slice(0, hasCarriageReturn ? lineEndIndex - 1 : lineEndIndex)
 }
 
-const getLanguageId = (state, content) => {
+const getLanguageId = (state, content, savedState) => {
+  const explicitLanguageId = savedState?.editorState?.explicitLanguageId
+  if (typeof explicitLanguageId === 'string' && Languages.getTokenizeFunctionPath(explicitLanguageId)) {
+    LanguagesState.setExplicitLanguageId(state.uri, explicitLanguageId)
+    return explicitLanguageId
+  }
+  LanguagesState.clearExplicitLanguageId(state.uri)
   const fileName = Workspace.pathBaseName(state.uri)
   const languageId = Languages.getLanguageId(fileName)
   if (languageId === 'unknown') {
@@ -115,6 +123,7 @@ export const loadContent = async (state, savedState, context) => {
   const rowHeight = EditorPreferences.getRowHeight()
   const fontSize = EditorPreferences.getFontSize()
   const hoverEnabled = EditorPreferences.getHoverEnabled()
+  const hoverDelay = EditorPreferences.getHoverDelay()
   const fontFamily = EditorPreferences.getFontFamily()
   const letterSpacing = EditorPreferences.getLetterSpacing()
   const tabSize = EditorPreferences.getTabSize()
@@ -127,8 +136,13 @@ export const loadContent = async (state, savedState, context) => {
   const isQuickSuggestionsEnabled = EditorPreferences.isQuickSuggestionsEnabled()
   const completionTriggerCharacters = EditorPreferences.getCompletionTriggerCharacters()
   const diagnosticsEnabled = EditorPreferences.diagnosticsEnabled()
-  const content = await GetTextEditorContent.getTextEditorContent(uri)
-  const languageId = context?.languageId || getLanguageId(state, content)
+  const content =
+    useFunctionalRendering && context?.largeFile === true
+      ? ''
+      : state.applicationId === undefined
+        ? await GetTextEditorContent.getTextEditorContent(uri)
+        : await ApplicationFileSystem.execute(state.applicationId, 'readFile', uri)
+  const languageId = context?.languageId || getLanguageId(state, content, savedState)
   const tokenizer = Tokenizer.getTokenizer(languageId)
   const tokenizerId = Id.create()
   TokenizerMap.set(tokenizerId, tokenizer)
@@ -150,8 +164,22 @@ export const loadContent = async (state, savedState, context) => {
   if (useFunctionalRendering) {
     const tokenizePath = GetTokenizePath.getTokenizePath(languageId)
     const useCache = Preferences.get('editor.cache') ?? true
-    await EditorWorker.invoke('Editor.create2', id, uri, x, y, width, height, platform, assetDir, languageId, tokenizePath, useCache)
-    await EditorWorker.invoke('Editor.loadContent', id, savedState?.editorState)
+    await EditorWorker.invoke(
+      'Editor.create2',
+      id,
+      uri,
+      x,
+      y,
+      width,
+      height,
+      platform,
+      assetDir,
+      languageId,
+      tokenizePath,
+      useCache,
+      ...(state.applicationId === undefined ? [] : [state.applicationId]),
+    )
+    await EditorWorker.invoke('Editor.loadContent', id, savedState?.editorState, context?.largeFile === true)
     const initialRender = await rerender(newState2)
     await EditorWorker.invoke('Editor.setSelections2', id, savedSelections)
     const selectionRender = await rerender(newState2)
@@ -172,6 +200,7 @@ export const loadContent = async (state, savedState, context) => {
       formatOnSave,
       height,
       hoverEnabled,
+      hoverDelay,
       id,
       isAutoClosingBracketsEnabled,
       isAutoClosingQuotesEnabled,
@@ -309,10 +338,7 @@ export const resize = async (state, dimensions) => {
 export const dispose = async (state) => {
   Tokenizer.removeConnectedEditor(state.id)
   const commands = await EditorWorker.invoke('Editor.dispose', state.id)
-  await RendererProcess.invoke(
-    'Viewlet.sendMultiple',
-    LayoutWidgets.reconcile(commands),
-  )
+  await RendererProcess.invoke('Viewlet.sendMultiple', LayoutWidgets.reconcile(commands))
 }
 
 export const hasFunctionalRender = true

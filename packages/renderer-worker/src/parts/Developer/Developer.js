@@ -13,6 +13,7 @@ import * as ProcessExplorer from '../ProcessExplorer/ProcessExplorer.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as ToMarkdownTable from '../ToMarkdownTable/ToMarkdownTable.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 // TODO vscode's version of this is shorter
 // if it is a bottleneck, check performance of this function (not very optimized now)
 
@@ -222,6 +223,11 @@ export const showMessageBox = () => {}
 
 export const openProcessExplorer = () => {
   return ProcessExplorer.open()
+}
+
+export const openComponentState = async () => {
+  await Command.execute('Layout.showSecondarySideBar')
+  await Command.execute('Layout.openSecondarySideBarViewlet', ViewletModuleId.ComponentState)
 }
 
 export const showGpuInfo = () => {

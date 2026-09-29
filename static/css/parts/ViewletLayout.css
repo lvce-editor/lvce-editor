@@ -8,6 +8,46 @@
   flex-direction: column;
 }
 
+/* Keep window controls in the space reserved above the primary sidebar. */
+.Workbench.TitleBarless > .TitleBar > :not(.TitleBarButtons) {
+  display: none;
+}
+
+.Workbench.TitleBarless > .TitleBar {
+  -webkit-app-region: drag;
+  flex-shrink: 0;
+  justify-content: flex-end;
+}
+
+.Workbench.CompactTitleBar > .TitleBar {
+  position: absolute;
+  top: 0;
+  left: var(--TitleBarLeft);
+  width: var(--TitleBarWidth);
+  z-index: 4;
+}
+
+.Workbench.CompactTitleBar .ContentArea > .ActivityBar,
+.Workbench.CompactTitleBar .ContentArea > .SideBar:not(.SecondarySideBar) {
+  margin-top: var(--TitleBarHeight);
+}
+
+.WorkbenchBody {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  position: relative;
+}
+
+.WorkbenchMain {
+  contain: size layout style;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+  min-width: 0;
+}
+
 .ContentArea {
   flex: 1;
   display: flex;
@@ -17,10 +57,52 @@
 }
 
 .PreviewArea {
+  display: flex;
   flex: 0 0 var(--PreviewWidth);
+  flex-direction: column;
+  min-height: 0;
   min-width: 0;
   overflow: hidden;
   position: relative;
+}
+
+.PreviewAreaContent {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  min-width: 0;
+}
+
+.PreviewAreaContent > * {
+  flex: 1;
+  min-height: 0;
+  min-width: 0;
+}
+
+.PreviewAreas {
+  display: flex;
+  flex: 0 0 var(--PreviewAreasWidth);
+  min-height: 0;
+  min-width: 0;
+  position: relative;
+}
+
+.PreviewAreasVertical {
+  flex-direction: column;
+}
+
+.PreviewAreasVertical > .PreviewArea {
+  flex: 0 0 var(--PreviewHeight);
+}
+
+.PreviewAreasVertical > .SecondaryPreviewArea {
+  flex-basis: var(--SecondaryPreviewHeight);
+}
+
+.PreviewAreasVertical .SecondaryPreview {
+  border-left: 0;
+  border-top: 1px solid var(--SeparatorBorder);
+  width: 100%;
 }
 
 .SecondaryPreviewArea {
@@ -90,4 +172,35 @@
   background: var(--PanelBackground);
   height: var(--PanelHeight);
   width: var(--PanelWidth);
+}
+
+.Workbench.BrowserFullWidth > .SimpleBrowser {
+  flex: 1;
+  min-width: 0;
+  width: 100%;
+}
+
+.Workbench.BrowserFullWidthHideTitleBar > .TitleBar {
+  contain: none;
+  flex: 0 0 0;
+  height: 0;
+  left: 0;
+  overflow: visible;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  z-index: 4;
+}
+
+.Workbench.BrowserFullWidthHideTitleBar > .TitleBar > :not(.TitleBarButtons) {
+  display: none;
+}
+
+.Workbench.BrowserFullWidthHideTitleBar > .TitleBar > .TitleBarButtons {
+  flex-grow: 0;
+  height: 35px;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: auto;
 }

@@ -1,4 +1,5 @@
 import * as LoadProcessExplorerViewletModule from '../LoadProcessExplorerViewletModule/LoadProcessExplorerViewletModule.js'
+import * as LoadFileWatcherExplorerViewletModule from '../LoadFileWatcherExplorerViewletModule/LoadFileWatcherExplorerViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
 export const map = {
@@ -11,6 +12,8 @@ export const map = {
   [ViewletModuleId.ChatDebug]: () => import('../ViewletChatDebug/ViewletChatDebug.ipc.js'),
   [ViewletModuleId.Clock]: () => import('../ViewletClock/ViewletClock.ipc.js'),
   [ViewletModuleId.Confirm]: () => import('../ViewletConfirm/ViewletConfirm.ipc.js'),
+  [ViewletModuleId.CookieImport]: () => import('../ViewletCookieImport/ViewletCookieImport.ipc.ts'),
+  [ViewletModuleId.ComponentState]: () => import('../ViewletComponentState/ViewletComponentState.ipc.js'),
   [ViewletModuleId.DebugConsole]: () => import('../ViewletDebugConsole/ViewletDebugConsole.ipc.js'),
   [ViewletModuleId.DefineKeyBinding]: () => import('../ViewletDefineKeyBinding/ViewletDefineKeyBinding.ipc.js'),
   [ViewletModuleId.Dialog]: () => import('../ViewletDialog/ViewletDialog.ipc.js'),
@@ -38,18 +41,23 @@ export const map = {
   [ViewletModuleId.Noop]: () => import('../ViewletNoop/ViewletNoop.ipc.js'),
   [ViewletModuleId.Output]: () => import('../ViewletOutput/ViewletOutput.ipc.ts'),
   [ViewletModuleId.Panel]: () => import('../ViewletPanel/ViewletPanel.ipc.ts'),
+  [ViewletModuleId.Ports]: () => import('../ViewletPorts/ViewletPorts.ipc.ts'),
   [ViewletModuleId.Problems]: () => import('../ViewletProblems/ViewletProblems.ipc.js'),
   [ViewletModuleId.ProcessExplorer]: LoadProcessExplorerViewletModule.loadProcessExplorerViewletModule,
+  [ViewletModuleId.FileWatcherExplorer]: LoadFileWatcherExplorerViewletModule.loadFileWatcherExplorerViewletModule,
   [ViewletModuleId.QuickPick]: () => import('../ViewletQuickPick/ViewletQuickPick.ipc.js'),
   [ViewletModuleId.References]: () => import('../ViewletReferences/ViewletReferences.ipc.js'),
   [ViewletModuleId.RunAndDebug]: () => import('../ViewletRunAndDebug/ViewletRunAndDebug.ipc.js'),
   [ViewletModuleId.RunningExtensions]: () => import('../ViewletRunningExtensions/ViewletRunningExtensions.ipc.ts'),
+  [ViewletModuleId.Workers]: () => import('../ViewletWorkers/ViewletWorkers.ipc.ts'),
+  [ViewletModuleId.Secrets]: () => import('../ViewletSecrets/ViewletSecrets.ipc.ts'),
   [ViewletModuleId.ScreenCapture]: () => import('../ViewletScreenCapture/ViewletScreenCapture.ipc.js'),
   [ViewletModuleId.Search]: () => import('../ViewletSearch/ViewletSearch.ipc.ts'),
   [ViewletModuleId.Settings]: () => import('../ViewletSettings/ViewletSettings.ipc.js'),
   [ViewletModuleId.SideBar]: () => import('../ViewletSideBar/ViewletSideBar.ipc.js'),
   [ViewletModuleId.SecondarySideBar]: () => import('../ViewletSecondarySideBar/ViewletSecondarySideBar.ipc.js'),
   [ViewletModuleId.SimpleBrowser]: () => import('../ViewletSimpleBrowser/ViewletSimpleBrowser.ipc.js'),
+  [ViewletModuleId.SimpleBrowserHistory]: () => import('../ViewletSimpleBrowserHistory/ViewletSimpleBrowserHistory.ipc.js'),
   [ViewletModuleId.SourceControl]: () => import('../ViewletSourceControl/ViewletSourceControl.ipc.js'),
   [ViewletModuleId.StatusBar]: () => import('../ViewletStatusBar/ViewletStatusBar.ipc.js'),
   [ViewletModuleId.Storage]: () => import('../ViewletStorage/ViewletStorage.ipc.js'),

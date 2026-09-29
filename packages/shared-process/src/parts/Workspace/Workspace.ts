@@ -22,7 +22,7 @@ export const resolveUri = (uri: any): any => {
   return {
     homeDir: PlatformPaths.getHomeDir(),
     path,
-    pathSeparator: Platform.getPathSeparator(),
+    pathSeparator: '/',
     uri,
   }
 }

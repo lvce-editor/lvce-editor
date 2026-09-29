@@ -1,8 +1,12 @@
+import * as BrowserFullWidth from '../BrowserFullWidth/BrowserFullWidth.js'
 import * as ViewletLayout from './ViewletLayout.ts'
 import * as ResetLayout from '../ResetLayout/ResetLayout.ts'
 
 // prettier-ignore
 export const Commands = {
+  loadContentLater: BrowserFullWidth.loadContentLater,
+  toggleSimpleBrowserFullWidth: BrowserFullWidth.toggle,
+  handleBrowserFullWidthGesture: BrowserFullWidth.handleGesture,
   getAllQuickPickMenuEntries: ViewletLayout.getAllQuickPickMenuEntries,
   getActiveSideBarView: ViewletLayout.getActiveSideBarView,
   getActiveSecondarySideBarView: ViewletLayout.getActiveSecondarySideBarView,
@@ -24,7 +28,10 @@ export const Commands = {
 }
 
 export const CommandsWithSideEffects = {
+  toggleSimpleBrowserFullWidthInternal: BrowserFullWidth.toggleInternal,
+  leaveSimpleBrowserFullWidth: BrowserFullWidth.leave,
   attachViewlet: ViewletLayout.attachViewlet,
+  clearProblemsSummary: ViewletLayout.clearProblemsSummary,
   handleActiveEditorChange: ViewletLayout.handleActiveEditorChange,
   handleBadgeCountChange: ViewletLayout.handleBadgeCountChange,
   handleColorThemeChanged: ViewletLayout.handleColorThemeChanged,
@@ -45,6 +52,7 @@ export const CommandsWithSideEffects = {
   handleSashPointerMove: ViewletLayout.handleSashPointerMove,
   handleSashPointerUp: ViewletLayout.handleSashPointerUp,
   handleSettingsChanged: ViewletLayout.handleSettingsChanged,
+  handleSourceControlProgressChange: ViewletLayout.handleSourceControlProgressChange,
   handleWorkspaceRefresh: ViewletLayout.handleWorkspaceRefresh,
   refreshProblemsSummary: ViewletLayout.refreshProblemsSummary,
   refreshSourceControlBadgeCount: ViewletLayout.refreshSourceControlBadgeCount,
@@ -82,6 +90,7 @@ export const CommandsWithSideEffects = {
   openOutput: ViewletLayout.openOutput,
   openProblems: ViewletLayout.openProblems,
   openSideBarViewlet: ViewletLayout.openSideBarView,
+  openTextSearch: ViewletLayout.openTextSearch,
   openSecondarySideBarViewlet: ViewletLayout.openSecondarySideBarView,
   openPanelViewlet: ViewletLayout.openPanelView,
   refreshAuthState: ViewletLayout.refreshAuthState,
@@ -103,11 +112,13 @@ export const CommandsWithSideEffects = {
   showTitleBar: ViewletLayout.showTitleBar,
   toggleSideBarView: ViewletLayout.toggleSideBarView,
   toggleActivityBar: ViewletLayout.toggleActivityBar,
+  toggleMenuBar: ViewletLayout.toggleMenuBar,
   toggleMain: ViewletLayout.toggleMain,
   togglePanel: ViewletLayout.togglePanel,
   maximizePanel: ViewletLayout.maximizePanel,
   unmaximizePanel: ViewletLayout.unmaximizePanel,
   togglePreview: ViewletLayout.togglePreview,
+  togglePreviewOrientation: ViewletLayout.togglePreviewOrientation,
   toggleSecondaryPreview: ViewletLayout.toggleSecondaryPreview,
   toggleSideBar: ViewletLayout.toggleSideBar,
   toggleSecondarySideBar: ViewletLayout.toggleSecondarySideBar,

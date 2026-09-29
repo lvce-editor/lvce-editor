@@ -126,6 +126,20 @@ export const writeFile = async (uri, content) => {
   }
 }
 
+export const writeBlob = async (uri, blob) => {
+  try {
+    const handle = await GetFileHandle.getFileHandle(uri, {
+      create: true,
+    })
+    if (!handle) {
+      throw new VError(`File not found ${uri}`)
+    }
+    await FileSystemFileHandle.write(handle, blob)
+  } catch (error) {
+    throw new VError(error, 'Failed to save file')
+  }
+}
+
 export const remove = async (uri) => {
   try {
     const dirname = Path.dirname(pathSeparator, uri)
@@ -181,10 +195,6 @@ export const mkdir = async (uri) => {
   } catch (error) {
     throw new VError(error, 'Failed to create directory')
   }
-}
-
-export const getPathSeparator = () => {
-  return pathSeparator
 }
 
 export const isReadonly = () => {

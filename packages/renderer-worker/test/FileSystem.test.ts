@@ -7,18 +7,25 @@ import * as FileSystemState from '../src/parts/FileSystemState/FileSystemState.j
 const readFile = jest.fn()
 const writeFile = jest.fn()
 const remove = jest.fn()
+const createFile = jest.fn()
 const isReadonly = jest.fn()
 const getBlobUrl = jest.fn()
+const getFileSize = jest.fn()
 
 FileSystemState.registerAll({
   test() {
     return {
       readFile,
       writeFile,
+      createFile,
       remove,
       isReadonly,
       getBlobUrl,
+      getFileSize,
     }
+  },
+  unsupported() {
+    return {}
   },
 })
 
@@ -39,6 +46,11 @@ test.skip('readFile - error', async () => {
   await expect(FileSystem.readFile('/tmp/some-file.txt')).rejects.toThrow(new TypeError('x is not a function'))
 })
 
+test('createFile uses the filesystem provider', async () => {
+  await FileSystem.createFile('test://some-file.txt')
+  expect(createFile).toHaveBeenCalledWith('test://some-file.txt')
+})
+
 test('removeFile', async () => {
   remove.mockReturnValue(null)
   await FileSystem.remove('test://some-file.txt')
@@ -57,6 +69,18 @@ test('getBlobUrl forwards the media type', async () => {
 
   await expect(FileSystem.getBlobUrl('test://some-file.svg', 'image/svg+xml')).resolves.toBe('blob:https://example.com/image-id')
   expect(getBlobUrl).toHaveBeenCalledWith('test://some-file.svg', 'image/svg+xml')
+})
+
+test('getFileSize returns the size without reading the file', async () => {
+  getFileSize.mockReturnValue(1024)
+
+  await expect(FileSystem.getFileSize('test://some-file.txt')).resolves.toBe(1024)
+  expect(getFileSize).toHaveBeenCalledWith('test://some-file.txt')
+  expect(readFile).not.toHaveBeenCalled()
+})
+
+test('getFileSize reports unsupported providers', async () => {
+  await expect(FileSystem.getFileSize('unsupported://some-file.txt')).rejects.toThrow('File size is not supported for unsupported files')
 })
 
 test.skip('removeFile - error', async () => {

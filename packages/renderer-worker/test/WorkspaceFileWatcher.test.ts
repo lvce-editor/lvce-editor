@@ -7,6 +7,7 @@ const watcher = {
   removeEventListener,
 }
 const getWorkspaceUri = jest.fn(() => 'file:///workspace')
+const getPreference = jest.fn((_key: string) => false)
 
 jest.unstable_mockModule('../src/parts/Command/Command.js', () => ({
   execute: jest.fn(),
@@ -15,6 +16,10 @@ jest.unstable_mockModule('../src/parts/Command/Command.js', () => ({
 jest.unstable_mockModule('../src/parts/FileWatcher/FileWatcher.js', () => ({
   dispose: jest.fn(),
   watch: jest.fn(() => watcher),
+}))
+
+jest.unstable_mockModule('../src/parts/Preferences/Preferences.js', () => ({
+  get: getPreference,
 }))
 
 jest.unstable_mockModule('../src/parts/Workspace/Workspace.js', () => ({
@@ -32,15 +37,26 @@ beforeEach(async () => {
   GlobalEventBus.state.listenerMap = Object.create(null)
   jest.clearAllMocks()
   getWorkspaceUri.mockReturnValue('file:///workspace')
+  getPreference.mockReturnValue(false)
 })
 
 afterEach(() => {
   jest.useRealTimers()
 })
 
-test('hydrate - watches the current file workspace', async () => {
+test('hydrate - does not watch the current file workspace by default', async () => {
   await WorkspaceFileWatcher.hydrate()
 
+  expect(FileWatcher.watch).not.toHaveBeenCalled()
+  expect(GlobalEventBus.state.listenerMap['workspace.change']).toBeUndefined()
+})
+
+test('hydrate - watches the current file workspace when enabled', async () => {
+  getPreference.mockReturnValue(true)
+
+  await WorkspaceFileWatcher.hydrate()
+
+  expect(getPreference).toHaveBeenCalledWith('files.workspaceWatcher.enabled')
   expect(FileWatcher.watch).toHaveBeenCalledWith({
     exclude: ['.git', 'node_modules'],
     roots: ['file:///workspace'],
@@ -61,6 +77,7 @@ test('watchWorkspace - replaces the previous watcher', async () => {
 })
 
 test('workspace change - watches the new workspace uri and refreshes the source control badge count', async () => {
+  getPreference.mockReturnValue(true)
   await WorkspaceFileWatcher.hydrate()
   getWorkspaceUri.mockReturnValue('file:///other')
   const handleWorkspaceChange = GlobalEventBus.state.listenerMap['workspace.change'][0]

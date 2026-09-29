@@ -44,7 +44,9 @@ const copyElectronResult = async ({ product, version, arch, debArch, platform, t
     },
     755,
   )
-  await Template.write('linux_cli_js', `packages/build/.tmp/linux/deb/${debArch}/app/usr/lib/${product.applicationName}/resources/app/bin/cli.js`, {})
+  await Template.write('linux_cli_js', `packages/build/.tmp/linux/deb/${debArch}/app/usr/lib/${product.applicationName}/resources/app/bin/cli.js`, {
+    '@@APPLICATION_NAME@@': product.applicationName,
+  })
   await Remove.remove(
     `packages/build/.tmp/linux/deb/${debArch}/app/usr/lib/${product.applicationName}/resources/app/packages/shared-process/node_modules/@lvce-editor/ripgrep`,
   )

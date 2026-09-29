@@ -1,5 +1,9 @@
+import { fileURLToPath, pathToFileURL } from 'node:url'
 import * as ErrorCodes from '../ErrorCodes/ErrorCodes.ts'
+import * as ExtensionManifest from '../ExtensionManifest/ExtensionManifest.ts'
+import * as ExtensionManifestStatus from '../ExtensionManifestStatus/ExtensionManifestStatus.ts'
 import * as FileSystem from '../FileSystem/FileSystem.ts'
+import * as LinkedWorkerManifest from '../LinkedWorkerManifest/LinkedWorkerManifest.ts'
 import * as Path from '../Path/Path.ts'
 import * as Process from '../Process/Process.ts'
 
@@ -28,6 +32,9 @@ const getCliLinkArgs = (): any => {
 }
 
 const resolveLinkPath = (path: any): any => {
+  if (path.startsWith('file:')) {
+    return fileURLToPath(path)
+  }
   if (Path.isAbsolute(path)) {
     return path
   }
@@ -41,6 +48,17 @@ export const getLinkedExtensions = (): any => {
       resolvedPath: resolveLinkPath(link.path),
     }
   })
+}
+
+export const getDevelopmentConfig = (): any => {
+  const extensions = getLinkedExtensions().map((link: any) => ({
+    path: link.resolvedPath,
+    uri: pathToFileURL(link.resolvedPath).toString(),
+  }))
+  return {
+    extensions,
+    hotReload: Process.argv.includes('--hot-reload') && extensions.length > 0,
+  }
 }
 
 const createMissingPathError = (link: any): any => {
@@ -58,6 +76,14 @@ const createPathNotFoundError = (link: any): any => {
   return error
 }
 
+const createExtensionNotFoundError = (link: any): any => {
+  const message = link.path === link.resolvedPath ? link.path : `${link.path} (resolved to ${link.resolvedPath})`
+  const error = new Error(`Failed to start: ${link.source} path does not contain an extension: ${message}`)
+  // @ts-ignore
+  error.code = ErrorCodes.E_MANIFEST_NOT_FOUND
+  return error
+}
+
 export const validate = async (): Promise<any> => {
   const links = getLinkedExtensions()
   for (const link of links) {
@@ -66,6 +92,10 @@ export const validate = async (): Promise<any> => {
     }
     if (!(await FileSystem.exists(link.resolvedPath))) {
       throw createPathNotFoundError(link)
+    }
+    const manifest = await ExtensionManifest.get(link.resolvedPath)
+    if (manifest.status !== ExtensionManifestStatus.Resolved && !(await LinkedWorkerManifest.getLinkedWorkerPreference(link.resolvedPath))) {
+      throw createExtensionNotFoundError(link)
     }
   }
   return links

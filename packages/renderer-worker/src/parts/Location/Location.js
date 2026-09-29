@@ -36,6 +36,20 @@ export const setPathName = async (pathName) => {
   state.href = resolvedUrl.href
 }
 
+export const setWorkspaceUri = async (workspaceUri) => {
+  const { href } = state
+  if (!href) {
+    return RendererProcess.invoke(/* Location.setWorkspaceUri */ 'Location.setWorkspaceUri', /* workspaceUri */ workspaceUri)
+  }
+  const url = new URL(href)
+  url.searchParams.set('workspace', workspaceUri)
+  if (url.href === href) {
+    return
+  }
+  await RendererProcess.invoke(/* Location.setWorkspaceUri */ 'Location.setWorkspaceUri', /* workspaceUri */ workspaceUri)
+  state.href = url.href
+}
+
 export const hydrate = () => {
   return RendererProcess.invoke(/* Location.hydrate */ 'Location.hydrate')
 }

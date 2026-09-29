@@ -23,7 +23,6 @@ jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () =
 jest.unstable_mockModule('../src/parts/FileSystem/FileSystem.js', () => ({
   canBeRestored: jest.fn(() => true),
   exists: jest.fn(async () => true),
-  getPathSeparator: jest.fn(async () => '/'),
 }))
 
 jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
@@ -34,8 +33,13 @@ jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
   }
 })
 
+jest.unstable_mockModule('../src/parts/StatusBarWorker/StatusBarWorker.js', () => ({
+  invoke: jest.fn(),
+}))
+
 const RendererProcess = await import('../src/parts/RendererProcess/RendererProcess.js')
 const SharedProcess = await import('../src/parts/SharedProcess/SharedProcess.js')
+const StatusBarWorker = await import('../src/parts/StatusBarWorker/StatusBarWorker.js')
 const Workspace = await import('../src/parts/Workspace/Workspace.js')
 const Command = await import('../src/parts/Command/Command.js')
 
@@ -61,7 +65,7 @@ test('hydrate', async () => {
         return {
           path: '/tmp/some-folder',
           homeDir: '~',
-          pathSeparator: '/',
+          pathSeparator: '\\',
           source: 'shared-process',
           uri: 'file:///tmp/some-folder',
         }
@@ -75,6 +79,7 @@ test('hydrate', async () => {
   await Workspace.hydrate({ href: 'http://localhost:3000' })
   expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
   expect(SharedProcess.invoke).toHaveBeenCalledWith('Workspace.resolveRoot', 'http://localhost:3000')
+  expect(Workspace.state.pathSeparator).toBe('/')
   const windowTitleCalls = jest.mocked(RendererProcess.invoke).mock.calls.filter(([method]) => method === 'WindowTitle.set')
   expect(windowTitleCalls).toEqual([['WindowTitle.set', 'some-folder']])
 })
@@ -163,4 +168,39 @@ test.skip('pathBaseName - linux', () => {
 test.skip('pathBaseName - windows', () => {
   Workspace.state.pathSeparator = '\\'
   expect(Workspace.pathBaseName('\\test\\file.txt')).toBe('file.txt')
+})
+
+test('close closes editors before clearing the workspace', async () => {
+  const closeAllEditors = jest.fn(async () => undefined)
+  const hasDirtyTabs = jest.fn(async () => false)
+  Command.register('Main.closeAllEditorsAndSave', closeAllEditors)
+  Command.register('Main.hasDirtyTabs', hasDirtyTabs)
+  jest.mocked(RendererProcess.invoke).mockResolvedValue(undefined)
+  Workspace.state.workspacePath = '/test'
+
+  await Workspace.close()
+
+  expect(closeAllEditors).toHaveBeenCalledTimes(1)
+  expect(hasDirtyTabs).toHaveBeenCalledTimes(1)
+  expect(StatusBarWorker.invoke).toHaveBeenCalledTimes(1)
+  expect(StatusBarWorker.invoke).toHaveBeenCalledWith('StatusBar.handleEditorStatusChanged', undefined)
+  expect(Workspace.state.workspacePath).toBe('')
+})
+
+test('close keeps the workspace open when closing a dirty editor is canceled', async () => {
+  const closeAllEditors = jest.fn(async () => undefined)
+  const hasDirtyTabs = jest.fn(async () => true)
+  Command.register('Main.closeAllEditorsAndSave', closeAllEditors)
+  Command.register('Main.hasDirtyTabs', hasDirtyTabs)
+  Workspace.state.workspacePath = '/test'
+  Workspace.state.workspaceUri = 'file:///test'
+
+  await Workspace.close()
+
+  expect(closeAllEditors).toHaveBeenCalledTimes(1)
+  expect(hasDirtyTabs).toHaveBeenCalledTimes(1)
+  expect(Workspace.state.workspacePath).toBe('/test')
+  expect(Workspace.state.workspaceUri).toBe('file:///test')
+  expect(StatusBarWorker.invoke).not.toHaveBeenCalled()
+  expect(RendererProcess.invoke).not.toHaveBeenCalled()
 })

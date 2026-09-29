@@ -14,6 +14,7 @@ type BundleOptions = {
   readonly external?: Array<string | RegExp>
   readonly from: string
   readonly minify?: boolean
+  readonly modulePaths?: string[]
   readonly platform: 'node' | 'webworker' | 'web' | 'node/cjs'
   readonly sourceMap?: boolean
   readonly typescript?: boolean
@@ -52,20 +53,25 @@ export const bundleJs = async ({
   allowCyclicDependencies = false,
   babelExternal = false,
   external = [],
+  modulePaths = [],
   typescript = from.endsWith('.ts'),
   sourceMap = true,
 }: BundleOptions) => {
   try {
     const allExternal = getExternal(babelExternal, external)
     const plugins: rollup.Plugin[] = [jsonPlugin]
-    if (platform === 'node/cjs' || platform === 'node') {
-      const { default: commonjs } = await import('@rollup/plugin-commonjs')
+    if (platform === 'node/cjs' || platform === 'node' || modulePaths.length > 0) {
       const { nodeResolve } = await import('@rollup/plugin-node-resolve')
-      plugins.push(
+      if (platform === 'node/cjs' || platform === 'node') {
+        const { default: commonjs } = await import('@rollup/plugin-commonjs')
         // @ts-ignore
-        commonjs(),
+        plugins.push(commonjs())
+      }
+      plugins.push(
         nodeResolve({
-          preferBuiltins: true,
+          browser: platform === 'web' || platform === 'webworker',
+          modulePaths,
+          preferBuiltins: platform === 'node/cjs' || platform === 'node',
         }),
       )
     }

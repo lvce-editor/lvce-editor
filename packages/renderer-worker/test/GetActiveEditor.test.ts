@@ -1,5 +1,11 @@
 // @ts-nocheck
-import { beforeEach, expect, jest, test } from '@jest/globals'
+import { afterEach, beforeEach, expect, jest, test } from '@jest/globals'
+
+const ApplicationRegistry = await import('../src/parts/ApplicationRegistry/ApplicationRegistry.ts')
+afterEach(() => {
+  ApplicationRegistry.remove('source')
+  ApplicationRegistry.remove('preview')
+})
 
 const GetActiveEditor = await import('../src/parts/GetActiveEditor/GetActiveEditor.js')
 const ViewletStates = await import('../src/parts/ViewletStates/ViewletStates.js')
@@ -55,6 +61,32 @@ test('getDiagnostics returns an empty array when there is no active editor', asy
   expect(invoke).not.toHaveBeenCalled()
 })
 
+test('getTextDocument returns the active text document', async () => {
+  ViewletStates.set(1, {
+    factory: {},
+    moduleId: 'EditorText',
+    renderedState: {},
+    state: {
+      id: 42,
+      uri: 'file:///test.js',
+    },
+  })
+  const invoke = jest.fn(async () => 'debugger')
+
+  await expect(GetActiveEditor.getTextDocumentWithInvoke(invoke)).resolves.toEqual({
+    text: 'debugger',
+    uri: 'file:///test.js',
+  })
+  expect(invoke).toHaveBeenCalledWith('Editor.getText', 42)
+})
+
+test('getTextDocument returns undefined when there is no active editor', async () => {
+  const invoke = jest.fn()
+
+  await expect(GetActiveEditor.getTextDocumentWithInvoke(invoke)).resolves.toBeUndefined()
+  expect(invoke).not.toHaveBeenCalled()
+})
+
 test('getSelections returns selections for the active editor', async () => {
   ViewletStates.set(1, {
     factory: {},
@@ -76,6 +108,93 @@ test('getSelections returns an empty array when there is no active editor', asyn
 
   await expect(GetActiveEditor.getSelectionsWithInvoke(invoke)).resolves.toEqual([])
   expect(invoke).not.toHaveBeenCalled()
+})
+
+test('getSelectionText returns the primary selection text', async () => {
+  ViewletStates.set(1, {
+    factory: {},
+    moduleId: 'EditorText',
+    renderedState: {},
+    state: {
+      id: 42,
+      uri: 'file:///test.txt',
+    },
+  })
+  const invoke = jest.fn(async (command: string) => {
+    if (command === 'Editor.getText') {
+      return 'prefix abc suffix'
+    }
+    return new Uint32Array([0, 7, 0, 10])
+  })
+
+  await expect(GetActiveEditor.getSelectionTextWithInvoke(invoke)).resolves.toBe('abc')
+})
+
+test('getSelectionText normalizes a reversed selection', async () => {
+  ViewletStates.set(1, {
+    factory: {},
+    moduleId: 'EditorText',
+    renderedState: {},
+    state: {
+      id: 42,
+      uri: 'file:///test.txt',
+    },
+  })
+  const invoke = jest.fn(async (command: string) => {
+    if (command === 'Editor.getText') {
+      return 'prefix abc suffix'
+    }
+    return new Uint32Array([0, 10, 0, 7])
+  })
+
+  await expect(GetActiveEditor.getSelectionTextWithInvoke(invoke)).resolves.toBe('abc')
+})
+
+test('getSelectionText returns a multiline selection', async () => {
+  ViewletStates.set(1, {
+    factory: {},
+    moduleId: 'EditorText',
+    renderedState: {},
+    state: {
+      id: 42,
+      uri: 'file:///test.txt',
+    },
+  })
+  const invoke = jest.fn(async (command: string) => {
+    if (command === 'Editor.getText') {
+      return 'one two\nthree four'
+    }
+    return new Uint32Array([0, 4, 1, 5])
+  })
+
+  await expect(GetActiveEditor.getSelectionTextWithInvoke(invoke)).resolves.toBe('two\nthree')
+})
+
+test('getSelectionText returns an empty string without an active editor', async () => {
+  const invoke = jest.fn()
+
+  await expect(GetActiveEditor.getSelectionTextWithInvoke(invoke)).resolves.toBe('')
+  expect(invoke).not.toHaveBeenCalled()
+})
+
+test('getSelectionText returns an empty string without a complete selection', async () => {
+  ViewletStates.set(1, {
+    factory: {},
+    moduleId: 'EditorText',
+    renderedState: {},
+    state: {
+      id: 42,
+      uri: 'file:///test.txt',
+    },
+  })
+  const invoke = jest.fn(async (command: string) => {
+    if (command === 'Editor.getText') {
+      return 'text'
+    }
+    return new Uint32Array()
+  })
+
+  await expect(GetActiveEditor.getSelectionTextWithInvoke(invoke)).resolves.toBe('')
 })
 
 test('setSelections updates selections for the active editor', async () => {
@@ -133,4 +252,24 @@ test('getOpenEditorUris returns an empty array without a main area', async () =>
   const invoke = jest.fn()
   await expect(GetActiveEditor.getOpenEditorUrisWithInvoke(invoke)).resolves.toEqual([])
   expect(invoke).not.toHaveBeenCalled()
+})
+
+test('getTextDocument reads only the requested application even when another editor is focused', async () => {
+  for (const [id, applicationId] of [
+    [41, 'source'],
+    [42, 'preview'],
+  ]) {
+    ApplicationRegistry.create({ id: applicationId, layoutUid: id + 100, workspaceUri: 'memfs:///', workspacePath: '/', href: '/samples' })
+    ViewletStates.set(id, {
+      factory: {},
+      moduleId: 'EditorText',
+      renderedState: { uid: id },
+      state: { id, uid: id, applicationId, uri: `memfs:///${applicationId}.js` },
+    })
+  }
+  ViewletStates.setFocusedInstanceByType(42, 'EditorText')
+  const invoke = jest.fn(async () => 'debugger')
+  await expect(GetActiveEditor.getTextDocumentWithInvoke(invoke, 'source')).resolves.toEqual({ text: 'debugger', uri: 'memfs:///source.js' })
+  expect(invoke).toHaveBeenCalledWith('Editor.getText', 41)
+  await expect(GetActiveEditor.getTextDocumentWithInvoke(invoke, 'missing')).resolves.toBeUndefined()
 })

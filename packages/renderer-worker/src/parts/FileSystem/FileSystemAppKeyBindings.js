@@ -1,14 +1,16 @@
 import * as PlatformPaths from '../PlatformPaths/PlatformPaths.js'
 import * as FileSystemAppShared from './FileSystemAppShared.js'
 
-const defaultContent = '{}'
+const defaultContent = '[]'
 
 export const readFile = () => {
   return FileSystemAppShared.readFileInternal(PlatformPaths.getUserKeyBindingsPath, defaultContent)
 }
 
-export const writeFile = (content) => {
-  return FileSystemAppShared.writeFileInternal(PlatformPaths.getUserKeyBindingsPath, content)
+export const writeFile = async (content) => {
+  await FileSystemAppShared.writeFileInternal(PlatformPaths.getUserKeyBindingsPath, content)
+  const KeyBindings = await import('../KeyBindings/KeyBindings.js')
+  await KeyBindings.reloadUserKeyBindings()
 }
 
 export const readJson = () => {}

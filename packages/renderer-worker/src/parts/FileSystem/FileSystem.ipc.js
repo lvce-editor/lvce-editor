@@ -5,10 +5,11 @@ export const name = 'FileSystem'
 export const Commands = {
   chmod: FileSystem.chmod,
   copy: FileSystem.copy,
+  createFile: FileSystem.createFile,
   exists: FileSystem.exists,
   getBlob: FileSystem.getBlob,
+  getFileSize: FileSystem.getFileSize,
   getFolderSize: FileSystem.getFolderSize,
-  getPathSeparator: FileSystem.getPathSeparator,
   getRealPath: FileSystem.getRealPath,
   isReadonly: FileSystem.isReadonly,
   mkdir: FileSystem.mkdir,

@@ -1,8 +1,5 @@
 import * as FileSystemWorker from '../FileSystemWorker/FileSystemWorker.js'
 import * as GetRemoteSrc from '../GetRemoteSrc/GetRemoteSrc.js'
-import * as PathSeparatorType from '../PathSeparatorType/PathSeparatorType.js'
-import * as Platform from '../Platform/Platform.js'
-import * as PlatformType from '../PlatformType/PlatformType.js'
 
 export const name = 'Disk'
 
@@ -17,6 +14,11 @@ export const copy = (source, target) => {
   source = toUri(source)
   target = toUri(target)
   return FileSystemWorker.invoke('FileSystem.copy', /* source */ source, /* target */ target)
+}
+
+export const createFile = (path) => {
+  path = toUri(path)
+  return FileSystemWorker.invoke('FileSystem.createFile', /* path */ path)
 }
 
 export const readFile = (path, encoding) => {
@@ -80,13 +82,6 @@ export const getBlob = async (path, type) => {
   return blob
 }
 
-export const getPathSeparator = () => {
-  if (Platform.getPlatform() === PlatformType.Web) {
-    return PathSeparatorType.Slash
-  }
-  return FileSystemWorker.invoke('FileSystem.getPathSeparator')
-}
-
 export const isReadonly = (path) => {
   path = toUri(path)
   return FileSystemWorker.invoke('FileSystem.isReadonly', /* path */ path)
@@ -94,6 +89,11 @@ export const isReadonly = (path) => {
 
 export const getRealPath = (path) => {
   return FileSystemWorker.invoke('FileSystem.getRealPath', /* path */ path)
+}
+
+export const getFileSize = (path) => {
+  path = toUri(path)
+  return FileSystemWorker.invoke('FileSystem.getFileSize', /* path */ path)
 }
 
 export const stat = (path) => {

@@ -38,7 +38,111 @@ test('bundleCss does not add filename comment to App.css', async () => {
   }
 }, 30_000)
 
-test('bundleCss preserves the simple browser preview width', async () => {
+test('bundleCss scopes debug chat resizer styles', async () => {
+  const dir = await mkdtemp(join(tmpdir(), 'lvce-bundle-css-'))
+
+  try {
+    await bundleCss({
+      outDir: dir,
+      assetDir: '',
+    })
+
+    const css = await readFile(join(dir, 'App.css'), 'utf8')
+    const settingsCss = await readFile(join(dir, 'parts', 'ViewletSettings.css'), 'utf8')
+
+    expect(css).toContain('\n.ChatDebugView .Resizer {')
+    expect(css).not.toContain(`
+.Resizer {
+  background: transparent;
+  border: 0;
+  bottom: 0;
+  cursor: col-resize;
+  margin: 0;
+  padding: 0;
+  pointer-events: auto;
+  position: absolute;
+  top: 0;
+  transform: translateX(calc(-0.5 * var(--ChatDebugViewSashWidth)));
+  width: var(--ChatDebugViewSashWidth);
+}`)
+    expect(settingsCss).toContain(`.SettingsMain > .SettingsResizer {
+  background: var(--ExtensionDetailTabsBorder);
+  flex: 0 0 var(--SashSize);
+  position: relative;
+}`)
+  } finally {
+    await rm(dir, { recursive: true, force: true })
+  }
+}, 30_000)
+
+test('bundleCss styles settings checkboxes like compact editor controls', async () => {
+  const dir = await mkdtemp(join(tmpdir(), 'lvce-bundle-css-'))
+
+  try {
+    await bundleCss({
+      outDir: dir,
+      assetDir: '',
+    })
+
+    const css = await readFile(join(dir, 'parts', 'SettingsItems.css'), 'utf8')
+
+    expect(css).toContain(`.CheckBox {
+  appearance: none;
+  background-color: var(--CheckboxBackground, var(--InputBoxBackground, #313131));`)
+    expect(css).toContain('border-radius: 3px;')
+    expect(css).toContain('height: 18px;')
+    expect(css).toContain('width: 18px;')
+    expect(css).toContain('.CheckBox:checked::before {')
+    expect(css).toContain('.CheckBox:focus-visible {')
+  } finally {
+    await rm(dir, { recursive: true, force: true })
+  }
+}, 30_000)
+
+test('bundleCss styles settings selects as native dropdown controls', async () => {
+  const dir = await mkdtemp(join(tmpdir(), 'lvce-bundle-css-'))
+
+  try {
+    await bundleCss({
+      outDir: dir,
+      assetDir: '',
+    })
+
+    const css = await readFile(join(dir, 'parts', 'SettingsItems.css'), 'utf8')
+
+    expect(css).toContain(`.SettingsItem .Select {
+  appearance: auto;`)
+    expect(css).toContain('border: 1px solid var(--DropDownBorder, var(--InputBoxBorder, rgb(55, 65, 63)));')
+    expect(css).toContain('.SettingsItem .Select:focus-visible {')
+  } finally {
+    await rm(dir, { recursive: true, force: true })
+  }
+}, 30_000)
+
+test('bundleCss keeps virtualized settings items within the content column', async () => {
+  const dir = await mkdtemp(join(tmpdir(), 'lvce-bundle-css-'))
+
+  try {
+    await bundleCss({
+      outDir: dir,
+      assetDir: '',
+    })
+
+    const css = await readFile(join(dir, 'parts', 'SettingsItems.css'), 'utf8')
+
+    expect(css).toContain(`.SettingsItems {
+  display: flex;
+  flex-direction: column;
+  contain: content;
+  flex: 1 1 0;
+  height: var(--SettingsItemsHeight);
+  min-width: 0;`)
+  } finally {
+    await rm(dir, { recursive: true, force: true })
+  }
+}, 30_000)
+
+test('bundleCss lets the simple browser fill the preview area height and use workbench theme colors', async () => {
   const dir = await mkdtemp(join(tmpdir(), 'lvce-bundle-css-'))
 
   try {
@@ -49,15 +153,112 @@ test('bundleCss preserves the simple browser preview width', async () => {
 
     const css = await readFile(join(dir, 'parts', 'ViewletSimpleBrowser.css'), 'utf8')
 
-    expect(css).toContain(`.ContentArea > .SimpleBrowser {
-  flex: 0 0 var(--PreviewWidth);
+    expect(css).toContain('background: var(--EditorBackground, var(--MainBackground));')
+    expect(css).toContain('color: var(--WorkbenchForeground);')
+    expect(css).toContain('flex: 1;')
+    expect(css).toContain('min-height: 0;')
+    expect(css).toContain('background: var(--TabsBackground, var(--MainBackground, var(--EditorBackground)));')
+  } finally {
+    await rm(dir, { recursive: true, force: true })
+  }
+}, 30_000)
+
+test('bundleCss strictly contains the simple browser snapshot wrapper', async () => {
+  const dir = await mkdtemp(join(tmpdir(), 'lvce-bundle-css-'))
+
+  try {
+    await bundleCss({
+      outDir: dir,
+      assetDir: '',
+    })
+
+    const css = await readFile(join(dir, 'parts', 'ViewletSimpleBrowser.css'), 'utf8')
+
+    expect(css).toContain(`.SimpleBrowserSnapshotWrapper {
+  contain: strict;
+  flex: 1;
+  min-height: 0;
+  width: 100%;
 }`)
   } finally {
     await rm(dir, { recursive: true, force: true })
   }
 }, 30_000)
 
-test('bundleCss keeps the preview sash transparent', async () => {
+test('bundleCss preserves the simple browser snapshot aspect ratio', async () => {
+  const dir = await mkdtemp(join(tmpdir(), 'lvce-bundle-css-'))
+
+  try {
+    await bundleCss({
+      outDir: dir,
+      assetDir: '',
+    })
+
+    const css = await readFile(join(dir, 'parts', 'ViewletSimpleBrowser.css'), 'utf8')
+
+    expect(css).toContain(`.SimpleBrowserSnapshot {
+  display: block;
+  filter: brightness(0.8);
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+  width: 100%;
+}`)
+  } finally {
+    await rm(dir, { recursive: true, force: true })
+  }
+}, 30_000)
+
+test('bundleCss keeps extra space between the simple browser favicon and tab title', async () => {
+  const dir = await mkdtemp(join(tmpdir(), 'lvce-bundle-css-'))
+
+  try {
+    await bundleCss({
+      outDir: dir,
+      assetDir: '',
+    })
+
+    const css = await readFile(join(dir, 'parts', 'ViewletSimpleBrowser.css'), 'utf8')
+
+    expect(css).toContain(`.SimpleBrowserTabFaviconWrapper {
+  align-items: center;
+  display: flex;
+  flex: 0 0 18px;
+}`)
+    expect(css).toContain(`.SimpleBrowserTabFavicon {
+  height: 16px;
+  object-fit: contain;
+  width: 16px;
+}`)
+  } finally {
+    await rm(dir, { recursive: true, force: true })
+  }
+}, 30_000)
+
+test('bundleCss fades overflowing simple browser tab titles', async () => {
+  const dir = await mkdtemp(join(tmpdir(), 'lvce-bundle-css-'))
+
+  try {
+    await bundleCss({
+      outDir: dir,
+      assetDir: '',
+    })
+
+    const css = await readFile(join(dir, 'parts', 'ViewletSimpleBrowser.css'), 'utf8')
+
+    expect(css).toContain(`.SimpleBrowserTabTitle {
+  flex: 1;
+  mask-image: linear-gradient(to right, black calc(100% - 12px), transparent);
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+}`)
+  } finally {
+    await rm(dir, { recursive: true, force: true })
+  }
+}, 30_000)
+
+test('bundleCss renders a visible preview sash border', async () => {
   const dir = await mkdtemp(join(tmpdir(), 'lvce-bundle-css-'))
 
   try {
@@ -80,6 +281,7 @@ test('bundleCss keeps the preview sash transparent', async () => {
 }`)
     expect(css).toContain(`.SashPreview {
   left: var(--SashPreviewLeft);
+  border-left: 1px solid var(--SashBorder, gray);
 }`)
     expect(css).toContain(`.SashSecondaryPreview {
   left: var(--SashSecondaryPreviewLeft);
@@ -89,7 +291,7 @@ test('bundleCss keeps the preview sash transparent', async () => {
   }
 }, 30_000)
 
-test('bundleCss keeps the panel and panel sash within the non-preview area', async () => {
+test('bundleCss keeps the main workbench column separate from the full-height preview', async () => {
   const dir = await mkdtemp(join(tmpdir(), 'lvce-bundle-css-'))
 
   try {
@@ -100,7 +302,32 @@ test('bundleCss keeps the panel and panel sash within the non-preview area', asy
 
     const css = await readFile(join(dir, 'App.css'), 'utf8')
 
-    expect(css).toContain('contain: size layout style;')
+    expect(css).toContain(`.WorkbenchBody {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  position: relative;
+}`)
+    expect(css).toContain(`.WorkbenchMain {
+  contain: size layout style;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+  min-width: 0;
+}`)
+    expect(css).toContain(`.PreviewArea {
+  display: flex;
+  flex: 0 0 var(--PreviewWidth);
+  flex-direction: column;
+  min-height: 0;
+  min-width: 0;
+  overflow: hidden;
+  position: relative;
+}`)
+    expect(css).toContain(`.PreviewAreasVertical {
+  flex-direction: column;
+}`)
     expect(css).toContain(`.Panel {
   background: var(--PanelBackground);
   height: var(--PanelHeight);
@@ -110,12 +337,16 @@ test('bundleCss keeps the panel and panel sash within the non-preview area', asy
   top: calc(var(--SashPanelTop) - 2px);
   width: var(--PanelWidth);
 }`)
+    expect(css).toContain(`.SashHorizontal.SashSecondaryPreview {
+  left: 0;
+  top: calc(var(--SashSecondaryPreviewTop) - 2px);
+}`)
   } finally {
     await rm(dir, { recursive: true, force: true })
   }
 }, 30_000)
 
-test('bundleCss centers quick pick in the non-preview area', async () => {
+test('bundleCss constrains and centers quick pick in the non-preview area', async () => {
   const dir = await mkdtemp(join(tmpdir(), 'lvce-bundle-css-'))
 
   try {
@@ -126,7 +357,26 @@ test('bundleCss centers quick pick in the non-preview area', async () => {
 
     const css = await readFile(join(dir, 'App.css'), 'utf8')
 
-    expect(css).toContain('left: calc((100% - var(--PreviewWidth, 0px) - var(--SecondaryPreviewWidth, 0px)) / 2);')
+    expect(css).toContain('width: min(600px, calc(100% - var(--PreviewAreasWidth, 0px) - 32px));')
+    expect(css).toContain('left: calc((100% - var(--PreviewAreasWidth, 0px)) / 2);')
+    expect(css).toContain('transform: translateX(-50%);')
+  } finally {
+    await rm(dir, { recursive: true, force: true })
+  }
+}, 30_000)
+
+test('bundleCss centers define keybinding in the non-preview area', async () => {
+  const dir = await mkdtemp(join(tmpdir(), 'lvce-bundle-css-'))
+
+  try {
+    await bundleCss({
+      outDir: dir,
+      assetDir: '',
+    })
+
+    const css = await readFile(join(dir, 'parts', 'ViewletDefineKeyBinding.css'), 'utf8')
+
+    expect(css).toContain('inset: 0 var(--PreviewAreasWidth, 0px) 0 0;')
   } finally {
     await rm(dir, { recursive: true, force: true })
   }
@@ -173,6 +423,30 @@ test('bundleCss preserves the extension detail sash divider', async () => {
   }
 }, 30_000)
 
+test('bundleCss keeps only the row separator for extension detail tabs', async () => {
+  const dir = await mkdtemp(join(tmpdir(), 'lvce-bundle-css-'))
+
+  try {
+    await bundleCss({
+      outDir: dir,
+      assetDir: '',
+    })
+
+    const css = await readFile(join(dir, 'parts', 'ViewletExtensionDetailTabs.css'), 'utf8')
+
+    expect(css).toContain(`.ExtensionDetailTabs {
+  display: flex;
+  gap: 10px;
+  contain: content;
+  border-bottom: 1px solid var(--PanelBorderTopColor, color-mix(in srgb, var(--WorkbenchForeground) 28%, transparent));`)
+    expect(css).toContain(`.ExtensionDetailTabSelected {
+  color: var(--PanelTabActiveForeground, var(--WorkbenchForeground));
+}`)
+  } finally {
+    await rm(dir, { recursive: true, force: true })
+  }
+}, 30_000)
+
 test('bundleCss preserves the color theme link foreground', async () => {
   const dir = await mkdtemp(join(tmpdir(), 'lvce-bundle-css-'))
 
@@ -205,7 +479,7 @@ test('bundleCss preserves the extension runtime status layout', async () => {
 
     expect(css).toContain(`.RuntimeStatusDefinitionList {
   align-items: baseline;
-  column-gap: 24px;
+  column-gap: 12px;
   contain: content;
   display: grid;
   grid-template-columns: max-content minmax(0, 1fr);
@@ -218,6 +492,41 @@ test('bundleCss preserves the extension runtime status layout', async () => {
   font-weight: 600;
 }`)
     expect(css).toContain(`.RuntimeStatusDefinitionList > dd {
+  margin: 0;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}`)
+  } finally {
+    await rm(dir, { recursive: true, force: true })
+  }
+}, 30_000)
+
+test('bundleCss preserves the extension security details layout', async () => {
+  const dir = await mkdtemp(join(tmpdir(), 'lvce-bundle-css-'))
+
+  try {
+    await bundleCss({
+      outDir: dir,
+      assetDir: '',
+    })
+
+    const css = await readFile(join(dir, 'parts', 'ViewletExtensionDetail.css'), 'utf8')
+
+    expect(css).toContain(`.SecurityDefinitionList {
+  align-items: baseline;
+  column-gap: 24px;
+  contain: content;
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  margin: 0;
+  max-width: 640px;
+  row-gap: 12px;
+}`)
+    expect(css).toContain(`.SecurityDefinitionList > dt {
+  color: var(--DescriptionForeground, color-mix(in srgb, var(--WorkbenchForeground) 76%, transparent));
+  font-weight: 600;
+}`)
+    expect(css).toContain(`.SecurityDefinitionList > dd {
   margin: 0;
   min-width: 0;
   overflow-wrap: anywhere;
@@ -425,7 +734,7 @@ test('bundleCss preserves the running extensions empty state artwork', async () 
   }
 }, 30_000)
 
-test('bundleCss preserves the panel background for xterm', async () => {
+test('bundleCss preserves the terminal background and editor fallbacks for xterm', async () => {
   const dir = await mkdtemp(join(tmpdir(), 'lvce-bundle-css-'))
 
   try {
@@ -440,7 +749,7 @@ test('bundleCss preserves the panel background for xterm', async () => {
   width: 100%;
   height: 100%;
   overflow: hidden;
-  background: var(--PanelBackground);
+  background: var(--TerminalBackground, var(--EditorBackground, var(--EditorBackGround, var(--MainBackground))));
 }`)
   } finally {
     await rm(dir, { recursive: true, force: true })

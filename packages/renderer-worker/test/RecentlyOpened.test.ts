@@ -95,3 +95,34 @@ test('addToRecentlyOpened - error - invalid json when reading recently opened', 
 `,
   )
 })
+
+test('removeRecentlyOpened removes equivalent local path and file URI entries', async () => {
+  // @ts-ignore
+  FileSystem.readJson.mockImplementation(() => {
+    return ['/test/folder', 'file:///test/folder/', 'remote-ssh://example/test/folder']
+  })
+  // @ts-ignore
+  FileSystem.writeFile.mockImplementation(() => {})
+
+  await RecentlyOpened.removeRecentlyOpened('file:///test/folder')
+
+  expect(FileSystem.writeFile).toHaveBeenCalledTimes(1)
+  expect(FileSystem.writeFile).toHaveBeenCalledWith('app://recently-opened.json', expect.stringContaining('remote-ssh://example/test/folder'))
+  const writeFileMock = jest.mocked(FileSystem.writeFile)
+  expect(JSON.parse(writeFileMock.mock.calls[0][1])).toEqual(['remote-ssh://example/test/folder'])
+})
+
+test('removeRecentlyOpened keeps distinct remote authorities', async () => {
+  // @ts-ignore
+  FileSystem.readJson.mockImplementation(() => {
+    return ['remote-ssh://one/test/folder', 'remote-ssh://two/test/folder']
+  })
+  // @ts-ignore
+  FileSystem.writeFile.mockImplementation(() => {})
+
+  await RecentlyOpened.removeRecentlyOpened('remote-ssh://one/test/folder')
+
+  expect(FileSystem.writeFile).toHaveBeenCalledWith('app://recently-opened.json', expect.stringContaining('remote-ssh://two/test/folder'))
+  const writeFileMock = jest.mocked(FileSystem.writeFile)
+  expect(JSON.parse(writeFileMock.mock.calls[0][1])).toEqual(['remote-ssh://two/test/folder'])
+})

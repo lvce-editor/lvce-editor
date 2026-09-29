@@ -40,11 +40,47 @@ const RendererProcess = await import('../src/parts/RendererProcess/RendererProce
 const SaveState = await import('../src/parts/SaveState/SaveState.js')
 const ViewletManager = await import('../src/parts/ViewletManager/ViewletManager.js')
 const ViewletSideBar = await import('../src/parts/ViewletSideBar/ViewletSideBar.js')
+const ViewletStates = await import('../src/parts/ViewletStates/ViewletStates.js')
 const SharedProcess = await import('../src/parts/SharedProcess/SharedProcess.js')
 const JsonRpcVersion = await import('../src/parts/JsonRpcVersion/JsonRpcVersion.js')
 
+test('component state exposes state and edits the title without changing child ownership', () => {
+  const state = {
+    ...ViewletSideBar.create(1, '', 0, 0, 300, 500),
+    childUid: 2,
+    currentViewletId: 'Explorer',
+    currentViewletRequestId: 3,
+    actionsUid: 4,
+  }
+  const componentState = ViewletSideBar.getComponentState(state)
+  const newState = ViewletSideBar.setComponentState(state, {
+    ...componentState,
+    title: 'Sidebar title',
+    childUid: 5,
+    currentViewletId: 'Search',
+    currentViewletRequestId: 6,
+    actionsUid: 7,
+  })
+
+  expect(componentState).toBe(state)
+  expect(newState).toMatchObject({
+    actionsUid: 4,
+    childUid: 2,
+    currentViewletId: 'Explorer',
+    currentViewletRequestId: 3,
+    title: 'Sidebar title',
+    uid: 1,
+  })
+})
+
+test('component state rejects a changed uid', () => {
+  const state = ViewletSideBar.create(1, '', 0, 0, 300, 500)
+  expect(() => ViewletSideBar.setComponentState(state, { ...state, uid: 2 })).toThrow('SideBar state uid must remain 1')
+})
+
 beforeEach(() => {
   jest.resetAllMocks()
+  ViewletStates.reset()
   Command.execute.mockResolvedValue('Search')
   RendererProcess.invoke.mockResolvedValue(undefined)
   SaveState.saveViewletState.mockResolvedValue(undefined)
@@ -174,6 +210,34 @@ test('handleSideBarViewletChange saves the concrete sidebar child under the view
   expect(SaveState.saveViewletState).not.toHaveBeenCalled()
 })
 
+test('handleSideBarViewletChange disposes the previously visible child', async () => {
+  const childState = { uid: 99 }
+  ViewletStates.set(99, {
+    factory: {},
+    moduleId: 'Search',
+    renderedState: childState,
+    state: childState,
+  })
+  const state = {
+    ...ViewletSideBar.create(1, '', 0, 0, 300, 500),
+    childUid: 99,
+    currentViewletId: 'Search',
+  }
+
+  await ViewletSideBar.handleSideBarViewletChange(state, 'Explorer')
+
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.sendMultiple', [
+    ['Viewlet.dispose', 99],
+    ['Viewlet.createFunctionalRoot', 'Explorer', 2, true],
+  ])
+  expect(ViewletStates.getInstance(99)).toBeUndefined()
+})
+
+test('getOwnedViewletIds returns the visible sidebar child', () => {
+  expect(ViewletSideBar.getOwnedViewletIds({ childUid: 99 })).toEqual([99])
+  expect(ViewletSideBar.getOwnedViewletIds({ childUid: -1 })).toEqual([])
+})
+
 test('handleSideBarViewletChange gives an opted-out extension view the full sidebar', async () => {
   const state = ViewletSideBar.create(1, '', 0, 0, 300, 500)
   GetExtensionViews.getExtensionView.mockResolvedValue({
@@ -268,12 +332,11 @@ test('setActionsDom updates an existing actions root', () => {
 test('setActionsDom creates an actions root when actions become available', () => {
   const state = {
     ...ViewletSideBar.create(1, '', 0, 0, 300, 500),
-    actionsEventListeners: ['click'],
     childUid: 2,
     currentViewletId: 'sample.views.main',
   }
 
-  const result = ViewletSideBar.setActionsDom(state, ['new-actions'], 2)
+  const result = ViewletSideBar.setActionsDom(state, ['new-actions'], 2, ['click'])
 
   expect(result.commands).toEqual([
     ['Viewlet.createFunctionalRoot', 'sample.views.main', result.statePatch.actionsUid, true],
@@ -282,6 +345,28 @@ test('setActionsDom creates an actions root when actions become available', () =
     ['Viewlet.setUid', result.statePatch.actionsUid, 2],
   ])
   expect(result.statePatch.actionsUid).not.toBe(-1)
+})
+
+test('setActionsDom registers new listeners on an existing actions root', () => {
+  const state = {
+    ...ViewletSideBar.create(1, '', 0, 0, 300, 500),
+    actionsUid: 3,
+    childUid: 2,
+  }
+
+  const result = ViewletSideBar.setActionsDom(state, ['updated-actions'], 2, ['click'])
+
+  expect(result).toEqual({
+    commands: [
+      ['Viewlet.registerEventListeners', 3, ['click']],
+      ['Viewlet.setDom2', 3, ['updated-actions']],
+    ],
+    handled: true,
+    renderParent: false,
+    statePatch: {
+      actionsEventListeners: ['click'],
+    },
+  })
 })
 
 test('setActionsDom ignores updates from a stale child', () => {

@@ -72,6 +72,19 @@ const createItemDirectory = (item) => {
 const createItemOther = (item) => {
   const { posInSet, setSize, icon, file, label, decorationIcon, decorationIconTitle, decorationStrikeThrough, detail, buttons } = item
   const labelClassName = getLabelClassName(decorationStrikeThrough)
+  const iconDom =
+    icon === ClassNames.ChevronRight
+      ? [
+          {
+            type: VirtualDomElements.Div,
+            className: ClassNames.Chevron,
+            childCount: 1,
+          },
+          GetIconVirtualDom.getIconVirtualDom(icon),
+        ]
+      : icon
+        ? [GetFileIconVirtualDom.getFileIconVirtualDom(icon)]
+        : []
   /**
    * @type {any[]}
    */
@@ -84,20 +97,11 @@ const createItemOther = (item) => {
       ariaPosInSet: posInSet,
       ariaSetSize: setSize,
       title: file,
-      childCount: 3,
+      childCount: 2 + (iconDom.length > 0 ? 1 : 0),
       paddingLeft: '1rem',
       paddingRight: '12px',
     },
-    ...(icon === ClassNames.ChevronRight
-      ? [
-          {
-            type: VirtualDomElements.Div,
-            className: ClassNames.Chevron,
-            childCount: 1,
-          },
-          GetIconVirtualDom.getIconVirtualDom(icon),
-        ]
-      : [GetFileIconVirtualDom.getFileIconVirtualDom(icon)]),
+    ...iconDom,
   )
   const labelDom = {
     type: VirtualDomElements.Div,

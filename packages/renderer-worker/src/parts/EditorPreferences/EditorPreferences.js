@@ -12,9 +12,10 @@ const kFormatOnSave = 'editor.formatOnSave'
 const kDiagnostics = 'editor.diagnostics'
 const kQuickSuggestions = 'editor.quickSuggestions'
 const kAutoClosingQuotes = 'editor.autoClosingQuotes'
-const kAutoClosingBrackets = 'editor.autoclosingBrackets'
+const kAutoClosingBrackets = 'editor.autoClosingBrackets'
 const kFontWeight = 'editor.fontWeight'
 const kHover = 'editor.hover'
+const kHoverDelay = 'editor.hoverDelay'
 
 export const isAutoClosingBracketsEnabled = () => {
   return Boolean(Preferences.get(kAutoClosingBrackets))
@@ -32,8 +33,13 @@ export const isAutoClosingTagsEnabled = () => {
   return true
 }
 
-export const getRowHeight = () => {
-  return Preferences.get(kLineHeight) || 20
+export const getRowHeight = (preferences) => {
+  const lineHeight = preferences ? preferences[kLineHeight] : Preferences.get(kLineHeight)
+  const fontSize = preferences ? preferences[kFontSize] || 15 : getFontSize()
+  if (typeof lineHeight !== 'number' || !Number.isFinite(lineHeight) || lineHeight < fontSize) {
+    return fontSize
+  }
+  return lineHeight
 }
 
 export const getFontSize = () => {
@@ -41,7 +47,11 @@ export const getFontSize = () => {
 }
 
 export const getHoverEnabled = () => {
-  return Preferences.get(kHover) ?? true
+  return Preferences.get(kHover) ?? false
+}
+
+export const getHoverDelay = () => {
+  return Preferences.get(kHoverDelay) ?? 200
 }
 
 export const getFontFamily = () => {

@@ -1,5 +1,10 @@
 import * as MenuWorker from '../MenuWorker/MenuWorker.js'
+import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 import * as SimpleBrowserOverlay from '../SimpleBrowserOverlay/SimpleBrowserOverlay.js'
+
+const getOverlayId = (menuId) => {
+  return menuId === MenuEntryId.Settings ? SimpleBrowserOverlay.SettingsMenu : 'menu'
+}
 
 export const show = async (x, y, menuId, ...args) => {
   await SimpleBrowserOverlay.show('menu')
@@ -12,11 +17,23 @@ export const show = async (x, y, menuId, ...args) => {
 }
 
 export const show2 = async (uid, menuId, x, y, ...args) => {
-  await SimpleBrowserOverlay.show('menu')
+  const overlayId = getOverlayId(menuId)
+  await SimpleBrowserOverlay.show(overlayId)
   try {
     await MenuWorker.invoke('Menu.show2', uid, menuId, x, y, ...args)
   } catch (error) {
-    await SimpleBrowserOverlay.hide('menu')
+    await SimpleBrowserOverlay.hide(overlayId)
+    throw error
+  }
+}
+
+export const show2Below = async (uid, menuId, x, y, ...args) => {
+  const overlayId = getOverlayId(menuId)
+  await SimpleBrowserOverlay.show(overlayId)
+  try {
+    await MenuWorker.invoke('Menu.show2Below', uid, menuId, x, y, ...args)
+  } catch (error) {
+    await SimpleBrowserOverlay.hide(overlayId)
     throw error
   }
 }
@@ -45,7 +62,7 @@ export const hide = async (restoreFocus = true) => {
   try {
     await MenuWorker.invoke('Menu.hide', restoreFocus)
   } finally {
-    await SimpleBrowserOverlay.hide('menu')
+    await Promise.all([SimpleBrowserOverlay.hide('menu'), SimpleBrowserOverlay.hide(SimpleBrowserOverlay.SettingsMenu)])
   }
 }
 
@@ -90,3 +107,13 @@ export const resetFocusedIndex = async (menu) => {
 // TODO pageup / pagedown keys
 
 // TODO more tests
+
+export const prepareContextMenu = async (port) => {
+  await SimpleBrowserOverlay.show('menu')
+  try {
+    await MenuWorker.invokeAndTransfer('Menu.handleMessagePort', port)
+  } catch (error) {
+    await SimpleBrowserOverlay.hide('menu')
+    throw error
+  }
+}

@@ -1,14 +1,19 @@
 import * as ApplyCustomWorkerPathCliOverride from '../ApplyCustomWorkerPathCliOverride/ApplyCustomWorkerPathCliOverride.ts'
 import * as GetCustomPathsConfig from '../GetCustomPathsConfig/GetCustomPathsConfig.ts'
+import * as LinkedWorkerPreferences from '../LinkedWorkerPreferences/LinkedWorkerPreferences.ts'
 import * as Platform from '../Platform/Platform.ts'
 import * as Preferences from '../Preferences/Preferences.ts'
 
 export const addCustomPathsToIndexHtml = async (content: any): Promise<any> => {
-  if (Platform.isProduction) {
+  let preferences = {}
+  if (!Platform.isProduction) {
+    preferences = ApplyCustomWorkerPathCliOverride.applyCustomWorkerPathCliOverride(await Preferences.getUserPreferences())
+  }
+  const linkedWorkerPreferences = await LinkedWorkerPreferences.getLinkedWorkerPreferences()
+  const config = GetCustomPathsConfig.getCustomPathsConfig({ ...preferences, ...linkedWorkerPreferences })
+  if (Object.keys(config).length === 0) {
     return content
   }
-  const preferences = ApplyCustomWorkerPathCliOverride.applyCustomWorkerPathCliOverride(await Preferences.getUserPreferences())
-  const config = GetCustomPathsConfig.getCustomPathsConfig(preferences)
   let newContent = content
   if (config.rendererProcessPath) {
     newContent = newContent

@@ -1,4 +1,6 @@
+import * as ComponentWorkerNames from '../ComponentWorkerNames/ComponentWorkerNames.js'
 import * as AdjustCommands from '../AdjustCommands/AdjustCommands.js'
+import * as ApplicationRegistry from '../ApplicationRegistry/ApplicationRegistry.ts'
 import * as AssetDir from '../AssetDir/AssetDir.js'
 import * as Platform from '../Platform/Platform.js'
 import * as WorkerInvokerMap from '../WorkerInvokerMap/WorkerInvokerMap.js'
@@ -77,9 +79,23 @@ const cloneStateValue = (value) => {
   return value
 }
 
+const getApplicationContext = (state, context) => {
+  const applicationId = state.applicationId ?? ApplicationRegistry.getOwner(state.uid ?? state.id)
+  if (applicationId === undefined) {
+    return context
+  }
+  const application = ApplicationRegistry.get(applicationId)
+  return {
+    ...context,
+    applicationId,
+    workspacePath: application.workspacePath,
+    workspaceUri: application.workspaceUri,
+  }
+}
+
 const createInvocation = (state, context, arguments_) => ({
   arguments: arguments_ || {},
-  context,
+  context: getApplicationContext(state, context),
   results: {},
   state,
 })
@@ -141,10 +157,49 @@ const createRenderTitle = (title) => {
 }
 
 const createWorkerViewletInternal = ({ adapter, config, context, worker }) => {
-  const { capabilities = {}, css = [], methods, name, state, variables = [], workspaceChangeEvent, workspaceChangeEventPrepend } = config
+  const { capabilities = {}, css = [], methods, name, state, variables = [], workspaceChangeEvent, workspaceChangeEventPrepend, workspaceProgressEvent } = config
   const Commands = {}
   const Events = {}
   const { idKey } = state
+  let nextRenderInvocationId = 0
+  const activeRenderInvocations = new Map()
+  const renderQueues = new Map()
+
+  const createRenderInvocation = (uid) => {
+    const invocationId = ++nextRenderInvocationId
+    activeRenderInvocations.set(uid, invocationId)
+    return {
+      finish() {
+        if (activeRenderInvocations.get(uid) === invocationId) {
+          activeRenderInvocations.delete(uid)
+        }
+      },
+      isLatest() {
+        return activeRenderInvocations.get(uid) === invocationId
+      },
+    }
+  }
+
+  const enqueueRender = async (uid, render) => {
+    const previous = renderQueues.get(uid) || Promise.resolve()
+    const run = async () => {
+      try {
+        await previous
+      } catch {
+        // The previous caller receives its error; later renders must still run.
+      }
+      return render()
+    }
+    const current = run()
+    renderQueues.set(uid, current)
+    try {
+      return await current
+    } finally {
+      if (renderQueues.get(uid) === current) {
+        renderQueues.delete(uid)
+      }
+    }
+  }
 
   if (capabilities.directRender) {
     Object.defineProperty(Commands, '__directEventRpcId', {
@@ -153,11 +208,24 @@ const createWorkerViewletInternal = ({ adapter, config, context, worker }) => {
   }
 
   const create = (id, uri, x, y, width, height, args, parentUid) => {
-    const initialState = getStateField(config, id, uri, x, y, width, height, args, parentUid, context)
+    const initialState = getStateField(config, id, uri, x, y, width, height, args, parentUid, getApplicationContext({ uid: id }, context))
     return adapter.transformState(initialState)
   }
 
-  const runRenderPipeline = async (
+  const applyOutputs = async (state, invocation, isHotReload = false) => {
+    const newState = { ...state }
+    for (const output of config.outputs || []) {
+      if (isHotReload && output.hotReload === false) {
+        continue
+      }
+      invocation.state = newState
+      invocation.results[output.stateField] = await invokeConfiguredMethod(worker, output.method, invocation)
+      newState[output.stateField] = invocation.results[output.stateField]
+    }
+    return newState
+  }
+
+  const runRenderPipelineInternal = async (
     currentState,
     invocationArguments = {},
     diffMethod = methods.diff,
@@ -167,27 +235,29 @@ const createWorkerViewletInternal = ({ adapter, config, context, worker }) => {
     const invocation = createInvocation(currentState, context, invocationArguments)
     invocation.results.diff = await invokeConfiguredMethod(worker, diffMethod, invocation)
     invocation.results.commands = await invokeConfiguredMethod(worker, renderMethod, invocation)
-    const newState = {
+    const renderedState = {
       ...currentState,
       commands: invocation.results.commands,
     }
-    for (const output of config.outputs || []) {
-      if (isHotReload && output.hotReload === false) {
-        continue
-      }
-      invocation.state = newState
-      invocation.results[output.stateField] = await invokeConfiguredMethod(worker, output.method, invocation)
-      newState[output.stateField] = invocation.results[output.stateField]
-    }
+    const newState = await applyOutputs(renderedState, invocation, isHotReload)
     return adapter.transformRenderedState(newState)
   }
 
+  const runRenderPipeline = (currentState, ...args) => {
+    const render = () => runRenderPipelineInternal(currentState, ...args)
+    if (adapter.serializeRenderPipelines) {
+      return enqueueRender(currentState[idKey], render)
+    }
+    return render()
+  }
+
   const runLoadContent = async (currentState, savedState, args, createMethod, loadMethod, isHotReload) => {
-    const loadState = adapter.prepareLoadState(currentState, { context, isHotReload, savedState, worker })
+    const applicationContext = getApplicationContext(currentState, context)
+    const loadState = adapter.prepareLoadState(currentState, { context: applicationContext, isHotReload, savedState, worker })
     const invocation = createInvocation(loadState, context, { args, savedState })
     await invokeConfiguredMethod(worker, createMethod, invocation)
     await invokeConfiguredMethod(worker, loadMethod, invocation)
-    await adapter.afterLoadContent({ context, isHotReload, savedState, state: loadState, worker })
+    await adapter.afterLoadContent({ context: applicationContext, isHotReload, savedState, state: loadState, worker })
     const diffMethod = isHotReload ? methods.hotReloadDiff || methods.diff : methods.diff
     const renderMethod = isHotReload ? methods.hotReloadRender || methods.render : methods.render
     const renderedState = await runRenderPipeline(loadState, invocation.arguments, diffMethod, renderMethod, isHotReload)
@@ -198,7 +268,7 @@ const createWorkerViewletInternal = ({ adapter, config, context, worker }) => {
     return runLoadContent(currentState, savedState, args, methods.create, methods.loadContent, false)
   }
 
-  const runCommandRenderPipeline = async (currentState, args) => {
+  const runCommandRenderPipelineInternal = async (currentState, args) => {
     const invocation = createInvocation(currentState, context, { args })
     invocation.results.diff = await invokeConfiguredMethod(worker, methods.commandDiff || methods.diff, invocation)
     if (config.commandSkipRenderWhenDiffEmpty && invocation.results.diff.length === 0) {
@@ -208,10 +278,20 @@ const createWorkerViewletInternal = ({ adapter, config, context, worker }) => {
     if (config.commandReturnStateWhenCommandsEmpty && invocation.results.commands.length === 0) {
       return currentState
     }
-    return adapter.transformRenderedState({
+    const renderedState = {
       ...currentState,
       commands: invocation.results.commands,
-    })
+    }
+    const newState = await applyOutputs(renderedState, invocation)
+    return adapter.transformRenderedState(newState)
+  }
+
+  const runCommandRenderPipeline = (currentState, args) => {
+    const render = () => runCommandRenderPipelineInternal(currentState, args)
+    if (adapter.serializeRenderPipelines) {
+      return enqueueRender(currentState[idKey], render)
+    }
+    return render()
   }
 
   Object.defineProperty(Commands, '__renderPending', {
@@ -228,7 +308,7 @@ const createWorkerViewletInternal = ({ adapter, config, context, worker }) => {
   }
 
   const createCommandWrapper = (command) => {
-    return adapter.wrapCommand(command, wrapCommand, { context, worker })
+    return adapter.wrapCommand(command, wrapCommand, { context, createRenderInvocation, enqueueRender, worker })
   }
 
   const wrapConfiguredCommand = (methodName) => {
@@ -314,6 +394,19 @@ const createWorkerViewletInternal = ({ adapter, config, context, worker }) => {
   const saveState = methods.saveState
     ? (currentState) => invokeConfiguredMethod(worker, methods.saveState, createInvocation(currentState, context))
     : undefined
+  const getComponentDom = methods.getComponentDom
+    ? (currentState) => invokeConfiguredMethod(worker, methods.getComponentDom, createInvocation(currentState, context))
+    : undefined
+  const getComponentState = methods.getComponentState
+    ? (currentState) => invokeConfiguredMethod(worker, methods.getComponentState, createInvocation(currentState, context))
+    : undefined
+  const setComponentState = methods.setComponentState
+    ? async (currentState, componentState) => {
+        const invocation = createInvocation(currentState, context, { componentState })
+        await invokeConfiguredMethod(worker, methods.setComponentState, invocation)
+        return runCommandRenderPipeline(currentState, [])
+      }
+    : undefined
   const dispose = methods.dispose
     ? (currentState) => invokeConfiguredMethod(worker, methods.dispose, createInvocation(currentState, context))
     : undefined
@@ -375,6 +468,8 @@ const createWorkerViewletInternal = ({ adapter, config, context, worker }) => {
     create,
     dispose,
     getCommands,
+    getComponentDom,
+    getComponentState,
     getKeyBindings,
     getQuickPickMenuEntries,
     getMenus,
@@ -395,8 +490,11 @@ const createWorkerViewletInternal = ({ adapter, config, context, worker }) => {
     renderTitle,
     resize,
     saveState,
+    serializeCommands: Boolean(adapter.serializeCommands),
+    setComponentState,
     workspaceChangeEvent,
     workspaceChangeEventPrepend,
+    workspaceProgressEvent,
   }
   workerViewlet.renderContent = workerViewlet.render[0]
   workerViewlet.renderDialog = workerViewlet.render[0]
@@ -423,5 +521,7 @@ export const createWorkerViewlet = ({ workerId, getPlatform = Platform.getPlatfo
   const context = createContext(getPlatform)
   const worker = WorkerInvokerMap.getWorkerInvoker(workerId)
   const adapter = WorkerViewletAdapterMap.getWorkerViewletAdapter(workerId)
-  return createWorkerViewletInternal({ adapter, config, context, worker })
+  const viewlet = createWorkerViewletInternal({ adapter, config, context, worker })
+  ComponentWorkerNames.registerViewlet(viewlet.create, workerId)
+  return viewlet
 }

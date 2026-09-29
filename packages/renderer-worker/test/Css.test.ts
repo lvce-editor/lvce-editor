@@ -26,6 +26,7 @@ beforeEach(() => {
     throw new Error('not implemented')
   }
   CssState.state.pending = Object.create(null)
+  CssState.state.references = Object.create(null)
 })
 
 jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () => {
@@ -87,4 +88,88 @@ test('loadCssStyleSheet - twice', async () => {
     'Css-test-Component',
     '/* /test/Component.css (Css-test-Component) */\nh1 { font-size: 20px; }',
   )
+})
+
+test('acquireCssStyleSheet keeps a shared stylesheet until its last view releases it', async () => {
+  // @ts-ignore
+  globalThis.fetch = jest.fn(() => {
+    return new Response({
+      ok: true,
+      statusText: 'ok',
+      // @ts-ignore
+      text: 'h1 { font-size: 20px; }',
+    })
+  })
+
+  await Css.acquireCssStyleSheet('/test/Component.css')
+  await Css.acquireCssStyleSheet('/test/Component.css')
+
+  expect(fetch).toHaveBeenCalledTimes(1)
+  expect(Css.releaseCssStyleSheet('/test/Component.css')).toEqual([])
+  expect(Css.releaseCssStyleSheet('/test/Component.css')).toEqual([['Css.removeCssStyleSheet', 'Css-test-Component']])
+})
+
+test('acquireCssStyleSheet adopts a stylesheet again after its last view released it', async () => {
+  // @ts-ignore
+  globalThis.fetch = jest.fn(() => {
+    return new Response({
+      ok: true,
+      statusText: 'ok',
+      // @ts-ignore
+      text: 'h1 { font-size: 20px; }',
+    })
+  })
+
+  await Css.acquireCssStyleSheet('/test/Component.css')
+  Css.releaseCssStyleSheet('/test/Component.css')
+  await Css.acquireCssStyleSheet('/test/Component.css')
+
+  expect(fetch).toHaveBeenCalledTimes(2)
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(2)
+})
+
+test('reloadDynamicCss updates an acquired stylesheet without changing its ownership', async () => {
+  const getCss = jest.fn((_preferences: Record<string, unknown>) => ':root { --editor-font-family: serif; }')
+  const id = 'Editor'
+  CssState.state.pending[id] = Promise.resolve()
+  CssState.state.references[id] = 2
+
+  await Css.reloadDynamicCss(id, getCss, { 'editor.fontFamily': 'serif' })
+
+  expect(getCss).toHaveBeenCalledWith({ 'editor.fontFamily': 'serif' })
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Css.addCssStyleSheet', id, ':root { --editor-font-family: serif; }')
+  expect(CssState.has(id)).toBe(true)
+  expect(CssState.state.references[id]).toBe(2)
+})
+
+// Panel workers commit disposal commands on their direct renderer connection.
+// Exercise the scheduler too: mocking only RendererProcess misses its CSS cache.
+test.each(['static', 'dynamic'])('reacquires %s CSS after removal on a direct renderer connection', async (kind) => {
+  const RendererFrameScheduler = await import('../src/parts/RendererFrameScheduler/RendererFrameScheduler.js')
+  const sheets = new Map<string, string>()
+  const rpc = {
+    invoke: jest.fn(async (method: string, id: string, text?: string) => {
+      if (method === 'Css.addCssStyleSheet') sheets.set(id, text!)
+      if (method === 'Css.removeCssStyleSheet') sheets.delete(id)
+    }),
+  }
+  RendererFrameScheduler.reset(rpc)
+  jest.mocked(RendererProcess.invoke).mockImplementation(RendererFrameScheduler.invoke)
+  const path = '/css/parts/ViewletOutput.css'
+  const id = kind === 'static' ? 'CssViewletOutput' : 'Output'
+  globalThis.fetch = jest.fn(async () => ({ ok: true, text: async () => '.Output { flex: 1; }' }) as Response)
+  const acquire = () => (kind === 'static' ? Css.acquireCssStyleSheet(path) : Css.acquireDynamicCss(id, () => '.Output { flex: 1; }', {}))
+  const release = () => (kind === 'static' ? Css.releaseCssStyleSheet(path) : Css.releaseDynamicCss(id))
+
+  await acquire()
+  await acquire()
+  expect(sheets.has(id)).toBe(true)
+  expect(release()).toEqual([])
+  expect(rpc.invoke).toHaveBeenCalledTimes(1)
+  for (const [method, sheetId] of release()) {
+    await rpc.invoke(method, sheetId)
+  }
+  expect(sheets.has(id)).toBe(false)
+  await acquire()
+  expect(sheets.has(id)).toBe(true)
 })

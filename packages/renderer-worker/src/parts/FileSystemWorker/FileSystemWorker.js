@@ -1,6 +1,6 @@
 import * as GetOrCreateWorker from '../GetOrCreateWorker/GetOrCreateWorker.js'
 import * as LaunchFileSystemWorker from '../LaunchFileSystemWorker/LaunchFileSystemWorker.js'
 
-const { invoke, invokeAndTransfer, restart } = GetOrCreateWorker.getOrCreateWorker(LaunchFileSystemWorker.launchFileSystemWorker)
+const { dispose, invoke, invokeAndTransfer, restart } = GetOrCreateWorker.getOrCreateWorker(LaunchFileSystemWorker.launchFileSystemWorker)
 
-export { invoke, invokeAndTransfer, restart }
+export { dispose, invoke, invokeAndTransfer, restart }

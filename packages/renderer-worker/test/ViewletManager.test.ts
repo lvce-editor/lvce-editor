@@ -1,5 +1,7 @@
 import { beforeEach, expect, jest, test } from '@jest/globals'
+import * as ApplicationRegistry from '../src/parts/ApplicationRegistry/ApplicationRegistry.ts'
 import { CancelationError } from '../src/parts/Errors/CancelationError.js'
+import * as VirtualDomElements from '../src/parts/VirtualDomElements/VirtualDomElements.js'
 import * as ViewletStates from '../src/parts/ViewletStates/ViewletStates.js'
 
 beforeEach(() => {
@@ -35,6 +37,7 @@ jest.unstable_mockModule('../src/parts/PrettyError/PrettyError.js', () => {
       codeFrame: error.codeFrame || '',
       message: error.message,
       stack: '    at treeToArray (editorWorkerMain.js:10:8)',
+      syntaxHighlightedCodeFrame: error.syntaxHighlightedCodeFrame,
       type: error.name,
     }),
     getMessage: (error: any) => `${error.type}: ${error.message}`,
@@ -46,8 +49,61 @@ const RendererProcess = await import('../src/parts/RendererProcess/RendererProce
 
 const Command = await import('../src/parts/Command/Command.js')
 const ViewletManager = await import('../src/parts/ViewletManager/ViewletManager.js')
+const Viewlet = await import('../src/parts/Viewlet/Viewlet.js')
 const ViewletExtensionViewRender = await import('../src/parts/ViewletExtensionView/ViewletExtensionViewRender.ts')
 const ViewletLayout = await import('../src/parts/ViewletLayout/ViewletLayout.ipc.js')
+
+test('UID-targeted async rendering ignores focus and never falls back after disposal', async () => {
+  const renderPending = Object.assign(
+    jest.fn((state) => state),
+    { targetUid: true },
+  )
+  const factory = {
+    Commands: { renderPending },
+    create: () => ({ uid: 91 }),
+    loadContent: (state) => state,
+    render: [],
+  }
+  await ViewletManager.load({ getModule: async () => factory, id: 'TargetedRender', uid: 91, type: 0 })
+  const other = { uid: 92 }
+  ViewletStates.set(92, { factory, moduleId: 'TargetedRender', renderedState: other, state: other })
+  ViewletStates.state.focusedInstanceByType.TargetedRender = 92
+  await Command.execute('TargetedRender.renderPending', 91)
+  expect(renderPending).toHaveBeenLastCalledWith(expect.objectContaining({ uid: 91 }))
+  ViewletStates.remove(91)
+  renderPending.mockClear()
+  await Command.execute('TargetedRender.renderPending', 91)
+  expect(renderPending).not.toHaveBeenCalled()
+})
+
+test('save accepts an explicit editor UID without treating it as a formatting option', async () => {
+  const save = Object.assign(
+    jest.fn((state, _skipFormatting?: boolean) => state),
+    { acceptsTargetUid: true },
+  )
+  const factory = {
+    Commands: { save },
+    create: () => ({ uid: 91 }),
+    loadContent: (state) => state,
+    render: [],
+  }
+  await ViewletManager.load({ getModule: async () => factory, id: 'SaveTarget', uid: 91, type: 0 })
+  const other = { uid: 92 }
+  ViewletStates.set(92, { factory, moduleId: 'SaveTarget', renderedState: other, state: other })
+  ViewletStates.state.focusedInstanceByType.SaveTarget = 92
+  await Command.execute('SaveTarget.save', 91)
+  expect(save).toHaveBeenLastCalledWith(expect.objectContaining({ uid: 91 }))
+  await Command.execute('SaveTarget.save', 91, true)
+  expect(save).toHaveBeenLastCalledWith(expect.objectContaining({ uid: 91 }), true)
+  await Command.execute('SaveTarget.save')
+  expect(save).toHaveBeenLastCalledWith(expect.objectContaining({ uid: 92 }))
+  await Command.execute('SaveTarget.save', false)
+  expect(save).toHaveBeenLastCalledWith(expect.objectContaining({ uid: 92 }), false)
+  ViewletStates.remove(91)
+  save.mockClear()
+  await Command.execute('SaveTarget.save', 91)
+  expect(save).not.toHaveBeenCalled()
+})
 
 test('runLoadContentLater starts deferred loading once', async () => {
   const loadContentLater = jest.fn(async (_state: unknown) => {})
@@ -534,6 +590,51 @@ test('functional getStatusBarVisible command returns its boolean value', async (
   await expect(Command.execute('StatusBarQueryTest.getStatusBarVisible')).resolves.toBe(false)
 })
 
+test('functional commands run afterRender after updating the renderer', async () => {
+  const callOrder: string[] = []
+  const oldState = { content: 'old', uid: 15 }
+  const newState = { content: 'new', uid: 15 }
+  const afterRender = jest.fn(async (_oldState: Readonly<typeof oldState>, _newState: Readonly<typeof newState>): Promise<void> => {
+    callOrder.push('afterRender')
+  })
+  const mockModule = {
+    Commands: {
+      update: jest.fn(async (): Promise<typeof newState> => newState),
+    },
+    afterRender,
+    create: jest.fn((): typeof oldState => oldState),
+    hasFunctionalRender: true,
+    hasFunctionalRootRender: true,
+    loadContent: jest.fn((state: Readonly<typeof oldState>): Readonly<typeof oldState> => state),
+    render: [
+      {
+        apply: jest.fn((): string[][] => [['Viewlet.setText', 'new']]),
+        isEqual: jest.fn((): boolean => false),
+        multiple: true,
+      },
+    ],
+  }
+  const viewlet = {
+    disposed: false,
+    focus: false,
+    getModule: async (): Promise<typeof mockModule> => mockModule,
+    id: 'AfterRenderTest',
+    show: false,
+    type: 0,
+    uid: 15,
+    uri: '',
+  }
+  await ViewletManager.load(viewlet)
+  jest.mocked(RendererProcess.invoke).mockImplementation(async (): Promise<void> => {
+    callOrder.push('render')
+  })
+
+  await Command.execute('AfterRenderTest.update')
+
+  expect(callOrder).toEqual(['render', 'afterRender'])
+  expect(afterRender).toHaveBeenCalledWith(oldState, newState)
+})
+
 test('extension view render sends a dynamic title to its parent', () => {
   const dom = []
   const oldState = {
@@ -787,6 +888,34 @@ test('extension view render sends a title command while loading a new child', ()
   expect(ViewletStates.getState(2)).toBe(parentState)
 })
 
+test('extension view render ignores a title update when the parent cannot receive it', () => {
+  const parentState = {
+    childUid: 3,
+    title: 'Search',
+    uid: 2,
+  }
+  ViewletStates.set(2, {
+    factory: {},
+    renderedState: parentState,
+    state: parentState,
+  })
+  const oldState = {
+    commands: [],
+    dom: [],
+    kind: 'virtualDom',
+    patches: [],
+    title: 'Testing',
+  }
+  const newState = {
+    ...oldState,
+    title: 'Testing: Updated',
+  }
+
+  const commands = ViewletManager.render(ViewletExtensionViewRender, oldState, newState, 1, 2)
+
+  expect(commands).toEqual([])
+})
+
 test.skip('load', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
@@ -855,6 +984,29 @@ test('load - race condition', async () => {
   expect(mockModule.contentLoaded).not.toHaveBeenCalled()
 })
 
+test('load applies the latest resize received before the viewlet instance is registered', async () => {
+  const resizeEffect = jest.fn()
+  const mockModule = {
+    create: jest.fn((uid: number) => ({ uid, x: 0, y: 0, width: 0, height: 0 })),
+    hasFunctionalResize: true,
+    loadContent: jest.fn(async (state: { uid: number }) => {
+      await Viewlet.resize(state.uid, { x: 10, y: 20, width: 300, height: 200 })
+      await Viewlet.resize(state.uid, { x: 40, y: 50, width: 800, height: 600 })
+      return { ...state, browserViewId: 1 }
+    }),
+    resize: jest.fn((state: { browserViewId?: number }, dimensions: { x: number; y: number; width: number; height: number }) => ({ ...state, ...dimensions })),
+    resizeEffect,
+  }
+  const state = ViewletManager.create(async () => mockModule, 'test', 0, '', 0, 0, 0, 0)
+
+  await ViewletManager.load(state)
+
+  expect(mockModule.resize).toHaveBeenCalledTimes(1)
+  expect(mockModule.resize).toHaveBeenCalledWith(expect.objectContaining({ browserViewId: 1 }), { x: 40, y: 50, width: 800, height: 600 })
+  expect(resizeEffect).toHaveBeenCalledWith(expect.objectContaining({ x: 40, y: 50, width: 800, height: 600 }))
+  expect(Viewlet.getState(1)).toMatchObject({ x: 40, y: 50, width: 800, height: 600 })
+})
+
 test('load should mark the loaded instance as focused for its module type', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
@@ -884,6 +1036,30 @@ test('load should mark the loaded instance as focused for its module type', asyn
   await ViewletManager.load(state)
 
   expect(ViewletStates.getFocusedInstanceByType('ChatDebug')).toBe(1)
+})
+
+test('loading an unfocused preview does not redirect source editor keyboard commands', async () => {
+  jest.mocked(RendererProcess.invoke).mockResolvedValue(undefined)
+  ApplicationRegistry.create({ id: 'preview', layoutUid: 90, href: '/', workspacePath: '/', workspaceUri: 'memfs:///' })
+  ViewletStates.state.focusedInstanceByType.Editor = 42
+  const module = {
+    create: jest.fn(() => ({})),
+    loadContent: jest.fn(async (state) => state),
+    hasFunctionalRender: true,
+    render: () => [
+      ['Viewlet.setFocusContext', 1, 1],
+      ['Viewlet.focus', 1],
+    ],
+  }
+  const viewlet = { ...ViewletManager.create(async () => module, 'Editor', 0, 'test', 0, 0, 600, 800), applicationId: 'preview', moduleId: 'Editor' }
+  try {
+    const commands = await ViewletManager.load({ ...viewlet, show: false }, false, false)
+    expect(commands).not.toEqual(expect.arrayContaining([['Viewlet.focus', 1]]))
+    expect(ViewletStates.state.focusedInstanceByType.Editor).toBe(42)
+  } finally {
+    ViewletStates.reset()
+    ApplicationRegistry.remove('preview')
+  }
 })
 
 test('load - custom error renderer preserves the original error and does not append a detached viewlet', async () => {
@@ -941,6 +1117,84 @@ test('load - custom error renderer preserves the original error and does not app
     ['Viewlet.create', 'Error', 42],
     ['Viewlet.create', 'EditorTextError', 42],
     ['Viewlet.setDom2', 42, errorDom],
+  ])
+})
+
+test('load - renders a syntax highlighted generic error', async () => {
+  // @ts-ignore
+  RendererProcess.invoke.mockResolvedValue(undefined)
+  const syntaxHighlightedCodeFrame = [
+    {
+      childCount: 1,
+      className: 'SyntaxHighlightedCodeFrame',
+      type: VirtualDomElements.Pre,
+    },
+    {
+      childCount: 0,
+      text: 'throw error',
+      type: VirtualDomElements.Text,
+    },
+  ]
+  const error = new TypeError('Oops')
+  // @ts-ignore
+  error.syntaxHighlightedCodeFrame = syntaxHighlightedCodeFrame
+  const getModule = async () => ({
+    create() {
+      return { uid: 42 }
+    },
+    loadContent() {
+      throw error
+    },
+  })
+  const viewlet = {
+    append: false,
+    disposed: false,
+    getModule,
+    id: 'VideoPreview',
+    parentUid: -1,
+    setBounds: false,
+    show: false,
+    type: 0,
+    uid: 42,
+    uri: 'test://video.mp4',
+  }
+
+  const commands = await ViewletManager.load(viewlet)
+
+  expect(commands).toEqual([
+    ['Viewlet.create', 'Error', 42],
+    [
+      'Viewlet.setDom2',
+      42,
+      [
+        {
+          childCount: 3,
+          className: 'Viewlet Error',
+          type: VirtualDomElements.Div,
+        },
+        {
+          childCount: 1,
+          className: 'ViewletErrorMessage',
+          type: VirtualDomElements.Div,
+        },
+        {
+          childCount: 0,
+          text: 'TypeError: Oops',
+          type: VirtualDomElements.Text,
+        },
+        ...syntaxHighlightedCodeFrame,
+        {
+          childCount: 1,
+          className: 'ViewletErrorStack',
+          type: VirtualDomElements.Pre,
+        },
+        {
+          childCount: 0,
+          text: '    at treeToArray (editorWorkerMain.js:10:8)',
+          type: VirtualDomElements.Text,
+        },
+      ],
+    ],
   ])
 })
 
@@ -1193,4 +1447,215 @@ test('backgroundLoad', async () => {
     },
     { value: 42 },
   )
+})
+
+test('commands with side effects run afterRender after their bounds and DOM updates', async () => {
+  const callOrder: string[] = []
+  const oldState = { content: 'old', uid: 15 }
+  const newState = { content: 'new', uid: 15 }
+  const afterRender = jest.fn(async (_oldState: Readonly<typeof oldState>, _newState: Readonly<typeof newState>): Promise<void> => {
+    callOrder.push('afterRender')
+  })
+  const mockModule = {
+    CommandsWithSideEffects: {
+      update: jest.fn(async (): Promise<any> => ({ newState, commands: [['Viewlet.setBounds', 15, 0, 0, 800, 600]] })),
+    },
+    afterRender,
+    create: jest.fn((): typeof oldState => oldState),
+    hasFunctionalRender: true,
+    hasFunctionalRootRender: true,
+    loadContent: jest.fn((state: Readonly<typeof oldState>): Readonly<typeof oldState> => state),
+    render: [
+      {
+        apply: jest.fn((): string[][] => [['Viewlet.setText', 'new']]),
+        isEqual: jest.fn((): boolean => false),
+        multiple: true,
+      },
+    ],
+  }
+  const viewlet = {
+    disposed: false,
+    focus: false,
+    getModule: async (): Promise<typeof mockModule> => mockModule,
+    id: 'SideEffectAfterRenderTest',
+    show: false,
+    type: 0,
+    uid: 15,
+    uri: '',
+  }
+  await ViewletManager.load(viewlet)
+  jest.mocked(RendererProcess.invoke).mockImplementation(async (): Promise<void> => {
+    callOrder.push('render')
+  })
+
+  await Command.execute('SideEffectAfterRenderTest.update')
+
+  expect(callOrder).toEqual(['render', 'afterRender'])
+  expect(afterRender).toHaveBeenCalledWith(oldState, newState)
+})
+
+test('functional commands retain concurrent layout flags and compare hooks against the latest rendered state', async () => {
+  const initial = { uid: 94, fullWidth: false, inputValue: '' }
+  const latest = { ...initial, fullWidth: true }
+  const afterRender = jest.fn()
+  const factory = {
+    Commands: {
+      update: async (state: typeof initial) => {
+        ViewletStates.setRenderedState(94, latest)
+        return { ...state, inputValue: 'typed' }
+      },
+    },
+    afterRender,
+    create: () => initial,
+    hasFunctionalRender: true,
+    loadContent: (state: typeof initial) => state,
+    render: [],
+  }
+  await ViewletManager.load({ getModule: async () => factory, id: 'ConcurrentBrowserInput', uid: 94, type: 0 })
+  jest.mocked(RendererProcess.invoke).mockResolvedValue(undefined as never)
+  await Command.execute('ConcurrentBrowserInput.update')
+  expect(ViewletStates.getState(94)).toEqual({ ...latest, inputValue: 'typed' })
+  expect(afterRender).toHaveBeenCalledWith(latest, { ...latest, inputValue: 'typed' })
+})
+
+test('commands without an instance still run after the last viewlet is disposed', async () => {
+  const refreshAll = Object.assign(
+    jest.fn(async () => {}),
+    { requiresInstance: false },
+  )
+  const factory = {
+    Commands: { refreshAll },
+    create: () => ({ uid: 93 }),
+    loadContent: (state) => state,
+    render: [],
+  }
+  await ViewletManager.load({ getModule: async () => factory, id: 'RefreshAll', uid: 93, type: 0 })
+  await Command.execute('RefreshAll.refreshAll')
+  expect(refreshAll).toHaveBeenLastCalledWith()
+  ViewletStates.remove(93)
+  refreshAll.mockClear()
+  await Command.execute('RefreshAll.refreshAll')
+  expect(refreshAll).toHaveBeenCalledTimes(1)
+  expect(refreshAll).toHaveBeenLastCalledWith()
+})
+
+test.each(['command', 'lazy', 'targetUid', 'sideEffect', 'lazySideEffect', 'event'])(
+  '%s commands share the viewlet queue through rendering and native visibility effects',
+  async (kind) => {
+    const Viewlet = await import('../src/parts/Viewlet/Viewlet.js')
+    const GlobalEventBus = await import('../src/parts/GlobalEventBus/GlobalEventBus.js')
+    const startedRendering = Promise.withResolvers<void>()
+    const finishRendering = Promise.withResolvers<void>()
+    const initial = { uid: 95, overlay: false }
+    let nativeVisible = true
+    const navigate = jest.fn(async (state: typeof initial) => {
+      nativeVisible = true
+      const newState = { ...state, overlay: false }
+      return kind.includes('SideEffect') || kind === 'sideEffect' ? { newState, commands: [] } : newState
+    })
+    if (kind === 'targetUid') Object.assign(navigate, { targetUid: true })
+    const factory = {
+      name: 'QueuedBrowser',
+      Events: kind === 'event' ? { 'queued-browser-event': navigate } : {},
+      create: () => initial,
+      loadContent: (state) => state,
+      hasFunctionalRender: true,
+      serializeCommands: true,
+      Commands: {
+        showOverlay: (state) => ({ ...state, overlay: true }),
+        ...(['command', 'targetUid'].includes(kind) ? { navigate } : {}),
+      },
+      LazyCommands: kind === 'lazy' ? { navigate: async () => ({ navigate }) } : {},
+      CommandsWithSideEffects: kind === 'sideEffect' ? { navigate } : {},
+      CommandsWithSideEffectsLazy: kind === 'lazySideEffect' ? { navigate: async () => ({ navigate }) } : {},
+      render: () => [['Viewlet.setText', 95, 'overlay']],
+      afterRender: async (_oldState, newState) => {
+        if (newState.overlay) nativeVisible = false
+      },
+    }
+    await ViewletManager.load({ getModule: async () => factory, id: 'QueuedBrowser', uid: 95, type: 0 })
+    jest.mocked(RendererProcess.invoke).mockImplementation(async () => {})
+    jest.mocked(RendererProcess.invoke).mockImplementationOnce(async () => {
+      startedRendering.resolve()
+      await finishRendering.promise
+    })
+    const overlay = Viewlet.executeViewletCommand(95, 'showOverlay')
+    await startedRendering.promise
+    const navigation =
+      kind === 'event'
+        ? GlobalEventBus.emitEvent('queued-browser-event')
+        : Command.execute('QueuedBrowser.navigate', ...(kind === 'targetUid' ? [95] : []))
+    try {
+      await new Promise<void>((resolve) => setTimeout(resolve, 0))
+      expect(navigate).not.toHaveBeenCalled()
+    } finally {
+      finishRendering.resolve()
+      await Promise.all([overlay, navigation])
+      delete GlobalEventBus.state.listenerMap['queued-browser-event']
+    }
+    expect(ViewletStates.getState(95).overlay).toBe(false)
+    expect(nativeVisible).toBe(true)
+  },
+)
+
+test.each(['preferences', 'workspace'])('%s events consume focus context before sending render commands', async (eventKind) => {
+  const GlobalEventBus = await import('../src/parts/GlobalEventBus/GlobalEventBus.js')
+  const FocusState = await import('../src/parts/FocusState/FocusState.js')
+  const moduleId = `EventFocus${eventKind}`
+  const eventName = `test.${moduleId}`
+  const update = (state) => ({ ...state, updated: true })
+  const factory = {
+    name: moduleId,
+    hasFunctionalEvents: true,
+    create: () => ({ uid: 93, updated: false }),
+    loadContent: (state) => state,
+    ...(eventKind === 'preferences'
+      ? { Events: { [eventName]: update } }
+      : { Commands: { handleWorkspaceChange: update }, workspaceChangeEvent: eventName }),
+    render: [
+      {
+        isEqual: (_oldState, newState) => !newState.updated,
+        apply: () => [
+          ['Viewlet.setFocusContext', 93, 123],
+          ['Viewlet.setDom2', 93, []],
+        ],
+        multiple: true,
+      },
+    ],
+  }
+  jest.mocked(RendererProcess.invoke).mockResolvedValue(undefined)
+  await ViewletManager.load({ getModule: async () => factory, id: moduleId, uid: 93, type: 0 })
+  jest.mocked(RendererProcess.invoke).mockClear()
+  try {
+    await GlobalEventBus.emitEvent(eventName)
+    expect(RendererProcess.invoke).toHaveBeenLastCalledWith('Viewlet.sendMultiple', [['Viewlet.setDom2', 93, []]])
+    expect(FocusState.get()).toBe(123)
+  } finally {
+    delete GlobalEventBus.state.listenerMap[eventName]
+  }
+})
+
+test('a named transfer command can await an attachment on its serialized viewlet queue', async () => {
+  const Viewlet = await import('../src/parts/Viewlet/Viewlet.js')
+  const initial = { uid: 96, owner: 'main' }
+  const factory = {
+    name: 'TransferPanel',
+    create: () => initial,
+    loadContent: (state) => state,
+    hasFunctionalRender: true,
+    serializeCommands: true,
+    concurrentCommands: ['drop'],
+    Commands: {
+      drop: async (state) => {
+        await Viewlet.executeViewletCommand(96, 'attach')
+        return state
+      },
+      attach: (state) => ({ ...state, owner: 'panel' }),
+    },
+    render: () => [],
+  }
+  await ViewletManager.load({ getModule: async () => factory, id: 'TransferPanel', uid: 96, type: 0 })
+  jest.mocked(RendererProcess.invoke).mockImplementation(async () => {})
+  await Command.execute('TransferPanel.drop')
+  expect(ViewletStates.getState(96).owner).toBe('panel')
 })

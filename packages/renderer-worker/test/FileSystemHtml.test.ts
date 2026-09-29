@@ -95,10 +95,6 @@ const getError = async (promise) => {
   }
 }
 
-test('getPathSeparator', async () => {
-  expect(FileSystemHtml.getPathSeparator()).toBe('/')
-})
-
 test('exists - exists', async () => {
   // @ts-ignore
   PersistentFileHandle.getHandle.mockResolvedValue({})
@@ -409,6 +405,24 @@ test('writeFile - creates missing file', async () => {
   expect(createWritable).toHaveBeenCalledTimes(1)
   expect(write).toHaveBeenCalledTimes(1)
   expect(write).toHaveBeenCalledWith('hello')
+  expect(close).toHaveBeenCalledTimes(1)
+})
+
+test('writeBlob - creates missing file with the original binary content', async () => {
+  const blob = new Blob([new Uint8Array([0, 255, 42])], { type: 'image/png' })
+  const write = jest.fn()
+  const close = jest.fn()
+  const createWritable = jest.fn(() => ({ write, close }))
+  const handle = { createWritable }
+  // @ts-ignore
+  PersistentFileHandle.getHandle.mockImplementation((uri) => (uri === 'html:///test' ? {} : undefined))
+  // @ts-ignore
+  FileSystemDirectoryHandle.getFileHandle.mockResolvedValue(handle)
+
+  await FileSystemHtml.writeBlob('html:///test/image (2).png', blob)
+
+  expect(FileSystemDirectoryHandle.getFileHandle).toHaveBeenCalledWith(expect.anything(), 'image (2).png', { create: true })
+  expect(write).toHaveBeenCalledWith(blob)
   expect(close).toHaveBeenCalledTimes(1)
 })
 

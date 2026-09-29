@@ -73,10 +73,6 @@ export const mkdir = (uri) => {
   throw new Error('Fetch file systems are readonly')
 }
 
-export const getPathSeparator = () => {
-  return PathSeparatorType.Slash
-}
-
 export const isReadonly = () => {
   return true
 }

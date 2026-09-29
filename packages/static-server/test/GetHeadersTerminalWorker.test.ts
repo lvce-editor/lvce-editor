@@ -10,7 +10,8 @@ test('terminal worker allows authenticated loopback websocket connections', () =
     applicationName: 'lvce',
   })
 
-  expect(headers['Content-Security-Policy']).toContain(`connect-src 'self' ws://127.0.0.1:* ws://localhost:*`)
+  expect(headers['Content-Security-Policy']).toContain(`connect-src 'self' https: wss:`)
+  expect(headers['Content-Security-Policy']).toContain(`ws://127.0.0.1:* ws://localhost:*`)
 })
 
 test('text search worker allows authenticated loopback websocket connections', () => {
@@ -22,7 +23,21 @@ test('text search worker allows authenticated loopback websocket connections', (
     applicationName: 'lvce',
   })
 
-  expect(headers['Content-Security-Policy']).toContain(`connect-src 'self' ws://127.0.0.1:* ws://localhost:*`)
+  expect(headers['Content-Security-Policy']).toContain(`connect-src 'self' https: wss:`)
+  expect(headers['Content-Security-Policy']).toContain(`ws://127.0.0.1:* ws://localhost:*`)
+})
+
+test('file system worker allows authenticated loopback websocket connections', () => {
+  const headers = GetHeaders.getHeaders({
+    absolutePath: '/test/fileSystemWorkerMain.js',
+    etag: 'test-etag',
+    isImmutable: false,
+    isForElectronProduction: false,
+    applicationName: 'lvce',
+  })
+
+  expect(headers['Content-Security-Policy']).toContain(`connect-src 'self'`)
+  expect(headers['Content-Security-Policy']).toContain(`ws://127.0.0.1:* ws://localhost:*`)
 })
 
 test('process explorer worker allows authenticated loopback websocket connections', () => {
@@ -34,5 +49,6 @@ test('process explorer worker allows authenticated loopback websocket connection
     applicationName: 'lvce',
   })
 
-  expect(headers['Content-Security-Policy']).toContain(`connect-src 'self' ws://127.0.0.1:* ws://localhost:*`)
+  expect(headers['Content-Security-Policy']).toContain(`connect-src 'self' https: wss:`)
+  expect(headers['Content-Security-Policy']).toContain(`ws://127.0.0.1:* ws://localhost:*`)
 })

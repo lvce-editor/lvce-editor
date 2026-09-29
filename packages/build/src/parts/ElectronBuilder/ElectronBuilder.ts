@@ -9,12 +9,14 @@ import * as CreatePlaceholderElectronApp from '../CreatePlaceholderElectronApp/C
 import * as ElectronBuilderConfigType from '../ElectronBuilderConfigType/ElectronBuilderConfigType.ts'
 import * as FileExtension from '../FileExtension/FileExtension.ts'
 import * as GetElectronVersion from '../GetElectronVersion/GetElectronVersion.ts'
+import * as GetWindowsUnpackedDir from '../GetWindowsUnpackedDir/GetWindowsUnpackedDir.ts'
 import * as Logger from '../Logger/Logger.ts'
 import * as Path from '../Path/Path.ts'
 import * as Remove from '../Remove/Remove.ts'
 import * as Rename from '../Rename/Rename.ts'
 import * as Replace from '../Replace/Replace.ts'
 import * as ResolveBuiltArtifactPath from '../ResolveBuiltArtifactPath/ResolveBuiltArtifactPath.ts'
+import * as SignMacApp from '../SignMacApp/SignMacApp.ts'
 import * as Stat from '../Stat/Stat.ts'
 import * as Tag from '../Tag/Tag.ts'
 import * as Template from '../Template/Template.ts'
@@ -128,6 +130,7 @@ const getElectronBuilderTargets = ({ config, arch }) => {
 }
 
 const runElectronBuilder = async ({ config, product, arch }) => {
+  const previousFilter = process.env.ELECTRON_BUILDER_7Z_FILTER
   try {
     const options: ElectronBuilder.CliOptions = {
       projectDir: Path.absolute('packages/build/.tmp/electron-builder'),
@@ -138,14 +141,23 @@ const runElectronBuilder = async ({ config, product, arch }) => {
       // win: ['portable'],
     }
 
-    // if (process.env.HIGHEST_COMPRESSION) {
-    //   Logger.info('[info] using highest compression, this may take some time')
-    //   process.env.ELECTRON_BUILDER_7Z_FILTER = 'bcj2'
-    //   process.env.ELECTRON_BUILDER_COMPRESSION_LEVEL = '5'
-    // }
+    if (config === ElectronBuilderConfigType.WindowsExe) {
+      // Modern 7-Zip can select filters the bundled Nsis7z decoder silently
+      // skips. BCJ is supported for both x64 and ARM64 installer payloads.
+      // https://github.com/electron-userland/electron-builder/issues/9983
+      process.env.ELECTRON_BUILDER_7Z_FILTER = 'BCJ'
+    }
     await ElectronBuilder.build(options)
   } catch (error) {
     throw new VError(error, `Electron builder failed to execute`)
+  } finally {
+    if (config === ElectronBuilderConfigType.WindowsExe) {
+      if (previousFilter === undefined) {
+        delete process.env.ELECTRON_BUILDER_7Z_FILTER
+      } else {
+        process.env.ELECTRON_BUILDER_7Z_FILTER = previousFilter
+      }
+    }
   }
 }
 
@@ -332,9 +344,9 @@ const copyElectronResult = async ({
     await Template.write('windows_cli_bash', `packages/build/.tmp/linux/snap/${debArch}/app/bin/${product.applicationName}`, {
       '@@WINDOWS_EXECUTABLE_NAME@@': product.windowsExecutableName,
     })
-    await CreatePlaceholderElectronApp.createPlaceholderElectronApp({ product, version, config, electronVersion, asar })
+    await CreatePlaceholderElectronApp.createPlaceholderElectronApp({ product, version, config, electronVersion, arch, asar })
     await Copy.copyFile({
-      from: `packages/build/.tmp/electron-builder-placeholder-app/dist/win-unpacked/${product.windowsExecutableName}.exe`,
+      from: `packages/build/.tmp/electron-builder-placeholder-app/dist/${GetWindowsUnpackedDir.getWindowsUnpackedDir(arch)}/${product.windowsExecutableName}.exe`,
       to: `packages/build/.tmp/linux/snap/${debArch}/app/${product.windowsExecutableName}.exe`,
     })
   }
@@ -390,6 +402,16 @@ export const build = async ({
     isAppImage,
   })
   console.timeEnd('copyElectronResult')
+
+  if (config === ElectronBuilderConfigType.Mac) {
+    console.time('signMacApp')
+    await SignMacApp.signMacApp({
+      appPath: getPrepackagedPath({ config, product }),
+      entitlementsPath: Path.absolute('packages/build/files/mac/entitlements.mac.plist'),
+      entitlementsInheritPath: Path.absolute('packages/build/files/mac/entitlements.mac.inherit.plist'),
+    })
+    console.timeEnd('signMacApp')
+  }
 
   console.time('copyElectronBuilderConfig')
   await copyElectronBuilderConfig({ config, version, product, electronVersion, bundleMainProcess, asar })

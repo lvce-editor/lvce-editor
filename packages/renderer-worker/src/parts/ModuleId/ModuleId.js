@@ -115,3 +115,11 @@ export const License = 150
 export const SendMessagePortToMainProcess = 151
 export const FileSystemMemory = 152
 export const WebSocketCapability = 153
+export const ExtensionHotReload = 154
+export const RevealInExplorer = 155
+export const ComponentState = 156
+export const Application = 157
+
+export const SimpleBrowserWorkflow = 158
+
+export const TerminalTransfer = 159

@@ -39,7 +39,12 @@ const matchesContext = (keyBinding) => {
 }
 
 const getMatchingKeyBindings = (keyBindingSets) => {
-  return Object.values(keyBindingSets).reverse().flat(1).filter(matchesContext)
+  const userKeyBindings = keyBindingSets.user || []
+  const defaultKeyBindings = Object.entries(keyBindingSets)
+    .filter(([id]) => id !== 'user')
+    .map(([, keyBindings]) => keyBindings)
+    .reverse()
+  return [userKeyBindings, ...defaultKeyBindings].flat(1).filter(matchesContext)
 }
 
 const getAvailableKeyBindings = (keyBindings) => {
@@ -94,5 +99,5 @@ export const removeKeyBindings = (id) => {
 }
 
 export const getKeyBindings = () => {
-  return state.keyBindings
+  return state.matchingKeyBindings
 }

@@ -26,7 +26,7 @@
   width: 100%;
   height: 100%;
   overflow: hidden;
-  background: var(--PanelBackground);
+  background: var(--TerminalBackground, var(--EditorBackground, var(--EditorBackGround, var(--MainBackground))));
 }
 
 .XtermTerminal .xterm {
@@ -34,6 +34,7 @@
   height: 100%;
 }
 
-.XtermTerminal .xterm-viewport {
+.XtermTerminal .xterm .xterm-viewport {
+  background-color: transparent;
   scrollbar-color: var(--EditorScrollBarBackground, rgba(57, 71, 71, 0.6)) transparent;
 }

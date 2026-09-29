@@ -372,10 +372,6 @@ test.skip('watch - rename', async () => {
   watcher.close()
 })
 
-test('getPathSeparator', () => {
-  expect(FileSystem.getPathSeparator()).toEqual(expect.any(String))
-})
-
 test('getRealPath', async () => {
   // @ts-ignore
   fs.realpath.mockImplementation(() => {

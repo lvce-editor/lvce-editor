@@ -3,6 +3,7 @@ import * as DirentType from '../src/parts/DirentType/DirentType.js'
 
 const invoke = jest.fn<(...args: readonly any[]) => Promise<any>>()
 const execute = jest.fn<(...args: readonly any[]) => Promise<any>>()
+const rendererInvoke = jest.fn<(...args: readonly any[]) => Promise<any>>()
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -15,6 +16,10 @@ jest.unstable_mockModule('../src/parts/ExtensionManagementWorker/ExtensionManage
 
 jest.unstable_mockModule('../src/parts/Command/Command.js', () => ({
   execute,
+}))
+
+jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () => ({
+  invoke: rendererInvoke,
 }))
 
 jest.unstable_mockModule('../src/parts/ExtensionHost/ExtensionHostShared.js', () => {
@@ -34,6 +39,12 @@ test('readFile', async () => {
     return 'test content'
   })
   expect(await ExtensionHostFileSystem.readFile('memfs:///test.txt')).toBe('test content')
+})
+
+test('readFile converts binary provider content to text', async () => {
+  invoke.mockResolvedValue({ found: true, result: new Blob(['test content']) })
+
+  await expect(ExtensionHostFileSystem.readFile('remote-ssh:///workspace/test.txt')).resolves.toBe('test content')
 })
 
 test('readFile - wrapped extension host uri', async () => {
@@ -57,6 +68,47 @@ test('readFile - error', async () => {
     throw new TypeError('x is not a function')
   })
   await expect(ExtensionHostFileSystem.readFile('memfs:///test.txt')).rejects.toThrow(new TypeError('x is not a function'))
+})
+
+test('stat dispatches through isolated file system providers', async () => {
+  invoke.mockResolvedValue({ found: true, result: 3 })
+
+  await expect(ExtensionHostFileSystem.stat('remote-ssh:///workspace/link')).resolves.toBe(3)
+  expect(invoke).toHaveBeenCalledWith('Extensions.executeFileSystemProviderStat', 'remote-ssh', 'remote-ssh:///workspace/link')
+  expect(ExtensionHostShared.executeProvider).not.toHaveBeenCalled()
+})
+
+test('getOpenExternalPath dispatches through isolated file system providers', async () => {
+  invoke.mockResolvedValue({ found: true, result: '\\\\wsl.localhost\\Ubuntu\\workspace' })
+
+  await expect(ExtensionHostFileSystem.getOpenExternalPath('wsl://Ubuntu/workspace')).resolves.toBe('\\\\wsl.localhost\\Ubuntu\\workspace')
+  expect(invoke).toHaveBeenCalledWith('Extensions.executeFileSystemProviderGetOpenExternalPath', 'wsl', 'wsl://Ubuntu/workspace')
+  expect(ExtensionHostShared.executeProvider).not.toHaveBeenCalled()
+})
+
+test('getBlob preserves binary provider content', async () => {
+  const audio = new Blob(['recorded audio'], { type: 'audio/webm' })
+  invoke.mockResolvedValue({ found: true, result: audio })
+
+  await expect(ExtensionHostFileSystem.getBlob('gpt-voice-audio:///message.webm', 'video/webm')).resolves.toBe(audio)
+})
+
+test('getBlob converts text provider content using the requested mime type', async () => {
+  invoke.mockResolvedValue({ found: true, result: 'test content' })
+
+  const blob = await ExtensionHostFileSystem.getBlob('memfs:///test.txt', 'text/plain')
+
+  expect(blob.type).toBe('text/plain')
+  await expect(blob.text()).resolves.toBe('test content')
+})
+
+test('getBlobUrl creates an object url in the renderer process', async () => {
+  const audio = new Blob(['recorded audio'], { type: 'audio/webm' })
+  invoke.mockResolvedValue({ found: true, result: audio })
+  rendererInvoke.mockResolvedValue('blob:recording')
+
+  await expect(ExtensionHostFileSystem.getBlobUrl('gpt-voice-audio:///message.webm', 'video/webm')).resolves.toBe('blob:recording')
+  expect(rendererInvoke).toHaveBeenCalledWith('ObjectUrl.create', audio)
 })
 
 test('remove', async () => {
@@ -272,9 +324,6 @@ test('isolated provider dispatch uses full provider uris', async () => {
     'Extensions.executeFileSystemProviderRename',
   )
   await expect(ExtensionHostFileSystem.remove('remote-ssh:///test-folder/renamed.txt')).resolves.toBe('Extensions.executeFileSystemProviderRemove')
-  await expect(ExtensionHostFileSystem.getPathSeparator('remote-ssh:///test-folder')).resolves.toBe(
-    'Extensions.executeFileSystemProviderGetPathSeparator',
-  )
   await expect(ExtensionHostFileSystem.isReadonly('remote-ssh:///test-folder')).resolves.toBe('Extensions.executeFileSystemProviderIsReadonly')
 
   expect(invoke.mock.calls).toEqual([
@@ -284,7 +333,6 @@ test('isolated provider dispatch uses full provider uris', async () => {
     ['Extensions.executeFileSystemProviderWriteFile', 'remote-ssh', 'remote-ssh:///test-folder/new.txt', 'content'],
     ['Extensions.executeFileSystemProviderRename', 'remote-ssh', 'remote-ssh:///test-folder/new.txt', 'remote-ssh:///test-folder/renamed.txt'],
     ['Extensions.executeFileSystemProviderRemove', 'remote-ssh', 'remote-ssh:///test-folder/renamed.txt'],
-    ['Extensions.executeFileSystemProviderGetPathSeparator', 'remote-ssh'],
     ['Extensions.executeFileSystemProviderIsReadonly', 'remote-ssh'],
   ])
   expect(ExtensionHostShared.executeProvider).not.toHaveBeenCalled()
@@ -299,4 +347,26 @@ test('isolated provider dispatch unwraps extension host uris', async () => {
   await expect(ExtensionHostFileSystem.readFile('extension-host://remote-ssh:///test-folder/README.md')).resolves.toBe('content')
 
   expect(invoke).toHaveBeenCalledWith('Extensions.executeFileSystemProviderReadFile', 'remote-ssh', 'remote-ssh:///test-folder/README.md')
+})
+
+test.each([
+  { name: 'writeFile', mutate: () => ExtensionHostFileSystem.writeFile('save-test:///note.txt', 'saved') },
+  { name: 'createFile', mutate: () => ExtensionHostFileSystem.createFile('save-test:///note.txt') },
+  { name: 'remove', mutate: () => ExtensionHostFileSystem.remove('save-test:///note.txt') },
+  { name: 'rename', mutate: () => ExtensionHostFileSystem.rename('save-test:///note.txt', 'save-test:///renamed.txt') },
+])('$name completes while a workspace refresh is waiting for the caller', async ({ mutate }) => {
+  const refresh = Promise.withResolvers<void>()
+  invoke.mockResolvedValue({ found: true, result: 'mutation completed' })
+  execute.mockReturnValue(refresh.promise)
+  const mutation = mutate()
+  try {
+    // Model a refresh waiting for the current editor/Explorer command to finish.
+    // It must not prevent the filesystem response from reaching that command.
+    const result = await Promise.race([mutation, new Promise((resolve) => setTimeout(resolve, 0, 'blocked by refresh'))])
+    expect(result).toBe('mutation completed')
+    expect(execute).toHaveBeenCalledWith('Layout.refreshSourceControlBadgeCount')
+  } finally {
+    refresh.resolve()
+    await mutation
+  }
 })

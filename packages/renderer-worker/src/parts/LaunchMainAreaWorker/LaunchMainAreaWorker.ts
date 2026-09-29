@@ -1,6 +1,7 @@
 import * as GetConfiguredWorkerUrl from '../GetConfiguredWorkerUrl/GetConfiguredWorkerUrl.ts'
 import * as GetPortTuple from '../GetPortTuple/GetPortTuple.js'
 import * as HandleIpc from '../HandleIpc/HandleIpc.js'
+import * as Id from '../Id/Id.js'
 import * as IpcParent from '../IpcParent/IpcParent.js'
 import * as IpcParentType from '../IpcParentType/IpcParentType.js'
 import * as JsonRpc from '../JsonRpc/JsonRpc.js'
@@ -15,6 +16,8 @@ export const launchMainAreaWorker = async () => {
     name: 'Main Area Worker',
   })
   HandleIpc.handleIpc(ipc)
+  const range = Id.reserve(1_000_000)
+  await JsonRpc.invoke(ipc, 'Id.configure', range.start, range.end)
   const { port1, port2 } = GetPortTuple.getPortTuple()
   await Promise.all([
     JsonRpc.invokeAndTransfer(ipc, 'MainArea.handleMessagePort', port1),

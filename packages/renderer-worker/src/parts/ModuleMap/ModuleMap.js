@@ -14,11 +14,16 @@ const getPrefix = (commandId) => {
 }
 
 export const getModuleId = (commandId) => {
+  if (commandId === 'SimpleBrowser.executeWorkflow' || commandId === 'SimpleBrowser.openHistory') {
+    return ModuleId.SimpleBrowserWorkflow
+  }
   const prefix = getPrefix(commandId)
   if (!prefix) {
     throw new CommandNotFoundError(commandId)
   }
   switch (prefix) {
+    case 'TerminalTransfer':
+      return ModuleId.TerminalTransfer
     case 'About':
       return ModuleId.About
     case 'Exec':
@@ -55,6 +60,10 @@ export const getModuleId = (commandId) => {
       return ModuleId.ContentTracing
     case 'ContextMenu':
       return ModuleId.ContextMenu
+    case 'ComponentState':
+      return ModuleId.ComponentState
+    case 'Application':
+      return ModuleId.Application
     case 'DebugSharedProcess':
       return ModuleId.DebugSharedProcess
     case 'Developer':
@@ -81,6 +90,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.Exit
     case 'ExtensionHost':
       return ModuleId.ExtensionHostCode
+    case 'ExtensionHotReload':
+      return ModuleId.ExtensionHotReload
     case 'ExtensionMeta':
       return ModuleId.ExtensionMeta
     case 'ExtensionNodeRpc':
@@ -148,6 +159,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.RebuildNodePty
     case 'RecentlyOpened':
       return ModuleId.RecentlyOpened
+    case 'RevealInExplorer':
+      return ModuleId.RevealInExplorer
     case 'Reload':
       return ModuleId.Reload
     case 'SaveFileAs':

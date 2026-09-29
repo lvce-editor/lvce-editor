@@ -10,6 +10,9 @@ jest.unstable_mockModule('../src/parts/ExtensionManagementWorker/ExtensionManage
   }
 })
 
+jest.unstable_mockModule('../src/parts/Focus/Focus.js', () => ({ setFocus: jest.fn() }))
+
+const Focus = await import('../src/parts/Focus/Focus.js')
 const ExtensionManagementWorker = await import('../src/parts/ExtensionManagementWorker/ExtensionManagementWorker.js')
 const GetSideBarDom = await import('../src/parts/GetSideBarDom/GetSideBarDom.js')
 const ViewletExtensionView = await import('../src/parts/ViewletExtensionView/ViewletExtensionView.ts')
@@ -31,6 +34,7 @@ const createState = () => {
     iframeSrc: '',
     kind: 'virtualDom',
     patches: [],
+    stateful: false,
     title: 'Testing',
     uid: 1,
     uri: 'sample.views.testing',
@@ -119,6 +123,45 @@ test('loadContent uses rendered title for virtual dom views', async () => {
   })
 })
 
+test('loadContent exposes managed extension view state', async () => {
+  const invoke = ExtensionManagementWorker.invoke as any
+  invoke.mockImplementation((method) => {
+    if (method === 'Extensions.getViews') {
+      return [{ id: 'sample.views.testing', kind: 'virtualDom', title: 'Testing' }]
+    }
+    if (method === 'Extensions.getAllExtensions') {
+      return []
+    }
+    if (method === 'Extensions.createViewInstance') {
+      return {
+        ok: true,
+        result: { dom: [], type: 'setDom' },
+        stateful: true,
+      }
+    }
+    if (method === 'Extensions.getViewActionsDom') {
+      return undefined
+    }
+    if (method === 'Extensions.getViewActions') {
+      return []
+    }
+    throw new Error(`unexpected method ${method}`)
+  })
+
+  const state = await ViewletExtensionView.loadContent(createState(), undefined)
+
+  expect(ViewletExtensionView.isComponentStateAvailable(state)).toBe(true)
+})
+
+test('exposes DOM for virtual DOM views but not iframe views', () => {
+  const state = { ...createState(), dom: [{ childCount: 0, type: 4 }] }
+  const iframeState = { ...state, kind: 'iframe' }
+
+  expect(ViewletExtensionView.isComponentDomAvailable(state)).toBe(true)
+  expect(ViewletExtensionView.getComponentDom(state)).toEqual(state.dom)
+  expect(ViewletExtensionView.isComponentDomAvailable(iframeState)).toBe(false)
+})
+
 test('sidebar dom uses custom view title instead of id', () => {
   const dom = GetSideBarDom.getSideBarDom({
     actionsUid: -1,
@@ -180,6 +223,45 @@ test('rerender requests virtual dom patches from extension management worker', a
   })
 
   expect(invoke).toHaveBeenCalledWith('Extensions.renderViewInstance', 'sample.views.testing', 1, expect.any(String), expect.any(Number))
+})
+
+test('gets managed extension view state', async () => {
+  const componentState = { count: 1 }
+  const invoke = ExtensionManagementWorker.invoke as any
+  invoke.mockResolvedValue(componentState)
+
+  await expect(ViewletExtensionView.getComponentState(createState())).resolves.toBe(componentState)
+
+  expect(invoke).toHaveBeenCalledWith('Extensions.getViewInstanceState', 'sample.views.testing', 1, expect.any(String), expect.any(Number))
+})
+
+test('sets managed extension view state and returns the renderer state', async () => {
+  const componentState = { count: 2 }
+  const patches = [['setText', 0, '2']]
+  const invoke = ExtensionManagementWorker.invoke as any
+  invoke.mockImplementation((method) => {
+    if (method === 'Extensions.setViewInstanceState') {
+      return { patches, type: 'setPatches' }
+    }
+    if (method === 'Extensions.getViewActionsDom') {
+      return undefined
+    }
+    if (method === 'Extensions.getViewActions') {
+      return []
+    }
+    throw new Error(`unexpected method ${method}`)
+  })
+
+  await expect(ViewletExtensionView.setComponentState(createState(), componentState)).resolves.toMatchObject({ patches })
+
+  expect(invoke).toHaveBeenCalledWith(
+    'Extensions.setViewInstanceState',
+    'sample.views.testing',
+    1,
+    componentState,
+    expect.any(String),
+    expect.any(Number),
+  )
 })
 
 test('rerender updates the title rendered by the parent sidebar', async () => {
@@ -255,4 +337,28 @@ test('handleActiveEditorChange ignores iframe views', async () => {
 
   expect(newState).toBe(state)
   expect(invoke).not.toHaveBeenCalled()
+})
+
+test.each(['click', 'focus'])('native extension %s takes keyboard focus before dispatch', async (type) => {
+  const state = createState()
+  const invoke = ExtensionManagementWorker.invoke as any
+  invoke.mockImplementation((method) => {
+    if (method === 'Extensions.dispatchViewEvent') {
+      expect(Focus.setFocus).toHaveBeenCalledWith(0, undefined, state.uid, 'ExtensionView')
+    }
+    return []
+  })
+  await ViewletExtensionView.handleViewEvent(state, type, 'cell:0:1')
+  expect(Focus.setFocus).toHaveBeenCalledTimes(1)
+})
+
+test('native extension blur does not take focus back from another view', async () => {
+  ;(ExtensionManagementWorker.invoke as any).mockResolvedValue([])
+  await ViewletExtensionView.handleBlur(createState(), 'cell:0:1')
+  expect(Focus.setFocus).not.toHaveBeenCalled()
+})
+
+test('iframe events do not change native keyboard focus', async () => {
+  await ViewletExtensionView.handleClick({ ...createState(), kind: 'iframe' }, '')
+  expect(Focus.setFocus).not.toHaveBeenCalled()
 })

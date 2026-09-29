@@ -28,9 +28,7 @@ const openEditorWithType = async () => {
   // then open extension host custom editor or normal editor
 }
 
-const saveWithoutFormatting = async () => {
-  console.warn('not implemented')
-}
+const saveWithoutFormatting = wrapMainAreaCommand('saveWithoutFormatting')
 
 export const extendModule = (workerViewlet) => ({
   dispose() {},
@@ -47,6 +45,17 @@ export const extendModule = (workerViewlet) => ({
   saveWithoutFormatting,
 })
 
-export const wrapCommand = (command) => {
+const wrapReturnValueCommand = (command, worker) => {
+  const fn = ({ uid }, ...args) => {
+    return worker.invoke(`MainArea.${command}`, uid, ...args)
+  }
+  fn.returnValue = true
+  return fn
+}
+
+export const wrapCommand = (command, _defaultWrapCommand, { worker }) => {
+  if (command === 'hasDirtyTabs') {
+    return wrapReturnValueCommand(command, worker)
+  }
   return wrapMainAreaCommand(command)
 }

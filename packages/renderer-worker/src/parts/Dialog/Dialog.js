@@ -40,8 +40,11 @@ const openFileRemote = () => {
 }
 
 const openFileElectron = async () => {
-  const [file] = await ElectronDialog.showOpenDialog('Open File', ['openFile', 'dontAddToRecent', 'showHiddenFiles'])
-  await OpenUri.openUri(file)
+  const uri = await ElectronDialog.showOpenDialog('Open File', ['openFile', 'dontAddToRecent', 'showHiddenFiles'])
+  if (!uri) {
+    return
+  }
+  await OpenUri.openUri(uri)
 }
 
 export const openFile = () => {
@@ -98,7 +101,12 @@ export const showMessage = async (message, options) => {
     }
     await handleClick(index)
   } else {
-    await Viewlet.openWidget(ViewletModuleId.Dialog, message, options)
+    // Prepared errors use `type` for the error class, not the dialog severity.
+    await Viewlet.openWidget(ViewletModuleId.Dialog, {
+      message: message.message,
+      title: message.type || message.name || 'Error',
+      type: 'error',
+    })
   }
 }
 
@@ -108,4 +116,10 @@ export const show = async (options) => {
 
 export const showWarning = async (options) => {
   await DialogWorker.invoke('Dialog.showWarning', options)
+}
+
+// Public dialog entry point for isolated extensions. The host owns the window
+// and product identity; callers supply only the message and available choices.
+export const showMessageBox = async ({ buttons, defaultId, message, type = 'info' }) => {
+  return ElectronDialog.showMessageBox({ buttons, defaultId, message, type })
 }

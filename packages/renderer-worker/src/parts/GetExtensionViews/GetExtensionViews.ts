@@ -95,10 +95,14 @@ const mergeCss = (views: readonly ExtensionView[], extensions: readonly Extensio
   })
 }
 
-export const getExtensionViews = async (): Promise<readonly ExtensionView[]> => {
+export const getExtensionViews = async (applicationId?: string): Promise<readonly ExtensionView[]> => {
+  const invoke = (command: string, ...args: readonly unknown[]): Promise<any> =>
+    applicationId === undefined
+      ? ExtensionManagementWorker.invoke(command, ...args)
+      : ExtensionManagementWorker.invoke('Extensions.invokeForApplication', applicationId, command, ...args)
   const [views, extensions] = await Promise.all([
-    ExtensionManagementWorker.invoke('Extensions.getViews', assetDir, getPlatform()) as Promise<readonly ExtensionView[]>,
-    ExtensionManagementWorker.invoke('Extensions.getAllExtensions', assetDir, getPlatform()) as Promise<readonly ExtensionManifest[]>,
+    invoke('Extensions.getViews', assetDir, getPlatform()) as Promise<readonly ExtensionView[]>,
+    invoke('Extensions.getAllExtensions', assetDir, getPlatform()) as Promise<readonly ExtensionManifest[]>,
   ])
   return mergeCss(views, extensions)
 }
@@ -112,7 +116,7 @@ export const findExtensionView = (views: readonly ExtensionView[], idOrUri: stri
   return views.find((view) => view.type === 'preview' && view.selector?.some((selector) => normalizedUri.endsWith(selector.toLowerCase())))
 }
 
-export const getExtensionView = async (idOrUri: string): Promise<ExtensionView | undefined> => {
-  const views = await getExtensionViews()
+export const getExtensionView = async (idOrUri: string, applicationId?: string): Promise<ExtensionView | undefined> => {
+  const views = await getExtensionViews(applicationId)
   return findExtensionView(views, idOrUri)
 }

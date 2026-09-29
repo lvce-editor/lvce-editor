@@ -1,7 +1,7 @@
-import * as HandleRequestTest from './HandleRequest.ts'
+import * as HandleRequest from './HandleRequest.ts'
 
 export const name = 'HandleRequest'
 
 export const Commands = {
-  handleRequest: HandleRequestTest.handleRequest,
+  handleRequest: HandleRequest.handleRequest,
 }

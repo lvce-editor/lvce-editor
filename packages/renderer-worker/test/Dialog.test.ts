@@ -121,6 +121,36 @@ test('openFile - web - canceled', async () => {
   })
 })
 
+test('openFile - electron opens the selected file URI', async () => {
+  const uri = 'file:///tmp/a%20file%20%231%25.heapsnapshot'
+  const showOpenDialog = jest.fn<(title: string, properties: string[]) => Promise<string | undefined>>().mockResolvedValue(uri)
+  const execute = jest.fn()
+  jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => ({
+    getPlatform: () => PlatformType.Electron,
+    assetDir: '',
+  }))
+  jest.unstable_mockModule('../src/parts/ElectronDialog/ElectronDialog.js', () => ({ showOpenDialog }))
+  jest.unstable_mockModule('../src/parts/Command/Command.js', () => ({ execute }))
+  const Dialog = await import('../src/parts/Dialog/Dialog.js')
+  await Dialog.openFile()
+  expect(showOpenDialog).toHaveBeenCalledWith('Open File', ['openFile', 'dontAddToRecent', 'showHiddenFiles'])
+  expect(execute).toHaveBeenCalledWith('Main.openUri', uri, true, {})
+})
+
+test('openFile - electron does not open when the dialog is canceled', async () => {
+  const showOpenDialog = jest.fn<(title: string, properties: string[]) => Promise<string | undefined>>().mockResolvedValue(undefined)
+  const execute = jest.fn()
+  jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => ({
+    getPlatform: () => PlatformType.Electron,
+    assetDir: '',
+  }))
+  jest.unstable_mockModule('../src/parts/ElectronDialog/ElectronDialog.js', () => ({ showOpenDialog }))
+  jest.unstable_mockModule('../src/parts/Command/Command.js', () => ({ execute }))
+  const Dialog = await import('../src/parts/Dialog/Dialog.js')
+  await expect(Dialog.openFile()).resolves.toBeUndefined()
+  expect(execute).not.toHaveBeenCalled()
+})
+
 test.skip('close - web', async () => {
   jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
     return {
@@ -152,4 +182,34 @@ test.skip('close - web', async () => {
   await Dialog.close()
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(2)
   expect(RendererProcess.invoke).toHaveBeenCalledWith(7836)
+})
+
+test.each(['Error', 'TypeError', 'DockerNotInstalledError'])('showMessage maps prepared %s errors to dialog options', async (type) => {
+  jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => ({
+    assetDir: '',
+    getPlatform: () => PlatformType.Remote,
+  }))
+  jest.unstable_mockModule('../src/parts/Viewlet/Viewlet.js', () => ({ openWidget: jest.fn() }))
+  const Dialog = await import('../src/parts/Dialog/Dialog.js')
+  const Viewlet = await import('../src/parts/Viewlet/Viewlet.js')
+  const error = { message: 'DevContainerNode.cliUp failed with exit code 1', type }
+  await Dialog.showMessage(error)
+  expect(Viewlet.openWidget).toHaveBeenCalledWith('Dialog', { message: error.message, title: type, type: 'error' })
+  expect(error.type).toBe(type)
+})
+
+test.each([0, 1, 2, undefined])('showMessageBox returns the selected option %s', async (response) => {
+  const showMessageBox = jest.fn<(options: unknown) => Promise<number | undefined>>().mockResolvedValue(response)
+  jest.unstable_mockModule('../src/parts/ElectronDialog/ElectronDialog.js', () => ({ showMessageBox }))
+  const Dialog = await import('../src/parts/Dialog/Dialog.js')
+  const options = {
+    buttons: ['Commit Anyway', 'Cancel', 'Commit to a New Branch'],
+    defaultId: 2,
+    message: 'You are trying to commit to a protected branch.',
+    type: 'warning',
+  }
+  const untrustedOptions = { ...options, productName: 'Untrusted title', windowId: 123 }
+  const result = await Dialog.showMessageBox(untrustedOptions)
+  expect(result).toBe(response)
+  expect(showMessageBox).toHaveBeenCalledWith(options)
 })

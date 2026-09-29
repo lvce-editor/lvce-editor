@@ -2,10 +2,6 @@ import { spawn, type ChildProcessWithoutNullStreams } from 'node:child_process'
 import { basename, extname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { LanguageServerMessageParser } from '../LanguageServerMessageParser/LanguageServerMessageParser.ts'
-import {
-  executeMarkdownLanguageServerRequest,
-  isMarkdownLanguageServerRequest,
-} from '../MarkdownLanguageServerRequest/MarkdownLanguageServerRequest.ts'
 import { normalizeLanguageServerDocumentUri } from '../NormalizeLanguageServerDocumentUri/NormalizeLanguageServerDocumentUri.ts'
 
 interface JsonRpcMessage {
@@ -34,6 +30,7 @@ interface InitializeResult {
     readonly codeActionProvider?: unknown
     readonly diagnosticProvider?: unknown
     readonly documentFormattingProvider?: unknown
+    readonly documentSymbolProvider?: unknown
     readonly referencesProvider?: unknown
   }
 }
@@ -164,12 +161,12 @@ export class LanguageServerConnection {
   private readonly ready: Promise<void>
   private readonly rootUri: string
   private initializationProgressWasStarted = false
-  private markdownConfigured = false
   private nextRequestId = 1
   private running = true
   private stderr = ''
   private supportsCodeActions = false
   private supportsDocumentFormatting = false
+  private supportsDocumentSymbols = false
   private supportsPullDiagnostics = false
   private supportsReferences = false
 
@@ -234,7 +231,6 @@ export class LanguageServerConnection {
 
   async complete(textDocument: TextDocument, offset: number): Promise<readonly unknown[]> {
     await this.ready
-    this.configureMarkdown(textDocument.languageId)
     this.syncDocument(textDocument)
     const result = await this.sendRequest('textDocument/completion', {
       context: {
@@ -256,7 +252,6 @@ export class LanguageServerConnection {
 
   async diagnostic(textDocument: TextDocument): Promise<readonly unknown[]> {
     await this.ready
-    this.configureMarkdown(textDocument.languageId)
     if (this.supportsPullDiagnostics) {
       this.syncDocument(textDocument)
       const result = await this.sendRequest('textDocument/diagnostic', {
@@ -284,7 +279,6 @@ export class LanguageServerConnection {
 
   async definition(textDocument: TextDocument, offset: number): Promise<unknown> {
     await this.ready
-    this.configureMarkdown(textDocument.languageId)
     this.syncDocument(textDocument)
     return this.sendRequest('textDocument/definition', {
       position: getPosition(textDocument.text, offset),
@@ -292,6 +286,20 @@ export class LanguageServerConnection {
         uri: textDocument.uri,
       },
     })
+  }
+
+  async documentSymbols(textDocument: TextDocument): Promise<readonly unknown[]> {
+    await this.ready
+    if (!this.supportsDocumentSymbols) {
+      return []
+    }
+    this.syncDocument(textDocument)
+    const result = await this.sendRequest('textDocument/documentSymbol', {
+      textDocument: {
+        uri: textDocument.uri,
+      },
+    })
+    return Array.isArray(result) ? result : []
   }
 
   async format(textDocument: TextDocument): Promise<readonly unknown[]> {
@@ -330,52 +338,6 @@ export class LanguageServerConnection {
     return Array.isArray(result) ? result : []
   }
 
-  private configureMarkdown(languageId: string): void {
-    if (languageId !== 'markdown' || this.markdownConfigured) {
-      return
-    }
-    this.markdownConfigured = true
-    this.sendNotification('workspace/didChangeConfiguration', {
-      settings: {
-        markdown: {
-          occurrencesHighlight: {
-            enabled: true,
-          },
-          preferredMdPathExtensionStyle: 'auto',
-          server: {
-            log: 'off',
-          },
-          suggest: {
-            paths: {
-              enabled: true,
-              includeWorkspaceHeaderCompletions: 'never',
-            },
-          },
-          validate: {
-            duplicateLinkDefinitions: {
-              enabled: 'warning',
-            },
-            enabled: true,
-            fileLinks: {
-              enabled: 'warning',
-              markdownFragmentLinks: 'inherit',
-            },
-            fragmentLinks: {
-              enabled: 'warning',
-            },
-            ignoredLinks: [],
-            referenceLinks: {
-              enabled: 'warning',
-            },
-            unusedLinkDefinitions: {
-              enabled: 'warning',
-            },
-          },
-        },
-      },
-    })
-  }
-
   private async initialize(): Promise<void> {
     const result = (await this.sendRequest('initialize', {
       capabilities: {
@@ -395,6 +357,10 @@ export class LanguageServerConnection {
           diagnostic: {
             dynamicRegistration: false,
             relatedDocumentSupport: false,
+          },
+          documentSymbol: {
+            dynamicRegistration: false,
+            hierarchicalDocumentSymbolSupport: true,
           },
           publishDiagnostics: {
             relatedInformation: true,
@@ -429,6 +395,7 @@ export class LanguageServerConnection {
     })) as InitializeResult
     this.supportsCodeActions = Boolean(result?.capabilities?.codeActionProvider)
     this.supportsDocumentFormatting = Boolean(result?.capabilities?.documentFormattingProvider)
+    this.supportsDocumentSymbols = Boolean(result?.capabilities?.documentSymbolProvider)
     this.supportsPullDiagnostics = Boolean(result?.capabilities?.diagnosticProvider)
     this.supportsReferences = Boolean(result?.capabilities?.referencesProvider)
     this.sendNotification('initialized', {})
@@ -509,7 +476,7 @@ export class LanguageServerConnection {
       return
     }
     if (message.method && message.id !== undefined && message.id !== null) {
-      void this.handleServerRequest(message)
+      this.handleServerRequest(message)
       return
     }
     if (message.id === undefined || message.id === null) {
@@ -558,7 +525,7 @@ export class LanguageServerConnection {
     this.initializationProgressEnded.resolve()
   }
 
-  private async handleServerRequest(message: JsonRpcMessage): Promise<void> {
+  private handleServerRequest(message: JsonRpcMessage): void {
     try {
       let result: unknown = null
       if (message.method === 'workspace/configuration') {
@@ -574,11 +541,6 @@ export class LanguageServerConnection {
             uri: this.rootUri,
           },
         ]
-      } else if (isMarkdownLanguageServerRequest(message.method || '')) {
-        result = await executeMarkdownLanguageServerRequest(message.method || '', message.params || {}, {
-          documents: this.documents,
-          rootUri: this.rootUri,
-        })
       }
       this.sendMessage({
         id: message.id,

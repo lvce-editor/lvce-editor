@@ -202,10 +202,6 @@ export const rename = async (oldUri: any, newUri: any): Promise<any> => {
   }
 }
 
-export const getPathSeparator = (): any => {
-  return '/'
-}
-
 // TODO handle error
 export const stat = async (uri: any): Promise<any> => {
   const path = fileURLToPath(uri)

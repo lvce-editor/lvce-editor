@@ -57,3 +57,28 @@ test('create', async () => {
     id: 0,
   })
 })
+
+test('create - forwards rpc id', async () => {
+  // @ts-ignore
+  RendererProcess.invokeAndTransfer.mockImplementation(() => {
+    return undefined
+  })
+  const ipc = await IpcParentWithModuleWorkerAndWorkaroundForChromeDevtoolsBug.create({
+    url: 'https://example.com/worker.js',
+    name: 'test worker',
+    port: undefined,
+    id: 0,
+    rpcId: 'MainArea',
+  })
+  expect(ipc).toBeInstanceOf(MessagePort)
+  expect(RendererProcess.invokeAndTransfer).toHaveBeenCalledTimes(1)
+  expect(RendererProcess.invokeAndTransfer).toHaveBeenCalledWith('IpcParent.create', {
+    method: RendererProcessIpcParentType.ModuleWorkerWithMessagePort,
+    name: 'test worker',
+    raw: true,
+    url: 'https://example.com/worker.js',
+    port: new MessagePort(),
+    id: 0,
+    rpcId: 'MainArea',
+  })
+})

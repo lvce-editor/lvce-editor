@@ -28,16 +28,40 @@ test('audio - opus', async () => {
   expect(await ViewletMap.getModuleId('/test/file.opus')).toBe(ViewletModuleId.Audio)
 })
 
+test('audio - audio-only webm', async () => {
+  expect(await ViewletMap.getModuleId('/test/file.weba')).toBe(ViewletModuleId.Audio)
+})
+
 test('process explorer', async () => {
   expect(await ViewletMap.getModuleId('process-explorer://')).toBe(ViewletModuleId.ProcessExplorer)
+})
+
+test('file watcher explorer', async () => {
+  expect(await ViewletMap.getModuleId('file-watcher-explorer:///')).toBe(ViewletModuleId.FileWatcherExplorer)
 })
 
 test('running extensions', async () => {
   expect(await ViewletMap.getModuleId('running-extensions://')).toBe(ViewletModuleId.RunningExtensions)
 })
 
+test('workers view', async () => {
+  expect(await ViewletMap.getModuleId('workers:///1')).toBe(ViewletModuleId.Workers)
+})
+
+test('cookie import view', async () => {
+  expect(await ViewletMap.getModuleId('cookie-import-view:///firefox/default')).toBe(ViewletModuleId.CookieImport)
+})
+
+test('secrets', async () => {
+  expect(await ViewletMap.getModuleId('secrets://')).toBe(ViewletModuleId.Secrets)
+})
+
 test('search editor', async () => {
   expect(await ViewletMap.getModuleId('search-editor://1/Search')).toBe(ViewletModuleId.Search)
+})
+
+test('simple browser history', async () => {
+  expect(await ViewletMap.getModuleId('simple-browser-history://')).toBe(ViewletModuleId.SimpleBrowserHistory)
 })
 
 test('inline diff uses the external diff editor', async () => {

@@ -188,6 +188,7 @@ test('loadContent opens a document view with its contributed id and resource uri
     },
     '',
     4,
+    undefined,
   )
   expect(newState.uri).toBe('file:///workspace/image.png')
   expect(newState.viewId).toBe('sample.views.testing')
@@ -609,4 +610,13 @@ test('render emits set css command', () => {
   expect(ViewletExtensionViewRender.render[4].apply(oldState as any, newState as any)).toEqual([
     ['Viewlet.setCss', 'ExtensionView:sample.views.testing', '.Testing { color: red; }'],
   ])
+})
+
+test('loadContent selects an explicit opener for an extensionless recording', async () => {
+  const GetExtensionViews = await import('../src/parts/GetExtensionViews/GetExtensionViews.ts')
+  const state = ViewletExtensionView.create(1, 'file:///tmp/.org.chromium.recording', 0, 0, 100, 100)
+  const result = await ViewletExtensionView.loadContent(state, undefined, { opener: 'sample.views.testing' })
+  expect(GetExtensionViews.getExtensionView).toHaveBeenCalledWith('sample.views.testing', undefined)
+  expect(result.uri).toBe('file:///tmp/.org.chromium.recording')
+  expect(result.viewId).toBe('sample.views.testing')
 })

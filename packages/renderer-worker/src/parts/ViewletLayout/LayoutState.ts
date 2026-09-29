@@ -20,7 +20,22 @@ export interface WidgetReference {
   readonly uid: number
 }
 
+export interface BrowserFullWidthState {
+  readonly browserWasVisible?: boolean
+  readonly browserUid: number
+  readonly hideTitleBar?: boolean
+  readonly layout: Partial<LayoutState>
+  readonly browserBounds: { x: number; y: number; width: number; height: number }
+  readonly ideFocusUid: number | undefined
+  readonly addressSelection?: { start: number; end: number }
+  readonly addressFocused: boolean
+  readonly hiddenBrowserUids: readonly number[]
+}
+
 export interface LayoutState {
+  readonly browserFullWidth?: BrowserFullWidthState
+
+  readonly applicationId?: string
   readonly activityBarHeight: number
   readonly activityBarId: number
   readonly activityBarLeft: number
@@ -29,7 +44,6 @@ export interface LayoutState {
   readonly activityBarTop: number
   readonly activityBarVisible: boolean
   readonly activityBarWidth: number
-  readonly authAccessToken: string
   readonly authErrorMessage: string
   readonly assetDir: string
   readonly backendUrl: string
@@ -71,6 +85,7 @@ export interface LayoutState {
   readonly previewMaxWidth: number
   readonly previewMinHeight: number
   readonly previewMinWidth: number
+  readonly previewOrientation: 'horizontal' | 'vertical'
   readonly previewSashId: number
   readonly previewSashVisible: boolean
   readonly previewTop: number
@@ -128,6 +143,7 @@ export interface LayoutState {
   readonly statusBarVisible: boolean
   readonly statusBarWidth: number
   readonly titleBarHeight: number
+  readonly titleBarless: boolean
   readonly titleBarId: number
   readonly titleBarLeft: number
   readonly titleBarNative: boolean

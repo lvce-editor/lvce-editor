@@ -6,6 +6,8 @@ beforeEach(() => {
   for (const key in Preferences.state) {
     delete Preferences.state[key]
   }
+  ColorTheme.state.colorThemeCss = ''
+  delete ColorTheme.state.colorTheme
   ColorTheme.state.watchedTheme = ''
 })
 
@@ -49,6 +51,7 @@ test('reload applies slime when no color theme is selected', async () => {
   expect(GetColorThemeNames.getColorThemeNames).not.toHaveBeenCalled()
   expect(GetColorThemeCss.getColorThemeCss).toHaveBeenCalledWith('slime')
   expect(Css.addCssStyleSheet).toHaveBeenCalledWith('ContributedColorTheme', ':root { --theme-id: "slime"; }')
+  expect(ColorTheme.getColorThemeCss()).toBe(':root { --theme-id: "slime"; }')
 })
 
 test('reload switches to slime when the selected color theme is no longer contributed', async () => {
@@ -84,4 +87,23 @@ test('setColorTheme does not notify viewlets when applying the color theme fails
   await ColorTheme.setColorTheme('missing-theme')
 
   expect(Command.execute).not.toHaveBeenCalled()
+})
+
+test('getColorTheme keeps the applied color theme when a new theme fails to load', async () => {
+  await ColorTheme.setColorTheme('cobalt2')
+  await ColorTheme.setColorTheme('missing-theme')
+
+  expect(ColorTheme.getColorTheme()).toBe('cobalt2')
+})
+
+test('getColorTheme returns the applied color theme', async () => {
+  await ColorTheme.setColorTheme('cobalt2')
+
+  expect(ColorTheme.getColorTheme()).toBe('cobalt2')
+})
+
+test('getColorTheme falls back to the preferred color theme', () => {
+  Preferences.state['workbench.colorTheme'] = 'cobalt2'
+
+  expect(ColorTheme.getColorTheme()).toBe('cobalt2')
 })

@@ -1,16 +1,177 @@
+import * as SimpleBrowserWorker from '../SimpleBrowserWorker/SimpleBrowserWorker.js'
+import * as HtmlPreviewUrl from '../HtmlPreviewUrl/HtmlPreviewUrl.js'
+import * as SimpleBrowserPreview from '../SimpleBrowserPreview/SimpleBrowserPreview.js'
+import * as SharedProcess from '../SharedProcess/SharedProcess.js'
+import * as BrowserSuggestionRequests from '../BrowserSuggestionRequests/BrowserSuggestionRequests.js'
+import * as Viewlet from '../Viewlet/Viewlet.js'
+import * as BrowserFullWidth from '../BrowserFullWidth/BrowserFullWidth.js'
 // based on vscode's simple browser by Microsoft (https://github.com/microsoft/vscode/blob/e8fe2d07d31f30698b9262dd5e1fcc59a85c6bb1/extensions/simple-browser/src/extension.ts, License MIT)
 
+import * as ApplicationRegistry from '../ApplicationRegistry/ApplicationRegistry.ts'
 import * as Assert from '../Assert/Assert.ts'
+import * as BrowserSearchHistory from '../BrowserSearchHistory/BrowserSearchHistory.js'
+import * as BrowserSearchSuggestions from '../BrowserSearchSuggestions/BrowserSearchSuggestions.js'
+import * as BrowserHistory from '../BrowserHistory/BrowserHistory.js'
+import * as BrowserVisitedSites from '../BrowserVisitedSites/BrowserVisitedSites.js'
+import * as Command from '../Command/Command.js'
 import * as ElectronWebContentsView from '../ElectronWebContentsView/ElectronWebContentsView.js'
 import * as ElectronWebContentsViewFunctions from '../ElectronWebContentsViewFunctions/ElectronWebContentsViewFunctions.js'
+import * as ElectronWindow from '../ElectronWindow/ElectronWindow.js'
+import * as Focus from '../Focus/Focus.js'
+import * as FocusState from '../FocusState/FocusState.js'
 import * as GetFallThroughKeyBindings from '../GetFallThroughKeyBindings/GetFallThroughKeyBindings.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as IframeSrc from '../IframeSrc/IframeSrc.js'
-import * as IsEmptyString from '../IsEmptyString/IsEmptyString.js'
+import * as InputName from '../InputName/InputName.js'
+import * as KeyCode from '../KeyCode/KeyCode.js'
 import * as KeyBindings from '../KeyBindings/KeyBindings.js'
-import * as KeyBindingsInitial from '../KeyBindingsInitial/KeyBindingsInitial.js'
+import * as KeyBindingsState from '../KeyBindingsState/KeyBindingsState.js'
+import * as KeyModifier from '../KeyModifier/KeyModifier.js'
 import * as Preferences from '../Preferences/Preferences.js'
+import * as QuickPickOpening from '../QuickPickOpening/QuickPickOpening.js'
+import * as PrettyBytes from '../PrettyBytes/PrettyBytes.js'
+import * as RendererProcess from '../RendererProcess/RendererProcess.js'
+import * as SimpleBrowserFavicon from '../SimpleBrowserFavicon/SimpleBrowserFavicon.js'
+import * as SimpleBrowserNewTabPage from '../SimpleBrowserNewTabPage/SimpleBrowserNewTabPage.js'
+import * as SimpleBrowserPageSnapshot from '../SimpleBrowserPageSnapshot/SimpleBrowserPageSnapshot.js'
 import * as SimpleBrowserPreferences from '../SimpleBrowserPreferences/SimpleBrowserPreferences.js'
+import * as SimpleBrowserSnapshot from '../SimpleBrowserSnapshot/SimpleBrowserSnapshot.js'
+import * as ViewletStates from '../ViewletStates/ViewletStates.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+import * as WhenExpression from '../WhenExpression/WhenExpression.js'
+
+import * as BrowserFind from './ViewletSimpleBrowserFind.js'
+import * as Resize from './ViewletSimpleBrowserResize.js'
+import * as TabDrag from './ViewletSimpleBrowserTabDrag.js'
+
+// Overlay snapshots and native visibility must commit together before the next command.
+export const serializeCommands = true
+
+const navigationHeaderHeight = 30
+const tabsHeaderHeight = 35
+const closeTabKeyBinding = KeyModifier.CtrlCmd | KeyCode.KeyW
+const reopenClosedTabKeyBinding = KeyModifier.CtrlCmd | KeyModifier.Shift | KeyCode.KeyT
+const createNewTabKeyBinding = KeyModifier.CtrlCmd | KeyCode.KeyT
+const focusNextTabKeyBinding = KeyModifier.CtrlCmd | KeyCode.Tab
+const focusPreviousTabKeyBinding = KeyModifier.CtrlCmd | KeyModifier.Shift | KeyCode.Tab
+const openHistoryKeyBinding = KeyModifier.CtrlCmd | KeyCode.KeyH
+const loginOverlayId = 'login'
+export const simpleBrowserHistoryUrl = 'simple-browser-history://'
+const toggleDevToolsKeyBinding = KeyModifier.CtrlCmd | KeyModifier.Shift | KeyCode.KeyI
+const focusAddressKeyBinding = KeyModifier.CtrlCmd | KeyCode.KeyL
+const findKeyBinding = KeyModifier.CtrlCmd | KeyCode.KeyF
+const browserTabKeyBindings = [
+  findKeyBinding,
+  toggleDevToolsKeyBinding,
+  focusAddressKeyBinding,
+  closeTabKeyBinding,
+  createNewTabKeyBinding,
+  reopenClosedTabKeyBinding,
+  focusNextTabKeyBinding,
+  focusPreviousTabKeyBinding,
+  openHistoryKeyBinding,
+]
+const visibleBrowserUids = new Set()
+
+const getFallThroughKeyBindings = () => {
+  const keyBindings = KeyBindingsState.getKeyBindings()
+  return [...new Set([...GetFallThroughKeyBindings.getFallThroughKeyBindings(keyBindings), ...browserTabKeyBindings])]
+}
+
+export const closeFind = (state, restoreFocus = true) => BrowserFind.closeFind(state, getFallThroughKeyBindings(), restoreFocus)
+
+export const toggleFind = async (state) => {
+  if (state.findVisible) return closeFind(state)
+  const current = await closeSuggestions(state)
+  return BrowserFind.openFind(current, getFallThroughKeyBindings())
+}
+
+export const escapeAddress = (state) => (state.findVisible ? closeFind(state) : closeSuggestions(state))
+
+const getHeaderHeight = (tabsEnabled) => navigationHeaderHeight + (tabsEnabled ? tabsHeaderHeight : 0)
+
+const createTab = ({
+  browserViewId = 0,
+  canGoBack = false,
+  canGoForward = false,
+  favicon = '',
+  faviconUrl = favicon,
+  iframeSrc = '',
+  inputValue = '',
+  isAudioPlaying = false,
+  isLoading = false,
+  muted = false,
+  pageSnapshot = undefined,
+  title = 'New Tab',
+  zoomLevel = 0,
+}) => ({
+  browserViewId,
+  canGoBack,
+  canGoForward,
+  favicon,
+  faviconUrl,
+  iframeSrc,
+  inputValue,
+  isAudioPlaying,
+  isLoading,
+  muted,
+  pageSnapshot,
+  title: title || 'New Tab',
+  zoomLevel,
+})
+
+const isHistoryUrl = (url) => typeof url === 'string' && url.startsWith(simpleBrowserHistoryUrl)
+
+const isPreviewTab = (tab) => HtmlPreviewUrl.isHtmlPreviewUrl(tab?.iframeSrc)
+const isSpecialTab = (tab) => isHistoryTab(tab) || isPreviewTab(tab)
+const createPreviewTab = (url) => createTab({ iframeSrc: url, inputValue: url, title: 'HTML Preview' })
+
+const isHistoryTab = (tab) => isHistoryUrl(tab?.iframeSrc)
+
+const createHistoryTab = () =>
+  createTab({ browserViewId: 0, iframeSrc: simpleBrowserHistoryUrl, inputValue: simpleBrowserHistoryUrl, title: 'History' })
+
+const updateTab = (state, browserViewId, updates) => {
+  const tabIndex = browserViewId ? state.tabs.findIndex((tab) => tab.browserViewId === browserViewId) : state.selectedTabIndex
+  if (tabIndex === -1 || state.tabs.length === 0) {
+    return state.tabs.length === 0 ? { ...state, ...updates } : state
+  }
+  const tabs = state.tabs.with(tabIndex, { ...state.tabs[tabIndex], ...updates })
+  if (tabIndex !== state.selectedTabIndex) {
+    return { ...state, tabs }
+  }
+  return {
+    ...state,
+    ...updates,
+    tabs,
+  }
+}
+
+const activateTab = (state, tabs, selectedTabIndex) => {
+  const tab = tabs[selectedTabIndex]
+  return {
+    ...state,
+    browserViewId: tab.browserViewId,
+    canGoBack: tab.canGoBack,
+    canGoForward: tab.canGoForward,
+    iframeSrc: tab.iframeSrc,
+    inputValue: tab.inputValue,
+    isAudioPlaying: tab.isAudioPlaying,
+    isLoading: tab.isLoading,
+    muted: tab.muted,
+    selectedTabIndex,
+    tabs,
+    title: tab.title,
+    zoomLevel: tab.zoomLevel,
+  }
+}
+
+const parseWebContentsEvent = (state, browserViewId, value) => {
+  if (typeof browserViewId === 'number' || (typeof browserViewId === 'string' && /^\d+$/.test(browserViewId))) {
+    return [Number(browserViewId), value]
+  }
+  return [state.browserViewId, browserViewId]
+}
 
 export const create = (id, uri, x, y, width, height) => {
   return {
@@ -21,27 +182,96 @@ export const create = (id, uri, x, y, width, height) => {
     y,
     width,
     height,
-    headerHeight: 30,
+    findVisible: false,
+    findValue: '',
+    findMatchCase: false,
+    findMatches: 0,
+    findActiveMatch: 0,
+    findFocusVersion: 0,
+    focusAddressVersion: 0,
+    suggestionSessionId: 0,
+    fullWidth: false,
+    chromeTheme: Preferences.get('simpleBrowser.chromeTheme') === 'inherit' ? 'inherit' : 'light',
+    headerHeight: getHeaderHeight(true),
     iframeSrc: '',
     inputValue: '',
+    addressValueVersion: 0,
     title: '',
     browserViewId: 0,
     canGoForward: true,
     canGoBack: true,
+    isAudioPlaying: false,
     isLoading: false,
+    downloadStates: {},
+    muted: false,
     hasSuggestionsOverlay: false,
+    selectedSuggestionIndex: -1,
+    suggestions: [],
     overlayIds: [],
+    loginChallenges: [],
     snapshot: '',
     suggestionsEnabled: false,
+    searchHistory: [],
     shortcuts: [],
+    tabs: [],
+    closedTabs: [],
+    audioIndicatorEnabled: true,
+    tabsEnabled: true,
+    unloadTabs: false,
+    selectedTabIndex: 0,
+    draggedTab: undefined,
+    isDraggingTab: false,
+    tabDropIndex: -1,
+    tabHover: undefined,
+    tabHoverEnabled: false,
+    tabWidth: undefined,
+    zoomLevel: 0,
+    visitedSites: [],
+    history: [],
+    historySearchValue: '',
+    historyScrollTop: 0,
+    historyViewportHeight: 1600,
   }
 }
 
 export const saveState = (state) => {
-  const { iframeSrc } = state
+  const { iframeSrc, selectedTabIndex, tabs } = state
   return {
     iframeSrc,
+    selectedTabIndex,
+    tabs: tabs.map((tab) => ({
+      favicon: tab.faviconUrl || SimpleBrowserFavicon.getSource(tab.favicon),
+      iframeSrc: tab.iframeSrc,
+      inputValue: tab.inputValue,
+      title: tab.title,
+    })),
   }
+}
+
+const getTabsFromSavedState = (savedState) => {
+  if (!Array.isArray(savedState?.tabs)) {
+    return []
+  }
+  return savedState.tabs
+    .filter((tab) => tab && typeof tab === 'object')
+    .map((tab) => {
+      const iframeSrc = typeof tab.iframeSrc === 'string' ? tab.iframeSrc : ''
+      return createTab({
+        browserViewId: 0,
+        favicon: typeof tab.favicon === 'string' ? tab.favicon : '',
+        faviconUrl: typeof tab.favicon === 'string' && !tab.favicon.startsWith('blob:') ? tab.favicon : '',
+        iframeSrc,
+        inputValue: typeof tab.inputValue === 'string' ? tab.inputValue : iframeSrc,
+        title: typeof tab.title === 'string' ? tab.title : 'New Tab',
+      })
+    })
+}
+
+const getSavedSelectedTabIndex = (savedState, tabs) => {
+  if (tabs.length === 0 || !Number.isInteger(savedState?.selectedTabIndex)) {
+    return 0
+  }
+  return Math.max(0, Math.min(savedState.selectedTabIndex, tabs.length - 1))
 }
 
 const getUrlFromSavedState = (savedState) => {
@@ -53,22 +283,43 @@ const getUrlFromSavedState = (savedState) => {
 
 export const backgroundLoadContent = async (state, savedState) => {
   // TODO duplicate code with loadContent
-  const { x, y, width, height, headerHeight } = state
+  const { x, y, width, height } = state
   const iframeSrc = getUrlFromSavedState(savedState)
   const shortcuts = SimpleBrowserPreferences.getShortCuts()
-  // TODO since browser view is not visible at this point
-  // it is not necessary to load keybindings for it
-  const keyBindings = await KeyBindingsInitial.getKeyBindings()
-  const fallThroughKeyBindings = GetFallThroughKeyBindings.getFallThroughKeyBindings(keyBindings)
+  const audioIndicatorEnabled = Preferences.get('simpleBrowser.audioIndicator.enabled') !== false
+  const suggestionsEnabled = Preferences.get('simpleBrowser.suggestions') === true
+  const tabsEnabled = Preferences.get('simpleBrowser.tabs.enabled') !== false
+  const tabHoverEnabled = Preferences.get('simpleBrowser.tabHover.enabled') === true
+  const unloadTabs = Preferences.get('simpleBrowser.unloadTabs') === true
+  const headerHeight = getHeaderHeight(tabsEnabled)
+  const [searchHistory, visitedSites, history] = await Promise.all([BrowserSearchHistory.load(), BrowserVisitedSites.load(), BrowserHistory.load()])
   const browserViewId = await ElectronWebContentsView.createWebContentsView(0)
-  await ElectronWebContentsViewFunctions.setFallthroughKeyBindings(fallThroughKeyBindings)
   Assert.number(browserViewId)
   await ElectronWebContentsViewFunctions.resizeWebContentsView(browserViewId, x, y + headerHeight, width, height - headerHeight)
-  const { newTitle } = await ElectronWebContentsViewFunctions.setIframeSrc(browserViewId, iframeSrc)
+  const { newTitle } = await ElectronWebContentsViewFunctions.setIframeSrc(
+    browserViewId,
+    iframeSrc || SimpleBrowserNewTabPage.getUrl(undefined, suggestionsEnabled, state.chromeTheme),
+  )
+  const title = newTitle || 'Simple Browser'
+  const tabs = [createTab({ browserViewId, iframeSrc, inputValue: iframeSrc, title })]
   return {
-    title: newTitle,
+    browserViewId,
+    audioIndicatorEnabled,
+    headerHeight,
+    selectedTabIndex: 0,
+    searchHistory,
+    history,
+    tabs,
+    tabsEnabled,
+    tabHoverEnabled,
+    unloadTabs,
+    title,
+    zoomLevel: 0,
+    visitedSites,
     uri: `simple-browser://${browserViewId}`,
     iframeSrc,
+    inputValue: iframeSrc,
+    suggestionsEnabled,
     shortcuts,
   }
 }
@@ -81,64 +332,617 @@ const getId = (idPart) => {
 }
 
 export const loadContent = async (state, savedState) => {
-  const { x, y, width, height, headerHeight, uri, uid } = state
+  const { x, y, width, height, uri } = state
   const idPart = uri.slice('simple-browser://'.length)
   const id = getId(idPart)
-  const iframeSrc = getUrlFromSavedState(savedState)
-  // TODO load keybindings in parallel with creating browserview
-  const keyBindings = await KeyBindingsInitial.getKeyBindings()
-  const suggestionsEnabled = Preferences.get('simpleBrowser.suggestions')
+  const savedTabs = getTabsFromSavedState(savedState)
+  const savedSelectedTabIndex = getSavedSelectedTabIndex(savedState, savedTabs)
+  const savedSelectedTab = savedTabs[savedSelectedTabIndex]
+  const iframeSrc = savedSelectedTab ? savedSelectedTab.iframeSrc : getUrlFromSavedState(savedState)
+  const [searchHistory, visitedSites, history] = await Promise.all([BrowserSearchHistory.load(), BrowserVisitedSites.load(), BrowserHistory.load()])
+  const audioIndicatorEnabled = Preferences.get('simpleBrowser.audioIndicator.enabled') !== false
+  const suggestionsEnabled = Preferences.get('simpleBrowser.suggestions') === true
+  const tabsEnabled = Preferences.get('simpleBrowser.tabs.enabled') !== false
+  const tabHoverEnabled = Preferences.get('simpleBrowser.tabHover.enabled') === true
+  const unloadTabs = Preferences.get('simpleBrowser.unloadTabs') === true
+  const headerHeight = getHeaderHeight(tabsEnabled)
   const browserViewX = x
   const browserViewY = y + headerHeight
   const browserViewWidth = width
   const browserViewHeight = height - headerHeight
   const shortcuts = SimpleBrowserPreferences.getShortCuts()
+  const fallThroughKeyBindings = getFallThroughKeyBindings()
 
-  if (id) {
-    const actualId = await ElectronWebContentsView.createWebContentsView(id, uid)
-    await ElectronWebContentsViewFunctions.setFallthroughKeyBindings(keyBindings)
-    await ElectronWebContentsViewFunctions.resizeWebContentsView(actualId, browserViewX, browserViewY, browserViewWidth, browserViewHeight)
-    if (id !== actualId) {
-      await ElectronWebContentsViewFunctions.setIframeSrc(actualId, iframeSrc)
-    }
+  const specialTabRequested = isHistoryUrl(uri) || HtmlPreviewUrl.isHtmlPreviewUrl(uri) || isSpecialTab(savedSelectedTab)
+  if (specialTabRequested) {
+    const restoredTabs =
+      savedSelectedTab && isSpecialTab(savedSelectedTab)
+        ? savedTabs
+        : [HtmlPreviewUrl.isHtmlPreviewUrl(uri) ? createPreviewTab(uri) : createHistoryTab()]
+    const restoredIndex = savedSelectedTab && isSpecialTab(savedSelectedTab) ? savedSelectedTabIndex : 0
+    const tabs = tabsEnabled ? restoredTabs : [restoredTabs[restoredIndex]]
+    const selectedTabIndex = tabsEnabled && savedSelectedTab && isSpecialTab(savedSelectedTab) ? savedSelectedTabIndex : 0
+    if (isPreviewTab(tabs[selectedTabIndex]))
+      tabs[selectedTabIndex] = await SimpleBrowserPreview.materialize({ ...state, headerHeight }, tabs[selectedTabIndex])
+    const selectedTab = tabs[selectedTabIndex]
     return {
       ...state,
-      iframeSrc,
-      title: 'Simple Browser',
-      browserViewId: actualId,
+      audioIndicatorEnabled,
+      iframeSrc: selectedTab.iframeSrc,
+      inputValue: selectedTab.inputValue,
+      title: selectedTab.title,
+      browserViewId: 0,
+      canGoBack: false,
+      canGoForward: false,
+      muted: false,
+      uri,
+      headerHeight,
+      selectedTabIndex,
+      searchHistory,
+      history,
+      historySearchValue: '',
       suggestionsEnabled,
       shortcuts,
+      tabs,
+      tabsEnabled,
+      tabHoverEnabled,
+      unloadTabs,
+      visitedSites,
     }
   }
 
-  const fallThroughKeyBindings = GetFallThroughKeyBindings.getFallThroughKeyBindings(keyBindings)
-  const browserViewId = await ElectronWebContentsView.createWebContentsView(/* restoreId */ 0, uid)
-  await ElectronWebContentsViewFunctions.setFallthroughKeyBindings(fallThroughKeyBindings)
+  const browserViewId = await ElectronWebContentsView.createWebContentsView(id, fallThroughKeyBindings)
+  await ElectronWebContentsViewFunctions.setFallthroughKeyBindings(browserViewId, fallThroughKeyBindings)
   await ElectronWebContentsViewFunctions.resizeWebContentsView(browserViewId, browserViewX, browserViewY, browserViewWidth, browserViewHeight)
   Assert.number(browserViewId)
-  await ElectronWebContentsViewFunctions.setIframeSrc(browserViewId, iframeSrc)
-  const { title, canGoBack, canGoForward } = await ElectronWebContentsViewFunctions.getStats(browserViewId)
-  return {
-    ...state,
-    iframeSrc,
-    title,
+  // Native IDs are reused after an app restart; a matching ID can still belong to a new, empty view.
+  const existingUrl = id && id === browserViewId ? (await ElectronWebContentsViewFunctions.getStats(browserViewId)).url : ''
+  if (!iframeSrc || !existingUrl) {
+    await ElectronWebContentsViewFunctions.setIframeSrc(
+      browserViewId,
+      iframeSrc || SimpleBrowserNewTabPage.getUrl(undefined, suggestionsEnabled, state.chromeTheme),
+    )
+  }
+  const { title, canGoBack, canGoForward, isAudioMuted } = await ElectronWebContentsViewFunctions.getStats(browserViewId)
+  const restoredTabs =
+    savedTabs.length > 0 ? savedTabs : [createTab({ browserViewId: 0, iframeSrc, inputValue: iframeSrc, title: title || 'Simple Browser' })]
+  const selectedTabIndex = tabsEnabled ? savedSelectedTabIndex : 0
+  const tabsToRestore = tabsEnabled ? restoredTabs : [restoredTabs[savedSelectedTabIndex]]
+  const savedActiveTab = tabsToRestore[selectedTabIndex]
+  const activeTab = createTab({
+    ...savedActiveTab,
     browserViewId,
     canGoBack,
     canGoForward,
-    uri: `simple-browser://${browserViewId}`,
+    iframeSrc,
+    inputValue: savedActiveTab.inputValue,
+    muted: Boolean(isAudioMuted),
+    title: title || savedActiveTab.title || 'Simple Browser',
+  })
+  const tabs = tabsToRestore.with(selectedTabIndex, activeTab)
+  return {
+    ...state,
+    audioIndicatorEnabled,
+    iframeSrc: activeTab.iframeSrc,
+    inputValue: activeTab.inputValue,
+    title: activeTab.title,
+    browserViewId,
+    canGoBack,
+    canGoForward,
+    muted: Boolean(isAudioMuted),
+    uri: id ? uri : `simple-browser://${browserViewId}`,
+    headerHeight,
+    selectedTabIndex,
+    searchHistory,
+    history,
     suggestionsEnabled,
     shortcuts,
+    tabs,
+    tabsEnabled,
+    tabHoverEnabled,
+    unloadTabs,
+    visitedSites,
   }
 }
 
+export const isVisible = (state) => visibleBrowserUids.has(state.uid)
+
 export const show = async (state) => {
   const { browserViewId } = state
-  await ElectronWebContentsViewFunctions.show(browserViewId)
+  visibleBrowserUids.add(state.uid)
+  const selectedTab = state.tabs[state.selectedTabIndex]
+  if (browserViewId && !selectedTab?.pageSnapshot && !isHistoryTab(selectedTab)) {
+    await ElectronWebContentsViewFunctions.show(browserViewId)
+  }
 }
 
 export const hide = async (state) => {
-  const { browserViewId } = state
+  visibleBrowserUids.delete(state.uid)
+  await Promise.all(state.tabs.filter((tab) => tab.browserViewId).map((tab) => ElectronWebContentsViewFunctions.hide(tab.browserViewId)))
+}
+
+const createUnloadedTab = async (state) => {
+  const { headerHeight, height, width, x, y } = state
+  const browserViewId = await ElectronWebContentsView.createWebContentsView(0, getFallThroughKeyBindings())
   await ElectronWebContentsViewFunctions.hide(browserViewId)
+  await ElectronWebContentsViewFunctions.resizeWebContentsView(browserViewId, x, y + headerHeight, width, height - headerHeight)
+  return createTab({ browserViewId })
+}
+
+const createEmptyTab = async () => {
+  return createTab({})
+}
+
+const updateNewTabPages = async (state) => {
+  const { tabs } = state
+  const newTabUrl = SimpleBrowserNewTabPage.getUrl(undefined, state.suggestionsEnabled, state.chromeTheme)
+  await Promise.all(
+    tabs
+      .filter((tab) => !tab.iframeSrc && tab.browserViewId)
+      .map((tab) => ElectronWebContentsViewFunctions.setIframeSrc(tab.browserViewId, newTabUrl)),
+  )
+  return state
+}
+
+export const handleColorThemeChanged = updateNewTabPages
+
+const materializeTab = async (state, tab) => {
+  if (isPreviewTab(tab)) return SimpleBrowserPreview.materialize(state, tab)
+  if (isHistoryTab(tab)) {
+    return tab
+  }
+  if (!tab.iframeSrc) {
+    return tab
+  }
+  const createdTab = await createUnloadedTab(state)
+  if (tab.iframeSrc) {
+    void ElectronWebContentsViewFunctions.setIframeSrc(createdTab.browserViewId, tab.iframeSrc)
+  }
+  return {
+    ...tab,
+    browserViewId: createdTab.browserViewId,
+    isLoading: Boolean(tab.iframeSrc),
+  }
+}
+
+const prepareTabDeactivation = async (state, tab) => {
+  if (!tab || !state.unloadTabs || !tab.browserViewId || tab.isAudioPlaying || tab.muted) {
+    return { shouldUnload: false }
+  }
+  if (tab.pageSnapshot) {
+    return { pageSnapshot: tab.pageSnapshot, shouldUnload: true }
+  }
+  try {
+    const pageSnapshot = await SimpleBrowserPageSnapshot.capture(tab.browserViewId)
+    return { pageSnapshot, shouldUnload: true }
+  } catch (error) {
+    console.error('[renderer-worker] Failed to capture Simple Browser tab snapshot', error)
+    return { shouldUnload: false }
+  }
+}
+
+const switchToTab = async (state, initialTabs, selectedTabIndex) => {
+  const previousTab = state.tabs[state.selectedTabIndex]
+  state = await closeFind({ ...state, tabs: initialTabs }, false)
+  BrowserSuggestionRequests.cancel(state.uid)
+  const oldTabIndex = initialTabs.indexOf(previousTab)
+  const oldTab = initialTabs[oldTabIndex]
+  const oldBrowserViewId = oldTab?.browserViewId || state.browserViewId
+  const deactivationPromise = prepareTabDeactivation(state, oldTab)
+  let tabs = initialTabs
+  let selectedTab = tabs[selectedTabIndex]
+  if (!selectedTab.browserViewId) {
+    selectedTab = await materializeTab(state, selectedTab)
+    tabs = tabs.with(selectedTabIndex, selectedTab)
+  }
+  if (selectedTab.browserViewId && !selectedTab.pageSnapshot && !isHistoryTab(selectedTab)) {
+    await ElectronWebContentsViewFunctions.show(selectedTab.browserViewId)
+  }
+  const deactivation = await deactivationPromise
+  if (oldBrowserViewId) {
+    if (deactivation.shouldUnload && oldTab) {
+      await ElectronWebContentsView.disposeWebContentsView(oldBrowserViewId)
+      tabs = tabs.with(oldTabIndex, {
+        ...oldTab,
+        browserViewId: 0,
+        isLoading: false,
+        pageSnapshot: deactivation.pageSnapshot,
+      })
+    } else {
+      await ElectronWebContentsViewFunctions.hide(oldBrowserViewId)
+    }
+  }
+  if (selectedTab.browserViewId && !selectedTab.pageSnapshot && !isHistoryTab(selectedTab)) {
+    await ElectronWebContentsViewFunctions.focus(selectedTab.browserViewId)
+  }
+  return activateTab(state, tabs, selectedTabIndex)
+}
+
+export const createNewTab = async (state, focusAddress = true, requiresNativeView = false) => {
+  if (!state.tabsEnabled) {
+    return state
+  }
+  const currentState = state.hasSuggestionsOverlay ? await closeSuggestions(state) : state
+  const tab = requiresNativeView ? await createUnloadedTab(currentState) : await createEmptyTab()
+  const newState = await switchToTab(currentState, [...currentState.tabs, tab], currentState.tabs.length)
+  if (!focusAddress) {
+    return newState
+  }
+  await ElectronWindow.focus()
+  return { ...newState, focusAddressVersion: newState.focusAddressVersion + 1 }
+}
+
+export const duplicateTab = async (state, index) => {
+  const { hasSuggestionsOverlay, tabs: oldTabs, tabsEnabled } = state
+  if (!tabsEnabled) {
+    return state
+  }
+  const tabIndex = Number(index)
+  if (tabIndex < 0 || tabIndex >= oldTabs.length) {
+    return state
+  }
+  const currentState = hasSuggestionsOverlay ? await closeSuggestions(state) : state
+  const sourceTab = currentState.tabs[tabIndex]
+  const emptyTab = isPreviewTab(sourceTab)
+    ? createPreviewTab(sourceTab.iframeSrc)
+    : isHistoryTab(sourceTab)
+      ? createHistoryTab()
+      : sourceTab.iframeSrc
+        ? await createUnloadedTab(currentState)
+        : await createEmptyTab()
+  const tab = {
+    ...emptyTab,
+    iframeSrc: sourceTab.iframeSrc,
+    inputValue: sourceTab.inputValue,
+    isLoading: Boolean(sourceTab.iframeSrc) && !isSpecialTab(sourceTab),
+    title: sourceTab.title,
+  }
+  if (tab.iframeSrc && !isSpecialTab(tab)) {
+    void ElectronWebContentsViewFunctions.setIframeSrc(tab.browserViewId, tab.iframeSrc)
+  }
+  const tabs = currentState.tabs.toSpliced(tabIndex + 1, 0, tab)
+  const newState = await switchToTab(currentState, tabs, tabIndex + 1)
+  return tab.iframeSrc ? newState : { ...newState, focusAddressVersion: newState.focusAddressVersion + 1 }
+}
+
+export const muteTab = async (state, index) => {
+  const { tabs } = state
+  const tabIndex = Number(index)
+  if (tabIndex < 0 || tabIndex >= tabs.length) {
+    return state
+  }
+  const tab = tabs[tabIndex]
+  if (isSpecialTab(tab)) {
+    return state
+  }
+  const muted = !tab.muted
+  await ElectronWebContentsViewFunctions.setAudioMuted(tab.browserViewId, muted)
+  return updateTab(state, tab.browserViewId, { muted })
+}
+
+export const reloadTab = async (state, index) => {
+  const { tabs } = state
+  const tabIndex = Number(index)
+  if (tabIndex < 0 || tabIndex >= tabs.length) {
+    return state
+  }
+  const tab = tabs[tabIndex]
+  if (isPreviewTab(tab)) {
+    await SimpleBrowserPreview.reload(tab)
+    return state
+  }
+  if (isSpecialTab(tab)) {
+    return state
+  }
+  await ElectronWebContentsViewFunctions.reload(tab.browserViewId)
+  return updateTab(state, tab.browserViewId, { isLoading: true })
+}
+
+export const openOrRevealTab = async (state, url) => {
+  const index = state.tabs.findIndex((tab) => tab.iframeSrc === url)
+  if (index !== -1) {
+    const selected = await selectTab(state, index)
+    return updateTab({ ...selected, addressValueVersion: selected.addressValueVersion + 1 }, selected.browserViewId, { inputValue: url })
+  }
+  if (!state.iframeSrc) {
+    return setUrl(state, url)
+  }
+  return openTab(state, url, 'foreground-tab')
+}
+
+export const openTab = async (state, url, disposition) => {
+  const { hasSuggestionsOverlay } = state
+  const currentState = hasSuggestionsOverlay ? await closeSuggestions(state) : state
+  if (isHistoryUrl(url) || HtmlPreviewUrl.isHtmlPreviewUrl(url)) {
+    const tab = HtmlPreviewUrl.isHtmlPreviewUrl(url) ? createPreviewTab(url) : createHistoryTab()
+    const tabs = [...currentState.tabs, tab]
+    if (disposition === 'background-tab') {
+      return { ...currentState, tabs }
+    }
+    return switchToTab(currentState, tabs, currentState.tabs.length)
+  }
+  if (disposition === 'background-tab' && currentState.unloadTabs) {
+    const tab = createTab({ browserViewId: 0, iframeSrc: url, inputValue: url })
+    return { ...currentState, tabs: [...currentState.tabs, tab] }
+  }
+  const emptyTab = await createUnloadedTab(currentState)
+  const tab = {
+    ...emptyTab,
+    iframeSrc: url,
+    inputValue: url,
+    isLoading: true,
+  }
+  void ElectronWebContentsViewFunctions.setIframeSrc(tab.browserViewId, url)
+  const tabs = [...currentState.tabs, tab]
+  if (disposition === 'background-tab') {
+    return { ...currentState, tabs }
+  }
+  return switchToTab(currentState, tabs, currentState.tabs.length)
+}
+
+export const handleWindowOpen = async (state, browserViewId, childBrowserViewId, url, disposition) => {
+  const { tabs: oldTabs, tabsEnabled } = state
+  const ownsWebContentsView = oldTabs.some((tab) => tab.browserViewId === Number(browserViewId))
+  const openExternalLinks = Preferences.get('simpleBrowser.openExternalLinks') === 'externalBrowser'
+  if (!ownsWebContentsView) {
+    return state
+  }
+  ElectronWebContentsView.adoptWebContentsView()
+  if (openExternalLinks || !tabsEnabled) {
+    await ElectronWebContentsView.disposeWebContentsView(childBrowserViewId)
+    await Command.execute('Open.openExternal', url)
+    return state
+  }
+  const currentState = state.hasSuggestionsOverlay ? await closeSuggestions(state) : state
+  const { headerHeight, height, width, x, y } = currentState
+  await ElectronWebContentsViewFunctions.setFallthroughKeyBindings(childBrowserViewId, getFallThroughKeyBindings())
+  await ElectronWebContentsViewFunctions.resizeWebContentsView(childBrowserViewId, x, y + headerHeight, width, height - headerHeight)
+  const tab = createTab({ browserViewId: Number(childBrowserViewId), iframeSrc: url, inputValue: url, isLoading: true })
+  const tabs = [...currentState.tabs, tab]
+  if (disposition === 'background-tab') {
+    await ElectronWebContentsViewFunctions.hide(childBrowserViewId)
+    if (currentState.browserViewId === Number(browserViewId) && FocusState.get() === WhenExpression.FocusSimpleBrowser) {
+      await ElectronWebContentsViewFunctions.focus(currentState.browserViewId)
+    }
+    return { ...currentState, tabs }
+  }
+  return switchToTab(currentState, tabs, currentState.tabs.length)
+}
+
+export const selectTab = async (state, index) => {
+  const selectedTabIndex = Number(index)
+  if (selectedTabIndex === state.selectedTabIndex || selectedTabIndex < 0 || selectedTabIndex >= state.tabs.length) {
+    return state
+  }
+  let newState = state
+  if (state.hasSuggestionsOverlay) {
+    newState = await closeSuggestions(state)
+  }
+  return switchToTab(newState, newState.tabs, selectedTabIndex)
+}
+
+export const handleTabPointerDown = async (state, index, button) => {
+  const newState = await hideTabHover(TabDrag.resetTabDrag(state))
+  if (button !== 0) {
+    return newState
+  }
+  const selectedState = await selectTab(newState, index)
+  return TabDrag.stageTabDrag(selectedState, index, button)
+}
+
+export const focusNextTab = (state) => {
+  if (state.tabs.length === 0) {
+    return state
+  }
+  return selectTab(state, (state.selectedTabIndex + 1) % state.tabs.length)
+}
+
+export const focusPreviousTab = (state) => {
+  if (state.tabs.length === 0) {
+    return state
+  }
+  return selectTab(state, (state.selectedTabIndex - 1 + state.tabs.length) % state.tabs.length)
+}
+
+const removeLoginChallenges = async (state, predicate, cancel = true) => {
+  const challenges = state.loginChallenges || []
+  const removed = challenges.filter(predicate)
+  if (removed.length === 0) return state
+  if (cancel) {
+    await Promise.all(removed.map((challenge) => ElectronWebContentsViewFunctions.cancelLogin(challenge.requestId)))
+  }
+  const loginChallenges = challenges.filter((challenge) => !predicate(challenge))
+  const nextState = { ...state, loginChallenges }
+  return loginChallenges.length === 0 ? hideOverlay(nextState, loginOverlayId) : nextState
+}
+
+const closeTabInternal = async (state, index, disposeWebContentsView) => {
+  if (!state.tabsEnabled) {
+    return state
+  }
+  const tabIndex = Number(index)
+  if (tabIndex < 0 || tabIndex >= state.tabs.length) {
+    return state
+  }
+  if (tabIndex === state.selectedTabIndex) BrowserSuggestionRequests.cancel(state.uid)
+  let currentState = tabIndex === state.selectedTabIndex && state.hasSuggestionsOverlay ? await closeSuggestions(state) : state
+  const tab = currentState.tabs[tabIndex]
+  currentState = await removeLoginChallenges(currentState, (challenge) => Number(challenge.browserViewId) === Number(tab.browserViewId))
+  await SimpleBrowserPreview.dispose(tab)
+  const closedTabs = [...currentState.closedTabs, { iframeSrc: tab.iframeSrc, title: tab.title, index: tabIndex }]
+  const closedState = { ...currentState, closedTabs }
+  if (currentState.tabs.length === 1) {
+    const replacement = await createEmptyTab()
+    if (disposeWebContentsView && tab.browserViewId) {
+      await ElectronWebContentsView.disposeWebContentsView(tab.browserViewId)
+    }
+    SimpleBrowserFavicon.dispose(tab.favicon)
+    if (replacement.browserViewId) {
+      await ElectronWebContentsViewFunctions.show(replacement.browserViewId)
+    }
+    const newState = activateTab(closedState, [replacement], 0)
+    return { ...newState, focusAddressVersion: newState.focusAddressVersion + 1 }
+  }
+  let tabs = currentState.tabs.toSpliced(tabIndex, 1)
+  const wasSelected = tabIndex === currentState.selectedTabIndex
+  let selectedTabIndex = currentState.selectedTabIndex
+  if (wasSelected) {
+    selectedTabIndex = Math.min(tabIndex, tabs.length - 1)
+  } else if (tabIndex < selectedTabIndex) {
+    selectedTabIndex--
+  }
+  if (disposeWebContentsView && tab.browserViewId) {
+    await ElectronWebContentsView.disposeWebContentsView(tab.browserViewId)
+  }
+  SimpleBrowserFavicon.dispose(tab.favicon)
+  if (!wasSelected) {
+    return { ...closedState, selectedTabIndex, tabs }
+  }
+  let selectedTab = tabs[selectedTabIndex]
+  if (!selectedTab.browserViewId) {
+    selectedTab = await materializeTab(currentState, selectedTab)
+    tabs = tabs.with(selectedTabIndex, selectedTab)
+  }
+  if (selectedTab.browserViewId && !selectedTab.pageSnapshot && !isHistoryTab(selectedTab)) {
+    await ElectronWebContentsViewFunctions.show(selectedTab.browserViewId)
+    await ElectronWebContentsViewFunctions.focus(selectedTab.browserViewId)
+  }
+  return activateTab(closedState, tabs, selectedTabIndex)
+}
+
+export const closeTab = (state, index) => {
+  return closeTabInternal(state, index, true)
+}
+
+export const handleBrowserViewDestroyed = async (state, browserViewId) => {
+  state = await removeLoginChallenges(state, (challenge) => Number(challenge.browserViewId) === Number(browserViewId), false)
+  const tabIndex = state.tabs.findIndex((tab) => tab.browserViewId === Number(browserViewId))
+  if (tabIndex === -1) {
+    return state
+  }
+  const newState = await closeTabInternal(state, tabIndex, false)
+  await ElectronWebContentsView.releaseWebContentsView()
+  return newState
+}
+
+export const reopenClosedTab = async (state) => {
+  if (!state.tabsEnabled || state.closedTabs.length === 0) {
+    return state
+  }
+  const currentState = state.hasSuggestionsOverlay ? await closeSuggestions(state) : state
+  const closedTab = currentState.closedTabs.at(-1)
+  const tab = createTab({ browserViewId: 0, iframeSrc: closedTab.iframeSrc, inputValue: closedTab.iframeSrc, title: closedTab.title })
+  const index = Math.min(closedTab.index, currentState.tabs.length)
+  const tabs = currentState.tabs.toSpliced(index, 0, tab)
+  const newState = await switchToTab(currentState, tabs, index)
+  return { ...newState, closedTabs: currentState.closedTabs.slice(0, -1) }
+}
+
+export const closeCurrentTab = (state) => {
+  return closeTab(state, state.selectedTabIndex)
+}
+
+export const handleTabsPointerOver = (state, tabWidth) => {
+  if (state.tabWidth !== undefined || state.tabs.length === 0 || !Number.isFinite(tabWidth) || tabWidth <= 0) {
+    return state
+  }
+  // Freeze the rendered width: flex layout can be narrower than the space available to the view.
+  return {
+    ...state,
+    tabWidth,
+  }
+}
+
+export const handleTabsPointerOut = (state, eventX, eventY) => {
+  const { x, y, width } = state
+  if (!Number.isFinite(eventX) || !Number.isFinite(eventY) || !Number.isFinite(x) || !Number.isFinite(y) || !Number.isFinite(width)) {
+    return state
+  }
+  if (eventX >= x && eventX < x + width && eventY >= y && eventY < y + tabsHeaderHeight) {
+    return state
+  }
+  if (state.tabWidth === undefined) {
+    return state
+  }
+  return {
+    ...state,
+    tabWidth: undefined,
+  }
+}
+
+const closeTabsByIndex = async (state, indexes, preferredTabIndex) => {
+  const { hasSuggestionsOverlay, selectedTabIndex: oldSelectedTabIndex, tabsEnabled } = state
+  if (!tabsEnabled || indexes.length === 0) {
+    return state
+  }
+  const indexesToClose = new Set(indexes)
+  const selectedTabWillClose = indexesToClose.has(oldSelectedTabIndex)
+  if (selectedTabWillClose) BrowserSuggestionRequests.cancel(state.uid)
+  let currentState = selectedTabWillClose && hasSuggestionsOverlay ? await closeSuggestions(state) : state
+  const closingBrowserViewIds = new Set(indexes.map((index) => currentState.tabs[index]?.browserViewId).filter(Boolean))
+  currentState = await removeLoginChallenges(currentState, (challenge) => closingBrowserViewIds.has(challenge.browserViewId))
+  const { tabs: currentTabs } = currentState
+  const preferredTab = currentTabs[preferredTabIndex]
+  const tabsToClose = currentTabs.filter((tab, index) => indexesToClose.has(index))
+  const closedTabs = [
+    ...currentState.closedTabs,
+    // Store positions as if the tabs were closed one at a time from left to right.
+    ...indexes.map((index, offset) => ({ iframeSrc: currentTabs[index].iframeSrc, title: currentTabs[index].title, index: index - offset })),
+  ]
+  const closedState = { ...currentState, closedTabs }
+  let remainingTabs = currentTabs.filter((tab, index) => !indexesToClose.has(index))
+  await Promise.all(tabsToClose.filter((tab) => tab.browserViewId).map((tab) => ElectronWebContentsView.disposeWebContentsView(tab.browserViewId)))
+  await Promise.all(tabsToClose.map(SimpleBrowserPreview.dispose))
+  tabsToClose.forEach((tab) => SimpleBrowserFavicon.dispose(tab.favicon))
+  const retainedSelectedTabIndex = remainingTabs.indexOf(currentTabs[oldSelectedTabIndex])
+  if (retainedSelectedTabIndex !== -1) {
+    return {
+      ...closedState,
+      selectedTabIndex: retainedSelectedTabIndex,
+      tabs: remainingTabs,
+    }
+  }
+  const selectedTabIndex = Math.max(0, remainingTabs.indexOf(preferredTab))
+  let selectedTab = remainingTabs[selectedTabIndex]
+  if (!selectedTab.browserViewId) {
+    selectedTab = await materializeTab(currentState, selectedTab)
+    remainingTabs = remainingTabs.with(selectedTabIndex, selectedTab)
+  }
+  if (selectedTab.browserViewId && !selectedTab.pageSnapshot && !isHistoryTab(selectedTab)) {
+    await ElectronWebContentsViewFunctions.show(selectedTab.browserViewId)
+    await ElectronWebContentsViewFunctions.focus(selectedTab.browserViewId)
+  }
+  return activateTab(closedState, remainingTabs, selectedTabIndex)
+}
+
+export const closeTabsToTheLeft = async (state, index) => {
+  const { tabs } = state
+  const tabIndex = Number(index)
+  if (tabIndex <= 0 || tabIndex >= tabs.length) {
+    return state
+  }
+  const indexes = Array.from({ length: tabIndex }, (_, index) => index)
+  return closeTabsByIndex(state, indexes, tabIndex)
+}
+
+export const closeTabsToTheRight = async (state, index) => {
+  const { tabs } = state
+  const tabIndex = Number(index)
+  if (tabIndex < 0 || tabIndex >= tabs.length - 1) {
+    return state
+  }
+  const indexes = Array.from({ length: tabs.length - tabIndex - 1 }, (_, index) => tabIndex + index + 1)
+  return closeTabsByIndex(state, indexes, tabIndex)
+}
+
+export const closeOtherTabs = async (state, index) => {
+  const { tabs } = state
+  const tabIndex = Number(index)
+  if (tabIndex < 0 || tabIndex >= tabs.length || tabs.length === 1) {
+    return state
+  }
+  const indexes = tabs.map((_, index) => index).filter((index) => index !== tabIndex)
+  return closeTabsByIndex(state, indexes, tabIndex)
 }
 
 export const showOverlay = async (state, overlayId) => {
@@ -146,23 +950,84 @@ export const showOverlay = async (state, overlayId) => {
     return state
   }
   const overlayIds = [...state.overlayIds, overlayId]
-  if (state.snapshot) {
+  const selectedTab = state.tabs[state.selectedTabIndex]
+  if (state.snapshot || selectedTab?.pageSnapshot) {
     return {
       ...state,
       overlayIds,
     }
   }
+  let snapshot = ''
   try {
-    const snapshot = await ElectronWebContentsViewFunctions.capturePage(state.browserViewId)
-    await ElectronWebContentsViewFunctions.hide(state.browserViewId)
+    if (state.browserViewId) {
+      const bytes = await ElectronWebContentsViewFunctions.capturePage(state.browserViewId)
+      snapshot = SimpleBrowserSnapshot.create(bytes)
+    }
     return {
       ...state,
       overlayIds,
       snapshot,
     }
   } catch (error) {
+    SimpleBrowserSnapshot.dispose(snapshot)
     console.error('[renderer-worker] Failed to capture Simple Browser page', error)
     return state
+  }
+}
+
+export const afterRender = async (oldState, newState) => {
+  const oldLoginRequestId = oldState.loginChallenges?.[0]?.requestId
+  const newLoginRequestId = newState.loginChallenges?.[0]?.requestId
+  if (newLoginRequestId && oldLoginRequestId !== newLoginRequestId) {
+    await Promise.all([
+      RendererProcess.invoke('Viewlet.setValueByName', newState.uid, 'username', ''),
+      RendererProcess.invoke('Viewlet.setValueByName', newState.uid, 'password', ''),
+      RendererProcess.invoke('Viewlet.focusElementByName', newState.uid, 'username'),
+    ])
+  }
+  if (oldState.fullWidth !== newState.fullWidth && newState.fullWidth) {
+    await show(newState)
+    // Showing the native page can finish after the command palette acquired focus.
+    // Cover module loading, instance creation, and the asynchronous focus event.
+    // Preserve the opening palette throughout those intervals.
+    const applicationId = ApplicationRegistry.getOwner(newState.uid)
+    const palette = ViewletStates.getInstance(ViewletModuleId.QuickPick, applicationId)
+    if (!QuickPickOpening.isOpening(applicationId) && !palette && FocusState.get() !== WhenExpression.FocusQuickPickInput) {
+      if (newState.fullWidthAddressSelection || !newState.iframeSrc) {
+        await ElectronWindow.focus()
+        await RendererProcess.invoke('Window.focusBrowserAddress', newState.uid, newState.fullWidthAddressSelection)
+      } else {
+        await ElectronWebContentsViewFunctions.focus(newState.browserViewId)
+      }
+    }
+  }
+  if (oldState.tabs !== newState.tabs || oldState.selectedTabIndex !== newState.selectedTabIndex || oldState.fullWidth !== newState.fullWidth) {
+    await RendererProcess.invoke('Window.revealBrowserTab', newState.uid)
+  }
+  const { overlayIds: oldOverlayIds } = oldState
+  const { browserViewId, overlayIds, selectedTabIndex, tabs } = newState
+  const didShowFirstOverlay = oldOverlayIds.length === 0 && overlayIds.length > 0
+  const selectedTab = tabs[selectedTabIndex]
+  if (didShowFirstOverlay && browserViewId && !selectedTab?.pageSnapshot && !isHistoryTab(selectedTab)) {
+    try {
+      await ElectronWebContentsViewFunctions.hide(browserViewId)
+    } catch (error) {
+      console.error('[renderer-worker] Failed to hide Simple Browser page', error)
+    }
+  }
+  if (oldState.suggestionSessionId !== newState.suggestionSessionId && newState.suggestionSessionId) {
+    // Queue the follow-up without waiting on the command that is currently rendering.
+    void Viewlet.executeViewletCommand(
+      newState.uid,
+      'applySuggestions',
+      newState.uid,
+      newState.inputValue,
+      [],
+      getLocalSuggestions(newState, newState.inputValue),
+      newState.suggestionSessionId,
+    ).catch((error) => {
+      console.error('[renderer-worker] Failed to apply browser suggestions', error)
+    })
   }
 }
 
@@ -178,9 +1043,11 @@ export const hideOverlay = async (state, overlayId) => {
     }
   }
   try {
-    await ElectronWebContentsViewFunctions.show(state.browserViewId)
+    await show(state)
   } catch (error) {
     console.error('[renderer-worker] Failed to restore Simple Browser page', error)
+  } finally {
+    SimpleBrowserSnapshot.dispose(state.snapshot)
   }
   return {
     ...state,
@@ -189,90 +1056,679 @@ export const hideOverlay = async (state, overlayId) => {
   }
 }
 
-export const handleInput = async (state, value) => {
-  const { hasSuggestionsOverlay, suggestionsEnabled } = state
-  if (suggestionsEnabled) {
-    if (IsEmptyString.isEmptyString(value) && hasSuggestionsOverlay) {
-      return {
-        ...state,
-        inputValue: value,
-        hasSuggestionsOverlay: false,
+const tabHoverOverlayId = 'tab-hover'
+const tabHoverWidth = 320
+
+export const showTabHover = async (state, index, tabOffsetLeft, tabWidth, tabsScrollLeft) => {
+  const { tabHover, tabHoverEnabled, tabs, width } = state
+  if (!tabHoverEnabled || state.draggedTab) {
+    return state
+  }
+  const tabIndex = Number(index)
+  const tab = tabs[tabIndex]
+  if (!tab || tabHover?.index === tabIndex) {
+    return state
+  }
+  const overlayState = await showOverlay(state, tabHoverOverlayId)
+  if (!overlayState.overlayIds.includes(tabHoverOverlayId)) {
+    return state
+  }
+  let statusLabel = tab.browserViewId ? 'Memory usage unavailable' : 'Tab is unloaded'
+  let title = tab.title || 'New Tab'
+  if (tab.browserViewId) {
+    try {
+      const stats = await ElectronWebContentsViewFunctions.getStats(tab.browserViewId, true)
+      title = stats.title || title
+      if (Number.isFinite(stats.memory)) {
+        statusLabel = `Memory usage: ${PrettyBytes.formatBytes(stats.memory)}`
       }
+    } catch (error) {
+      console.error('[renderer-worker] Failed to get Simple Browser tab memory usage', error)
     }
-    // TODO maybe show autocomplete for urls like browsers do
+  }
+  const tabLeft = Number(tabOffsetLeft) - Number(tabsScrollLeft)
+  const maximumLeft = Math.max(8, width - tabHoverWidth - 8)
+  const left = Math.max(8, Math.min(tabLeft, maximumLeft))
+  return {
+    ...overlayState,
+    tabHover: {
+      index: tabIndex,
+      left,
+      statusLabel,
+      tabLeft: Number(tabLeft),
+      tabWidth: Number(tabWidth),
+      title,
+    },
+  }
+}
+
+export const hideTabHover = async (state, index, clientX, clientY) => {
+  const { tabHover, x, y } = state
+  if (!tabHover) {
+    return state
+  }
+  const tabIndex = Number(index)
+  if (Number.isFinite(tabIndex) && tabIndex !== tabHover.index) {
+    return state
+  }
+  const pointerInsideTab =
+    Number.isFinite(clientX) &&
+    Number.isFinite(clientY) &&
+    clientX >= x + tabHover.tabLeft &&
+    clientX < x + tabHover.tabLeft + tabHover.tabWidth &&
+    clientY >= y &&
+    clientY < y + tabsHeaderHeight
+  if (pointerInsideTab) {
+    return state
+  }
+  return hideOverlay({ ...state, tabHover: undefined }, tabHoverOverlayId)
+}
+
+export const handleInput = (state, value) => {
+  const suggestionSessionId = BrowserSuggestionRequests.begin(
+    state.uid,
+    state.browserViewId,
+    value,
+    state.suggestionsEnabled && shouldRequestSuggestions(value) ? BrowserSearchSuggestions.get : undefined,
+    (id, suggestions) => Viewlet.executeViewletCommand(state.uid, 'applySuggestions', state.uid, value, suggestions, undefined, id),
+  )
+  // Commit typing before capturing the native page for the popup. Popup work runs after rendering.
+  return {
+    ...updateTab(state, state.browserViewId, { inputValue: value }),
+    selectedSuggestionIndex: -1,
+    suggestionSessionId,
+    suggestions: state.hasSuggestionsOverlay ? state.suggestions : [],
+  }
+}
+
+export const handleHistoryInput = (state, value) => {
+  return {
+    ...state,
+    historySearchValue: value,
+    historyScrollTop: 0,
+  }
+}
+
+export const handleHistoryScroll = (state, scrollTop, viewportHeight) => {
+  if (state.historyScrollTop === scrollTop && state.historyViewportHeight === viewportHeight) {
+    return state
+  }
+  return { ...state, historyScrollTop: scrollTop, historyViewportHeight: viewportHeight }
+}
+
+export const clearHistory = async (state) => {
+  const history = await BrowserHistory.clear()
+  return {
+    ...state,
+    history,
+    historyScrollTop: 0,
+  }
+}
+
+export const removeHistoryEntry = async (state, index) => {
+  const entry = state.history[Number(index)]
+  if (!entry) {
+    return state
+  }
+  const history = await BrowserHistory.removeEntry(entry)
+  if (!history) {
+    return state
   }
   return {
     ...state,
-    inputValue: value,
-    hasSuggestionsOverlay: true,
+    history,
+    historyScrollTop: 0,
   }
+}
+
+const suggestionsOverlayId = 'search-suggestions'
+
+const shouldRequestSuggestions = (value) => {
+  const query = value.trim()
+  if (query.length < 2) {
+    return false
+  }
+  return !/^(?:[a-z][a-z\d+.-]*:\/\/|localhost(?::\d+)?(?:\/|$)|\d{1,3}(?:\.\d{1,3}){3}(?::\d+)?(?:\/|$)|(?:[\w-]+\.)+[a-z]{2,}(?::\d+)?(?:\/|$))/i.test(
+    query,
+  )
+}
+
+const createSearchSuggestion = (value) => {
+  return { favicon: '', type: 'search', value }
+}
+
+const getSuggestionValue = (suggestion) => {
+  return typeof suggestion === 'string' ? suggestion : suggestion?.value
+}
+
+const getLocalSuggestions = (state, query) => {
+  return [
+    ...BrowserSearchHistory.getSuggestions(state.searchHistory, query),
+    ...BrowserHistory.getSuggestions(state.history || [], query),
+    ...BrowserVisitedSites.getSuggestions(state.visitedSites, query),
+  ]
+}
+
+export const applySuggestions = async (state, uid, query, suggestions, precomputedLocalSuggestions, sessionId) => {
+  const isCurrent = () => sessionId === undefined || BrowserSuggestionRequests.isCurrent(uid, sessionId, state.browserViewId)
+  if (!isCurrent() || state.uid !== uid || state.inputValue !== query) {
+    return state
+  }
+  const updateId =
+    sessionId === undefined ? undefined : BrowserSuggestionRequests.beginUpdate(uid, sessionId, precomputedLocalSuggestions === undefined)
+  if (sessionId !== undefined && updateId === undefined) return state
+  const isCurrentUpdate = () => isCurrent() && (sessionId === undefined || BrowserSuggestionRequests.isCurrentUpdate(uid, sessionId, updateId))
+  if (!state.suggestionsEnabled || query.trim().length < 2) {
+    const result = await dismissSuggestions(state)
+    return isCurrentUpdate() ? result : state
+  }
+  // Keep the visible list stable until the provider completes this query.
+  if (precomputedLocalSuggestions !== undefined && state.hasSuggestionsOverlay && shouldRequestSuggestions(query)) {
+    return state
+  }
+  const localSuggestions = precomputedLocalSuggestions || getLocalSuggestions(state, query)
+  const providerSuggestions = Array.isArray(suggestions) ? suggestions : []
+  const allSuggestions = [
+    ...localSuggestions,
+    ...((state.hasSuggestionsOverlay && shouldRequestSuggestions(query)) || providerSuggestions.length > 0 ? [createSearchSuggestion(query)] : []),
+    ...providerSuggestions.map(createSearchSuggestion),
+  ]
+  const uniqueSuggestions = allSuggestions
+    .filter((suggestion, index) => allSuggestions.findIndex((other) => other.value === suggestion.value) === index)
+    .slice(0, 8)
+  if (uniqueSuggestions.length === 0) {
+    const result = await dismissSuggestions(state)
+    return isCurrentUpdate() ? result : state
+  }
+  const selectedValue = state.selectedSuggestionIndex < 0 ? undefined : getSuggestionValue(state.suggestions[state.selectedSuggestionIndex])
+  const overlayState = await showOverlay(state, suggestionsOverlayId)
+  if (!isCurrentUpdate()) {
+    if (overlayState.snapshot !== state.snapshot) SimpleBrowserSnapshot.dispose(overlayState.snapshot)
+    return state
+  }
+  if (!overlayState.overlayIds.includes(suggestionsOverlayId)) {
+    return state
+  }
+  return {
+    ...overlayState,
+    hasSuggestionsOverlay: true,
+    selectedSuggestionIndex: selectedValue === undefined ? -1 : uniqueSuggestions.findIndex((item) => item.value === selectedValue),
+    suggestions: uniqueSuggestions,
+  }
+}
+
+const dismissSuggestions = async (state) => {
+  const overlayState = state.hasSuggestionsOverlay ? await hideOverlay(state, suggestionsOverlayId) : state
+  return {
+    ...overlayState,
+    hasSuggestionsOverlay: false,
+    selectedSuggestionIndex: -1,
+    suggestions: [],
+  }
+}
+
+export const closeSuggestions = (state) => {
+  BrowserSuggestionRequests.cancel(state.uid)
+  return dismissSuggestions(state)
+}
+
+const renderAddressSelection = async (state, focused, value = state.inputValue) => {
+  const selection = await SimpleBrowserWorker.invoke(
+    'SimpleBrowser.getAddressSelection',
+    focused,
+    value,
+    state.suggestions.length > 0,
+    focused ? state.fullWidthAddressSelection : undefined,
+  )
+  await RendererProcess.invoke('Viewlet.sendMultiple', [
+    ['Viewlet.setSelectionByName', state.uid, InputName.SimpleBrowserAddress, selection.start, selection.end, value],
+  ])
+}
+
+export const handleAddressFocus = (state, value) => {
+  void renderAddressSelection(state, true, value)
+  return { ...state, fullWidthAddressSelection: undefined }
+}
+
+export const handleAddressBlur = (state) => {
+  void renderAddressSelection(state, false)
+  return closeSuggestions(state)
+}
+export const handleSuggestionPointerDown = (state) => state
+
+export const selectNextSuggestion = (state) => {
+  if (!state.hasSuggestionsOverlay || state.suggestions.length === 0) {
+    return state
+  }
+  return {
+    ...state,
+    selectedSuggestionIndex: Math.min(state.selectedSuggestionIndex + 1, state.suggestions.length - 1),
+  }
+}
+
+export const selectPreviousSuggestion = (state) => {
+  if (!state.hasSuggestionsOverlay || state.suggestions.length <= 1) {
+    return state
+  }
+  return {
+    ...state,
+    selectedSuggestionIndex: state.selectedSuggestionIndex === 0 ? state.suggestions.length - 1 : Math.max(state.selectedSuggestionIndex - 1, -1),
+  }
+}
+
+const openCookieImportView = (value) => {
+  if (!value.startsWith('cookie-import-view:///')) {
+    return false
+  }
+  void Command.execute('Main.openUri', value)
+  return true
+}
+
+const addToSearchHistory = (state, value) => {
+  if (!IframeSrc.isSearchInput(value, state.shortcuts)) {
+    return state
+  }
+  const searchHistory = BrowserSearchHistory.add(state.searchHistory, value)
+  if (searchHistory === state.searchHistory) {
+    return state
+  }
+  void BrowserSearchHistory.save(searchHistory)
+  return {
+    ...state,
+    searchHistory,
+  }
+}
+
+const navigate = async (state, value) => {
+  BrowserSuggestionRequests.cancel(state.uid)
+  if (openCookieImportView(value)) {
+    return state
+  }
+  const iframeSrc = HtmlPreviewUrl.isHtmlPreviewUrl(value) ? value : IframeSrc.toIframeSrc(value, state.shortcuts)
+  if (HtmlPreviewUrl.isHtmlPreviewUrl(iframeSrc)) {
+    return openTab(state, iframeSrc, 'foreground-tab')
+  }
+  if (isHistoryUrl(iframeSrc)) {
+    return openTab(state, simpleBrowserHistoryUrl, 'foreground-tab')
+  }
+  const selectedTab = state.tabs[state.selectedTabIndex]
+  if (isSpecialTab(selectedTab)) {
+    await SimpleBrowserPreview.dispose(selectedTab)
+    const tab = await createUnloadedTab(state)
+    const nextTab = {
+      ...tab,
+      iframeSrc,
+      inputValue: value,
+      isLoading: true,
+    }
+    void ElectronWebContentsViewFunctions.setIframeSrc(nextTab.browserViewId, iframeSrc)
+    const tabs = state.tabs.with(state.selectedTabIndex, nextTab)
+    const newState = await switchToTab(state, tabs, state.selectedTabIndex)
+    return updateTab({ ...newState, addressValueVersion: newState.addressValueVersion + 1 }, nextTab.browserViewId, {
+      iframeSrc,
+      inputValue: value,
+      isLoading: true,
+    })
+  }
+  if (!state.browserViewId) {
+    const tab = await createUnloadedTab(state)
+    const nextTab = {
+      ...selectedTab,
+      ...tab,
+      iframeSrc,
+      inputValue: value,
+      isLoading: true,
+    }
+    void ElectronWebContentsViewFunctions.setIframeSrc(tab.browserViewId, iframeSrc)
+    const tabs = state.tabs.with(state.selectedTabIndex, nextTab)
+    const newState = await switchToTab(state, tabs, state.selectedTabIndex)
+    const stateWithSearchHistory = addToSearchHistory(newState, value)
+    return updateTab({ ...stateWithSearchHistory, addressValueVersion: state.addressValueVersion + 1 }, tab.browserViewId, {
+      iframeSrc,
+      inputValue: value,
+      isLoading: true,
+    })
+  }
+  void ElectronWebContentsViewFunctions.setIframeSrc(state.browserViewId, iframeSrc)
+  void ElectronWebContentsViewFunctions.focus(state.browserViewId)
+  const stateWithSearchHistory = addToSearchHistory(state, value)
+  return updateTab({ ...stateWithSearchHistory, addressValueVersion: state.addressValueVersion + 1 }, state.browserViewId, {
+    iframeSrc,
+    inputValue: value,
+    isLoading: true,
+  })
+}
+
+export const acceptSuggestion = async (state, value) => {
+  const suggestion = typeof value === 'string' ? value : getSuggestionValue(state.suggestions[state.selectedSuggestionIndex])
+  if (typeof suggestion !== 'string') {
+    return state
+  }
+  const newState = await closeSuggestions(state)
+  return navigate(newState, suggestion)
 }
 
 export const setUrl = async (state, value) => {
   const newState1 = await handleInput(state, value)
-  const { inputValue, browserViewId, shortcuts } = newState1
-  const iframeSrc = IframeSrc.toIframeSrc(inputValue, shortcuts)
-  void ElectronWebContentsViewFunctions.setIframeSrc(browserViewId, iframeSrc)
-
-  return {
-    ...newState1,
-    iframeSrc,
-    isLoading: true,
-  }
+  return navigate(newState1, newState1.inputValue)
 }
 
-export const go = (state) => {
-  const { inputValue, browserViewId, suggestionsEnabled, hasSuggestionsOverlay, shortcuts } = state
-  const iframeSrc = IframeSrc.toIframeSrc(inputValue, shortcuts)
-  // TODO await promises
-  void ElectronWebContentsViewFunctions.setIframeSrc(browserViewId, iframeSrc)
-  void ElectronWebContentsViewFunctions.focus(browserViewId)
-  if (suggestionsEnabled && hasSuggestionsOverlay) {
-    // void ElectronBrowserViewSuggestions.disposeBrowserView()
+export const go = async (state) => {
+  if (state.hasSuggestionsOverlay && state.selectedSuggestionIndex >= 0) {
+    return acceptSuggestion(state)
   }
-  return {
+  const newState = state.hasSuggestionsOverlay ? await closeSuggestions(state) : state
+  return navigate(newState, newState.inputValue)
+}
+
+export const handleWillNavigate = async (state, browserViewId, value) => {
+  const [actualBrowserViewId, url] = parseWebContentsEvent(state, browserViewId, value)
+  const clearedState = await removeLoginChallenges(state, (challenge) => Number(challenge.browserViewId) === Number(actualBrowserViewId))
+  return updateTab(clearedState, actualBrowserViewId, {
+    favicon: '',
+    iframeSrc: SimpleBrowserNewTabPage.toDisplayUrl(url),
+    isAudioPlaying: false,
+    isLoading: true,
+  })
+}
+
+export const handleLogin = async (state, browserViewId, challenge) => {
+  const actualBrowserViewId = Number(browserViewId)
+  if (!state.tabs.some((tab) => Number(tab.browserViewId) === actualBrowserViewId)) {
+    await ElectronWebContentsViewFunctions.cancelLogin(challenge.requestId)
+    return state
+  }
+  const loginChallenges = state.loginChallenges || []
+  if (loginChallenges.some((pending) => pending.requestId === challenge.requestId)) return state
+  const shouldShowOverlay = loginChallenges.length === 0
+  const nextState = {
     ...state,
-    iframeSrc,
-    isLoading: true,
+    loginChallenges: [...loginChallenges, { ...challenge, browserViewId: actualBrowserViewId }],
   }
+  return shouldShowOverlay ? showOverlay(nextState, loginOverlayId) : nextState
 }
 
-export const handleWillNavigate = (state, url) => {
-  return {
-    ...state,
-    iframeSrc: url,
-    isLoading: true,
+const settleLogin = async (state, requestId, credentials) => {
+  const challenges = state.loginChallenges || []
+  const challenge = challenges.find((pending) => pending.requestId === requestId)
+  if (!challenge) return state
+  if (credentials) {
+    await ElectronWebContentsViewFunctions.acceptLogin(requestId, credentials.username, credentials.password)
+  } else {
+    await ElectronWebContentsViewFunctions.cancelLogin(requestId)
   }
+  const loginChallenges = challenges.filter((pending) => pending.requestId !== requestId)
+  const nextState = { ...state, loginChallenges }
+  return loginChallenges.length === 0 ? hideOverlay(nextState, loginOverlayId) : nextState
 }
 
-export const handleKeyBinding = async (state, keyBinding) => {
-  await KeyBindings.handleKeyBinding(keyBinding)
+export const submitLogin = (state, requestId, username, password) => {
+  if (!username || !password) return state
+  return settleLogin(state, requestId, { username, password })
+}
+
+export const cancelLogin = (state, requestId) => settleLogin(state, requestId, undefined)
+
+export const cancelLoginOnEscape = (state, requestId, key) => (key === 'Escape' ? cancelLogin(state, requestId) : state)
+
+export const handleFocusIn = (state, name) => {
+  const focusKey =
+    name === 'simple-browser-find'
+      ? WhenExpression.FocusSimpleBrowserFindInput
+      : name?.startsWith('simple-browser-find')
+        ? WhenExpression.FocusSimpleBrowserFind
+        : name === InputName.SimpleBrowserAddress || name === InputName.SimpleBrowserNewTabSearch
+          ? WhenExpression.FocusSimpleBrowserInput
+          : WhenExpression.FocusSimpleBrowser
+  Focus.setFocus(focusKey, undefined, state.uid, ViewletModuleId.SimpleBrowser)
   return state
 }
 
-export const handleDidNavigate = (state, url) => {
-  return {
-    ...state,
-    iframeSrc: url,
-    inputValue: url,
-    isLoading: false,
+export const handleKeyBinding = async (state, browserViewId, keyBinding) => {
+  if (Number(browserViewId) !== state.browserViewId) {
+    return state
   }
-}
-
-export const handleDidNavigationCancel = (state, url) => {
-  return {
-    ...state,
-    isLoading: false,
+  if (keyBinding === findKeyBinding) return toggleFind(state)
+  if (keyBinding === KeyCode.Escape && state.findVisible) return closeFind(state)
+  if (keyBinding === toggleDevToolsKeyBinding) {
+    if (!state.browserViewId) {
+      return state
+    }
+    await ElectronWebContentsViewFunctions.toggleDevTools(state.browserViewId)
+    return state
   }
-}
-
-export const handleTitleUpdated = async (state, title) => {
-  const { uid } = state
-  await GlobalEventBus.emitEvent('titleUpdated', uid, title)
+  if (keyBinding === focusAddressKeyBinding) return focusAddress(state)
+  if (keyBinding === closeTabKeyBinding) {
+    return closeCurrentTab(state)
+  }
+  if (keyBinding === reopenClosedTabKeyBinding) {
+    return reopenClosedTab(state)
+  }
+  if (keyBinding === createNewTabKeyBinding) {
+    return createNewTab(state)
+  }
+  if (keyBinding === focusNextTabKeyBinding) {
+    return focusNextTab(state)
+  }
+  if (keyBinding === focusPreviousTabKeyBinding) {
+    return focusPreviousTab(state)
+  }
+  if (keyBinding === openHistoryKeyBinding) {
+    return openTab(state, simpleBrowserHistoryUrl, 'foreground-tab')
+  }
+  // A fallback binding may dispatch another command to this viewlet.
+  void KeyBindings.handleKeyBinding(keyBinding).catch((error) => {
+    console.error('[renderer-worker] Failed to handle browser key binding', error)
+  })
   return state
+}
+
+export const handleDidNavigate = async (state, browserViewId, value) => {
+  const [actualBrowserViewId, url] = parseWebContentsEvent(state, browserViewId, value)
+  const displayUrl = SimpleBrowserNewTabPage.toDisplayUrl(url)
+  const { canGoBack, canGoForward, isFocused, url: currentUrl } = await ElectronWebContentsViewFunctions.getStats(actualBrowserViewId)
+  if (currentUrl && currentUrl !== url) return state
+  const tab = state.tabs.find((tab) => tab.browserViewId === actualBrowserViewId)
+  if (tab?.pageSnapshot && actualBrowserViewId === state.browserViewId && visibleBrowserUids.has(state.uid)) {
+    await ElectronWebContentsViewFunctions.show(actualBrowserViewId)
+    if (FocusState.get() === WhenExpression.FocusSimpleBrowser) await ElectronWebContentsViewFunctions.focus(actualBrowserViewId)
+  }
+  const preserveAddress =
+    actualBrowserViewId === state.browserViewId &&
+    !state.isLoading &&
+    !isFocused &&
+    FocusState.get() === WhenExpression.FocusSimpleBrowserInput &&
+    ViewletStates.getFocusedInstanceByType(ViewletModuleId.SimpleBrowser) === state.uid
+  const newState = updateTab(state, actualBrowserViewId, {
+    canGoBack,
+    canGoForward,
+    iframeSrc: displayUrl,
+    inputValue: preserveAddress ? state.inputValue : displayUrl,
+    isLoading: false,
+    pageSnapshot: undefined,
+  })
+  const history = await BrowserHistory.record(url)
+  const stateWithHistory = {
+    ...newState,
+    addressValueVersion: state.addressValueVersion + (actualBrowserViewId === state.browserViewId ? 1 : 0),
+    history: history || state.history,
+  }
+  return actualBrowserViewId === state.browserViewId ? BrowserFind.refreshFind(stateWithHistory) : stateWithHistory
+}
+
+export const handleDidNavigationCancel = async (state, browserViewId) => {
+  const [actualBrowserViewId] = parseWebContentsEvent(state, browserViewId)
+  const tab = state.tabs.find((tab) => tab.browserViewId === actualBrowserViewId)
+  if (tab?.pageSnapshot && actualBrowserViewId === state.browserViewId && visibleBrowserUids.has(state.uid)) {
+    await ElectronWebContentsViewFunctions.show(actualBrowserViewId)
+  }
+  return updateTab(state, actualBrowserViewId, {
+    isLoading: false,
+    pageSnapshot: undefined,
+  })
+}
+
+export const handleTitleUpdated = async (state, browserViewId, value) => {
+  const [actualBrowserViewId, title] = parseWebContentsEvent(state, browserViewId, value)
+  const newState = updateTab(state, actualBrowserViewId, { title: title || 'New Tab' })
+  if (actualBrowserViewId === state.browserViewId) {
+    await GlobalEventBus.emitEvent('titleUpdated', state.uid, title)
+  }
+  return newState
+}
+
+export const handlePageFaviconUpdated = (state, browserViewId, favicons) => {
+  const [actualBrowserViewId, actualFavicons] = parseWebContentsEvent(state, browserViewId, favicons)
+  const faviconData = Array.isArray(actualFavicons) ? actualFavicons[0] || '' : ''
+  const tab = state.tabs.find((tab) => tab.browserViewId === actualBrowserViewId)
+  if (!tab) {
+    return state
+  }
+  const favicon = SimpleBrowserFavicon.create(faviconData)
+  if (tab.favicon !== favicon) {
+    SimpleBrowserFavicon.dispose(tab.favicon)
+  }
+  const faviconUrl = SimpleBrowserFavicon.getSource(faviconData)
+  const newState = updateTab(state, actualBrowserViewId, { favicon, faviconUrl })
+  const visitedSites = BrowserVisitedSites.add(state.visitedSites, tab.iframeSrc, faviconUrl)
+  if (visitedSites === state.visitedSites) {
+    return newState
+  }
+  void BrowserVisitedSites.save(visitedSites)
+  return {
+    ...newState,
+    visitedSites,
+  }
+}
+
+export const handleAudioStateChanged = (state, browserViewId, audible) => {
+  const [actualBrowserViewId, isAudioPlaying] = parseWebContentsEvent(state, browserViewId, audible)
+  return updateTab(state, actualBrowserViewId, { isAudioPlaying: Boolean(isAudioPlaying) })
+}
+
+export const handleDownloadStateChanged = (state, browserViewId, downloadId, status) => {
+  const [actualBrowserViewId, actualDownloadId] = parseWebContentsEvent(state, browserViewId, downloadId)
+  if (!state.tabs.some((tab) => tab.browserViewId === actualBrowserViewId) || !actualDownloadId) {
+    return state
+  }
+  const downloadStates = { ...state.downloadStates }
+  if (status === 'started') {
+    downloadStates[actualDownloadId] = 'downloading'
+  } else {
+    if (downloadStates[actualDownloadId] !== 'downloading') {
+      return state
+    }
+    delete downloadStates[actualDownloadId]
+    if (status === 'completed') {
+      downloadStates.completed = 'completed'
+    }
+  }
+  return { ...state, downloadStates }
 }
 
 export const dispose = async (state) => {
-  const { browserViewId } = state
-  await ElectronWebContentsView.disposeWebContentsView(browserViewId)
+  if (state.findVisible) await SharedProcess.invoke('BrowserFind.stop', state.browserViewId)
+  BrowserSuggestionRequests.dispose(state.uid)
+  await BrowserFullWidth.handleDispose(state.uid)
+  visibleBrowserUids.delete(state.uid)
+  await Promise.all([
+    ...state.tabs.filter((tab) => tab.browserViewId).map((tab) => ElectronWebContentsView.disposeWebContentsView(tab.browserViewId)),
+    ...state.tabs.map((tab) => SimpleBrowserFavicon.dispose(tab.favicon)),
+    ...state.tabs.map(SimpleBrowserPreview.dispose),
+    RendererProcess.invoke('Viewlet.sendMultiple', [['Css.removeCssStyleSheet', SimpleBrowserPageSnapshot.getStyleSheetId(state.uid)]]),
+    SimpleBrowserSnapshot.dispose(state.snapshot),
+  ])
+}
+
+export const prepareFullWidth = async (state) => {
+  BrowserSuggestionRequests.cancel(state.uid)
+  if (
+    !state.overlayIds.length &&
+    !state.hasSuggestionsOverlay &&
+    !state.suggestions.length &&
+    state.selectedSuggestionIndex === -1 &&
+    !state.tabHover
+  ) {
+    return state
+  }
+  let next = state
+  for (const overlayId of state.overlayIds) next = await hideOverlay(next, overlayId)
+  return { ...next, hasSuggestionsOverlay: false, suggestions: [], selectedSuggestionIndex: -1, tabHover: undefined }
+}
+
+export const setFullWidth = async (state, fullWidth, addressSelection) => {
+  return { ...state, fullWidth, fullWidthAddressSelection: addressSelection }
+}
+
+export const toggleFullWidth = (state) => {
+  void Command.execute('Layout.toggleSimpleBrowserFullWidth', state.uid)
+  return state
+}
+
+export const focusAddress = async (state) => {
+  BrowserSuggestionRequests.cancel(state.uid)
+  await ElectronWindow.focus()
+  await RendererProcess.invoke('Window.focusBrowserAddress', state.uid)
+  Focus.setFocus(WhenExpression.FocusSimpleBrowserInput, undefined, state.uid, ViewletModuleId.SimpleBrowser)
+  return state
+}
+
+export const handleSettingsChanged = async (state) => {
+  const chromeTheme = Preferences.get('simpleBrowser.chromeTheme') === 'inherit' ? 'inherit' : 'light'
+  const suggestionsEnabled = Preferences.get('simpleBrowser.suggestions') === true
+  const shortcuts = SimpleBrowserPreferences.getShortCuts()
+  const audioIndicatorEnabled = Preferences.get('simpleBrowser.audioIndicator.enabled') !== false
+  const tabsEnabled = Preferences.get('simpleBrowser.tabs.enabled') !== false
+  const tabHoverEnabled = Preferences.get('simpleBrowser.tabHover.enabled') === true
+  const unloadTabs = Preferences.get('simpleBrowser.unloadTabs') === true
+  const chromeThemeChanged = chromeTheme !== state.chromeTheme
+  const suggestionsChanged = suggestionsEnabled !== state.suggestionsEnabled
+  const shortcutsChanged = JSON.stringify(shortcuts) !== JSON.stringify(state.shortcuts)
+  const audioIndicatorChanged = audioIndicatorEnabled !== state.audioIndicatorEnabled
+  const tabsChanged = tabsEnabled !== state.tabsEnabled
+  const tabHoverChanged = tabHoverEnabled !== state.tabHoverEnabled
+  const unloadTabsChanged = unloadTabs !== state.unloadTabs
+  const suggestionsNeedClosing = !suggestionsEnabled && (state.hasSuggestionsOverlay || state.suggestions.length > 0)
+  if (
+    !chromeThemeChanged &&
+    !suggestionsChanged &&
+    !shortcutsChanged &&
+    !audioIndicatorChanged &&
+    !tabsChanged &&
+    !tabHoverChanged &&
+    !unloadTabsChanged &&
+    !suggestionsNeedClosing
+  ) {
+    return state
+  }
+  let nextState = {
+    ...state,
+    audioIndicatorEnabled,
+    chromeTheme,
+    shortcuts,
+    suggestionsEnabled,
+    tabHoverEnabled,
+    unloadTabs,
+    tabsEnabled,
+  }
+  if (suggestionsNeedClosing || (suggestionsChanged && !suggestionsEnabled)) {
+    nextState = await closeSuggestions(nextState)
+  }
+  if (chromeThemeChanged || suggestionsChanged) {
+    await updateNewTabPages(nextState)
+  }
+  if (tabsChanged) {
+    nextState = {
+      ...nextState,
+      headerHeight: state.headerHeight + getHeaderHeight(tabsEnabled) - getHeaderHeight(state.tabsEnabled),
+    }
+    await Resize.resizeEffect(nextState)
+  }
+  return nextState
+}
+
+export const handleFaviconError = (state, index, src) => {
+  const tab = state.tabs[Number(index)]
+  if (!tab || tab.favicon !== src) return state
+  return updateTab(state, tab.browserViewId, { favicon: '' })
 }

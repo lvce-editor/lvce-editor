@@ -1,4 +1,6 @@
 import * as Assert from '../Assert/Assert.ts'
+import * as ApplicationRegistry from '../ApplicationRegistry/ApplicationRegistry.ts'
+import * as Application from '../Application/Application.ts'
 import * as Command from '../Command/Command.js'
 import * as DirentType from '../DirentType/DirentType.js'
 import * as IconTheme from '../IconTheme/IconTheme.js'
@@ -8,12 +10,14 @@ import * as Workspace from '../Workspace/Workspace.js'
 import * as Platform from '../Platform/Platform.js'
 import * as AssetDir from '../AssetDir/AssetDir.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+import * as WrapSourceControlCommand from '../WrapSourceControlCommand/WrapSourceControlCommand.ts'
 
 // TODO when accept input is invoked multiple times, it should not lead to errors
 
-export const create = (id, uri, x, y, width, height) => {
+export const create = (id, uri, x, y, width, height, args, parentUid) => {
   return {
     uid: id,
+    parentUid,
     x,
     y,
     width,
@@ -47,15 +51,17 @@ export const loadContent = async (state, savedState) => {
     state.y,
     state.width,
     state.height,
-    Workspace.state.workspacePath, // TODO use workspace uri
+    state.applicationId === undefined ? Workspace.state.workspacePath : ApplicationRegistry.get(state.applicationId).workspaceUri,
     platform,
     assetDir,
+    state.applicationId,
   )
   const diffResult = await SourceControlWorker.invoke('SourceControl.diff2', state.uid)
   const commands = await SourceControlWorker.invoke('SourceControl.render2', state.uid, diffResult)
-  const actionsDom = await SourceControlWorker.invoke('SourceControl.renderActions2', state.uid)
+  const actionsDom = await SourceControlWorker.invoke('SourceControl.renderActions', state.uid)
   const badgeCount = await SourceControlWorker.invoke('SourceControl.getBadgeCount', state.uid)
-  await Command.execute('Layout.setBadgeCount', ViewletModuleId.SourceControl, badgeCount)
+  if (state.applicationId === undefined) await Command.execute('Layout.setBadgeCount', ViewletModuleId.SourceControl, badgeCount)
+  else await Application.execute(state.applicationId, 'Layout.setBadgeCount', ViewletModuleId.SourceControl, badgeCount)
   return {
     ...state,
     commands,
@@ -69,7 +75,8 @@ export const loadContentLater = async (state) => {
   await Command.execute('Viewlet.executeViewletCommand', state.uid, 'loadContent', state.savedState)
 }
 
-export const dispose = (state) => {
+export const dispose = async (state) => {
+  await SourceControlWorker.invoke('SourceControl.dispose', state.uid)
   return {
     ...state,
     disposed: true,
@@ -89,6 +96,17 @@ export const focus = (state) => {
     ...state,
     commands: [['Viewlet.focusSelector', '[name="SourceControlInput"]']],
   }
+}
+
+export const getComponentState = async (state) => {
+  const { uid } = state
+  return SourceControlWorker.invoke('SourceControl.getComponentState', uid)
+}
+
+export const setComponentState = async (state, componentState) => {
+  const { uid } = state
+  await SourceControlWorker.invoke('SourceControl.setComponentState', uid, componentState)
+  return WrapSourceControlCommand.renderPendingSourceControl(state)
 }
 
 const updateIcon = (displayItem) => {
@@ -136,11 +154,26 @@ export const handleWorkspaceChange = async (state) => {
   await SourceControlWorker.invoke('SourceControl.loadContent', state.uid)
   const diffResult = await SourceControlWorker.invoke('SourceControl.diff2', state.uid)
   const commands = await SourceControlWorker.invoke('SourceControl.render2', state.uid, diffResult)
-  const actionsDom = await SourceControlWorker.invoke('SourceControl.renderActions2', state.uid)
+  const actionsDom = await SourceControlWorker.invoke('SourceControl.renderActions', state.uid)
   const badgeCount = await SourceControlWorker.invoke('SourceControl.getBadgeCount', state.uid)
-  await Command.execute('Layout.setBadgeCount', ViewletModuleId.SourceControl, badgeCount)
+  if (state.applicationId === undefined) await Command.execute('Layout.setBadgeCount', ViewletModuleId.SourceControl, badgeCount)
+  else await Application.execute(state.applicationId, 'Layout.setBadgeCount', ViewletModuleId.SourceControl, badgeCount)
   return {
     ...loadingState,
+    actionsDom,
+    badgeCount,
+    commands,
+  }
+}
+
+export const handleExtensionsChanged = async (state) => {
+  await SourceControlWorker.invoke('SourceControl.loadContent', state.uid, state.savedState)
+  const diffResult = await SourceControlWorker.invoke('SourceControl.diff2', state.uid)
+  const commands = await SourceControlWorker.invoke('SourceControl.render2', state.uid, diffResult)
+  const actionsDom = await SourceControlWorker.invoke('SourceControl.renderActions', state.uid)
+  const badgeCount = await SourceControlWorker.invoke('SourceControl.getBadgeCount', state.uid)
+  return {
+    ...state,
     actionsDom,
     badgeCount,
     commands,
@@ -180,9 +213,10 @@ export const hotReload = async (state) => {
     state.y,
     state.width,
     state.height,
-    Workspace.state.workspacePath, // TODO use workspace uri
+    state.applicationId === undefined ? Workspace.state.workspacePath : ApplicationRegistry.get(state.applicationId).workspaceUri,
     state.platform,
     state.assetDir,
+    state.applicationId,
   )
   await SourceControlWorker.invoke('SourceControl.loadContent', state.uid, savedState)
   const diffResult = await SourceControlWorker.invoke('SourceControl.diff2', state.uid)

@@ -9,5 +9,6 @@ export const Commands = {
   openFolder: OpenFolder.openFolder,
   show: Dialog.show,
   showMessage: Dialog.showMessage,
+  showMessageBox: Dialog.showMessageBox,
   showWarning: Dialog.showWarning,
 }

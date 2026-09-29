@@ -50,10 +50,6 @@ test('getMarketplaceUrl', () => {
   expect(PlatformPaths.getMarketplaceUrl()).toEqual(expect.any(String))
 })
 
-test('getPathSeparator', () => {
-  expect(PlatformPaths.getPathSeparator()).toEqual(expect.any(String))
-})
-
 test('getLogsDir', () => {
   expect(PlatformPaths.getLogsDir()).toEqual(expect.any(String))
 })

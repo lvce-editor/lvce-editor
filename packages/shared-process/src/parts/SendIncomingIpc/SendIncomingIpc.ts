@@ -7,8 +7,8 @@ const supportsPartialIpcHandling = (ipcId: any): any => {
   switch (ipcId) {
     case IpcId.AuthProcess:
     case IpcId.EmbedsProcess:
+    case IpcId.FileWatcherExplorer:
     case IpcId.ProcessExplorer:
-    case IpcId.TerminalProcess:
       return true
     default:
       return false

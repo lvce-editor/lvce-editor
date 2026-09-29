@@ -2,6 +2,9 @@ import * as ExtensionStateStorage from '../ExtensionStateStorage/ExtensionStateS
 import * as IframeWorker from '../IframeWorker/IframeWorker.js'
 
 export const saveState = async () => {
+  if (!IframeWorker.isCreated()) {
+    return (await getSavedState()) || []
+  }
   return IframeWorker.invoke('WebView.saveState')
 }
 

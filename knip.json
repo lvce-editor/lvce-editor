@@ -5,7 +5,7 @@
     ".": {
       "entry": ["scripts/**/*.js"],
       "project": ["eslint.config.js", "scripts/**/*.js"],
-      "ignoreDependencies": ["@lerna/legacy-package-management", "prettier"],
+      "ignoreDependencies": ["prettier"],
       "ignoreUnresolved": ["../build/src/parts/Format/Format.js"]
     },
     "packages/build": {
@@ -13,19 +13,17 @@
       "project": ["bin/**/*.ts", "src/**/*.js", "src/**/*.ts", "test/**/*.js", "test/**/*.ts"],
       "ignoreBinaries": ["microbundle"]
     },
-    "packages/extension-host-helper-process": {
-      "entry": ["index.js", "src/extensionHostHelperProcessMain.js"],
-      "project": ["**/*.js"]
-    },
     "packages/extension-host-worker-tests": {
-      "entry": ["src/**/*.js", "src/**/*.ts", "fixtures/**/*.js", "fixtures/**/*.ts"],
-      "project": ["src/**/*.js", "src/**/*.ts", "fixtures/**/*.js", "fixtures/**/*.ts", "typings/**/*.d.ts"],
-      "ignoreDependencies": ["data"],
+      "entry": ["src/**/*.js", "scripts/wait-for-server-ready.mjs", "test/**/*.test.mjs"],
+      "project": ["src/**/*.js", "scripts/**/*.mjs", "test/**/*.mjs", "typings/**/*.d.ts"],
+      "ignoreDependencies": ["data", "electron", "@lvce-editor/test-with-playwright"],
+      "ignoreBinaries": ["xdotool"],
       "ignoreUnresolved": ["./add.js", "./not-found.js", "./parts/math.js"]
     },
     "packages/main-process": {
       "entry": ["src/mainProcessMain.js", "test/**/*.test.js"],
       "project": ["src/**/*.js", "test/**/*.js"],
+      "ignoreDependencies": ["electron", "@electron/get", "@electron-internal/extract-zip"],
       "ignoreBinaries": ["dbus-daemon"]
     },
     "packages/renderer-worker": {
@@ -50,11 +48,7 @@
       "ignoreDependencies": ["@lvce-editor/auth-process", "@lvce-editor/static-server"]
     },
     "packages/static-server": {
-      "entry": [
-        "src/static-server.ts",
-        "src/parts/ContentSecurityPolicyUpdateWorker/ContentSecurityPolicyUpdateWorker.ts",
-        "test/**/*.test.ts"
-      ],
+      "entry": ["src/static-server.ts", "src/parts/ContentSecurityPolicyUpdateWorker/ContentSecurityPolicyUpdateWorker.ts", "test/**/*.test.ts"],
       "project": ["src/**/*.ts", "test/**/*.ts"]
     }
   }

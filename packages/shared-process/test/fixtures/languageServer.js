@@ -25,6 +25,7 @@ const handleMessage = (message) => {
             workspaceDiagnostics: false,
           },
           documentFormattingProvider: true,
+          documentSymbolProvider: true,
           referencesProvider: true,
           textDocumentSync: 1,
         },
@@ -91,6 +92,30 @@ const handleMessage = (message) => {
         },
         uri: `${message.params.textDocument.uri}?definition=${encodeURIComponent(text)}`,
       },
+    })
+    return
+  }
+  if (message.method === 'textDocument/documentSymbol') {
+    const text = documents.get(message.params.textDocument.uri)
+    send({
+      id: message.id,
+      jsonrpc: '2.0',
+      result: [
+        {
+          children: [],
+          detail: text,
+          kind: 5,
+          name: 'FixtureClass',
+          range: {
+            end: { character: text.length, line: 0 },
+            start: { character: 0, line: 0 },
+          },
+          selectionRange: {
+            end: { character: 12, line: 0 },
+            start: { character: 0, line: 0 },
+          },
+        },
+      ],
     })
     return
   }

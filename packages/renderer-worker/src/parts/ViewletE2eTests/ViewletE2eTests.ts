@@ -2,6 +2,7 @@ import * as ContextMenu from '../ContextMenu/ContextMenu.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as GetE2eTestsSandbox from '../GetE2eTestsSandbox/GetE2eTestsSandbox.ts'
 import * as Id from '../Id/Id.js'
+import * as Location from '../Location/Location.js'
 import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 import * as Open from '../Open/Open.js'
 import * as OpenUri from '../OpenUri/OpenUri.js'
@@ -54,7 +55,7 @@ export const executeTest = async (state: E2eState, index: number): Promise<E2eSt
   const { tests } = state
   const test = tests[index]
   const htmlFileName = toHtmlFileName(test)
-  const iframeSrc = `http://localhost:3001/tests/${htmlFileName}`
+  const iframeSrc = `/tests/${htmlFileName}`
   return {
     ...state,
     index,
@@ -69,7 +70,7 @@ export const handleLoad = async (state: E2eState): Promise<E2eState> => {
   port2.onmessage = (event) => {
     console.log({ event })
   }
-  const iframeOrigin = 'http://localhost:3001'
+  const iframeOrigin = Location.getOrigin()
   return {
     ...state,
     portId: messagePortId,

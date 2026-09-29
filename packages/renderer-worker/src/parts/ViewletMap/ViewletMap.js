@@ -9,6 +9,7 @@ const mapExtToEditorType = {
   '.mp3': ViewletModuleId.Audio,
   '.ogg': ViewletModuleId.Audio,
   '.opus': ViewletModuleId.Audio,
+  '.weba': ViewletModuleId.Audio,
 }
 
 const getModuleIdForOpener = async (opener) => {
@@ -37,6 +38,9 @@ export const getModuleId = async (uri, opener) => {
   if (uri.startsWith('chat-debug://')) {
     return ViewletModuleId.ChatDebug
   }
+  if (uri.startsWith('cookie-import-view:///')) {
+    return ViewletModuleId.CookieImport
+  }
   if (uri.startsWith('language-models://')) {
     return ViewletModuleId.LanguageModels
   }
@@ -46,14 +50,26 @@ export const getModuleId = async (uri, opener) => {
   if (uri.startsWith('process-explorer://')) {
     return ViewletModuleId.ProcessExplorer
   }
+  if (uri.startsWith('file-watcher-explorer://')) {
+    return ViewletModuleId.FileWatcherExplorer
+  }
   if (uri.startsWith('running-extensions://')) {
     return ViewletModuleId.RunningExtensions
+  }
+  if (uri.startsWith('workers:///')) {
+    return ViewletModuleId.Workers
+  }
+  if (uri.startsWith('secrets://')) {
+    return ViewletModuleId.Secrets
   }
   if (uri.startsWith('search-editor://')) {
     return ViewletModuleId.Search
   }
-  if (uri.startsWith('simple-browser://')) {
+  if (uri.startsWith('simple-browser://') || uri.startsWith('html-preview:///')) {
     return ViewletModuleId.SimpleBrowser
+  }
+  if (uri.startsWith('simple-browser-history://')) {
+    return ViewletModuleId.SimpleBrowserHistory
   }
   if (uri.startsWith('storage-overview://')) {
     return ViewletModuleId.Storage

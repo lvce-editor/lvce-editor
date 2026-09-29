@@ -1,7 +1,7 @@
-import * as Command from '../Command/Command.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as Mime from '../Mime/Mime.js'
 import * as Protocol from '../Protocol/Protocol.js'
+import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 
 export const getSrc = (uri) => {
   const mimeType = Mime.getMediaMimeType(uri)
@@ -10,6 +10,6 @@ export const getSrc = (uri) => {
 
 export const disposeSrc = async (src) => {
   if (src.startsWith(Protocol.Blob)) {
-    await Command.execute('Url.revokeObjectUrl', src)
+    await RendererProcess.invoke('ObjectUrl.revoke', src)
   }
 }

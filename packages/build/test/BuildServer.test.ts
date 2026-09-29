@@ -15,7 +15,7 @@ const readJson = async (path: string): Promise<any> => {
 
 test('generated server sends index documents through the static server', () => {
   const replacement = getServerIsStaticReplacement('abcdefg')
-  const isStatic = runInNewContext(`${replacement}; isStatic`) as (url: string) => boolean
+  const isStatic = runInNewContext(`${replacement}; isStatic`, { argvSliced: [] }) as (url: string) => boolean
 
   expect(isStatic('/')).toBe(true)
   expect(isStatic('/?workspace=/test')).toBe(true)
@@ -25,7 +25,18 @@ test('generated server sends index documents through the static server', () => {
   expect(isStatic('/api/status')).toBe(false)
 })
 
-test('setVersionsAndDependencies includes process explorer as shared-process dependency', async () => {
+test('generated server sends index documents through the shared process when extensions are linked', () => {
+  const replacement = getServerIsStaticReplacement('abcdefg')
+  const isStatic = runInNewContext(`${replacement}; isStatic`, { argvSliced: ['--link', '/test/extension'] }) as (url: string) => boolean
+
+  expect(isStatic('/')).toBe(false)
+  expect(isStatic('/?workspace=/test')).toBe(false)
+  expect(isStatic('/index.html')).toBe(false)
+  expect(isStatic('/index.html?workspace=/test')).toBe(false)
+  expect(isStatic('/abcdefg/packages/renderer-worker.js')).toBe(true)
+})
+
+test('setVersionsAndDependencies includes explorer processes as shared-process dependencies', async () => {
   const dir = await mkdtemp(join(tmpdir(), 'lvce-build-server-'))
   try {
     const serverPackageJson = join(dir, 'server-package.json')
@@ -44,6 +55,7 @@ test('setVersionsAndDependencies includes process explorer as shared-process dep
         '@lvce-editor/assert': '1.5.1',
       },
       optionalDependencies: {
+        '@lvce-editor/file-watcher-explorer': '1.0.0',
         '@lvce-editor/process-explorer': '3.0.0',
         '@vscode/windows-process-tree': '1.0.0',
         'symlink-dir': '1.0.0',
@@ -64,9 +76,11 @@ test('setVersionsAndDependencies includes process explorer as shared-process dep
 
     expect(serverJson.dependencies['@lvce-editor/shared-process']).toBe('1.2.3')
     expect(serverJson.dependencies['@lvce-editor/static-server']).toBe('1.2.3')
-    expect(sharedProcessJson.dependencies['@lvce-editor/extension-host-helper-process']).toBe('1.2.3')
+    expect(sharedProcessJson.dependencies).not.toHaveProperty('@lvce-editor/extension-host-helper-process')
     expect(sharedProcessJson.dependencies['@lvce-editor/process-explorer']).toBe('3.0.0')
+    expect(sharedProcessJson.dependencies['@lvce-editor/file-watcher-explorer']).toBe('1.0.0')
     expect(sharedProcessJson.optionalDependencies).not.toHaveProperty('@lvce-editor/process-explorer')
+    expect(sharedProcessJson.optionalDependencies).not.toHaveProperty('@lvce-editor/file-watcher-explorer')
     expect(sharedProcessJson.optionalDependencies).not.toHaveProperty('@vscode/windows-process-tree')
     expect(sharedProcessJson.optionalDependencies).not.toHaveProperty('symlink-dir')
     expect(sharedProcessJson.optionalDependencies.tail).toBe('2.2.6')

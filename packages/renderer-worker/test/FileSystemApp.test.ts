@@ -33,9 +33,6 @@ jest.unstable_mockModule('../src/parts/FileSystem/FileSystem.js', () => {
     mkdir: jest.fn(() => {
       throw new Error('not implemented')
     }),
-    getPathSeparator: jest.fn(() => {
-      throw new Error('not implemented')
-    }),
   }
 })
 
@@ -50,11 +47,18 @@ jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
 
 jest.unstable_mockModule('../src/parts/PlatformPaths/PlatformPaths.js', () => {
   return {
+    getUserKeyBindingsPath: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
     getUserSettingsPath: jest.fn(() => {
       throw new Error('not implemented')
     }),
   }
 })
+
+jest.unstable_mockModule('../src/parts/KeyBindings/KeyBindings.js', () => ({
+  reloadUserKeyBindings: jest.fn(),
+}))
 
 jest.unstable_mockModule('../src/parts/Workspace/Workspace.js', () => {
   return {
@@ -65,10 +69,11 @@ jest.unstable_mockModule('../src/parts/Workspace/Workspace.js', () => {
 })
 
 const FileSystemApp = await import('../src/parts/FileSystem/FileSystemApp.js')
+const KeyBindings = await import('../src/parts/KeyBindings/KeyBindings.js')
 const PlatformPaths = await import('../src/parts/PlatformPaths/PlatformPaths.js')
 const FileSystem = await import('../src/parts/FileSystem/FileSystem.js')
 
-test('readFile - settings', async () => {
+test.each(['settings.json', 'app://settings.json', 'app:///settings.json'])('readFile - settings %s', async (uri) => {
   // @ts-ignore
   PlatformPaths.getUserSettingsPath.mockImplementation(() => {
     return '~/.config/app/settings.json'
@@ -77,7 +82,27 @@ test('readFile - settings', async () => {
   FileSystem.readFile.mockImplementation(() => {
     return '{}'
   })
-  expect(await FileSystemApp.readFile('settings.json')).toBe('{}')
+  expect(await FileSystemApp.readFile(uri)).toBe('{}')
+})
+
+test('writeFile - keybindings reloads runtime keybindings after persisting', async () => {
+  jest.mocked(PlatformPaths.getUserKeyBindingsPath).mockResolvedValue('~/.config/app/keybindings.json')
+  jest.mocked(FileSystem.writeFile).mockResolvedValue()
+
+  await FileSystemApp.writeFile('keybindings.json', '[]')
+
+  expect(FileSystem.writeFile).toHaveBeenCalledWith('~/.config/app/keybindings.json', '[]')
+  expect(KeyBindings.reloadUserKeyBindings).toHaveBeenCalledTimes(1)
+})
+
+test('readFile - keybindings creates an empty array for a new profile', async () => {
+  jest.mocked(PlatformPaths.getUserKeyBindingsPath).mockResolvedValue('~/.config/app/keybindings.json')
+  jest.mocked(FileSystem.mkdir).mockResolvedValue()
+  jest.mocked(FileSystem.writeFile).mockResolvedValue()
+  jest.mocked(FileSystem.readFile).mockRejectedValueOnce(new NodeError(FileSytemErrorCodes.ENOENT))
+
+  await expect(FileSystemApp.readFile('keybindings.json')).resolves.toBe('[]')
+  expect(FileSystem.writeFile).toHaveBeenCalledWith('~/.config/app/keybindings.json', '[]')
 })
 
 test('readFile - settings - error', async () => {
@@ -104,6 +129,14 @@ test('mkdir - error', async () => {
   await expect(FileSystemApp.mkdir('my-folder')).rejects.toThrow(new Error('not allowed'))
 })
 
+test.each(['app://memory-usage', 'app://session.json', 'app://startup-performance'])('isReadonly - readonly app resource %s', async (uri) => {
+  expect(await FileSystemApp.isReadonly(uri)).toBe(true)
+})
+
+test.each(['app://keybindings.json', 'app://recently-opened.json', 'app://settings.json'])('isReadonly - writable app resource %s', async (uri) => {
+  expect(await FileSystemApp.isReadonly(uri)).toBe(false)
+})
+
 // TODO test writeFile and writeFile errors
 
 test('readFile - settings - error - file does not exist', async () => {
@@ -113,10 +146,6 @@ test('readFile - settings - error - file does not exist', async () => {
   })
   // @ts-ignore
   FileSystem.mkdir.mockImplementation(() => {})
-  // @ts-ignore
-  FileSystem.getPathSeparator.mockImplementation(() => {
-    return '/'
-  })
   let i = 0
   // @ts-ignore
   FileSystem.readFile.mockImplementation((uri) => {
@@ -158,10 +187,6 @@ test('writeFile - settings - error parent folder does not exist', async () => {
   })
   // @ts-ignore
   FileSystem.mkdir.mockImplementation(() => {})
-  // @ts-ignore
-  FileSystem.getPathSeparator.mockImplementation(() => {
-    return '/'
-  })
   let i = 0
   // @ts-ignore
   FileSystem.writeFile.mockImplementation((uri) => {
@@ -202,4 +227,13 @@ test('writeFile - settings - creates windows parent folder', async () => {
 
   expect(FileSystem.mkdir).toHaveBeenCalledWith(String.raw`C:\Users\test\.config\lvce-oss`)
   expect(FileSystem.writeFile).toHaveBeenLastCalledWith(settingsPath, '{}')
+})
+
+test.each(['app://settings.json', 'app:///settings.json'])('writeFile - settings %s', async (uri) => {
+  jest.mocked(PlatformPaths.getUserSettingsPath).mockResolvedValue('~/.config/app/settings.json')
+  jest.mocked(FileSystem.writeFile).mockResolvedValue()
+
+  await FileSystemApp.writeFile(uri, '{"editor.fontSize":17}')
+
+  expect(FileSystem.writeFile).toHaveBeenCalledWith('~/.config/app/settings.json', '{"editor.fontSize":17}')
 })

@@ -32,6 +32,21 @@ export const create = (id, uri, x, y, width, height) => {
   }
 }
 
+export const getComponentState = (state) => state
+
+export const setComponentState = (currentState, componentState) => {
+  if (!componentState || typeof componentState !== 'object' || Array.isArray(componentState)) {
+    throw new TypeError('SideBar state must be an object')
+  }
+  if (componentState.uid !== currentState.uid) {
+    throw new Error(`SideBar state uid must remain ${currentState.uid}`)
+  }
+  return {
+    ...currentState,
+    title: componentState.title,
+  }
+}
+
 // export const saveState = (state) => {
 //   const { currentViewletId } = state
 //   return {
@@ -97,8 +112,8 @@ const getChildModuleId = (moduleId) => {
   return ViewletModuleId.ExtensionView
 }
 
-const getExtensionViewMetadata = async (moduleId) => {
-  const view = await GetExtensionViews.getExtensionView(moduleId)
+const getExtensionViewMetadata = async (moduleId, applicationId) => {
+  const view = await GetExtensionViews.getExtensionView(moduleId, applicationId)
   return {
     extensionId: view?.extensionId || '',
     titleAreaHeight: view?.showSideBarHeader === false ? 0 : defaultTitleAreaHeight,
@@ -132,8 +147,7 @@ export const handleSideBarViewletChange = async (state, moduleId, restore = true
   // TODO set it in layout
   const { childUid: currentChildUid, currentViewletId } = state
   const requestId = state.currentViewletRequestId + 1
-  const savePromise =
-    restore && currentChildUid !== -1 ? SaveState.saveViewletStateWithStorageId(currentChildUid, currentViewletId) : undefined
+  const savePromise = restore && currentChildUid !== -1 ? SaveState.saveViewletStateWithStorageId(currentChildUid, currentViewletId) : undefined
   state.currentViewletRequestId = requestId
   state.currentViewletId = moduleId
 
@@ -142,7 +156,7 @@ export const handleSideBarViewletChange = async (state, moduleId, restore = true
   const childModuleId = getChildModuleId(moduleId)
   const extensionViewMetadata =
     childModuleId === ViewletModuleId.ExtensionView
-      ? await getExtensionViewMetadata(moduleId)
+      ? await getExtensionViewMetadata(moduleId, state.applicationId)
       : {
           extensionId: '',
           titleAreaHeight: defaultTitleAreaHeight,
@@ -180,7 +194,10 @@ export const handleSideBarViewletChange = async (state, moduleId, restore = true
     restore ? undefined : { restore: false },
   )
   if (state.currentViewletRequestId !== requestId || state.currentViewletId !== moduleId) {
-    Viewlet.disposeFunctional(childUid)
+    const disposeCommands = Viewlet.disposeFunctional(childUid)
+    if (disposeCommands.length > 0) {
+      await RendererProcess.invoke('Viewlet.sendMultiple', disposeCommands)
+    }
     await savePromise
     return state
   }
@@ -189,6 +206,9 @@ export const handleSideBarViewletChange = async (state, moduleId, restore = true
   let actionsUid = -1
   let title = Character.EmptyString
   if (commands) {
+    if (currentChildUid !== -1) {
+      commands.unshift(...Viewlet.disposeFunctional(currentChildUid))
+    }
     const actionsDomIndex = commands.findIndex((command) => command[2] === 'setActionsDom')
     if (actionsDomIndex >= 0) {
       const nextActionsDom = commands[actionsDomIndex][3]
@@ -215,7 +235,10 @@ export const handleSideBarViewletChange = async (state, moduleId, restore = true
       commands.push(['Viewlet.setDom2', actionsUid, actionsDom], ['Viewlet.setUid', actionsUid, childUid])
     }
     if (state.currentViewletRequestId !== requestId || state.currentViewletId !== moduleId) {
-      Viewlet.disposeFunctional(childUid)
+      const disposeCommands = Viewlet.disposeFunctional(childUid)
+      if (disposeCommands.length > 0) {
+        await RendererProcess.invoke('Viewlet.sendMultiple', disposeCommands)
+      }
       await savePromise
       return state
     }
@@ -249,8 +272,13 @@ export const setActionsDom = (state, actionsDom, childUid, eventListeners = stat
     }
   }
   if (state.actionsUid !== -1) {
+    const commands = []
+    if (eventListeners.length > 0) {
+      commands.push(['Viewlet.registerEventListeners', state.actionsUid, eventListeners])
+    }
+    commands.push(['Viewlet.setDom2', state.actionsUid, actionsDom])
     return {
-      commands: [['Viewlet.setDom2', state.actionsUid, actionsDom]],
+      commands,
       handled: true,
       renderParent: false,
       statePatch: {
@@ -270,8 +298,8 @@ export const setActionsDom = (state, actionsDom, childUid, eventListeners = stat
   }
   const actionsUid = Id.create()
   const commands = [['Viewlet.createFunctionalRoot', state.currentViewletId, actionsUid, true]]
-  if (state.actionsEventListeners.length > 0) {
-    commands.push(['Viewlet.registerEventListeners', actionsUid, state.actionsEventListeners])
+  if (eventListeners.length > 0) {
+    commands.push(['Viewlet.registerEventListeners', actionsUid, eventListeners])
   }
   commands.push(['Viewlet.setDom2', actionsUid, actionsDom], ['Viewlet.setUid', actionsUid, childUid])
   return {
@@ -303,6 +331,10 @@ export const dispose = (state) => {
   // state.currentViewletId = undefined
 }
 
+export const getOwnedViewletIds = (state) => {
+  return state.childUid === -1 ? [] : [state.childUid]
+}
+
 export const openDefaultViewlet = async (state) => {
   await openViewlet(state, 'Explorer')
 }
@@ -318,7 +350,7 @@ export const close = (state) => {
 export const resize = async (state, dimensions) => {
   const { titleAreaHeight } = state
   const childDimensions = getContentDimensions(dimensions, titleAreaHeight)
-  const currentViewletInstance = ViewletStates.getInstance(state.currentViewletId)
+  const currentViewletInstance = ViewletStates.getByUid(state.childUid)
   const newState = {
     ...state,
     ...dimensions,
@@ -339,11 +371,15 @@ export const resize = async (state, dimensions) => {
 
 export const focus = async (state) => {
   const { currentViewletId } = state
-  const currentViewlet = ViewletStates.getInstance(currentViewletId)
+  const currentViewlet = ViewletStates.getByUid(state.childUid)
   if (!currentViewlet) {
     return state
   }
-  await Command.execute(`${currentViewletId}.focus`)
+  if (state.applicationId === undefined) {
+    await Command.execute(`${currentViewletId}.focus`)
+  } else {
+    await ViewletManager.executeForApplication(state.applicationId, `${currentViewletId}.focus`)
+  }
   // if (!currentViewlet.factory.focus) {
   //   throw new Error(`missing focus function for ${currentViewletId}`)
   // }

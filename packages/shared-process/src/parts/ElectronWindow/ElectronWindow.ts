@@ -32,6 +32,11 @@ export const maximize = (windowId: any): any => {
   return ParentIpc.invoke('ElectronWindow.executeWindowFunction', windowId, 'maximize')
 }
 
+export const toggleMaximize = (windowId: number): any => {
+  Assert.number(windowId)
+  return ParentIpc.invoke('ElectronWindow.executeWindowFunction', windowId, 'toggleMaximize')
+}
+
 export const unmaximize = (windowId: any): any => {
   Assert.number(windowId)
   return ParentIpc.invoke('ElectronWindow.executeWindowFunction', windowId, 'unmaximize')
@@ -117,4 +122,12 @@ export const handleClose = (windowId: any): any => {
 
 export const getFocusedWindowId = (): any => {
   return ParentIpc.invoke('ElectronWindow.getFocusedWindowId')
+}
+
+export const setBrowserFullWidthGestureEnabled = (windowId: number, enabled: boolean): Promise<any> => {
+  return ParentIpc.invoke(
+    'ElectronWindow.executeWindowFunction',
+    windowId,
+    enabled ? 'enableBrowserFullWidthGesture' : 'disableBrowserFullWidthGesture',
+  )
 }

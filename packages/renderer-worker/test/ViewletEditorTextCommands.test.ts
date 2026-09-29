@@ -3,6 +3,9 @@ import { beforeEach, expect, jest, test } from '@jest/globals'
 const commandExecute = jest.fn()
 const editorWorkerInvoke = jest.fn()
 const rendererProcessInvoke = jest.fn()
+const setFocus = jest.fn()
+
+jest.unstable_mockModule('../src/parts/Focus/Focus.js', () => ({ setFocus }))
 
 jest.unstable_mockModule('../src/parts/EditorWorker/EditorWorker.ts', () => {
   return {
@@ -21,6 +24,7 @@ jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () =
 })
 
 const ViewletEditorTextCommands = await import('../src/parts/ViewletEditorText/ViewletEditorTextCommands.js')
+const Languages = await import('../src/parts/Languages/Languages.js')
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -60,6 +64,16 @@ test('getCommands registers worker commands, sub-widget commands, and local comm
   expect(commands.renderPending).toBeDefined()
   expect(commands.showOverlayMessage).toBeDefined()
   expect(commands.hotReload).toBeDefined()
+})
+
+test('a DOM focus event selects its application editor even if the worker returns no focus diff', async () => {
+  editorWorkerInvoke.mockImplementation((method) =>
+    method === 'Editor.getCommandIds' || method === 'Editor.diff2' || method === 'Editor.render2' ? [] : undefined,
+  )
+  const commands = await ViewletEditorTextCommands.getCommands()
+  await commands.handleFocus({ uid: 42, applicationId: 'source', uri: 'memfs:///main.ts' })
+  expect(setFocus).toHaveBeenCalledWith(12, undefined, 42, 'Editor')
+  expect(editorWorkerInvoke).toHaveBeenCalledWith('Editor.handleFocus', 42)
 })
 
 test('color picker slider escape closes the picker', async () => {
@@ -244,6 +258,7 @@ test('worker command wrapper serializes command, diff, and render per editor', a
 
 test('handleUriChange skips the duplicated viewlet uid and updates the renderer editor uri', async () => {
   const editor = {
+    languageId: 'unknown',
     uid: 42,
     uri: '/test/original.txt',
   }
@@ -267,4 +282,155 @@ test('handleUriChange skips the duplicated viewlet uid and updates the renderer 
     ...editor,
     uri: '/test/renamed.txt',
   })
+})
+
+test('handleUriChange updates the language from the saved file extension', async () => {
+  Languages.addLanguage({
+    extensions: ['.c'],
+    id: 'c',
+    tokenize: '/tokenize-c.js',
+  })
+  const editor = {
+    languageId: 'unknown',
+    uid: 42,
+    uri: 'untitled:///1',
+  }
+  editorWorkerInvoke.mockImplementation((method) => {
+    switch (method) {
+      case 'Editor.getCommandIds':
+        return ['handleUriChange']
+      case 'Editor.handleUriChange':
+      case 'Editor.setLanguageId':
+        return undefined
+      default:
+        throw new Error(`unexpected method ${method}`)
+    }
+  })
+
+  const commands = await ViewletEditorTextCommands.getCommands()
+  const result = await commands.handleUriChange(editor, 42, 'file:///tmp/file.c')
+
+  expect(editorWorkerInvoke).toHaveBeenNthCalledWith(1, 'Editor.getCommandIds')
+  expect(editorWorkerInvoke).toHaveBeenNthCalledWith(2, 'Editor.handleUriChange', 42, 'file:///tmp/file.c')
+  expect(editorWorkerInvoke).toHaveBeenNthCalledWith(3, 'Editor.setLanguageId', 42, 'c', '/tokenize-c.js')
+  expect(result).toEqual({
+    ...editor,
+    languageId: 'c',
+    uri: 'file:///tmp/file.c',
+  })
+})
+
+test('background loadContent keeps content updates but suppresses focus commands', async () => {
+  editorWorkerInvoke.mockImplementation((method) => {
+    switch (method) {
+      case 'Editor.getCommandIds':
+        return ['loadContent']
+      case 'Editor.loadContent':
+        return undefined
+      case 'Editor.diff2':
+        return []
+      case 'Editor.render2':
+        return [
+          ['Viewlet.setDom2', 42, []],
+          ['Viewlet.focusSelector', 42, '[name="editor"]'],
+          ['Viewlet.setFocusContext', 42, 1],
+          ['Viewlet.setAdditionalFocus', 42, 2],
+          ['Viewlet.send', 42, 'setFocused', true],
+          ['Viewlet.setPatches', 42, []],
+        ]
+      default:
+        throw new Error(`unexpected method ${method}`)
+    }
+  })
+  const commands = await ViewletEditorTextCommands.getCommands()
+  const result = await commands.loadContent({ uid: 42 }, undefined, { preserveFocus: true })
+  expect(result.commands).toEqual([
+    ['Viewlet.setDom2', 42, []],
+    ['Viewlet.setPatches', 42, []],
+  ])
+})
+
+test('background reload also suppresses focus in diagnostic renders before the reload returns', async () => {
+  const editor = { uid: 42, uri: 'live-component-state:///1.json' }
+  const focusCommands = [['Viewlet.focusSelector', 42, '[name="editor"]']]
+  const contentCommands = [['Viewlet.setPatches', 42, []]]
+  let pendingCommands: unknown
+  editorWorkerInvoke.mockImplementation(async (method) => {
+    switch (method) {
+      case 'Editor.getCommandIds':
+        return ['loadContent']
+      case 'Editor.loadContent':
+        pendingCommands = (await commands.__renderPending(editor)).commands
+        return undefined
+      case 'Editor.diff2':
+        return []
+      case 'Editor.render2':
+        return [...contentCommands, ...focusCommands]
+      default:
+        throw new Error(`unexpected method ${method}`)
+    }
+  })
+  const commands = await ViewletEditorTextCommands.getCommands()
+  await commands.loadContent(editor, undefined, { preserveFocus: true })
+  expect(pendingCommands).toEqual(contentCommands)
+  // Normal navigation can focus the editor again after the background reload.
+  await commands.loadContent(editor)
+  expect(pendingCommands).toEqual([...contentCommands, ...focusCommands])
+})
+
+test('failed background reloads leave idle diagnostic renders unable to steal focus', async () => {
+  const editor = { uid: 42 }
+  editorWorkerInvoke.mockImplementation((method) => {
+    switch (method) {
+      case 'Editor.getCommandIds':
+        return ['loadContent']
+      case 'Editor.loadContent':
+        throw new Error('reload failed')
+      case 'Editor.diff2':
+        return []
+      case 'Editor.render2':
+        return [['Viewlet.focusSelector', 42, '[name="editor"]']]
+      default:
+        throw new Error(`unexpected method ${method}`)
+    }
+  })
+  const commands = await ViewletEditorTextCommands.getCommands()
+  await expect(commands.loadContent(editor, undefined, { preserveFocus: true })).rejects.toThrow('reload failed')
+  expect((await commands.__renderPending(editor)).commands).toEqual([])
+})
+
+test('diagnostic renders after a background reload preserve focus while navigation can still focus the editor', async () => {
+  const editor = { uid: 42, uri: 'live-component-state:///1.json' }
+  const focusCommands = [['Viewlet.focusSelector', 42, '[name="editor"]']]
+  const contentCommands = [['Viewlet.setPatches', 42, []]]
+  editorWorkerInvoke.mockImplementation((method) => {
+    switch (method) {
+      case 'Editor.getCommandIds':
+        return ['loadContent', 'updateDiagnostics']
+      case 'Editor.loadContent':
+      case 'Editor.updateDiagnostics':
+        return undefined
+      case 'Editor.diff2':
+        return []
+      case 'Editor.render2':
+        return [...contentCommands, ...focusCommands]
+      default:
+        throw new Error(`unexpected method ${method}`)
+    }
+  })
+  const commands = await ViewletEditorTextCommands.getCommands()
+  await commands.loadContent(editor, undefined, { preserveFocus: true })
+  expect((await commands.__renderPending(editor)).commands).toEqual(contentCommands)
+  expect((await commands.updateDiagnostics(editor)).commands).toEqual(contentCommands)
+  expect((await commands.loadContent(editor)).commands).toEqual([...contentCommands, ...focusCommands])
+})
+
+test('refreshing all gutter decorations does not require or forward an active editor', async () => {
+  editorWorkerInvoke.mockImplementation(async (method) => (method === 'Editor.getCommandIds' ? ['refreshGutterDecorationsAll'] : undefined))
+  const commands = await ViewletEditorTextCommands.getCommands()
+  editorWorkerInvoke.mockClear()
+  expect(commands.refreshGutterDecorationsAll.requiresInstance).toBe(false)
+  await commands.refreshGutterDecorationsAll()
+  expect(editorWorkerInvoke).toHaveBeenCalledTimes(1)
+  expect(editorWorkerInvoke).toHaveBeenCalledWith('Editor.refreshGutterDecorationsAll')
 })

@@ -33,6 +33,33 @@ test('getKeyBindings - toggle terminal panel', () => {
         command: 'Layout.togglePanel',
         key: KeyModifier.CtrlCmd | KeyCode.Backquote,
       },
+      {
+        args: ['Terminals'],
+        command: 'Layout.togglePanel',
+        key: KeyModifier.CtrlCmd | KeyCode.KeyJ,
+      },
     ]),
   )
+})
+
+test('getKeyBindings - open text search', () => {
+  const keyBindings = ViewletLayoutKeyBindings.getKeyBindings()
+
+  expect(keyBindings).toEqual(
+    expect.arrayContaining([
+      {
+        command: 'Layout.openTextSearch',
+        key: KeyModifier.CtrlCmd | KeyModifier.Shift | KeyCode.KeyF,
+      },
+    ]),
+  )
+})
+
+test('getKeyBindings - open remote from any non-editable surface', () => {
+  const keyBindings = ViewletLayoutKeyBindings.getKeyBindings()
+
+  expect(keyBindings).toContainEqual({
+    command: 'Workspace.openRemote',
+    key: KeyCode.Period,
+  })
 })

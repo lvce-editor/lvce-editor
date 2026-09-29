@@ -155,6 +155,13 @@ export const bundleRendererWorker = async ({ cachePath, platform, commitHash, as
         replacement: `../../../static/`,
       })
     }
+    for (const file of ['HandleDialogWorkerMessagePort', 'HandleSecretsViewMessagePort']) {
+      await Replace.replace({
+        path: `${cachePath}/src/parts/${file}/${file}.ts`,
+        occurrence: `../../../../../static/`,
+        replacement: `../../../static/`,
+      })
+    }
     for (const file of ['IpcChildModule']) {
       await Replace.replace({
         path: `${cachePath}/src/parts/${file}/${file}.js`,
@@ -265,6 +272,7 @@ export const bundleRendererWorker = async ({ cachePath, platform, commitHash, as
     await BundleJs.bundleJs({
       cwd: cachePath,
       from: `./src/rendererWorkerMain.ts`,
+      modulePaths: [Path.absolute('packages/renderer-worker/node_modules')],
       platform: 'webworker',
       sourceMap: false,
     })

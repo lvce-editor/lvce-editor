@@ -27,6 +27,7 @@ import * as Remove from '../Remove/Remove.ts'
 import * as RemoveUnusedLocales from '../RemoveUnusedLocales/RemoveUnusedLocales.ts'
 import * as Replace from '../Replace/Replace.ts'
 import * as Root from '../Root/Root.ts'
+import * as Template from '../Template/Template.ts'
 import * as WriteFile from '../WriteFile/WriteFile.ts'
 import { generateConfigJson } from '../GenerateConfigJson/GenerateConfigJson.ts'
 
@@ -34,10 +35,8 @@ const getDependencyCacheHash = async ({ electronVersion, arch, supportsAutoUpdat
   const files = [
     'packages/main-process/package-lock.json',
     'packages/shared-process/package-lock.json',
-    'packages/extension-host-helper-process/package-lock.json',
     'packages/build/src/parts/BundleElectronApp/BundleElectronApp.ts',
     'packages/build/src/parts/BundleElectronAppDependencies/BundleElectronAppDependencies.ts',
-    'packages/build/src/parts/BundleExtensionHostHelperProcessDependencies/BundleExtensionHostHelperProcessDependencies.ts',
     'packages/build/src/parts/BundleSharedProcessDependencies/BundleSharedProcessDependencies.ts',
     'packages/build/src/parts/FilterSharedProcessDependencies/FilterSharedProcessDependencies.ts',
     'packages/build/src/parts/CopyDependencies/CopyDependencies.ts',
@@ -89,13 +88,6 @@ const copyDependencies = async ({ cachePath, resourcesPath }) => {
   await Copy.copy({
     from: cachePath,
     to: `${resourcesPath}/app/packages`,
-  })
-}
-
-const copyExtensionHostHelperProcessSources = async ({ resourcesPath }) => {
-  await Copy.copy({
-    from: 'packages/extension-host-helper-process/src',
-    to: `${resourcesPath}/app/packages/extension-host-helper-process/src`,
   })
 }
 
@@ -248,6 +240,13 @@ export const build = async ({
   })
   console.timeEnd('copyElectron')
 
+  if (isMacos) {
+    await Template.write('macos_cli', `${resourcesPath}/app/bin/${product.applicationName}`, {}, 755)
+    await Template.write('linux_cli_js', `${resourcesPath}/app/bin/cli.js`, {
+      '@@APPLICATION_NAME@@': product.applicationName,
+    })
+  }
+
   console.time('copyLicense')
   await CopyElectronLicense.copyElectronLicense({ resourcesPath })
   console.timeEnd('copyLicense')
@@ -300,10 +299,6 @@ export const build = async ({
     to: `${resourcesPath}/app/packages/shared-process`,
   })
   console.timeEnd('copySharedProcessFiles')
-
-  console.time('copyExtensionHostHelperProcessSources')
-  await copyExtensionHostHelperProcessSources({ resourcesPath })
-  console.timeEnd('copyExtensionHostHelperProcessSources')
 
   console.time('copyExtensions')
   await copyExtensions({ resourcesPath, commitHash })

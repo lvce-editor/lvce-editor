@@ -3,6 +3,18 @@ import * as DomEventListenerFunctions from '../src/parts/DomEventListenerFunctio
 import * as SideBarLocationType from '../src/parts/SideBarLocationType/SideBarLocationType.js'
 import { getLayoutVirtualDom } from '../src/parts/GetLayoutVirtualDom/GetLayoutVirtualDom.ts'
 
+const parseVirtualDom = (dom: readonly any[]) => {
+  let index = 0
+  const parseNode = (): any => {
+    const node = dom[index++]
+    const children = Array.from({ length: node.childCount || 0 }, parseNode)
+    return { children, node }
+  }
+  const root = parseNode()
+  expect(index).toBe(dom.length)
+  return root
+}
+
 test('getLayoutVirtualDom renders sashes with tabIndex -1', () => {
   const state = {
     activityBarVisible: false,
@@ -49,6 +61,7 @@ test('getLayoutVirtualDom renders sashes with tabIndex -1', () => {
       }),
       expect.objectContaining({
         className: 'Viewlet Sash SashVertical SashPreview',
+        onDblClick: DomEventListenerFunctions.HandleSashPreviewDoubleClick,
         tabIndex: -1,
         onContextMenu: DomEventListenerFunctions.HandleContextMenu,
       }),
@@ -70,6 +83,7 @@ test('getLayoutVirtualDom renders sashes with tabIndex -1', () => {
     type: 100,
     uid: 6,
   })
+  expect(dom).toContainEqual(expect.objectContaining({ className: 'PreviewAreaContent', childCount: 1 }))
 })
 
 test('getLayoutVirtualDom does not render the preview close button when preview is hidden', () => {
@@ -99,21 +113,91 @@ test('getLayoutVirtualDom does not render the preview close button when preview 
   const dom = getLayoutVirtualDom(state)
 
   expect(dom.some((node) => node.className?.includes('PreviewCloseButton'))).toBe(false)
+  expect(dom).not.toContainEqual(expect.objectContaining({ className: 'Viewlet Sash SashVertical SashPreview' }))
 })
 
-test.each([
-  ['left', SideBarLocationType.Left],
-  ['right', SideBarLocationType.Right],
-])('getLayoutVirtualDom wraps preview content with the side bar on the %s', (_name, sideBarLocation) => {
+test('getLayoutVirtualDom renders the panel sash when the panel is hidden', () => {
+  const state = {
+    activityBarVisible: false,
+    mainVisible: true,
+    mainId: 1,
+    panelSashVisible: true,
+    panelVisible: false,
+    panelId: -1,
+    previewSashVisible: false,
+    previewVisible: false,
+    previewId: -1,
+    secondarySideBarVisible: false,
+    secondarySideBarId: -1,
+    sideBarLocation: SideBarLocationType.Left,
+    sideBarSashVisible: false,
+    sideBarVisible: false,
+    sideBarId: -1,
+    statusBarVisible: true,
+    statusBarId: 2,
+    titleBarVisible: false,
+    titleBarId: -1,
+  }
+
+  // @ts-ignore
+  const dom = getLayoutVirtualDom(state)
+
+  expect(dom).toContainEqual(
+    expect.objectContaining({
+      className: 'Viewlet Sash SashHorizontal SashPanel',
+      onPointerDown: DomEventListenerFunctions.HandleSashPanelPointerDown,
+    }),
+  )
+})
+
+test('getLayoutVirtualDom places the panel before the status bar', () => {
   const state = {
     activityBarVisible: false,
     mainVisible: true,
     mainId: 1,
     panelSashVisible: false,
-    panelVisible: false,
-    panelId: -1,
-    previewActionsUid: 3,
+    panelVisible: true,
+    panelId: 2,
     previewSashVisible: false,
+    previewVisible: false,
+    previewId: -1,
+    secondaryPreviewSashVisible: false,
+    secondaryPreviewVisible: false,
+    secondaryPreviewId: -1,
+    secondarySideBarVisible: false,
+    secondarySideBarId: -1,
+    sideBarLocation: SideBarLocationType.Left,
+    sideBarSashVisible: false,
+    sideBarVisible: false,
+    sideBarId: -1,
+    statusBarVisible: true,
+    statusBarId: 3,
+    titleBarVisible: false,
+    titleBarId: -1,
+  }
+
+  // @ts-ignore
+  const dom = getLayoutVirtualDom(state)
+  const panelIndex = dom.findIndex((node) => node.uid === state.panelId)
+  const statusBarIndex = dom.findIndex((node) => node.uid === state.statusBarId)
+
+  expect(panelIndex).toBeGreaterThan(-1)
+  expect(statusBarIndex).toBeGreaterThan(panelIndex)
+})
+
+test.each([
+  ['left', SideBarLocationType.Left],
+  ['right', SideBarLocationType.Right],
+])('getLayoutVirtualDom places the preview beside the main workbench column with the side bar on the %s', (_name, sideBarLocation) => {
+  const state = {
+    activityBarVisible: false,
+    mainVisible: true,
+    mainId: 1,
+    panelSashVisible: false,
+    panelVisible: true,
+    panelId: 4,
+    previewActionsUid: 3,
+    previewSashVisible: true,
     previewVisible: true,
     previewId: 2,
     secondarySideBarVisible: false,
@@ -122,35 +206,26 @@ test.each([
     sideBarSashVisible: false,
     sideBarVisible: false,
     sideBarId: -1,
-    statusBarVisible: false,
-    statusBarId: -1,
-    titleBarVisible: false,
-    titleBarId: -1,
+    statusBarVisible: true,
+    statusBarId: 5,
+    titleBarVisible: true,
+    titleBarId: 10,
   }
 
   // @ts-ignore
   const dom = getLayoutVirtualDom(state)
-  const previewAreaIndex = dom.findIndex((node) => node.className === 'PreviewArea')
+  const workbench = parseVirtualDom(dom)
+  const body = workbench.children[1]
+  const mainColumn = body.children[0]
+  const contentArea = mainColumn.children[0]
+  const previewArea = body.children[2]
 
-  expect(dom.slice(previewAreaIndex, previewAreaIndex + 5)).toEqual([
-    {
-      childCount: 3,
-      className: 'PreviewArea',
-      type: 4,
-    },
-    { type: 100, uid: 2 },
-    { type: 100, uid: 3 },
-    expect.objectContaining({
-      ariaLabel: 'Close Preview',
-      childCount: 1,
-      className: 'IconButton PreviewCloseButton',
-    }),
-    {
-      childCount: 0,
-      className: 'MaskIcon MaskIconClose',
-      type: 4,
-    },
-  ])
+  expect(workbench.children.map(({ node }) => node.uid ?? node.className)).toEqual([10, 'WorkbenchBody'])
+  expect(body.children.map(({ node }) => node.className)).toEqual(['WorkbenchMain', 'Viewlet Sash SashVertical SashPreview', 'PreviewArea'])
+  expect(mainColumn.children.map(({ node }) => node.uid ?? node.className)).toEqual(['ContentArea', 4, 5])
+  expect(contentArea.children.map(({ node }) => node.uid)).toEqual([1])
+  expect(previewArea.children.map(({ node }) => node.uid ?? node.className)).toEqual(['PreviewAreaContent', 3, 'IconButton PreviewCloseButton'])
+  expect(previewArea.children[0].children.map(({ node }) => node.uid)).toEqual([2])
 })
 
 test('getLayoutVirtualDom renders an independently closable secondary preview', () => {
@@ -198,6 +273,52 @@ test('getLayoutVirtualDom renders an independently closable secondary preview', 
       { type: 100, uid: 7 },
     ]),
   )
+})
+
+test('getLayoutVirtualDom groups vertically stacked preview areas', () => {
+  const state = {
+    activityBarVisible: false,
+    mainVisible: true,
+    mainId: 1,
+    panelSashVisible: false,
+    panelVisible: false,
+    panelId: -1,
+    previewActionsUid: -1,
+    previewOrientation: 'vertical',
+    previewSashVisible: true,
+    previewVisible: true,
+    previewId: 2,
+    secondaryPreviewActionsUid: -1,
+    secondaryPreviewSashVisible: true,
+    secondaryPreviewVisible: true,
+    secondaryPreviewId: 3,
+    secondarySideBarVisible: false,
+    secondarySideBarId: -1,
+    sideBarLocation: SideBarLocationType.Left,
+    sideBarSashVisible: false,
+    sideBarVisible: false,
+    sideBarId: -1,
+    statusBarVisible: false,
+    statusBarId: -1,
+    titleBarVisible: false,
+    titleBarId: -1,
+  }
+
+  // @ts-ignore
+  const workbench = parseVirtualDom(getLayoutVirtualDom(state))
+  const body = workbench.children[0]
+  const previewAreas = body.children[2]
+
+  expect(body.children.map(({ node }) => node.className)).toEqual([
+    'WorkbenchMain',
+    'Viewlet Sash SashVertical SashPreview',
+    'PreviewAreas PreviewAreasVertical',
+  ])
+  expect(previewAreas.children.map(({ node }) => node.className)).toEqual([
+    'PreviewArea',
+    'Viewlet Sash SashHorizontal SashSecondaryPreview',
+    'PreviewArea SecondaryPreviewArea',
+  ])
 })
 
 test('getLayoutVirtualDom renders visible widgets as the final Workbench children', () => {

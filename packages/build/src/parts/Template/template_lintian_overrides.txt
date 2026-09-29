@@ -43,7 +43,6 @@
 
 # node modules
 @@NAME@@: missing-dep-for-interpreter node (does not satisfy nodejs:any)
-@@NAME@@: non-standard-executable-perm 0775 != 0755 [usr/lib/@@NAME@@/resources/app/packages/extension-host-helper-process/node_modules/which/bin/node-which]
 @@NAME@@: non-standard-executable-perm 0775 != 0755 [usr/lib/@@NAME@@/resources/app/packages/pty-host/node_modules/node-pty/build/Release/pty.node]
 @@NAME@@: non-standard-executable-perm 0775 != 0755 [usr/lib/@@NAME@@/resources/app/packages/shared-process/node_modules/extract-zip/cli.js]
 @@NAME@@: non-standard-executable-perm 0775 != 0755 [usr/lib/@@NAME@@/resources/app/packages/shared-process/node_modules/symlink-dir/dist/cli.js]

@@ -9,6 +9,7 @@ jest.unstable_mockModule('../src/parts/SaveState/SaveState.js', () => {
 
 jest.unstable_mockModule('../src/parts/Viewlet/Viewlet.js', () => {
   return {
+    executeViewletCommand: jest.fn(),
     disposeFunctional: jest.fn(() => []),
     resize: jest.fn(() => []),
   }
@@ -96,7 +97,6 @@ test('loadContent restores both preview areas independently', () => {
     secondaryPreviewVisible: true,
     secondaryPreviewWidth: 400,
   })
-
   expect(result).toMatchObject({
     previewLeft: 400,
     previewSashVisible: true,
@@ -107,6 +107,78 @@ test('loadContent restores both preview areas independently', () => {
     secondaryPreviewUri: 'gpt-voice.views.default',
     secondaryPreviewVisible: true,
   })
+})
+
+test('loadContent restores vertically stacked preview areas', () => {
+  const state = ViewletLayout.create(1)
+
+  const result = ViewletLayout.loadContent(state, {
+    Layout: {
+      bounds: {
+        windowWidth: 1200,
+        windowHeight: 800,
+      },
+    },
+    previewHeight: 300,
+    previewOrientation: 'vertical',
+    previewVisible: true,
+    previewWidth: 400,
+    secondaryPreviewVisible: true,
+    secondaryPreviewWidth: 400,
+  })
+
+  expect(result).toMatchObject({
+    previewHeight: 300,
+    previewLeft: 800,
+    previewOrientation: 'vertical',
+    previewTop: 20,
+    previewWidth: 400,
+    secondaryPreviewHeight: 480,
+    secondaryPreviewLeft: 800,
+    secondaryPreviewTop: 320,
+    secondaryPreviewWidth: 400,
+  })
+  expect(ViewletLayout.saveState(result)).toMatchObject({
+    previewHeight: 300,
+    previewOrientation: 'vertical',
+  })
+})
+
+test('loadSecondaryPreviewIfVisible restores the simple browser in the secondary preview', async () => {
+  const state = ViewletLayout.create(1)
+
+  const result = ViewletLayout.loadContent(state, {
+    Layout: {
+      bounds: {
+        windowWidth: 1200,
+        windowHeight: 800,
+      },
+    },
+    secondaryPreviewUri: 'simple-browser://12',
+    secondaryPreviewViewletId: 'SimpleBrowser',
+    secondaryPreviewVisible: true,
+    secondaryPreviewWidth: 400,
+  })
+
+  expect(result).toMatchObject({
+    secondaryPreviewUri: 'simple-browser://12',
+    secondaryPreviewViewletId: 'SimpleBrowser',
+    secondaryPreviewVisible: true,
+  })
+  // @ts-ignore
+  ViewletStates.getState.mockReturnValue(result)
+
+  await ViewletLayout.loadSecondaryPreviewIfVisible(result)
+
+  expect(ViewletManager.load).toHaveBeenCalledWith(
+    expect.objectContaining({
+      id: 'SimpleBrowser',
+      uri: 'simple-browser://12',
+    }),
+    false,
+    true,
+    undefined,
+  )
 })
 
 test('loadPreviewIfVisible restores the simple browser preview', async () => {
@@ -252,8 +324,47 @@ test('showPreview enables preview sash', async () => {
   expect(result.newState).toMatchObject({
     previewVisible: true,
     previewSashVisible: true,
-    previewUri: 'file:///test.html',
-    previewViewletId: 'Preview',
+    previewUri: 'html-preview:///file%3A%2F%2F%2Ftest.html',
+    previewViewletId: 'SimpleBrowser',
+  })
+})
+
+test('showPreview keeps the preview hidden until its viewlet has loaded', async () => {
+  let resolveLoad: (commands: unknown[][]) => void = () => {}
+  const loading = new Promise<unknown[][]>((resolve) => {
+    resolveLoad = resolve
+  })
+  let latestState
+  // @ts-ignore
+  ViewletManager.load.mockReturnValue(loading)
+  // @ts-ignore
+  ViewletStates.setState.mockImplementation((_uid, state) => {
+    latestState = state
+  })
+  // @ts-ignore
+  ViewletStates.getState.mockImplementation(() => latestState)
+  const state = {
+    ...ViewletLayout.create(1),
+    activityBarVisible: true,
+    activityBarWidth: 48,
+    statusBarHeight: 20,
+    titleBarHeight: 35,
+    windowHeight: 800,
+    windowWidth: 1200,
+  }
+
+  const resultPromise = ViewletLayout.showPreview(state, 'file:///test.html')
+
+  expect(latestState).toMatchObject({
+    previewVisible: false,
+    previewUri: 'html-preview:///file%3A%2F%2F%2Ftest.html',
+  })
+
+  resolveLoad([['Viewlet.createFunctionalRoot', 'Preview', 2, true]])
+  const result = await resultPromise
+  expect(result.newState).toMatchObject({
+    previewVisible: true,
+    previewUri: 'html-preview:///file%3A%2F%2F%2Ftest.html',
   })
 })
 
@@ -285,6 +396,15 @@ test('showPreview opens the simple browser in the preview area', async () => {
     true,
     undefined,
   )
+})
+
+test('showPreview opens HTML in the existing browser without a second preview area', async () => {
+  const state = { ...ViewletLayout.create(1), previewVisible: true, previewViewletId: 'SimpleBrowser', previewId: 7 }
+  const result = await ViewletLayout.showPreview(state, 'file:///test.html')
+  expect(result).toEqual({ newState: state, commands: [] })
+  expect(Viewlet.executeViewletCommand).toHaveBeenCalledWith(7, 'openTab', 'html-preview:///file%3A%2F%2F%2Ftest.html', 'foreground-tab')
+  expect(ViewletManager.load).not.toHaveBeenCalled()
+  expect(Viewlet.disposeFunctional).not.toHaveBeenCalled()
 })
 
 test.each([
@@ -373,6 +493,94 @@ test.each([
     secondaryPreviewLeft: 800,
     secondaryPreviewWidth: 400,
     statusBarWidth: 400,
+  })
+})
+
+test.each([
+  ['left', SideBarLocationType.Left],
+  ['right', SideBarLocationType.Right],
+])('togglePreviewOrientation stacks both previews with the side bar on the %s', async (_name, sideBarLocation) => {
+  const state = LayoutPoints.getPoints(
+    {
+      ...ViewletLayout.create(1),
+      previewMinHeight: 100,
+      previewMinWidth: 100,
+      previewVisible: true,
+      previewWidth: 400,
+      secondaryPreviewMinHeight: 100,
+      secondaryPreviewMinWidth: 100,
+      secondaryPreviewVisible: true,
+      secondaryPreviewWidth: 400,
+      statusBarHeight: 20,
+      statusBarVisible: true,
+      titleBarHeight: 20,
+      titleBarVisible: true,
+      windowHeight: 800,
+      windowWidth: 1200,
+    },
+    sideBarLocation,
+  )
+
+  const result = await ViewletLayout.togglePreviewOrientation(state)
+
+  expect(result.newState).toMatchObject({
+    panelWidth: 800,
+    previewHeight: 390,
+    previewLeft: 800,
+    previewOrientation: 'vertical',
+    previewTop: 20,
+    previewWidth: 400,
+    secondaryPreviewHeight: 390,
+    secondaryPreviewLeft: 800,
+    secondaryPreviewTop: 410,
+    secondaryPreviewWidth: 400,
+    statusBarWidth: 800,
+  })
+
+  const horizontalResult = await ViewletLayout.togglePreviewOrientation(result.newState)
+
+  expect(horizontalResult.newState).toMatchObject({
+    panelWidth: 400,
+    previewHeight: 780,
+    previewLeft: 400,
+    previewOrientation: 'horizontal',
+    previewWidth: 400,
+    secondaryPreviewHeight: 780,
+    secondaryPreviewLeft: 800,
+    secondaryPreviewTop: 20,
+    secondaryPreviewWidth: 400,
+    statusBarWidth: 400,
+  })
+})
+
+test('resizing the divider between vertically stacked previews changes their heights', async () => {
+  const state = LayoutPoints.getPoints({
+    ...ViewletLayout.create(1),
+    previewHeight: 300,
+    previewMinHeight: 100,
+    previewMinWidth: 100,
+    previewOrientation: 'vertical',
+    previewVisible: true,
+    previewWidth: 400,
+    sashId: 'SecondaryPreview',
+    secondaryPreviewMinHeight: 100,
+    secondaryPreviewMinWidth: 100,
+    secondaryPreviewVisible: true,
+    secondaryPreviewWidth: 400,
+    statusBarHeight: 20,
+    statusBarVisible: true,
+    titleBarHeight: 20,
+    titleBarVisible: true,
+    windowHeight: 800,
+    windowWidth: 1200,
+  })
+
+  const result = await ViewletLayout.handleSashPointerMove(state, 800, 500)
+
+  expect(result.newState).toMatchObject({
+    previewHeight: 480,
+    secondaryPreviewHeight: 300,
+    secondaryPreviewTop: 500,
   })
 })
 
@@ -468,14 +676,7 @@ test('showPreview keeps code visible when voice chat is already open', async () 
   })
   expect(Viewlet.disposeFunctional).not.toHaveBeenCalledWith(8)
   expect(result.newState.previewHeight).toBe(result.newState.windowHeight - result.newState.previewTop)
-  expect(result.commands).toContainEqual([
-    'Viewlet.setBounds',
-    expect.any(Number),
-    0,
-    0,
-    result.newState.previewWidth,
-    result.newState.previewHeight,
-  ])
+  expect(result.commands).toContainEqual(['Viewlet.setBounds', expect.any(Number), 0, 0, result.newState.previewWidth, result.newState.previewHeight])
 })
 
 test('hideSecondaryPreview leaves the primary preview mounted', async () => {
@@ -540,6 +741,29 @@ test('resizing the primary preview preserves the secondary preview width', async
     previewWidth: 450,
     secondaryPreviewLeft: 800,
     secondaryPreviewWidth: 400,
+  })
+})
+
+test('double clicking the preview sash resets the preview to half the window width', async () => {
+  const state = LayoutPoints.getPoints({
+    ...ViewletLayout.create(1),
+    activityBarVisible: true,
+    activityBarWidth: 48,
+    previewMinWidth: 100,
+    previewVisible: true,
+    previewWidth: 400,
+    sideBarMinWidth: 170,
+    sideBarVisible: true,
+    sideBarWidth: 240,
+    windowHeight: 800,
+    windowWidth: 1200,
+  })
+
+  const result = await ViewletLayout.handleSashDoubleClick(state, 'Preview')
+
+  expect(result.newState).toMatchObject({
+    previewLeft: 600,
+    previewWidth: 600,
   })
 })
 

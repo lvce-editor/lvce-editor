@@ -1,9 +1,7 @@
 import { createWorkerViewlet } from '../CreateWorkerViewlet/CreateWorkerViewlet.js'
 import * as Platform from '../Platform/Platform.js'
-import * as PlatformType from '../PlatformType/PlatformType.js'
-import * as WorkspaceBackend from '../WorkspaceBackend/WorkspaceBackend.js'
 
-const getPlatform = () => (WorkspaceBackend.isActive() ? PlatformType.Remote : Platform.getPlatform())
+const getPlatform = Platform.getPlatform
 
 export const {
   Commands,
@@ -13,6 +11,8 @@ export const {
   create,
   dispose,
   getCommands,
+  getComponentDom,
+  getComponentState,
   getKeyBindings,
   getMenus,
   getQuickPickMenuEntries,
@@ -33,4 +33,5 @@ export const {
   renderTitle,
   resize,
   saveState,
+  setComponentState,
 } = createWorkerViewlet({ workerId: 'processExplorer', getPlatform })
