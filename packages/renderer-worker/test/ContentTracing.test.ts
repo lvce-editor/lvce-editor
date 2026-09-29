@@ -19,15 +19,15 @@ jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
     },
   }
 })
-jest.unstable_mockModule('../src/parts/OpenUri/OpenUri.js', () => {
+jest.unstable_mockModule('../src/parts/Command/Command.js', () => {
   return {
-    openUri: jest.fn(),
+    execute: jest.fn(),
   }
 })
 
 const ContentTracing = await import('../src/parts/ContentTracing/ContentTracing.js')
 const ElectronContentTracing = await import('../src/parts/ElectronContentTracing/ElectronContentTracing.js')
-const OpenUri = await import('../src/parts/OpenUri/OpenUri.js')
+const Command = await import('../src/parts/Command/Command.js')
 
 test('start', async () => {
   // @ts-ignore
@@ -35,9 +35,11 @@ test('start', async () => {
   await ContentTracing.start()
   expect(ElectronContentTracing.startRecording).toHaveBeenCalledTimes(1)
   expect(ElectronContentTracing.startRecording).toHaveBeenCalledWith({
-    included_categories: ['*'],
+    included_categories: ['devtools.timeline', 'v8', 'blink.user_timing'],
   })
   expect(ElectronContentTracing.startRecording).toHaveBeenCalledTimes(1)
+  // @ts-ignore
+  ElectronContentTracing.stopRecording.mockImplementation(() => '/test/records.txt')
   await ContentTracing.stop()
 })
 
@@ -48,17 +50,23 @@ test('stop', async () => {
     return '/test/records.txt'
   })
   // @ts-ignore
-  OpenUri.openUri.mockImplementation(() => {})
+  Command.execute.mockImplementation(() => {})
   await ContentTracing.stop()
   expect(ElectronContentTracing.stopRecording).toHaveBeenCalledTimes(1)
-  expect(OpenUri.openUri).toHaveBeenCalledTimes(1)
-  expect(OpenUri.openUri).toHaveBeenCalledWith('/test/records.txt', true, { opener: 'builtin.performance-profile-view' })
+  expect(Command.execute).toHaveBeenCalledTimes(1)
+  expect(Command.execute).toHaveBeenCalledWith('Main.openInput', {
+    editorInput: { type: 'webview', uri: 'file:///test/records.txt', providerId: 'builtin.performance-profile-view' },
+    focus: true,
+    args: [{ opener: 'builtin.performance-profile-view' }],
+  })
 })
 
 test('repeated start keeps a single recording session', async () => {
   await ContentTracing.start()
   await ContentTracing.start()
   expect(ElectronContentTracing.startRecording).toHaveBeenCalledTimes(1)
+  // @ts-ignore
+  ElectronContentTracing.stopRecording.mockImplementation(() => '/test/records.txt')
   await ContentTracing.stop()
 })
 
