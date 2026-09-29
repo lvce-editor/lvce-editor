@@ -4,10 +4,11 @@
 /* TODO recalculate style is really slow in chrome for unknown reasons */
 .QuickPick {
   position: absolute;
-  width: 600px;
+  width: min(600px, calc(100% - var(--PreviewAreasWidth, 0px) - 32px));
   top: 50px;
   left: calc((100% - var(--PreviewAreasWidth, 0px)) / 2);
-  margin-left: -300px; /* TODO maybe this should be 301px because of padding to be centered */
+  margin-left: 0;
+  transform: translateX(-50%);
   padding: 0 1px 6px;
   background: var(--QuickPickBackground);
   color: var(--ListForeground);
@@ -88,6 +89,10 @@
   font-size: 0.9em;
   pointer-events: none;
   contain: content;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   /* TODO compute mixed color in javascript once for effiency */
   color: color-mix(in oklab, var(--ListForeground), var(--QuickPickBackground) 30%);
 }
@@ -144,5 +149,6 @@
   contain: strict;
   width: 20px;
   height: 20px;
+  flex-shrink: 0;
   mask-size: 70%;
 }

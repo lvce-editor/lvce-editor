@@ -22,6 +22,10 @@ test('registers the audio state handler with the IPC module', () => {
   expect(ElectronBrowserViewIpc.Commands.handleAudioStateChanged).toBe(ElectronBrowserView.handleAudioStateChanged)
 })
 
+test('registers the download state handler with the IPC module', () => {
+  expect(ElectronBrowserViewIpc.Commands.handleDownloadStateChanged).toBe(ElectronBrowserView.handleDownloadStateChanged)
+})
+
 test('forwards web contents audio state changes through the global event bus', async () => {
   const listener = jest.fn()
   GlobalEventBus.addListener('browser-view-audio-state-changed', listener)
@@ -31,6 +35,15 @@ test('forwards web contents audio state changes through the global event bus', a
   expect(listener).toHaveBeenCalledWith(12, true)
 })
 
+test('forwards web contents download state changes through the global event bus', async () => {
+  const listener = jest.fn()
+  GlobalEventBus.addListener('browser-view-download-state-changed', listener)
+
+  await ElectronBrowserView.handleDownloadStateChanged(12, 3, 'started')
+
+  expect(listener).toHaveBeenCalledWith(12, 3, 'started')
+})
+
 test('forwards web contents keybindings through the global event bus', async () => {
   const listener = jest.fn()
   GlobalEventBus.addListener('browser-view-key-binding', listener)
@@ -38,6 +51,16 @@ test('forwards web contents keybindings through the global event bus', async () 
   await ElectronBrowserView.handleKeyBinding(12, 2050)
 
   expect(listener).toHaveBeenCalledWith(12, 2050)
+})
+
+test('forwards web contents login challenges through the global event bus', async () => {
+  const listener = jest.fn()
+  const challenge = { host: 'example.com', requestId: '12:1' }
+  GlobalEventBus.addListener('browser-view-login', listener)
+
+  await ElectronBrowserView.handleLogin(12, challenge)
+
+  expect(listener).toHaveBeenCalledWith(12, challenge)
 })
 
 test('forwards web contents context menus through the global event bus', async () => {

@@ -53,3 +53,16 @@ test('showMessageBox - uses default product name', async () => {
     windowId: 42,
   })
 })
+
+test('showOpenDialog - returns a mocked file URI', async () => {
+  const uri = 'file:///tmp/a%20file.txt'
+  ElectronDialog.mockOpenDialog(uri)
+  expect(ElectronDialog.showOpenDialog('Open File', ['openFile'])).toBe(uri)
+  expect(SharedProcess.invoke).not.toHaveBeenCalled()
+  ElectronDialog.resetMockOpenDialog()
+})
+
+test('mockOpenDialog requires a file URI string', () => {
+  // @ts-ignore
+  expect(() => ElectronDialog.mockOpenDialog(['/tmp/file.txt'])).toThrow('expected uri to be a string')
+})

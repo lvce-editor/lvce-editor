@@ -7,6 +7,7 @@ import * as FileSystemState from '../src/parts/FileSystemState/FileSystemState.j
 const readFile = jest.fn()
 const writeFile = jest.fn()
 const remove = jest.fn()
+const createFile = jest.fn()
 const isReadonly = jest.fn()
 const getBlobUrl = jest.fn()
 const getFileSize = jest.fn()
@@ -16,6 +17,7 @@ FileSystemState.registerAll({
     return {
       readFile,
       writeFile,
+      createFile,
       remove,
       isReadonly,
       getBlobUrl,
@@ -42,6 +44,11 @@ test.skip('readFile - error', async () => {
     throw new TypeError('x is not a function')
   })
   await expect(FileSystem.readFile('/tmp/some-file.txt')).rejects.toThrow(new TypeError('x is not a function'))
+})
+
+test('createFile uses the filesystem provider', async () => {
+  await FileSystem.createFile('test://some-file.txt')
+  expect(createFile).toHaveBeenCalledWith('test://some-file.txt')
 })
 
 test('removeFile', async () => {
