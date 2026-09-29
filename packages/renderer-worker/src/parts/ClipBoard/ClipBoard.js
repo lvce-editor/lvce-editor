@@ -6,6 +6,10 @@ export const readText = async () => {
   return await ClipBoardWorker.invoke('ClipBoard.readText')
 }
 
+export const readImage = async () => {
+  return await ClipBoardWorker.invoke('ClipBoard.readImage')
+}
+
 export const writeText = async (text) => {
   return await ClipBoardWorker.invoke('ClipBoard.writeText', text)
 }

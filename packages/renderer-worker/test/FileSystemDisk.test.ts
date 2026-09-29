@@ -14,7 +14,12 @@ jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
   }
 })
 
+jest.unstable_mockModule('../src/parts/FileSystemWorker/FileSystemWorker.js', () => ({
+  invoke: jest.fn(),
+}))
+
 const SharedProcess = await import('../src/parts/SharedProcess/SharedProcess.js')
+const FileSystemWorker = await import('../src/parts/FileSystemWorker/FileSystemWorker.js')
 
 const FileSystemDisk = await import('../src/parts/FileSystem/FileSystemDisk.js')
 
@@ -24,6 +29,11 @@ test('getBlobUrl preserves a memfs uri', () => {
 
 test('getBlobUrl converts a file uri to a remote source', () => {
   expect(FileSystemDisk.getBlobUrl('file:///tmp/image.svg')).toBe('/remote/tmp/image.svg')
+})
+
+test('createFile uses exclusive filesystem creation', async () => {
+  await FileSystemDisk.createFile('/tmp/image.png')
+  expect(FileSystemWorker.invoke).toHaveBeenCalledWith('FileSystem.createFile', 'file:///tmp/image.png')
 })
 
 test.skip('readFile', async () => {

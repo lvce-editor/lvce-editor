@@ -7,6 +7,7 @@ import { fileURLToPath } from 'node:url'
 import { Worker } from 'node:worker_threads'
 import * as ArgvConfig from './argvConfig.js'
 import { getRemoteSshOptions, isAuthenticatedRemoteRequest } from './remoteSshOptions.js'
+import { sendSocket } from './sendSocket.js'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const ROOT = resolve(__dirname, '../../../')
@@ -305,16 +306,14 @@ const sendHandleSharedProcess = async (request, socket, method, ...params) => {
   }
   socket.on('error', handleSocketError)
   const sharedProcess = await getOrCreateSharedProcess()
-  sharedProcess.send(
+  sendSocket(
+    sharedProcess,
     {
       jsonrpc: '2.0',
       method,
       params: [getHandleMessage(request), ...params],
     },
     socket,
-    {
-      keepOpen: false,
-    },
   )
 }
 

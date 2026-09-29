@@ -2,7 +2,7 @@ import * as ElectronBrowserViewFunctions from '../ElectronBrowserViewFunctions/E
 
 export const forward = async (state) => {
   const { browserViewId, canGoForward } = state
-  if (!canGoForward) {
+  if (!browserViewId || !canGoForward) {
     return {
       ...state,
       isLoading: false,

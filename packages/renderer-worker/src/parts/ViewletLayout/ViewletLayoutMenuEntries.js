@@ -70,6 +70,10 @@ export const getQuickPickMenuEntries = async () => {
       label: 'Layout: Toggle Activity Bar',
     },
     {
+      id: 'Layout.toggleMenuBar',
+      label: 'View: Toggle Menu Bar',
+    },
+    {
       id: 'Layout.toggleStatusBar',
       label: 'Layout: Toggle Status Bar',
     },
@@ -388,6 +392,11 @@ export const getQuickPickMenuEntries = async () => {
       id: 'Main.openUri',
       label: 'Developer: Show Running Extensions',
       args: ['running-extensions://'],
+    },
+    {
+      id: 'Main.openUri',
+      label: 'Developer: Open Workers View',
+      args: ['workers:///1'],
     },
     {
       id: 'Main.openUri',

@@ -19,6 +19,14 @@ export const getMenuEntries = (uid, browserViewId) => {
     MenuEntrySeparator.menuEntrySeparator,
     entry('history', 'History', 'SimpleBrowser.openHistory'),
     entry('downloads', 'Downloads', 'SimpleBrowser.openDownloads'),
+    ...[
+      ['save', 'Save Password'],
+      ['fill', 'Fill Password'],
+      ['manage', 'Manage Passwords'],
+    ].map(([action, label]) => ({
+      ...entry(`passwords-${action}`, label, 'Viewlet.executeViewletCommand'),
+      args: [uid, 'handleContextMenuAction', browserViewId, 'passwords', [action]],
+    })),
     MenuEntrySeparator.menuEntrySeparator,
     entry('zoom-in', 'Zoom In', 'SimpleBrowser.zoomIn'),
     entry('zoom-out', 'Zoom Out', 'SimpleBrowser.zoomOut'),
