@@ -19,8 +19,8 @@ const ElectronBrowserViewFunctions = await import('../src/parts/ElectronBrowserV
 test('forward', async () => {
   // @ts-ignore
   ElectronBrowserViewFunctions.forward.mockImplementation(() => {})
-  const state = ViewletSimpleBrowser.create()
+  const state = { ...ViewletSimpleBrowser.create(), browserViewId: 1 }
   await ViewletSimpleBrowserForward.forward(state)
   expect(ElectronBrowserViewFunctions.forward).toHaveBeenCalledTimes(1)
-  expect(ElectronBrowserViewFunctions.forward).toHaveBeenCalledWith(0)
+  expect(ElectronBrowserViewFunctions.forward).toHaveBeenCalledWith(1)
 })

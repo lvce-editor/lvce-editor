@@ -44,6 +44,7 @@ const adapters = {
   settingsView: Object.assign({}, clearItemsOnHotReload, WorkerViewletAdapters.settings),
   textSearchView: WorkerViewletAdapters.textSearch,
   titleBar: WorkerViewletAdapters.titleBar,
+  workersView: { serializeCommands: true },
 }
 
 const emptyAdapter = {
