@@ -1,5 +1,12 @@
 [
   {
+    "name": "builtin.performance-profile-view",
+    "repository": "github.com/lvce-editor/performance-profile-view",
+    "version": "0.1.1",
+    "sha256": "9660dffd1eca59dfe266e187a53a7211ebbdc701d83274306e15875ae031f167",
+    "created": "2026-09-29"
+  },
+  {
     "name": "builtin.notebook",
     "repository": "github.com/lvce-editor/notebook",
     "version": "0.1.1",
