@@ -4,10 +4,6 @@ import * as SourceControlWorker from '../SourceControlWorker/SourceControlWorker
 
 export const Commands = {}
 
-Object.defineProperty(Commands, '__directEventRpcId', {
-  value: 'SourceControl',
-})
-
 Object.defineProperty(Commands, '__renderPending', {
   value: WrapSourceControlCommand.renderPendingSourceControl,
 })

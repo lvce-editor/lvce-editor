@@ -71,6 +71,12 @@ test.skip('openSettingsJson', async () => {
   expect(Main.openUri).toHaveBeenCalledWith('app:///settings.json')
 })
 
+test('openSettingsUi', async () => {
+  await Preferences.openSettingsUi()
+  expect(OpenUri.openUri).toHaveBeenCalledTimes(1)
+  expect(OpenUri.openUri).toHaveBeenCalledWith('settings:///')
+})
+
 test('openKeyBindingsJson', async () => {
   await Preferences.openKeyBindingsJson()
   expect(OpenUri.openUri).toHaveBeenCalledTimes(1)
@@ -174,12 +180,12 @@ test('set - does not persist preferences in test mode', async () => {
   expect(Preferences.state.x).toBe(42)
 })
 
-test('toggleAutoSave - turns auto save on', async () => {
+test('toggleAutoSave - turns auto save on when the editor loses focus', async () => {
   Object.assign(Preferences.state, { 'files.autoSave': 'off' })
 
   await Preferences.toggleAutoSave()
 
-  expect(Preferences.state['files.autoSave']).toBe('afterDelay')
+  expect(Preferences.state['files.autoSave']).toBe('onFocusChange')
 })
 
 test('toggleAutoSave - turns auto save off', async () => {

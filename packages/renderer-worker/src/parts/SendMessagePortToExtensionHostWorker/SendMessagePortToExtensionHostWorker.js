@@ -50,6 +50,7 @@ import * as TextMeasurementWorker from '../TextMeasurementWorker/TextMeasurement
 import * as TextSearchViewWorker from '../TextSearchViewWorker/TextSearchViewWorker.js'
 import * as TextSearchWorker from '../TextSearchWorker/TextSearchWorker.js'
 import * as TitleBarWorker from '../TitleBarWorker/TitleBarWorker.js'
+import * as WorkersViewWorker from '../WorkersViewWorker/WorkersViewWorker.ts'
 import * as WorkspaceConnection from '../WorkspaceConnection/WorkspaceConnection.js'
 
 const directViewWorkers = {
@@ -77,6 +78,7 @@ const directViewWorkers = {
   StatusBar: [StatusBarWorker, 'StatusBar.handleMessagePort'],
   TextSearch: [TextSearchViewWorker, 'TextSearch.handleMessagePort'],
   TitleBar: [TitleBarWorker, 'TitleBar.handleMessagePort'],
+  Workers: [WorkersViewWorker, 'Workers.handleMessagePort'],
 }
 
 export const sendMessagePortToExtensionHostWorker = async (port, initialCommand, rpcId) => {

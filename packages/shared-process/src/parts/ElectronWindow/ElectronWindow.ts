@@ -32,6 +32,11 @@ export const maximize = (windowId: any): any => {
   return ParentIpc.invoke('ElectronWindow.executeWindowFunction', windowId, 'maximize')
 }
 
+export const toggleMaximize = (windowId: number): any => {
+  Assert.number(windowId)
+  return ParentIpc.invoke('ElectronWindow.executeWindowFunction', windowId, 'toggleMaximize')
+}
+
 export const unmaximize = (windowId: any): any => {
   Assert.number(windowId)
   return ParentIpc.invoke('ElectronWindow.executeWindowFunction', windowId, 'unmaximize')
