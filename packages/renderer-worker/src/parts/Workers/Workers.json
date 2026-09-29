@@ -1648,6 +1648,7 @@
     "viewlet": {
       "name": "Workers",
       "title": "Workers",
+      "css": ["/css/parts/ViewletWorkers.css"],
       "state": {
         "idKey": "uid",
         "fields": ["uri", "x", "y", "width", "height"],
