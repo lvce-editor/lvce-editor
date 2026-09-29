@@ -33,8 +33,13 @@ export const isAutoClosingTagsEnabled = () => {
   return true
 }
 
-export const getRowHeight = () => {
-  return Preferences.get(kLineHeight) || 20
+export const getRowHeight = (preferences) => {
+  const lineHeight = preferences ? preferences[kLineHeight] : Preferences.get(kLineHeight)
+  const fontSize = preferences ? preferences[kFontSize] || 15 : getFontSize()
+  if (typeof lineHeight !== 'number' || !Number.isFinite(lineHeight) || lineHeight < fontSize) {
+    return fontSize
+  }
+  return lineHeight
 }
 
 export const getFontSize = () => {

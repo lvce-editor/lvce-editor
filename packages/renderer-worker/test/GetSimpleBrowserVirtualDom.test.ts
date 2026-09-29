@@ -22,6 +22,79 @@ test('renders a snapshot below the browser header', () => {
   ])
 })
 
+test('shows the downloads button while downloading and blue after successful completion', () => {
+  const render = (downloadStates) =>
+    GetSimpleBrowserVirtualDom.getSimpleBrowserVirtualDom(
+      false,
+      false,
+      false,
+      'https://example.com',
+      '',
+      [],
+      -1,
+      [{ browserViewId: 12 }],
+      0,
+      true,
+      true,
+      [],
+      undefined,
+      -1,
+      false,
+      'light',
+      undefined,
+      false,
+      [],
+      '',
+      undefined,
+      0,
+      1600,
+      false,
+      downloadStates,
+    )
+
+  expect(render({})).not.toContainEqual(expect.objectContaining({ ariaLabel: 'Downloads' }))
+  expect(render({ 1: 'downloading' })).toContainEqual(
+    expect.objectContaining({ className: 'IconButton SimpleBrowserDownloadButton SimpleBrowserDownloadButtonDownloading', ariaLabel: 'Downloads' }),
+  )
+  expect(render({ completed: 'completed' })).toContainEqual(
+    expect.objectContaining({ className: 'IconButton SimpleBrowserDownloadButton SimpleBrowserDownloadButtonComplete', ariaLabel: 'Downloads' }),
+  )
+  expect(render({ 1: 'failed' })).not.toContainEqual(expect.objectContaining({ ariaLabel: 'Downloads' }))
+})
+
+test('renders a Simple Browser snapshot without dimming for the activity bar settings menu', () => {
+  const dom = GetSimpleBrowserVirtualDom.getSimpleBrowserVirtualDom(
+    true,
+    true,
+    false,
+    'https://example.com',
+    'blob:https://example.com/snapshot',
+    [],
+    -1,
+    [],
+    0,
+    true,
+    true,
+    [],
+    undefined,
+    -1,
+    false,
+    'light',
+    undefined,
+    false,
+    [],
+    '',
+    undefined,
+    0,
+    1600,
+    true,
+  )
+
+  expect(dom.at(-1)).toMatchObject({
+    className: 'SimpleBrowserSnapshot SimpleBrowserSnapshotSettingsMenu',
+  })
+})
+
 test('renders history as an interactive browser tab page', () => {
   const dom = GetSimpleBrowserVirtualDom.getSimpleBrowserVirtualDom(
     false,
@@ -99,6 +172,37 @@ test('names the address input so focus can be restored after rendering', () => {
       type: VirtualDomElements.Input,
     }),
   )
+})
+
+test('renders an HTTP authentication prompt with a masked password field', () => {
+  const dom = GetSimpleBrowserVirtualDom.getSimpleBrowserVirtualDom(
+    false,
+    false,
+    false,
+    'https://example.com',
+    '',
+    [],
+    -1,
+    [],
+    0,
+    true,
+    true,
+    [],
+    undefined,
+    -1,
+    false,
+    'light',
+    undefined,
+    false,
+    [],
+    '',
+    { host: 'example.com', realm: 'Members', requestId: '12:1' },
+  )
+
+  expect(dom[0].childCount).toBe(3)
+  expect(dom).toContainEqual(expect.objectContaining({ className: 'SimpleBrowserLoginDialog', role: 'dialog', ariaModal: true }))
+  expect(dom).toContainEqual(expect.objectContaining({ className: 'InputBox SimpleBrowserLoginInput', inputType: 'password', name: 'password' }))
+  expect(dom).toContainEqual(expect.objectContaining({ 'data-requestId': '12:1', onSubmit: 'handle-simple-browser-login-submit' }))
 })
 
 test('renders the empty tab landing page in the view dom', () => {
@@ -292,6 +396,39 @@ test('renders a history icon for history tabs without changing website favicons'
   ])
   expect(dom).toContainEqual(expect.objectContaining({ src: 'https://example.com/favicon.png' }))
   expect(dom).not.toContainEqual(expect.objectContaining({ className: 'SimpleBrowserTabFavicon SimpleBrowserTabFaviconFallback' }))
+})
+
+test('renders a bounded embedded history window at the requested scroll position', () => {
+  const entries = Array.from({ length: 10_000 }, (_, index) => ({ date: 10_000 - index, url: `https://example.test/${index}` }))
+  const dom = GetSimpleBrowserVirtualDom.getSimpleBrowserVirtualDom(
+    false,
+    false,
+    false,
+    '',
+    '',
+    [],
+    -1,
+    [{ iframeSrc: 'simple-browser-history://', title: 'History' }],
+    0,
+    true,
+    true,
+    [],
+    undefined,
+    -1,
+    false,
+    'light',
+    undefined,
+    true,
+    entries,
+    '',
+    undefined,
+    5_000 * 56,
+    300,
+  )
+  const renderedUrls = dom.filter((node) => node.className === 'SimpleBrowserHistoryUrl').map((node) => node['data-url'])
+
+  expect(renderedUrls.length).toBeLessThan(40)
+  expect(renderedUrls).toContain('https://example.test/5000')
 })
 
 test('freezes tab sizing through the tab list style', () => {

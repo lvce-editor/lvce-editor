@@ -17,6 +17,15 @@ The launcher supports `-v` and `--version` without opening a window, plus file p
 and the other editor CLI arguments. This requires a release containing the macOS
 launcher and installation command; older releases do not include them.
 
+## Linux Electron version selection
+
+The Linux CLI accepts `--electron-version <version>` (or
+`--electron-version=<version>`) to launch the current application resources with
+another Electron release. The selected runtime is downloaded on first use and
+cached under the user's cache directory, separately for each version and platform
+architecture. For example, `lvce --electron-version 44.0.0 --wait` launches and
+waits for Electron 44.0.0.
+
 ## Contributing
 
 ```sh

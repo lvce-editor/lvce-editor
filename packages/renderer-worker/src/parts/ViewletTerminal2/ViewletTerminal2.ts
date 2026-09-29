@@ -48,9 +48,24 @@ export const loadContent = async (state, _savedState?: any, configuredSpawnOptio
 
 export const loadContentLater = async (state) => {
   const { args, command, cwd, uid } = state
-  await TerminalWorker.invoke('Terminal.create', uid, cwd || Workspace.state.workspacePath, command, args, {
-    backend: getBackend(),
-  })
+  try {
+    await TerminalWorker.invoke('Terminal.create', uid, cwd || Workspace.state.workspacePath, command, args, {
+      backend: getBackend(),
+    })
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error)
+    await showError(state, `Failed to start terminal: ${message}`)
+  }
+}
+
+const showError = async (state, message) => {
+  const workspaceChanged = message.includes('Workspace changed while starting the terminal.')
+  const diagnostic = workspaceChanged ? message.replace(' Create a new terminal to retry.', '') : message
+  const recovery = workspaceChanged
+    ? 'Create a new terminal to retry.'
+    : 'Check the shell, working directory, and workspace connection. Create a new terminal to retry.'
+  const text = `${diagnostic}\r\n${recovery}\r\n`
+  await handleData(state, new TextEncoder().encode(`\r\n${text}`))
 }
 
 export const handleInput = async (state, data) => {
@@ -74,7 +89,14 @@ export const handleData = async (state, data) => {
   return state
 }
 
-export const handleExit = async (state) => {
+export const handleExit = async (state, event?: { exitCode?: number; signal?: number }) => {
+  if (event?.exitCode || event?.signal) {
+    const message = event.signal
+      ? `The terminal process exited with signal ${event.signal}.`
+      : `The terminal process exited with code ${event.exitCode}.`
+    await showError(state, message)
+    return state
+  }
   if (!(await TerminalTransfer.handleExit(state.uid))) {
     await Command.execute('Terminals.handleTerminalExit', state.uid)
   }

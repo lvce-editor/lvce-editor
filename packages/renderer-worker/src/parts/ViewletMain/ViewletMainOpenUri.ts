@@ -9,6 +9,7 @@ import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletMap from '../ViewletMap/ViewletMap.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as ViewletMainFocusIndex from './ViewletMainFocusIndex.js'
 
@@ -103,7 +104,7 @@ export const openUri = async (state, uri, focus = true, { preview = false, ...co
     instance.args = [context]
   }
   // @ts-ignore
-  const commands = await ViewletManager.load(instance, focus)
+  const commands = await ViewletManager.load(instance, focus, moduleId === ViewletModuleId.EditorText)
   commands.push(['Viewlet.setBounds', instanceUid, activeGroup.x, tabHeight, activeGroup.width, contentHeight])
   let tabsUid = state.tabsUid
   if (tabsUid === -1) {

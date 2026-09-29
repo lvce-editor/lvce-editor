@@ -1,5 +1,12 @@
 [
   {
+    "name": "builtin.performance-profile-view",
+    "repository": "github.com/lvce-editor/performance-profile-view",
+    "version": "0.1.1",
+    "sha256": "9660dffd1eca59dfe266e187a53a7211ebbdc701d83274306e15875ae031f167",
+    "created": "2026-09-29"
+  },
+  {
     "name": "builtin.notebook",
     "repository": "github.com/lvce-editor/notebook",
     "version": "0.1.1",
@@ -10,8 +17,8 @@
   {
     "name": "builtin.git",
     "repository": "github.com/lvce-editor/git",
-    "version": "5.36.2",
-    "sha256": "6968ae41a37ce4e90dea5342590a27b59d982060f9e58d620137559e67fdbe8d",
+    "version": "5.39.1",
+    "sha256": "975f98576ee941cab07f4c92c8c39fc4038d1e6fc6ff3613c010ee0bf5d91b76",
     "created": "2022-07-02"
   },
   {
@@ -24,8 +31,8 @@
   {
     "name": "builtin.csv-viewer",
     "repository": "github.com/lvce-editor/csv-viewer",
-    "version": "2.14.1",
-    "sha256": "136b3aafa2ceca51ac6789916640f982058145fc91a954ac7224ef86a9b194fb",
+    "version": "2.15.1",
+    "sha256": "c8d97e043e305e21ae11719fa5ad80cb4d35c1ba8dbf81842f3a5bae9fab9582",
     "created": "2024-10-13"
   },
   {
@@ -38,8 +45,8 @@
   {
     "name": "builtin.chat-view-2",
     "repository": "github.com/lvce-editor/chat-view-2",
-    "version": "1.24.0",
-    "sha256": "779b6b9c890cc785c0a6698c608197730ac2d7a9d1985e6b8c6848188c2d9391",
+    "version": "1.28.1",
+    "sha256": "d1759e2163dc4c5f788f5d6525e8ce07af9d838f1109991abd6dd3aeb95272b1",
     "created": "2026-09-13"
   },
   {
@@ -53,8 +60,8 @@
   {
     "name": "builtin.pull-request-github",
     "repository": "github.com/lvce-editor/pull-request-github",
-    "version": "1.6.2",
-    "sha256": "923915d0fc28f0a83f2a4550ddc83337de5d7b327d17447fb38d942f9623fd0e",
+    "version": "1.8.3",
+    "sha256": "69697995589db4e46f070c3e11bf36ebdad68b8f19ffba99e15dece7be2b1e3b",
     "created": "2026-08-19",
     "enabled": false
   },
@@ -89,8 +96,8 @@
   {
     "name": "builtin.eslint",
     "repository": "github.com/lvce-editor/eslint",
-    "version": "1.20.0",
-    "sha256": "cc5280744dc037f0c4b5ffdc758b7447e89b1d734d863b83d3974644cb7eb776",
+    "version": "1.23.1",
+    "sha256": "5d8caa9472e2f41ac69efdd0ed9208d3ce055964ea26019405d346b700dbf6c3",
     "created": "2026-08-01"
   },
   {
@@ -103,8 +110,8 @@
   {
     "name": "builtin.remote-ssh",
     "repository": "github.com/lvce-editor/remote-ssh",
-    "version": "0.13.2",
-    "sha256": "d5ff7d76d556067cdc736f2682bf0027622d52305c06b97d24fad339036ab880",
+    "version": "0.14.0",
+    "sha256": "64f26c0c8f2cc430a8d8d8ccb12e53258f9d2c3e619b6b952de43d5c9637a194",
     "created": "2026-08-03"
   },
   {
@@ -244,8 +251,8 @@
   {
     "name": "builtin.heap-snapshot-viewer",
     "repository": "github.com/lvce-editor/heap-snapshot-viewer",
-    "version": "1.27.1",
-    "sha256": "557b54c613adc69dd8106524742234d04b1ef6535a630dfb1615e2d8aa45432c",
+    "version": "1.27.2",
+    "sha256": "a583491c8439907feb3a9c2c068c5083d72b4ae98ceb4d2540308119f0c0e84f",
     "created": "2024-08-09"
   },
   {
@@ -440,8 +447,8 @@
   {
     "name": "builtin.language-basics-typescript",
     "repository": "github.com/lvce-editor/language-basics-typescript",
-    "version": "3.19.3",
-    "sha256": "f41a95fd2a96e058ec3134ccc0422e8d4343d081002751649b089bcdc109e2fd",
+    "version": "3.20.3",
+    "sha256": "58b3afbadbffc71caa61c5f8fdc75f535b1ef4c40743199e6d9192f51bfe1aeb",
     "created": "2022-06-26"
   },
   {
@@ -468,8 +475,8 @@
   {
     "name": "builtin.language-basics-yaml",
     "repository": "github.com/lvce-editor/language-basics-yaml",
-    "version": "1.11.0",
-    "sha256": "246100eca30dce9e590c18bbc427f7cb48ded96ef94272efacc46650a7b5de31",
+    "version": "1.11.1",
+    "sha256": "2a64d479eda8abd8c094060afcbeb38734f5bbcb2eed0519e46fdb3f8577cca0",
     "created": "2022-06-16"
   },
   {
@@ -503,8 +510,8 @@
   {
     "name": "builtin.language-features-typescript",
     "repository": "github.com/lvce-editor/language-features-typescript",
-    "version": "5.21.0",
-    "sha256": "fd4b723255886ef33b7c28db2b700964e6fd09da77c31c274abbb484ee002252",
+    "version": "5.23.0",
+    "sha256": "3187e2256fca023c58813a1ca3f6553fb1ba2d5cd707eb495a1ad1a33047a996",
     "created": "2022-06-16"
   },
   {

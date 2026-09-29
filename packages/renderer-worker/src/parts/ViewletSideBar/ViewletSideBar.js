@@ -32,6 +32,21 @@ export const create = (id, uri, x, y, width, height) => {
   }
 }
 
+export const getComponentState = (state) => state
+
+export const setComponentState = (currentState, componentState) => {
+  if (!componentState || typeof componentState !== 'object' || Array.isArray(componentState)) {
+    throw new TypeError('SideBar state must be an object')
+  }
+  if (componentState.uid !== currentState.uid) {
+    throw new Error(`SideBar state uid must remain ${currentState.uid}`)
+  }
+  return {
+    ...currentState,
+    title: componentState.title,
+  }
+}
+
 // export const saveState = (state) => {
 //   const { currentViewletId } = state
 //   return {

@@ -287,6 +287,8 @@ export const getModuleId = (commandId: any): any => {
     case 'ProcessId.getMainProcessId':
     case 'ProcessId.getSharedProcessId':
       return ModuleId.ProcessId
+    case 'PtyHost.release':
+      return ModuleId.PtyHost
     case 'RebuildNodePty.rebuildNodePty':
       return ModuleId.RebuildNodePty
     case 'RecentlyOpened.addPath':

@@ -5,6 +5,7 @@ export const name = 'FileSystem'
 export const Commands = {
   chmod: FileSystem.chmod,
   copy: FileSystem.copy,
+  createFile: FileSystem.createFile,
   exists: FileSystem.exists,
   getBlob: FileSystem.getBlob,
   getFileSize: FileSystem.getFileSize,

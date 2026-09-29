@@ -246,6 +246,11 @@ const getPreviewAreaDom = (previewId: number, previewActionsUid: number | undefi
       className: secondary ? 'PreviewArea SecondaryPreviewArea' : 'PreviewArea',
       type: VirtualDomElements.Div,
     },
+    {
+      childCount: 1,
+      className: 'PreviewAreaContent',
+      type: VirtualDomElements.Div,
+    },
     previewDom,
     ...actionsDom,
     ...closeButtonDom,

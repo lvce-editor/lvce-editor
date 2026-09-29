@@ -2,10 +2,11 @@
 
 ## Staged Windows updates
 
-New Windows releases publish `Lvce-Stage-v<version>-<arch>-v2.json` to declare that
-their official NSIS installer supports preparation without installation. The desktop
-checks the actual installed version, downloads the installer, verifies its GitHub
-SHA256 digest, and invokes `/S /LVCESTAGE` with `LVCE_UPDATE_STAGE` set to a fresh
+Windows releases from v0.116.2 onward support staged updates through their official
+NSIS installer; no separate capability asset is needed. The desktop checks the
+release version and the installer for the current architecture, downloads the
+installer, verifies its GitHub SHA256 digest, and invokes `/S /LVCESTAGE` with
+`LVCE_UPDATE_STAGE` set to a fresh
 sibling directory using the Windows extended-length path namespace in the child
 environment. NSIS's extraction plugin otherwise silently omits files beyond
 `MAX_PATH` even when it returns success. Keeping the path out of the command
@@ -15,9 +16,11 @@ close the editor, uninstall files, or register another installation. Existing
 destination directories are rejected. This uses the normal installer extraction
 path; it does not change Windows application-control policy or trust metadata.
 
-Releases without this capability retain the existing NSIS update path. New releases
-do not publish the earlier ZIP payload, so clients with the old ZIP updater also
-fall back to normal installation. NSIS handles deep extension paths; backup cleanup
+Releases older than v0.116.2 use the existing normal NSIS update path. This version
+boundary preserves compatibility with older clients whose staged-update startup
+protocol cannot safely activate a newer installation. New releases do not publish
+the earlier ZIP payload, so clients with the old ZIP updater also fall back to
+normal installation. NSIS handles deep extension paths; backup cleanup
 uses extended-length paths for the same reason. Windows CI tests the actual built
 installer in a path containing spaces, checks registration is unchanged, and checks
 that a second preparation cannot overwrite an existing directory.
@@ -35,9 +38,8 @@ unique backup, renames the prepared directory into place, and starts the new app
 The new shared process atomically acknowledges its token, version and actual main
 process ID after creating the app window. The helper waits for this acknowledgment
 even if the initial launcher exits, validates the acknowledged executable path,
-and uses that process for the stability check. The v2 capability filename makes
-older helpers fall back to normal NSIS installation instead of using their
-incompatible startup protocol.
+and uses that process for the stability check. Releases before v0.116.2 use normal
+NSIS installation instead of invoking the incompatible startup protocol.
 Startup failure restores the backup; cleanup occurs only after acknowledgment and
 a short stability check. Normal NSIS installation and uninstall remain available.
 The existing uninstaller is retained, and the registered installation path does not
