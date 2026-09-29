@@ -465,6 +465,7 @@ export const shouldBeCopied = (extensionName) => {
     extensionName === 'builtin.media-preview' ||
     extensionName === 'builtin.video-preview' ||
     extensionName === 'builtin.vscode-icons' ||
+    extensionName === 'builtin.language-features-json' ||
     extensionName.startsWith('builtin.theme-') ||
     extensionName.startsWith('builtin.language-basics-')
   )

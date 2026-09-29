@@ -31,3 +31,13 @@ test('dispose', async () => {
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
   expect(RendererProcess.invoke).toHaveBeenCalledWith('Notification.dispose', 1)
 })
+
+test.each([0, 1, undefined])('showWithOptions returns the renderer choice %s', async (choice) => {
+  // @ts-ignore
+  RendererProcess.invoke.mockResolvedValue(choice)
+  const result = await Notification.showWithOptions('info', 'There are no changes to commit', ['Create Empty Commit'])
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Notification.showWithOptions', 'info', 'There are no changes to commit', [
+    'Create Empty Commit',
+  ])
+  expect(result).toBe(choice)
+})

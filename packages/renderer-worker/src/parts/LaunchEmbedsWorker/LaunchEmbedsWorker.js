@@ -1,3 +1,4 @@
+import * as GetWindowId from '../GetWindowId/GetWindowId.js'
 import * as EmbedsWorkerUrl from '../EmbedsWorkerUrl/EmbedsWorkerUrl.js'
 import * as HandleIpc from '../HandleIpc/HandleIpc.js'
 import * as IpcParent from '../IpcParent/IpcParent.js'
@@ -26,6 +27,7 @@ export const launchEmbedsWorker = async () => {
     name: 'Embeds Worker',
   })
   HandleIpc.handleIpc(ipc)
-  await JsonRpc.invoke(ipc, 'Initialize.initialize')
+  const windowId = await GetWindowId.getWindowId()
+  await JsonRpc.invoke(ipc, 'Initialize.initialize', windowId)
   return ipc
 }
