@@ -19,15 +19,15 @@ jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
     },
   }
 })
-jest.unstable_mockModule('../src/parts/OpenNativeFolder/OpenNativeFolder.js', () => {
+jest.unstable_mockModule('../src/parts/OpenUri/OpenUri.js', () => {
   return {
-    openNativeFolder: jest.fn(),
+    openUri: jest.fn(),
   }
 })
 
 const ContentTracing = await import('../src/parts/ContentTracing/ContentTracing.js')
 const ElectronContentTracing = await import('../src/parts/ElectronContentTracing/ElectronContentTracing.js')
-const OpenNativeFolder = await import('../src/parts/OpenNativeFolder/OpenNativeFolder.js')
+const OpenUri = await import('../src/parts/OpenUri/OpenUri.js')
 
 test('start', async () => {
   // @ts-ignore
@@ -37,17 +37,32 @@ test('start', async () => {
   expect(ElectronContentTracing.startRecording).toHaveBeenCalledWith({
     included_categories: ['*'],
   })
+  expect(ElectronContentTracing.startRecording).toHaveBeenCalledTimes(1)
+  await ContentTracing.stop()
 })
 
 test('stop', async () => {
+  await ContentTracing.start()
   // @ts-ignore
   ElectronContentTracing.stopRecording.mockImplementation(() => {
     return '/test/records.txt'
   })
   // @ts-ignore
-  OpenNativeFolder.openNativeFolder.mockImplementation(() => {})
+  OpenUri.openUri.mockImplementation(() => {})
   await ContentTracing.stop()
   expect(ElectronContentTracing.stopRecording).toHaveBeenCalledTimes(1)
-  expect(OpenNativeFolder.openNativeFolder).toHaveBeenCalledTimes(1)
-  expect(OpenNativeFolder.openNativeFolder).toHaveBeenCalledWith('/test/records.txt')
+  expect(OpenUri.openUri).toHaveBeenCalledTimes(1)
+  expect(OpenUri.openUri).toHaveBeenCalledWith('/test/records.txt', true, { opener: 'builtin.performance-profile-view' })
+})
+
+test('repeated start keeps a single recording session', async () => {
+  await ContentTracing.start()
+  await ContentTracing.start()
+  expect(ElectronContentTracing.startRecording).toHaveBeenCalledTimes(1)
+  await ContentTracing.stop()
+})
+
+test('stop without a recording rejects without calling Electron', async () => {
+  await expect(ContentTracing.stop()).rejects.toThrow('content tracing is not recording')
+  expect(ElectronContentTracing.stopRecording).not.toHaveBeenCalled()
 })
