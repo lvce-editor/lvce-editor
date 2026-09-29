@@ -72,3 +72,18 @@ test('renders an empty state', () => {
   })
   expect(dom).toContainEqual({ type: VirtualDomElements.Text, text: 'No history entries', childCount: 0 })
 })
+
+test('renders a bounded window and keeps the first, middle, and final history entries reachable', () => {
+  const entries = Array.from({ length: 100_000 }, (_, index) => ({ date: 100_000 - index, url: `https://example.test/${index}` }))
+  const render = (scrollTop: number) => GetSimpleBrowserHistoryVirtualDom.getSimpleBrowserHistoryVirtualDom(entries, '', '', scrollTop, 400)
+  const getRenderedUrls = (dom: readonly any[]) => dom.filter((node) => node.className === 'SimpleBrowserHistoryUrl').map((node) => node['data-url'])
+
+  const firstDom = render(0)
+  const middleDom = render(50_000 * 56)
+  const finalDom = render(99_999 * 56)
+
+  expect(getNodesByClassName(firstDom, 'SimpleBrowserHistoryEntry').length).toBeLessThan(40)
+  expect(getRenderedUrls(firstDom)).toContain('https://example.test/0')
+  expect(getRenderedUrls(middleDom)).toContain('https://example.test/50000')
+  expect(getRenderedUrls(finalDom)).toContain('https://example.test/99999')
+})

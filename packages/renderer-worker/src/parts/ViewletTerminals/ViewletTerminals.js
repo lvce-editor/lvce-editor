@@ -502,3 +502,6 @@ export const handleDrop = async (state, dropId) => {
   await dropTerminal(state.uid, dropId)
   return state
 }
+
+// Keep running terminals available to restoreExistingTerminals when switching panel tabs.
+export const hide = () => {}

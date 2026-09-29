@@ -98,7 +98,7 @@
 
 .RuntimeStatusDefinitionList {
   align-items: baseline;
-  column-gap: 24px;
+  column-gap: 12px;
   contain: content;
   display: grid;
   grid-template-columns: max-content minmax(0, 1fr);

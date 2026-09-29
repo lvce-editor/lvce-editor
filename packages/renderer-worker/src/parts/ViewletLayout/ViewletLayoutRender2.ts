@@ -161,6 +161,7 @@ const getCss = (newState: LayoutState) => {
   const secondaryPreviewWidth = newState.secondaryPreviewWidth
   const previewAreasWidth =
     newState.previewOrientation === PreviewOrientation.Vertical ? Math.max(previewWidth, secondaryPreviewWidth) : previewWidth + secondaryPreviewWidth
+  const previewVisible = !newState.browserFullWidth && (newState.previewVisible || newState.secondaryPreviewVisible)
   const sashSideBarLeft = newState.sideBarLeft
   const secondarySideBarLeft = newState.secondarySideBarLeft
   const sashPanelTop = newState.panelTop
@@ -201,6 +202,8 @@ const getCss = (newState: LayoutState) => {
   --TitleBarLeft: ${getPixelValue(newState.titleBarLeft)};
   --TitleBarWidth: ${getPixelValue(newState.titleBarWidth)};
   --SashPreviewLeft: ${getRoundedPixelValue(previewLeft)};
+  --NotificationRight: ${previewVisible ? `calc(100vw - ${getPixelValue(previewLeft)} + 30px)` : '30px'};
+  --NotificationMaxWidth: ${previewVisible ? `min(250px, calc(${getPixelValue(previewLeft)} - 60px), calc(100vw - 60px))` : 'min(250px, calc(100vw - 60px))'};
   --PreviewAreasWidth: ${getPixelValue(previewAreasWidth)};
   --PreviewHeight: ${getPixelValue(previewHeight)};
   --PreviewWidth: ${getPixelValue(previewWidth)};

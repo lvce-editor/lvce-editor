@@ -40,6 +40,9 @@
 }
 
 .EditorBreadcrumb {
+  align-items: center;
+  display: inline-flex;
+  gap: 4px;
   flex-shrink: 0;
   max-width: 240px;
   overflow: hidden;
@@ -58,9 +61,7 @@
   height: 16px;
 }
 
-.Editor:has(> .EditorBreadcrumbs) > .Gutter,
-.Editor:has(> .EditorBreadcrumbs) > .EditorContent,
-.Editor:has(> .EditorBreadcrumbs) > .EditorMinimap {
+.EditorBreadcrumbsOffset {
   height: calc(100% - 22px);
   margin-top: 22px;
 }
@@ -103,9 +104,10 @@
 
 .EditorRow {
   display: block;
-  height: var(--EditorLineHeight);
-  line-height: var(--EditorLineHeight);
-  contain: strict;
+  flex: none;
+  height: var(--EditorRowHeight, var(--EditorLineHeight));
+  line-height: var(--EditorRowHeight, var(--EditorLineHeight));
+  contain: var(--EditorRowContain, strict);
 }
 
 .EditorRowHighlighted {
@@ -252,7 +254,9 @@
 .LineNumber,
 .DiffEditorLineNumber {
   color: var(--EditorLineNumberForeground, rgba(155, 162, 160, 0.3));
+  display: flex;
   flex-shrink: 0;
+  justify-content: flex-end;
   margin-right: 1px;
   height: var(--EditorLineHeight);
   text-align: right;
@@ -260,6 +264,9 @@
 
 .LineNumber {
   contain: content;
+  flex: none;
+  height: var(--EditorRowHeight, var(--EditorLineHeight));
+  position: relative;
 }
 
 .LineNumberActive {
@@ -277,4 +284,12 @@
 
 .DiffEditorLineNumber {
   contain: strict;
+}
+
+.EditorBreadcrumbIcon {
+  --MaskIconSize: 16px;
+
+  flex: 0 0 16px;
+  height: 16px;
+  width: 16px;
 }

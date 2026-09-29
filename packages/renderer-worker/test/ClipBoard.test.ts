@@ -43,6 +43,15 @@ test('readMemoryImage', async () => {
   expect(ClipBoardWorker.invoke).toHaveBeenCalledWith('ClipBoard.readMemoryImage')
 })
 
+test('readImage', async () => {
+  const image = new Blob(['image'], { type: 'image/png' })
+  // @ts-ignore
+  ClipBoardWorker.invoke.mockResolvedValue(image)
+
+  await expect(ClipBoard.readImage()).resolves.toBe(image)
+  expect(ClipBoardWorker.invoke).toHaveBeenCalledWith('ClipBoard.readImage')
+})
+
 test.skip('readText', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {

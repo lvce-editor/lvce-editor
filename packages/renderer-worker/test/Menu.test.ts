@@ -5,12 +5,14 @@ jest.unstable_mockModule('../src/parts/MenuWorker/MenuWorker.js', () => ({
   invokeAndTransfer: jest.fn(),
 }))
 jest.unstable_mockModule('../src/parts/SimpleBrowserOverlay/SimpleBrowserOverlay.js', () => ({
+  SettingsMenu: 'settings-menu',
   hide: jest.fn(),
   show: jest.fn(),
 }))
 
 const MenuWorker = await import('../src/parts/MenuWorker/MenuWorker.js')
 const SimpleBrowserOverlay = await import('../src/parts/SimpleBrowserOverlay/SimpleBrowserOverlay.js')
+const MenuEntryId = await import('../src/parts/MenuEntryId/MenuEntryId.js')
 const Menu = await import('../src/parts/Menu/Menu.js')
 const MenuIpc = await import('../src/parts/Menu/Menu.ipc.js')
 
@@ -32,11 +34,25 @@ test('show2 hides the Simple Browser while a menu is open', async () => {
   expect(MenuWorker.invoke).toHaveBeenCalledWith('Menu.show2', 7, 'EditorContextMenu', 10, 20, 'arg')
 })
 
+test('show2 leaves the Simple Browser undimmed for the activity bar settings menu', async () => {
+  await Menu.show2(7, MenuEntryId.Settings, 10, 20, 'arg')
+
+  expect(SimpleBrowserOverlay.show).toHaveBeenCalledWith('settings-menu')
+  expect(MenuWorker.invoke).toHaveBeenCalledWith('Menu.show2', 7, MenuEntryId.Settings, 10, 20, 'arg')
+})
+
 test('show2Below hides the Simple Browser while a menu is open', async () => {
   await Menu.show2Below(7, 'EditorContextMenu', 10, 20, 'arg')
 
   expect(SimpleBrowserOverlay.show).toHaveBeenCalledWith('menu')
   expect(MenuWorker.invoke).toHaveBeenCalledWith('Menu.show2Below', 7, 'EditorContextMenu', 10, 20, 'arg')
+})
+
+test('show2Below leaves the Simple Browser undimmed for the activity bar settings menu', async () => {
+  await Menu.show2Below(7, MenuEntryId.Settings, 10, 20, 'arg')
+
+  expect(SimpleBrowserOverlay.show).toHaveBeenCalledWith('settings-menu')
+  expect(MenuWorker.invoke).toHaveBeenCalledWith('Menu.show2Below', 7, MenuEntryId.Settings, 10, 20, 'arg')
 })
 
 test('hide restores the Simple Browser even when hiding the menu fails', async () => {
