@@ -1,6 +1,5 @@
-import * as Command from '../Command/Command.js'
+import * as SimpleBrowser from './ViewletSimpleBrowser.js'
 
 export const openHistory = async (state) => {
-  await Command.execute('Main.openUri', 'simple-browser-history://')
-  return state
+  return SimpleBrowser.openTab(state, SimpleBrowser.simpleBrowserHistoryUrl, 'foreground-tab')
 }

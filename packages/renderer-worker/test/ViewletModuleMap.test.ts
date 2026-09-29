@@ -32,14 +32,20 @@ test('file watcher explorer uses worker-backed module', async () => {
 })
 
 const componentStateViewlets = [
+  ViewletModuleId.ActivityBar,
   ViewletModuleId.Explorer,
   ViewletModuleId.ExtensionDetail,
   ViewletModuleId.Extensions,
   ViewletModuleId.Main,
+  ViewletModuleId.Output,
+  ViewletModuleId.Problems,
+  ViewletModuleId.ProcessExplorer,
   ViewletModuleId.Search,
+  ViewletModuleId.Settings,
   ViewletModuleId.SourceControl,
   ViewletModuleId.StatusBar,
   ViewletModuleId.TitleBar,
+  ViewletModuleId.Workers,
 ]
 
 test.each(componentStateViewlets)('viewlet %s exposes live component state access', async (moduleId) => {
@@ -49,12 +55,31 @@ test.each(componentStateViewlets)('viewlet %s exposes live component state acces
   expect(typeof module.setComponentState).toBe('function')
 })
 
+test.each([ViewletModuleId.Output, ViewletModuleId.Problems, ViewletModuleId.ProcessExplorer])(
+  'viewlet %s exposes live component DOM access',
+  async (moduleId) => {
+    const module = await ViewletModuleMap.map[moduleId]()
+
+    expect(typeof module.getComponentDom).toBe('function')
+  },
+)
+
 test('running extensions uses worker-backed module', async () => {
   const module = await ViewletModuleMap.map[ViewletModuleId.RunningExtensions]()
 
   expect(module.hasFunctionalRender).toBe(true)
   expect(typeof module.loadContent).toBe('function')
   expect(typeof module.getCommands).toBe('function')
+})
+
+test('workers view uses worker-backed module', async () => {
+  const module = await ViewletModuleMap.map[ViewletModuleId.Workers]()
+
+  expect(module.hasFunctionalRender).toBe(true)
+  expect(typeof module.loadContent).toBe('function')
+  expect(typeof module.getCommands).toBe('function')
+  expect(module.hasFunctionalResize).toBe(true)
+  expect(Reflect.get(module, 'serializeCommands')).toBe(true)
 })
 
 test('simple browser history exposes the placeholder view', async () => {

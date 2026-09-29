@@ -314,8 +314,13 @@ test('reload restores a viewlet from its current saved state and rerenders it', 
   const savedState = { selection: 3 } as const
   const saveState = jest.fn(async (_state: typeof oldState) => savedState)
   const dispose = jest.fn(async (_state: typeof oldState) => {})
-  const loadContent = jest.fn(async (_state: typeof oldState, _savedState: typeof savedState) => newState)
-  const contentLoaded = jest.fn(async (_state: typeof newState) => [['Viewlet.afterLoad', 2]])
+  const loadContent = jest.fn(
+    async (_state: typeof oldState, _savedState: typeof savedState, _context: { readonly preserveFocus: boolean }) => newState,
+  )
+  const contentLoaded = jest.fn(async (_state: typeof newState) => [
+    ['Viewlet.afterLoad', 2],
+    ['Viewlet.focus', 2],
+  ])
   const contentLoadedEffects = jest.fn(async (_state: typeof newState) => {})
   ViewletStates.set(2, {
     factory: { contentLoaded, contentLoadedEffects, dispose, loadContent, saveState },
@@ -323,14 +328,18 @@ test('reload restores a viewlet from its current saved state and rerenders it', 
     renderedState: oldState,
     state: oldState,
   })
-  jest.mocked(ViewletManager.render).mockReturnValue([['Viewlet.setDom2', 2, []]])
+  jest.mocked(ViewletManager.render).mockReturnValue([
+    ['Viewlet.setDom2', 2, []],
+    ['Viewlet.send', 2, 'focusSelector', 'textarea'],
+    ['Viewlet.setFocusContext', 2, 1],
+  ])
   jest.mocked(RendererProcess.invoke).mockResolvedValue(undefined)
 
   await Viewlet.reload(2)
 
   expect(saveState).toHaveBeenCalledWith(oldState)
   expect(dispose).toHaveBeenCalledWith(oldState)
-  expect(loadContent).toHaveBeenCalledWith(oldState, savedState)
+  expect(loadContent).toHaveBeenCalledWith(oldState, savedState, { preserveFocus: true })
   expect(ViewletManager.render).toHaveBeenCalledWith(expect.anything(), oldState, newState)
   expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.sendMultiple', [
     ['Viewlet.setDom2', 2, []],
@@ -616,7 +625,7 @@ test('openWidget - once', async () => {
     return []
   })
   await Viewlet.openWidget('QuickPick', ['everything'])
-  expect(SimpleBrowserOverlay.show).toHaveBeenCalledWith('quick-pick')
+  expect(SimpleBrowserOverlay.show).not.toHaveBeenCalled()
   expect(ViewletManager.load).toHaveBeenCalledTimes(1)
   expect(ViewletManager.load).toHaveBeenCalledWith({
     // @ts-ignore
@@ -680,7 +689,7 @@ test('openWidget - declares DefineKeyBinding as an owned widget', async () => {
   expect(ViewletStates.getState('Layout').widgetReferences).toEqual([{ parentUid: 7, uid: 2 }])
 })
 
-test('closeWidget restores Simple Browser after closing Quick Pick', async () => {
+test('closeWidget restores focus after closing Quick Pick', async () => {
   const focus = jest.fn((state: Readonly<{ readonly uid: number }>): Readonly<{ readonly uid: number }> => state)
   ViewletStates.set(2, {
     factory: {},
@@ -703,7 +712,7 @@ test('closeWidget restores Simple Browser after closing Quick Pick', async () =>
 
   await Viewlet.closeWidget(2)
 
-  expect(SimpleBrowserOverlay.hide).toHaveBeenCalledWith('quick-pick')
+  expect(SimpleBrowserOverlay.hide).not.toHaveBeenCalled()
   expect(focus).toHaveBeenCalledWith({ uid: 3 })
 })
 
@@ -810,4 +819,155 @@ test('an unchanged async command does not render over a newer update', async () 
   expect(instance.state).toBe(currentState)
   expect(ViewletManager.render).not.toHaveBeenCalled()
   expect(afterRender).not.toHaveBeenCalled()
+})
+
+test('openWidget assigns command palette ownership before loading it', async () => {
+  const layout = ViewletStates.getState('Layout')
+  layout.applicationId = 'source'
+  jest.mocked(ViewletManager.load).mockResolvedValue([])
+  jest.mocked(RendererProcess.invoke).mockResolvedValue(undefined as never)
+  await Viewlet.openWidget('QuickPick', 'commands')
+  expect(ViewletManager.load).toHaveBeenCalledWith(expect.objectContaining({ applicationId: 'source', id: 'QuickPick' }))
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.executeCommands', expect.arrayContaining([['Viewlet.append', 1, 2]]))
+})
+
+test('command palettes follow focus from the source application to the preview', async () => {
+  const ApplicationRegistry = await import('../src/parts/ApplicationRegistry/ApplicationRegistry.ts')
+  const Focus = await import('../src/parts/Focus/Focus.js')
+  for (const [id, layoutUid, editorUid] of [
+    ['palette-source', 101, 103],
+    ['palette-preview', 102, 104],
+  ] as const) {
+    ApplicationRegistry.create({ id, layoutUid, href: '', workspacePath: '', workspaceUri: '' })
+    const layout = { applicationId: id, uid: layoutUid }
+    ViewletStates.set(layoutUid, { state: layout, renderedState: layout, moduleId: 'Layout', factory: {} })
+    const editor = { applicationId: id, uid: editorUid }
+    ViewletStates.set(editorUid, { state: editor, renderedState: editor, moduleId: 'EditorText', factory: {} })
+  }
+  // The first mounted layout also has a module-name alias.
+  ViewletStates.set('Layout', ViewletStates.getByUid(101))
+  jest.mocked(ViewletManager.load).mockResolvedValue([])
+  jest.mocked(RendererProcess.invoke).mockResolvedValue(undefined as never)
+  try {
+    Focus.setFocus(1, undefined, 103, 'EditorText')
+    Focus.setFocus(1, undefined, 104, 'EditorText')
+    await Viewlet.openWidget('QuickPick', 'commands')
+    expect(ViewletManager.load).toHaveBeenCalledWith(expect.objectContaining({ applicationId: 'palette-preview', id: 'QuickPick' }))
+    expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.executeCommands', expect.arrayContaining([['Viewlet.append', 102, 2]]))
+  } finally {
+    ApplicationRegistry.remove('palette-source')
+    ApplicationRegistry.remove('palette-preview')
+  }
+})
+
+test('dialog widgets acquire their application owner before loading', async () => {
+  const ApplicationRegistry = await import('../src/parts/ApplicationRegistry/ApplicationRegistry.ts')
+  ApplicationRegistry.create({ id: 'dialog-preview', layoutUid: 101, href: '', workspacePath: '', workspaceUri: '' })
+  const layout = { applicationId: 'dialog-preview', uid: 101 }
+  ViewletStates.set(101, { state: layout, renderedState: layout, moduleId: 'Layout', factory: {} })
+  jest.mocked(ViewletManager.load).mockResolvedValue([])
+  jest.mocked(RendererProcess.invoke).mockResolvedValue(undefined as never)
+  try {
+    await Viewlet.openWidgetForApplication('dialog-preview', 'Dialog', { message: 'Preview message', type: 'warning' })
+    expect(ViewletManager.load).toHaveBeenCalledWith(expect.objectContaining({ applicationId: 'dialog-preview', id: 'Dialog' }))
+    expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.executeCommands', expect.arrayContaining([['Viewlet.append', 101, 2]]))
+  } finally {
+    ApplicationRegistry.remove('dialog-preview')
+  }
+})
+
+test('a transfer command can await a serialized attachment without blocking its own queue', async () => {
+  const state = { uid: 2, value: 'source' }
+  ViewletStates.set(2, {
+    state,
+    renderedState: state,
+    moduleId: 'Test',
+    factory: {
+      name: 'Test',
+      serializeCommands: true,
+      concurrentCommands: ['transfer'],
+      Commands: {
+        transfer: async (oldState) => {
+          await Viewlet.executeViewletCommand(2, 'attach')
+          return oldState
+        },
+        attach: async (oldState) => ({ ...oldState, value: 'destination' }),
+      },
+    },
+  })
+  jest.mocked(ViewletManager.render).mockReturnValue([])
+  await Viewlet.executeViewletCommand(2, 'transfer')
+  expect(ViewletStates.getState(2).value).toBe('destination')
+})
+
+test.each([false, true])('palette opening is tracked during load and cleared after failure=%s', async (fail) => {
+  const QuickPickOpening = await import('../src/parts/QuickPickOpening/QuickPickOpening.js')
+  // @ts-ignore
+  ViewletManager.load.mockImplementation(async () => {
+    expect(QuickPickOpening.isOpening(undefined)).toBe(true)
+    if (fail) throw new Error('palette load failed')
+    return []
+  })
+  if (fail) await expect(Viewlet.openWidget('QuickPick', 'commands')).rejects.toThrow('palette load failed')
+  else await Viewlet.openWidget('QuickPick', 'commands')
+  expect(QuickPickOpening.isOpening(undefined)).toBe(false)
+})
+
+test('dispose - can defer DOM removal to the parent render transaction', async () => {
+  let resolveDispose = () => {}
+  const factoryDispose = jest.fn(
+    (_state: unknown) =>
+      new Promise<void>((resolve) => {
+        resolveDispose = resolve
+      }),
+  )
+  ViewletStates.set(2, {
+    state: { uid: 2 },
+    renderedState: { uid: 2 },
+    moduleId: 'Problems',
+    factory: { dispose: factoryDispose },
+  })
+
+  const pending = Viewlet.dispose(2, true)
+  await Promise.resolve()
+  expect(factoryDispose).toHaveBeenCalledWith({ uid: 2 })
+  expect(ViewletStates.getInstance(2)).toBeDefined()
+  expect(RendererProcess.invoke).not.toHaveBeenCalled()
+  resolveDispose()
+
+  expect(await pending).toEqual([['Viewlet.dispose', 2]])
+  expect(ViewletStates.getInstance(2)).toBeUndefined()
+  expect(RendererProcess.invoke).not.toHaveBeenCalled()
+})
+
+test('hide - retains runtime state and returns container cleanup for the parent transaction', async () => {
+  const hide = jest.fn(async (_state: unknown) => {})
+  const dispose = jest.fn()
+  ViewletStates.set(2, {
+    state: { uid: 2, tabs: [{ uid: 3 }] },
+    renderedState: { uid: 2 },
+    moduleId: 'Terminals',
+    factory: { hide, dispose },
+  })
+
+  expect(await Viewlet.hide(2)).toEqual([['Viewlet.dispose', 2]])
+  expect(hide).toHaveBeenCalledWith({ uid: 2, tabs: [{ uid: 3 }] })
+  expect(dispose).not.toHaveBeenCalled()
+  expect(ViewletStates.getInstance(2).status).toBe('hidden')
+  expect(RendererProcess.invoke).not.toHaveBeenCalled()
+})
+
+test('hide - disposes ordinary child worker state without removing DOM before the parent patches', async () => {
+  const dispose = jest.fn(async (_state: unknown) => {})
+  ViewletStates.set(2, {
+    state: { uid: 2 },
+    renderedState: { uid: 2 },
+    moduleId: 'Problems',
+    factory: { dispose },
+  })
+
+  expect(await Viewlet.hide(2)).toEqual([['Viewlet.dispose', 2]])
+  expect(dispose).toHaveBeenCalledWith({ uid: 2 })
+  expect(ViewletStates.getInstance(2)).toBeUndefined()
+  expect(RendererProcess.invoke).not.toHaveBeenCalled()
 })

@@ -1,9 +1,13 @@
-import * as ApplicationRegistry from '../ApplicationRegistry/ApplicationRegistry.ts'
 import * as ApplicationFileSystem from '../ApplicationFileSystem/ApplicationFileSystem.ts'
+import * as ApplicationRegistry from '../ApplicationRegistry/ApplicationRegistry.ts'
 import * as Command from '../Command/Command.js'
+import * as ExtensionHostCommands from '../ExtensionHost/ExtensionHostCommands.js'
+import * as ExtensionHostQuickPick from '../ExtensionHost/ExtensionHostQuickPick.js'
 import * as ExtensionManagementWorker from '../ExtensionManagementWorker/ExtensionManagementWorker.js'
+import * as GetActiveEditor from '../GetActiveEditor/GetActiveEditor.js'
 import * as Id from '../Id/Id.js'
 import * as Platform from '../Platform/Platform.js'
+import * as QuickPick from '../QuickPick/QuickPick.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
@@ -148,11 +152,61 @@ export const execute = (applicationId: string, command: string, ...args: readonl
     })
   }
   switch (command) {
+    case 'Notification.create':
+      return ApplicationRegistry.track(applicationId, () => RendererProcess.invoke('Notification.create', args[0], args[1], application.layoutUid))
+    case 'Dialog.show':
+      return ApplicationRegistry.track(applicationId, () => Viewlet.openWidgetForApplication(applicationId, ViewletModuleId.Dialog, args[0]))
+    case 'Dialog.showWarning':
+      return ApplicationRegistry.track(applicationId, () =>
+        Viewlet.openWidgetForApplication(applicationId, ViewletModuleId.Dialog, { ...args[0], type: 'warning' }),
+      )
+    case 'Viewlet.openWidget':
+      return ApplicationRegistry.track(applicationId, () => Viewlet.openWidgetForApplication(applicationId, args[0], ...args.slice(1)))
+    case 'QuickPick.showCustom':
+      return ApplicationRegistry.track(applicationId, () => QuickPick.showCustom(args[0], args[1], applicationId))
+    case 'ExtensionHostQuickPick.showQuickPick':
+      return ApplicationRegistry.track(applicationId, () => ExtensionHostQuickPick.showQuickPick(args[0], applicationId))
+    case 'ExtensionHostQuickPick.showQuickInput':
+      return ApplicationRegistry.track(applicationId, () => ExtensionHostQuickPick.showQuickInput(args[0], applicationId))
+    case 'ExtensionHost.executeCommand':
+      return ApplicationRegistry.track(applicationId, () =>
+        ExtensionManagementWorker.invoke('Extensions.invokeForApplication', applicationId, 'Extensions.executeCommand', ...args),
+      )
+    case 'ExtensionHost.getCommands':
+      return ApplicationRegistry.track(applicationId, () => ExtensionHostCommands.getCommands(args[0], args[1], applicationId))
     case 'ExtensionHostSourceControl.getEnabledProviderIds':
     case 'ExtensionHostSourceControl.getFileDecorations':
       return ApplicationRegistry.track(applicationId, () =>
         ExtensionManagementWorker.invoke('Extensions.invokeForApplication', applicationId, command, ...args),
       )
+    case 'Extensions.reload':
+      return ApplicationRegistry.track(applicationId, async () => {
+        await ExtensionManagementWorker.invoke('Extensions.reloadApplicationExtension', applicationId, ...args)
+        for (const uid of ApplicationRegistry.getUids(applicationId)) {
+          const instance = ViewletStates.getByUid(uid)
+          if (instance?.moduleId === ViewletModuleId.EditorText || instance?.moduleId === ViewletModuleId.ExtensionView) {
+            await Viewlet.executeViewletCommand(uid, 'loadContent', undefined, { preserveFocus: true })
+          }
+        }
+        await ViewletManager.executeForApplication(applicationId, 'Layout.handleWorkspaceRefresh')
+      })
+    case 'GetActiveEditor.getTextDocument':
+      return ApplicationRegistry.track(applicationId, () => GetActiveEditor.getTextDocument(applicationId))
+    case 'PortProvider.forwardPort':
+      return ApplicationRegistry.track(applicationId, async () => {
+        const { forwardPort } = await import('../PortProvider/PortProvider.ts')
+        return forwardPort(application.workspaceUri, args[0], applicationId)
+      })
+    case 'PortProvider.getPorts':
+      return ApplicationRegistry.track(applicationId, async () => {
+        const { getPorts } = await import('../PortProvider/PortProvider.ts')
+        return getPorts(application.workspaceUri, applicationId)
+      })
+    case 'PortProvider.stopForwardPort':
+      return ApplicationRegistry.track(applicationId, async () => {
+        const { stopForwardPort } = await import('../PortProvider/PortProvider.ts')
+        await stopForwardPort(application.workspaceUri, args[0], applicationId)
+      })
     case 'Workspace.getUri':
     case 'Workspace.getWorkspaceUri':
       return Promise.resolve(application.workspaceUri)
@@ -172,6 +226,10 @@ export const execute = (applicationId: string, command: string, ...args: readonl
 export const executeForView = (uid: number, command: string, ...args: readonly any[]): Promise<any> => {
   const applicationId = ApplicationRegistry.getOwner(uid)
   if (applicationId === undefined) {
+    // Ports requests its initial content before the view is added to ViewletStates.
+    if (command === 'PortProvider.getPorts') {
+      return import('../PortProvider/PortProvider.ts').then(({ getPorts }) => getPorts(args[0]))
+    }
     if (!ViewletStates.getByUid(uid)) {
       return Promise.reject(new Error(`Component not found: ${uid}`))
     }
@@ -212,8 +270,13 @@ const disposeApplication = async (applicationId: string): Promise<void> => {
       }
     }
   }
-  ApplicationRegistry.remove(applicationId)
-  ApplicationFileSystem.dispose(applicationId)
+  for (const cleanup of [ApplicationRegistry.remove, ApplicationFileSystem.dispose]) {
+    try {
+      await cleanup(applicationId)
+    } catch (error) {
+      errors.push(error)
+    }
+  }
   try {
     await ExtensionManagementWorker.invoke('Extensions.disposeApplication', applicationId)
   } catch (error) {

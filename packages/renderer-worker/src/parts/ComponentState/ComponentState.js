@@ -1,3 +1,10 @@
+import * as AssetDir from '../AssetDir/AssetDir.js'
+import * as ExtensionManagementWorker from '../ExtensionManagementWorker/ExtensionManagementWorker.js'
+import * as GetExtensionViews from '../GetExtensionViews/GetExtensionViews.ts'
+import * as ComponentWorkerNames from '../ComponentWorkerNames/ComponentWorkerNames.js'
+import * as Platform from '../Platform/Platform.js'
+import * as PlatformType from '../PlatformType/PlatformType.js'
+import * as ApplicationRegistry from '../ApplicationRegistry/ApplicationRegistry.ts'
 import * as EditorWorker from '../EditorWorker/EditorWorker.ts'
 import * as FilterFocusCommands from '../FilterFocusCommands/FilterFocusCommands.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
@@ -70,8 +77,8 @@ const unsubscribeComponent = (componentUid) => {
   }
 }
 
-const getEditorTabStates = async () => {
-  const mainInstance = ViewletStates.getInstance('Main')
+const getEditorTabStates = async (componentUid) => {
+  const mainInstance = ViewletStates.getInstance('Main', ApplicationRegistry.getOwner(componentUid))
   if (!mainInstance || typeof mainInstance.factory.getComponentState !== 'function') {
     return new Map()
   }
@@ -111,7 +118,7 @@ const runRefreshes = async (componentUid, refresh) => {
     while (refresh.pending) {
       refresh.pending = false
       const editorUids = [...(editorUidsByComponentUid.get(componentUid) || [])]
-      const editorTabStates = await getEditorTabStates()
+      const editorTabStates = await getEditorTabStates(componentUid)
       const isMainComponent = ViewletStates.getByUid(componentUid)?.moduleId === 'Main'
       const editorUidsToRefresh = editorUids.filter((editorUid) => {
         if (mainEditorUidsAwaitingInitialRefresh.has(editorUid)) {
@@ -212,6 +219,16 @@ const isEditable = (instance) => {
   return typeof instance.factory.getComponentState === 'function' && typeof instance.factory.setComponentState === 'function'
 }
 
+const hasComponentDom = (instance) => {
+  if (typeof instance.factory.getComponentDom !== 'function') {
+    return false
+  }
+  if (typeof instance.factory.isComponentDomAvailable === 'function') {
+    return instance.factory.isComponentDomAvailable(instance.state)
+  }
+  return true
+}
+
 const getInstance = (uid) => {
   const instance = ViewletStates.getByUid(uid)
   if (!instance) {
@@ -220,12 +237,16 @@ const getInstance = (uid) => {
   return instance
 }
 
-export const getComponents = () => {
+/**
+ * @param {number=} viewUid
+ */
+export const getComponents = (viewUid = undefined) => {
+  const applicationId = viewUid === undefined ? undefined : ApplicationRegistry.getOwner(viewUid)
   const seen = new Set()
   const components = []
   for (const instance of ViewletStates.getValues()) {
     const uid = getUid(instance)
-    if (typeof uid !== 'number' || seen.has(uid)) {
+    if (typeof uid !== 'number' || seen.has(uid) || (viewUid !== undefined && ApplicationRegistry.getOwner(uid) !== applicationId)) {
       continue
     }
     seen.add(uid)
@@ -233,9 +254,11 @@ export const getComponents = () => {
     const displayName = moduleId === 'ExtensionView' ? `${instance.state?.title || instance.state?.viewId || moduleId} (extension)` : moduleId
     components.push({
       displayName,
-      domAvailable: typeof instance.factory.getComponentDom === 'function',
+      domAvailable: hasComponentDom(instance),
       editable: isEditable(instance),
+      heapSnapshotAvailable: Platform.getPlatform() === PlatformType.Electron,
       moduleId,
+      savedStateAvailable: typeof instance.factory.saveState === 'function',
       uid,
     })
   }
@@ -253,9 +276,24 @@ export const getState = async (uid) => {
   return instance.state
 }
 
+export const getSavedState = async (uid) => {
+  const instance = getInstance(uid)
+  if (instance.status === 'disposed') {
+    throw new Error(`Component is disposed: ${uid}`)
+  }
+  if (typeof instance.factory.saveState !== 'function') {
+    throw new Error(`Saved component state API not available: ${instance.moduleId}`)
+  }
+  const savedState = await instance.factory.saveState(instance.state)
+  if (savedState === undefined) {
+    throw new Error(`Saved component state is undefined: ${instance.moduleId}`)
+  }
+  return savedState
+}
+
 export const getDom = async (uid) => {
   const instance = getInstance(uid)
-  if (typeof instance.factory.getComponentDom !== 'function') {
+  if (!hasComponentDom(instance)) {
     throw new Error(`Component DOM API not available: ${instance.moduleId}`)
   }
   const preview = await RendererProcess.invoke('Viewlet.getComponentDom', uid)
@@ -301,7 +339,7 @@ export const setState = async (uid, newComponentState) => {
 
 export const setDom = async (uid, dom) => {
   const instance = getInstance(uid)
-  if (typeof instance.factory.getComponentDom !== 'function') {
+  if (!hasComponentDom(instance)) {
     throw new Error(`Component DOM API not available: ${instance.moduleId}`)
   }
   if (!Array.isArray(dom) || dom.length === 0) {
@@ -334,4 +372,31 @@ export const setDom = async (uid, dom) => {
   }
   await RendererProcess.invoke('Viewlet.setComponentDom', uid, dom)
   await refreshOpenEditors(uid)
+}
+
+export const getWorkerName = async (uid) => {
+  if (Platform.getPlatform() !== PlatformType.Electron) {
+    throw new Error('Component heap snapshots require Electron')
+  }
+  const instance = getInstance(uid)
+  if (instance.moduleId === 'ExtensionView') {
+    const applicationId = ApplicationRegistry.getOwner(uid)
+    const view = await GetExtensionViews.getExtensionView(instance.state.viewId, applicationId)
+    const args = ['Extensions.getRunningExtensions', AssetDir.assetDir, PlatformType.Electron]
+    const extensions = await (applicationId === undefined
+      ? ExtensionManagementWorker.invoke(...args)
+      : ExtensionManagementWorker.invoke('Extensions.invokeForApplication', applicationId, ...args))
+    const extension = extensions.find((item) => item.id === view?.extensionId)
+    if (!extension?.isolated) {
+      throw new Error('Component extension does not have an isolated worker')
+    }
+    return extension.workerName || `Extension API (Electron): ${extension.id}`
+  }
+  const workerName = ComponentWorkerNames.getName(instance.factory, instance.moduleId)
+  if (workerName) {
+    const workers = await RendererProcess.invoke('Workers.getWorkers')
+    const worker = workers.find((item) => item.name === workerName)
+    return worker?.runtimeName ?? workerName
+  }
+  return globalThis.name
 }

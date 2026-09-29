@@ -32,6 +32,21 @@ export const create = (id, uri, x, y, width, height) => {
   }
 }
 
+export const getComponentState = (state) => state
+
+export const setComponentState = (currentState, componentState) => {
+  if (!componentState || typeof componentState !== 'object' || Array.isArray(componentState)) {
+    throw new TypeError('SideBar state must be an object')
+  }
+  if (componentState.uid !== currentState.uid) {
+    throw new Error(`SideBar state uid must remain ${currentState.uid}`)
+  }
+  return {
+    ...currentState,
+    title: componentState.title,
+  }
+}
+
 // export const saveState = (state) => {
 //   const { currentViewletId } = state
 //   return {
@@ -97,8 +112,8 @@ const getChildModuleId = (moduleId) => {
   return ViewletModuleId.ExtensionView
 }
 
-const getExtensionViewMetadata = async (moduleId) => {
-  const view = await GetExtensionViews.getExtensionView(moduleId)
+const getExtensionViewMetadata = async (moduleId, applicationId) => {
+  const view = await GetExtensionViews.getExtensionView(moduleId, applicationId)
   return {
     extensionId: view?.extensionId || '',
     titleAreaHeight: view?.showSideBarHeader === false ? 0 : defaultTitleAreaHeight,
@@ -141,7 +156,7 @@ export const handleSideBarViewletChange = async (state, moduleId, restore = true
   const childModuleId = getChildModuleId(moduleId)
   const extensionViewMetadata =
     childModuleId === ViewletModuleId.ExtensionView
-      ? await getExtensionViewMetadata(moduleId)
+      ? await getExtensionViewMetadata(moduleId, state.applicationId)
       : {
           extensionId: '',
           titleAreaHeight: defaultTitleAreaHeight,

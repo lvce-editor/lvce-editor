@@ -1,8 +1,10 @@
+import * as BrowserFind from '../GetBrowserFindVirtualDom/GetBrowserFindVirtualDom.js'
 import * as ClassNames from '../ClassNames/ClassNames.js'
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as HtmlInputType from '../HtmlInputType/HtmlInputType.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.js'
+import * as GetSimpleBrowserHistoryVirtualDom from '../GetSimpleBrowserHistoryVirtualDom/GetSimpleBrowserHistoryVirtualDom.js'
 import * as InputName from '../InputName/InputName.js'
 import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
@@ -19,6 +21,65 @@ const getInlineSuggestion = (value, suggestions) => {
     }
   }
   return ''
+}
+
+const getNewTabVirtualDom = (value) => {
+  return [
+    {
+      type: VirtualDomElements.Main,
+      className: 'SimpleBrowserNewTabPage',
+      childCount: 2,
+    },
+    {
+      type: VirtualDomElements.Div,
+      className: 'SimpleBrowserNewTabBrand',
+      childCount: 2,
+    },
+    {
+      type: VirtualDomElements.Div,
+      className: 'SimpleBrowserNewTabBrandMark',
+      ariaHidden: true,
+      childCount: 0,
+    },
+    {
+      type: VirtualDomElements.Span,
+      childCount: 1,
+    },
+    text('LVCE'),
+    {
+      type: VirtualDomElements.Form,
+      className: 'SimpleBrowserNewTabSearch',
+      role: AriaRoles.Search,
+      noValidate: true,
+      onSubmit: DomEventListenerFunctions.HandleSubmitSimpleBrowserAddress,
+      childCount: 1,
+    },
+    {
+      type: VirtualDomElements.Label,
+      className: 'SimpleBrowserNewTabSearchBox',
+      childCount: 2,
+    },
+    {
+      type: VirtualDomElements.Div,
+      className: 'MaskIcon MaskIconSearch SimpleBrowserNewTabSearchIcon',
+      ariaHidden: true,
+      childCount: 0,
+    },
+    {
+      type: VirtualDomElements.Input,
+      className: 'SimpleBrowserNewTabSearchInput',
+      inputType: HtmlInputType.Search,
+      name: InputName.SimpleBrowserNewTabSearch,
+      ariaLabel: 'Search with Google',
+      placeholder: 'Search with Google',
+      autocomplete: 'off',
+      spellcheck: false,
+      onInput: DomEventListenerFunctions.HandleInput,
+      onFocus: DomEventListenerFunctions.HandleFocus,
+      onBlur: DomEventListenerFunctions.HandleBlurSimpleBrowserAddress,
+      value,
+    },
+  ]
 }
 
 export const getSimpleBrowserVirtualDom = (
@@ -38,8 +99,32 @@ export const getSimpleBrowserVirtualDom = (
   tabDropIndex = -1,
   fullWidth = false,
   chromeTheme = 'light',
+  findState,
+  historyTab = false,
+  historyEntries = [],
+  historySearchValue = '',
+  loginChallenge,
+  historyScrollTop = 0,
+  historyViewportHeight = 1600,
+  undimmedSnapshot = false,
+  downloadStates = {},
 ) => {
   const inlineSuggestion = getInlineSuggestion(value, suggestions)
+  const historyDom = historyTab
+    ? GetSimpleBrowserHistoryVirtualDom.getSimpleBrowserHistoryVirtualDom(
+        historyEntries,
+        historySearchValue,
+        historySearchValue,
+        historyScrollTop,
+        historyViewportHeight,
+      )
+    : []
+  const selectedTab = tabs[selectedTabIndex]
+  const downloadStatuses = Object.values(downloadStates)
+  const isDownloading = downloadStatuses.includes('downloading')
+  const hasCompletedDownload = downloadStatuses.includes('completed')
+  const showDownloadsButton = isDownloading || hasCompletedDownload
+  const isNewTab = Boolean(selectedTab && !selectedTab.browserViewId && !selectedTab.iframeSrc && !historyTab)
   /** @type {any[]} */
   const dom = [
     {
@@ -47,24 +132,44 @@ export const getSimpleBrowserVirtualDom = (
       className: `Viewlet SimpleBrowser${tabsEnabled ? ' SimpleBrowserTabsEnabled' : ''}${chromeTheme === 'inherit' ? '' : ' SimpleBrowserLight'}`,
       onFocusIn: DomEventListenerFunctions.HandleFocusInSimpleBrowser,
       childCount:
-        1 + (tabsEnabled ? 1 : 0) + (snapshot ? 1 : 0) + (pageSnapshotDom.length > 0 ? 1 : 0) + (suggestions.length > 0 ? 1 : 0) + (tabHover ? 1 : 0),
+        1 +
+        (findState?.findVisible ? 1 : 0) +
+        (tabsEnabled ? 1 : 0) +
+        (snapshot ? 1 : 0) +
+        (pageSnapshotDom.length > 0 ? 1 : 0) +
+        (historyDom.length > 0 ? 1 : 0) +
+        (isNewTab ? 1 : 0) +
+        (selectedTab?.previewUid ? 1 : 0) +
+        (suggestions.length > 0 ? 1 : 0) +
+        (tabHover ? 1 : 0) +
+        (loginChallenge ? 1 : 0),
     },
   ]
   if (tabsEnabled) {
+    const tabsClassName = findState?.tabWidth === undefined ? 'SimpleBrowserTabs' : 'SimpleBrowserTabs SimpleBrowserTabsFrozen'
     dom.push({
       type: VirtualDomElements.Div,
-      className: 'SimpleBrowserTabs',
+      className: tabsClassName,
       role: AriaRoles.TabList,
       ariaLabel: 'Browser tabs',
-      childCount: tabs.length + 1,
+      childCount: 2,
       onDragOver: DomEventListenerFunctions.HandleDragOverSimpleBrowserTabs,
       onDragLeave: DomEventListenerFunctions.HandleDragLeaveSimpleBrowserTab,
       onDrop: DomEventListenerFunctions.HandleDropSimpleBrowserTab,
       onPointerUp: DomEventListenerFunctions.HandlePointerUpSimpleBrowserTab,
+      onPointerOut: DomEventListenerFunctions.HandlePointerOutSimpleBrowserTabs,
+      onPointerOver: DomEventListenerFunctions.HandlePointerOverSimpleBrowserTabs,
+      ...(findState?.tabWidth === undefined ? {} : { style: `--SimpleBrowserTabWidth: ${findState.tabWidth}px;` }),
+    })
+    dom.push({
+      type: VirtualDomElements.Div,
+      className: 'SimpleBrowserTabItems',
+      childCount: tabs.length,
     })
     for (let index = 0; index < tabs.length; index++) {
       const tab = tabs[index]
       const isSelected = index === selectedTabIndex
+      const isHistoryTab = tab.iframeSrc?.startsWith('simple-browser-history://')
       const isMuted = Boolean(tab.muted)
       const showAudioIndicator = audioIndicatorEnabled && (tab.isAudioPlaying || isMuted)
       const tabClass = isSelected ? 'SimpleBrowserTab SimpleBrowserTabSelected' : 'SimpleBrowserTab'
@@ -93,20 +198,33 @@ export const getSimpleBrowserVirtualDom = (
         ariaLabel: tab.title || 'New Tab',
         childCount: 3 + (showAudioIndicator ? 1 : 0),
       })
-      if (tab.favicon) {
-        dom.push({
-          type: VirtualDomElements.Img,
-          className: 'SimpleBrowserTabFavicon',
-          alt: '',
-          'data-index': index,
-          onError: DomEventListenerFunctions.HandleErrorSimpleBrowserFavicon,
-          crossOrigin: 'anonymous',
-          src: tab.favicon,
-          draggable: false,
-          childCount: 0,
-        })
+      if (isHistoryTab) {
+        dom.push(
+          { type: VirtualDomElements.Div, className: 'SimpleBrowserTabFaviconWrapper', childCount: 1 },
+          { type: VirtualDomElements.Span, className: 'SimpleBrowserTabFavicon SimpleBrowserTabHistoryFavicon', ariaHidden: true, childCount: 0 },
+        )
+      } else if (tab.favicon) {
+        dom.push(
+          {
+            type: VirtualDomElements.Div,
+            className: 'SimpleBrowserTabFaviconWrapper',
+            childCount: 1,
+          },
+          {
+            type: VirtualDomElements.Img,
+            className: 'SimpleBrowserTabFavicon',
+            alt: '',
+            'data-index': index,
+            onError: DomEventListenerFunctions.HandleErrorSimpleBrowserFavicon,
+            crossOrigin: 'anonymous',
+            src: tab.favicon,
+            draggable: false,
+            childCount: 0,
+          },
+        )
       } else {
         dom.push(
+          { type: VirtualDomElements.Div, className: 'SimpleBrowserTabFaviconWrapper', childCount: 1 },
           { type: VirtualDomElements.Span, className: 'SimpleBrowserTabFavicon SimpleBrowserTabFaviconFallback', ariaHidden: true, childCount: 1 },
           text('◉'),
         )
@@ -178,7 +296,12 @@ export const getSimpleBrowserVirtualDom = (
     {
       type: VirtualDomElements.Div,
       className: ClassNames.SimpleBrowserHeader,
-      childCount: 7,
+      childCount: 3,
+    },
+    {
+      type: VirtualDomElements.Div,
+      className: 'SimpleBrowserButtonsLeft',
+      childCount: 3,
     },
     {
       type: VirtualDomElements.Button,
@@ -219,8 +342,10 @@ export const getSimpleBrowserVirtualDom = (
       childCount: 0,
     },
     {
-      type: VirtualDomElements.Div,
+      type: VirtualDomElements.Form,
       className: 'SimpleBrowserAddressBar',
+      noValidate: true,
+      onSubmit: DomEventListenerFunctions.HandleSubmitSimpleBrowserAddress,
       childCount: inlineSuggestion ? 2 : 1,
     },
   )
@@ -233,7 +358,6 @@ export const getSimpleBrowserVirtualDom = (
     onFocus: DomEventListenerFunctions.HandleFocusSimpleBrowserAddress,
     name: InputName.SimpleBrowserAddress,
     onBlur: DomEventListenerFunctions.HandleBlurSimpleBrowserAddress,
-    value,
   })
   if (inlineSuggestion) {
     dom.push(
@@ -260,6 +384,11 @@ export const getSimpleBrowserVirtualDom = (
   }
   dom.push(
     {
+      type: VirtualDomElements.Div,
+      className: 'SimpleBrowserButtonsRight',
+      childCount: 3 + (showDownloadsButton ? 1 : 0),
+    },
+    {
       type: VirtualDomElements.Button,
       className: ClassNames.IconButton,
       title: 'Open External',
@@ -271,6 +400,19 @@ export const getSimpleBrowserVirtualDom = (
       childCount: 0,
       onClick: DomEventListenerFunctions.HandleClickOpenExternal,
     },
+    ...(showDownloadsButton
+      ? [
+          {
+            type: VirtualDomElements.Button,
+            className: `IconButton SimpleBrowserDownloadButton${isDownloading ? ' SimpleBrowserDownloadButtonDownloading' : ' SimpleBrowserDownloadButtonComplete'}`,
+            ariaLabel: 'Downloads',
+            title: 'Downloads',
+            onClick: DomEventListenerFunctions.HandleClickSimpleBrowserDownloads,
+            childCount: 1,
+          },
+          { type: VirtualDomElements.Div, className: 'MaskIcon MaskIconArrowDown', childCount: 0 },
+        ]
+      : []),
     {
       type: VirtualDomElements.Button,
       className: 'IconButton SimpleBrowserFullWidthButton',
@@ -295,6 +437,16 @@ export const getSimpleBrowserVirtualDom = (
       childCount: 0,
     },
   )
+  if (selectedTab?.previewUid) {
+    dom.push(
+      { type: VirtualDomElements.Div, className: 'SimpleBrowserHtmlPreview', childCount: 1 },
+      { type: VirtualDomElements.Reference, uid: selectedTab.previewUid },
+    )
+  }
+  if (isNewTab) {
+    dom.push(...getNewTabVirtualDom(value))
+  }
+  if (findState?.findVisible) dom.push(...BrowserFind.getBrowserFindVirtualDom(findState))
   if (snapshot) {
     dom.push(
       {
@@ -304,7 +456,7 @@ export const getSimpleBrowserVirtualDom = (
       },
       {
         type: VirtualDomElements.Img,
-        className: suggestions.length > 0 ? 'SimpleBrowserSnapshot SimpleBrowserSnapshotSearchSuggestions' : 'SimpleBrowserSnapshot',
+        className: `SimpleBrowserSnapshot${suggestions.length > 0 ? ' SimpleBrowserSnapshotSearchSuggestions' : ''}${undimmedSnapshot ? ' SimpleBrowserSnapshotSettingsMenu' : ''}`,
         src: snapshot,
         draggable: false,
         childCount: 0,
@@ -322,6 +474,9 @@ export const getSimpleBrowserVirtualDom = (
       },
       ...pageSnapshotDom,
     )
+  }
+  if (!snapshot && historyDom.length > 0) {
+    dom.push(...historyDom)
   }
   if (suggestions.length > 0) {
     dom.push({
@@ -387,6 +542,100 @@ export const getSimpleBrowserVirtualDom = (
         childCount: 1,
       },
       text(tabHover.statusLabel),
+    )
+  }
+  if (loginChallenge) {
+    dom.push(
+      {
+        type: VirtualDomElements.Div,
+        className: 'SimpleBrowserLoginBackdrop',
+        childCount: 1,
+      },
+      {
+        type: VirtualDomElements.Div,
+        className: 'SimpleBrowserLoginDialog',
+        role: AriaRoles.Dialog,
+        ariaModal: true,
+        ariaLabel: 'Sign in to website',
+        childCount: 4,
+      },
+      {
+        type: VirtualDomElements.Div,
+        className: 'SimpleBrowserLoginTitle',
+        childCount: 1,
+      },
+      text('Sign in to website'),
+      {
+        type: VirtualDomElements.Div,
+        className: 'SimpleBrowserLoginOrigin',
+        childCount: 1,
+      },
+      text(loginChallenge.host || ''),
+      {
+        type: VirtualDomElements.Div,
+        className: 'SimpleBrowserLoginRealm',
+        childCount: 1,
+      },
+      text(loginChallenge.realm ? `“${loginChallenge.realm}” requires a username and password.` : 'This website requires a username and password.'),
+      {
+        type: VirtualDomElements.Form,
+        className: 'SimpleBrowserLoginForm',
+        'data-requestId': loginChallenge.requestId,
+        childCount: 3,
+        onSubmit: 'handle-simple-browser-login-submit',
+        onKeyDown: 'handle-simple-browser-login-keydown',
+      },
+      {
+        type: VirtualDomElements.Label,
+        className: 'SimpleBrowserLoginLabel',
+        childCount: 2,
+      },
+      text('Username'),
+      {
+        type: VirtualDomElements.Input,
+        className: 'InputBox SimpleBrowserLoginInput',
+        name: 'username',
+        autoFocus: true,
+        autocomplete: 'username',
+        required: true,
+        childCount: 0,
+      },
+      {
+        type: VirtualDomElements.Label,
+        className: 'SimpleBrowserLoginLabel',
+        childCount: 2,
+      },
+      text('Password'),
+      {
+        type: VirtualDomElements.Input,
+        className: 'InputBox SimpleBrowserLoginInput',
+        name: 'password',
+        inputType: 'password',
+        autocomplete: 'current-password',
+        required: true,
+        childCount: 0,
+      },
+      {
+        type: VirtualDomElements.Div,
+        className: 'SimpleBrowserLoginActions',
+        childCount: 2,
+      },
+      {
+        type: VirtualDomElements.Input,
+        className: 'Button ButtonSecondary',
+        inputType: 'button',
+        value: 'Cancel',
+        'data-requestId': loginChallenge.requestId,
+        onClick: 'handle-simple-browser-login-cancel',
+        childCount: 0,
+      },
+      {
+        type: VirtualDomElements.Input,
+        className: 'Button ButtonPrimary',
+        inputType: 'submit',
+        value: 'Sign in',
+        childCount: 0,
+      },
     )
   }
   return dom

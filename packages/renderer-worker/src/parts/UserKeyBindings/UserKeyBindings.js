@@ -1,3 +1,4 @@
+import { parseKeyBindingString } from '../ParseKeyBindingString/ParseKeyBindingString.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
 
 const isValidUserKeyBinding = (keyBinding) => {
@@ -20,7 +21,14 @@ export const getKeyBindings = async () => {
     if (!Array.isArray(parsed)) {
       return []
     }
-    return parsed.filter(isValidUserKeyBinding)
+    return parsed
+      .map((entry) => {
+        if (typeof entry?.key !== 'string') return entry
+        const key = parseKeyBindingString(entry.key)
+        if (!key) return undefined
+        return { ...entry, key, source: entry.source ?? 'User' }
+      })
+      .filter(isValidUserKeyBinding)
   } catch {
     return []
   }

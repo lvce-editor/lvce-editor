@@ -37,7 +37,41 @@ test('full width mounts only title bar and existing browser reference', () => {
   const dom = getLayoutVirtualDom(fullWidth)
   expect(dom).toHaveLength(3)
   expect(dom[0].className).toContain('BrowserFullWidth')
+  expect(dom[0].className).not.toContain('BrowserFullWidthHideTitleBar')
+  expect(fullWidth.titleBarHeight).toBe(state.titleBarHeight)
   expect(dom.slice(1).map((node) => node.uid)).toEqual([2, 3])
+  expect(Layout.saveState(fullWidth)).toEqual(Layout.saveState(state))
+})
+
+test('full width can reclaim the title bar height without changing the saved layout', () => {
+  const state = createState()
+  const fullWidth = LayoutPoints.getPoints({
+    ...state,
+    browserFullWidth: {
+      browserUid: 3,
+      hideTitleBar: true,
+      layout: {
+        titleBarHeight: state.titleBarHeight,
+        titleBarVisible: true,
+        previewWidth: 420,
+        panelVisible: true,
+        mainVisible: true,
+        previewVisible: true,
+        statusBarVisible: true,
+      },
+      browserBounds: { x: 780, y: 35, width: 420, height: 765 },
+      ideFocusUid: 10,
+      addressFocused: false,
+      hiddenBrowserUids: [],
+    },
+  })
+  expect(fullWidth).toEqual(expect.objectContaining({ titleBarHeight: 0, titleBarVisible: true }))
+  expect(getLayoutVirtualDom(fullWidth)[0].className).toContain('BrowserFullWidthHideTitleBar')
+  expect(
+    getLayoutVirtualDom(fullWidth)
+      .slice(1)
+      .map((node) => node.uid),
+  ).toEqual([2, 3])
   expect(Layout.saveState(fullWidth)).toEqual(Layout.saveState(state))
 })
 

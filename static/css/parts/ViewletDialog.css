@@ -10,8 +10,7 @@
 
 .DialogContent {
   width: 520px;
-  height: 280px;
-  contain: strict;
+  contain: content;
   background: var(--WidgetBackground, #1f1f1f);
   color: var(--WidgetForeground, #cccccc);
   display: flex;
@@ -38,8 +37,7 @@
 .DialogMessageRow {
   display: flex;
   gap: 24px;
-  flex: 1;
-  contain: strict;
+  contain: content;
   padding: 0 10px;
 }
 
@@ -65,7 +63,7 @@
 .DialogContentRight {
   display: flex;
   flex-direction: column;
-  contain: strict;
+  contain: content;
   flex: 1;
 }
 
@@ -104,9 +102,8 @@
 .DialogMessage {
   display: flex;
   gap: 10px;
-  contain: strict;
+  contain: content;
   user-select: text;
-  flex: 1;
 }
 
 .DialogButtonsRow {

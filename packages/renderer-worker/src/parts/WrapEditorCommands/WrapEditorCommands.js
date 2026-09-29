@@ -1,7 +1,12 @@
 import * as EditorWorker from '../EditorWorker/EditorWorker.ts'
+import * as FilterFocusCommands from '../FilterFocusCommands/FilterFocusCommands.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
 const queues = new Map()
+// Only an active foreground command may move focus during an asynchronous render.
+const focusPolicies = new Map()
+
+const getQueueKey = (editor) => JSON.stringify([editor.applicationId ?? null, editor.uri || editor.uid])
 
 const isTextEditor = (instance) => {
   return instance?.moduleId === 'Editor' || instance?.moduleId === 'EditorText'
@@ -62,21 +67,24 @@ const renderEditor = async (uid, sourceUid) => {
   }
 }
 
-export const renderPendingEditors = async (editor) => {
+export const renderPendingEditors = async (editor, preserveFocusOverride) => {
+  const queueKey = getQueueKey(editor)
+  const preserveFocus = preserveFocusOverride ?? focusPolicies.get(queueKey) !== false
   const editorUids = await getExistingEditorUids(editor)
   const commandLists = await Promise.all(editorUids.map((uid) => renderEditor(uid, editor.uid)))
+  const commands = commandLists.flat()
   return {
     ...editor,
-    commands: commandLists.flat(),
+    commands: preserveFocus ? FilterFocusCommands.filterFocusCommands(commands) : commands,
   }
 }
 
-const runEditorCommand = async (editor, fullId, restArgs) => {
+const runEditorCommand = async (editor, fullId, restArgs, preserveFocus = false) => {
   await EditorWorker.invoke(fullId, editor.uid, ...restArgs)
-  return renderPendingEditors(editor)
+  return renderPendingEditors(editor, preserveFocus)
 }
 
-export const wrapEditorCommand = (id) => {
+export const wrapEditorCommand = (id, { preserveFocus = false } = {}) => {
   return async (...args) => {
     if (args.length === 0) {
       throw new Error('missing arg')
@@ -87,7 +95,7 @@ export const wrapEditorCommand = (id) => {
     if (fullId === 'Editor.openFind' || fullId === 'Editor.openFind2' || fullId === 'Editor.closeFind') {
       return runEditorCommand(editor, fullId, restArgs)
     }
-    const queueKey = JSON.stringify([editor.applicationId ?? null, editor.uri || editor.uid])
+    const queueKey = getQueueKey(editor)
     const previous = queues.get(queueKey)
     const { promise: next, resolve } = Promise.withResolvers()
     queues.set(queueKey, next)
@@ -96,8 +104,10 @@ export const wrapEditorCommand = (id) => {
       await previous
     }
     try {
-      return await runEditorCommand(editor, fullId, restArgs)
+      focusPolicies.set(queueKey, preserveFocus)
+      return await runEditorCommand(editor, fullId, restArgs, preserveFocus)
     } finally {
+      focusPolicies.delete(queueKey)
       resolve(undefined)
       if (queues.get(queueKey) === next) {
         queues.delete(queueKey)

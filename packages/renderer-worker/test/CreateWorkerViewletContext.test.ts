@@ -48,3 +48,10 @@ test('creates text search with the workspace URI instead of the filesystem path'
 
   expect(invoke).toHaveBeenCalledWith('TextSearch.create', 8, 1, 2, 300, 200, 'file:///workspace', 'test://assets', 22, '', '', 2, false)
 })
+
+test('passes the workspace URI to Ports on load', async () => {
+  const viewlet = createWorkerViewlet({ workerId: 'portsView' })
+  const state = viewlet.create(9, 'ports://', 1, 2, 300, 200)
+  await viewlet.loadContent(state, undefined)
+  expect(invoke).toHaveBeenCalledWith('Ports.loadContent', 9, 'file:///workspace')
+})

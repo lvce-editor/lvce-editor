@@ -1,5 +1,11 @@
 // @ts-nocheck
-import { beforeEach, expect, jest, test } from '@jest/globals'
+import { afterEach, beforeEach, expect, jest, test } from '@jest/globals'
+
+const ApplicationRegistry = await import('../src/parts/ApplicationRegistry/ApplicationRegistry.ts')
+afterEach(() => {
+  ApplicationRegistry.remove('source')
+  ApplicationRegistry.remove('preview')
+})
 
 const GetActiveEditor = await import('../src/parts/GetActiveEditor/GetActiveEditor.js')
 const ViewletStates = await import('../src/parts/ViewletStates/ViewletStates.js')
@@ -246,4 +252,24 @@ test('getOpenEditorUris returns an empty array without a main area', async () =>
   const invoke = jest.fn()
   await expect(GetActiveEditor.getOpenEditorUrisWithInvoke(invoke)).resolves.toEqual([])
   expect(invoke).not.toHaveBeenCalled()
+})
+
+test('getTextDocument reads only the requested application even when another editor is focused', async () => {
+  for (const [id, applicationId] of [
+    [41, 'source'],
+    [42, 'preview'],
+  ]) {
+    ApplicationRegistry.create({ id: applicationId, layoutUid: id + 100, workspaceUri: 'memfs:///', workspacePath: '/', href: '/samples' })
+    ViewletStates.set(id, {
+      factory: {},
+      moduleId: 'EditorText',
+      renderedState: { uid: id },
+      state: { id, uid: id, applicationId, uri: `memfs:///${applicationId}.js` },
+    })
+  }
+  ViewletStates.setFocusedInstanceByType(42, 'EditorText')
+  const invoke = jest.fn(async () => 'debugger')
+  await expect(GetActiveEditor.getTextDocumentWithInvoke(invoke, 'source')).resolves.toEqual({ text: 'debugger', uri: 'memfs:///source.js' })
+  expect(invoke).toHaveBeenCalledWith('Editor.getText', 41)
+  await expect(GetActiveEditor.getTextDocumentWithInvoke(invoke, 'missing')).resolves.toBeUndefined()
 })

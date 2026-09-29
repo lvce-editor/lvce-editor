@@ -4,6 +4,9 @@ const appPrefix = 'app://'
 const readonlyPaths = new Set(['memory-usage', 'session.json', 'startup-performance'])
 
 const getPath = (uri) => {
+  if (uri.startsWith(`${appPrefix}/`)) {
+    return uri.slice(appPrefix.length + 1)
+  }
   if (uri.startsWith(appPrefix)) {
     return uri.slice(appPrefix.length)
   }

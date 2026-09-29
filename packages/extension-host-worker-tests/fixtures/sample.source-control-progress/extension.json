@@ -1,0 +1,21 @@
+{
+  "id": "sample.source-control-progress",
+  "name": "Source Control Progress",
+  "version": "0.0.0",
+  "browser": "main.js",
+  "isolated": true,
+  "activation": ["onSourceControl:memfs", "onCommand:sourceControlProgress.begin", "onCommand:sourceControlProgress.finish"],
+  "commands": [
+    {
+      "id": "sourceControlProgress.begin"
+    },
+    {
+      "id": "sourceControlProgress.finish"
+    }
+  ],
+  "sourceControlProviders": [
+    {
+      "id": "source-control-progress"
+    }
+  ]
+}

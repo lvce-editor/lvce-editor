@@ -1,3 +1,4 @@
+import { isCompactTitleBar } from '../ViewletLayout/IsCompactTitleBar.ts'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 import * as SideBarLocationType from '../SideBarLocationType/SideBarLocationType.js'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.js'
@@ -245,6 +246,11 @@ const getPreviewAreaDom = (previewId: number, previewActionsUid: number | undefi
       className: secondary ? 'PreviewArea SecondaryPreviewArea' : 'PreviewArea',
       type: VirtualDomElements.Div,
     },
+    {
+      childCount: 1,
+      className: 'PreviewAreaContent',
+      type: VirtualDomElements.Div,
+    },
     previewDom,
     ...actionsDom,
     ...closeButtonDom,
@@ -389,7 +395,7 @@ const getPanelDom = (panelId: number) => {
   if (panelId === -1) {
     return {
       type: VirtualDomElements.Div,
-      className: 'Viewlet StatusBar',
+      className: 'Viewlet Panel',
       childCount: 0,
     }
   } else {
@@ -503,7 +509,7 @@ export const getLayoutVirtualDom = (state: LayoutState) => {
   dom.push({
     type: VirtualDomElements.Div,
     id: state.applicationId === undefined ? 'Workbench' : `Workbench-${state.uid}`,
-    className: 'Viewlet Layout Workbench new',
+    className: `Viewlet Layout Workbench new${state.titleBarless ? ' TitleBarless' : ''}${isCompactTitleBar(state) ? ' CompactTitleBar' : ''}`,
     role: 'application',
     childCount: 0,
   })
@@ -514,7 +520,7 @@ export const getLayoutVirtualDom = (state: LayoutState) => {
   }
 
   if (state.browserFullWidth) {
-    dom[0].className += ' BrowserFullWidth'
+    dom[0].className += ` BrowserFullWidth${state.browserFullWidth.hideTitleBar ? ' BrowserFullWidthHideTitleBar' : ''}`
     dom[0].childCount = workbenchChildCount + 1
     dom.push({ type: VirtualDomElements.Reference, uid: state.browserFullWidth.browserUid })
     return dom

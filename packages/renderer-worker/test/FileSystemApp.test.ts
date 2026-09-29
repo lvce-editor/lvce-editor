@@ -73,7 +73,7 @@ const KeyBindings = await import('../src/parts/KeyBindings/KeyBindings.js')
 const PlatformPaths = await import('../src/parts/PlatformPaths/PlatformPaths.js')
 const FileSystem = await import('../src/parts/FileSystem/FileSystem.js')
 
-test('readFile - settings', async () => {
+test.each(['settings.json', 'app://settings.json', 'app:///settings.json'])('readFile - settings %s', async (uri) => {
   // @ts-ignore
   PlatformPaths.getUserSettingsPath.mockImplementation(() => {
     return '~/.config/app/settings.json'
@@ -82,7 +82,7 @@ test('readFile - settings', async () => {
   FileSystem.readFile.mockImplementation(() => {
     return '{}'
   })
-  expect(await FileSystemApp.readFile('settings.json')).toBe('{}')
+  expect(await FileSystemApp.readFile(uri)).toBe('{}')
 })
 
 test('writeFile - keybindings reloads runtime keybindings after persisting', async () => {
@@ -93,6 +93,16 @@ test('writeFile - keybindings reloads runtime keybindings after persisting', asy
 
   expect(FileSystem.writeFile).toHaveBeenCalledWith('~/.config/app/keybindings.json', '[]')
   expect(KeyBindings.reloadUserKeyBindings).toHaveBeenCalledTimes(1)
+})
+
+test('readFile - keybindings creates an empty array for a new profile', async () => {
+  jest.mocked(PlatformPaths.getUserKeyBindingsPath).mockResolvedValue('~/.config/app/keybindings.json')
+  jest.mocked(FileSystem.mkdir).mockResolvedValue()
+  jest.mocked(FileSystem.writeFile).mockResolvedValue()
+  jest.mocked(FileSystem.readFile).mockRejectedValueOnce(new NodeError(FileSytemErrorCodes.ENOENT))
+
+  await expect(FileSystemApp.readFile('keybindings.json')).resolves.toBe('[]')
+  expect(FileSystem.writeFile).toHaveBeenCalledWith('~/.config/app/keybindings.json', '[]')
 })
 
 test('readFile - settings - error', async () => {
@@ -217,4 +227,13 @@ test('writeFile - settings - creates windows parent folder', async () => {
 
   expect(FileSystem.mkdir).toHaveBeenCalledWith(String.raw`C:\Users\test\.config\lvce-oss`)
   expect(FileSystem.writeFile).toHaveBeenLastCalledWith(settingsPath, '{}')
+})
+
+test.each(['app://settings.json', 'app:///settings.json'])('writeFile - settings %s', async (uri) => {
+  jest.mocked(PlatformPaths.getUserSettingsPath).mockResolvedValue('~/.config/app/settings.json')
+  jest.mocked(FileSystem.writeFile).mockResolvedValue()
+
+  await FileSystemApp.writeFile(uri, '{"editor.fontSize":17}')
+
+  expect(FileSystem.writeFile).toHaveBeenCalledWith('~/.config/app/settings.json', '{"editor.fontSize":17}')
 })

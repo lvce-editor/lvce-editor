@@ -107,7 +107,7 @@
   width: var(--ChatDebugViewTableColFourWidth);
 }
 
-.Resizers {
+.ChatDebugView .Resizers {
   bottom: 0;
   left: 0;
   pointer-events: none;
@@ -116,7 +116,7 @@
   top: 0;
 }
 
-.Resizer {
+.ChatDebugView .Resizer {
   background: transparent;
   border: 0;
   bottom: 0;
@@ -130,23 +130,23 @@
   width: var(--ChatDebugViewSashWidth);
 }
 
-.ResizerOne {
+.ChatDebugView .ResizerOne {
   left: var(--ResizerOneLeft);
 }
 
-.ResizerTwo {
+.ChatDebugView .ResizerTwo {
   left: var(--ResizerTwoLeft);
 }
 
-.ResizerThree {
+.ChatDebugView .ResizerThree {
   left: var(--ResizerThreeLeft);
 }
 
-.ResizerFour {
+.ChatDebugView .ResizerFour {
   left: var(--ResizerFourLeft);
 }
 
-.ResizerInner {
+.ChatDebugView .ResizerInner {
   background: var(--vscode-panel-border, rgba(255, 255, 255, 0.12));
   bottom: 0;
   pointer-events: none;

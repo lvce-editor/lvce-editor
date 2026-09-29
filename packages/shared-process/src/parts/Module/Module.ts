@@ -10,6 +10,8 @@ export const load = (moduleId: any): any => {
       return import('../AutoUpdaterAppImage/AutoUpdaterAppImage.ipc.ts')
     case ModuleId.AutoUpdaterWindowsNsis:
       return import('../AutoUpdaterWindowsNsis/AutoUpdaterWindowsNsis.ipc.ts')
+    case ModuleId.BrowserFind:
+      return import('../BrowserFind/BrowserFind.ipc.ts')
     case ModuleId.BulkReplacement:
       return import('../BulkReplacement/BulkReplacement.ipc.ts')
     case ModuleId.ClipBoard:
@@ -138,6 +140,8 @@ export const load = (moduleId: any): any => {
       return import('../ProcessExplorer/ProcessExplorer.ipc.ts')
     case ModuleId.ProcessId:
       return import('../ProcessId/ProcessId.ipc.ts')
+    case ModuleId.PtyHost:
+      return import('../PtyHost/PtyHost.ipc.ts')
     case ModuleId.RebuildNodePty:
       return import('../RebuildNodePty/RebuildNodePty.ipc.ts')
     case ModuleId.RecentlyOpened:
@@ -148,6 +152,8 @@ export const load = (moduleId: any): any => {
       return import('../Screen/Screen.ipc.ts')
     case ModuleId.SendMessagePortToMainProcess:
       return import('../SendMessagePortToMainProcess/SendMessagePortToMainProcess.ipc.ts')
+    case ModuleId.ShellCommand:
+      return import('../ShellCommand/ShellCommand.ipc.ts')
     case ModuleId.TemporaryMessagePort:
       return import('../TemporaryMessagePort/TemporaryMessagePort.ipc.ts')
     case ModuleId.Terminal:

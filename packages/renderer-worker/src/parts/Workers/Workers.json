@@ -1,5 +1,18 @@
 [
   {
+    "id": "sessionReplayWorker",
+    "fileName": "sessionReplayWorkerMain.js",
+    "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/renderer-process/dist/sessionReplayWorkerMain.js",
+    "productionPath": "/packages/renderer-process/dist/sessionReplayWorkerMain.js",
+    "settingName": "develop.sessionReplayWorkerPath",
+    "hotReloadCommand": "",
+    "contentSecurityPolicy": [
+      "default-src 'none'",
+      "connect-src 'self' https: http://127.0.0.1:* http://localhost:*",
+      "script-src 'self'"
+    ]
+  },
+  {
     "id": "componentState",
     "fileName": "componentStateWorkerMain.js",
     "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/component-state-worker/dist/componentStateWorkerMain.js",
@@ -178,6 +191,9 @@
         "diff": { "name": "ActivityBar.diff2", "parameters": [{ "source": "state", "name": "uid" }] },
         "render": { "name": "ActivityBar.render2", "parameters": [{ "source": "state", "name": "uid" }, { "source": "result", "name": "diff" }] },
         "saveState": { "name": "ActivityBar.saveState", "parameters": [{ "source": "state", "name": "uid" }] },
+        "getComponentDom": { "name": "ActivityBar.getComponentDom", "parameters": [{ "source": "state", "name": "uid" }] },
+        "getComponentState": { "name": "ActivityBar.getComponentState", "parameters": [{ "source": "state", "name": "uid" }] },
+        "setComponentState": { "name": "ActivityBar.setComponentState", "parameters": [{ "source": "state", "name": "uid" }, { "source": "argument", "name": "componentState" }] },
         "terminate": { "name": "ActivityBar.terminate", "parameters": [] },
         "getCommandIds": { "name": "ActivityBar.getCommandIds", "parameters": [] },
         "getMenuEntryIds": { "name": "ActivityBar.getMenuEntryIds", "parameters": [] },
@@ -205,7 +221,7 @@
         "/css/parts/ViewletList.css", "/css/parts/ViewletSearch.css"
       ],
       "state": {
-        "idKey": "uid", "fields": ["uri", "x", "y", "width", "height"], "contextFields": ["assetDir", "platform"],
+        "idKey": "uid", "fields": ["parentUid", "uri", "x", "y", "width", "height"], "contextFields": ["assetDir", "platform"],
         "defaults": { "actionsDom": [] }
       },
       "storageKeyField": "uri",
@@ -223,7 +239,11 @@
         },
         "loadContent": {
           "name": "TextSearch.loadContent",
-          "parameters": [{ "source": "state", "name": "uid" }, { "source": "argument", "name": "savedState" }]
+          "parameters": [
+            { "source": "state", "name": "uid" },
+            { "source": "argument", "name": "savedState" },
+            { "source": "argument", "name": "args", "index": 0 }
+          ]
         },
         "diff": { "name": "TextSearch.diff2", "parameters": [{ "source": "state", "name": "uid" }] },
         "render": {
@@ -257,6 +277,7 @@
         ] }
       },
       "outputs": [{ "stateField": "actionsDom", "hotReload": false, "method": { "name": "TextSearch.renderActions", "parameters": [{ "source": "state", "name": "uid" }] } }],
+      "renderActionsComparison": "always",
       "capabilities": { "directRender": true, "events": true, "render": true, "resize": true, "rootRender": true },
       "renderComparison": "emptyCommands"
     }
@@ -649,6 +670,7 @@
         "contextFields": ["platform", "assetDir"], "defaults": { "title": "" }
       },
       "commandPrefix": "Explorer",
+      "workspaceProgressEvent": "workspace.progress",
       "methods": {
         "create": { "name": "Explorer.create", "parameters": [
           { "source": "state", "name": "uid" }, { "source": "state", "name": "uri" }, { "source": "state", "name": "x" },
@@ -701,6 +723,7 @@
         "/css/parts/AdditionalDetails.css", "/css/parts/BrowserScrollBar.css", "/css/parts/Button.css", "/css/parts/Category.css",
         "/css/parts/Changelog.css", "/css/parts/FeatureContent.css", "/css/parts/Features.css", "/css/parts/Markdown.css",
         "/css/parts/Message.css", "/css/parts/ScrollToTop.css", "/css/parts/Table.css", "/css/parts/ViewletExtensionDetail.css",
+        "/css/parts/ViewletExtensionDetailContents.css",
         "/css/parts/ViewletExtensionDetailHeader.css", "/css/parts/ViewletExtensionDetailTabs.css"
       ],
       "state": { "idKey": "uid", "fields": ["uri", "x", "y", "width", "height"], "defaults": { "name": "" } },
@@ -730,6 +753,10 @@
         "render": {
           "name": "ExtensionDetail.render2",
           "parameters": [{ "source": "state", "name": "uid" }, { "source": "result", "name": "diff" }]
+        },
+        "resize": {
+          "name": "ExtensionDetail.resize",
+          "parameters": [{ "source": "state", "name": "uid" }, { "source": "argument", "name": "dimensions" }]
         },
         "saveState": { "name": "ExtensionDetail.saveState", "parameters": [{ "source": "state", "name": "uid" }] },
         "terminate": { "name": "ExtensionDetail.terminate", "parameters": [] },
@@ -1192,8 +1219,13 @@
         },
         "renderActions": { "name": "Output.renderActions", "parameters": [{ "source": "state", "name": "uid" }] },
         "saveState": { "name": "Output.saveState", "parameters": [{ "source": "state", "name": "uid" }] },
+        "setComponentState": { "name": "Output.setComponentState", "parameters": [
+          { "source": "state", "name": "id" }, { "source": "argument", "name": "componentState" }
+        ] },
         "terminate": { "name": "Output.terminate", "parameters": [] },
         "getCommandIds": { "name": "Output.getCommandIds", "parameters": [] },
+        "getComponentDom": { "name": "Output.getComponentDom", "parameters": [{ "source": "state", "name": "id" }] },
+        "getComponentState": { "name": "Output.getComponentState", "parameters": [{ "source": "state", "name": "id" }] },
         "renderEventListeners": { "name": "Output.renderEventListeners", "parameters": [] }
       },
       "outputs": [{ "stateField": "actionsDom", "method": { "name": "Output.renderActions", "parameters": [{ "source": "state", "name": "uid" }] } }],
@@ -1211,6 +1243,8 @@
     "contentSecurityPolicy": ["default-src 'none'"],
     "viewlet": {
       "name": "Panel",
+      "extraCommands": [{ "name": "handleWorkspaceChange", "method": "loadContent" }],
+      "workspaceChangeEvent": "workspace.change",
       "css": ["/css/parts/ViewletPanel.css", "/css/parts/IconButton.css", "/css/parts/Actions.css", "/css/parts/ViewletPanelTabs.css"],
       "variables": ["PanelBackground"],
       "state": {
@@ -1236,11 +1270,19 @@
         },
         "loadContent": {
           "name": "Panel.loadContent",
-          "parameters": [{ "source": "state", "name": "uid" }, { "source": "literal", "value": {} }]
+          "parameters": [
+            { "source": "state", "name": "uid" },
+            { "source": "literal", "value": {} },
+            { "source": "context", "name": "workspaceUri" }
+          ]
         },
         "hotReloadLoadContent": {
           "name": "Panel.loadContent",
-          "parameters": [{ "source": "state", "name": "uid" }, { "source": "argument", "name": "savedState" }]
+          "parameters": [
+            { "source": "state", "name": "uid" },
+            { "source": "argument", "name": "savedState" },
+            { "source": "context", "name": "workspaceUri" }
+          ]
         },
         "diff": { "name": "Panel.diff2", "parameters": [{ "source": "state", "name": "uid" }] },
         "render": {
@@ -1254,6 +1296,12 @@
         "saveState": { "name": "Panel.saveState", "parameters": [{ "source": "state", "name": "uid" }] },
         "terminate": { "name": "Panel.terminate", "parameters": [] },
         "getCommandIds": { "name": "Panel.getCommandIds", "parameters": [] },
+        "getMenuEntryIds": { "name": "Panel.getMenuIds", "parameters": [] },
+        "getMenuEntries": { "name": "Panel.getMenuEntries2", "parameters": [{ "source": "argument", "name": "args", "spread": true }] },
+        "getComponentState": { "name": "Panel.getComponentState", "parameters": [{ "source": "state", "name": "uid" }] },
+        "setComponentState": { "name": "Panel.setComponentState", "parameters": [
+          { "source": "state", "name": "uid" }, { "source": "argument", "name": "componentState" }
+        ] },
         "renderEventListeners": { "name": "Panel.renderEventListeners", "parameters": [] }
       },
       "capabilities": { "directRender": true, "events": true, "render": true, "resize": true, "rootRender": true },
@@ -1330,6 +1378,7 @@
     "hotReloadCommand": "",
     "viewlet": {
       "name": "Ports",
+      "extraCommands": [{ "name": "handleWorkspaceChange", "method": "loadContent" }, { "name": "refresh", "method": "loadContent" }],
       "css": ["/css/parts/ViewletPorts.css"],
       "state": {
         "idKey": "uid",
@@ -1347,15 +1396,19 @@
             { "source": "state", "name": "parentUid" }
           ]
         },
-        "loadContent": { "name": "Ports.loadContent", "parameters": [{ "source": "state", "name": "uid" }] },
+        "loadContent": { "name": "Ports.loadContent", "parameters": [{ "source": "state", "name": "uid" }, { "source": "context", "name": "workspaceUri" }] },
         "diff": { "name": "Ports.diff2", "parameters": [{ "source": "state", "name": "uid" }] },
         "render": { "name": "Ports.render2", "parameters": [{ "source": "state", "name": "uid" }, { "source": "result", "name": "diff" }] },
         "dispose": { "name": "Ports.dispose", "parameters": [{ "source": "state", "name": "uid" }] },
         "resize": { "name": "Ports.resize", "parameters": [{ "source": "state", "name": "uid" }, { "source": "argument", "name": "dimensions" }] },
         "terminate": { "name": "Ports.terminate", "parameters": [] },
         "getCommandIds": { "name": "Ports.getCommandIds", "parameters": [] },
+        "getComponentState": { "name": "Ports.getComponentState", "parameters": [{ "source": "state", "name": "uid" }] },
         "getKeyBindings": { "name": "Ports.getKeyBindings", "parameters": [], "fallback": [] },
-        "renderEventListeners": { "name": "Ports.renderEventListeners", "parameters": [] }
+        "getMenuEntryIds": { "name": "Ports.getMenuIds", "parameters": [] },
+        "getMenuEntries": { "name": "Ports.getMenuEntries2", "parameters": [{ "source": "argument", "name": "args", "spread": true }] },
+        "renderEventListeners": { "name": "Ports.renderEventListeners", "parameters": [] },
+        "setComponentState": { "name": "Ports.setComponentState", "parameters": [{ "source": "state", "name": "uid" }, { "source": "argument", "name": "componentState" }] }
       },
       "renderComparison": "emptyCommands",
       "capabilities": { "events": true, "render": true, "resize": true, "rootRender": true }
@@ -1390,6 +1443,7 @@
         "resize": { "name": "Problems.resize", "parameters": [{ "source": "state", "name": "uid" }, { "source": "argument", "name": "dimensions" }] },
         "saveState": { "name": "Problems.saveState", "parameters": [{ "source": "state", "name": "uid" }] },
         "getCommandIds": { "name": "Problems.getCommandIds", "parameters": [] },
+        "getComponentDom": { "name": "Problems.getComponentDom", "parameters": [{ "source": "state", "name": "uid" }] },
         "getComponentState": { "name": "Problems.getComponentState", "parameters": [{ "source": "state", "name": "uid" }] },
         "getMenuEntryIds": { "name": "Problems.getMenuIds", "parameters": [] },
         "getMenuEntries": { "name": "Problems.getMenuEntries2", "parameters": [{ "source": "argument", "name": "args", "spread": true }] },
@@ -1447,7 +1501,7 @@
     "hotReloadCommand": "ProcessExplorer.hotReload",
     "viewlet": {
       "name": "ProcessExplorer",
-      "css": ["/css/parts/ViewletProcessExplorer.css"],
+      "css": ["/css/parts/MaskIcon.css", "/css/parts/ViewletProcessExplorer.css"],
       "state": { "idKey": "uid", "fields": ["parentUid", "uri", "x", "y", "width", "height"], "contextFields": ["platform", "assetDir"] },
       "commandPrefix": "ProcessExplorer",
       "methods": {
@@ -1464,6 +1518,7 @@
         "dispose": { "name": "ProcessExplorer.dispose", "parameters": [{ "source": "state", "name": "uid" }] },
         "terminate": { "name": "ProcessExplorer.terminate", "parameters": [] },
         "getCommandIds": { "name": "ProcessExplorer.getCommandIds", "parameters": [] },
+        "getComponentDom": { "name": "ProcessExplorer.getComponentDom", "parameters": [{ "source": "state", "name": "uid" }] },
         "getComponentState": { "name": "ProcessExplorer.getComponentState", "parameters": [{ "source": "state", "name": "uid" }] },
         "setComponentState": { "name": "ProcessExplorer.setComponentState", "parameters": [{ "source": "state", "name": "uid" }, { "source": "argument", "name": "componentState" }] },
         "getKeyBindings": { "name": "ProcessExplorer.getKeyBindings", "parameters": [] },
@@ -1503,7 +1558,8 @@
           { "source": "state", "name": "uid" }, { "source": "state", "name": "uri" }, { "source": "literal", "value": 22 },
           { "source": "state", "name": "x" }, { "source": "state", "name": "y" }, { "source": "state", "name": "width" },
           { "source": "state", "name": "height" }, { "source": "state", "name": "platform" }, { "source": "state", "name": "args" },
-          { "source": "literal", "value": true }, { "source": "context", "name": "workspacePath" }, { "source": "state", "name": "assetDir" }
+          { "source": "literal", "value": true }, { "source": "context", "name": "workspacePath" }, { "source": "state", "name": "assetDir" },
+          { "source": "context", "name": "applicationId" }
         ] },
         "loadContent": { "name": "QuickPick.loadContent", "parameters": [{ "source": "state", "name": "uid" }] },
         "diff": { "name": "QuickPick.diff2", "parameters": [{ "source": "state", "name": "uid" }] },
@@ -1579,6 +1635,61 @@
       },
       "extraCommands": [{ "name": "handleExtensionsChanged", "method": "refresh" }],
       "capabilities": { "directRender": true, "events": true, "render": true, "rootRender": true },
+      "renderComparison": "emptyCommands"
+    }
+  },
+  {
+    "id": "workersView",
+    "fileName": "workersViewMain.js",
+    "contentSecurityPolicy": ["default-src 'none'"],
+    "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/workers-view/dist/workersViewMain.js",
+    "productionPath": "/packages/workers-view/dist/workersViewMain.js",
+    "settingName": "develop.workersViewPath",
+    "viewlet": {
+      "name": "Workers",
+      "title": "Workers",
+      "css": ["/css/parts/ViewletWorkers.css"],
+      "state": {
+        "idKey": "uid",
+        "fields": ["uri", "x", "y", "width", "height"],
+        "contextFields": ["platform", "assetDir"],
+        "defaults": { "title": "Workers" }
+      },
+      "commandPrefix": "Workers",
+      "methods": {
+        "create": {
+          "name": "Workers.create",
+          "parameters": [
+            { "source": "state", "name": "uid" }, { "source": "state", "name": "uri" }, { "source": "state", "name": "x" },
+            { "source": "state", "name": "y" }, { "source": "state", "name": "width" }, { "source": "state", "name": "height" },
+            { "source": "state", "name": "platform" }, { "source": "state", "name": "assetDir" }
+          ]
+        },
+        "loadContent": { "name": "Workers.loadContent", "parameters": [{ "source": "state", "name": "uid" }] },
+        "refresh": { "name": "Workers.refresh", "parameters": [{ "source": "state", "name": "uid" }] },
+        "diff": { "name": "Workers.diff2", "parameters": [{ "source": "state", "name": "uid" }] },
+        "render": {
+          "name": "Workers.render2",
+          "parameters": [{ "source": "state", "name": "uid" }, { "source": "result", "name": "diff" }]
+        },
+        "dispose": { "name": "Workers.dispose", "parameters": [{ "source": "state", "name": "uid" }] },
+        "resize": {
+          "name": "Workers.resize",
+          "parameters": [
+            { "source": "state", "name": "uid" },
+            { "source": "argument", "name": "dimensions", "index": "width" },
+            { "source": "argument", "name": "dimensions", "index": "height" }
+          ]
+        },
+        "getCommandIds": { "name": "Workers.getCommandIds", "parameters": [] },
+        "getComponentState": { "name": "Workers.getComponentState", "parameters": [{ "source": "state", "name": "uid" }] },
+        "setComponentState": {
+          "name": "Workers.setComponentState",
+          "parameters": [{ "source": "state", "name": "uid" }, { "source": "argument", "name": "componentState" }]
+        },
+        "renderEventListeners": { "name": "Workers.renderEventListeners", "parameters": [] }
+      },
+      "capabilities": { "directRender": true, "events": true, "render": true, "resize": true, "rootRender": true },
       "renderComparison": "emptyCommands"
     }
   },
@@ -1672,13 +1783,18 @@
         "saveState": { "name": "Settings.saveState", "parameters": [{ "source": "state", "name": "uid" }] },
         "terminate": { "name": "Settings.terminate", "parameters": [] },
         "getCommandIds": { "name": "Settings.getCommandIds", "parameters": [] },
+        "getComponentState": { "name": "Settings.getComponentState", "parameters": [{ "source": "state", "name": "uid" }] },
         "getKeyBindings": { "name": "Settings.getKeyBindings", "parameters": [] },
         "getMenuEntryIds": { "name": "Settings.getMenuIds", "parameters": [] },
         "getMenuEntries": {
           "name": "Settings.getMenuEntries",
           "parameters": [{ "source": "argument", "name": "args", "spread": true }]
         },
-        "renderEventListeners": { "name": "Settings.renderEventListeners", "parameters": [] }
+        "renderEventListeners": { "name": "Settings.renderEventListeners", "parameters": [] },
+        "setComponentState": {
+          "name": "Settings.setComponentState",
+          "parameters": [{ "source": "state", "name": "uid" }, { "source": "argument", "name": "componentState" }]
+        }
       },
       "outputs": [{ "stateField": "actionsDom", "hotReload": false, "method": { "name": "Settings.renderActions", "parameters": [{ "source": "state", "name": "uid" }] } }],
       "capabilities": { "directRender": true, "events": true, "render": true, "resize": true, "rootRender": true },
@@ -1719,7 +1835,7 @@
     "productionPath": "/packages/source-control-worker/dist/sourceControlWorkerMain.js",
     "settingName": "develop.sourceControlWorkerPath",
     "hotReloadCommand": "Source Control.hotReload",
-    "contentSecurityPolicy": ["default-src 'none'"]
+    "contentSecurityPolicy": ["default-src 'none'", "script-src 'self'"]
   },
   {
     "id": "statusBar",
@@ -1894,7 +2010,7 @@
   {
     "id": "updateWorker",
     "fileName": "updateWorkerMain.js",
-    "contentSecurityPolicy": ["default-src 'none'", "connect-src https://github.com https://release-assets.githubusercontent.com"],
+    "contentSecurityPolicy": ["default-src 'none'", "connect-src https://github.com https://api.github.com https://release-assets.githubusercontent.com"],
     "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/update-worker/dist/updateWorkerMain.js",
     "productionPath": "/packages/update-worker/dist/updateWorkerMain.js",
     "settingName": "develop.updateWorkerPath",

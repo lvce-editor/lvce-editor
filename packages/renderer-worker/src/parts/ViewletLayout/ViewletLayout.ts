@@ -1,8 +1,10 @@
+import * as HtmlPreviewUrl from '../HtmlPreviewUrl/HtmlPreviewUrl.js'
 import * as BrowserFullWidth from '../BrowserFullWidth/BrowserFullWidth.js'
 import * as ActivityBarWorker from '../ActivityBarWorker/ActivityBarWorker.js'
 import * as ApplicationRegistry from '../ApplicationRegistry/ApplicationRegistry.ts'
 import * as Assert from '../Assert/Assert.ts'
 import { assetDir } from '../AssetDir/AssetDir.js'
+import * as AuthAccessToken from '../AuthAccessToken/AuthAccessToken.js'
 import * as AuthWorker from '../AuthWorker/AuthWorker.js'
 import * as AutoUpdateType from '../AutoUpdateType/AutoUpdateType.js'
 import * as ChatViewWorker from '../ChatViewWorker/ChatViewWorker.js'
@@ -33,11 +35,15 @@ import * as SashType from '../SashType/SashType.js'
 import * as SaveState from '../SaveState/SaveState.js'
 import * as SideBarLocationType from '../SideBarLocationType/SideBarLocationType.js'
 import * as SourceControlWorker from '../SourceControlWorker/SourceControlWorker.js'
+import * as StatusBarWorker from '../StatusBarWorker/StatusBarWorker.js'
+import * as TitleBarWorker from '../TitleBarWorker/TitleBarWorker.js'
 import { VError } from '../VError/VError.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletMap from '../ViewletMap/ViewletMap.js'
+import * as ViewletManagerVisitor from '../ViewletManagerVisitor/ViewletManagerVisitor.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
+import * as UpdateDynamicFocusContext from '../UpdateDynamicFocusContext/UpdateDynamicFocusContext.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
@@ -63,7 +69,6 @@ const getInitialBackendUrl = () => {
 
 const getDefaultAuthState = () => {
   return {
-    authAccessToken: '',
     authErrorMessage: '',
     userName: '',
     userState: 'loggedOut',
@@ -74,7 +79,7 @@ const getDefaultAuthState = () => {
 
 const toAuthState = (state) => {
   return {
-    accessToken: state.authAccessToken,
+    accessToken: AuthAccessToken.get(state.uid),
     signInState: state.userState,
     userName: state.userName,
   }
@@ -82,7 +87,6 @@ const toAuthState = (state) => {
 
 const toUserInfo = (state) => {
   return {
-    authAccessToken: state.authAccessToken,
     authErrorMessage: state.authErrorMessage,
     userName: state.userName,
     userState: state.userState,
@@ -91,12 +95,9 @@ const toUserInfo = (state) => {
   }
 }
 
-const toFilteredUserInfo = (state: LayoutState, options: { readonly includeAccessToken?: boolean; readonly includeTokenUsage?: boolean } = {}) => {
-  const { includeAccessToken = true, includeTokenUsage = true } = options
+const toFilteredUserInfo = (state: LayoutState, options: { readonly includeTokenUsage?: boolean } = {}) => {
+  const { includeTokenUsage = true } = options
   const info = toUserInfo(state)
-  if (!includeAccessToken) {
-    delete info.authAccessToken
-  }
   if (!includeTokenUsage) {
     delete info.userUsedTokens
   }
@@ -118,6 +119,7 @@ const toActivityBarUserLoginState = (userState) => {
 
 export const create = (id: number): LayoutState => {
   Assert.number(id)
+  AuthAccessToken.clear(id)
   return {
     sideBarLocation: SideBarLocationType.Right,
     uid: id,
@@ -200,6 +202,7 @@ export const create = (id: number): LayoutState => {
     windowHeight: 0,
     statusBarWidth: 0,
     titleBarHeight: 0,
+    titleBarless: false,
     titleBarLeft: 0,
     titleBarTop: 0,
     titleBarVisibleBeforeFullScreen: false,
@@ -454,6 +457,7 @@ export const loadContent = (state: LayoutState, savedState: any): LayoutState =>
   const previewViewletId = getSavedPreviewViewletId(stateToRestore)
   const secondaryPreviewUri = stateToRestore?.secondaryPreviewUri || ''
   const secondaryPreviewViewletId = getSavedSecondaryPreviewViewletId(stateToRestore)
+  const titleBarless = state.platform === PlatformType.Electron && Preferences.get('window.titleBarless.enabled') === true
   const intermediateState: LayoutState = {
     ...state,
     activityBarVisible: true,
@@ -490,9 +494,10 @@ export const loadContent = (state: LayoutState, savedState: any): LayoutState =>
     secondaryPreviewWidth,
     secondaryPreviewMinWidth: 100,
     secondaryPreviewMaxWidth: Math.max(1800, windowWidth / 2),
-    titleBarHeight: isNativeTitleBarStyle(state.platform) ? 0 : GetDefaultTitleBarHeight.getDefaultTitleBarHeight(),
+    titleBarHeight: titleBarless || !isNativeTitleBarStyle(state.platform) ? GetDefaultTitleBarHeight.getDefaultTitleBarHeight() : 0,
+    titleBarless,
     titleBarVisible: true,
-    titleBarNative: isNativeTitleBarStyle(state.platform),
+    titleBarNative: !titleBarless && isNativeTitleBarStyle(state.platform),
     windowHeight,
     windowWidth,
     activityBarSashVisible: true,
@@ -662,12 +667,7 @@ const renderActivityBarAuthCommands = async (state: LayoutState) => {
   if (activityBarId === -1) {
     return []
   }
-  await ActivityBarWorker.invoke(
-    'ActivityBar.setUserLoginState',
-    activityBarId,
-    toActivityBarUserLoginState(userState),
-    toFilteredUserInfo(state, { includeAccessToken: false }),
-  )
+  await ActivityBarWorker.invoke('ActivityBar.setUserLoginState', activityBarId, toActivityBarUserLoginState(userState), toFilteredUserInfo(state))
   const diffResult = await ActivityBarWorker.invoke('ActivityBar.diff2', activityBarId)
   return ActivityBarWorker.invoke('ActivityBar.render2', activityBarId, diffResult)
 }
@@ -676,7 +676,10 @@ const renderChatAuthCommands = async (state: LayoutState) => {
   if (state.secondarySideBarId === -1 || state.secondarySideBarView !== ViewletModuleId.Chat) {
     return []
   }
-  await ChatViewWorker.invoke('Chat.handleAuthStateChange', state.secondarySideBarId, toUserInfo(state))
+  await ChatViewWorker.invoke('Chat.handleAuthStateChange', state.secondarySideBarId, {
+    ...toUserInfo(state),
+    authAccessToken: AuthAccessToken.get(state.uid),
+  })
   const diffResult = await ChatViewWorker.invoke('Chat.diff2', state.secondarySideBarId)
   return ChatViewWorker.invoke('Chat.render2', state.secondarySideBarId, diffResult)
 }
@@ -1016,8 +1019,13 @@ export const showPanel = async (state: LayoutState, moduleId = state.panelView, 
 }
 
 export const openIntegratedTerminal = async (state: LayoutState, cwd: string): Promise<LayoutStateResult> => {
-  const terminalsActive = state.panelVisible && Boolean(ViewletStates.getInstance(ViewletModuleId.Terminals))
-  if (terminalsActive) {
+  const terminalsExist = Boolean(ViewletStates.getInstance(ViewletModuleId.Terminals))
+  if (terminalsExist) {
+    if (!state.panelVisible || state.panelView !== ViewletModuleId.Terminals) {
+      await Viewlet.executeViewletCommand(state.uid, 'showPanel', ViewletModuleId.Terminals)
+      await Command.execute('Terminals.addTerminal', cwd)
+      return { newState: state, commands: [] }
+    }
     await Command.execute('Terminals.addTerminal', cwd)
     return {
       newState: {
@@ -1143,6 +1151,19 @@ export const toggleActivityBar = (state: LayoutState) => {
   return toggle(state, LayoutModules.ActivityBar)
 }
 
+export const toggleMenuBar = async (state: LayoutState): Promise<LayoutStateResult> => {
+  const titleBar = ViewletStates.getInstance(LayoutModules.TitleBar.moduleId, state.applicationId)
+  if (titleBar) {
+    const titleBarState = await TitleBarWorker.invoke('TitleBar.getComponentState', titleBar.state.uid)
+    const command = titleBarState.titleBarMenuBarEnabled ? 'hideMenuBar' : 'showMenuBar'
+    await Viewlet.executeViewletCommand(titleBar.state.uid, command)
+  }
+  return {
+    newState: state,
+    commands: [],
+  }
+}
+
 const getPreferredViewLocation = async (viewId: string): Promise<'preview' | 'secondaryPreview' | 'sideBar'> => {
   if (!viewId.includes('.')) {
     return 'sideBar'
@@ -1251,6 +1272,17 @@ export const showPreview = async (
   uri: string = initialState.previewUri,
   previewViewletId: string = getPreviewViewletId(uri),
 ) => {
+  if (previewViewletId === ViewletModuleId.Preview && /\.html?(?:[?#].*)?$/i.test(uri)) {
+    return showPreview(initialState, HtmlPreviewUrl.encode(uri), ViewletModuleId.SimpleBrowser)
+  }
+  if (HtmlPreviewUrl.isHtmlPreviewUrl(uri)) {
+    previewViewletId = ViewletModuleId.SimpleBrowser
+    if (initialState.previewVisible && initialState.previewViewletId === ViewletModuleId.SimpleBrowser) {
+      await Viewlet.executeViewletCommand(initialState.previewId, 'openTab', uri, 'foreground-tab')
+      return { newState: initialState, commands: [] }
+    }
+  }
+
   if (
     initialState.previewVisible &&
     initialState.previewId !== -1 &&
@@ -2294,6 +2326,19 @@ export const handleSashPointerMove = async (state: LayoutState, x: number, y: nu
     const { kVisible, moduleId } = module
     if (state[kVisible] !== newState[kVisible]) {
       if (newState[kVisible]) {
+        if (module === LayoutModules.Panel) {
+          const shown = await show(
+            {
+              ...state,
+              panelHeight: newState.panelHeight,
+            },
+            module,
+            undefined,
+          )
+          newState = shown.newState
+          allCommands.push(...shown.commands)
+          continue
+        }
         const viewletUid = Id.create()
         showAsync(uid, newState, module, viewletUid) // TODO avoid side effect
         const commands = showPlaceholder(uid, newState, module)
@@ -2399,7 +2444,11 @@ export const showE2eTests = async (state: LayoutState) => {
   return state
 }
 
-export const handleBlur = (state: LayoutState) => {
+export const handleBlur = async (state: LayoutState) => {
+  const titleBar = ViewletStates.getInstance(LayoutModules.TitleBar.moduleId, state.applicationId)
+  if (titleBar) {
+    await Viewlet.executeViewletCommand(titleBar.state.uid, 'closeMenu', false)
+  }
   return handleFocusChange(state, false)
 }
 
@@ -2617,12 +2666,10 @@ export const getUserInfo = (state: LayoutState, options: { readonly includeAcces
 }
 
 const mergeAuthState = (state: LayoutState, authState) => {
-  const authAccessToken =
-    typeof authState?.authAccessToken === 'string'
-      ? authState.authAccessToken
-      : typeof authState?.accessToken === 'string'
-        ? authState.accessToken
-        : state.authAccessToken
+  const authAccessToken = typeof authState?.authAccessToken === 'string' ? authState.authAccessToken : authState?.accessToken
+  if (typeof authAccessToken === 'string') {
+    AuthAccessToken.set(state.uid, authAccessToken)
+  }
   const userState =
     typeof authState?.userState === 'string'
       ? authState.userState
@@ -2631,7 +2678,6 @@ const mergeAuthState = (state: LayoutState, authState) => {
         : state.userState
   return {
     ...state,
-    authAccessToken,
     authErrorMessage: typeof authState?.authErrorMessage === 'string' ? authState.authErrorMessage : state.authErrorMessage,
     userName: typeof authState?.userName === 'string' ? authState.userName : state.userName,
     userState,
@@ -2654,20 +2700,36 @@ export const refreshAuthState = async (state: LayoutState): Promise<LayoutStateR
   return setAuthState(state, authState)
 }
 
-const showAuthNotification = async (type: string, message: string): Promise<void> => {
+const showAuthNotification = async (type: string, message: string): Promise<string | undefined> => {
   try {
-    await Command.execute('Notification.create', type, message)
+    return await Command.execute('Notification.create', type, message)
   } catch {
     // Authentication should continue when notifications are unavailable.
+    return undefined
   }
 }
 
 export const signIn = async (state: LayoutState): Promise<LayoutStateResult> => {
   const { platform, backendUrl } = state
+  let notificationId: string | undefined
   if (platform === PlatformType.Electron) {
-    await showAuthNotification('info', 'Continue signing in in your browser. If it did not open, check your system default browser settings.')
+    notificationId = await showAuthNotification(
+      'info',
+      'Continue signing in in your browser. If it did not open, check your system default browser settings.',
+    )
   }
-  const authState = await AuthWorker.signIn(backendUrl, platform)
+  let authState
+  try {
+    authState = await AuthWorker.signIn(backendUrl, platform)
+  } finally {
+    if (notificationId !== undefined) {
+      try {
+        await Command.execute('Notification.dispose', notificationId)
+      } catch {
+        // Notification cleanup must not prevent authentication from completing.
+      }
+    }
+  }
   const newState = mergeAuthState(state, authState)
   if (newState.authErrorMessage) {
     await showAuthNotification('error', newState.authErrorMessage)
@@ -2717,6 +2779,10 @@ export const handleWorkspaceRefresh = async (state: LayoutState, refresh: Worksp
   return result
 }
 
+export const handleSourceControlProgressChange = async (state: LayoutState): Promise<LayoutStateResult> => {
+  return callGlobalEvent(state, 'handleSourceControlProgressChange')
+}
+
 export const refreshProblemsSummary = async (state: LayoutState): Promise<LayoutStateResult> => {
   try {
     const summary = await ProblemsWorker.invoke('Problems.getProblemsSummary')
@@ -2747,9 +2813,14 @@ const callGlobalEventAndRefreshProblemsSummary = async (state: LayoutState, even
   }
 }
 
-export const handleActiveEditorChange = async (state: LayoutState, activeUri: string) => {
+export const handleActiveEditorChange = async (state: LayoutState, activeUri: string, activeIsTextEditor = true) => {
   const restored = state.browserFullWidth ? await BrowserFullWidth.leave(state) : { newState: state, commands: [] }
   const eventResult = await callGlobalEvent(restored.newState, 'handleActiveEditorChange', activeUri)
+  try {
+    await StatusBarWorker.invoke('StatusBar.handleEditorStatusVisibilityChanged', activeIsTextEditor)
+  } catch {
+    // Older status bar workers do not support active editor visibility updates.
+  }
   const summaryResult = activeUri ? await refreshProblemsSummary(eventResult.newState) : await clearProblemsSummary(eventResult.newState)
   return {
     newState: summaryResult.newState,
@@ -2763,6 +2834,7 @@ export const handleDiagnosticsChange = async (state: LayoutState, uri: string) =
 
 export const handleSettingsChanged = async (state: LayoutState) => {
   await Preferences.hydrate()
+  await ViewletManagerVisitor.reloadDynamicCss()
   await BrowserFullWidth.configureGesture()
   return callGlobalEvent(state, 'handleSettingsChanged')
 }
@@ -2826,10 +2898,16 @@ const getActiveSideBarExtensionId = (state: LayoutState): string => {
 
 export const handleExtensionsChanged = async (state: LayoutState, extensionId?: string, disabled?: boolean): Promise<LayoutStateResult> => {
   const globalEventResult = await callGlobalEvent(state, 'handleExtensionsChanged')
+  // Workers have already queued these transactions. Commit them before an extension
+  // provider query can delay every subsequent direct render of the same views.
+  UpdateDynamicFocusContext.updateDynamicFocusContext(globalEventResult.commands)
+  if (globalEventResult.commands.length > 0) {
+    await RendererProcess.invoke('Viewlet.sendMultiple', globalEventResult.commands)
+  }
   const sourceControlBadgeResult = await refreshSourceControlBadgeCount(globalEventResult.newState)
   const extensionChangeResult = {
     newState: sourceControlBadgeResult.newState,
-    commands: [...globalEventResult.commands, ...sourceControlBadgeResult.commands],
+    commands: sourceControlBadgeResult.commands,
   }
   if (!disabled || !extensionId || getActiveSideBarExtensionId(extensionChangeResult.newState) !== extensionId) {
     return extensionChangeResult
@@ -2879,8 +2957,11 @@ export const openSideBarView = async (state: LayoutState, moduleId, focus = fals
     return result
   }
   await ViewletManager.waitForLoadContentLater(moduleId)
-  await Viewlet.focus(moduleId)
-  return result
+  const focusCommands = await Viewlet.getFocusCommands(moduleId)
+  return {
+    newState: result.newState,
+    commands: [...result.commands, ...focusCommands],
+  }
 }
 
 export const openTextSearch = async (state: LayoutState): Promise<LayoutStateResult> => {

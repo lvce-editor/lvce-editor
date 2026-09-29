@@ -1,12 +1,13 @@
 import * as BrowserKey from '../BrowserKey/BrowserKey.js'
 import * as Command from '../Command/Command.js'
 import * as EditorWorker from '../EditorWorker/EditorWorker.ts'
-import * as FilterFocusCommands from '../FilterFocusCommands/FilterFocusCommands.js'
 import * as Focus from '../Focus/Focus.js'
 import * as WhenExpression from '../WhenExpression/WhenExpression.js'
 import * as GetTokenizePath from '../GetTokenizePath/GetTokenizePath.js'
 import * as Languages from '../Languages/Languages.js'
+import * as LanguagesState from '../LanguagesState/LanguagesState.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
+import * as SaveState from '../SaveState/SaveState.js'
 import * as WrapEditorCommands from '../WrapEditorCommands/WrapEditorCommands.js'
 
 const subWidgetCommandIds = [
@@ -109,6 +110,7 @@ const hotReload = async (state, editor, ...args) => {
 
 const handleUriChange = async (editor, editorUidOrNewUri, maybeNewUri) => {
   const newUri = maybeNewUri ?? editorUidOrNewUri
+  LanguagesState.clearExplicitLanguageId(editor.uri)
   await EditorWorker.invoke('Editor.handleUriChange', editor.uid, newUri)
   const languageId = Languages.getLanguageId(newUri)
   if (languageId !== editor.languageId) {
@@ -127,16 +129,23 @@ const loadContentLater = async (editor) => {
 }
 
 const loadEditorContent = WrapEditorCommands.wrapEditorCommand('Editor.loadContent')
+const loadEditorContentPreservingFocus = WrapEditorCommands.wrapEditorCommand('Editor.loadContent', { preserveFocus: true })
 
-const loadContent = async (editor, savedState, context) => {
-  const newState = await loadEditorContent(editor, savedState)
-  if (!context?.preserveFocus) {
-    return newState
+const loadContent = (editor, savedState, context) => {
+  const load = context?.preserveFocus ? loadEditorContentPreservingFocus : loadEditorContent
+  return load(editor, savedState)
+}
+
+const updateDiagnostics = WrapEditorCommands.wrapEditorCommand('Editor.updateDiagnostics', { preserveFocus: true })
+const setLanguageId = async (editor, languageId, tokenizePath, isExplicit) => {
+  const result = await WrapEditorCommands.wrapEditorCommand('Editor.setLanguageId')(editor, languageId, tokenizePath, isExplicit)
+  if (isExplicit) {
+    LanguagesState.setExplicitLanguageId(editor.uri, languageId)
+    await SaveState.saveViewletState(editor.uid)
+  } else {
+    LanguagesState.clearExplicitLanguageId(editor.uri)
   }
-  return {
-    ...newState,
-    commands: FilterFocusCommands.filterFocusCommands(newState.commands),
-  }
+  return result
 }
 
 const renderPending = Object.assign(WrapEditorCommands.renderPendingEditors, { targetUid: true })
@@ -157,16 +166,22 @@ const handleColorPickerSliderKeyDown = (editor, ...args) => {
   return executeWidgetCommand(editor, ...args)
 }
 
+const refreshGutterDecorationsAll = Object.assign(() => EditorWorker.invoke('Editor.refreshGutterDecorationsAll'), { requiresInstance: false })
+
 export const getCommands = async () => {
   const commandIds = await EditorWorker.invoke('Editor.getCommandIds')
   Object.assign(Commands, WrapEditorCommands.wrapEditorCommands(commandIds), WrapEditorCommands.wrapEditorCommands(subWidgetCommandIds), {
+    'Editor.save': Object.assign(WrapEditorCommands.wrapEditorCommand('Editor.save'), { acceptsTargetUid: true }),
     __renderPending: renderPending,
     handleFocus,
     handleUriChange,
     loadContent,
     loadContentLater,
     renderPending,
+    refreshGutterDecorationsAll,
+    setLanguageId,
     showOverlayMessage,
+    updateDiagnostics,
     hotReload,
     'ColorPicker.handleSliderKeyDown': handleColorPickerSliderKeyDown,
   })

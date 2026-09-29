@@ -24,13 +24,13 @@ test('loads unsupported viewlet on web', async () => {
   expect(module.getKeyBindings()).toEqual([])
 })
 
-test('loads worker-backed viewlet on web with an active workspace connection', async () => {
+test('keeps the local platform with an active workspace connection', async () => {
   jest.mocked(WorkspaceConnection.isActive).mockReturnValue(true)
 
   const module = await LoadFileWatcherExplorerViewletModule.loadFileWatcherExplorerViewletModule(PlatformType.Web)
 
   const state = module.create(7, 'file-watcher-explorer://', 1, 2, 3, 4)
-  expect(state.platform).toBe(PlatformType.Remote)
+  expect(module.loadContent(state)).toEqual({ ...state, message: 'File Watcher Explorer is not supported on web.' })
   expect(typeof module.getCommands).toBe('function')
   expect(typeof module.getKeyBindings).toBe('function')
 })

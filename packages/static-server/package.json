@@ -41,9 +41,12 @@
     }
   },
   "dependencies": {
-    "@lvce-editor/rpc": "^6.19.3"
+    "@lvce-editor/rpc": "^6.21.1"
   },
   "devDependencies": {
-    "@jest/globals": "^30.5.1"
+    "@jest/globals": "^30.5.2"
+  },
+  "allowScripts": {
+    "@parcel/watcher@2.6.0": true
   }
 }

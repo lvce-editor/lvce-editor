@@ -1,3 +1,4 @@
+import * as ExtensionManagementWorker from '../ExtensionManagementWorker/ExtensionManagementWorker.js'
 import * as ExtensionHostCommands from '../ExtensionHost/ExtensionHostCommands.js'
 import * as IpcParentWithWebSocket from '../IpcParentWithWebSocket/IpcParentWithWebSocket.js'
 import * as Json from '../Json/Json.js'
@@ -118,6 +119,13 @@ export const getWebSocketUrl = async (type, searchParams = {}) => {
 }
 
 export const connectMessagePort = async (type, port, searchParams = {}) => {
+  if (type === 'terminal-process') {
+    const workspaceUri = await ExtensionManagementWorker.invoke('Extensions.getWorkspaceTransportUri')
+    if (workspaceUri) {
+      await ExtensionManagementWorker.invokeAndTransfer('Extensions.connectWorkspaceTerminal', workspaceUri, port)
+      return true
+    }
+  }
   if (!isActive()) {
     return false
   }

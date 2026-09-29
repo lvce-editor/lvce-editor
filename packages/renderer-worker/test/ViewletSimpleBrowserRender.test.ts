@@ -48,6 +48,28 @@ test('rerenders when suggestions change', () => {
   expect(ViewletSimpleBrowserRender.render[0].isEqual(state, newState)).toBe(false)
 })
 
+test('rerenders the snapshot when the activity bar settings menu opens', () => {
+  const oldState = {
+    ...state,
+    overlayIds: ['menu'],
+  }
+  const newState = {
+    ...oldState,
+    overlayIds: ['settings-menu'],
+  }
+
+  expect(ViewletSimpleBrowserRender.render[0].isEqual(oldState, newState)).toBe(false)
+})
+
+test('updates inline completion when the input changes but suggestions stay the same', () => {
+  const oldState = { ...state, inputValue: 'what is', suggestions: ['what is'] }
+  const newState = { ...oldState, inputValue: 'what' }
+
+  expect(ViewletSimpleBrowserRender.render[0].isEqual(oldState, newState)).toBe(false)
+  const commands = ViewletSimpleBrowserRender.render[0].apply(oldState, newState)
+  expect(commands[0][2]).not.toContainEqual(expect.objectContaining({ key: 'value' }))
+})
+
 test('rerenders when the audio indicator setting changes', () => {
   const oldState = {
     ...state,
@@ -82,7 +104,7 @@ test('renders suggestions incrementally without taking keyboard focus', () => {
 
   const commands = ViewletSimpleBrowserRender.render[0].apply(state, newState)
 
-  expect(commands[0].slice(0, 2)).toEqual(['Viewlet.setPatches', 42])
+  expect(commands[0].slice(0, 2)).toEqual(['Viewlet.setTreePatches', 42])
   expect(commands[0][2]).not.toHaveLength(0)
   expect(commands.some((command) => command[0] === 'Viewlet.focusElementByName')).toBe(false)
 })
@@ -97,6 +119,18 @@ test('renders the initial dom in full', () => {
 
   expect(commands).toHaveLength(1)
   expect(commands[0].slice(0, 2)).toEqual(['Viewlet.setDom2', 42])
+})
+
+test('keeps the browser root when adding history suggestions without an inline completion', () => {
+  const oldState = { ...state, iframeSrc: '', inputValue: 'example' }
+  const newState = { ...oldState, suggestions: [{ value: 'https://example.com', favicon: '', type: 'url' }] }
+
+  const commands = ViewletSimpleBrowserRender.render[0].apply(oldState, newState)
+
+  expect(commands[0].slice(0, 2)).toEqual(['Viewlet.setTreePatches', 42])
+  expect(commands[0][2]).toEqual([
+    expect.objectContaining({ type: 6, nodes: expect.arrayContaining([expect.objectContaining({ className: 'SimpleBrowserSuggestions' })]) }),
+  ])
 })
 
 test('does not focus the address input after suggestions close', () => {
@@ -117,6 +151,29 @@ test('synchronizes the native address value when selecting another tab', () => {
   expect(ViewletSimpleBrowserRender.render[1].isEqual(oldState, newState)).toBe(false)
   expect(ViewletSimpleBrowserRender.render[1].multiple).toBe(true)
   expect(ViewletSimpleBrowserRender.render[1].apply(oldState, newState)).toEqual([['Viewlet.setValueByName', 42, 'simple-browser-address', '']])
+})
+
+test('synchronizes the address after navigation in the current tab', () => {
+  const newState = { ...state, iframeSrc: 'https://other.example', inputValue: 'https://other.example' }
+
+  expect(ViewletSimpleBrowserRender.render[1].isEqual(state, newState)).toBe(false)
+  expect(ViewletSimpleBrowserRender.render[1].apply(state, newState)).toEqual([
+    ['Viewlet.setValueByName', 42, 'simple-browser-address', 'https://other.example'],
+  ])
+})
+
+test('does not overwrite newer native typing when suggestions arrive', () => {
+  const newState = { ...state, inputValue: 'wh', suggestions: ['what is'] }
+
+  expect(ViewletSimpleBrowserRender.render[1].isEqual(state, newState)).toBe(true)
+  const patches = ViewletSimpleBrowserRender.render[0].apply(state, newState)[0][2]
+  expect(patches).not.toContainEqual(expect.objectContaining({ key: 'value' }))
+})
+
+test('synchronizes the address when navigating to the same URL again', () => {
+  const newState = { ...state, addressValueVersion: 1 }
+
+  expect(ViewletSimpleBrowserRender.render[1].isEqual(state, newState)).toBe(false)
 })
 
 test('focuses the address input for a new empty tab', () => {
@@ -184,6 +241,14 @@ test('routes address input changes to the simple browser state', async () => {
   })
 })
 
+test('routes history link clicks to navigation without following the anchor', async () => {
+  expect(await ViewletSimpleBrowserRender.renderEventListeners()).toContainEqual({
+    name: DomEventListenerFunctions.HandleClickSimpleBrowserHistoryUrl,
+    params: ['setUrl', 'event.currentTarget.dataset.url'],
+    preventDefault: true,
+  })
+})
+
 test('routes browser chrome focus with the focused element name', async () => {
   expect(await ViewletSimpleBrowserRender.renderEventListeners()).toContainEqual({
     name: DomEventListenerFunctions.HandleFocusInSimpleBrowser,
@@ -225,6 +290,28 @@ test('routes tab pointer events to show and hide the rich hover', async () => {
       },
     ]),
   )
+})
+
+test('routes tab list pointer events for freezing and restoring tab sizing', async () => {
+  expect(await ViewletSimpleBrowserRender.renderEventListeners()).toEqual(
+    expect.arrayContaining([
+      {
+        name: DomEventListenerFunctions.HandlePointerOverSimpleBrowserTabs,
+        params: ['handleTabsPointerOver', 'event.currentTarget.firstElementChild.firstElementChild.offsetWidth'],
+      },
+      {
+        name: DomEventListenerFunctions.HandlePointerOutSimpleBrowserTabs,
+        params: ['handleTabsPointerOut', 'event.clientX', 'event.clientY'],
+      },
+    ]),
+  )
+})
+
+test('rerenders when the frozen tab width changes', () => {
+  const oldState = { ...state, tabWidth: 180 }
+  const newState = { ...state, tabWidth: 120 }
+
+  expect(ViewletSimpleBrowserRender.render[0].isEqual(oldState, newState)).toBe(false)
 })
 
 test('routes audio button clicks to mute the tab without selecting it', async () => {

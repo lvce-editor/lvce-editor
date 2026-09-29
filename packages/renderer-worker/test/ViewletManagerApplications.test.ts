@@ -129,3 +129,31 @@ test('concurrent loads cannot claim the same uid even inside one application', a
   expect(ViewletStates.getByUid(3)).toBeUndefined()
   expect(ApplicationRegistry.getOwner(3)).toBeUndefined()
 })
+
+test('application commands wait for DOM commands and skip disposed queued work', async () => {
+  const Viewlet = await import('../src/parts/Viewlet/Viewlet.js')
+  const started = Promise.withResolvers<void>()
+  const finish = Promise.withResolvers<void>()
+  const update = jest.fn(async (state: { uid: number; value: string }) => ({ ...state, value: 'updated' }))
+  addLayout('source', 1, {
+    async pause(state) {
+      started.resolve()
+      await finish.promise
+      return state
+    },
+    update,
+  })
+  ViewletStates.getInstance(1).factory.serializeCommands = true
+  const first = Viewlet.executeViewletCommand(1, 'pause')
+  await started.promise
+  const next = ViewletManager.executeForApplication('source', 'Layout.update')
+  try {
+    await new Promise<void>((resolve) => setTimeout(resolve, 0))
+    expect(update).not.toHaveBeenCalled()
+    ViewletStates.remove(1)
+  } finally {
+    finish.resolve()
+    await Promise.all([first, next])
+  }
+  expect(update).not.toHaveBeenCalled()
+})

@@ -70,6 +70,22 @@ test('readFile - error', async () => {
   await expect(ExtensionHostFileSystem.readFile('memfs:///test.txt')).rejects.toThrow(new TypeError('x is not a function'))
 })
 
+test('stat dispatches through isolated file system providers', async () => {
+  invoke.mockResolvedValue({ found: true, result: 3 })
+
+  await expect(ExtensionHostFileSystem.stat('remote-ssh:///workspace/link')).resolves.toBe(3)
+  expect(invoke).toHaveBeenCalledWith('Extensions.executeFileSystemProviderStat', 'remote-ssh', 'remote-ssh:///workspace/link')
+  expect(ExtensionHostShared.executeProvider).not.toHaveBeenCalled()
+})
+
+test('getOpenExternalPath dispatches through isolated file system providers', async () => {
+  invoke.mockResolvedValue({ found: true, result: '\\\\wsl.localhost\\Ubuntu\\workspace' })
+
+  await expect(ExtensionHostFileSystem.getOpenExternalPath('wsl://Ubuntu/workspace')).resolves.toBe('\\\\wsl.localhost\\Ubuntu\\workspace')
+  expect(invoke).toHaveBeenCalledWith('Extensions.executeFileSystemProviderGetOpenExternalPath', 'wsl', 'wsl://Ubuntu/workspace')
+  expect(ExtensionHostShared.executeProvider).not.toHaveBeenCalled()
+})
+
 test('getBlob preserves binary provider content', async () => {
   const audio = new Blob(['recorded audio'], { type: 'audio/webm' })
   invoke.mockResolvedValue({ found: true, result: audio })

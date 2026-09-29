@@ -5,11 +5,14 @@ jest.unstable_mockModule('../src/parts/EmbedsWorker/EmbedsWorker.js', () => ({
   invoke: jest.fn(() => 12),
 }))
 
+jest.unstable_mockModule('../src/parts/GetWindowId/GetWindowId.js', () => ({ getWindowId: jest.fn(() => 7) }))
+
 const ElectronWebContentsView = await import('../src/parts/ElectronWebContentsView/ElectronWebContentsView.js')
 const EmbedsWorker = await import('../src/parts/EmbedsWorker/EmbedsWorker.js')
 
 test('tracks an adopted popup until both browser views are closed', async () => {
   await expect(ElectronWebContentsView.createWebContentsView(0, [])).resolves.toBe(12)
+  expect(EmbedsWorker.invoke).toHaveBeenCalledWith('ElectronWebContentsView.createWebContentsView', 0, [], 7)
   ElectronWebContentsView.adoptWebContentsView()
 
   await ElectronWebContentsView.releaseWebContentsView()

@@ -60,9 +60,33 @@ test('lists native and supported worker-backed components once', () => {
   })
 
   expect(ComponentState.getComponents()).toEqual([
-    { displayName: 'Editor', domAvailable: false, editable: false, moduleId: 'Editor', uid: 3 },
-    { displayName: 'Explorer', domAvailable: false, editable: true, moduleId: 'Explorer', uid: 2 },
-    { displayName: 'Layout', domAvailable: false, editable: true, moduleId: 'Layout', uid: 1 },
+    {
+      displayName: 'Editor',
+      domAvailable: false,
+      heapSnapshotAvailable: false,
+      editable: false,
+      moduleId: 'Editor',
+      savedStateAvailable: false,
+      uid: 3,
+    },
+    {
+      displayName: 'Explorer',
+      domAvailable: false,
+      heapSnapshotAvailable: false,
+      editable: true,
+      moduleId: 'Explorer',
+      savedStateAvailable: false,
+      uid: 2,
+    },
+    {
+      displayName: 'Layout',
+      domAvailable: false,
+      heapSnapshotAvailable: false,
+      editable: true,
+      moduleId: 'Layout',
+      savedStateAvailable: false,
+      uid: 1,
+    },
   ])
 })
 
@@ -83,7 +107,15 @@ test('uses a worker-backed component state availability check', () => {
   })
 
   expect(ComponentState.getComponents()).toEqual([
-    { displayName: 'ExtensionView (extension)', domAvailable: false, editable: true, moduleId: 'ExtensionView', uid: 4 },
+    {
+      displayName: 'ExtensionView (extension)',
+      domAvailable: false,
+      heapSnapshotAvailable: false,
+      editable: true,
+      moduleId: 'ExtensionView',
+      savedStateAvailable: false,
+      uid: 4,
+    },
   ])
   expect(isComponentStateAvailable).toHaveBeenCalledWith(rendererState)
 })
@@ -100,18 +132,52 @@ test('labels extension views by title and sorts by display name then uid', () =>
   }
 
   expect(ComponentState.getComponents()).toEqual([
-    { displayName: 'Hetzner (extension)', domAvailable: false, editable: true, moduleId: 'ExtensionView', uid: 2 },
-    { displayName: 'Hetzner (extension)', domAvailable: false, editable: true, moduleId: 'ExtensionView', uid: 3 },
-    { displayName: 'Notes (extension)', domAvailable: false, editable: true, moduleId: 'ExtensionView', uid: 1 },
-    { displayName: 'sample.untitled (extension)', domAvailable: false, editable: true, moduleId: 'ExtensionView', uid: 4 },
+    {
+      displayName: 'Hetzner (extension)',
+      domAvailable: false,
+      heapSnapshotAvailable: false,
+      editable: true,
+      moduleId: 'ExtensionView',
+      savedStateAvailable: false,
+      uid: 2,
+    },
+    {
+      displayName: 'Hetzner (extension)',
+      domAvailable: false,
+      heapSnapshotAvailable: false,
+      editable: true,
+      moduleId: 'ExtensionView',
+      savedStateAvailable: false,
+      uid: 3,
+    },
+    {
+      displayName: 'Notes (extension)',
+      domAvailable: false,
+      heapSnapshotAvailable: false,
+      editable: true,
+      moduleId: 'ExtensionView',
+      savedStateAvailable: false,
+      uid: 1,
+    },
+    {
+      displayName: 'sample.untitled (extension)',
+      domAvailable: false,
+      heapSnapshotAvailable: false,
+      editable: true,
+      moduleId: 'ExtensionView',
+      savedStateAvailable: false,
+      uid: 4,
+    },
   ])
 
   ViewletStates.setRenderedState(1, { ...states[0], title: 'Bookmarks' })
   expect(ComponentState.getComponents()[0]).toEqual({
     displayName: 'Bookmarks (extension)',
     domAvailable: false,
+    heapSnapshotAvailable: false,
     editable: true,
     moduleId: 'ExtensionView',
+    savedStateAvailable: false,
     uid: 1,
   })
 })
@@ -136,6 +202,64 @@ test('gets authoritative worker state', async () => {
 
   await expect(ComponentState.getState(2)).resolves.toBe(componentState)
   expect(getComponentState).toHaveBeenCalledWith(rendererState)
+})
+
+test('gets current factory saved state without changing the component state', async () => {
+  const rendererState = { uid: 8, value: 'runtime' }
+  const savedState = { uid: 8, value: 'persisted' }
+  const saveState = jest.fn(async (_state: typeof rendererState) => savedState)
+  ViewletStates.set(8, { factory: { saveState }, moduleId: 'Explorer', renderedState: rendererState, state: rendererState })
+
+  await expect(ComponentState.getSavedState(8)).resolves.toBe(savedState)
+  expect(saveState).toHaveBeenCalledWith(rendererState)
+  expect(ViewletStates.getState(8)).toBe(rendererState)
+})
+
+test('exposes saved-state capability independently of component editability', () => {
+  const rendererState = { uid: 11 }
+  ViewletStates.set(11, {
+    factory: { hasFunctionalRender: true, saveState: jest.fn() },
+    moduleId: 'Secrets',
+    renderedState: rendererState,
+    state: rendererState,
+  })
+
+  expect(ComponentState.getComponents()).toEqual([
+    {
+      displayName: 'Secrets',
+      domAvailable: false,
+      editable: false,
+      heapSnapshotAvailable: false,
+      moduleId: 'Secrets',
+      savedStateAvailable: true,
+      uid: 11,
+    },
+  ])
+})
+
+test('reports unavailable, undefined, disposed and missing saved state explicitly', async () => {
+  await expect(ComponentState.getSavedState(99)).rejects.toThrow('Component not found: 99')
+
+  const componentState = { uid: 8 }
+  ViewletStates.set(8, { factory: {}, moduleId: 'Editor', renderedState: componentState, state: componentState })
+  await expect(ComponentState.getSavedState(8)).rejects.toThrow('Saved component state API not available: Editor')
+
+  ViewletStates.set(9, {
+    factory: { saveState: jest.fn(async () => undefined) },
+    moduleId: 'Explorer',
+    renderedState: { uid: 9 },
+    state: { uid: 9 },
+  })
+  await expect(ComponentState.getSavedState(9)).rejects.toThrow('Saved component state is undefined: Explorer')
+
+  ViewletStates.set(10, {
+    factory: { saveState: jest.fn() },
+    moduleId: 'Explorer',
+    renderedState: { uid: 10 },
+    status: 'disposed',
+    state: { uid: 10 },
+  })
+  await expect(ComponentState.getSavedState(10)).rejects.toThrow('Component is disposed: 10')
 })
 
 test('sets renderer-native state and renders it', async () => {
@@ -326,7 +450,17 @@ test('gets virtual DOM through the component API without rendering or changing s
   expect(ViewletStates.getByUid(0.25).state).toBe(state)
   expect(ViewletManager.render).not.toHaveBeenCalled()
   expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.getComponentDom', 0.25)
-  expect(ComponentState.getComponents()).toEqual([{ displayName: 'TitleBar', domAvailable: true, editable: true, moduleId: 'TitleBar', uid: 0.25 }])
+  expect(ComponentState.getComponents()).toEqual([
+    {
+      displayName: 'TitleBar',
+      domAvailable: true,
+      heapSnapshotAvailable: false,
+      editable: true,
+      moduleId: 'TitleBar',
+      savedStateAvailable: false,
+      uid: 0.25,
+    },
+  ])
 })
 
 test('rejects missing components and components without a DOM API', async () => {
@@ -336,25 +470,58 @@ test('rejects missing components and components without a DOM API', async () => 
   await expect(ComponentState.getDom(1)).rejects.toThrow('Component DOM API not available: Layout')
 })
 
+test('exposes extension view DOM only for virtual DOM views and prefers the mounted DOM', async () => {
+  const cachedDom = [{ childCount: 0, type: 4 }]
+  const mountedDom = [{ childCount: 0, className: 'PullRequests', type: 4 }]
+  const state = { dom: cachedDom, kind: 'virtualDom', uid: 12 }
+  const factory = {
+    getComponentDom: (currentState: typeof state) => currentState.dom,
+    hasFunctionalRender: true,
+    isComponentDomAvailable: (currentState: typeof state) => currentState.kind === 'virtualDom',
+  }
+  ViewletStates.set(12, { factory, moduleId: 'ExtensionView', renderedState: state, state })
+  jest.mocked(RendererProcess.invoke).mockResolvedValue(mountedDom)
+
+  expect(ComponentState.getComponents()[0].domAvailable).toBe(true)
+  await expect(ComponentState.getDom(12)).resolves.toBe(mountedDom)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.getComponentDom', 12)
+
+  const iframeState = { ...state, kind: 'iframe', uid: 13 }
+  ViewletStates.set(13, { factory, moduleId: 'ExtensionView', renderedState: iframeState, state: iframeState })
+
+  expect(ComponentState.getComponents().find(({ uid }) => uid === 13)?.domAvailable).toBe(false)
+  await expect(ComponentState.getDom(13)).rejects.toThrow('Component DOM API not available: ExtensionView')
+})
+
 test('exposes Simple Browser state and renders edits through its component state hooks', async () => {
   const factory = await import('../src/parts/ViewletSimpleBrowser/ViewletSimpleBrowser.ipc.js')
-  const state = factory.create(10, 'simple-browser://', 0, 0, 800, 600)
+  const state = { ...factory.create(10, 'simple-browser://', 0, 0, 800, 600), browserViewId: 12 }
   ViewletStates.set(10, { factory, moduleId: 'SimpleBrowser', renderedState: state, state })
 
   expect(ComponentState.getComponents()).toEqual([
-    { displayName: 'SimpleBrowser', domAvailable: false, editable: true, moduleId: 'SimpleBrowser', uid: 10 },
+    {
+      displayName: 'SimpleBrowser',
+      domAvailable: true,
+      heapSnapshotAvailable: false,
+      editable: true,
+      moduleId: 'SimpleBrowser',
+      savedStateAvailable: true,
+      uid: 10,
+    },
   ])
   await expect(ComponentState.getState(10)).resolves.toBe(state)
 
   const editedState = { ...state, inputValue: 'Live browser state' }
-  const domCommands = factory.render[0].apply(state, editedState)
+  const renderedState = { ...editedState, addressValueVersion: 1 }
+  expect(factory.render[1].isEqual(state, renderedState)).toBe(false)
+  const domCommands = factory.render[1].apply(state, renderedState)
   jest.mocked(ViewletManager.render).mockReturnValue(domCommands)
   await ComponentState.setState(10, editedState)
 
-  await expect(ComponentState.getState(10)).resolves.toBe(editedState)
-  expect(ViewletManager.render).toHaveBeenCalledWith(factory, state, editedState, 10, undefined)
+  await expect(ComponentState.getState(10)).resolves.toEqual(renderedState)
+  expect(ViewletManager.render).toHaveBeenCalledWith(factory, state, renderedState, 10, undefined)
   expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.sendMultiple', domCommands)
-  expect(domCommands).toEqual([['Viewlet.setDom2', 10, expect.arrayContaining([expect.objectContaining({ value: 'Live browser state' })])]])
+  expect(domCommands).toEqual([['Viewlet.setValueByName', 10, 'simple-browser-address', 'Live browser state']])
 })
 
 test('exposes Layout state and renders edits through its component state hooks', async () => {
@@ -362,7 +529,17 @@ test('exposes Layout state and renders edits through its component state hooks',
   const state = { ...factory.create(1), initial: false, statusBarId: 6, statusBarVisible: true }
   ViewletStates.set(1, { factory, moduleId: 'Layout', renderedState: state, state })
 
-  expect(ComponentState.getComponents()).toEqual([{ displayName: 'Layout', domAvailable: false, editable: true, moduleId: 'Layout', uid: 1 }])
+  expect(ComponentState.getComponents()).toEqual([
+    {
+      displayName: 'Layout',
+      domAvailable: false,
+      heapSnapshotAvailable: false,
+      editable: true,
+      moduleId: 'Layout',
+      savedStateAvailable: true,
+      uid: 1,
+    },
+  ])
   await expect(ComponentState.getState(1)).resolves.toBe(state)
 
   const editedState = { ...state, sideBarWidth: 320, statusBarVisible: false }
@@ -503,4 +680,56 @@ test('refreshes other DOM editors after a direct DOM edit', async () => {
   await ComponentState.setDom(2, editedDom)
   expect(Viewlet.executeViewletCommand).toHaveBeenCalledWith(10, 'loadContent', undefined, { preserveFocus: true })
   expect(ViewletStates.getState(2)).toBe(state)
+})
+
+test('lists only components belonging to the requesting inspector application', async () => {
+  const Registry = await import('../src/parts/ApplicationRegistry/ApplicationRegistry.ts')
+  for (const [id, uid] of [
+    ['source', 100],
+    ['preview', 200],
+  ] as const) {
+    Registry.create({ href: '', id, layoutUid: uid, workspacePath: '', workspaceUri: '' })
+    for (const componentUid of [uid, uid + 1]) {
+      const state = { applicationId: id, uid: componentUid }
+      ViewletStates.set(componentUid, { factory: {}, moduleId: 'Layout', renderedState: state, state })
+    }
+  }
+  try {
+    expect(ComponentState.getComponents(100).map(({ uid }) => uid)).toEqual([100, 101])
+    expect(ComponentState.getComponents(200).map(({ uid }) => uid)).toEqual([200, 201])
+    expect(ComponentState.getComponents().map(({ uid }) => uid)).toEqual([100, 101, 200, 201])
+  } finally {
+    ViewletStates.reset()
+    Registry.remove('source')
+    Registry.remove('preview')
+  }
+})
+
+test('uses the preview tab state to preserve unsaved live component edits', async () => {
+  const Registry = await import('../src/parts/ApplicationRegistry/ApplicationRegistry.ts')
+  const sourceMain = jest.fn(async () => ({ layout: { groups: [] } }))
+  const previewMain = jest.fn(async () => ({ layout: { groups: [{ tabs: [{ editorUid: 203, isDirty: true }] }] } }))
+  for (const [id, uid, getComponentState] of [
+    ['source', 100, sourceMain],
+    ['preview', 200, previewMain],
+  ] as const) {
+    Registry.create({ href: '', id, layoutUid: uid, workspacePath: '', workspaceUri: '' })
+    const state = { applicationId: id, uid: uid + 1 }
+    ViewletStates.set(uid + 1, { factory: { getComponentState }, moduleId: 'Main', renderedState: state, state })
+  }
+  try {
+    const componentState = { applicationId: 'preview', uid: 202, value: 0 }
+    const editorState = { applicationId: 'preview', uid: 203, uri: 'live-component-state:///202.json' }
+    ViewletStates.set(202, { factory: {}, moduleId: 'Explorer', renderedState: componentState, state: componentState })
+    ViewletStates.set(203, { factory: {}, moduleId: 'EditorText', renderedState: editorState, state: editorState })
+    ViewletStates.setRenderedState(202, { ...componentState, value: 1 })
+    await ComponentState.waitForRefreshes()
+    expect(previewMain).toHaveBeenCalledTimes(1)
+    expect(sourceMain).not.toHaveBeenCalled()
+    expect(Viewlet.executeViewletCommand).not.toHaveBeenCalled()
+  } finally {
+    ViewletStates.reset()
+    Registry.remove('source')
+    Registry.remove('preview')
+  }
 })

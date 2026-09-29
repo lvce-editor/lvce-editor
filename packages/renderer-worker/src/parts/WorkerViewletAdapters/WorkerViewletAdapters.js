@@ -13,6 +13,7 @@ import { renderActions as renderExtensionActions } from '../ViewletExtensions/Vi
 import { getKeyBindings as getProblemsKeyBindings } from '../ViewletProblems/ViewletProblemsKeyBindings.js'
 import { menus as processExplorerMenus } from '../ViewletProcessExplorer/ViewletProcessExplorerMenuEntries.js'
 import { resize as resizeTitleBar } from '../ViewletTitleBar/ViewletTitleBarResize.js'
+import * as TitleBarMenuOverlay from '../ViewletTitleBar/TitleBarMenuOverlay.js'
 import { wrapTitleBarCommand } from '../ViewletTitleBar/WrapTitleBarCommand.js'
 import { wrapActivityBarCommand } from '../WrapActivityBarCommand/WrapActivityBarCommand.ts'
 import { wrapDiffViewCommand } from '../WrapDiffViewCommand/WrapDiffViewCommand.ts'
@@ -148,9 +149,6 @@ export const preview = {
       decrement(state) {
         return { ...state, count: state.count - 1 }
       },
-      dispose(state) {
-        return { ...state, disposed: true }
-      },
       increment(state) {
         return { ...state, count: state.count + 1 }
       },
@@ -161,7 +159,7 @@ export const preview = {
       return state
     }
     const layoutState = ViewletStates.getState(ViewletModuleId.Layout)
-    return { ...state, uri: layoutState.previewUri || state.uri }
+    return { ...state, uri: state.uri || layoutState?.previewUri }
   },
   wrapCommand(command, defaultWrapCommand, { worker }) {
     if (command !== 'getRuntimeDiagnostics') {
@@ -211,10 +209,16 @@ export const quickPick = {
     // must not replace QuickPick.executeCallback with a view command.
     delete Commands.executeCallback
   },
-  extendModule() {
+  extendModule(_workerViewlet, { worker }) {
     return {
       dispose(state) {
         return state
+      },
+      async handleIconThemeChange(state) {
+        await worker.invoke('QuickPick.setDeltaY', state.uid, state.deltaY, true)
+        const diff = await worker.invoke('QuickPick.diff2', state.uid)
+        const commands = await worker.invoke('QuickPick.render2', state.uid, diff)
+        return { ...state, commands }
       },
       saveState() {
         return {}
@@ -281,7 +285,9 @@ export const textSearch = {
             return state
           }
           const commands = await worker.invoke('TextSearch.render2', state.uid, diff)
-          return { ...state, commands }
+          const actionsDom = await worker.invoke('TextSearch.renderActions', state.uid)
+          const latestState = ViewletStates.getByUid(state.uid)?.state || state
+          return { ...latestState, actionsDom, commands }
         } finally {
           invocation.finish()
         }
@@ -293,6 +299,7 @@ export const textSearch = {
 export const titleBar = {
   extendModule() {
     return {
+      afterRender: TitleBarMenuOverlay.afterRender,
       handleFocusChange(state, isFocused) {
         return { ...state, isFocused }
       },
@@ -312,11 +319,12 @@ export const titleBar = {
       titleBarTitleEnabled: Preferences.get('titleBar.titleEnabled') ?? false,
     }
   },
+  transformRenderedState: TitleBarMenuOverlay.reconcile,
   transformState(state) {
     return {
       ...state,
-      controlsOverlayEnabled: Preferences.get('window.controlsOverlay.enabled') === true,
-      titleBarStyleCustom: Preferences.get('window.titleBarStyle') === 'custom',
+      controlsOverlayEnabled: Preferences.get('window.controlsOverlay.enabled') === true && Preferences.get('window.titleBarless.enabled') !== true,
+      titleBarStyleCustom: Preferences.get('window.titleBarStyle') === 'custom' || Preferences.get('window.titleBarless.enabled') === true,
     }
   },
   wrapCommand: wrapTitleBarCommand,

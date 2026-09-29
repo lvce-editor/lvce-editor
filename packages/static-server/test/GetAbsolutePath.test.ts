@@ -66,3 +66,15 @@ test('returns 404 for missing vscode icon in development', async () => {
     headers: {},
   })
 })
+
+test('returns 200 for the menu submenu chevron icon', async () => {
+  const response = await GetResponseInfo.getResponseInfo({
+    request: {
+      method: 'GET',
+      url: '/icons/chevron-right.svg',
+    },
+    isImmutable: false,
+  })
+
+  expect(response.status).toBe(HttpStatusCode.Ok)
+})

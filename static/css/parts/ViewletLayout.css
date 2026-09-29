@@ -8,6 +8,30 @@
   flex-direction: column;
 }
 
+/* Keep window controls in the space reserved above the primary sidebar. */
+.Workbench.TitleBarless > .TitleBar > :not(.TitleBarButtons) {
+  display: none;
+}
+
+.Workbench.TitleBarless > .TitleBar {
+  -webkit-app-region: drag;
+  flex-shrink: 0;
+  justify-content: flex-end;
+}
+
+.Workbench.CompactTitleBar > .TitleBar {
+  position: absolute;
+  top: 0;
+  left: var(--TitleBarLeft);
+  width: var(--TitleBarWidth);
+  z-index: 4;
+}
+
+.Workbench.CompactTitleBar .ContentArea > .ActivityBar,
+.Workbench.CompactTitleBar .ContentArea > .SideBar:not(.SecondarySideBar) {
+  margin-top: var(--TitleBarHeight);
+}
+
 .WorkbenchBody {
   display: flex;
   flex: 1;
@@ -42,7 +66,14 @@
   position: relative;
 }
 
-.PreviewArea > :first-child {
+.PreviewAreaContent {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  min-width: 0;
+}
+
+.PreviewAreaContent > * {
   flex: 1;
   min-height: 0;
   min-width: 0;
@@ -147,4 +178,29 @@
   flex: 1;
   min-width: 0;
   width: 100%;
+}
+
+.Workbench.BrowserFullWidthHideTitleBar > .TitleBar {
+  contain: none;
+  flex: 0 0 0;
+  height: 0;
+  left: 0;
+  overflow: visible;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  z-index: 4;
+}
+
+.Workbench.BrowserFullWidthHideTitleBar > .TitleBar > :not(.TitleBarButtons) {
+  display: none;
+}
+
+.Workbench.BrowserFullWidthHideTitleBar > .TitleBar > .TitleBarButtons {
+  flex-grow: 0;
+  height: 35px;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: auto;
 }

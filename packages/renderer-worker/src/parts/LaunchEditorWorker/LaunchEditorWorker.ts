@@ -10,7 +10,7 @@ import * as JsonRpc from '../JsonRpc/JsonRpc.js'
 import * as Transferrable from '../Transferrable/Transferrable.js'
 
 export const launchEditorWorker = async () => {
-  const configuredWorkerUrl = GetConfiguredWorkerUrl.getConfiguredWorkerUrl('developer.editorWorkerPath', EditorWorkerUrl.editorWorkerUrl)
+  const configuredWorkerUrl = GetConfiguredWorkerUrl.getConfiguredWorkerUrl('develop.editorWorkerPath', EditorWorkerUrl.editorWorkerUrl)
   const id = Id.create()
   let ipc = await IpcParent.create({
     method: IpcParentType.ModuleWorkerAndWorkaroundForChromeDevtoolsBug,

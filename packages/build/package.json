@@ -21,8 +21,8 @@
     "@babel/preset-typescript": "^7.20.1",
     "@electron/get": "^5.1.0",
     "@electron/rebuild": "^4.2.0",
-    "@electron/osx-sign": "^2.7.0",
-    "@jest/globals": "^30.5.1",
+    "@electron/osx-sign": "^2.7.1",
+    "@jest/globals": "^30.5.2",
     "@rollup/plugin-babel": "^7.1.0",
     "@rollup/plugin-commonjs": "^29.0.3",
     "@rollup/plugin-node-resolve": "^16.0.3",
@@ -38,15 +38,16 @@
   },
   "dependencies": {
     "@lvce-editor/assert": "^1.9.0",
+    "@lvce-editor/session-replay-worker": "^1.3.0",
     "@lvce-editor/verror": "^1.7.0",
     "bytes": "^3.1.2",
     "esbuild": "^0.28.2",
-    "fs-extra": "^11.4.0",
+    "fs-extra": "^11.4.1",
     "got": "^16.0.0",
     "gzip-size": "^7.0.0",
     "minimist": "^1.2.8",
-    "p-map": "^7.0.7",
-    "pretty-bytes": "^7.1.3",
+    "p-map": "^7.0.8",
+    "pretty-bytes": "^7.2.0",
     "rollup": "^4.53.3",
     "tar-fs": "^3.1.3"
   },
@@ -105,5 +106,11 @@
         }
       ]
     }
+  },
+  "allowScripts": {
+    "@parcel/watcher@2.6.0": true,
+    "electron-winstaller@5.4.0": true,
+    "esbuild@0.28.2": true,
+    "fsevents@2.3.3": true
   }
 }

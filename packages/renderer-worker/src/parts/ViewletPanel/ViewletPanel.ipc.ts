@@ -13,7 +13,9 @@ export const {
   create,
   dispose,
   getCommands,
+  getComponentState,
   getKeyBindings,
+  getMenus,
   hasDirectRender,
   hasFunctionalEvents,
   hasFunctionalRender,
@@ -27,4 +29,6 @@ export const {
   renderEventListeners,
   resize,
   saveState,
+  setComponentState,
+  workspaceChangeEvent,
 } = createWorkerViewlet({ workerId: 'panel' })

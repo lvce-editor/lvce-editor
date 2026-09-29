@@ -29,6 +29,7 @@ import * as KeyBindingsViewWorker from '../KeyBindingsViewWorker/KeyBindingsView
 import * as LanguageModelsViewWorker from '../LanguageModelsViewWorker/LanguageModelsViewWorker.js'
 import * as MainAreaWorker from '../MainAreaWorker/MainAreaWorker.js'
 import * as MarkdownWorker from '../MarkdownWorker/MarkdownWorker.js'
+import * as MenuWorker from '../MenuWorker/MenuWorker.js'
 import * as OpenerWorker from '../OpenerWorker/OpenerWorker.js'
 import * as OutputViewWorker from '../OutputViewWorker/OutputViewWorker.js'
 import * as PanelWorker from '../PanelWorker/PanelWorker.js'
@@ -49,6 +50,7 @@ import * as TextMeasurementWorker from '../TextMeasurementWorker/TextMeasurement
 import * as TextSearchViewWorker from '../TextSearchViewWorker/TextSearchViewWorker.js'
 import * as TextSearchWorker from '../TextSearchWorker/TextSearchWorker.js'
 import * as TitleBarWorker from '../TitleBarWorker/TitleBarWorker.js'
+import * as WorkersViewWorker from '../WorkersViewWorker/WorkersViewWorker.ts'
 import * as WorkspaceConnection from '../WorkspaceConnection/WorkspaceConnection.js'
 
 const directViewWorkers = {
@@ -76,6 +78,7 @@ const directViewWorkers = {
   StatusBar: [StatusBarWorker, 'StatusBar.handleMessagePort'],
   TextSearch: [TextSearchViewWorker, 'TextSearch.handleMessagePort'],
   TitleBar: [TitleBarWorker, 'TitleBar.handleMessagePort'],
+  Workers: [WorkersViewWorker, 'Workers.handleMessagePort'],
 }
 
 export const sendMessagePortToExtensionHostWorker = async (port, initialCommand, rpcId) => {
@@ -97,9 +100,6 @@ export const sendMessagePortToProcessExplorer = async (port) => {
 
 export const sendMessagePortToFileWatcherExplorer = async (port) => {
   Assert.object(port)
-  if (await WorkspaceConnection.connectMessagePort('file-watcher-explorer', port)) {
-    return
-  }
   await SharedProcess.invokeAndTransfer('HandleMessagePortForFileWatcherExplorer.handleMessagePortForFileWatcherExplorer', port)
 }
 
@@ -291,3 +291,8 @@ export const sendMessagePortToDiffWorker = async (port, initialCommand, rpcId) =
 }
 
 // TODO add only one function sendMessagePortToRpc(rpcId) which sends it to the matching rpc module
+
+export const sendMessagePortToMenuWorker = async (port) => {
+  Assert.object(port)
+  await MenuWorker.invokeAndTransfer('Menu.handleMessagePort', port)
+}

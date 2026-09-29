@@ -3,7 +3,6 @@ import * as Character from '../Character/Character.js'
 import * as Command from '../Command/Command.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as FileSystemProtocol from '../FileSystemProtocol/FileSystemProtocol.js'
-import * as FileSystemWorker from '../FileSystemWorker/FileSystemWorker.js'
 import * as GetResolvedRoot from '../GetResolvedRoot/GetResolvedRoot.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as GetProtocol from '../GetProtocol/GetProtocol.js'
@@ -16,17 +15,75 @@ import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as Product from '../Product/Product.js'
 import * as RemoteCli from '../RemoteCli/RemoteCli.js'
 import * as StatusBarWorker from '../StatusBarWorker/StatusBarWorker.js'
+import * as TerminalWorker from '../TerminalWorker/TerminalWorker.js'
 import * as WindowTitle from '../WindowTitle/WindowTitle.js'
 import * as WorkspaceConnection from '../WorkspaceConnection/WorkspaceConnection.js'
 import { state } from '../WorkspaceState/WorkspaceState.js'
 
 const pathSeparator = '/'
+const workspaceProgressDelay = 200
+
+let nextWorkspaceProgressId = 0
+let currentWorkspaceProgress
+
+const clearWorkspaceProgressTimer = () => {
+  if (currentWorkspaceProgress?.timer) {
+    clearTimeout(currentWorkspaceProgress.timer)
+  }
+}
+
+const emitWorkspaceProgress = (message) => {
+  void GlobalEventBus.emitEvent('workspace.progress', message).catch(() => {})
+}
+
+export const startProgress = (message) => {
+  clearWorkspaceProgressTimer()
+  if (currentWorkspaceProgress?.visible) {
+    emitWorkspaceProgress('')
+  }
+  const id = ++nextWorkspaceProgressId
+  const progress = {
+    id,
+    message,
+    timer: setTimeout(() => {
+      if (currentWorkspaceProgress !== progress) {
+        return
+      }
+      progress.visible = true
+      emitWorkspaceProgress(message)
+    }, workspaceProgressDelay),
+    visible: false,
+  }
+  currentWorkspaceProgress = progress
+  return id
+}
+
+export const endProgress = (id) => {
+  if (!currentWorkspaceProgress || currentWorkspaceProgress.id !== id) {
+    return
+  }
+  const wasVisible = currentWorkspaceProgress.visible
+  clearWorkspaceProgressTimer()
+  currentWorkspaceProgress = undefined
+  if (wasVisible) {
+    emitWorkspaceProgress('')
+  }
+}
 
 const toWorkspaceUri = (path) => {
   if (!path || path.startsWith('file://') || GetProtocol.getProtocol(path) !== FileSystemProtocol.Disk) {
     return path
   }
   return PathToFileUri.pathToFileUri(path)
+}
+
+const fileUriToPath = (uri) => {
+  const url = new URL(uri)
+  const path = decodeURIComponent(url.pathname)
+  if (url.hostname) {
+    return `//${url.hostname}${path}`
+  }
+  return /^\/[A-Za-z]:\//.test(path) ? path.slice(1) : path
 }
 
 const validateLocalPath = async (path) => {
@@ -59,15 +116,15 @@ export const setPath = async (path) => {
   if (workspaceChanged) {
     WorkspaceConnection.reset()
     RemoteCli.stop()
-    await FileSystemWorker.dispose()
+    await TerminalWorker.resetWorkspaceConnection()
   }
   await onWorkspaceChange()
 }
 
-export const setUri = async (uri, connectionOrPathSeparator, legacyConnection) => {
+export const setUri = async (uri, connectionOrPathSeparator, legacyConnection, openUri = '') => {
   const connection = legacyConnection || (typeof connectionOrPathSeparator === 'object' ? connectionOrPathSeparator : undefined)
   const protocol = GetProtocol.getProtocol(uri)
-  const path = connection?.workspacePath || (protocol === 'file' ? decodeURIComponent(uri.slice('file://'.length)) : uri)
+  const path = connection?.workspacePath || (protocol === 'file' ? fileUriToPath(uri) : uri)
   if (protocol === 'file' && !connection) {
     await validateLocalPath(path)
   }
@@ -92,8 +149,11 @@ export const setUri = async (uri, connectionOrPathSeparator, legacyConnection) =
     WorkspaceConnection.reset()
     RemoteCli.stop()
   }
-  await FileSystemWorker.dispose()
+  await TerminalWorker.resetWorkspaceConnection()
   await onWorkspaceChange()
+  if (openUri) {
+    await Command.execute('Main.openUri', openUri)
+  }
 }
 
 const handleRemoteCliOpenRequest = async (request) => {
@@ -177,6 +237,7 @@ export const hydrate = async ({ href }) => {
   }
   const resolvedRoot = await GetResolvedRoot.getResolvedRoot(href)
   if (state.isTest) {
+    state.homeDir = resolvedRoot.homeDir
     return
   }
   if (state.workspacePath) {

@@ -1,3 +1,5 @@
+import * as BrowserFind from './ViewletSimpleBrowserFind.js'
+import { executeWorkflow } from '../SimpleBrowserWorkflow/SimpleBrowserWorkflow.js'
 import * as ContextMenuAction from './ViewletSimpleBrowserContextMenuAction.js'
 import * as SimpleBrowser from './ViewletSimpleBrowser.js'
 import * as ViewletSimpleBrowserGetDomTree from './ViewletSimpleBrowserGetDomTree.js'
@@ -8,6 +10,15 @@ import * as ViewletSimpleBrowserInsertJavaScript from './ViewletSimpleBrowserIns
 import * as TabDrag from './ViewletSimpleBrowserTabDrag.js'
 
 export const Commands = {
+  escapeAddress: SimpleBrowser.escapeAddress,
+  applyFindResult: BrowserFind.applyFindResult,
+  toggleFind: SimpleBrowser.toggleFind,
+  closeFind: SimpleBrowser.closeFind,
+  handleFindInput: BrowserFind.handleFindInput,
+  findNext: BrowserFind.findNext,
+  findPrevious: BrowserFind.findPrevious,
+  toggleFindMatchCase: BrowserFind.toggleFindMatchCase,
+  executeWorkflow,
   handleBrowserViewDestroyed: SimpleBrowser.handleBrowserViewDestroyed,
   handleWindowOpen: SimpleBrowser.handleWindowOpen,
   handleContextMenuAction: ContextMenuAction.handleContextMenuAction,
@@ -30,6 +41,7 @@ export const Commands = {
   closeSuggestions: SimpleBrowser.closeSuggestions,
   closeCurrentTab: SimpleBrowser.closeCurrentTab,
   closeOtherTabs: SimpleBrowser.closeOtherTabs,
+  reopenClosedTab: SimpleBrowser.reopenClosedTab,
   closeTab: SimpleBrowser.closeTab,
   closeTabsToTheLeft: SimpleBrowser.closeTabsToTheLeft,
   closeTabsToTheRight: SimpleBrowser.closeTabsToTheRight,
@@ -40,19 +52,30 @@ export const Commands = {
   getDomTree: ViewletSimpleBrowserGetDomTree.getDomTree,
   go: SimpleBrowser.go,
   handleAudioStateChanged: SimpleBrowser.handleAudioStateChanged,
+  handleDownloadStateChanged: SimpleBrowser.handleDownloadStateChanged,
   handleColorThemeChanged: SimpleBrowser.handleColorThemeChanged,
   handleSettingsChanged: SimpleBrowser.handleSettingsChanged,
   handleDidNavigate: SimpleBrowser.handleDidNavigate,
   handleDidNavigationCancel: SimpleBrowser.handleDidNavigationCancel,
   handleFocusIn: SimpleBrowser.handleFocusIn,
   handleInput: SimpleBrowser.handleInput,
+  handleHistoryInput: SimpleBrowser.handleHistoryInput,
+  clearHistory: SimpleBrowser.clearHistory,
+  removeHistoryEntry: SimpleBrowser.removeHistoryEntry,
   handleKeyBinding: SimpleBrowser.handleKeyBinding,
+  handleLogin: SimpleBrowser.handleLogin,
+  submitLogin: SimpleBrowser.submitLogin,
+  cancelLogin: SimpleBrowser.cancelLogin,
+  cancelLoginOnEscape: SimpleBrowser.cancelLoginOnEscape,
   handlePageFaviconUpdated: SimpleBrowser.handlePageFaviconUpdated,
   handleTitleUpdated: SimpleBrowser.handleTitleUpdated,
   handleTabPointerDown: SimpleBrowser.handleTabPointerDown,
+  handleTabsPointerOut: SimpleBrowser.handleTabsPointerOut,
+  handleTabsPointerOver: SimpleBrowser.handleTabsPointerOver,
   handleWillNavigate: SimpleBrowser.handleWillNavigate,
   hideTabHover: SimpleBrowser.hideTabHover,
   hideOverlay: SimpleBrowser.hideOverlay,
+  openOrRevealTab: SimpleBrowser.openOrRevealTab,
   openTab: SimpleBrowser.openTab,
   muteTab: SimpleBrowser.muteTab,
   reloadTab: SimpleBrowser.reloadTab,
@@ -81,6 +104,7 @@ export const LazyCommands = {
   openDevtools: () => import('./ViewletSimpleBrowserOpenDevtools.js'),
   reload: () => import('./ViewletSimpleBrowserReload.js'),
   showMenu: () => import('./ViewletSimpleBrowserShowMenu.js'),
+  showDownloadsMenu: () => import('./ViewletSimpleBrowserShowDownloadsMenu.js'),
   toggleDevTools: () => import('./ViewletSimpleBrowserToggleDevTools.js'),
   resetZoom: () => import('./ViewletSimpleBrowserZoom.js'),
   zoomIn: () => import('./ViewletSimpleBrowserZoom.js'),
@@ -90,10 +114,12 @@ export const LazyCommands = {
 
 export const Events = {
   'browser-view-audio-state-changed': SimpleBrowser.handleAudioStateChanged,
+  'browser-view-download-state-changed': SimpleBrowser.handleDownloadStateChanged,
   'browser-view-destroyed': SimpleBrowser.handleBrowserViewDestroyed,
   'browser-view-context-menu': ViewletSimpleBrowserHandleContextMenu.handleContextMenu,
   'browser-view-did-navigate': SimpleBrowser.handleDidNavigate,
   'browser-view-key-binding': SimpleBrowser.handleKeyBinding,
+  'browser-view-login': SimpleBrowser.handleLogin,
   'browser-view-page-favicon-updated': SimpleBrowser.handlePageFaviconUpdated,
   'browser-view-title-updated': SimpleBrowser.handleTitleUpdated,
   'browser-view-will-navigate': SimpleBrowser.handleWillNavigate,

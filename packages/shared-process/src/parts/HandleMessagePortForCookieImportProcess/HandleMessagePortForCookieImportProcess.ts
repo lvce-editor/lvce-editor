@@ -1,3 +1,4 @@
+import type { MessagePort } from 'node:worker_threads'
 import * as Assert from '../Assert/Assert.ts'
 import * as CookieImportProcess from '../CookieImportProcess/CookieImportProcess.ts'
 import * as JsonRpc from '../JsonRpc/JsonRpc.ts'

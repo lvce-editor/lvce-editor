@@ -44,6 +44,40 @@ const ViewletStates = await import('../src/parts/ViewletStates/ViewletStates.js'
 const SharedProcess = await import('../src/parts/SharedProcess/SharedProcess.js')
 const JsonRpcVersion = await import('../src/parts/JsonRpcVersion/JsonRpcVersion.js')
 
+test('component state exposes state and edits the title without changing child ownership', () => {
+  const state = {
+    ...ViewletSideBar.create(1, '', 0, 0, 300, 500),
+    childUid: 2,
+    currentViewletId: 'Explorer',
+    currentViewletRequestId: 3,
+    actionsUid: 4,
+  }
+  const componentState = ViewletSideBar.getComponentState(state)
+  const newState = ViewletSideBar.setComponentState(state, {
+    ...componentState,
+    title: 'Sidebar title',
+    childUid: 5,
+    currentViewletId: 'Search',
+    currentViewletRequestId: 6,
+    actionsUid: 7,
+  })
+
+  expect(componentState).toBe(state)
+  expect(newState).toMatchObject({
+    actionsUid: 4,
+    childUid: 2,
+    currentViewletId: 'Explorer',
+    currentViewletRequestId: 3,
+    title: 'Sidebar title',
+    uid: 1,
+  })
+})
+
+test('component state rejects a changed uid', () => {
+  const state = ViewletSideBar.create(1, '', 0, 0, 300, 500)
+  expect(() => ViewletSideBar.setComponentState(state, { ...state, uid: 2 })).toThrow('SideBar state uid must remain 1')
+})
+
 beforeEach(() => {
   jest.resetAllMocks()
   ViewletStates.reset()

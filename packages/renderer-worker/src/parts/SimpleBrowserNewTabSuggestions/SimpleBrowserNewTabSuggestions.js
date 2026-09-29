@@ -38,6 +38,13 @@ export const script = String.raw`(() => {
     }
   };
 
+  const getPreviousIndex = () => {
+    if (selectedIndex === 0) {
+      return suggestions.length > 1 ? suggestions.length - 1 : selectedIndex;
+    }
+    return Math.max(selectedIndex - 1, -1);
+  };
+
   const render = (data) => {
     if (!Array.isArray(data) || !Array.isArray(data[1])) return;
     suggestions = [...new Set(data[1].filter((value) => typeof value === 'string' && value.trim()))].slice(0, 7);
@@ -113,7 +120,11 @@ export const script = String.raw`(() => {
       dismiss();
     } else if (suggestions.length && (event.key === 'ArrowDown' || event.key === 'ArrowUp')) {
       event.preventDefault();
-      select(event.key === 'ArrowDown' ? Math.min(selectedIndex + 1, suggestions.length - 1) : Math.max(selectedIndex - 1, -1));
+      const index =
+        event.key === 'ArrowDown'
+          ? Math.min(selectedIndex + 1, suggestions.length - 1)
+          : getPreviousIndex();
+      select(index);
     }
   });
   form.addEventListener('submit', (event) => {
