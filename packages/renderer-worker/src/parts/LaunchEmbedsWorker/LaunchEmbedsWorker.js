@@ -1,3 +1,4 @@
+import * as GetWindowId from '../GetWindowId/GetWindowId.js'
 import * as EmbedsWorkerUrl from '../EmbedsWorkerUrl/EmbedsWorkerUrl.js'
 import * as HandleIpc from '../HandleIpc/HandleIpc.js'
 import * as IpcParent from '../IpcParent/IpcParent.js'

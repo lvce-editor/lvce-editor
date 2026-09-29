@@ -97,6 +97,16 @@ test('getQuickPickMenuEntries includes running extensions command', async () => 
   })
 })
 
+test('getQuickPickMenuEntries includes workers view command', async () => {
+  const entries = await ViewletLayoutMenuEntries.getQuickPickMenuEntries()
+
+  expect(entries).toContainEqual({
+    id: 'Main.openUri',
+    label: 'Developer: Open Workers View',
+    args: ['workers:///1'],
+  })
+})
+
 test('getQuickPickMenuEntries includes secrets command', async () => {
   const entries = await ViewletLayoutMenuEntries.getQuickPickMenuEntries()
 

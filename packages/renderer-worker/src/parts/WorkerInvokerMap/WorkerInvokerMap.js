@@ -28,6 +28,7 @@ import * as SettingsViewWorker from '../SettingsViewWorker/SettingsViewWorker.js
 import * as StatusBarWorker from '../StatusBarWorker/StatusBarWorker.js'
 import * as TextSearchViewWorker from '../TextSearchViewWorker/TextSearchViewWorker.js'
 import * as TitleBarWorker from '../TitleBarWorker/TitleBarWorker.js'
+import * as WorkersViewWorker from '../WorkersViewWorker/WorkersViewWorker.ts'
 
 const workerInvokers = {
   aboutWorker: AboutViewWorker,
@@ -60,6 +61,7 @@ const workerInvokers = {
   statusBar: StatusBarWorker,
   textSearchView: TextSearchViewWorker,
   titleBar: TitleBarWorker,
+  workersView: WorkersViewWorker,
 }
 
 export const getWorkerInvoker = (workerId) => {

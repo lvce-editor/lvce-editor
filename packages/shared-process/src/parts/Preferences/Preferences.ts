@@ -3,12 +3,14 @@ import * as IsEnoentError from '../IsEnoentError/IsEnoentError.ts'
 import * as JsoncFile from '../JsoncFile/JsoncFile.ts'
 import * as LinkedWorkerPreferences from '../LinkedWorkerPreferences/LinkedWorkerPreferences.ts'
 import * as Logger from '../Logger/Logger.ts'
+import * as Platform from '../Platform/Platform.ts'
 import * as PlatformPaths from '../PlatformPaths/PlatformPaths.ts'
 import * as Process from '../Process/Process.ts'
 import { VError } from '../VError/VError.ts'
 // TODO need jsonc parser for settings with comments
 
 const builtinPreferences = {
+  'window.titleBarless.enabled': false,
   'window.titleBarStyle': 'custom',
 }
 
@@ -74,6 +76,8 @@ export const getAll = async (): Promise<any> => {
       ...userPreferences,
       ...overrides,
     }
+    // Keep the Linux-only window layout inert on other platforms.
+    preferences['window.titleBarless.enabled'] = Platform.isLinux && preferences['window.titleBarless.enabled'] === true
     // try {
     //   await mkdir(dirname(CACHED_SETTINGS_PATH), { recursive: true })
     //   await writeFile(

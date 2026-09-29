@@ -70,8 +70,13 @@ export const writeBlob = async (uri, blob) => {
   await fileSystem.writeBlob(uri, blob)
 }
 
-export const createFile = (uri) => {
-  return writeFile(uri, '')
+export const createFile = async (uri) => {
+  const protocol = GetProtocol.getProtocol(uri)
+  const fileSystem = await GetFileSystem.getFileSystem(protocol)
+  if (!fileSystem.createFile) {
+    throw new Error(`Creating files is not supported for ${protocol} URIs.`)
+  }
+  return fileSystem.createFile(uri)
 }
 
 export const readDirWithFileTypes = async (uri) => {

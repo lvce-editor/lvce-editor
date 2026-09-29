@@ -22,6 +22,11 @@
   box-shadow: rgb(0 0 0 / 36%) 0px 0px 8px 2px;
 }
 
+.Widgets > .Notification {
+  right: var(--NotificationRight, 30px);
+  max-width: var(--NotificationMaxWidth, calc(100vw - 60px));
+}
+
 .NotificationMessage {
   line-height: 22px;
   overflow-y: auto;
@@ -35,7 +40,7 @@
 
 .NotificationCloseButton {
   position: absolute;
-  top: 4px;
+  top: 10px;
   right: 4px;
 }
 

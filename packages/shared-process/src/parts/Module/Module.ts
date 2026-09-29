@@ -138,6 +138,8 @@ export const load = (moduleId: any): any => {
       return import('../ProcessExplorer/ProcessExplorer.ipc.ts')
     case ModuleId.ProcessId:
       return import('../ProcessId/ProcessId.ipc.ts')
+    case ModuleId.PtyHost:
+      return import('../PtyHost/PtyHost.ipc.ts')
     case ModuleId.RebuildNodePty:
       return import('../RebuildNodePty/RebuildNodePty.ipc.ts')
     case ModuleId.RecentlyOpened:

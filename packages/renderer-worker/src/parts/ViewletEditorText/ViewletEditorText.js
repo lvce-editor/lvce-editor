@@ -11,6 +11,7 @@ import * as GetTextEditorContent from '../GetTextEditorContent/GetTextEditorCont
 import * as GetTokenizePath from '../GetTokenizePath/GetTokenizePath.js'
 import * as Id from '../Id/Id.js'
 import * as Languages from '../Languages/Languages.js'
+import * as LanguagesState from '../LanguagesState/LanguagesState.js'
 import * as LayoutWidgets from '../LayoutWidgets/LayoutWidgets.ts'
 import * as Platform from '../Platform/Platform.js'
 import * as Preferences from '../Preferences/Preferences.js'
@@ -97,7 +98,13 @@ const getFirstLine = (content) => {
   return content.slice(0, hasCarriageReturn ? lineEndIndex - 1 : lineEndIndex)
 }
 
-const getLanguageId = (state, content) => {
+const getLanguageId = (state, content, savedState) => {
+  const explicitLanguageId = savedState?.editorState?.explicitLanguageId
+  if (typeof explicitLanguageId === 'string' && Languages.getTokenizeFunctionPath(explicitLanguageId)) {
+    LanguagesState.setExplicitLanguageId(state.uri, explicitLanguageId)
+    return explicitLanguageId
+  }
+  LanguagesState.clearExplicitLanguageId(state.uri)
   const fileName = Workspace.pathBaseName(state.uri)
   const languageId = Languages.getLanguageId(fileName)
   if (languageId === 'unknown') {
@@ -135,7 +142,7 @@ export const loadContent = async (state, savedState, context) => {
       : state.applicationId === undefined
         ? await GetTextEditorContent.getTextEditorContent(uri)
         : await ApplicationFileSystem.execute(state.applicationId, 'readFile', uri)
-  const languageId = context?.languageId || getLanguageId(state, content)
+  const languageId = context?.languageId || getLanguageId(state, content, savedState)
   const tokenizer = Tokenizer.getTokenizer(languageId)
   const tokenizerId = Id.create()
   TokenizerMap.set(tokenizerId, tokenizer)

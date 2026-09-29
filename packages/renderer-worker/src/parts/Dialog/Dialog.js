@@ -40,8 +40,11 @@ const openFileRemote = () => {
 }
 
 const openFileElectron = async () => {
-  const [file] = await ElectronDialog.showOpenDialog('Open File', ['openFile', 'dontAddToRecent', 'showHiddenFiles'])
-  await OpenUri.openUri(file)
+  const uri = await ElectronDialog.showOpenDialog('Open File', ['openFile', 'dontAddToRecent', 'showHiddenFiles'])
+  if (!uri) {
+    return
+  }
+  await OpenUri.openUri(uri)
 }
 
 export const openFile = () => {

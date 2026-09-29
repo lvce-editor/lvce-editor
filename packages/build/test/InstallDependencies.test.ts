@@ -13,7 +13,7 @@ describe('installDependenciesWithRetry', () => {
 
     installDependenciesWithRetry(execSyncFn, () => {})
 
-    expect(commands).toEqual(['npm ci --ignore-scripts', 'npm rebuild --workspaces'])
+    expect(commands).toEqual(['npm ci --ignore-scripts', 'npm rebuild --workspaces', 'npm run postinstall'])
   })
 
   test('retries the full install flow until it succeeds', () => {
@@ -31,7 +31,13 @@ describe('installDependenciesWithRetry', () => {
 
     installDependenciesWithRetry(execSyncFn, () => {})
 
-    expect(commands).toEqual(['npm ci --ignore-scripts', 'npm ci --ignore-scripts', 'npm ci --ignore-scripts', 'npm rebuild --workspaces'])
+    expect(commands).toEqual([
+      'npm ci --ignore-scripts',
+      'npm ci --ignore-scripts',
+      'npm ci --ignore-scripts',
+      'npm rebuild --workspaces',
+      'npm run postinstall',
+    ])
   })
 
   test('throws after the maximum number of attempts', () => {

@@ -82,3 +82,4 @@ export const HandleMessagePortForFileWatcherExplorer = 95
 export const RemoteCli = 96
 export const BrowserFind = 97
 export const ShellCommand = 98
+export const PtyHost = 99

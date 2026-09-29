@@ -93,6 +93,7 @@ export const getModuleId = (commandId: any): any => {
     case 'ElectronWindow.setBrowserFullWidthGestureEnabled':
     case 'ElectronWindow.toggleDevtools':
     case 'ElectronWindow.toggleFullScreen':
+    case 'ElectronWindow.toggleMaximize':
     case 'ElectronWindow.unmaximize':
     case 'ElectronWindow.zoomIn':
     case 'ElectronWindow.zoomOut':
@@ -283,6 +284,8 @@ export const getModuleId = (commandId: any): any => {
     case 'ProcessId.getMainProcessId':
     case 'ProcessId.getSharedProcessId':
       return ModuleId.ProcessId
+    case 'PtyHost.release':
+      return ModuleId.PtyHost
     case 'RebuildNodePty.rebuildNodePty':
       return ModuleId.RebuildNodePty
     case 'RecentlyOpened.addPath':
