@@ -171,6 +171,10 @@
   /* visibility: hidden; */
 }
 
+.EditorInput textarea {
+  caret-animation: manual;
+}
+
 /* interesting: could do transform via css -> only set data-row, data-column on editor cursor */
 /* .EditorCursor::after {
   position: absolute;
