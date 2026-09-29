@@ -1,3 +1,10 @@
+:root {
+  --ToolBarHoverBackground: rgba(90, 93, 94, 0.31);
+  --SendButtonDisabledForeground: rgba(204, 204, 204, 0.5);
+  --ChatSendAreaBorder: 1px solid #37413f;
+  --ChatSendAreaFocusedBorderColor: #3d5252;
+}
+
 .ChatSendArea {
   display: flex;
   gap: 10px;
@@ -10,73 +17,23 @@
 
 .ChatSendAreaContent {
   position: relative;
-  background: var(--InputBoxBackground);
+  background: var(--InputBoxBackground, var(--vscode-input-background, var(--vscode-editorWidget-background, transparent)));
   border-radius: 5px;
   padding: 10px;
+  flex: 1;
+  contain: strict;
 }
 
-.ChatComposerAttachments {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-bottom: 8px;
+.ChatSendAreaContent {
+  border: var(--ChatSendAreaBorder);
 }
 
-.ChatComposerAttachment {
-  align-items: center;
-  display: inline-flex;
-  gap: 6px;
-  max-width: 100%;
-  min-width: 0;
-  overflow: hidden;
-  border-radius: 999px;
-  border: 1px solid var(--vscode-widget-border, var(--vscode-panel-border));
-  padding: 4px 10px;
-  background: var(--vscode-badge-background, color-mix(in srgb, var(--vscode-editor-background) 88%, white));
-  color: var(--vscode-badge-foreground, var(--vscode-foreground));
-  font-size: 12px;
+.ChatSendAreaContentFocused {
+  border-color: var(--ChatSendAreaFocusedBorderColor);
 }
 
-.ChatComposerAttachmentLabel {
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.ChatComposerAttachmentPreview {
-  width: 20px;
-  height: 20px;
-  flex: none;
-  border-radius: 4px;
-  object-fit: cover;
-}
-
-.ChatComposerAttachmentRemoveButton {
-  appearance: none;
-  background: transparent;
-  border: none;
-  border-radius: 999px;
-  color: inherit;
-  cursor: pointer;
-  flex-shrink: 0;
-  font: inherit;
-  line-height: 1;
-  margin: 0;
-  padding: 0;
-}
-
-.ChatComposerAttachmentImage {
-  border-color: var(--vscode-charts-blue);
-}
-
-.ChatComposerAttachmentInvalidImage {
-  border-color: var(--vscode-inputValidation-errorBorder, var(--vscode-errorForeground));
-  color: var(--vscode-errorForeground, var(--vscode-foreground));
-}
-
-.ChatComposerAttachmentTextFile {
-  border-color: var(--vscode-charts-green, var(--vscode-widget-border, var(--vscode-panel-border)));
+.InputInvalid {
+  border-color: var(--InputValidationErrorBorder, red);
 }
 
 .ChatSendArea .MultilineInputBox {
@@ -99,7 +56,6 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-right: auto;
 }
 
 .ChatInputBox {
@@ -108,13 +64,12 @@
   border: none;
   outline: none;
   flex: 1;
-  background: var(--InputBoxBackground);
-  padding: 4px 6px;
-  padding-left: 0;
-  padding-right: 0;
-  color: var(--InputBoxForeground);
+  background: var(--InputBoxBackground, var(--vscode-input-background, var(--vscode-editorWidget-background, transparent)));
+  color: var(--InputBoxForeground, var(--vscode-input-foreground, var(--vscode-foreground, inherit)));
+  font-family: inherit;
   font-size: 13px;
   height: 24px;
+  line-height: 24px;
   contain: strict;
   resize: none;
   overflow: hidden;
@@ -135,7 +90,6 @@
 }
 
 .SendButtonDisabled {
-  background: var(--vscode-button-secondaryBackground);
-  color: var(--vscode-disabledForeground);
+  color: var(--SendButtonDisabledForeground);
   cursor: default;
 }

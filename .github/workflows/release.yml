@@ -27,12 +27,12 @@ jobs:
           echo "version is: ${{ env.RG_VERSION }}"
       - name: Create GitHub release
         id: release
-        uses: actions/create-release@v1
+        uses: softprops/action-gh-release@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ env.RG_VERSION }}
-          release_name: ${{ env.RG_VERSION }}
+          name: ${{ env.RG_VERSION }}
           draft: true
 
   build-release:
@@ -45,75 +45,82 @@ jobs:
           [
             { os: windows-2025, arch: x64 },
             { os: windows-2025, arch: arm64 },
-            { os: macos-15, arch: arm64 },
+            { os: macos-26, arch: arm64 },
             { os: ubuntu-24.04, arch: x64 },
             { os: ubuntu-24.04, arch: arm64 },
-            { os: ubuntu-24.04, arch: armhf },
           ]
     runs-on: ${{ matrix.versions.os }}
     timeout-minutes: 80
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v6
         with:
           node-version-file: '.nvmrc'
           registry-url: 'https://registry.npmjs.org'
       - name: Setup Python 3
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: '3.11'
       - name: Compute node modules cache key
         id: nodeModulesCacheKey
-        run: echo "value=$(node packages/build/src/parts/ComputeNodeModulesCacheKey/ComputeNodeModulesCacheKey.js)" >> $GITHUB_OUTPUT
+        run: echo "value=$(node packages/build/src/parts/ComputeNodeModulesCacheKey/ComputeNodeModulesCacheKey.ts)" >> $GITHUB_OUTPUT
         shell: bash
-      - uses: actions/cache@v4
+      - uses: actions/cache@v6
         id: npm-cache
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0
         with:
           path: '**/node_modules'
           key: ${{ runner.os }}-cacheNodeModules-${{ steps.nodeModulesCacheKey.outputs.value }}
-          restore-keys: ${{ runner.os }}-cacheNodeModules-
-      - uses: actions/cache@v4
+      - uses: actions/cache@v6
         id: electron-builder-cache
         with:
           path: '~/.cache/electron-builder'
           key: ${{ runner.os }}-cacheElectronBuilder-${{ steps.nodeModulesCacheKey.outputs.value }}
-      - uses: actions/cache@v4
+      - uses: actions/cache@v6
         id: build-cache
         with:
           path: 'packages/build/.tmp/cachedDependencies'
           key: ${{ runner.os }}-build-cache-${{ steps.nodeModulesCacheKey.outputs.value }}
       - name: npm ci
-        run: npm ci --ignore-scripts && npm run postinstall
+        run: node packages/build/src/parts/InstallDependencies/InstallDependencies.ts
         if: steps.npm-cache.outputs.cache-hit != 'true'
         env:
           DOWNLOAD_BUILTIN_EXTENSIONS: 0
       - name: Compute builtin extensions cache key
         id: builtinExtensionsCacheKey
-        run: echo "value=$(node packages/build/src/parts/ComputeBuiltinExtensionsCacheKey/ComputeBuiltinExtensionsCacheKey.js)" >> $GITHUB_OUTPUT
+        run: echo "value=$(node packages/build/src/parts/ComputeBuiltinExtensionsCacheKey/ComputeBuiltinExtensionsCacheKey.ts)" >> $GITHUB_OUTPUT
         shell: bash
-      - uses: actions/cache@v4
+      - uses: actions/cache@v6
         id: builtin-extensions-cache
         with:
           path: extensions
           key: builtinExtensions-${{ steps.builtinExtensionsCacheKey.outputs.value }}
       - name: Download Builtin Extensions
-        run: node packages/build/src/parts/DownloadBuiltinExtensions/DownloadBuiltinExtensions.js
+        run: node packages/build/src/parts/DownloadBuiltinExtensions/DownloadBuiltinExtensions.ts
         if: steps.builtin-extensions-cache.outputs.cache-hit != 'true'
       - run: npm run type-check
       - run: npm test
-      - run: node packages/build/bin/build.js --target=server
+      - run: npm run build:server
+      - name: Test built server
+        if: matrix.versions.os == 'ubuntu-24.04' && matrix.versions.arch == 'x64'
+        run: npm run test:server
       - name: Cache Electron Builder Dependencies (Windows)
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         id: electron-builder-cache-windows
         if: matrix.versions.os == 'windows-2025'
         with:
           path: '~\AppData\Local\electron-builder'
-          key: ${{ runner.os }}-electron-builder-${{ hashFiles('packages/build/package-lock.json') }}
+          key: ${{ runner.os }}-electron-builder-${{ hashFiles('package-lock.json') }}
+      - name: Install Cloudsmith CLI
+        if: matrix.versions.os == 'ubuntu-24.04'
+        uses: cloudsmith-io/cloudsmith-cli-action@159f1619275d5d3147f059c3cc110938ec221d16
+        with:
+          api-key: ${{ secrets.CLOUDSMITH_API_TOKEN }}
+
       - name: Build Electron App (deb, x64)
         if: matrix.versions.os == 'ubuntu-24.04' && matrix.versions.arch == 'x64'
-        run: node packages/build/bin/build.js --product=lvce --target=electron-deb
+        run: npm run build:electron:deb:x64 -- --product=lvce
         env:
           HIGHEST_COMPRESSION: 1
       - name: Rename Electron App (deb, x64)
@@ -133,9 +140,12 @@ jobs:
           asset_path: ${{ env.ASSET_DEB_X64 }}
           asset_name: ${{ env.ASSET_DEB_X64 }}
           asset_content_type: application/octet-stream
+      - name: Publish Electron App (deb, x64) to Cloudsmith
+        if: matrix.versions.os == 'ubuntu-24.04' && matrix.versions.arch == 'x64'
+        run: cloudsmith push deb lvce-editor/lvce-editor-2/any-distro/any-version "${{ env.ASSET_DEB_X64 }}"
       - name: Build Electron App (deb, arm64)
         if: matrix.versions.os == 'ubuntu-24.04' && matrix.versions.arch == 'arm64'
-        run: node packages/build/bin/build.js --product=lvce --target=electron-deb --arch=arm64
+        run: npm run build:electron:deb:arm64 -- --product=lvce
         env:
           HIGHEST_COMPRESSION: 1
       - name: Rename Electron App (deb, arm64)
@@ -155,33 +165,14 @@ jobs:
           asset_path: ${{ env.ASSET_DEB_ARM64 }}
           asset_name: ${{ env.ASSET_DEB_ARM64 }}
           asset_content_type: application/octet-stream
-      - name: Build Electron App (deb, armhf)
-        if: matrix.versions.os == 'ubuntu-24.04' && matrix.versions.arch == 'armhf'
-        run: node packages/build/bin/build.js --product=lvce --target=electron-deb --arch=armhf
-        env:
-          HIGHEST_COMPRESSION: 1
-      - name: Rename Electron App (deb, armhf)
-        if: matrix.versions.os == 'ubuntu-24.04' && matrix.versions.arch == 'armhf'
-        shell: bash
-        run: |
-          staging="lvce-${{ needs.create-release.outputs.rg_version }}_armhf.deb"
-          mv "packages/build/.tmp/releases/lvce-armhf.deb" "$staging"
-          echo "ASSET_DEB_ARMHF=$staging" >> $GITHUB_ENV
-      - name: Release Electron App (deb, armhf)
-        uses: actions/upload-release-asset@v1.0.1
-        if: matrix.versions.os == 'ubuntu-24.04' && matrix.versions.arch == 'armhf'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ needs.create-release.outputs.upload_url }}
-          asset_path: ${{ env.ASSET_DEB_ARMHF }}
-          asset_name: ${{ env.ASSET_DEB_ARMHF }}
-          asset_content_type: application/octet-stream
+      - name: Publish Electron App (deb, arm64) to Cloudsmith
+        if: matrix.versions.os == 'ubuntu-24.04' && matrix.versions.arch == 'arm64'
+        run: cloudsmith push deb lvce-editor/lvce-editor-2/any-distro/any-version "${{ env.ASSET_DEB_ARM64 }}"
       # - name: Build Electron App (Macos dmg, x64)
-      #   if: matrix.versions.os == 'macos-15'
-      #   run: node packages/build/bin/build.js --product=lvce --target=electron-builder-mac --arch=arm64
+      #   if: matrix.versions.os == 'macos-26'
+      #   run: npm run build:electron:mac:x64 -- --product=lvce
       # - name: Rename Electron App (Macos dmg, x64)
-      #   if: matrix.versions.os == 'macos-15'
+      #   if: matrix.versions.os == 'macos-26'
       #   shell: bash
       #   run: |
       #     staging="lvce-${{ needs.create-release.outputs.rg_version }}_amd64.dmg"
@@ -189,7 +180,7 @@ jobs:
       #     echo "ASSET_DMG_X64=$staging" >> $GITHUB_ENV
       # - name: Release Electron App (Macos dmg, x64)
       #   uses: actions/upload-release-asset@v1.0.1
-      #   if: matrix.versions.os == 'macos-15'
+      #   if: matrix.versions.os == 'macos-26'
       #   env:
       #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       #   with:
@@ -197,19 +188,48 @@ jobs:
       #     asset_path: ${{ env.ASSET_DMG_X64 }}
       #     asset_name: ${{ env.ASSET_DMG_X64 }}
       #     asset_content_type: application/octet-stream
-      - name: Build Electron App (Macos dmg, arm64)
-        if: matrix.versions.os == 'macos-15' && matrix.versions.arch == 'arm64'
-        run: node packages/build/bin/build.js --product=lvce --target=electron-builder-mac --arch=arm64
+      - name: Prepare Apple signing credentials
+        if: matrix.versions.os == 'macos-26' && matrix.versions.arch == 'arm64'
+        shell: bash
+        env:
+          APPLE_API_KEY_BASE64: ${{ secrets.APPLE_API_KEY_BASE64 }}
+          APPLE_API_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
+          APPLE_API_ISSUER: ${{ secrets.APPLE_API_ISSUER }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          CSC_LINK: ${{ secrets.CSC_LINK }}
+          CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
+        run: bash packages/build/scripts/github-actions/prepare-macos-signing.sh required
+      - name: Build signed Electron App (Macos dmg, arm64)
+        if: matrix.versions.os == 'macos-26' && matrix.versions.arch == 'arm64'
+        run: npm run build:electron:mac:arm64 -- --product=lvce
+        env:
+          CSC_KEYCHAIN: ${{ env.CSC_KEYCHAIN_PATH }}
+          APPLE_API_KEY: ${{ env.APPLE_API_KEY_PATH }}
+          APPLE_API_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
+          APPLE_API_ISSUER: ${{ secrets.APPLE_API_ISSUER }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+      - name: Notarize macOS installer
+        if: matrix.versions.os == 'macos-26' && matrix.versions.arch == 'arm64'
+        shell: bash
+        env:
+          APPLE_API_KEY: ${{ env.APPLE_API_KEY_PATH }}
+          APPLE_API_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
+          APPLE_API_ISSUER: ${{ secrets.APPLE_API_ISSUER }}
+        run: bash packages/build/scripts/github-actions/notarize-macos-dmg.sh
+      - name: Verify signed and notarized macOS installer
+        if: matrix.versions.os == 'macos-26' && matrix.versions.arch == 'arm64'
+        shell: bash
+        run: bash packages/build/scripts/github-actions/verify-macos-dmg.sh
       - name: Rename Electron App (Macos dmg, arm64)
-        if: matrix.versions.os == 'macos-15' && matrix.versions.arch == 'arm64'
+        if: matrix.versions.os == 'macos-26' && matrix.versions.arch == 'arm64'
         shell: bash
         run: |
           staging="lvce-${{ needs.create-release.outputs.rg_version }}_arm64.dmg"
           mv "packages/build/.tmp/releases/lvce-arm64.dmg" "$staging"
           echo "ASSET_DMG_ARM64=$staging" >> $GITHUB_ENV
-      - name: Release Electron App (Macos dmg, x64)
+      - name: Release Electron App (Macos dmg, arm64)
         uses: actions/upload-release-asset@v1.0.1
-        if: matrix.versions.os == 'macos-15' && matrix.versions.arch == 'arm64'
+        if: matrix.versions.os == 'macos-26' && matrix.versions.arch == 'arm64'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
@@ -219,7 +239,7 @@ jobs:
           asset_content_type: application/octet-stream
       - name: Build Electron App (exe, x64)
         if: matrix.versions.os == 'windows-2025' && matrix.versions.arch == 'x64'
-        run: node packages/build/bin/build.js --product=lvce --target=electron-builder-windows-exe --arch=x64
+        run: npm run build:electron:windows:exe:x64 -- --product=lvce
         env:
           HIGHEST_COMPRESSION: 1
       - name: Rename Electron App (exe, x64)
@@ -241,7 +261,7 @@ jobs:
           asset_content_type: application/octet-stream
       - name: Build Electron App (exe, arm64)
         if: matrix.versions.os == 'windows-2025' && matrix.versions.arch == 'arm64'
-        run: node packages/build/bin/build.js --product=lvce --target=electron-builder-windows-exe --arch=arm64
+        run: npm run build:electron:windows:exe:arm64 -- --product=lvce
         env:
           HIGHEST_COMPRESSION: 1
       - name: Rename Electron App (exe, arm64)
@@ -261,9 +281,13 @@ jobs:
           asset_path: ${{ env.ASSET_WINDOWS_EXE_ARM64 }}
           asset_name: ${{ env.ASSET_WINDOWS_EXE_ARM64 }}
           asset_content_type: application/octet-stream
+      - name: Test staged Windows installer
+        if: matrix.versions.os == 'windows-2025'
+        shell: pwsh
+        run: ./packages/build/scripts/test-windows-staging.ps1 -Installer '${{ env.ASSET_WINDOWS_EXE_X64 || env.ASSET_WINDOWS_EXE_ARM64 }}' -Architecture '${{ matrix.versions.arch }}'
       - name: Build Electron App (AppImage, x64)
         if: matrix.versions.os == 'ubuntu-24.04' && matrix.versions.arch == 'x64'
-        run: node packages/build/bin/build.js --product=lvce --target=electron-builder-app-image
+        run: npm run build:electron:app-image:x64 -- --product=lvce
       - name: Rename Electron App (AppImage, x64)
         if: matrix.versions.os == 'ubuntu-24.04' && matrix.versions.arch == 'x64'
         shell: bash
@@ -281,7 +305,7 @@ jobs:
           asset_path: ${{ env.ASSET_APP_IMAGE_X64 }}
           asset_name: ${{ env.ASSET_APP_IMAGE_X64 }}
           asset_content_type: application/octet-stream
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: matrix.versions.os == 'ubuntu-24.04' && matrix.versions.arch == 'x64'
         with:
           name: server
@@ -293,8 +317,8 @@ jobs:
     needs: ['create-release', 'build-release']
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/download-artifact@v4
+      - uses: actions/checkout@v7
+      - uses: actions/download-artifact@v8
         with:
           name: server
           path: packages/build/.tmp/server
@@ -302,8 +326,6 @@ jobs:
         with:
           node-version-file: '.nvmrc'
           registry-url: 'https://registry.npmjs.org'
-      - run: npm publish --access public
-        working-directory: ./packages/build/.tmp/server/extension-host-helper-process
       - run: npm publish --access public
         working-directory: ./packages/build/.tmp/server/static-server
       - run: npm publish --access public

@@ -1,6 +1,5 @@
 export const state = {
-  // TODO use numeric focus key
-  currentFocus: '',
+  currentFocus: 0,
 }
 
 export const get = () => {

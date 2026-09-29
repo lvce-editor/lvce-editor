@@ -1,0 +1,88 @@
+:root {
+  --EmptyGroupCloseButtonForeground: #c5c5c5;
+  --EmptyGroupOpacity: 0.5;
+}
+
+.editor-groups-container {
+  flex: 1;
+  display: flex;
+  height: 100%;
+  width: 100%;
+  contain: strict;
+  overflow: auto;
+}
+
+.EditorGroupsVertical {
+  flex-direction: row;
+}
+
+.EditorGroupsHorizontal {
+  flex-direction: column;
+}
+
+.EditorGroup {
+  contain: strict;
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  min-width: 250px;
+  outline: none;
+  width: var(--EditorGroupWidth, auto);
+}
+
+.EditorGroupEmpty {
+  opacity: var(--EmptyGroupOpacity);
+}
+
+.EditorGroup:focus {
+  --EmptyGroupOpacity: 1;
+}
+
+.editor-groups-container::-webkit-scrollbar {
+  height: 14px;
+}
+
+.editor-groups-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.editor-groups-container::-webkit-scrollbar-thumb {
+  background: var(--EditorScrollBarBackground);
+}
+
+.editor-groups-container::-webkit-scrollbar-thumb:hover {
+}
+
+.EmptyGroupCloseButton {
+  display: flex;
+  background: transparent;
+  border: none;
+  color: var(--EmptyGroupCloseButtonForeground);
+  align-self: end;
+  width: 30px;
+  height: 30px;
+  contain: strict;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.EditorGroupHeader {
+  display: flex;
+  contain: strict;
+  height: var(--EditorGroupHeight);
+  justify-content: space-between;
+}
+
+.SplitEditorGroupButton {
+  background: transparent;
+  color: white;
+  border: none;
+}
+
+.EmptyGroupHeader {
+  display: flex;
+  height: 30px;
+  contain: strict;
+  justify-content: end;
+}

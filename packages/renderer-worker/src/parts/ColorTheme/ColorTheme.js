@@ -1,7 +1,10 @@
 import * as Assert from '../Assert/Assert.ts'
+import * as AssetDir from '../AssetDir/AssetDir.js'
+import * as Command from '../Command/Command.js'
 import * as Css from '../Css/Css.js'
 import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
 import * as GetColorThemeCss from '../GetColorThemeCss/GetColorThemeCss.js'
+import * as GetColorThemeNames from '../GetColorThemeNames/GetColorThemeNames.js'
 import * as GetMetaThemeColor from '../GetMetaThemeColor/GetMetaThemeColor.js'
 import * as Meta from '../Meta/Meta.js'
 import * as Platform from '../Platform/Platform.js'
@@ -13,6 +16,7 @@ import { VError } from '../VError/VError.js'
 // actual color theme can be computed after workbench has loaded (most times will be the same and doesn't need to be computed)
 
 export const state = {
+  colorThemeCss: '',
   watchedTheme: '',
 }
 
@@ -24,12 +28,13 @@ const FALLBACK_COLOR_THEME_ID = 'slime'
 const applyColorTheme = async (colorThemeId) => {
   try {
     Assert.string(colorThemeId)
-    state.colorTheme = colorThemeId
     const colorThemeCss = await GetColorThemeCss.getColorThemeCss(colorThemeId)
     if (!colorThemeCss) {
       return new Error(`Color theme is empty`)
     }
+    state.colorThemeCss = colorThemeCss
     await Css.addCssStyleSheet('ContributedColorTheme', colorThemeCss)
+    state.colorTheme = colorThemeId
     if (Platform.getPlatform() === PlatformType.Web) {
       const themeColor = GetMetaThemeColor.getMetaThemeColor(colorThemeId) || ''
       await Meta.setThemeColor(themeColor)
@@ -43,6 +48,15 @@ const applyColorTheme = async (colorThemeId) => {
   }
 }
 
+export const getColorThemeCss = () => {
+  const { colorThemeCss } = state
+  return colorThemeCss
+}
+
+export const getColorTheme = () => {
+  return state.colorTheme || getPreferredColorTheme()
+}
+
 export const setColorTheme = async (colorThemeId) => {
   const error = await applyColorTheme(colorThemeId)
   if (error) {
@@ -50,6 +64,7 @@ export const setColorTheme = async (colorThemeId) => {
   }
   // TODO should preferences throw errors or should it call handleError directly?
   await Preferences.set('workbench.colorTheme', colorThemeId)
+  await Command.execute('Layout.handleColorThemeChanged', colorThemeId)
   return undefined
 }
 
@@ -62,27 +77,41 @@ export const watch = async (id) => {
 }
 
 const getPreferredColorTheme = () => {
-  const preferredColorTheme = Preferences.get('workbench.colorTheme')
-  return preferredColorTheme
+  return Preferences.get('workbench.colorTheme') || FALLBACK_COLOR_THEME_ID
+}
+
+const applyPreferredColorTheme = async () => {
+  const colorThemeId = getPreferredColorTheme()
+  const error = await applyColorTheme(colorThemeId)
+  if (!error) {
+    return
+  }
+  if (colorThemeId === FALLBACK_COLOR_THEME_ID) {
+    throw error
+  }
+  await ErrorHandling.handleError(error)
+  const fallbackError = await applyColorTheme(FALLBACK_COLOR_THEME_ID)
+  if (fallbackError) {
+    throw fallbackError
+  }
 }
 
 export const reload = async () => {
   const colorThemeId = getPreferredColorTheme()
-  await applyColorTheme(colorThemeId)
+  if (colorThemeId !== FALLBACK_COLOR_THEME_ID) {
+    const colorThemeNames = await GetColorThemeNames.getColorThemeNames(AssetDir.assetDir, Platform.getPlatform())
+    if (!colorThemeNames.includes(colorThemeId)) {
+      const error = await setColorTheme(FALLBACK_COLOR_THEME_ID)
+      if (error) {
+        throw error
+      }
+      return
+    }
+  }
+  await applyPreferredColorTheme()
 }
 
-// TODO test this, and also the error case
 // TODO have icon theme, color theme together (maybe)
 export const hydrate = async () => {
-  const preferredColorTheme = getPreferredColorTheme()
-  const colorThemeId = preferredColorTheme || FALLBACK_COLOR_THEME_ID
-  try {
-    await applyColorTheme(colorThemeId)
-  } catch (error) {
-    if (colorThemeId === FALLBACK_COLOR_THEME_ID) {
-      throw error
-    }
-    ErrorHandling.handleError(error)
-    await applyColorTheme(FALLBACK_COLOR_THEME_ID)
-  }
+  await applyPreferredColorTheme()
 }

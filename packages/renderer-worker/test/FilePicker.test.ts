@@ -1,0 +1,80 @@
+import { beforeEach, expect, jest, test } from '@jest/globals'
+
+beforeEach(() => {
+  jest.resetAllMocks()
+  FilePicker.setOpenFolderSupported(true)
+})
+
+jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () => {
+  return {
+    invoke: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+  }
+})
+
+const FilePicker = await import('../src/parts/FilePicker/FilePicker.js')
+const RendererProcess = await import('../src/parts/RendererProcess/RendererProcess.js')
+
+test('showDirectoryPicker - error', async () => {
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(async () => {
+    throw new TypeError('x is not a function')
+  })
+  await expect(FilePicker.showDirectoryPicker()).rejects.toThrow(new TypeError('x is not a function'))
+})
+
+test('showDirectoryPicker - error - canceled', async () => {
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(async () => {
+    throw new DOMException('The user aborted a request.', 'AbortError')
+  })
+  await expect(FilePicker.showDirectoryPicker()).rejects.toThrow(new DOMException('The user aborted a request.', 'AbortError'))
+})
+
+test('showDirectoryPicker - error - not supported', async () => {
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(async () => {
+    throw new Error('window.showDirectoryPicker is not a function')
+  })
+  await expect(FilePicker.showDirectoryPicker()).rejects.toThrow(new Error('showDirectoryPicker not supported on this browser'))
+})
+
+test('showDirectoryPicker - mocked as not supported', async () => {
+  FilePicker.setOpenFolderSupported(false)
+
+  await expect(FilePicker.showDirectoryPicker()).rejects.toThrow(new Error('showDirectoryPicker not supported on this browser'))
+  expect(RendererProcess.invoke).not.toHaveBeenCalled()
+})
+
+test('showFilePicker - error', async () => {
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(async () => {
+    throw new TypeError('x is not a function')
+  })
+  await expect(FilePicker.showFilePicker()).rejects.toThrow(new TypeError('x is not a function'))
+})
+
+test('showFilePicker - error - not supported', async () => {
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(async () => {
+    throw new Error('window.showOpenFilePicker is not a function')
+  })
+  await expect(FilePicker.showFilePicker()).rejects.toThrow(new Error('showFilePicker not supported on this browser'))
+})
+
+test('showSaveFilePicker - error', async () => {
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(async () => {
+    throw new TypeError('x is not a function')
+  })
+  await expect(FilePicker.showSaveFilePicker()).rejects.toThrow(new TypeError('x is not a function'))
+})
+
+test('showSaveFilePicker - error - not supported', async () => {
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(async () => {
+    throw new Error('window.showSaveFilePicker is not a function')
+  })
+  await expect(FilePicker.showSaveFilePicker()).rejects.toThrow(new Error('showSaveFilePicker not supported on this browser'))
+})

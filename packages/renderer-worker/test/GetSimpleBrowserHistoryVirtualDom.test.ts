@@ -1,0 +1,89 @@
+import { expect, test } from '@jest/globals'
+import * as DomEventListenerFunctions from '../src/parts/DomEventListenerFunctions/DomEventListenerFunctions.js'
+import * as GetSimpleBrowserHistoryVirtualDom from '../src/parts/GetSimpleBrowserHistoryVirtualDom/GetSimpleBrowserHistoryVirtualDom.js'
+import * as VirtualDomElements from '../src/parts/VirtualDomElements/VirtualDomElements.js'
+
+const getNodesByClassName = (dom: readonly any[], className: string) => {
+  return dom.filter((node) => node.className === className)
+}
+
+test('renders each history entry with its date, url, and remove button', () => {
+  const date = Date.UTC(2026, 8, 3, 12, 30)
+  const entries = [
+    { date, url: 'https://newer.example/docs' },
+    { date: date - 1000, url: 'https://older.example' },
+  ]
+
+  const dom = GetSimpleBrowserHistoryVirtualDom.getSimpleBrowserHistoryVirtualDom(entries, '')
+
+  expect(getNodesByClassName(dom, 'SimpleBrowserHistoryEntry')).toHaveLength(2)
+  expect(getNodesByClassName(dom, 'SimpleBrowserHistoryDate')[0]).toMatchObject({
+    type: VirtualDomElements.Time,
+    dateTime: new Date(date).toISOString(),
+  })
+  expect(dom).toContainEqual({ type: VirtualDomElements.Text, text: new Date(date).toLocaleString(), childCount: 0 })
+  expect(dom).toContainEqual({
+    childCount: 1,
+    className: 'SimpleBrowserHistoryUrl',
+    'data-url': 'https://newer.example/docs',
+    href: 'https://newer.example/docs',
+    onClick: DomEventListenerFunctions.HandleClickSimpleBrowserHistoryUrl,
+    rel: 'noopener noreferrer',
+    target: '_blank',
+    title: 'https://newer.example/docs',
+    type: VirtualDomElements.A,
+  })
+  expect(dom).toContainEqual({ type: VirtualDomElements.Text, text: 'https://newer.example/docs', childCount: 0 })
+  expect(getNodesByClassName(dom, 'Button ButtonSecondary SimpleBrowserHistoryRemove')[0]).toMatchObject({
+    'data-index': 0,
+    ariaLabel: 'Remove https://newer.example/docs from history',
+    onClick: DomEventListenerFunctions.HandleClickSimpleBrowserHistoryRemove,
+  })
+})
+
+test('filters entries by url while retaining their original removal index', () => {
+  const entries = [
+    { date: 200, url: 'https://newer.example' },
+    { date: 100, url: 'https://matching.example' },
+  ]
+
+  const dom = GetSimpleBrowserHistoryVirtualDom.getSimpleBrowserHistoryVirtualDom(entries, 'matching')
+
+  expect(getNodesByClassName(dom, 'SimpleBrowserHistoryEntry')).toHaveLength(1)
+  expect(getNodesByClassName(dom, 'Button ButtonSecondary SimpleBrowserHistoryRemove')[0]).toMatchObject({ 'data-index': 1 })
+  expect(getNodesByClassName(dom, 'SimpleBrowserHistoryUrl')[0]).toMatchObject({
+    childCount: 1,
+    'data-url': 'https://matching.example',
+    href: 'https://matching.example',
+    rel: 'noopener noreferrer',
+    target: '_blank',
+    type: VirtualDomElements.A,
+  })
+  expect(dom).toContainEqual({ type: VirtualDomElements.Text, text: 'https://matching.example', childCount: 0 })
+})
+
+test('renders an empty state', () => {
+  const dom = GetSimpleBrowserHistoryVirtualDom.getSimpleBrowserHistoryVirtualDom([], '')
+
+  expect(dom).toContainEqual({
+    type: VirtualDomElements.P,
+    className: 'SimpleBrowserHistoryEmpty',
+    childCount: 1,
+  })
+  expect(dom).toContainEqual({ type: VirtualDomElements.Text, text: 'No history entries', childCount: 0 })
+})
+
+test('renders a bounded window and keeps the first, middle, and final history entries reachable', () => {
+  const entries = Array.from({ length: 100_000 }, (_, index) => ({ date: 100_000 - index, url: `https://example.test/${index}` }))
+  const render = (scrollTop: number) => GetSimpleBrowserHistoryVirtualDom.getSimpleBrowserHistoryVirtualDom(entries, '', '', scrollTop, 400)
+  const getRenderedUrls = (dom: readonly any[]) => dom.filter((node) => node.className === 'SimpleBrowserHistoryUrl').map((node) => node['data-url'])
+
+  const firstDom = render(0)
+  const middleDom = render(50_000 * 56)
+  const finalDom = render(99_999 * 56)
+
+  expect(getNodesByClassName(firstDom, 'SimpleBrowserHistoryEntry').length).toBeLessThan(40)
+  expect(getRenderedUrls(firstDom)).toContain('https://example.test/0')
+  expect(getRenderedUrls(middleDom)).toContain('https://example.test/50000')
+  expect(getRenderedUrls(finalDom)).toContain('https://example.test/99999')
+})

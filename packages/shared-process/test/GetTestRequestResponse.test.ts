@@ -1,4 +1,7 @@
-import { beforeEach, expect, jest, test } from '@jest/globals'
+import { afterEach, beforeEach, expect, jest, test } from '@jest/globals'
+import { mkdtemp, rm, writeFile } from 'node:fs/promises'
+import { tmpdir } from 'node:os'
+import { join } from 'node:path'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -23,15 +26,21 @@ jest.unstable_mockModule('../src/parts/GetPathName/GetPathName.js', () => ({
 }))
 
 jest.unstable_mockModule('../src/parts/Logger/Logger.js', () => ({
-  error: jest.fn(() => {
-    throw new Error('not implemented')
-  }),
+  error: jest.fn(),
 }))
 
 const GetTestRequestResponse = await import('../src/parts/GetTestRequestResponse/GetTestRequestResponse.js')
 const GetTestPath = await import('../src/parts/GetTestPath/GetTestPath.js')
 const CreateTestOverview = await import('../src/parts/CreateTestOverview/CreateTestOverview.js')
 const GetPathName = await import('../src/parts/GetPathName/GetPathName.js')
+
+const temporaryDirectories: string[] = []
+
+afterEach(async () => {
+  const directories = [...temporaryDirectories]
+  temporaryDirectories.length = 0
+  await Promise.all(directories.map((directory: any) => rm(directory, { force: true, recursive: true })))
+})
 
 test('getTestRequestResponse', async () => {
   const request = {
@@ -41,19 +50,66 @@ test('getTestRequestResponse', async () => {
   jest.spyOn(GetPathName, 'getPathName').mockReturnValue('/tests/')
   jest.spyOn(CreateTestOverview, 'createTestOverview').mockResolvedValue('test overview html')
   jest.spyOn(GetTestPath, 'getTestPath').mockReturnValue('/test')
-  expect(await GetTestRequestResponse.getTestRequestResponse(request, indexHtmlPath)).toEqual({
+  const result = await GetTestRequestResponse.getTestRequestResponse(request, indexHtmlPath)
+  expect(result).toEqual({
     body: 'test overview html',
     init: {
       headers: {
-        'Cache-Control': 'public, max-age=0, must-revalidate',
+        'Cache-Control': 'no-store',
         'Content-Security-Policy': "default-src 'none'",
         'Content-Type': 'text/html',
         'Cross-Origin-Embedder-Policy': 'require-corp',
         'Cross-Origin-Opener-Policy': 'same-origin',
       },
-      status: 300,
+      status: 200,
     },
   })
+  expect(CreateTestOverview.createTestOverview).toHaveBeenCalledWith(join('/test', 'src'))
+})
+
+test('getTestRequestResponse - redirects the test overview without a trailing slash', async () => {
+  const request = {
+    url: '/tests?filter=chat',
+  }
+  jest.spyOn(GetPathName, 'getPathName').mockReturnValue('/tests')
+
+  const result = await GetTestRequestResponse.getTestRequestResponse(request, '/test/index.html')
+
+  expect(result).toEqual({
+    body: '',
+    init: {
+      headers: {
+        Location: '/tests/?filter=chat',
+      },
+      status: 308,
+    },
+  })
+  expect(CreateTestOverview.createTestOverview).not.toHaveBeenCalled()
+})
+
+test('getTestRequestResponse - _all.html serves index html', async () => {
+  const tmpDir = await mkdtemp(join(tmpdir(), 'lvce-test-request-'))
+  temporaryDirectories.push(tmpDir)
+  const indexHtmlPath = join(tmpDir, 'index.html')
+  await writeFile(indexHtmlPath, '<!doctype html><title>Tests</title>')
+  const request = {
+    url: '/tests/_all.html',
+  }
+  jest.spyOn(GetPathName, 'getPathName').mockReturnValue('/tests/_all.html')
+
+  const result = await GetTestRequestResponse.getTestRequestResponse(request, indexHtmlPath)
+
+  expect(result).toMatchObject({
+    init: {
+      headers: {
+        'Content-Security-Policy': expect.stringContaining(`style-src 'self' 'unsafe-inline'`),
+        'Content-Type': 'text/html',
+      },
+      status: 200,
+    },
+  })
+  expect(result.init.headers['Content-Security-Policy']).toContain(`media-src 'self' blob:`)
+  expect(result.body).toContain('<title>Tests</title>')
 })
 
 test('getTestRequestResponse - error in createTestOverview', async () => {

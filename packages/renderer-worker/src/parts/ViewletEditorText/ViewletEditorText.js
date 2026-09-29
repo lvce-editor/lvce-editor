@@ -1,16 +1,21 @@
+import * as AssetDir from '../AssetDir/AssetDir.js'
+import * as ApplicationFileSystem from '../ApplicationFileSystem/ApplicationFileSystem.ts'
 import * as Command from '../Command/Command.js'
 import * as Editor from '../Editor/Editor.js'
 import * as EditorPreferences from '../EditorPreferences/EditorPreferences.js'
 import * as EditorWorker from '../EditorWorker/EditorWorker.ts'
 import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
 import * as ExtensionHostSemanticTokens from '../ExtensionHost/ExtensionHostSemanticTokens.js'
-import * as ExtensionHostLanguages from '../ExtensionHostLanguages/ExtensionHostLanguages.js'
 import * as GetFontUrl from '../GetFontUrl/GetFontUrl.js'
 import * as GetTextEditorContent from '../GetTextEditorContent/GetTextEditorContent.js'
 import * as GetTokenizePath from '../GetTokenizePath/GetTokenizePath.js'
 import * as Id from '../Id/Id.js'
 import * as Languages from '../Languages/Languages.js'
+import * as LanguagesState from '../LanguagesState/LanguagesState.js'
+import * as LayoutWidgets from '../LayoutWidgets/LayoutWidgets.ts'
+import * as Platform from '../Platform/Platform.js'
 import * as Preferences from '../Preferences/Preferences.js'
+import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as Tokenizer from '../Tokenizer/Tokenizer.js'
 import * as TokenizerMap from '../TokenizerMap/TokenizerMap.js'
 import * as UnquoteString from '../UnquoteString/UnquoteString.js'
@@ -18,8 +23,6 @@ import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as Workspace from '../Workspace/Workspace.js'
-import * as Platform from '../Platform/Platform.js'
-import * as AssetDir from '../AssetDir/AssetDir.js'
 
 const COLUMN_WIDTH = 9 // TODO compute this automatically once
 
@@ -42,6 +45,8 @@ export const handleTokenizeChange = () => {
   Viewlet.setState('EditorText', newState)
 }
 
+const useFunctionalRendering = true
+
 // TODO uri?
 export const create = (id, uri, x, y, width, height) => {
   const fileName = Workspace.pathBaseName(uri)
@@ -57,10 +62,22 @@ export const create = (id, uri, x, y, width, height) => {
     moduleId: ViewletModuleId.EditorText,
     platform: Platform.getPlatform(),
     assetDir: AssetDir.assetDir,
+    useFunctionalRendering,
   }
 }
 
-const getSavedSelections = (savedState) => {
+const getSavedSelections = (savedState, context) => {
+  if (context?.selections) {
+    return new Uint32Array(context.selections)
+  }
+  if (
+    typeof context?.startRowIndex === 'number' &&
+    typeof context?.startColumnIndex === 'number' &&
+    typeof context?.endRowIndex === 'number' &&
+    typeof context?.endColumnIndex === 'number'
+  ) {
+    return new Uint32Array([context.startRowIndex, context.startColumnIndex, context.endRowIndex, context.endColumnIndex])
+  }
   if (savedState && savedState.selections) {
     return new Uint32Array(savedState.selections)
   }
@@ -74,15 +91,27 @@ const getSavedDeltaY = (savedState) => {
   return 0
 }
 
-const getLanguageId = (state) => {
+const getFirstLine = (content) => {
+  const lineFeedIndex = content.indexOf('\n')
+  const lineEndIndex = lineFeedIndex === -1 ? content.length : lineFeedIndex
+  const hasCarriageReturn = lineEndIndex > 0 && content.charCodeAt(lineEndIndex - 1) === 13
+  return content.slice(0, hasCarriageReturn ? lineEndIndex - 1 : lineEndIndex)
+}
+
+const getLanguageId = (state, content, savedState) => {
+  const explicitLanguageId = savedState?.editorState?.explicitLanguageId
+  if (typeof explicitLanguageId === 'string' && Languages.getTokenizeFunctionPath(explicitLanguageId)) {
+    LanguagesState.setExplicitLanguageId(state.uri, explicitLanguageId)
+    return explicitLanguageId
+  }
+  LanguagesState.clearExplicitLanguageId(state.uri)
   const fileName = Workspace.pathBaseName(state.uri)
   const languageId = Languages.getLanguageId(fileName)
   if (languageId === 'unknown') {
-    if (state.languageId) {
+    if (state.languageId && state.languageId !== 'unknown') {
       return state.languageId
     }
-    console.log('try to get language from content', state)
-    const firstLine = state.lines[0] || ''
+    const firstLine = getFirstLine(content)
     const languageIdFromContent = Languages.getLanguageIdByFirstLine(firstLine)
     return languageIdFromContent
   }
@@ -90,10 +119,11 @@ const getLanguageId = (state) => {
 }
 
 export const loadContent = async (state, savedState, context) => {
-  const { uri, id, x, y, width, height, platform, assetDir } = state
+  const { uri, id, x, y, width, height, platform, assetDir, useFunctionalRendering } = state
   const rowHeight = EditorPreferences.getRowHeight()
   const fontSize = EditorPreferences.getFontSize()
   const hoverEnabled = EditorPreferences.getHoverEnabled()
+  const hoverDelay = EditorPreferences.getHoverDelay()
   const fontFamily = EditorPreferences.getFontFamily()
   const letterSpacing = EditorPreferences.getLetterSpacing()
   const tabSize = EditorPreferences.getTabSize()
@@ -106,12 +136,17 @@ export const loadContent = async (state, savedState, context) => {
   const isQuickSuggestionsEnabled = EditorPreferences.isQuickSuggestionsEnabled()
   const completionTriggerCharacters = EditorPreferences.getCompletionTriggerCharacters()
   const diagnosticsEnabled = EditorPreferences.diagnosticsEnabled()
-  const content = await GetTextEditorContent.getTextEditorContent(uri)
-  const languageId = context?.languageId || getLanguageId(state)
+  const content =
+    useFunctionalRendering && context?.largeFile === true
+      ? ''
+      : state.applicationId === undefined
+        ? await GetTextEditorContent.getTextEditorContent(uri)
+        : await ApplicationFileSystem.execute(state.applicationId, 'readFile', uri)
+  const languageId = context?.languageId || getLanguageId(state, content, savedState)
   const tokenizer = Tokenizer.getTokenizer(languageId)
   const tokenizerId = Id.create()
   TokenizerMap.set(tokenizerId, tokenizer)
-  let savedSelections = getSavedSelections(savedState)
+  const savedSelections = getSavedSelections(savedState, context)
   const savedDeltaY = getSavedDeltaY(savedState)
   state.languageId = languageId
   let newState2 = Editor.setDeltaYFixedValue(state, savedDeltaY)
@@ -125,45 +160,85 @@ export const loadContent = async (state, savedState, context) => {
   const fontWeight = EditorPreferences.getFontWeight()
   const lineToReveal = context?.rowIndex || 0
   const columnToReveal = context?.columnIndex || 0
-  await EditorWorker.invoke('Editor.create', {
-    assetDir,
-    columnToReveal,
-    completionTriggerCharacters,
-    content,
-    diagnosticsEnabled,
-    fontFamily,
-    fontSize,
-    fontWeight,
-    formatOnSave,
-    height,
-    hoverEnabled,
-    id,
-    isAutoClosingBracketsEnabled,
-    isAutoClosingQuotesEnabled,
-    isAutoClosingTagsEnabled,
-    isMonospaceFont,
-    isQuickSuggestionsEnabled,
-    languageId,
-    letterSpacing,
-    lineNumbers,
-    lineToReveal,
-    links,
-    platform,
-    rowHeight,
-    savedDeltaY,
-    savedSelections,
-    tabSize,
-    uri,
-    width,
-    x,
-    y,
-  })
+
+  if (useFunctionalRendering) {
+    const tokenizePath = GetTokenizePath.getTokenizePath(languageId)
+    const useCache = Preferences.get('editor.cache') ?? true
+    await EditorWorker.invoke(
+      'Editor.create2',
+      id,
+      uri,
+      x,
+      y,
+      width,
+      height,
+      platform,
+      assetDir,
+      languageId,
+      tokenizePath,
+      useCache,
+      ...(state.applicationId === undefined ? [] : [state.applicationId]),
+    )
+    await EditorWorker.invoke('Editor.loadContent', id, savedState?.editorState, context?.largeFile === true)
+    const initialRender = await rerender(newState2)
+    await EditorWorker.invoke('Editor.setSelections2', id, savedSelections)
+    const selectionRender = await rerender(newState2)
+    return {
+      ...selectionRender,
+      commands: [...initialRender.commands, ...selectionRender.commands],
+    }
+  } else {
+    await EditorWorker.invoke('Editor.create', {
+      assetDir,
+      columnToReveal,
+      completionTriggerCharacters,
+      content,
+      diagnosticsEnabled,
+      fontFamily,
+      fontSize,
+      fontWeight,
+      formatOnSave,
+      height,
+      hoverEnabled,
+      hoverDelay,
+      id,
+      isAutoClosingBracketsEnabled,
+      isAutoClosingQuotesEnabled,
+      isAutoClosingTagsEnabled,
+      isMonospaceFont,
+      isQuickSuggestionsEnabled,
+      languageId,
+      letterSpacing,
+      lineNumbers,
+      lineToReveal,
+      links,
+      platform,
+      rowHeight,
+      savedDeltaY,
+      savedSelections,
+      tabSize,
+      uri,
+      width,
+      x,
+      y,
+      useFunctionalRendering,
+    })
+  }
+
   // TODO send render commands directly from editor worker
   // to renderer process
   return rerender(newState2)
 }
 
 export const rerender = async (state) => {
+  if (state.useFunctionalRendering) {
+    const diffResult = await EditorWorker.invoke('Editor.diff2', state.id)
+    const commands = await EditorWorker.invoke('Editor.render2', state.id, diffResult)
+    return {
+      ...state,
+      commands,
+    }
+  }
   const commands = await EditorWorker.invoke('Editor.render', state.id)
   return {
     ...state,
@@ -172,8 +247,8 @@ export const rerender = async (state) => {
 }
 
 export const contentLoaded = async (state) => {
-  const { languageId } = state
-  ExtensionHostLanguages.load(languageId)
+  // const { languageId } = state
+  // ExtensionHostLanguages.load(languageId)
   return []
 }
 
@@ -231,9 +306,9 @@ export const contentLoadedEffects = async (state) => {
   // GlobalEventBus.emitEvent('editor.create', state)
   // GlobalEventBus.addListener('editor.change', handleEditorChange)
   // Tokenizer.addConnectedEditor(state.uid)
-  const newLanguageId = getLanguageId(state)
-  const tokenizePath = GetTokenizePath.getTokenizePath(newLanguageId)
-  await Viewlet.executeViewletCommand(state.uid, 'setLanguageId', newLanguageId, tokenizePath)
+  // const newLanguageId = getLanguageId(state)
+  // const tokenizePath = GetTokenizePath.getTokenizePath(newLanguageId)
+  // await Viewlet.executeViewletCommand(state.uid, 'setLanguageId', newLanguageId, tokenizePath)
   // await ExtensionHostTextDocument.handleEditorCreate(state)
   // TODO check if semantic highlighting is enabled in settings
   // await updateSemanticTokens(state)
@@ -247,18 +322,29 @@ export const handleLanguagesChanged = async (state) => {
   return state
 }
 
-export const hasFunctionalResize = true
-
-export const resize = (state, dimensions) => {
-  const newState = Editor.setBounds(state, dimensions.x, dimensions.y, dimensions.width, dimensions.height, state.columnWidth)
-  return newState
+export const handleSettingsChanged = async (state) => {
+  await EditorWorker.invoke('Editor.handleSettingsChanged', state.id)
+  return rerender(state)
 }
 
-export const dispose = (state) => {
+export const hasFunctionalResize = true
+
+export const resize = async (state, dimensions) => {
+  await EditorWorker.invoke('Editor.resize', state.id, dimensions)
+  const newState = Editor.setBounds(state, dimensions.x, dimensions.y, dimensions.width, dimensions.height, state.columnWidth)
+  return rerender(newState)
+}
+
+export const dispose = async (state) => {
   Tokenizer.removeConnectedEditor(state.id)
+  const commands = await EditorWorker.invoke('Editor.dispose', state.id)
+  await RendererProcess.invoke('Viewlet.sendMultiple', LayoutWidgets.reconcile(commands))
 }
 
 export const hasFunctionalRender = true
+export const hasFunctionalRootRender = true
+
+export const hasFunctionalEvents = true
 
 export const render = Editor.render
 
@@ -270,3 +356,8 @@ export const focus = (state) => {
 }
 
 export const customErrorRenderer = ViewletModuleId.EditorTextError
+
+export const renderEventListeners = async () => {
+  const listeners = await EditorWorker.invoke('Editor.renderEventListeners')
+  return listeners
+}

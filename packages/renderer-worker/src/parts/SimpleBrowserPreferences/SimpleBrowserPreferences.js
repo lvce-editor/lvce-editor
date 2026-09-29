@@ -1,7 +1,7 @@
 import * as Preferences from '../Preferences/Preferences.js'
 
 export const getDefaultUrl = () => {
-  return 'https://example.com'
+  return 'https://example.com/'
 }
 
 export const getShortCuts = () => {

@@ -1,5 +1,5 @@
 import { expect, jest, test, afterEach } from '@jest/globals'
-import { mkdtemp } from 'node:fs/promises'
+import { mkdir, mkdtemp, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 
@@ -14,13 +14,23 @@ jest.unstable_mockModule('../src/parts/PlatformPaths/PlatformPaths.js', () => ({
   getDefaultSettingsPath: jest.fn(() => {
     throw new Error('not implemented')
   }),
+  getUserSettingsPath: jest.fn(() => {
+    throw new Error('not implemented')
+  }),
+}))
+
+jest.unstable_mockModule('../src/parts/Logger/Logger.js', () => ({
+  error: jest.fn(),
 }))
 
 const Preferences = await import('../src/parts/Preferences/Preferences.js')
+const Logger = await import('../src/parts/Logger/Logger.js')
 
 const PlatformPaths = await import('../src/parts/PlatformPaths/PlatformPaths.js')
+const getAllErrorRegex = /^Failed to get all preferences: Failed to load default preferences: File not found/
+const startupPreferencesErrorRegex = /^\[shared-process\] Failed to load preferences on startup, continuing with defaults: VError: Failed to get all preferences:/
 
-const getTmpDir = () => {
+const getTmpDir = (): any => {
   return mkdtemp(join(tmpdir(), 'foo-'))
 }
 
@@ -106,7 +116,50 @@ test('getAll - error', async () => {
   const tmpDir = await getTmpDir()
   // @ts-ignore
   PlatformPaths.getDefaultSettingsPath.mockImplementation(() => join(tmpDir, 'static', 'config', 'defaultSettings.json'))
-  await expect(Preferences.getAll()).rejects.toThrow(/^Failed to get all preferences: Failed to load default preferences: File not found/)
+  await expect(Preferences.getAll()).rejects.toThrow(getAllErrorRegex)
+})
+
+test('getAll - uses custom title bar style by default', async () => {
+  const tmpDir = await getTmpDir()
+  const defaultSettingsPath = join(tmpDir, 'static', 'config', 'defaultSettings.json')
+  const userSettingsPath = join(tmpDir, 'config', 'settings.json')
+  await mkdir(join(tmpDir, 'static', 'config'), { recursive: true })
+  await writeFile(
+    defaultSettingsPath,
+    JSON.stringify(
+      {
+        'window.titleBarStyle': 'native',
+        'window.zoomLevel': 0,
+      },
+      null,
+      2,
+    ),
+  )
+  // @ts-ignore
+  PlatformPaths.getDefaultSettingsPath.mockImplementation(() => defaultSettingsPath)
+  // @ts-ignore
+  PlatformPaths.getUserSettingsPath.mockImplementation(() => userSettingsPath)
+
+  await expect(Preferences.getAll()).resolves.toEqual({
+    'window.titleBarless.enabled': false,
+    'window.titleBarStyle': 'custom',
+    'window.zoomLevel': 0,
+  })
+})
+
+test('getAllSafe - error', async () => {
+  const tmpDir = await getTmpDir()
+  // @ts-ignore
+  PlatformPaths.getDefaultSettingsPath.mockImplementation(() => join(tmpDir, 'static', 'config', 'defaultSettings.json'))
+
+  await expect(Preferences.getAllSafe()).resolves.toEqual({
+    'window.titleBarless.enabled': false,
+    'window.titleBarStyle': 'custom',
+  })
+  expect(Logger.error).toHaveBeenCalledTimes(1)
+  expect(Logger.error).toHaveBeenCalledWith(
+    expect.stringMatching(startupPreferencesErrorRegex),
+  )
 })
 
 // test('getDefaultPreferences - error', async () => {

@@ -1,6 +1,34 @@
-export const name = 'StatusBar'
+import { createWorkerViewlet } from '../CreateWorkerViewlet/CreateWorkerViewlet.js'
+import * as Command from '../Command/Command.js'
 
-export * from './ViewletStatusBar.js'
-export * from './ViewletStatusBarCommands.js'
-export * from './ViewletStatusBarCss.js'
-export * from './ViewletStatusBarRender.js'
+export const contentLoadedEffects = async () => {
+  await Command.execute('Layout.refreshProblemsSummary')
+}
+
+export const {
+  Commands,
+  Css,
+  Events,
+  Variables,
+  create,
+  dispose,
+  getCommands,
+  getComponentDom,
+  getComponentState,
+  getKeyBindings,
+  hasDirectRender,
+  hasFunctionalEvents,
+  hasFunctionalRender,
+  hasFunctionalResize,
+  hasFunctionalRootRender,
+  hotReload,
+  loadContent,
+  name,
+  render,
+  renderEventListeners,
+  resize,
+  saveState,
+  setComponentState,
+} = createWorkerViewlet({ workerId: 'statusBar' })
+
+export * from './ViewletStatusBarMenuEntries.js'

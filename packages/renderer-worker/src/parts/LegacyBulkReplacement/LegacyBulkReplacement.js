@@ -1,6 +1,5 @@
 import * as Assert from '../Assert/Assert.ts'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
-import * as ExtensionHostWorker from '../ExtensionHostWorker/ExtensionHostWorker.js'
 
 const specialSchemes = ['memfs://', 'html://', 'fetch://']
 
@@ -20,8 +19,7 @@ export const applyLegacyBulkReplacement = async (files, ranges, replacement) => 
   Assert.array(ranges)
   Assert.string(replacement)
   if (isSpecialScheme(files)) {
-    await ExtensionHostWorker.invoke('BulkReplacement.applyBulkReplacement', files, ranges, replacement)
-    return
+    throw new Error('Legacy bulk replacement is not supported for in-memory workspaces')
   }
   await SharedProcess.invoke('BulkReplacement.applyBulkReplacement', files, ranges, replacement)
 }

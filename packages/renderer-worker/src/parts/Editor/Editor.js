@@ -1,5 +1,6 @@
 import * as EditorCompletionState from '../EditorCompletionState/EditorCompletionState.js'
 import * as MinimumSliderSize from '../MinimumSliderSize/MinimumSliderSize.js'
+import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
 import * as EditorScrolling from './EditorScrolling.js'
 
 // TODO
@@ -76,9 +77,13 @@ export const setBounds = (editor, x, y, width, height, columnWidth) => {
   const { itemHeight } = editor
   const numberOfVisibleLines = Math.floor(height / itemHeight)
   const total = editor.lines.length
-  const maxLineY = Math.min(numberOfVisibleLines, total)
   const finalY = Math.max(total - numberOfVisibleLines, 0)
   const finalDeltaY = finalY * itemHeight
+  const deltaY = Math.min(editor.deltaY, finalDeltaY)
+  const minLineY = Math.floor(deltaY / itemHeight)
+  const maxLineY = Math.min(minLineY + numberOfVisibleLines, total)
+  const contentHeight = total * editor.rowHeight
+  const scrollBarHeight = ScrollBarFunctions.getScrollBarSize(height, contentHeight, editor.minimumSliderSize)
   return {
     ...editor,
     x,
@@ -86,10 +91,13 @@ export const setBounds = (editor, x, y, width, height, columnWidth) => {
     width,
     height,
     columnWidth,
+    deltaY,
     numberOfVisibleLines,
+    minLineY,
     maxLineY,
     finalY,
     finalDeltaY,
+    scrollBarHeight,
   }
 }
 

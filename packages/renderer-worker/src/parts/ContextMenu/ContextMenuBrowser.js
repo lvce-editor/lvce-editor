@@ -17,3 +17,8 @@ export const show2 = async (uid, menuId, x, y, ...args) => {
   // TODO maybe only send labels and keybindings to ui (id not needed on ui)
   // TODO what about separators?
 }
+
+export const show2Below = async (uid, menuId, x, y, ...args) => {
+  await Menu.hide()
+  await Menu.show2Below(uid, menuId, x, y, ...args)
+}

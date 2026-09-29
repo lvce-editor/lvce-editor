@@ -1,6 +1,6 @@
 .Workbench {
-  width: 100%;
-  height: 100%;
+  width: var(--AppWidth);
+  height: var(--AppHeight);
   contain: strict;
   font-size: 13px;
   line-height: 1.4;
@@ -8,11 +8,135 @@
   flex-direction: column;
 }
 
+/* Keep window controls in the space reserved above the primary sidebar. */
+.Workbench.TitleBarless > .TitleBar > :not(.TitleBarButtons) {
+  display: none;
+}
+
+.Workbench.TitleBarless > .TitleBar {
+  -webkit-app-region: drag;
+  flex-shrink: 0;
+  justify-content: flex-end;
+}
+
+.Workbench.CompactTitleBar > .TitleBar {
+  position: absolute;
+  top: 0;
+  left: var(--TitleBarLeft);
+  width: var(--TitleBarWidth);
+  z-index: 4;
+}
+
+.Workbench.CompactTitleBar .ContentArea > .ActivityBar,
+.Workbench.CompactTitleBar .ContentArea > .SideBar:not(.SecondarySideBar) {
+  margin-top: var(--TitleBarHeight);
+}
+
+.WorkbenchBody {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  position: relative;
+}
+
+.WorkbenchMain {
+  contain: size layout style;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+  min-width: 0;
+}
+
 .ContentArea {
   flex: 1;
   display: flex;
-  contain: strict;
+  contain: size layout style;
+  position: relative;
   /* flex-direction: column; */
+}
+
+.PreviewArea {
+  display: flex;
+  flex: 0 0 var(--PreviewWidth);
+  flex-direction: column;
+  min-height: 0;
+  min-width: 0;
+  overflow: hidden;
+  position: relative;
+}
+
+.PreviewAreaContent {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  min-width: 0;
+}
+
+.PreviewAreaContent > * {
+  flex: 1;
+  min-height: 0;
+  min-width: 0;
+}
+
+.PreviewAreas {
+  display: flex;
+  flex: 0 0 var(--PreviewAreasWidth);
+  min-height: 0;
+  min-width: 0;
+  position: relative;
+}
+
+.PreviewAreasVertical {
+  flex-direction: column;
+}
+
+.PreviewAreasVertical > .PreviewArea {
+  flex: 0 0 var(--PreviewHeight);
+}
+
+.PreviewAreasVertical > .SecondaryPreviewArea {
+  flex-basis: var(--SecondaryPreviewHeight);
+}
+
+.PreviewAreasVertical .SecondaryPreview {
+  border-left: 0;
+  border-top: 1px solid var(--SeparatorBorder);
+  width: 100%;
+}
+
+.SecondaryPreviewArea {
+  flex-basis: var(--SecondaryPreviewWidth);
+}
+
+.PreviewArea > .Actions {
+  position: absolute;
+  right: 40px;
+  top: 4px;
+  z-index: 1;
+}
+
+.PreviewCloseButton,
+.SecondaryPreviewCloseButton {
+  background: var(--TitleBarBackground, rgb(40, 46, 47));
+  color: var(--TitleBarForeground, #c5c5c5);
+  position: absolute;
+  top: 4px;
+  z-index: 1;
+}
+
+.PreviewCloseButton {
+  right: 4px;
+}
+
+.SecondaryPreviewCloseButton {
+  right: 4px;
+}
+
+.SecondaryPreview {
+  background: var(--EditorBackground);
+  border-left: 1px solid var(--SeparatorBorder);
+  width: var(--SecondaryPreviewWidth);
 }
 
 .ActivityBar {
@@ -47,4 +171,36 @@
 .Panel {
   background: var(--PanelBackground);
   height: var(--PanelHeight);
+  width: var(--PanelWidth);
+}
+
+.Workbench.BrowserFullWidth > .SimpleBrowser {
+  flex: 1;
+  min-width: 0;
+  width: 100%;
+}
+
+.Workbench.BrowserFullWidthHideTitleBar > .TitleBar {
+  contain: none;
+  flex: 0 0 0;
+  height: 0;
+  left: 0;
+  overflow: visible;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  z-index: 4;
+}
+
+.Workbench.BrowserFullWidthHideTitleBar > .TitleBar > :not(.TitleBarButtons) {
+  display: none;
+}
+
+.Workbench.BrowserFullWidthHideTitleBar > .TitleBar > .TitleBarButtons {
+  flex-grow: 0;
+  height: 35px;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: auto;
 }

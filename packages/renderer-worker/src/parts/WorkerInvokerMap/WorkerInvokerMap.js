@@ -1,0 +1,73 @@
+import * as AboutViewWorker from '../AboutViewWorker/AboutViewWorker.js'
+import * as ActivityBarWorker from '../ActivityBarWorker/ActivityBarWorker.js'
+import * as ChatDebugViewWorker from '../ChatDebugViewWorker/ChatDebugViewWorker.js'
+import * as ChatViewWorker from '../ChatViewWorker/ChatViewWorker.js'
+import * as CookieImportViewWorker from '../CookieImportViewWorker/CookieImportViewWorker.ts'
+import * as ComponentStateWorker from '../ComponentStateWorker/ComponentStateWorker.js'
+import * as DialogWorker from '../DialogWorker/DialogWorker.js'
+import * as DiffViewWorker from '../DiffViewWorker/DiffViewWorker.js'
+import * as ExplorerViewWorker from '../ExplorerViewWorker/ExplorerViewWorker.js'
+import * as ExtensionDetailViewWorker from '../ExtensionDetailViewWorker/ExtensionDetailViewWorker.js'
+import * as ExtensionSearchViewWorker from '../ExtensionSearchViewWorker/ExtensionSearchViewWorker.js'
+import * as IframeInspectorWorker from '../IframeInspectorWorker/IframeInspectorWorker.js'
+import * as KeyBindingsViewWorker from '../KeyBindingsViewWorker/KeyBindingsViewWorker.js'
+import * as LanguageModelsViewWorker from '../LanguageModelsViewWorker/LanguageModelsViewWorker.js'
+import * as MainAreaWorker from '../MainAreaWorker/MainAreaWorker.js'
+import * as NotificationCenterViewWorker from '../NotificationCenterViewWorker/NotificationCenterViewWorker.js'
+import * as OutputViewWorker from '../OutputViewWorker/OutputViewWorker.js'
+import * as PanelWorker from '../PanelWorker/PanelWorker.js'
+import * as PreviewWorker from '../PreviewWorker/PreviewWorker.js'
+import * as PortsViewWorker from '../PortsViewWorker/PortsViewWorker.ts'
+import * as ProblemsWorker from '../ProblemsWorker/ProblemsWorker.ts'
+import * as ProcessExplorerWorker from '../ProcessExplorerWorker/ProcessExplorerWorker.js'
+import * as FileWatcherViewWorker from '../FileWatcherViewWorker/FileWatcherViewWorker.js'
+import * as QuickPickWorker from '../QuickPickWorker/QuickPickWorker.js'
+import * as RunningExtensionsViewWorker from '../RunningExtensionsViewWorker/RunningExtensionsViewWorker.ts'
+import * as SecretsViewWorker from '../SecretsViewWorker/SecretsViewWorker.ts'
+import * as SettingsViewWorker from '../SettingsViewWorker/SettingsViewWorker.js'
+import * as StatusBarWorker from '../StatusBarWorker/StatusBarWorker.js'
+import * as TextSearchViewWorker from '../TextSearchViewWorker/TextSearchViewWorker.js'
+import * as TitleBarWorker from '../TitleBarWorker/TitleBarWorker.js'
+import * as WorkersViewWorker from '../WorkersViewWorker/WorkersViewWorker.ts'
+
+const workerInvokers = {
+  aboutWorker: AboutViewWorker,
+  activityBar: ActivityBarWorker,
+  chatDebug: ChatDebugViewWorker,
+  chatView: ChatViewWorker,
+  cookieImportView: CookieImportViewWorker,
+  componentState: ComponentStateWorker,
+  dialogWorker: DialogWorker,
+  diffView: DiffViewWorker,
+  explorer: ExplorerViewWorker,
+  extensionDetail: ExtensionDetailViewWorker,
+  extensionSearch: ExtensionSearchViewWorker,
+  iframeInspector: IframeInspectorWorker,
+  keyBindings: KeyBindingsViewWorker,
+  languageModels: LanguageModelsViewWorker,
+  mainArea: MainAreaWorker,
+  notificationCenterView: NotificationCenterViewWorker,
+  output: OutputViewWorker,
+  panel: PanelWorker,
+  preview: PreviewWorker,
+  portsView: PortsViewWorker,
+  problemsViewWorker: ProblemsWorker,
+  processExplorer: ProcessExplorerWorker,
+  fileWatcherView: FileWatcherViewWorker,
+  quickPickWorker: QuickPickWorker,
+  runningExtensionsView: RunningExtensionsViewWorker,
+  secretsView: SecretsViewWorker,
+  settingsView: SettingsViewWorker,
+  statusBar: StatusBarWorker,
+  textSearchView: TextSearchViewWorker,
+  titleBar: TitleBarWorker,
+  workersView: WorkersViewWorker,
+}
+
+export const getWorkerInvoker = (workerId) => {
+  const worker = workerInvokers[workerId]
+  if (!worker) {
+    throw new Error(`worker invoker not found: ${workerId}`)
+  }
+  return worker
+}

@@ -1,12 +1,21 @@
 import * as CssState from '../CssState/CssState.js'
 import * as GetCss from '../GetCss/GetCss.js'
 import * as GetCssId from '../GetCssId/GetCssId.js'
+import * as NormalizeRendererCommands from '../NormalizeRendererCommands/NormalizeRendererCommands.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
+
+const escapeCssComment = (value) => {
+  return value.replaceAll('*/', '* /')
+}
+
+const prependCssSourceComment = (cssPath, id, text) => {
+  return `/* ${escapeCssComment(cssPath)} (${escapeCssComment(id)}) */\n${text}`
+}
 
 const actuallyLoadCssStyleSheet = async (css) => {
   const text = await GetCss.getCss(css)
   const id = GetCssId.getCssId(css)
-  await addCssStyleSheet(id, text)
+  await addCssStyleSheet(id, prependCssSourceComment(css, id, text))
 }
 
 export const loadCssStyleSheet = (id) => {
@@ -18,6 +27,29 @@ export const loadCssStyleSheet = (id) => {
 
 export const loadCssStyleSheets = (css) => {
   return Promise.all(css.map(loadCssStyleSheet))
+}
+
+export const acquireCssStyleSheet = async (css) => {
+  CssState.addReference(css)
+  try {
+    await loadCssStyleSheet(css)
+  } catch (error) {
+    CssState.removeReference(css)
+    CssState.remove(css)
+    throw error
+  }
+}
+
+export const releaseCssStyleSheet = (css) => {
+  const count = CssState.removeReference(css)
+  if (count !== 0) {
+    return []
+  }
+  CssState.remove(css)
+  const id = GetCssId.getCssId(css)
+  // Panel workers may send this removal directly, bypassing the frame scheduler.
+  NormalizeRendererCommands.removeCssText(id)
+  return [['Css.removeCssStyleSheet', id]]
 }
 
 export const addCssStyleSheet = (id, css) => {
@@ -34,6 +66,34 @@ export const addDynamicCss = (id, getCss, preferences) => {
     CssState.set(id, actuallyAddDynamicCss(id, getCss, preferences))
   }
   return CssState.get(id)
+}
+
+export const reloadDynamicCss = async (id, getCss, preferences) => {
+  if (!CssState.has(id)) {
+    return
+  }
+  await actuallyAddDynamicCss(id, getCss, preferences)
+}
+
+export const acquireDynamicCss = async (id, getCss, preferences) => {
+  CssState.addReference(id)
+  try {
+    await addDynamicCss(id, getCss, preferences)
+  } catch (error) {
+    CssState.removeReference(id)
+    CssState.remove(id)
+    throw error
+  }
+}
+
+export const releaseDynamicCss = (id) => {
+  const count = CssState.removeReference(id)
+  if (count !== 0) {
+    return []
+  }
+  CssState.remove(id)
+  NormalizeRendererCommands.removeCssText(id)
+  return [['Css.removeCssStyleSheet', id]]
 }
 
 export const reload = async (css) => {

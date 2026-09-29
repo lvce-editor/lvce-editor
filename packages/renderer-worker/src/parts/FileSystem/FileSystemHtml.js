@@ -14,6 +14,11 @@ import { VError } from '../VError/VError.js'
 
 const pathSeparator = '/'
 
+export const exists = async (uri) => {
+  const handle = await PersistentFileHandle.getHandle(uri)
+  return Boolean(handle)
+}
+
 const getDirent = (handle) => {
   const { name, kind } = handle
   const type = FileHandleTypeMap.getDirentType(kind)
@@ -109,13 +114,54 @@ export const readFile = async (uri) => {
 
 export const writeFile = async (uri, content) => {
   try {
-    const handle = await GetFileHandle.getFileHandle(uri)
+    const handle = await GetFileHandle.getFileHandle(uri, {
+      create: true,
+    })
     if (!handle) {
       throw new VError(`File not found ${uri}`)
     }
     await FileSystemFileHandle.write(handle, content)
   } catch (error) {
     throw new VError(error, 'Failed to save file')
+  }
+}
+
+export const writeBlob = async (uri, blob) => {
+  try {
+    const handle = await GetFileHandle.getFileHandle(uri, {
+      create: true,
+    })
+    if (!handle) {
+      throw new VError(`File not found ${uri}`)
+    }
+    await FileSystemFileHandle.write(handle, blob)
+  } catch (error) {
+    throw new VError(error, 'Failed to save file')
+  }
+}
+
+export const remove = async (uri) => {
+  try {
+    const dirname = Path.dirname(pathSeparator, uri)
+    const parentHandle = await GetDirectoryHandle.getDirectoryHandle(dirname)
+    if (!parentHandle) {
+      throw new FileNotFoundError(uri)
+    }
+    const existingHandle = await PersistentFileHandle.getHandle(uri)
+    const baseName = Path.getBaseName(pathSeparator, uri)
+    if (existingHandle?.kind === 'directory') {
+      await parentHandle.removeEntry(baseName, {
+        recursive: true,
+      })
+    } else {
+      await parentHandle.removeEntry(baseName)
+    }
+    PersistentFileHandle.removeHandle(uri)
+  } catch (error) {
+    if (error instanceof FileNotFoundError || BrowserErrorTypes.isNotFoundError(error)) {
+      throw new FileNotFoundError(uri)
+    }
+    throw new VError(error, 'Failed to remove')
   }
 }
 
@@ -151,8 +197,8 @@ export const mkdir = async (uri) => {
   }
 }
 
-export const getPathSeparator = () => {
-  return pathSeparator
+export const isReadonly = () => {
+  return false
 }
 
 export const getBlobSrc = async (uri) => {

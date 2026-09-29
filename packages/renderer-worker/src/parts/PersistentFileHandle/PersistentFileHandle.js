@@ -1,7 +1,24 @@
 import * as Command from '../Command/Command.js'
+import * as GetProtocol from '../GetProtocol/GetProtocol.js'
 import { VError } from '../VError/VError.js'
 
 const handles = Object.create(null)
+
+const getLegacyHtmlKeys = (uri) => {
+  if (!uri.startsWith('html://')) {
+    return []
+  }
+  const protocol = GetProtocol.getProtocol(uri)
+  const strippedUri = GetProtocol.getPath(protocol, uri)
+  const legacyKeys = []
+  if (strippedUri) {
+    legacyKeys.push(strippedUri)
+  }
+  if (strippedUri.startsWith('/')) {
+    legacyKeys.push(strippedUri.slice(1))
+  }
+  return legacyKeys.filter((value, index, array) => value && array.indexOf(value) === index)
+}
 
 export const addHandle = async (uri, handle) => {
   try {
@@ -26,15 +43,38 @@ export const addHandles = async (parentUri, childHandles) => {
   await Promise.all(promises)
 }
 
-export const removeHandle = () => {
-  // TODO remove handle from state and from indexeddb
+export const removeHandle = (uri) => {
+  delete handles[uri]
+  const prefix = `${uri}/`
+  for (const key in handles) {
+    if (key.startsWith(prefix)) {
+      delete handles[key]
+    }
+  }
 }
 
 export const getHandle = async (uri) => {
   try {
     // TODO retrieve handle from state or from indexeddb
     // TODO if not found, throw error
-    const handle = await Command.execute('IndexedDb.getHandle', uri)
+    if (uri in handles) {
+      return handles[uri]
+    }
+    let handle = await Command.execute('IndexedDb.getHandle', uri)
+    if (!handle) {
+      const legacyKeys = getLegacyHtmlKeys(uri)
+      for (const legacyKey of legacyKeys) {
+        handle = await Command.execute('IndexedDb.getHandle', legacyKey)
+        if (handle) {
+          await addHandle(uri, handle)
+          handles[legacyKey] = handle
+          break
+        }
+      }
+    }
+    if (handle) {
+      handles[uri] = handle
+    }
     return handle
   } catch (error) {
     throw new VError(error, 'Failed to get handle')

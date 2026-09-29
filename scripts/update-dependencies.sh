@@ -18,7 +18,7 @@ fi
 
 function updateDependencies {
   echo "updating dependencies..."
-  OUTPUT=`ncu -u -x msw -x @types/node -x rollup -x electron-unhandled -x electron -x execa -x electron-builder -x jest -x jest-environment-jsdom -x lerna -x typescript`
+  OUTPUT=`ncu -u -x msw -x @types/node -x rollup -x electron-unhandled -x electron -x execa -x electron-builder -x jest -x jest-environment-jsdom -x typescript -x @babel/preset-typescript`
   SUB='All dependencies match the latest package versions'
   if [[ "$OUTPUT" == *"$SUB"* ]]; then
     echo "$OUTPUT"
@@ -30,7 +30,6 @@ function updateDependencies {
 
                                                        updateDependencies             &&
 cd packages/build                                   && updateDependencies && cd ../.. &&
-cd packages/extension-host-helper-process           && updateDependencies && cd ../.. &&
 cd packages/extension-host-worker-tests             && updateDependencies && cd ../.. &&
 cd packages/main-process                            && updateDependencies && cd ../.. &&
 cd packages/renderer-worker                         && updateDependencies && cd ../.. &&

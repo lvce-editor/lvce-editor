@@ -1,6 +1,8 @@
 import * as Command from '../Command/Command.js'
 import * as Assert from '../Assert/Assert.ts'
+import * as ExtensionKeyBindings from '../ExtensionKeyBindings/ExtensionKeyBindings.js'
 import * as KeyBindingsState from '../KeyBindingsState/KeyBindingsState.js'
+import * as UserKeyBindings from '../UserKeyBindings/UserKeyBindings.js'
 
 // TODO where to store keybindings? need them here and in renderer process
 // how to avoid duplicate loading / where to store them and keep them in sync?
@@ -33,4 +35,18 @@ export const handleKeyBinding = async (identifier) => {
   //     ...(keyBinding.args || [])
   //   )
   // }
+}
+
+export const hydrate = async () => {
+  const [extensionKeyBindings, userKeyBindings] = await Promise.all([
+    ExtensionKeyBindings.getKeyBindings(),
+    UserKeyBindings.getKeyBindings(),
+  ])
+  KeyBindingsState.setKeyBindings('extensions', extensionKeyBindings)
+  KeyBindingsState.setKeyBindings('user', userKeyBindings)
+}
+
+export const reloadUserKeyBindings = async () => {
+  const keyBindings = await UserKeyBindings.getKeyBindings()
+  KeyBindingsState.setKeyBindings('user', keyBindings)
 }

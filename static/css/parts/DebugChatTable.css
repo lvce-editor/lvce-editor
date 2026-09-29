@@ -1,0 +1,207 @@
+:root {
+  --ChatDebugViewSashWidth: 4px;
+}
+
+.ChatDebugViewCellDuration {
+  text-align: right;
+}
+
+.ChatDebugViewCellStatusError {
+  color: var(--vscode-errorForeground, #f14c4c);
+}
+
+.ChatDebugViewEvents {
+  display: flex;
+  flex: 0 1 var(--ChatDebugViewTableWidth);
+  flex-direction: column;
+  overflow: auto;
+  min-width: 0;
+  min-height: 0;
+  scrollbar-width: thin;
+  scrollbar-color: var(--vscode-scrollbarSlider-background, rgba(121, 121, 121, 0.4)) transparent;
+  contain: strict;
+}
+
+.ChatDebugViewEvents::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+.ChatDebugViewEvents::-webkit-scrollbar-thumb {
+  background: var(--vscode-scrollbarSlider-background, rgba(121, 121, 121, 0.4));
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+.ChatDebugViewEvents::-webkit-scrollbar-thumb:active {
+  background: var(--vscode-scrollbarSlider-activeBackground, rgba(191, 191, 191, 0.4));
+}
+
+.ChatDebugViewEvents::-webkit-scrollbar-thumb:hover {
+  background: var(--vscode-scrollbarSlider-hoverBackground, rgba(100, 100, 100, 0.7));
+}
+
+.ChatDebugViewEvents::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.ChatDebugViewEvents.ChatDebugViewEventsFullWidth,
+.ChatDebugViewEventsFullWidth {
+  flex: 1 1 100%;
+}
+
+.ChatDebugView .Sash {
+  flex: 0 0 var(--ChatDebugViewSashWidth);
+  position: relative;
+  cursor: col-resize;
+  display: flex;
+  justify-content: center;
+  min-height: 0;
+  contain: strict;
+}
+
+.ChatDebugView .Sash:hover .ChatDebugViewSashLine {
+  background: var(--vscode-focusBorder, #007fd4);
+}
+
+.ChatDebugViewSashLine {
+  width: 1px;
+  height: 100%;
+  background: var(--vscode-editorWidget-border, #454545);
+  pointer-events: none;
+  contain: strict;
+}
+
+.ChatDebugView .TableWrapper {
+  position: relative;
+  width: min(100%, var(--ChatDebugViewTableWidth));
+  max-width: 100%;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+}
+
+.ChatDebugView .Table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+}
+
+.ChatDebugView .TableRow {
+  height: var(--ChatDebugViewTableRowHeight);
+}
+
+.ChatDebugView .TableSummary {
+  flex: none;
+  min-height: 24px;
+  width: min(100%, var(--ChatDebugViewTableWidth));
+  max-width: 100%;
+  padding: 6px 4px 0;
+  color: var(--vscode-descriptionForeground, inherit);
+  opacity: 0.86;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.ChatDebugView .TableCell {
+  box-sizing: border-box;
+  height: var(--ChatDebugViewTableHeaderHeight);
+  max-height: var(--ChatDebugViewTableHeaderHeight);
+  padding: 0 6px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
+.ChatDebugView .TableBody .TableCell {
+  height: var(--ChatDebugViewTableRowHeight);
+  max-height: var(--ChatDebugViewTableRowHeight);
+  line-height: var(--ChatDebugViewTableRowHeight);
+}
+
+.ChatDebugView .TableCol {
+  width: auto;
+}
+
+.ChatDebugView .TableColZero {
+  width: var(--ChatDebugViewTableColZeroWidth);
+  max-width: var(--ChatDebugViewTableColZeroWidth);
+}
+
+.ChatDebugView .TableColOne {
+  width: var(--ChatDebugViewTableColOneWidth);
+  max-width: var(--ChatDebugViewTableColOneWidth);
+}
+
+.ChatDebugView .TableColTwo {
+  width: var(--ChatDebugViewTableColTwoWidth);
+  max-width: var(--ChatDebugViewTableColTwoWidth);
+}
+
+.ChatDebugView .Resizers {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.ChatDebugView .Resizer {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 12px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  pointer-events: auto;
+  cursor: col-resize;
+}
+
+.ChatDebugView .ResizerOne {
+  left: var(--ResizerOneLeft);
+  transform: translateX(-50%);
+}
+
+.ChatDebugView .ResizerTwo {
+  left: var(--ResizerTwoLeft);
+  transform: translateX(-50%);
+}
+
+.ChatDebugView .ResizerInner {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 1px;
+  transform: translateX(-50%);
+  background: var(--vscode-widget-border, rgba(255, 255, 255, 0.18));
+}
+
+.ChatDebugView .TableRow:hover {
+  background: var(--ListHoverBackground, var(--vscode-list-hoverBackground, rgba(90, 93, 94, 0.31)));
+  color: var(--ListHoverForeground, var(--vscode-list-hoverForeground, inherit));
+}
+
+.TableWrapper {
+  position: relative;
+  width: min(100%, var(--ChatDebugViewTableWidth));
+  max-width: 100%;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.TableWrapperWrapper {
+  position: relative;
+  width: min(100%, var(--ChatDebugViewTableWidth));
+  max-width: 100%;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}

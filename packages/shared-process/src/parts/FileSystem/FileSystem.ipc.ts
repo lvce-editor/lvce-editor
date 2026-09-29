@@ -1,0 +1,36 @@
+import * as FileSystem from './FileSystem.ts'
+
+// TODO ugly code here -> should be inside FileSystem.js
+const fileSystemWatch = (socket: any, id: any, path: any): any => {
+  // const watcher = FileSystem.watch(path, {
+  //   onAll(...args) {
+  //     socket.send(JSON.stringify([/* callback */ id, /* event */ args]))
+  //   }
+  // }
+  // )
+  // socket.on('close', () => {
+  //   watcher.close()
+  // })
+}
+
+export const name = 'FileSystem'
+
+// TODO separate ipc from code like in renderer worker
+export const Commands = {
+  chmod: FileSystem.chmod,
+  copy: FileSystem.copy,
+  createFile: FileSystem.createFile,
+  createFolder: FileSystem.createFolder,
+  ensureFile: FileSystem.ensureFile,
+  getRealPath: FileSystem.getRealPath,
+  getRealUri: FileSystem.getRealUri,
+  mkdir: FileSystem.mkdir,
+  readDirWithFileTypes: FileSystem.readDirWithFileTypes,
+  readFile: FileSystem.readFile,
+  readFileAsBuffer: FileSystem.readFileAsBuffer,
+  readJson: FileSystem.readJson,
+  remove: FileSystem.remove,
+  rename: FileSystem.rename,
+  stat: FileSystem.stat,
+  writeFile: FileSystem.writeFile,
+}

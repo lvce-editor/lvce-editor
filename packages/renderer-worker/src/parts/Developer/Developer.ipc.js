@@ -1,5 +1,6 @@
 import * as Crash from '../Crash/Crash.js'
 import * as Devtools from '../Devtools/Devtools.js'
+import * as MeasureExtensionManagementWorkerLatency from '../MeasureExtensionManagementWorkerLatency/MeasureExtensionManagementWorkerLatency.js'
 import * as OpenSpecialFolder from '../OpenSpecialFolder/OpenSpecialFolder.js'
 import * as Developer from './Developer.js'
 
@@ -18,7 +19,9 @@ export const Commands = {
   downloadViewletState: Developer.downloadViewletState,
   getMemoryUsageContent: Developer.getMemoryUsageContent,
   getStartupPerformanceContent: Developer.getStartupPerformanceContent,
+  measureExtensionManagementWorkerLatency: MeasureExtensionManagementWorkerLatency.measureExtensionManagementWorkerLatency,
   openBrowserViewOverview: Developer.openBrowserViewOverview,
+  openComponentState: Developer.openComponentState,
   openCacheFolder: OpenSpecialFolder.openCacheFolder,
   openConfigFolder: OpenSpecialFolder.openConfigFolder,
   openDataFolder: OpenSpecialFolder.openDataFolder,
@@ -29,6 +32,7 @@ export const Commands = {
   reloadColorTheme: Developer.reloadColorTheme,
   reloadIconTheme: Developer.reloadIconTheme,
   showColorThemeCss: Developer.showColorThemeCss,
+  showGpuInfo: Developer.showGpuInfo,
   showMemoryUsage: Developer.showMemoryUsage,
   showStartupPerformance: Developer.showStartupPerformance,
   startupPerformance: Developer.showStartupPerformance,

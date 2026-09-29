@@ -1,3 +1,4 @@
+import * as CacheExpiration from '../CacheExpiration/CacheExpiration.js'
 import * as Character from '../Character/Character.js'
 import * as Logger from '../Logger/Logger.js'
 import * as MimeType from '../MimeType/MimeType.js'
@@ -83,9 +84,41 @@ const setResponse = async (key, value, contentType) => {
       headers: new Headers({
         'Content-Type': contentType,
         'Content-Length': `${value.length}`,
+        Expires: CacheExpiration.getExpirationDate(),
       }),
     }),
   )
+}
+
+const deleteExpiredEntriesFromCacheStorage = async (cacheStorage, now) => {
+  const cacheNames = await cacheStorage.keys()
+  for (const cacheName of cacheNames) {
+    const cache = await cacheStorage.open(cacheName)
+    const requests = await cache.keys()
+    for (const request of requests) {
+      const response = await cache.match(request)
+      const expires = response?.headers.get('Expires')
+      if (expires && Date.parse(expires) <= now) {
+        await cache.delete(request)
+      }
+    }
+  }
+}
+
+export const deleteExpiredEntries = async (now = Date.now()) => {
+  if (typeof caches !== 'undefined') {
+    await deleteExpiredEntriesFromCacheStorage(caches, now)
+  }
+  // @ts-ignore Storage Buckets are not included in all TypeScript DOM library versions.
+  const storageBuckets = typeof navigator === 'undefined' ? undefined : navigator.storageBuckets
+  if (typeof storageBuckets?.keys !== 'function') {
+    return
+  }
+  const bucketNames = await storageBuckets.keys()
+  for (const bucketName of bucketNames) {
+    const bucket = await storageBuckets.open(bucketName)
+    await deleteExpiredEntriesFromCacheStorage(bucket.caches, now)
+  }
 }
 
 export const setText = async (key, value, contentType) => {

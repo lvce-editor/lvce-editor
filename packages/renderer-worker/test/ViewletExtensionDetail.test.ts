@@ -1,0 +1,148 @@
+import { beforeEach, expect, jest, test } from '@jest/globals'
+import * as ErrorCodes from '../src/parts/ErrorCodes/ErrorCodes.js'
+
+beforeEach(() => {
+  jest.resetModules()
+  jest.resetAllMocks()
+})
+
+jest.unstable_mockModule('../src/parts/FileSystem/FileSystem.js', () => {
+  return {
+    readFile: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+  }
+})
+
+jest.unstable_mockModule('../src/parts/ExtensionManagement/ExtensionManagement.js', () => {
+  return {
+    getExtension: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+  }
+})
+
+jest.unstable_mockModule('../src/parts/ExtensionDetailViewWorker/ExtensionDetailViewWorker.js', () => {
+  return {
+    invoke: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+    restart: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+  }
+})
+
+jest.unstable_mockModule('../src/parts/ExtensionManagement/ExtensionManagement.js', () => {
+  return {
+    getExtension: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+  }
+})
+
+class NodeError extends Error {
+  code: any
+
+  constructor(code, message = code) {
+    super(code + ':' + message)
+    this.code = code
+  }
+}
+
+const ViewletExtensionDetail = await import('../src/parts/ViewletExtensionDetail/ViewletExtensionDetail.ipc.ts')
+const ExtensionDetailViewWorker = await import('../src/parts/ExtensionDetailViewWorker/ExtensionDetailViewWorker.js')
+const ExtensionManagement = await import('../src/parts/ExtensionManagement/ExtensionManagement.js')
+const FileSystem = await import('../src/parts/FileSystem/FileSystem.js')
+
+test('create', () => {
+  // @ts-ignore
+  const state = ViewletExtensionDetail.create()
+  expect(state).toBeDefined()
+})
+
+test('getTitle', async () => {
+  // @ts-ignore
+  ExtensionDetailViewWorker.invoke.mockResolvedValue('Test Extension')
+  await expect(ViewletExtensionDetail.getTitle(42)).resolves.toBe('Test Extension')
+  expect(ExtensionDetailViewWorker.invoke).toHaveBeenCalledTimes(1)
+  expect(ExtensionDetailViewWorker.invoke).toHaveBeenCalledWith('ExtensionDetail.renderTitle', 42)
+})
+
+test.skip('loadContent', async () => {
+  // @ts-ignore
+  ExtensionManagement.getExtension.mockImplementation(() => {
+    return {
+      path: '/test/test-extension',
+      name: 'Test Extension',
+    }
+  })
+  // @ts-ignore
+  FileSystem.readFile.mockImplementation(() => {
+    return '# test extension'
+  })
+  const state = {
+    // @ts-ignore
+    ...ViewletExtensionDetail.create(),
+    uri: 'extension-detail://test-extension',
+  }
+  expect(await ViewletExtensionDetail.loadContent(state, {})).toMatchObject({
+    sanitizedReadmeHtml: '<h1 id="test-extension">Test Extension</h1>',
+    iconSrc: '/icons/extensionDefaultIcon.png',
+    name: 'Test Extension',
+  })
+  expect(ExtensionManagement.getExtension).toHaveBeenCalledTimes(1)
+  expect(ExtensionManagement.getExtension).toHaveBeenCalledWith('test-extension')
+  expect(FileSystem.readFile).toHaveBeenCalledTimes(1)
+  expect(FileSystem.readFile).toHaveBeenCalledWith('/test/test-extension/README.md')
+})
+
+test.skip('loadContent - error - readme not found', async () => {
+  // @ts-ignore
+  ExtensionManagement.getExtension.mockImplementation(() => {
+    return {
+      path: '/test/test-extension',
+      name: 'Test Extension',
+    }
+  })
+  // @ts-ignore
+  FileSystem.readFile.mockImplementation(() => {
+    throw new NodeError(ErrorCodes.ENOENT)
+  })
+  const state = {
+    // @ts-ignore
+    ...ViewletExtensionDetail.create(),
+    uri: 'extension-detail://test-extension',
+  }
+  expect(await ViewletExtensionDetail.loadContent(state, {})).toMatchObject({
+    sanitizedReadmeHtml: '<h1 id="test-extension">Test Extension</h1>',
+    iconSrc: '/icons/extensionDefaultIcon.png',
+    name: 'Test Extension',
+  })
+  expect(ExtensionManagement.getExtension).toHaveBeenCalledTimes(1)
+  expect(ExtensionManagement.getExtension).toHaveBeenCalledWith('test-extension')
+  expect(FileSystem.readFile).toHaveBeenCalledTimes(1)
+  expect(FileSystem.readFile).toHaveBeenCalledWith('/test/test-extension/README.md')
+})
+
+test('resize forwards dimensions to the worker and renders the updated layout', async () => {
+  const state = { uid: 42, width: 1000, height: 600, x: 0, y: 0 }
+  const dimensions = { width: 400, height: 600, x: 0, y: 0 }
+  const commands = [['Viewlet.setCss', 42, ':root {}']]
+  // @ts-ignore
+  ExtensionDetailViewWorker.invoke.mockImplementation(async (method) => {
+    if (method === 'ExtensionDetail.diff2') {
+      return [7, 5]
+    }
+    if (method === 'ExtensionDetail.render2') {
+      return commands
+    }
+  })
+
+  const result = await ViewletExtensionDetail.resize(state, dimensions)
+
+  expect(ExtensionDetailViewWorker.invoke).toHaveBeenNthCalledWith(1, 'ExtensionDetail.resize', 42, dimensions)
+  expect(ExtensionDetailViewWorker.invoke).toHaveBeenNthCalledWith(2, 'ExtensionDetail.diff2', 42)
+  expect(ExtensionDetailViewWorker.invoke).toHaveBeenNthCalledWith(3, 'ExtensionDetail.render2', 42, [7, 5])
+  expect(result).toMatchObject({ ...dimensions, commands })
+})

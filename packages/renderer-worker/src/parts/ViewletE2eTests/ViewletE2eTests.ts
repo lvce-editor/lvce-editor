@@ -2,6 +2,7 @@ import * as ContextMenu from '../ContextMenu/ContextMenu.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as GetE2eTestsSandbox from '../GetE2eTestsSandbox/GetE2eTestsSandbox.ts'
 import * as Id from '../Id/Id.js'
+import * as Location from '../Location/Location.js'
 import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 import * as Open from '../Open/Open.js'
 import * as OpenUri from '../OpenUri/OpenUri.js'
@@ -35,6 +36,10 @@ const getTests = async () => {
   return tests
 }
 
+const toHtmlFileName = (testFileName: string): string => {
+  return testFileName.replace(/\.(js|ts)$/, '.html')
+}
+
 export const loadContent = async (state: E2eState): Promise<E2eState> => {
   const tests = await getTests()
   const sandbox = GetE2eTestsSandbox.getE2eTestsSandbox()
@@ -49,8 +54,8 @@ export const loadContent = async (state: E2eState): Promise<E2eState> => {
 export const executeTest = async (state: E2eState, index: number): Promise<E2eState> => {
   const { tests } = state
   const test = tests[index]
-  const htmlFileName = test.replace('.js', '.html')
-  const iframeSrc = `http://localhost:3001/tests/${htmlFileName}`
+  const htmlFileName = toHtmlFileName(test)
+  const iframeSrc = `/tests/${htmlFileName}`
   return {
     ...state,
     index,
@@ -65,7 +70,7 @@ export const handleLoad = async (state: E2eState): Promise<E2eState> => {
   port2.onmessage = (event) => {
     console.log({ event })
   }
-  const iframeOrigin = 'http://localhost:3001'
+  const iframeOrigin = Location.getOrigin()
   return {
     ...state,
     portId: messagePortId,
@@ -104,7 +109,7 @@ export const handleContextMenu = async (state: E2eState, button, x, y): Promise<
 export const openInNewTab = async (state: E2eState): Promise<E2eState> => {
   const { index, tests } = state
   const item = tests[index]
-  const url = '/tests/' + item.replace('.js', '.html')
+  const url = '/tests/' + toHtmlFileName(item)
   await Open.openUrl(url)
   return state
 }

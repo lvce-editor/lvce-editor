@@ -1,4 +1,5 @@
 import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
+import * as MenuEntrySeparator from '../MenuEntrySeparator/MenuEntrySeparator.js'
 import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
 import * as Path from '../Path/Path.js'
 import * as PathSeparatorType from '../PathSeparatorType/PathSeparatorType.js'
@@ -27,6 +28,31 @@ const getMenuEntriesLink = (x, y, params) => {
 const getMenuEntriesDefault = (x, y, params) => {
   return [
     {
+      id: 'back',
+      label: SimpleBrowserStrings.back(),
+      flags: params.canGoBack ? MenuItemFlags.None : MenuItemFlags.Disabled,
+      command: 'SimpleBrowser.backward',
+    },
+    {
+      id: 'forward',
+      label: SimpleBrowserStrings.forward(),
+      flags: params.canGoForward ? MenuItemFlags.None : MenuItemFlags.Disabled,
+      command: 'SimpleBrowser.forward',
+    },
+    {
+      id: 'reload',
+      label: SimpleBrowserStrings.reload(),
+      flags: MenuItemFlags.None,
+      command: 'SimpleBrowser.reload',
+    },
+    MenuEntrySeparator.menuEntrySeparator,
+    {
+      id: 'toggle-developer-tools',
+      label: 'Toggle Developer Tools',
+      flags: MenuItemFlags.None,
+      command: 'SimpleBrowser.toggleDevTools',
+    },
+    {
       id: 'inspect-element',
       label: SimpleBrowserStrings.inspectElement(),
       flags: MenuItemFlags.None,
@@ -54,6 +80,20 @@ const getMenuEntriesImage = (x, y, params) => {
   const fileName = Path.getBaseName(PathSeparatorType.Slash, srcURL)
   return [
     {
+      id: 'open-image-in-new-tab',
+      label: SimpleBrowserStrings.openImageInNewTab(),
+      flags: MenuItemFlags.None,
+      command: 'SimpleBrowser.openBackgroundTab',
+      args: [srcURL],
+    },
+    {
+      id: 'copy-image-address',
+      label: SimpleBrowserStrings.copyImageAddress(),
+      flags: MenuItemFlags.None,
+      command: 'ElectronClipBoard.writeText',
+      args: [srcURL],
+    },
+    {
       id: 'save-image',
       label: SimpleBrowserStrings.saveImageAs(),
       flags: MenuItemFlags.None,
@@ -76,12 +116,26 @@ export const getMenuEntries = (x, y, params) => {
   const menuItems = []
   if (params.linkURL) {
     menuItems.push(...getMenuEntriesLink(x, y, params))
+    menuItems.push(MenuEntrySeparator.menuEntrySeparator)
   }
-  if (params.selectionText) {
+  if (params.isEditable) {
+    for (const [role, label, capability] of [
+      ['undo', 'Undo', 'canUndo'],
+      ['redo', 'Redo', 'canRedo'],
+      ['cut', SimpleBrowserStrings.cut(), 'canCut'],
+      ['copy', SimpleBrowserStrings.copy(), 'canCopy'],
+      ['paste', SimpleBrowserStrings.paste(), 'canPaste'],
+      ['selectAll', 'Select All', 'canSelectAll'],
+    ])
+      menuItems.push({ id: role, role, label, flags: params.editFlags?.[capability] ? MenuItemFlags.None : MenuItemFlags.Disabled })
+    menuItems.push(MenuEntrySeparator.menuEntrySeparator)
+  } else if (params.selectionText) {
     menuItems.push(...getMenuEntriesSelectionText(x, y, params))
+    menuItems.push(MenuEntrySeparator.menuEntrySeparator)
   }
   if (params.mediaType === 'image') {
     menuItems.push(...getMenuEntriesImage(x, y, params))
+    menuItems.push(MenuEntrySeparator.menuEntrySeparator)
   }
   menuItems.push(...getMenuEntriesDefault(x, y, params))
   return menuItems

@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <meta name="description" content="Completing authentication..." />
+    <meta name="theme-color" content="#282e2f" />
+    <title>Signing In...</title>
+  </head>
+  <body>
+    <script>
+      // TODO maybe use same code as for normal frontend
+      // in normal frontend, check for url parameters, then redirect
+      const databaseName = 'auth-worker'
+      const objectStoreName = 'auth'
+      const callbackKey = 'oidcCallbackUrl'
+
+      const persistCallbackUrl = async (callbackUrl) => {
+        if (typeof indexedDB === 'undefined') {
+          return
+        }
+        await new Promise((resolve, reject) => {
+          const request = indexedDB.open(databaseName, 1)
+          request.addEventListener('upgradeneeded', () => {
+            const database = request.result
+            if (!database.objectStoreNames.contains(objectStoreName)) {
+              database.createObjectStore(objectStoreName)
+            }
+          })
+          request.addEventListener('success', () => {
+            const database = request.result
+            const transaction = database.transaction(objectStoreName, 'readwrite')
+            const objectStore = transaction.objectStore(objectStoreName)
+            objectStore.put(callbackUrl, callbackKey)
+            transaction.addEventListener('complete', resolve)
+            transaction.addEventListener('abort', reject)
+            transaction.addEventListener('error', reject)
+          })
+          request.addEventListener('error', reject)
+        })
+      }
+
+      const finish = async () => {
+        await persistCallbackUrl(window.location.href)
+        window.location.replace('/')
+      }
+
+      void finish()
+    </script>
+  </body>
+</html>

@@ -50,7 +50,7 @@ export const getMenuEntries = () => {
     {
       id: 'saveAll',
       label: FileStrings.saveAll(),
-      flags: MenuItemFlags.None,
+      flags: MenuItemFlags.Disabled,
       command: 'Main.saveAll',
     },
   ]

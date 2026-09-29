@@ -1,0 +1,251 @@
+import { beforeEach, expect, jest, test } from '@jest/globals'
+import * as PlatformType from '../src/parts/PlatformType/PlatformType.js'
+
+beforeEach(() => {
+  jest.resetAllMocks()
+  IsTest.state.isTest = true
+  GlobalEventBus.state.listenerMap = Object.create(null)
+  for (const key in Preferences.state) {
+    delete Preferences.state[key]
+  }
+})
+
+jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () => {
+  return {
+    invoke: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+  }
+})
+
+jest.unstable_mockModule('../src/parts/ErrorHandling/ErrorHandling.js', () => {
+  return {
+    logError: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+  }
+})
+
+jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
+  return {
+    invoke: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+  }
+})
+
+jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
+  return {
+    getPlatform: jest.fn(() => {
+      return PlatformType.Remote
+    }),
+    assetDir: '',
+  }
+})
+
+jest.unstable_mockModule('../src/parts/OpenUri/OpenUri.js', () => {
+  return {
+    openUri: jest.fn(),
+  }
+})
+
+const RendererProcess = await import('../src/parts/RendererProcess/RendererProcess.js')
+const SharedProcess = await import('../src/parts/SharedProcess/SharedProcess.js')
+const ErrorHandling = await import('../src/parts/ErrorHandling/ErrorHandling.js')
+const GlobalEventBus = await import('../src/parts/GlobalEventBus/GlobalEventBus.js')
+const IsTest = await import('../src/parts/IsTest/IsTest.js')
+const OpenUri = await import('../src/parts/OpenUri/OpenUri.js')
+const Preferences = await import('../src/parts/Preferences/Preferences.js')
+
+const Main = await import('../src/parts/ViewletMain/ViewletMain.js')
+
+test.skip('openSettingsJson', async () => {
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
+  // @ts-ignore
+  Main.openUri.mockImplementation(() => {})
+  await Preferences.openSettingsJson()
+  // @ts-ignore
+  expect(Main.openUri).toHaveBeenCalledTimes(1)
+  // @ts-ignore
+  expect(Main.openUri).toHaveBeenCalledWith('app:///settings.json')
+})
+
+test('openSettingsUi', async () => {
+  await Preferences.openSettingsUi()
+  expect(OpenUri.openUri).toHaveBeenCalledTimes(1)
+  expect(OpenUri.openUri).toHaveBeenCalledWith('settings:///')
+})
+
+test('openKeyBindingsJson', async () => {
+  await Preferences.openKeyBindingsJson()
+  expect(OpenUri.openUri).toHaveBeenCalledTimes(1)
+  expect(OpenUri.openUri).toHaveBeenCalledWith('app://keybindings.json')
+})
+
+test('hydrate', async () => {
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation((method, ...params) => {
+    switch (method) {
+      case 'Preferences.getAll':
+        return {
+          'editor.fontSize': 14,
+          'editor.fontFamily': "'Fira Code'",
+        }
+      default:
+        throw new Error('unexpected message')
+    }
+  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
+  await Preferences.hydrate()
+  expect(Preferences.state).toEqual({
+    'editor.fontSize': 14,
+    'editor.fontFamily': "'Fira Code'",
+  })
+})
+
+test('reload replaces preferences and emits a change event', async () => {
+  Object.assign(Preferences.state, {
+    'workbench.iconTheme': null,
+    stale: true,
+  })
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation((method) => {
+    if (method === 'Preferences.getAll') {
+      return {
+        'editor.fontSize': 14,
+      }
+    }
+    throw new Error('unexpected message')
+  })
+  const listener = jest.fn()
+  GlobalEventBus.addListener('preferences.changed', listener)
+
+  await Preferences.reload()
+
+  expect(Preferences.state).toEqual({
+    'editor.fontSize': 14,
+  })
+  expect(listener).toHaveBeenCalledTimes(1)
+})
+
+test.skip('hydrate - error', async () => {
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation((method, ...params) => {
+    switch (method) {
+      case 'Preferences.getAll':
+        throw new TypeError('x is not a function')
+      default:
+        throw new Error('unexpected message')
+    }
+  })
+  // TODO should handle error gracefully
+  await expect(Preferences.hydrate()).rejects.toThrow(new Error('x is not a function'))
+})
+
+test('hydrate - error - permission denied', async () => {
+  // @ts-ignore
+  ErrorHandling.logError.mockImplementation(() => {})
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation((method, ...params) => {
+    switch (method) {
+      case 'Preferences.getAll':
+        throw new Error(
+          'Failed to get all preferences: failed to get user preferences: Failed to read file "/test/.config/lvce-oss/settings.json": EACCES: permission denied, open \'/test/.config/lvce-oss/settings.json\'',
+        )
+      default:
+        throw new Error('unexpected message')
+    }
+  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
+  await Preferences.hydrate()
+  expect(ErrorHandling.logError).toHaveBeenCalledTimes(1)
+  expect(ErrorHandling.logError).toHaveBeenCalledWith(
+    new Error(
+      'Failed to get all preferences: failed to get user preferences: Failed to read file "/test/.config/lvce-oss/settings.json": EACCES: permission denied, open \'/test/.config/lvce-oss/settings.json\'',
+    ),
+  )
+})
+
+test('get', () => {
+  Object.assign(Preferences.state, { x: 42 })
+  expect(Preferences.get('x')).toBe(42)
+})
+
+test('set - does not persist preferences in test mode', async () => {
+  await Preferences.set('x', 42)
+
+  expect(Preferences.state.x).toBe(42)
+})
+
+test('toggleAutoSave - turns auto save on when the editor loses focus', async () => {
+  Object.assign(Preferences.state, { 'files.autoSave': 'off' })
+
+  await Preferences.toggleAutoSave()
+
+  expect(Preferences.state['files.autoSave']).toBe('onFocusChange')
+})
+
+test('toggleAutoSave - turns auto save off', async () => {
+  Object.assign(Preferences.state, { 'files.autoSave': 'afterDelay' })
+
+  await Preferences.toggleAutoSave()
+
+  expect(Preferences.state['files.autoSave']).toBe('off')
+})
+
+test.skip('set', async () => {
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation((method, ...params) => {
+    switch (method) {
+      case 'Platform.getUserSettingsPath':
+        return '/test/settings.json'
+      case 'FileSystem.writeFile':
+        return null
+      default:
+        throw new Error('unexpected message')
+    }
+  })
+  await Preferences.set('x', 42)
+  expect(SharedProcess.invoke).toHaveBeenCalledTimes(2)
+  expect(SharedProcess.invoke).toHaveBeenNthCalledWith(1, 'Platform.getUserSettingsPath')
+  expect(SharedProcess.invoke).toHaveBeenNthCalledWith(
+    2,
+    'FileSystem.writeFile',
+    '/test/settings.json',
+    `{
+  \"x\": 42
+}
+`,
+  )
+})
+
+test.skip('set - error - getUserSettingsPath', async () => {
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation((method, ...params) => {
+    switch (method) {
+      case 'Platform.getUserSettingsPath':
+        throw new TypeError('x is not a function')
+      default:
+        throw new Error('unexpected message')
+    }
+  })
+  await expect(Preferences.set('x', 42)).rejects.toThrow(new TypeError('x is not a function'))
+})
+
+test.skip('set - error - writeFile', async () => {
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation((method, ...params) => {
+    switch (method) {
+      case 'Platform.getUserSettingsPath':
+        return ''
+      case 'FileSystem.writeFile':
+        throw new TypeError('x is not a function')
+      default:
+        throw new Error('unexpected message')
+    }
+  })
+  await expect(Preferences.set('x', 42)).rejects.toThrow(new Error('Failed to write : x is not a function'))
+})

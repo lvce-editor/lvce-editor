@@ -3,14 +3,18 @@ import * as ClipBoard from './ClipBoard.js'
 export const name = 'ClipBoard'
 
 export const Commands = {
+  disableMemoryClipBoard: ClipBoard.disableMemoryClipBoard,
+  enableMemoryClipBoard: ClipBoard.enableMemoryClipBoard,
   execCopy: ClipBoard.execCopy,
+  getSelectionText: ClipBoard.getSelectionText,
   hotReload: ClipBoard.hotReload,
+  readMemoryImage: ClipBoard.readMemoryImage,
+  readImage: ClipBoard.readImage,
+  readMemoryText: ClipBoard.readMemoryText,
   readNativeFiles: ClipBoard.readNativeFiles,
   readText: ClipBoard.readText,
   writeImage: ClipBoard.writeImage,
+  writeImageUrl: ClipBoard.writeImageUrl,
   writeNativeFiles: ClipBoard.writeNativeFiles,
   writeText: ClipBoard.writeText,
-  enableMemoryClipBoard: ClipBoard.enableMemoryClipBoard,
-  disableMemoryClipBoard: ClipBoard.disableMemoryClipBoard,
-  readMemoryText: ClipBoard.readMemoryText,
 }

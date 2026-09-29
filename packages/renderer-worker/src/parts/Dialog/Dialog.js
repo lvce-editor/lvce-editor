@@ -2,19 +2,37 @@
 import * as Command from '../Command/Command.js'
 import * as ElectronDialog from '../ElectronDialog/ElectronDialog.js'
 import * as ElectronMessageBoxType from '../ElectronMessageBoxType/ElectronMessageBoxType.js'
+import * as DialogWorker from '../DialogWorker/DialogWorker.js'
 import * as Logger from '../Logger/Logger.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as OpenUri from '../OpenUri/OpenUri.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+import * as IsAbortError from '../IsAbortError/IsAbortError.js'
+import { VError } from '../VError/VError.js'
 
 export const state = {
   dialog: undefined,
 }
 
-const openFileWeb = () => {
-  Logger.warn('open file - not implemented')
+const openFileWeb = async () => {
+  try {
+    const [fileHandle] = await Command.execute('FilePicker.showFilePicker', {
+      multiple: false,
+    })
+    if (!fileHandle) {
+      return
+    }
+    const uri = `html:///${fileHandle.name}`
+    await Command.execute('PersistentFileHandle.addHandle', uri, fileHandle)
+    await OpenUri.openUri(uri)
+  } catch (error) {
+    if (IsAbortError.isAbortError(error)) {
+      return
+    }
+    throw new VError(error, 'Failed to open file')
+  }
 }
 
 const openFileRemote = () => {
@@ -22,8 +40,11 @@ const openFileRemote = () => {
 }
 
 const openFileElectron = async () => {
-  const [file] = await ElectronDialog.showOpenDialog('Open File', ['openFile', 'dontAddToRecent', 'showHiddenFiles'])
-  await OpenUri.openUri(file)
+  const uri = await ElectronDialog.showOpenDialog('Open File', ['openFile', 'dontAddToRecent', 'showHiddenFiles'])
+  if (!uri) {
+    return
+  }
+  await OpenUri.openUri(uri)
 }
 
 export const openFile = () => {
@@ -80,6 +101,25 @@ export const showMessage = async (message, options) => {
     }
     await handleClick(index)
   } else {
-    await Viewlet.openWidget(ViewletModuleId.Dialog, message, options)
+    // Prepared errors use `type` for the error class, not the dialog severity.
+    await Viewlet.openWidget(ViewletModuleId.Dialog, {
+      message: message.message,
+      title: message.type || message.name || 'Error',
+      type: 'error',
+    })
   }
+}
+
+export const show = async (options) => {
+  await DialogWorker.invoke('Dialog.show', options)
+}
+
+export const showWarning = async (options) => {
+  await DialogWorker.invoke('Dialog.showWarning', options)
+}
+
+// Public dialog entry point for isolated extensions. The host owns the window
+// and product identity; callers supply only the message and available choices.
+export const showMessageBox = async ({ buttons, defaultId, message, type = 'info' }) => {
+  return ElectronDialog.showMessageBox({ buttons, defaultId, message, type })
 }

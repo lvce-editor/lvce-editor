@@ -1,11 +1,20 @@
 export const name = 'Data'
 
+const dataPrefix = 'data://'
+
+const getPath = (uri) => {
+  if (uri.startsWith(dataPrefix)) {
+    return uri.slice(dataPrefix.length)
+  }
+  return uri
+}
+
 export const copy = (source, target) => {
   throw new Error('not implemented')
 }
 
 export const readFile = (path) => {
-  return path
+  return getPath(path)
 }
 
 export const remove = (path) => {
@@ -34,6 +43,6 @@ export const getBlobUrl = (path) => {
   throw new Error('not implemented')
 }
 
-export const getPathSeparator = () => {
-  throw new Error('not implemented')
+export const isReadonly = () => {
+  return true
 }

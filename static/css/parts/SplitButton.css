@@ -1,4 +1,5 @@
 .SplitButton {
+  --MaskIconSize: 16px;
   background: var(--SplitButtonBackground, rgb(35, 112, 112));
   color: var(--SplitButtonForeground, white);
   height: 28px;
@@ -18,6 +19,13 @@
   align-items: center;
   cursor: pointer;
   outline: none;
+}
+
+.SplitButtonContent > .MaskIcon {
+  width: 16px;
+  height: 16px;
+  margin-right: 4px;
+  flex-shrink: 0;
 }
 
 .SplitButtonContent:where(:hover),

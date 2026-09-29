@@ -1,11 +1,36 @@
-export const Events = {}
+import { createWorkerViewlet } from '../CreateWorkerViewlet/CreateWorkerViewlet.js'
 
-export * from './ViewletActivityBar.ts'
-export * from './ViewletActivityBarCommands.js'
-export * from './ViewletActivityBarCss.js'
-export * from './ViewletActivityBarKeyBindings.js'
-export * from './ViewletActivityBarMenuEntries.js'
-export * from './ViewletActivityBarName.js'
-export * from './ViewletActivityBarQuickPickMenuEntries.js'
-export * from './ViewletActivityBarRenderVirtualDom.js'
-export * from './ViewletActivityBarStorageKey.ts'
+export const {
+  ActivityBar,
+  Commands,
+  Css,
+  Events,
+  Variables,
+  create,
+  dispose,
+  getCommands,
+  getComponentDom,
+  getComponentState,
+  getDisplayName,
+  getKeyBindings,
+  getMenus,
+  getQuickPickMenuEntries,
+  getStorageKey,
+  getTitle,
+  hasDirectRender,
+  hasFunctionalEvents,
+  hasFunctionalRender,
+  hasFunctionalResize,
+  hasFunctionalRootRender,
+  hotReload,
+  loadContent,
+  menus,
+  name,
+  render,
+  renderActions,
+  renderEventListeners,
+  renderTitle,
+  resize,
+  saveState,
+  setComponentState,
+} = createWorkerViewlet({ workerId: 'activityBar' })

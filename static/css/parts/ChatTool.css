@@ -1,3 +1,7 @@
+.Chat {
+  --TextLinkForeground: dodgerblue;
+}
+
 .ChatToolCalls {
   position: relative;
   border: 1px solid var(--vscode-editorWidget-border);
@@ -8,7 +12,6 @@
 }
 
 .ChatToolCallsLabel {
-  position: absolute;
   top: -8px;
   left: 8px;
   padding: 0 4px;
@@ -19,10 +22,12 @@
   line-height: 14px;
   text-transform: lowercase;
   letter-spacing: 0.02em;
+  height: 14px;
+  contain: strict;
 }
 
 .ChatToolCallReadFileLink {
-  color: var(--vscode-textLink-foreground);
+  color: var(--TextLinkForeground);
   text-decoration: underline;
 }
 
@@ -31,7 +36,7 @@
 }
 
 .ChatToolCallFileName:hover {
-  color: var(--vscode-textLink-foreground);
+  color: var(--TextLinkForeground);
 }
 
 .ChatToolCalls .ChatOrderedList {
@@ -83,7 +88,7 @@
   width: 100%;
 }
 
-.ChatToolCallRenderHtmlBody * {
+.ChatToolCallRenderHtmlElement {
   box-sizing: border-box;
 }
 

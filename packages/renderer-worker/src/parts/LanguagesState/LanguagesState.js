@@ -1,26 +1,10 @@
-// TODO merge all of this with extension host languages module
-
-// @ts-ignore
-import * as Assert from '../Assert/Assert.ts'
-// @ts-ignore
-import * as CodeFrameColumns from '../CodeFrameColumns/CodeFrameColumns.js'
-// @ts-ignore
-import * as ExtensionHostLanguages from '../ExtensionHost/ExtensionHostLanguages.js'
-// @ts-ignore
-import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
-// @ts-ignore
-import * as Logger from '../Logger/Logger.js'
-// @ts-ignore
-import * as Preferences from '../Preferences/Preferences.js'
-// @ts-ignore
-import * as SplitLines from '../SplitLines/SplitLines.js'
-
 export const state = {
   loadState: false,
   isHydrating: false,
   fileNameMap: Object.create(null),
   extensionMap: Object.create(null),
   tokenizerMap: Object.create(null),
+  explicitLanguageMap: Object.create(null),
   /**
    * @type {any[]}
    */
@@ -54,6 +38,18 @@ export const getLanguageByFileName = (fileName) => {
 export const getTokenizeFunctionPath = (languageId) => {
   // TODO what if language.tokenize is not of type string? -> handle error gracefully
   return state.tokenizerMap[languageId] || ''
+}
+
+export const getExplicitLanguageId = (uri) => {
+  return state.explicitLanguageMap[uri]
+}
+
+export const setExplicitLanguageId = (uri, languageId) => {
+  state.explicitLanguageMap[uri] = languageId
+}
+
+export const clearExplicitLanguageId = (uri) => {
+  delete state.explicitLanguageMap[uri]
 }
 
 export const setHydrating = (value) => {

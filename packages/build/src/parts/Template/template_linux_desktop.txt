@@ -7,8 +7,10 @@ Icon=@@ICON@@
 Terminal=false
 Type=Application
 StartupNotify=false
-StartupWMClass=@@NAME_LONG@@
+StartupWMClass=@@APPLICATION_NAME@@
+X-GNOME-WMClass=@@APPLICATION_NAME@@
 Categories=Utility;TextEditor;Development;IDE;
+MimeType=inode/directory;
 Actions=new-empty-window;
 Keywords=@@KEYWORDS@@
 

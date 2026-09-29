@@ -1,18 +1,7 @@
-:root {
-  --MoreInfoOddBackground: hsla(0, 0%, 51%, 0.06);
-}
-
-.Aside {
-  min-width: 175px;
-  contain: strict;
-  scrollbar-color: var(--EditorScrollBarBackground, rgba(57, 71, 71, 0.6)) transparent;
-  scrollbar-width: thin;
-  display: flex;
-  flex-direction: column;
-  width: var(--ExtensionDetailSideBarWidth);
-}
-
 .AdditionalDetails {
+  --AdditionalDetailsBorder: var(--PanelBorderTopColor, color-mix(in srgb, var(--WorkbenchForeground) 22%, transparent));
+  --MoreInfoOddBackground: var(--ListHoverBackground, color-mix(in srgb, var(--WorkbenchForeground) 7%, transparent));
+  --MoreInfoKeyForeground: var(--DescriptionForeground, color-mix(in srgb, var(--WorkbenchForeground) 72%, transparent));
   contain: strict;
   flex: 1;
   height: 100%;
@@ -21,6 +10,17 @@
   padding: 20px;
   overflow-y: auto;
   gap: 15px;
+}
+
+.Aside {
+  flex: 0 0 var(--ExtensionDetailSideBarWidth);
+  min-width: 175px;
+  contain: strict;
+  scrollbar-color: var(--EditorScrollBarBackground, rgba(57, 71, 71, 0.6)) transparent;
+  scrollbar-width: thin;
+  display: flex;
+  flex-direction: column;
+  width: var(--ExtensionDetailSideBarWidth);
 }
 
 .AdditionalDetails:focus {
@@ -40,13 +40,14 @@
   /* padding-top: 15px; */
   padding-bottom: 15px;
   contain: content;
-  border-bottom: 1px solid hsla(0, 0%, 50%, 0.22);
+  border-bottom: 1px solid var(--AdditionalDetailsBorder);
 }
 
 .MoreInfo {
   display: flex;
   flex-direction: column;
   contain: content;
+  margin: 0;
 }
 
 .MoreInfoEntry {
@@ -63,20 +64,27 @@
   background: var(--MoreInfoOddBackground);
 }
 
-.Link {
+/* .Link {
   color: dodgerblue;
   cursor: pointer;
 }
 
 .Link:hover {
   text-decoration: underline;
-}
+} */
 
 .MoreInfoEntryKey {
+  color: var(--MoreInfoKeyForeground);
   contain: content;
 }
 
 .MoreInfoEntryValue {
   contain: content;
   margin: 0;
+}
+
+.MoreInfoEntryValue.Link {
+  color: var(--vscode-textLink-foreground, #3794ff);
+  cursor: pointer;
+  text-decoration: none;
 }

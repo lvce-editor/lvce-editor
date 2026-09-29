@@ -1,0 +1,402 @@
+import * as AssetDir from '../AssetDir/AssetDir.js'
+import * as ExtensionManagementWorker from '../ExtensionManagementWorker/ExtensionManagementWorker.js'
+import * as GetExtensionViews from '../GetExtensionViews/GetExtensionViews.ts'
+import * as ComponentWorkerNames from '../ComponentWorkerNames/ComponentWorkerNames.js'
+import * as Platform from '../Platform/Platform.js'
+import * as PlatformType from '../PlatformType/PlatformType.js'
+import * as ApplicationRegistry from '../ApplicationRegistry/ApplicationRegistry.ts'
+import * as EditorWorker from '../EditorWorker/EditorWorker.ts'
+import * as FilterFocusCommands from '../FilterFocusCommands/FilterFocusCommands.js'
+import * as RendererProcess from '../RendererProcess/RendererProcess.js'
+import * as SerializeComponentState from '../SerializeComponentState/SerializeComponentState.js'
+import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
+import * as Viewlet from '../Viewlet/Viewlet.js'
+import * as ViewletManager from '../ViewletManager/ViewletManager.js'
+import * as ViewletStates from '../ViewletStates/ViewletStates.js'
+
+const liveComponentStatePattern = /^live-component-state:\/\/\/(?:dom\/)?(\d+(?:\.\d+)?)\.json$/
+const virtualDomTypes = new Set(Object.values(VirtualDomElements))
+const domEditorUids = new Set()
+const editorUidsByComponentUid = new Map()
+const componentUidByEditorUid = new Map()
+const mainEditorUidsAwaitingInitialRefresh = new Set()
+const refreshes = new Map()
+
+const getUid = (instance) => instance.state?.uid ?? instance.renderedState?.uid
+
+const getLiveComponentUid = (instance) => {
+  const uri = instance.state?.uri
+  if (typeof uri !== 'string') {
+    return undefined
+  }
+  const match = liveComponentStatePattern.exec(uri)
+  return match ? Number(match[1]) : undefined
+}
+
+const subscribe = (instance) => {
+  const componentUid = getLiveComponentUid(instance)
+  const editorUid = getUid(instance)
+  if (componentUid === undefined || typeof editorUid !== 'number') {
+    return
+  }
+  editorUidsByComponentUid.set(componentUid, editorUidsByComponentUid.get(componentUid)?.add(editorUid) || new Set([editorUid]))
+  componentUidByEditorUid.set(editorUid, componentUid)
+  if (instance.state.uri.startsWith('live-component-state:///dom/')) {
+    domEditorUids.add(editorUid)
+  }
+  if (ViewletStates.getByUid(componentUid)?.moduleId === 'Main') {
+    mainEditorUidsAwaitingInitialRefresh.add(editorUid)
+  }
+}
+
+const unsubscribeEditor = (editorUid) => {
+  const componentUid = componentUidByEditorUid.get(editorUid)
+  if (componentUid === undefined) {
+    return
+  }
+  componentUidByEditorUid.delete(editorUid)
+  mainEditorUidsAwaitingInitialRefresh.delete(editorUid)
+  domEditorUids.delete(editorUid)
+  const editorUids = editorUidsByComponentUid.get(componentUid)
+  editorUids?.delete(editorUid)
+  if (editorUids?.size === 0) {
+    editorUidsByComponentUid.delete(componentUid)
+  }
+}
+
+const unsubscribeComponent = (componentUid) => {
+  const editorUids = editorUidsByComponentUid.get(componentUid)
+  if (!editorUids) {
+    return
+  }
+  editorUidsByComponentUid.delete(componentUid)
+  for (const editorUid of editorUids) {
+    componentUidByEditorUid.delete(editorUid)
+    domEditorUids.delete(editorUid)
+    mainEditorUidsAwaitingInitialRefresh.delete(editorUid)
+  }
+}
+
+const getEditorTabStates = async (componentUid) => {
+  const mainInstance = ViewletStates.getInstance('Main', ApplicationRegistry.getOwner(componentUid))
+  if (!mainInstance || typeof mainInstance.factory.getComponentState !== 'function') {
+    return new Map()
+  }
+  const mainState = await mainInstance.factory.getComponentState(mainInstance.state)
+  const groups = mainState?.layout?.groups
+  if (!Array.isArray(groups)) {
+    return new Map()
+  }
+  const editorTabStates = new Map()
+  for (const group of groups) {
+    for (const tab of group.tabs || []) {
+      if (typeof tab.editorUid === 'number') {
+        editorTabStates.set(tab.editorUid, {
+          active: Boolean(group.focused && group.activeTabId === tab.id),
+          dirty: Boolean(tab.isDirty),
+        })
+      }
+    }
+  }
+  return editorTabStates
+}
+
+const refreshEditorIfContentChanged = async (editorUid, content) => {
+  try {
+    const currentContent = await EditorWorker.invoke('Editor.getText', editorUid)
+    if (SerializeComponentState.serializeComponentState(JSON.parse(currentContent)) === content) {
+      return
+    }
+  } catch {
+    // Refresh in place when the current editor content cannot be read.
+  }
+  await Viewlet.executeViewletCommand(editorUid, 'loadContent', undefined, { preserveFocus: true })
+}
+
+const runRefreshes = async (componentUid, refresh) => {
+  try {
+    while (refresh.pending) {
+      refresh.pending = false
+      const editorUids = [...(editorUidsByComponentUid.get(componentUid) || [])]
+      const editorTabStates = await getEditorTabStates(componentUid)
+      const isMainComponent = ViewletStates.getByUid(componentUid)?.moduleId === 'Main'
+      const editorUidsToRefresh = editorUids.filter((editorUid) => {
+        if (mainEditorUidsAwaitingInitialRefresh.has(editorUid)) {
+          return true
+        }
+        const tabState = editorTabStates.get(editorUid)
+        return !tabState?.dirty && !(isMainComponent && tabState?.active)
+      })
+      if (editorUidsToRefresh.length === 0) {
+        continue
+      }
+      const contents = new Map()
+      const getContent = (isDom) => {
+        if (!contents.has(isDom)) {
+          const read = isDom ? getDom : getState
+          contents.set(
+            isDom,
+            read(componentUid)
+              .then(SerializeComponentState.serializeComponentState)
+              .catch(() => undefined),
+          )
+        }
+        return contents.get(isDom)
+      }
+      await Promise.allSettled(
+        editorUidsToRefresh.map(async (editorUid) => {
+          const content = await getContent(domEditorUids.has(editorUid))
+          if (content === undefined) {
+            await Viewlet.executeViewletCommand(editorUid, 'loadContent', undefined, { preserveFocus: true })
+          } else {
+            await refreshEditorIfContentChanged(editorUid, content)
+          }
+        }),
+      )
+      for (const editorUid of editorUidsToRefresh) {
+        mainEditorUidsAwaitingInitialRefresh.delete(editorUid)
+      }
+    }
+  } finally {
+    refreshes.delete(componentUid)
+  }
+}
+
+export const refreshOpenEditors = (componentUid) => {
+  const existingRefresh = refreshes.get(componentUid)
+  if (existingRefresh) {
+    existingRefresh.pending = true
+    return existingRefresh.promise
+  }
+  const refresh = {
+    pending: true,
+    promise: Promise.resolve(),
+  }
+  refreshes.set(componentUid, refresh)
+  refresh.promise = runRefreshes(componentUid, refresh)
+  return refresh.promise
+}
+
+export const waitForRefreshes = async () => {
+  while (refreshes.size > 0) {
+    await Promise.all([...refreshes.values()].map((refresh) => refresh.promise))
+  }
+}
+
+const handleViewletStateChange = (type, instance) => {
+  const uid = getUid(instance)
+  if (typeof uid !== 'number') {
+    return
+  }
+  if (type === 'add') {
+    subscribe(instance)
+    return
+  }
+  if (type === 'remove') {
+    unsubscribeEditor(uid)
+    unsubscribeComponent(uid)
+    return
+  }
+  if (type === 'render' && editorUidsByComponentUid.has(uid)) {
+    void refreshOpenEditors(uid)
+  }
+}
+
+ViewletStates.addListener(handleViewletStateChange)
+for (const instance of ViewletStates.getValues()) {
+  subscribe(instance)
+}
+
+const isWorkerBacked = (instance) => Boolean(instance.factory?.hasFunctionalRender)
+
+const isEditable = (instance) => {
+  if (!isWorkerBacked(instance)) {
+    return true
+  }
+  if (typeof instance.factory.isComponentStateAvailable === 'function') {
+    return instance.factory.isComponentStateAvailable(instance.state)
+  }
+  return typeof instance.factory.getComponentState === 'function' && typeof instance.factory.setComponentState === 'function'
+}
+
+const hasComponentDom = (instance) => {
+  if (typeof instance.factory.getComponentDom !== 'function') {
+    return false
+  }
+  if (typeof instance.factory.isComponentDomAvailable === 'function') {
+    return instance.factory.isComponentDomAvailable(instance.state)
+  }
+  return true
+}
+
+const getInstance = (uid) => {
+  const instance = ViewletStates.getByUid(uid)
+  if (!instance) {
+    throw new Error(`Component not found: ${uid}`)
+  }
+  return instance
+}
+
+/**
+ * @param {number=} viewUid
+ */
+export const getComponents = (viewUid = undefined) => {
+  const applicationId = viewUid === undefined ? undefined : ApplicationRegistry.getOwner(viewUid)
+  const seen = new Set()
+  const components = []
+  for (const instance of ViewletStates.getValues()) {
+    const uid = getUid(instance)
+    if (typeof uid !== 'number' || seen.has(uid) || (viewUid !== undefined && ApplicationRegistry.getOwner(uid) !== applicationId)) {
+      continue
+    }
+    seen.add(uid)
+    const moduleId = instance.moduleId || instance.factory?.name || 'Unknown'
+    const displayName = moduleId === 'ExtensionView' ? `${instance.state?.title || instance.state?.viewId || moduleId} (extension)` : moduleId
+    components.push({
+      displayName,
+      domAvailable: hasComponentDom(instance),
+      editable: isEditable(instance),
+      heapSnapshotAvailable: Platform.getPlatform() === PlatformType.Electron,
+      moduleId,
+      savedStateAvailable: typeof instance.factory.saveState === 'function',
+      uid,
+    })
+  }
+  return components.sort((a, b) => a.displayName.localeCompare(b.displayName) || a.uid - b.uid)
+}
+
+export const getState = async (uid) => {
+  const instance = getInstance(uid)
+  if (isWorkerBacked(instance)) {
+    if (typeof instance.factory.getComponentState !== 'function') {
+      throw new Error(`Component state API not available: ${instance.moduleId}`)
+    }
+    return instance.factory.getComponentState(instance.state)
+  }
+  return instance.state
+}
+
+export const getSavedState = async (uid) => {
+  const instance = getInstance(uid)
+  if (instance.status === 'disposed') {
+    throw new Error(`Component is disposed: ${uid}`)
+  }
+  if (typeof instance.factory.saveState !== 'function') {
+    throw new Error(`Saved component state API not available: ${instance.moduleId}`)
+  }
+  const savedState = await instance.factory.saveState(instance.state)
+  if (savedState === undefined) {
+    throw new Error(`Saved component state is undefined: ${instance.moduleId}`)
+  }
+  return savedState
+}
+
+export const getDom = async (uid) => {
+  const instance = getInstance(uid)
+  if (!hasComponentDom(instance)) {
+    throw new Error(`Component DOM API not available: ${instance.moduleId}`)
+  }
+  const preview = await RendererProcess.invoke('Viewlet.getComponentDom', uid)
+  return preview ?? instance.factory.getComponentDom(instance.state)
+}
+
+const validateState = (uid, oldState, newState) => {
+  if (!newState || typeof newState !== 'object' || Array.isArray(newState)) {
+    throw new TypeError('Component state must be an object')
+  }
+  if (typeof oldState.uid === 'number' && newState.uid !== oldState.uid) {
+    throw new Error(`Component state uid must remain ${uid}`)
+  }
+}
+
+const renderState = async (instance, uid, newState) => {
+  const commands = FilterFocusCommands.filterFocusCommands(
+    ViewletManager.render(instance.factory, instance.renderedState, newState, uid, newState.parentUid),
+  )
+  ViewletStates.setRenderedState(uid, newState)
+  if (commands.length > 0) {
+    await RendererProcess.invoke('Viewlet.sendMultiple', commands)
+  }
+}
+
+export const setState = async (uid, newComponentState) => {
+  const instance = getInstance(uid)
+  const oldComponentState = await getState(uid)
+  validateState(uid, oldComponentState, newComponentState)
+  if (SerializeComponentState.serializeComponentState(oldComponentState) === SerializeComponentState.serializeComponentState(newComponentState)) {
+    return
+  }
+  if (isWorkerBacked(instance)) {
+    if (typeof instance.factory.setComponentState !== 'function') {
+      throw new Error(`Component state API not available: ${instance.moduleId}`)
+    }
+    const newRendererState = await instance.factory.setComponentState(instance.state, newComponentState)
+    await renderState(instance, uid, newRendererState)
+    return
+  }
+  await renderState(instance, uid, newComponentState)
+}
+
+export const setDom = async (uid, dom) => {
+  const instance = getInstance(uid)
+  if (!hasComponentDom(instance)) {
+    throw new Error(`Component DOM API not available: ${instance.moduleId}`)
+  }
+  if (!Array.isArray(dom) || dom.length === 0) {
+    throw new TypeError('Component DOM must be a non-empty array')
+  }
+  if (dom[0]?.type === VirtualDomElements.Text || dom[0]?.type === VirtualDomElements.Reference) {
+    throw new TypeError('Component DOM must have an element root')
+  }
+  let remaining = 1
+  for (const node of dom) {
+    if (
+      !node ||
+      typeof node !== 'object' ||
+      !virtualDomTypes.has(node.type) ||
+      ((node.type === VirtualDomElements.Text || node.type === VirtualDomElements.Reference) && node.childCount !== 0) ||
+      !Number.isInteger(node.childCount) ||
+      node.childCount < 0 ||
+      remaining === 0
+    ) {
+      throw new TypeError('Component DOM must contain one complete tree')
+    }
+    remaining += node.childCount - 1
+  }
+  if (remaining !== 0) {
+    throw new TypeError('Component DOM must contain one complete tree')
+  }
+  const currentDom = await getDom(uid)
+  if (SerializeComponentState.serializeComponentState(currentDom) === SerializeComponentState.serializeComponentState(dom)) {
+    return
+  }
+  await RendererProcess.invoke('Viewlet.setComponentDom', uid, dom)
+  await refreshOpenEditors(uid)
+}
+
+export const getWorkerName = async (uid) => {
+  if (Platform.getPlatform() !== PlatformType.Electron) {
+    throw new Error('Component heap snapshots require Electron')
+  }
+  const instance = getInstance(uid)
+  if (instance.moduleId === 'ExtensionView') {
+    const applicationId = ApplicationRegistry.getOwner(uid)
+    const view = await GetExtensionViews.getExtensionView(instance.state.viewId, applicationId)
+    const args = ['Extensions.getRunningExtensions', AssetDir.assetDir, PlatformType.Electron]
+    const extensions = await (applicationId === undefined
+      ? ExtensionManagementWorker.invoke(...args)
+      : ExtensionManagementWorker.invoke('Extensions.invokeForApplication', applicationId, ...args))
+    const extension = extensions.find((item) => item.id === view?.extensionId)
+    if (!extension?.isolated) {
+      throw new Error('Component extension does not have an isolated worker')
+    }
+    return extension.workerName || `Extension API (Electron): ${extension.id}`
+  }
+  const workerName = ComponentWorkerNames.getName(instance.factory, instance.moduleId)
+  if (workerName) {
+    const workers = await RendererProcess.invoke('Workers.getWorkers')
+    const worker = workers.find((item) => item.name === workerName)
+    return worker?.runtimeName ?? workerName
+  }
+  return globalThis.name
+}

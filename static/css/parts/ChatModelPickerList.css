@@ -1,0 +1,10 @@
+.ChatModelPickerList {
+  flex: 1;
+  margin: 0;
+  min-height: 0;
+  max-height: 240px;
+  overflow-y: auto;
+  padding: 0;
+  scrollbar-width: thin;
+  scrollbar-color: var(--EditorScrollBarBackground, rgba(57, 71, 71, 0.6)) transparent;
+}

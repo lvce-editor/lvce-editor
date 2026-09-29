@@ -16,10 +16,12 @@ export const getAll = () => {
   return contexts
 }
 
+const toKeep = [WhenExpression.BrowserChromium, WhenExpression.BrowserElectron, WhenExpression.BrowserFirefox]
+
 export const reset = () => {
   const oldContexts = contexts
   contexts = Object.create(null)
-  for (const key of [WhenExpression.BrowserChromium, WhenExpression.BrowserChromium, WhenExpression.BrowserFirefox]) {
+  for (const key of toKeep) {
     if (oldContexts[key]) {
       contexts = { ...contexts, [key]: true }
     }

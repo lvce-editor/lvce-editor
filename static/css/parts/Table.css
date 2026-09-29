@@ -1,16 +1,11 @@
-:root {
-  --TableRowOddBackground: rgba(156, 162, 160, 0.04);
-  --TableRowSelectedBackground: #515f59;
-  --TableRowHoverBackground: rgba(64, 92, 80, 0.2);
-  --TableRowHoverForeground: #e0e0e0;
-}
-
 .TableWrapper {
   position: relative;
   padding-left: 27px;
   padding-right: 15px;
   contain: strict;
   flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .Table {
@@ -44,20 +39,21 @@
 }
 
 .TableRowOdd {
-  background: var(--TableRowOddBackground);
+  background: color-mix(in srgb, var(--WorkbenchForeground) 4%, transparent);
 }
 
 .TableRow:where(:hover) {
-  color: var(--TableRowHoverForeground);
-  background: var(--TableRowHoverBackground);
+  color: var(--ListHoverForeground, var(--WorkbenchForeground));
+  background: var(--ListHoverBackground, color-mix(in srgb, var(--WorkbenchForeground) 8%, transparent));
 }
 
 .TableRowSelected {
-  background: var(--ListInactiveSelectionBackground);
+  background: var(--ListInactiveSelectionBackground, color-mix(in srgb, var(--WorkbenchForeground) 12%, transparent));
 }
 
 .Table:focus .TableRowSelected {
-  background: var(--TableRowSelectedBackground);
+  background: var(--ListActiveSelectionBackground, color-mix(in srgb, var(--FocusBorder, var(--WorkbenchForeground)) 34%, transparent));
+  color: var(--ListActiveSelectionForeground, var(--WorkbenchForeground));
 }
 
 .TableCell {
@@ -69,12 +65,23 @@
   padding-left: 10px;
 }
 
+.Table .Link {
+  color: var(--LinkForeground, #3794ff);
+}
+
 .TableCellInvalid {
-  text-decoration: 1px solid red underline;
+  text-decoration-color: var(--EditorErrorForeground, #f14c4c);
+  text-decoration-line: underline;
+  text-decoration-style: wavy;
+  text-decoration-thickness: 1px;
   text-underline-offset: 3px;
 }
 
 .TableCellInvalid .Link,
 .TableCellInvalid .Link:hover {
   text-decoration: inherit;
+}
+
+.ChatDebugView .TableWrapper {
+  padding: 0;
 }

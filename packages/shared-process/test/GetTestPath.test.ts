@@ -1,0 +1,46 @@
+import { beforeEach, expect, test } from '@jest/globals'
+import { join } from 'node:path'
+import * as GetTestPath from '../src/parts/GetTestPath/GetTestPath.js'
+import * as Root from '../src/parts/Root/Root.js'
+
+const originalTestPath = process.env.TEST_PATH
+const originalArgv = process.argv
+
+beforeEach(() => {
+  if (originalTestPath === undefined) {
+    delete process.env.TEST_PATH
+  } else {
+    process.env.TEST_PATH = originalTestPath
+  }
+  process.argv = originalArgv
+})
+
+test('getTestPath - uses absolute --test-path arg', () => {
+  process.argv = [...originalArgv, '--test-path=/test/packages/e2e']
+
+  expect(GetTestPath.getTestPath()).toEqual('/test/packages/e2e')
+})
+
+test('getTestPath - resolves relative --test-path arg from cwd', () => {
+  process.argv = [...originalArgv, '--test-path=packages/e2e']
+
+  expect(GetTestPath.getTestPath()).toEqual(join(process.cwd(), 'packages/e2e'))
+})
+
+test('getTestPath - uses absolute TEST_PATH', () => {
+  process.env.TEST_PATH = '/test/packages/e2e'
+
+  expect(GetTestPath.getTestPath()).toEqual('/test/packages/e2e')
+})
+
+test('getTestPath - resolves relative TEST_PATH from cwd', () => {
+  process.env.TEST_PATH = 'packages/e2e'
+
+  expect(GetTestPath.getTestPath()).toEqual(join(process.cwd(), 'packages/e2e'))
+})
+
+test('getTestPath - falls back to extension-host-worker-tests', () => {
+  delete process.env.TEST_PATH
+
+  expect(GetTestPath.getTestPath()).toEqual(join(Root.root, 'packages', 'extension-host-worker-tests'))
+})

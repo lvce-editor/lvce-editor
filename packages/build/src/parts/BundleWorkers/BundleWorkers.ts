@@ -1,0 +1,96 @@
+import { existsSync } from 'node:fs'
+import * as BundleBuiltinSettings from '../BundleBuiltinSettings/BundleBuiltinSettings.ts'
+import * as BundleRendererProcessCached from '../BundleRendererProcessCached/BundleRendererProcessCached.ts'
+import * as BundleRendererWorkerCached from '../BundleRendererWorkerCached/BundleRendererWorkerCached.ts'
+import * as Copy from '../Copy/Copy.ts'
+import * as JsonFile from '../JsonFile/JsonFile.ts'
+import * as Logger from '../Logger/Logger.ts'
+import * as Path from '../Path/Path.ts'
+import * as PatchDialogWorkerProductName from '../PatchDialogWorkerProductName/PatchDialogWorkerProductName.ts'
+import * as ValidateRendererProcessArtifacts from '../ValidateRendererProcessArtifacts/ValidateRendererProcessArtifacts.ts'
+
+const workersJsonPath = 'packages/renderer-worker/src/parts/Workers/Workers.json'
+
+const stripLeadingSlash = (path) => {
+  return path.startsWith('/') ? path.slice(1) : path
+}
+
+const getWorkerSourcePath = (defaultPath) => {
+  const sourcePath = stripLeadingSlash(defaultPath)
+  if (existsSync(Path.absolute(sourcePath))) {
+    return sourcePath
+  }
+  const hoistedPath = sourcePath.replace(/^packages\/renderer-worker\/node_modules\//, 'node_modules/')
+  if (existsSync(Path.absolute(hoistedPath))) {
+    return hoistedPath
+  }
+  return ''
+}
+
+const copyWorkers = async ({ product, toRoot, workers }) => {
+  for (const worker of workers) {
+    if (worker.id === 'rendererWorker') {
+      continue
+    }
+    const { defaultPath, productionPath } = worker
+    if (!defaultPath || !productionPath) {
+      continue
+    }
+    const from = getWorkerSourcePath(defaultPath)
+    if (!from) {
+      Logger.info(`[bundleWorkers] skipped missing worker artifact for ${worker.id}: ${defaultPath}`)
+      continue
+    }
+    await Copy.copyFile({
+      from,
+      to: Path.join(toRoot, stripLeadingSlash(productionPath)),
+    })
+    if (worker.id === 'dialogWorker') {
+      await PatchDialogWorkerProductName.patchDialogWorkerProductName({ product, toRoot })
+    }
+  }
+}
+
+export const bundleWorkers = async ({ commitHash, platform, assetDir, version, date, product, toRoot, iconThemeEtag }) => {
+  const workers = await JsonFile.readJson(workersJsonPath)
+  const rendererProcessCachePath = await BundleRendererProcessCached.bundleRendererProcessCached({
+    commitHash,
+    platform,
+    assetDir,
+  })
+  await Copy.copy({
+    from: rendererProcessCachePath,
+    to: `${toRoot}/packages/renderer-process`,
+    ignore: ['static'],
+  })
+  ValidateRendererProcessArtifacts.validateRendererProcessArtifacts({
+    rendererProcessPath: `${toRoot}/packages/renderer-process`,
+  })
+  const rendererWorkerCachePath = await BundleRendererWorkerCached.bundleRendererWorkerCached({
+    commitHash,
+    platform,
+    assetDir,
+    version,
+    date,
+    product,
+    iconThemeEtag,
+  })
+  await Copy.copy({
+    from: rendererWorkerCachePath,
+    to: `${toRoot}/packages/renderer-worker`,
+    ignore: ['static'],
+  })
+
+  await copyWorkers({ product, toRoot, workers })
+  await BundleBuiltinSettings.bundleBuiltinSettings({ toRoot, workers })
+
+  await Copy.copy({
+    from: 'packages/shared-process/node_modules/@lvce-editor/preview-process/files/previewInjectedCode.js',
+    to: `${toRoot}/js/preview-injected.js`,
+  })
+
+  await Copy.copyFile({
+    from: 'packages/shared-process/node_modules/@lvce-editor/preload/src/index.js',
+    to: Path.join(`${toRoot}/packages/preload`, 'dist', 'index.js'),
+  })
+}
