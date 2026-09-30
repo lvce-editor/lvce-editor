@@ -324,7 +324,7 @@ test('showPreview enables preview sash', async () => {
   expect(result.newState).toMatchObject({
     previewVisible: true,
     previewSashVisible: true,
-    previewUri: 'html-preview:///file%3A%2F%2F%2Ftest.html',
+    previewUri: 'html-preview:///file/test.html',
     previewViewletId: 'SimpleBrowser',
   })
 })
@@ -357,14 +357,14 @@ test('showPreview keeps the preview hidden until its viewlet has loaded', async 
 
   expect(latestState).toMatchObject({
     previewVisible: false,
-    previewUri: 'html-preview:///file%3A%2F%2F%2Ftest.html',
+    previewUri: 'html-preview:///file/test.html',
   })
 
   resolveLoad([['Viewlet.createFunctionalRoot', 'Preview', 2, true]])
   const result = await resultPromise
   expect(result.newState).toMatchObject({
     previewVisible: true,
-    previewUri: 'html-preview:///file%3A%2F%2F%2Ftest.html',
+    previewUri: 'html-preview:///file/test.html',
   })
 })
 
@@ -402,7 +402,7 @@ test('showPreview opens HTML in the existing browser without a second preview ar
   const state = { ...ViewletLayout.create(1), previewVisible: true, previewViewletId: 'SimpleBrowser', previewId: 7 }
   const result = await ViewletLayout.showPreview(state, 'file:///test.html')
   expect(result).toEqual({ newState: state, commands: [] })
-  expect(Viewlet.executeViewletCommand).toHaveBeenCalledWith(7, 'openTab', 'html-preview:///file%3A%2F%2F%2Ftest.html', 'foreground-tab')
+  expect(Viewlet.executeViewletCommand).toHaveBeenCalledWith(7, 'openTab', 'html-preview:///file/test.html', 'foreground-tab')
   expect(ViewletManager.load).not.toHaveBeenCalled()
   expect(Viewlet.disposeFunctional).not.toHaveBeenCalled()
 })
