@@ -96,9 +96,9 @@
   {
     "name": "builtin.eslint",
     "repository": "github.com/lvce-editor/eslint",
-    "version": "1.23.2",
-    "sha256": "8778b5267c1dfb5de78e019e7ea90c6bdc51e0fdc8189a3b698255afe6b18af2",
-    "created": "2026-08-01"
+    "version": "1.23.3",
+    "sha256": "d2ce424c00bcda22ef167ec9965a9c5508af814279f463d8a671b182d75d2d9f",
+    "created": "2026-09-30"
   },
   {
     "name": "builtin.rest-client",
