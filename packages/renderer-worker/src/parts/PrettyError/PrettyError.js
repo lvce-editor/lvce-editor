@@ -1,5 +1,4 @@
 import * as ErrorWorker from '../ErrorWorker/ErrorWorker.ts'
-import * as FileSystemDisk from '../FileSystem/FileSystemDisk.js'
 import * as GetTokenizePath from '../GetTokenizePath/GetTokenizePath.js'
 
 const getFileUrl = (stack) => {
@@ -39,6 +38,7 @@ export const prepare = async (error) => {
     let sourceText
     if (sourceUrl) {
       try {
+        const FileSystemDisk = await import('../FileSystem/FileSystemDisk.js')
         sourceText = await FileSystemDisk.readFile(sourceUrl)
       } catch {
         // The formatter can still return the original diagnostic without source access.
