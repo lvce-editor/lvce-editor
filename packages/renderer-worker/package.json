@@ -62,7 +62,7 @@
     "@lvce-editor/diff-view": "^3.38.1",
     "@lvce-editor/diff-worker": "^3.4.0",
     "@lvce-editor/drag-and-drop-worker": "^0.11.0",
-    "@lvce-editor/editor-worker": "^19.69.0",
+    "@lvce-editor/editor-worker": "^19.69.1",
     "@lvce-editor/embeds-worker": "^4.20.2",
     "@lvce-editor/error-worker": "^3.11.1",
     "@lvce-editor/explorer-view": "^7.45.3",
@@ -94,10 +94,10 @@
     "@lvce-editor/quick-pick-worker": "^4.24.7",
     "@lvce-editor/references-view": "^2.16.1",
     "@lvce-editor/rename-worker": "^1.41.0",
-    "@lvce-editor/renderer-process": "^30.65.2",
+    "@lvce-editor/renderer-process": "^30.65.3",
     "@lvce-editor/running-extensions-view": "^1.26.0",
     "@lvce-editor/secrets-view": "^0.3.0",
-    "@lvce-editor/settings-view": "^2.30.4",
+    "@lvce-editor/settings-view": "^2.30.5",
     "@lvce-editor/settings-worker": "^1.22.1",
     "@lvce-editor/simple-browser-view": "^2.23.0",
     "@lvce-editor/source-action-worker": "^1.20.0",
@@ -112,7 +112,7 @@
     "@lvce-editor/title-bar-worker": "^4.25.6",
     "@lvce-editor/update-worker": "^2.15.0",
     "@lvce-editor/virtual-dom-worker": "^11.22.0",
-    "@lvce-editor/workers-view": "^0.4.0"
+    "@lvce-editor/workers-view": "^0.4.1"
   },
   "devDependencies": {
     "@jest/globals": "^30.5.2",
