@@ -3,6 +3,7 @@ import * as SendMessagePortToExtensionHostWorker from './SendMessagePortToExtens
 export const name = 'SendMessagePortToExtensionHostWorker'
 
 export const Commands = {
+  sendMessagePortToCacheWorker: SendMessagePortToExtensionHostWorker.sendMessagePortToCacheWorker,
   sendMessagePortToAuthWorker: SendMessagePortToExtensionHostWorker.sendMessagePortToAuthWorker,
   sendMessagePortToChatCoordinatorWorker: SendMessagePortToExtensionHostWorker.sendMessagePortToChatCoordinatorWorker,
   sendMessagePortToChatMathWorker: SendMessagePortToExtensionHostWorker.sendMessagePortToChatMathWorker,
