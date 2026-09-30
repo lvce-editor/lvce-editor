@@ -312,6 +312,11 @@ writeFileSync(process.env.LVCE_TEST_LAUNCH_RESULT, JSON.stringify({ args: proces
 
       if (process.platform === 'linux') {
         const cachedSandboxPath = join(dirname(cachedExecutablePath), 'chrome-sandbox')
+        const userId = process.getuid?.()
+        const groupId = process.getgid?.()
+        if (userId === undefined || groupId === undefined) {
+          throw new Error('POSIX user and group ids are required for the Linux sandbox test')
+        }
         const preparedSandboxStats = await lstat(cachedSandboxPath)
         expect(preparedSandboxStats.uid).toBe(0)
         expect(preparedSandboxStats.mode & 0o7777).toBe(0o4755)
@@ -321,14 +326,14 @@ writeFileSync(process.env.LVCE_TEST_LAUNCH_RESULT, JSON.stringify({ args: proces
         })
         expect(cachedStdout).not.toContain('Downloading Electron')
 
-        await execFileAsync('sudo', ['chown', `${process.getuid()}:${process.getgid()}`, cachedSandboxPath])
+        await execFileAsync('sudo', ['chown', `${userId}:${groupId}`, cachedSandboxPath])
         await chmod(cachedSandboxPath, 0o755)
         await execFileAsync(process.execPath, [cliPath, '--electron-version=44.1.2', '--wait'], { env })
         const repairedSandboxStats = await lstat(cachedSandboxPath)
         expect(repairedSandboxStats.uid).toBe(0)
         expect(repairedSandboxStats.mode & 0o7777).toBe(0o4755)
 
-        await execFileAsync('sudo', ['chown', `${process.getuid()}:${process.getgid()}`, cachedSandboxPath])
+        await execFileAsync('sudo', ['chown', `${userId}:${groupId}`, cachedSandboxPath])
         await chmod(cachedSandboxPath, 0o755)
         await rm(launchResultPath)
         await expect(
