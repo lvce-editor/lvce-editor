@@ -782,6 +782,7 @@
   {
     "id": "cacheWorker",
     "fileName": "cacheWorkerMain.js",
+    "contentSecurityPolicy": ["default-src 'none'", "sandbox allow-same-origin"],
     "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/cache-worker/cacheWorkerMain.js",
     "productionPath": "/packages/cache-worker/cacheWorkerMain.js",
     "settingName": "develop.cacheWorkerPath"

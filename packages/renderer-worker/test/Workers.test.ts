@@ -24,6 +24,7 @@ test('cache worker is available in development and packaged builds', () => {
   const worker = Workers.getWorkers().find(({ id }: Readonly<{ id: string }>) => id === 'cacheWorker')
 
   expect(worker).toMatchObject({
+    contentSecurityPolicy: ["default-src 'none'", 'sandbox allow-same-origin'],
     defaultPath: '/packages/renderer-worker/node_modules/@lvce-editor/cache-worker/cacheWorkerMain.js',
     fileName: 'cacheWorkerMain.js',
     productionPath: '/packages/cache-worker/cacheWorkerMain.js',
