@@ -1,6 +1,6 @@
 import { spawn } from 'node:child_process'
 import { createRequire } from 'node:module'
-import { access, chmod, mkdtemp, mkdir, readFile, rename, rm } from 'node:fs/promises'
+import { access, chmod, lstat, mkdtemp, mkdir, open, readFile, rename, rm } from 'node:fs/promises'
 import { constants } from 'node:fs'
 import { homedir, tmpdir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
@@ -53,15 +53,87 @@ const getElectronExecutablePath = (electronDir) => {
   return join(electronDir, 'electron')
 }
 
+const runPermissionCommand = async (command, args) => {
+  const isRoot = typeof process.getuid === 'function' && process.getuid() === 0
+  const executable = isRoot ? command : 'sudo'
+  const commandArgs = isRoot ? args : [command, ...args]
+  const child = spawn(executable, commandArgs, { stdio: 'inherit' })
+  const { promise, resolve, reject } = Promise.withResolvers()
+  child.once('error', reject)
+  child.once('exit', (code) => {
+    if (code === 0) {
+      resolve()
+    } else {
+      reject(new Error(`${executable} exited with code ${code ?? 1}`))
+    }
+  })
+  await promise
+}
+
+const ensureLinuxSandbox = async (electronDir) => {
+  if (process.platform !== 'linux') {
+    return
+  }
+
+  const sandboxPath = join(electronDir, 'chrome-sandbox')
+  let runtimeDirectory
+  try {
+    runtimeDirectory = await open(electronDir, constants.O_RDONLY | constants.O_DIRECTORY | constants.O_NOFOLLOW)
+  } catch (error) {
+    throw new Error(`Electron runtime directory must be a real directory at ${electronDir}: ${error instanceof Error ? error.message : error}`)
+  }
+  const permissionPath = `/proc/${process.pid}/fd/${runtimeDirectory.fd}/chrome-sandbox`
+  try {
+    const sandbox = await lstat(permissionPath).catch(() => {
+      throw new Error(`Electron sandbox helper is missing at ${sandboxPath}`)
+    })
+    if (!sandbox.isFile()) {
+      throw new Error(`Electron sandbox helper must be a regular file at ${sandboxPath}`)
+    }
+    const sandboxFile = await open(permissionPath, constants.O_RDONLY | constants.O_NOFOLLOW).catch(() => {
+      throw new Error(`Electron sandbox helper changed or is not a regular file at ${sandboxPath}`)
+    })
+    try {
+      const sandboxStats = await sandboxFile.stat()
+      if (sandboxStats.uid === 0 && (sandboxStats.mode & 0o7777) === 0o4755) {
+        return
+      }
+
+      const sandboxFilePath = `/proc/${process.pid}/fd/${sandboxFile.fd}`
+      await runPermissionCommand('chown', ['root:root', '--', sandboxFilePath])
+      await runPermissionCommand('chmod', ['4755', '--', sandboxFilePath])
+      const repairedSandbox = await sandboxFile.stat()
+      if (!repairedSandbox.isFile() || repairedSandbox.uid !== 0 || (repairedSandbox.mode & 0o7777) !== 0o4755) {
+        throw new Error('permission verification failed')
+      }
+    } catch (error) {
+      throw new Error(
+        `Unable to prepare Electron sandbox helper at ${sandboxPath}; run sudo chown root:root -- ${shellQuote(sandboxPath)} and sudo chmod 4755 -- ${shellQuote(sandboxPath)}: ${error instanceof Error ? error.message : error}`,
+        { cause: error },
+      )
+    } finally {
+      await sandboxFile.close()
+    }
+  } finally {
+    await runtimeDirectory.close()
+  }
+}
+
 const ensureElectronRuntime = async (electronVersion) => {
   const cacheHome = process.env.XDG_CACHE_HOME || join(homedir(), '.cache')
   const cacheRoot = join(cacheHome, applicationName, 'electron')
   const cachePath = join(cacheRoot, `${electronVersion}-${process.platform}-${process.arch}`)
   const executablePath = getElectronExecutablePath(cachePath)
+  let runtimeCached = true
   try {
     await access(executablePath, constants.X_OK)
+  } catch {
+    runtimeCached = false
+  }
+  if (runtimeCached) {
+    await ensureLinuxSandbox(cachePath)
     return executablePath
-  } catch {}
+  }
 
   await mkdir(cacheRoot, { recursive: true })
   const stagingPath = await mkdtemp(join(cacheRoot, `.download-${electronVersion}-`))
@@ -83,6 +155,7 @@ const ensureElectronRuntime = async (electronVersion) => {
       await chmod(stagedExecutablePath, 0o755)
       await access(stagedExecutablePath, constants.X_OK)
     })
+    await ensureLinuxSandbox(stagingPath)
     try {
       await rename(stagingPath, cachePath)
     } catch (error) {
@@ -91,6 +164,7 @@ const ensureElectronRuntime = async (electronVersion) => {
       } catch {
         throw error
       }
+      await ensureLinuxSandbox(cachePath)
     }
     return executablePath
   } catch (error) {
