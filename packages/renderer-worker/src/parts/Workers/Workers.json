@@ -1677,6 +1677,8 @@
           "name": "Workers.resize",
           "parameters": [
             { "source": "state", "name": "uid" },
+            { "source": "argument", "name": "dimensions", "index": "x" },
+            { "source": "argument", "name": "dimensions", "index": "y" },
             { "source": "argument", "name": "dimensions", "index": "width" },
             { "source": "argument", "name": "dimensions", "index": "height" }
           ]

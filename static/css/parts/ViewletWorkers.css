@@ -1,16 +1,38 @@
 .WorkersView {
   contain: strict;
+  display: flex;
+  flex-direction: column;
   width: 100%;
   height: 100%;
-  overflow: auto;
+  overflow: hidden;
   background: var(--EditorBackground);
   color: var(--WorkbenchForeground, white);
 }
 
 .WorkersViewTitle {
-  margin: 16px 0 8px;
+  box-sizing: border-box;
+  flex: 0 0 48px;
+  height: 48px;
+  margin: 0;
+  padding: 16px 0 8px;
   font-size: 20px;
+  line-height: 24px;
   font-weight: 600;
+}
+
+.WorkersViewError {
+  box-sizing: border-box;
+  flex: 0 0 30px;
+  height: 30px;
+  margin: 0;
+  overflow: hidden;
+  line-height: 30px;
+}
+
+.WorkersViewTableContainer {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
 }
 
 .WorkersViewTable {
