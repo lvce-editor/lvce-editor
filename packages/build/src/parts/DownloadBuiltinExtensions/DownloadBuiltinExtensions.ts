@@ -62,7 +62,16 @@ const applyExtensionMetadata = async (extension, outPath) => {
   const manifestPath = Path.join(outPath, 'extension.json')
   const manifest = await JsonFile.readJson(manifestPath)
   const disabled = extension.enabled === false
-  if (manifest.created === extension.created && manifest.disabled === disabled) {
+  const outputChannelOptions: Record<string, Record<string, unknown>> = extension.outputChannelOptions || {}
+  const outputChannels = (manifest.outputChannels || []).map((outputChannel) => ({
+    ...outputChannel,
+    ...outputChannelOptions[outputChannel.id],
+  }))
+  const hasMatchingOutputChannelOptions = Object.entries(outputChannelOptions).every(([id, options]) => {
+    const outputChannel = outputChannels.find((candidate) => candidate.id === id)
+    return outputChannel && Object.entries(options).every(([key, value]) => outputChannel[key] === value)
+  })
+  if (manifest.created === extension.created && manifest.disabled === disabled && hasMatchingOutputChannelOptions) {
     return
   }
   await JsonFile.writeJson({
@@ -71,6 +80,7 @@ const applyExtensionMetadata = async (extension, outPath) => {
       ...manifest,
       created: extension.created,
       disabled,
+      outputChannels,
     },
   })
 }
