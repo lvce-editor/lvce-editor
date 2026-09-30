@@ -42,6 +42,19 @@
   text-align: left;
 }
 
+.WorkersViewMemoryTrend {
+  margin-left: 8px;
+  font-size: 12px;
+}
+
+.WorkersViewMemoryTrendGrowing {
+  color: #f48771;
+}
+
+.WorkersViewMemoryTrendShrinking {
+  color: #89d185;
+}
+
 .WorkersViewTableHeaderCell {
   position: sticky;
   top: 0;
