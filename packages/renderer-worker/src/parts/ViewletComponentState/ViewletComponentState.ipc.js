@@ -10,6 +10,7 @@ export const {
   Variables,
   create,
   getCommands,
+  getComponentState,
   getKeyBindings,
   getMenus,
   getTitle,
@@ -26,6 +27,7 @@ export const {
   renderTitle,
   resize,
   saveState,
+  setComponentState,
 } = workerViewlet
 
 export const serializeCommands = true

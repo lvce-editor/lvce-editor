@@ -30,3 +30,12 @@ test('cache worker is available in development and packaged builds', () => {
     settingName: 'develop.cacheWorkerPath',
   })
 })
+
+test('workers view keybindings are registered', () => {
+  const worker = Workers.getWorkers().find(({ id }: Readonly<{ id: string }>) => id === 'workersView')
+
+  expect(worker?.viewlet?.methods?.getKeyBindings).toEqual({
+    name: 'Workers.getKeyBindings',
+    parameters: [],
+  })
+})

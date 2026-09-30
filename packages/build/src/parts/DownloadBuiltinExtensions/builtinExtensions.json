@@ -96,8 +96,8 @@
   {
     "name": "builtin.eslint",
     "repository": "github.com/lvce-editor/eslint",
-    "version": "1.23.1",
-    "sha256": "5d8caa9472e2f41ac69efdd0ed9208d3ce055964ea26019405d346b700dbf6c3",
+    "version": "1.23.2",
+    "sha256": "8778b5267c1dfb5de78e019e7ea90c6bdc51e0fdc8189a3b698255afe6b18af2",
     "created": "2026-08-01"
   },
   {
@@ -447,8 +447,8 @@
   {
     "name": "builtin.language-basics-typescript",
     "repository": "github.com/lvce-editor/language-basics-typescript",
-    "version": "3.20.5",
-    "sha256": "85fcec9d5632124c06082f952de584cf9a230be818a8d0da0fde9c2a0bcba8e7",
+    "version": "3.20.6",
+    "sha256": "d12cdc96edd118e6e67a577db72d69b1066387c9cfd0775e09a50bb1bbd58c5f",
     "created": "2022-06-26"
   },
   {

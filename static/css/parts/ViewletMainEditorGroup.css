@@ -3,7 +3,6 @@
   --EmptyGroupOpacity: 0.5;
 }
 
-.editor-groups-container,
 .EditorGroupsContainer {
   flex: 1;
   display: flex;
@@ -39,22 +38,18 @@
   --EmptyGroupOpacity: 1;
 }
 
-.editor-groups-container::-webkit-scrollbar,
 .EditorGroupsContainer::-webkit-scrollbar {
   height: 14px;
 }
 
-.editor-groups-container::-webkit-scrollbar-track,
 .EditorGroupsContainer::-webkit-scrollbar-track {
   background: transparent;
 }
 
-.editor-groups-container::-webkit-scrollbar-thumb,
 .EditorGroupsContainer::-webkit-scrollbar-thumb {
   background: var(--EditorScrollBarBackground);
 }
 
-.editor-groups-container::-webkit-scrollbar-thumb:hover,
 .EditorGroupsContainer::-webkit-scrollbar-thumb:hover {
 }
 

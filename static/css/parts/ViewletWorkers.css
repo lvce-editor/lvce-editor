@@ -9,17 +9,6 @@
   color: var(--WorkbenchForeground, white);
 }
 
-.WorkersViewTitle {
-  box-sizing: border-box;
-  flex: 0 0 48px;
-  height: 48px;
-  margin: 0;
-  padding: 16px 0 8px;
-  font-size: 20px;
-  line-height: 24px;
-  font-weight: 600;
-}
-
 .WorkersViewError {
   box-sizing: border-box;
   flex: 0 0 30px;
@@ -51,6 +40,19 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   text-align: left;
+}
+
+.WorkersViewMemoryTrend {
+  margin-left: 8px;
+  font-size: 12px;
+}
+
+.WorkersViewMemoryTrendGrowing {
+  color: #f48771;
+}
+
+.WorkersViewMemoryTrendShrinking {
+  color: #89d185;
 }
 
 .WorkersViewTableHeaderCell {
