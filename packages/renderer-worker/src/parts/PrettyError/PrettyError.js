@@ -1,5 +1,19 @@
 import * as ErrorWorker from '../ErrorWorker/ErrorWorker.ts'
+import * as FileSystemDisk from '../FileSystem/FileSystemDisk.js'
 import * as GetTokenizePath from '../GetTokenizePath/GetTokenizePath.js'
+
+const getFileUrl = (stack) => {
+  if (typeof stack !== 'string') {
+    return undefined
+  }
+  for (const line of stack.split('\n')) {
+    const match = line.match(/(file:\/\/\/.*):(\d+):(\d+)\)?$/)
+    if (match) {
+      return match[1]
+    }
+  }
+  return undefined
+}
 
 const serializeError = (error) => {
   if (!error) {
@@ -21,7 +35,19 @@ export const prepare = async (error) => {
   try {
     const serialized = serializeError(error)
     const tokenizerPath = GetTokenizePath.getTokenizePath('javascript')
-    const prepared = await ErrorWorker.invoke('Errors.prepare', serialized, { tokenizerPath })
+    const sourceUrl = getFileUrl(serialized.stack)
+    let sourceText
+    if (sourceUrl) {
+      try {
+        sourceText = await FileSystemDisk.readFile(sourceUrl)
+      } catch {
+        // The formatter can still return the original diagnostic without source access.
+      }
+    }
+    const prepared = await ErrorWorker.invoke('Errors.prepare', serialized, {
+      tokenizerPath,
+      ...(sourceText !== undefined && { sourceText, sourceUrl }),
+    })
     return prepared
   } catch {
     return error
