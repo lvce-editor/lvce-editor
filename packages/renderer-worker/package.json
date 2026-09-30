@@ -112,7 +112,7 @@
     "@lvce-editor/title-bar-worker": "^4.25.6",
     "@lvce-editor/update-worker": "^2.15.0",
     "@lvce-editor/virtual-dom-worker": "^11.22.0",
-    "@lvce-editor/workers-view": "^0.3.10"
+    "@lvce-editor/workers-view": "^0.4.1"
   },
   "devDependencies": {
     "@jest/globals": "^30.5.2",

@@ -19,3 +19,12 @@ test('workers view resize forwards its position and dimensions', () => {
     { source: 'argument', name: 'dimensions', index: 'height' },
   ])
 })
+
+test('workers view keybindings are registered', () => {
+  const worker = Workers.getWorkers().find(({ id }) => id === 'workersView')
+
+  expect(worker?.viewlet?.methods?.getKeyBindings).toEqual({
+    name: 'Workers.getKeyBindings',
+    parameters: [],
+  })
+})

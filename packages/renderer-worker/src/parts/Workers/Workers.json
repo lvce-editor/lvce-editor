@@ -1685,6 +1685,7 @@
         },
         "getCommandIds": { "name": "Workers.getCommandIds", "parameters": [] },
         "getComponentState": { "name": "Workers.getComponentState", "parameters": [{ "source": "state", "name": "uid" }] },
+        "getKeyBindings": { "name": "Workers.getKeyBindings", "parameters": [] },
         "getMenuEntryIds": { "name": "Workers.getMenuEntryIds", "parameters": [] },
         "getMenuEntries": {
           "name": "Workers.getMenuEntries",
