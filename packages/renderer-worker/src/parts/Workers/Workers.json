@@ -1689,10 +1689,7 @@
         "getMenuEntryIds": { "name": "Workers.getMenuEntryIds", "parameters": [] },
         "getMenuEntries": {
           "name": "Workers.getMenuEntries",
-          "parameters": [
-            { "source": "state", "name": "uid" },
-            { "source": "argument", "name": "args", "spread": true }
-          ]
+          "parameters": [{ "source": "argument", "name": "args", "spread": true }]
         },
         "setComponentState": {
           "name": "Workers.setComponentState",
