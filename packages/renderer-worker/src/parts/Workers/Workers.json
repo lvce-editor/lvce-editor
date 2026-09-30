@@ -1755,7 +1755,6 @@
         "/css/parts/SettingsItems.css", "/css/parts/SettingsSideBar.css", "/css/parts/ViewletSettings.css"
       ],
       "state": { "idKey": "uid", "fields": ["uri", "x", "y", "width", "height", "parentUid"] },
-      "stateResize": true,
       "commandPrefix": "Settings",
       "methods": {
         "create": {
@@ -1776,6 +1775,10 @@
         "loadContent": {
           "name": "Settings.loadContent",
           "parameters": [{ "source": "state", "name": "uid" }, { "source": "argument", "name": "savedState" }]
+        },
+        "resize": {
+          "name": "Settings.resize",
+          "parameters": [{ "source": "state", "name": "uid" }, { "source": "argument", "name": "dimensions" }]
         },
         "diff": { "name": "Settings.diff2", "parameters": [{ "source": "state", "name": "uid" }] },
         "render": {
