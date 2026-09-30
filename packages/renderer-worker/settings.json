@@ -178,6 +178,14 @@
   },
   {
     "category": "workbench",
+    "description": "Shows whether worker memory usage is growing or shrinking, measured over the last minute",
+    "heading": "Worker Memory Usage Trend",
+    "id": "workers.memoryUsageTrend.enabled",
+    "type": "boolean",
+    "value": false
+  },
+  {
+    "category": "workbench",
     "description": "Enables experimental recycling of compatible virtual DOM elements and text nodes",
     "heading": "Virtual DOM Recycling",
     "id": "virtualDom.recycling.enabled",

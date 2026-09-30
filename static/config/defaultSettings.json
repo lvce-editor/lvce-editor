@@ -78,6 +78,7 @@
   "window.controlsOverlay.enabled": true,
 
   "Workers.cleanUpAfterLoad": false,
+  "workers.memoryUsageTrend.enabled": false,
   "virtualDom.recycling.enabled": false,
   "virtualDom.recycling.size": 100,
 
