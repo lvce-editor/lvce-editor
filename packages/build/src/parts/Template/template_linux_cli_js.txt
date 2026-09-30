@@ -90,14 +90,19 @@ const ensureLinuxSandbox = async (electronDir) => {
     if (!sandbox.isFile()) {
       throw new Error(`Electron sandbox helper must be a regular file at ${sandboxPath}`)
     }
-    if (sandbox.uid === 0 && (sandbox.mode & 0o7777) === 0o4755) {
-      return
-    }
-
+    const sandboxFile = await open(permissionPath, constants.O_RDONLY | constants.O_NOFOLLOW).catch(() => {
+      throw new Error(`Electron sandbox helper changed or is not a regular file at ${sandboxPath}`)
+    })
     try {
-      await runPermissionCommand('chown', ['root:root', '--no-dereference', '--', permissionPath])
-      await runPermissionCommand('chmod', ['4755', '--no-dereference', '--', permissionPath])
-      const repairedSandbox = await lstat(permissionPath)
+      const sandboxStats = await sandboxFile.stat()
+      if (sandboxStats.uid === 0 && (sandboxStats.mode & 0o7777) === 0o4755) {
+        return
+      }
+
+      const sandboxFilePath = `/proc/${process.pid}/fd/${sandboxFile.fd}`
+      await runPermissionCommand('chown', ['root:root', '--', sandboxFilePath])
+      await runPermissionCommand('chmod', ['4755', '--', sandboxFilePath])
+      const repairedSandbox = await sandboxFile.stat()
       if (!repairedSandbox.isFile() || repairedSandbox.uid !== 0 || (repairedSandbox.mode & 0o7777) !== 0o4755) {
         throw new Error('permission verification failed')
       }
@@ -106,6 +111,8 @@ const ensureLinuxSandbox = async (electronDir) => {
         `Unable to prepare Electron sandbox helper at ${sandboxPath}; run sudo chown root:root -- ${shellQuote(sandboxPath)} and sudo chmod 4755 -- ${shellQuote(sandboxPath)}: ${error instanceof Error ? error.message : error}`,
         { cause: error },
       )
+    } finally {
+      await sandboxFile.close()
     }
   } finally {
     await runtimeDirectory.close()
