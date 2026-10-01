@@ -1,3 +1,4 @@
+import * as Command from '../Command/Command.js'
 import * as QuickPickOpening from '../QuickPickOpening/QuickPickOpening.js'
 import * as Assert from '../Assert/Assert.ts'
 import * as ApplicationRegistry from '../ApplicationRegistry/ApplicationRegistry.ts'
@@ -717,4 +718,17 @@ export const disposeWidgetWithValue = async (id, value) => {
     // TODO use Error.cause once proper stack traces are supported by chrome
     throw new Error(`Failed to dispose viewlet ${id}: ${error}`)
   }
+}
+
+// Save the document belonging to this exact tab, including extension-backed documents.
+export const save = async (uid, skipFormatting = false) => {
+  const instance = ViewletStates.getByUid(uid)
+  if (!instance) {
+    throw new Error(`cannot save missing view ${uid}`)
+  }
+  if (instance.moduleId !== ViewletModuleId.ExtensionView) {
+    return skipFormatting ? Command.execute('Editor.save', uid, true) : Command.execute('Editor.save', uid)
+  }
+  await executeViewletCommand(uid, 'save')
+  return { modified: instance.state.modified !== false }
 }

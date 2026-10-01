@@ -519,6 +519,7 @@ export const commandMap = {
   'Viewlet.dispose': lazy('Viewlet.dispose'),
   'Viewlet.hide': lazy('Viewlet.hide'),
   'Viewlet.executeViewletCommand': lazy('Viewlet.executeViewletCommand'),
+  'Viewlet.save': lazy('Viewlet.save'),
   'Viewlet.requestRender': lazy('Viewlet.requestRender'),
   'Viewlet.focus': lazy('Viewlet.focus'),
   'Viewlet.focusSelector': lazy('Viewlet.focusSelector'),

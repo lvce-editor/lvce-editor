@@ -971,3 +971,26 @@ test('hide - disposes ordinary child worker state without removing DOM before th
   expect(ViewletStates.getInstance(2)).toBeUndefined()
   expect(RendererProcess.invoke).not.toHaveBeenCalled()
 })
+
+test('save routes an extension document by uid and reports its current dirty state', async () => {
+  jest.mocked(ViewletManager.render).mockReturnValue([])
+  const state = { uid: 20, modified: true }
+  const save = jest.fn(async (state: any) => ({ ...state, modified: false }))
+  ViewletStates.set(20, { state, renderedState: state, moduleId: 'ExtensionView', factory: { serializeCommands: true, Commands: { save } } })
+  await expect(Viewlet.save(20)).resolves.toEqual({ modified: false })
+  expect(save).toHaveBeenCalledWith(state)
+})
+
+test('save rejects extension write failures and leaves the view dirty', async () => {
+  const state = { uid: 20, modified: true }
+  const save = async (): Promise<never> => {
+    throw new Error('disk full')
+  }
+  ViewletStates.set(20, { state, renderedState: state, moduleId: 'ExtensionView', factory: { serializeCommands: true, Commands: { save } } })
+  await expect(Viewlet.save(20)).rejects.toThrow('disk full')
+  expect(ViewletStates.getByUid(20).state.modified).toBe(true)
+})
+
+test('save rejects a missing view instead of clearing its tab', async () => {
+  await expect(Viewlet.save(999)).rejects.toThrow('cannot save missing view 999')
+})
