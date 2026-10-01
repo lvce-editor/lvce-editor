@@ -994,3 +994,13 @@ test('save rejects extension write failures and leaves the view dirty', async ()
 test('save rejects a missing view instead of clearing its tab', async () => {
   await expect(Viewlet.save(999)).rejects.toThrow('cannot save missing view 999')
 })
+
+test('save retains the text editor route and skip-formatting option', async () => {
+  const Command = await import('../src/parts/Command/Command.js')
+  const save = jest.fn(async () => ({ modified: false }))
+  Command.register('Editor.save', save)
+  const state = { uid: 21 }
+  ViewletStates.set(21, { state, renderedState: state, moduleId: 'Editor', factory: {} })
+  await expect(Viewlet.save(21, true)).resolves.toEqual({ modified: false })
+  expect(save).toHaveBeenCalledWith(21, true)
+})
