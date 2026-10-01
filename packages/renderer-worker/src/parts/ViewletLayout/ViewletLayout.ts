@@ -3007,7 +3007,19 @@ export const getHref = (state: LayoutState) => {
   return Location.getHref()
 }
 
-export const afterRender = (oldState: LayoutState, newState: LayoutState) => BrowserFullWidth.afterRender(oldState, newState)
+export const afterRender = async (oldState: LayoutState, newState: LayoutState) => {
+  await BrowserFullWidth.afterRender(oldState, newState)
+  if (newState.secondaryPreviewPlacement !== 'bottomLeft' || !newState.secondaryPreviewVisible) return
+  // Root reconciliation preserves named inputs. Both browser panes use the same
+  // address name, so restore each retained view's own value after reconciliation.
+  const commands = [newState.previewId, newState.secondaryPreviewId].flatMap((uid) => {
+    const browser = ViewletStates.getInstance(uid)
+    return browser?.moduleId === ViewletModuleId.SimpleBrowser
+      ? [['Viewlet.setValueByName', uid, 'simple-browser-address', browser.state.inputValue]]
+      : []
+  })
+  if (commands.length) await RendererProcess.invoke('Viewlet.sendMultiple', commands)
+}
 
 export const beginBrowserTabDrag = (state: LayoutState, sourceUid: number): LayoutStateResult => {
   const source = ViewletStates.getInstance(sourceUid)?.state
