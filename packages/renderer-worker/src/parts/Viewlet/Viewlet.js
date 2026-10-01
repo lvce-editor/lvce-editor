@@ -1,3 +1,4 @@
+import * as Command from '../Command/Command.js'
 import * as QuickPickOpening from '../QuickPickOpening/QuickPickOpening.js'
 import * as Assert from '../Assert/Assert.ts'
 import * as ApplicationRegistry from '../ApplicationRegistry/ApplicationRegistry.ts'
@@ -8,6 +9,7 @@ import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as Id from '../Id/Id.js'
 import * as KeyBindingsState from '../KeyBindingsState/KeyBindingsState.js'
 import * as LayoutWidgets from '../LayoutWidgets/LayoutWidgets.ts'
+import * as Notification from '../Notification/Notification.js'
 import * as Logger from '../Logger/Logger.js'
 import * as RebaseState from '../RebaseState/RebaseState.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
@@ -717,4 +719,26 @@ export const disposeWidgetWithValue = async (id, value) => {
     // TODO use Error.cause once proper stack traces are supported by chrome
     throw new Error(`Failed to dispose viewlet ${id}: ${error}`)
   }
+}
+
+// Save the document belonging to this exact tab, including extension-backed documents.
+export const save = async (uid, skipFormatting = false) => {
+  const instance = ViewletStates.getByUid(uid)
+  if (!instance) {
+    throw new Error(`cannot save missing view ${uid}`)
+  }
+  if (instance.moduleId !== ViewletModuleId.ExtensionView) {
+    return skipFormatting ? Command.execute('Editor.save', uid, true) : Command.execute('Editor.save', uid)
+  }
+  try {
+    await executeViewletCommand(uid, 'save')
+  } catch (error) {
+    try {
+      await Notification.create('error', `Failed to save document: ${error instanceof Error ? error.message : error}`)
+    } catch (notificationError) {
+      console.error(notificationError)
+    }
+    throw error
+  }
+  return { modified: instance.state.modified !== false }
 }

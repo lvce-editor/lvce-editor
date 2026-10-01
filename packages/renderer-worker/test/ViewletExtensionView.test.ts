@@ -12,6 +12,9 @@ jest.unstable_mockModule('../src/parts/ExtensionManagementWorker/ExtensionManage
 
 jest.unstable_mockModule('../src/parts/Focus/Focus.js', () => ({ setFocus: jest.fn() }))
 
+jest.unstable_mockModule('../src/parts/Command/Command.js', () => ({ execute: jest.fn() }))
+const Command = await import('../src/parts/Command/Command.js')
+
 const Focus = await import('../src/parts/Focus/Focus.js')
 const ExtensionManagementWorker = await import('../src/parts/ExtensionManagementWorker/ExtensionManagementWorker.js')
 const GetSideBarDom = await import('../src/parts/GetSideBarDom/GetSideBarDom.js')
@@ -361,4 +364,50 @@ test('native extension blur does not take focus back from another view', async (
 test('iframe events do not change native keyboard focus', async () => {
   await ViewletExtensionView.handleClick({ ...createState(), kind: 'iframe' }, '')
   expect(Focus.setFocus).not.toHaveBeenCalled()
+})
+
+test('committed document edits notify the owning main area of dirty state', async () => {
+  const state = { ...createState(), parentUid: 7, uri: 'file:///save.csv', modified: false }
+  const dirty = { ...state, modified: true }
+  await ViewletExtensionView.afterRender(state, dirty)
+  expect(Command.execute).toHaveBeenCalledWith('Main.handleModifiedStatusChange', 'file:///save.csv', true)
+})
+
+test('document save dispatches the save callback and retains its dirty result', async () => {
+  const state = { ...createState(), modified: true }
+  jest.mocked(ExtensionManagementWorker.invoke).mockImplementation(async (method) => {
+    if (method === 'Extensions.dispatchViewEvent') return { type: 'setPatches', patches: [], modified: false }
+    return []
+  })
+  const saved = await ViewletExtensionView.save(state)
+  expect(saved.modified).toBe(false)
+  expect(ExtensionManagementWorker.invoke).toHaveBeenCalledWith(
+    'Extensions.dispatchViewEvent',
+    state.viewId,
+    state.uid,
+    { type: 'command', handler: 'save', args: [] },
+    expect.anything(),
+    expect.anything(),
+  )
+})
+
+test('failed document saves reject without clearing dirty state', async () => {
+  const state = { ...createState(), modified: true }
+  jest.mocked(ExtensionManagementWorker.invoke).mockRejectedValue(new Error('disk full'))
+  await expect(ViewletExtensionView.save(state)).rejects.toThrow('disk full')
+  expect(state.modified).toBe(true)
+})
+
+test('clean and non-document views do not dispatch save callbacks', async () => {
+  const state = createState()
+  expect(await ViewletExtensionView.save(state)).toBe(state)
+  const clean = { ...state, modified: false }
+  expect(await ViewletExtensionView.save(clean)).toBe(clean)
+  expect(ExtensionManagementWorker.invoke).not.toHaveBeenCalled()
+})
+
+test('dirty changes are scoped to the owning application', async () => {
+  const state = { ...createState(), applicationId: 'app-2', modified: false }
+  await ViewletExtensionView.afterRender(state, { ...state, modified: true })
+  expect(Command.execute).toHaveBeenCalledWith('Application.execute', 'app-2', 'Main.handleModifiedStatusChange', state.uri, true)
 })

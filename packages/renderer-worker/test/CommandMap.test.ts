@@ -1,4 +1,4 @@
-import { expect, test } from '@jest/globals'
+import { expect, jest, test } from '@jest/globals'
 import { commandMap } from '../src/parts/CommandMap/CommandMap.js'
 import * as ClipBoardIpc from '../src/parts/ClipBoard/ClipBoard.ipc.js'
 
@@ -71,4 +71,16 @@ test('registers only direct extension node process commands', () => {
   expect(commandMap['ExtensionNodeRpc.create']).toBeUndefined()
   expect(commandMap['ExtensionNodeRpc.dispose']).toBeUndefined()
   expect(commandMap['ExtensionNodeRpc.invoke']).toBeUndefined()
+})
+
+test('window-close RPC commands preserve dirty results and save failures', async () => {
+  const Command = await import('../src/parts/Command/Command.js')
+  const dirty = jest.fn(() => true)
+  const failure = new Error('disk full')
+  Command.register('Main.hasDirtyTabs', dirty)
+  Command.register('Main.saveAll', async () => {
+    throw failure
+  })
+  await expect(commandMap['Main.hasDirtyTabs']()).resolves.toBe(true)
+  await expect(commandMap['Main.saveAll']()).rejects.toBe(failure)
 })
