@@ -5,6 +5,7 @@ import { constants } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { basename, dirname, join } from 'node:path'
 import { promisify } from 'node:util'
+import { setTimeout } from 'node:timers/promises'
 
 const execFileAsync = promisify(execFile)
 const testPosix = process.platform === 'win32' ? test.skip : test
@@ -277,8 +278,10 @@ module.exports = async (_zipPath, { dir }) => {
       await writeFile(
         fakeElectronPath,
         `#!/usr/bin/env node
-const { writeFileSync } = require('node:fs')
-writeFileSync(process.env.LVCE_TEST_LAUNCH_RESULT, JSON.stringify({ args: process.argv.slice(2), runAsNode: process.env.ELECTRON_RUN_AS_NODE }))
+const { renameSync, writeFileSync } = require('node:fs')
+const temporaryResult = process.env.LVCE_TEST_LAUNCH_RESULT + '.tmp'
+writeFileSync(temporaryResult, JSON.stringify({ args: process.argv.slice(2), runAsNode: process.env.ELECTRON_RUN_AS_NODE }))
+renameSync(temporaryResult, process.env.LVCE_TEST_LAUNCH_RESULT)
 `,
       )
       await chmod(fakeElectronPath, 0o755)
@@ -356,8 +359,23 @@ writeFileSync(process.env.LVCE_TEST_LAUNCH_RESULT, JSON.stringify({ args: proces
       }
       expect((await readFile(downloadResultPath, 'utf8')).trim().split('\n')).toHaveLength(1)
 
-      const { stdout: detachedStdout } = await execFileAsync(process.execPath, [cliPath, '--electron-version=44.2.0'], { env })
+      const detachedResultPath = join(root, 'detached-launch.json')
+      const { stdout: detachedStdout } = await execFileAsync(process.execPath, [cliPath, '--electron-version=44.2.0'], {
+        env: { ...env, LVCE_TEST_LAUNCH_RESULT: detachedResultPath },
+      })
       expect(detachedStdout).toContain('Downloading Electron 44.2.0...')
+      // The CLI exits before its detached child. Wait for that child's write before removing its directory.
+      let detachedResult: string | undefined
+      for (let attempt = 0; attempt < 100; attempt++) {
+        try {
+          detachedResult = await readFile(detachedResultPath, 'utf8')
+          if (detachedResult) break
+        } catch (error) {
+          if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error
+        }
+        await setTimeout(20)
+      }
+      expect(JSON.parse(detachedResult || 'null')).toEqual({ args: [realAppRoot] })
 
       await expect(
         execFileAsync(process.execPath, [cliPath, '--electron-version=45.0.0', '--wait'], {
