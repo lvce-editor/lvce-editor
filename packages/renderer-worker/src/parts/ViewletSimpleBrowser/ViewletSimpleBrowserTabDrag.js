@@ -77,18 +77,21 @@ export const handleTabDrop = (state) => {
 }
 
 export const renderDragData = {
+  multiple: true,
   isEqual(oldState, newState) {
     return oldState.draggedTab === newState.draggedTab
   },
   apply(oldState, newState) {
     const { draggedTab, uid } = newState
     return [
-      'Viewlet.setDragData',
-      uid,
-      {
-        items: draggedTab ? [{ type: 'application/x-lvce-simple-browser-tab', data: String(uid) }] : [],
-        label: draggedTab?.title || 'New Tab',
-      },
+      [
+        'Viewlet.setDragData',
+        uid,
+        {
+          items: draggedTab ? [{ type: 'application/x-lvce-simple-browser-tab', data: String(uid) }] : [],
+          label: draggedTab?.title || 'New Tab',
+        },
+      ],
     ]
   },
 }

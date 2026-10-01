@@ -276,6 +276,7 @@ export const saveState = (state: LayoutState) => {
     previewWidth,
     previewHeight,
     previewOrientation,
+    secondaryPreviewPlacement,
     secondaryPreviewUri,
     secondaryPreviewViewletId,
     secondaryPreviewVisible,
@@ -298,6 +299,7 @@ export const saveState = (state: LayoutState) => {
     previewWidth,
     previewHeight,
     previewOrientation,
+    secondaryPreviewPlacement,
     secondaryPreviewUri,
     secondaryPreviewViewletId,
     secondaryPreviewVisible,
@@ -488,6 +490,7 @@ export const loadContent = (state: LayoutState, savedState: any): LayoutState =>
     previewMinWidth: 100,
     previewMaxWidth: Math.max(1800, windowWidth / 2),
     secondaryPreviewVisible,
+    secondaryPreviewPlacement: stateToRestore?.secondaryPreviewPlacement === 'bottomLeft' ? 'bottomLeft' : undefined,
     secondaryPreviewHeight: 350,
     secondaryPreviewMinHeight: 200,
     secondaryPreviewMaxHeight: 1200,
@@ -2104,6 +2107,9 @@ const getNewStatePointerMoveSecondaryPreview = async (
   x: number,
   y: number,
 ): Promise<{ newState: LayoutState; commands: any[] }> => {
+  if (state.secondaryPreviewPlacement === 'bottomLeft') {
+    return { newState: getPoints({ ...state, secondaryPreviewHeight: state.windowHeight - y }), commands: [] }
+  }
   if (state.previewOrientation === PreviewOrientation.Vertical && state.previewVisible) {
     const previewHeight = y - state.previewTop
     return {
@@ -3002,3 +3008,56 @@ export const getHref = (state: LayoutState) => {
 }
 
 export const afterRender = (oldState: LayoutState, newState: LayoutState) => BrowserFullWidth.afterRender(oldState, newState)
+
+export const beginBrowserTabDrag = (state: LayoutState, sourceUid: number): LayoutStateResult => {
+  const source = ViewletStates.getInstance(sourceUid)?.state
+  const supported =
+    sourceUid === state.previewId &&
+    !state.secondaryPreviewVisible &&
+    !state.browserFullWidth &&
+    !state.sideBarFocusMode &&
+    source?.draggedTab?.browserViewId &&
+    !source?.loginChallenges?.length
+  return { newState: supported ? { ...state, browserTabDragSource: sourceUid } : state, commands: [] }
+}
+
+export const endBrowserTabDrag = (state: LayoutState, sourceUid: number): LayoutStateResult => ({
+  newState: state.browserTabDragSource === sourceUid ? { ...state, browserTabDragSource: undefined } : state,
+  commands: [],
+})
+
+export const handleBrowserTabDragOver = (state: LayoutState): LayoutStateResult => ({ newState: state, commands: [] })
+
+export const handleBrowserTabDrop = async (state: LayoutState, x: number, y: number): Promise<LayoutStateResult> => {
+  const sourceUid = state.browserTabDragSource
+  const source = sourceUid === undefined ? undefined : ViewletStates.getInstance(sourceUid)?.state
+  const browserViewId = source?.draggedTab?.browserViewId
+  const top = (state.windowHeight + (state.titleBarVisible ? state.titleBarHeight : 0)) / 2
+  const cleanState = { ...state, browserTabDragSource: undefined }
+  if (
+    !browserViewId ||
+    !source?.isDraggingTab ||
+    state.secondaryPreviewVisible ||
+    x < 0 ||
+    x >= state.previewLeft ||
+    y < top ||
+    y >= state.windowHeight
+  ) {
+    return { newState: cleanState, commands: [] }
+  }
+  const result = await show(
+    {
+      ...cleanState,
+      secondaryPreviewPlacement: 'bottomLeft',
+      secondaryPreviewHeight: state.windowHeight - top,
+      secondaryPreviewUri: 'simple-browser://transfer',
+      secondaryPreviewViewletId: ViewletModuleId.SimpleBrowser,
+    },
+    LayoutModules.SecondaryPreview,
+    undefined,
+    false,
+  )
+  await RendererProcess.invoke('Viewlet.sendMultiple', result.commands)
+  await Viewlet.executeViewletCommand(sourceUid, 'moveTabToBrowser', browserViewId, result.newState.secondaryPreviewId)
+  return { commands: [], newState: { ...result.newState, browserTabDragSource: undefined, secondaryPreviewUri: 'simple-browser://' } }
+}
