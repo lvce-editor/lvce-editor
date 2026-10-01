@@ -95,6 +95,8 @@ const renderDom = {
   isEqual(oldState: LayoutState, newState: LayoutState) {
     return (
       oldState.browserFullWidth === newState.browserFullWidth &&
+      oldState.browserTabDragSource === newState.browserTabDragSource &&
+      oldState.secondaryPreviewPlacement === newState.secondaryPreviewPlacement &&
       oldState.mainVisible === newState.mainVisible &&
       oldState.mainId === newState.mainId &&
       oldState.titleBarVisible === newState.titleBarVisible &&
@@ -191,6 +193,8 @@ const getCss = (newState: LayoutState) => {
   const appWidth = explicitBounds ? getPixelValue(windowWidth) : '100%'
   const appHeight = explicitBounds ? getPixelValue(windowHeight) : '100%'
   return `:root {
+  --BrowserDropWidth: ${getPixelValue(newState.previewLeft)};
+  --BrowserDropTop: ${getPixelValue((newState.windowHeight + (newState.titleBarVisible ? newState.titleBarHeight : 0)) / 2)};
   --AppWidth: ${appWidth};
   --AppHeight: ${appHeight};
   --ActivityBarWidth: ${getPixelValue(activityBarWidth)};
@@ -231,6 +235,8 @@ const renderCss = {
 
 export const renderEventListeners = () => {
   return [
+    { name: 'handleBrowserTabDragOver', params: ['handleBrowserTabDragOver'], preventDefault: true, stopPropagation: true },
+    { name: 'handleBrowserTabDrop', params: ['handleBrowserTabDrop', 'event.clientX', 'event.clientY'], preventDefault: true, stopPropagation: true },
     {
       name: DomEventListenersFunctions.HandleClickClose,
       params: ['hidePreview'],

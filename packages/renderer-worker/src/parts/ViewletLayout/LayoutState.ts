@@ -33,6 +33,9 @@ export interface BrowserFullWidthState {
 }
 
 export interface LayoutState {
+  readonly secondaryPreviewPlacement?: 'bottomLeft'
+  readonly browserTabDragSource?: number
+
   readonly browserFullWidth?: BrowserFullWidthState
 
   readonly applicationId?: string
