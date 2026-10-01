@@ -29,36 +29,55 @@ jest.unstable_mockModule('../src/parts/IpcParent/IpcParent.js', () => {
   }
 })
 
+jest.unstable_mockModule('../src/parts/JsonRpc/JsonRpc.js', () => ({ invoke: jest.fn() }))
+jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => ({ getPlatform: jest.fn(() => 2) }))
+jest.unstable_mockModule('../src/parts/Preferences/Preferences.js', () => ({ get: jest.fn() }))
+jest.unstable_mockModule('../src/parts/Product/Product.js', () => ({ getBackendUrl: jest.fn(() => 'https://default.example.com') }))
+
+const JsonRpc = await import('../src/parts/JsonRpc/JsonRpc.js')
+const Platform = await import('../src/parts/Platform/Platform.js')
+const Preferences = await import('../src/parts/Preferences/Preferences.js')
+const Product = await import('../src/parts/Product/Product.js')
 const GetConfiguredWorkerUrl = await import('../src/parts/GetConfiguredWorkerUrl/GetConfiguredWorkerUrl.ts')
 const HandleIpc = await import('../src/parts/HandleIpc/HandleIpc.js')
 const IpcParent = await import('../src/parts/IpcParent/IpcParent.js')
 const LaunchAuthWorker = await import('../src/parts/LaunchAuthWorker/LaunchAuthWorker.js')
 
-test('launchAuthWorker', async () => {
-  const ipc = {
-    send() {},
-  }
-  // @ts-ignore
-  GetConfiguredWorkerUrl.getConfiguredWorkerUrl.mockReturnValue('file:///auth-worker.js')
-  // @ts-ignore
-  IpcParent.create.mockResolvedValue(ipc)
-  // @ts-ignore
-  HandleIpc.handleIpc.mockReturnValue(undefined)
+test.each([undefined, 'https://configured.example.com'])(
+  'configures lazy auth before returning its IPC with backend preference %s',
+  async (backendUrl) => {
+    jest.mocked(Platform.getPlatform).mockReturnValue(2)
+    jest.mocked(Product.getBackendUrl).mockReturnValue('https://default.example.com')
+    jest.mocked(Preferences.get).mockReturnValue(backendUrl)
+    const ipc = {
+      send() {},
+    }
+    // @ts-ignore
+    GetConfiguredWorkerUrl.getConfiguredWorkerUrl.mockReturnValue('file:///auth-worker.js')
+    // @ts-ignore
+    IpcParent.create.mockResolvedValue(ipc)
+    // @ts-ignore
+    HandleIpc.handleIpc.mockReturnValue(undefined)
 
-  const result = await LaunchAuthWorker.launchAuthWorker()
+    const result = await LaunchAuthWorker.launchAuthWorker()
 
-  expect(GetConfiguredWorkerUrl.getConfiguredWorkerUrl).toHaveBeenCalledTimes(1)
-  expect(GetConfiguredWorkerUrl.getConfiguredWorkerUrl).toHaveBeenCalledWith(
-    'develop.authWorkerPath',
-    expect.stringContaining('/@lvce-editor/auth-worker/dist/authWorkerMain.js'),
-  )
-  expect(IpcParent.create).toHaveBeenCalledTimes(1)
-  expect(IpcParent.create).toHaveBeenCalledWith({
-    method: IpcParentType.ModuleWorkerAndWorkaroundForChromeDevtoolsBug,
-    name: 'Auth Worker',
-    url: 'file:///auth-worker.js',
-  })
-  expect(HandleIpc.handleIpc).toHaveBeenCalledTimes(1)
-  expect(HandleIpc.handleIpc).toHaveBeenCalledWith(ipc)
-  expect(result).toBe(ipc)
-})
+    expect(GetConfiguredWorkerUrl.getConfiguredWorkerUrl).toHaveBeenCalledTimes(1)
+    expect(GetConfiguredWorkerUrl.getConfiguredWorkerUrl).toHaveBeenCalledWith(
+      'develop.authWorkerPath',
+      expect.stringContaining('/@lvce-editor/auth-worker/dist/authWorkerMain.js'),
+    )
+    expect(IpcParent.create).toHaveBeenCalledTimes(1)
+    expect(IpcParent.create).toHaveBeenCalledWith({
+      method: IpcParentType.ModuleWorkerAndWorkaroundForChromeDevtoolsBug,
+      name: 'Auth Worker',
+      url: 'file:///auth-worker.js',
+    })
+    expect(HandleIpc.handleIpc).toHaveBeenCalledTimes(1)
+    expect(HandleIpc.handleIpc).toHaveBeenCalledWith(ipc)
+    expect(JsonRpc.invoke).toHaveBeenCalledWith(ipc, 'Auth.configure', {
+      backendUrl: backendUrl || 'https://default.example.com',
+      platform: 2,
+    })
+    expect(result).toBe(ipc)
+  },
+)
