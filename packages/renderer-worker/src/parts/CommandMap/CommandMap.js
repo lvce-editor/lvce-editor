@@ -292,6 +292,8 @@ export const commandMap = {
   'LocalStorage.getText': lazy('LocalStorage.getText'),
   'LocalStorage.setJson': lazy('LocalStorage.setJson'),
   'LocalStorage.setText': lazy('LocalStorage.setText'),
+  'Main.hasDirtyTabs': lazy('Main.hasDirtyTabs'),
+  'Main.saveAll': lazy('Main.saveAll'),
   'Main.focus': lazy('Main.focus'),
   'Main.handleClickClose': lazy('Main.handleClickClose'),
   'Main.handleDragEnd': lazy('Main.handleDragEnd'),

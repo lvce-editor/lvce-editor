@@ -9,6 +9,7 @@ import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as Id from '../Id/Id.js'
 import * as KeyBindingsState from '../KeyBindingsState/KeyBindingsState.js'
 import * as LayoutWidgets from '../LayoutWidgets/LayoutWidgets.ts'
+import * as Notification from '../Notification/Notification.js'
 import * as Logger from '../Logger/Logger.js'
 import * as RebaseState from '../RebaseState/RebaseState.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
@@ -729,6 +730,15 @@ export const save = async (uid, skipFormatting = false) => {
   if (instance.moduleId !== ViewletModuleId.ExtensionView) {
     return skipFormatting ? Command.execute('Editor.save', uid, true) : Command.execute('Editor.save', uid)
   }
-  await executeViewletCommand(uid, 'save')
+  try {
+    await executeViewletCommand(uid, 'save')
+  } catch (error) {
+    try {
+      await Notification.create('error', `Failed to save document: ${error instanceof Error ? error.message : error}`)
+    } catch (notificationError) {
+      console.error(notificationError)
+    }
+    throw error
+  }
   return { modified: instance.state.modified !== false }
 }

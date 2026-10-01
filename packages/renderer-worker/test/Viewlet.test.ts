@@ -981,7 +981,10 @@ test('save routes an extension document by uid and reports its current dirty sta
   expect(save).toHaveBeenCalledWith(state)
 })
 
-test('save rejects extension write failures and leaves the view dirty', async () => {
+test.each([false, true])('save reports write failures and remains dirty when notification fails=%s', async (notificationFails) => {
+  if (notificationFails) {
+    jest.mocked(RendererProcess.invoke).mockRejectedValue(new Error('notification unavailable'))
+  }
   const state = { uid: 20, modified: true }
   const save = async (): Promise<never> => {
     throw new Error('disk full')
@@ -989,6 +992,7 @@ test('save rejects extension write failures and leaves the view dirty', async ()
   ViewletStates.set(20, { state, renderedState: state, moduleId: 'ExtensionView', factory: { serializeCommands: true, Commands: { save } } })
   await expect(Viewlet.save(20)).rejects.toThrow('disk full')
   expect(ViewletStates.getByUid(20).state.modified).toBe(true)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Notification.create', 'error', 'Failed to save document: disk full')
 })
 
 test('save rejects a missing view instead of clearing its tab', async () => {
