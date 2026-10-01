@@ -997,7 +997,7 @@ test('save rejects a missing view instead of clearing its tab', async () => {
 
 test('save retains the text editor route and skip-formatting option', async () => {
   const Command = await import('../src/parts/Command/Command.js')
-  const save = jest.fn(async () => ({ modified: false }))
+  const save = jest.fn(async (_uid: number, _skipFormatting: boolean) => ({ modified: false }))
   Command.register('Editor.save', save)
   const state = { uid: 21 }
   ViewletStates.set(21, { state, renderedState: state, moduleId: 'Editor', factory: {} })
