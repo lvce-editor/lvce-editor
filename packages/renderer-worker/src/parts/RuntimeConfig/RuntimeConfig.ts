@@ -14,7 +14,7 @@ export const parseRuntimeConfig = (url: string): RuntimeConfig => {
 }
 
 const getRuntimeConfig = (): RuntimeConfig => {
-  if (typeof location === 'undefined') {
+  if (typeof location === 'undefined' || typeof location.href !== 'string') {
     return {}
   }
   return parseRuntimeConfig(location.href)
