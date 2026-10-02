@@ -4,6 +4,7 @@ import { spawnSync } from 'node:child_process'
 import { mkdir, mkdtemp, readFile, readdir, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
+import { setTimeout as delay } from 'node:timers/promises'
 import { build } from 'esbuild'
 
 const root = process.cwd()
@@ -12,6 +13,24 @@ assert.ok(electron, 'Set LVCE_ELECTRON_PATH to the Electron executable')
 const directory = await mkdtemp(join(tmpdir(), 'lvce-startup-acceptance-'))
 const packaged = process.env.LVCE_CPU_PROFILE_PACKAGED === '1'
 const outputs = []
+const waitForExit = async (configHome) => {
+  const marker = Buffer.from(`XDG_CONFIG_HOME=${configHome}\0`)
+  const deadline = Date.now() + 10_000
+  while (true) {
+    const pids = (await readdir('/proc')).filter((name) => /^\d+$/.test(name))
+    const remaining = []
+    for (const pid of pids) {
+      try {
+        if ((await readFile(`/proc/${pid}/environ`)).includes(marker)) remaining.push(pid)
+      } catch (error) {
+        if (!['ENOENT', 'ESRCH', 'EACCES'].includes(error.code)) throw error
+      }
+    }
+    if (!remaining.length) return
+    assert.ok(Date.now() < deadline, `Application processes remain: ${remaining.join(', ')}`)
+    await delay(100)
+  }
+}
 const snapshot = async (directory) => {
   const files = {}
   for (const entry of await readdir(directory, { withFileTypes: true })) {
@@ -67,6 +86,7 @@ try {
   )
   assert.ifError(baseline.error)
   assert.equal(baseline.status, 0, baseline.stdout + baseline.stderr)
+  await waitForExit(env.XDG_CONFIG_HOME)
   const sessionDirectory = join(env.XDG_CACHE_HOME, 'lvce-oss/userdata/Partitions/lvce-oss')
   const savedSession = await snapshot(sessionDirectory)
   assert.ok(Object.keys(savedSession).length > 0, 'Normal startup did not create session storage')
@@ -79,7 +99,7 @@ try {
   await mkdir(join(env.XDG_CACHE_HOME, 'lvce-oss'), { recursive: true })
   const original = JSON.stringify({ x: 42, y: 42, width: 777, height: 555, maximized: false })
   await writeFile(savedWindow, original)
-  for (const mode of ['configured', 'default', 'provider-error']) {
+  for (const mode of ['configured', 'default', 'provider-error', 'provider-timeout']) {
     await writeFile(join(project, 'target.txt'), `cpu-profile-acceptance ${mode}`)
     const args = [
       ...(packaged ? [] : [join(root, 'packages/main-process')]),
@@ -95,12 +115,15 @@ try {
     if (mode !== 'default') args.push('--cpu-profile-dir', directory)
     const result = spawnSync(electron, args, { cwd: root, env, encoding: 'utf8', timeout: 80_000, maxBuffer: 10 * 1024 * 1024 })
     assert.ifError(result.error)
-    assert.equal(result.status, mode === 'provider-error' ? 1 : 0, result.stdout + result.stderr)
+    const failure = mode.startsWith('provider-')
+    assert.equal(result.status, failure ? 1 : 0, result.stdout + result.stderr)
+    await waitForExit(env.XDG_CONFIG_HOME)
     const output = result.stdout.match(/CPU profile: (.+)/)?.[1]
     assert.ok(output, result.stdout + result.stderr)
     outputs.push(output)
     const manifest = JSON.parse(await readFile(join(output, 'manifest.json'), 'utf8'))
     if (mode === 'provider-error') assert.match(manifest.errors.join('\n'), /CPU profile acceptance provider error/)
+    else if (mode === 'provider-timeout') assert.match(manifest.errors.join('\n'), /timed out/i)
     else assert.deepEqual(manifest.errors, [])
     assert.ok(manifest.utilities.length > 0)
     for (const { file } of manifest.utilities) {
@@ -109,7 +132,7 @@ try {
     }
     const trace = JSON.parse(await readFile(join(output, manifest.trace), 'utf8'))
     assert.ok(trace.traceEvents.length > 0)
-    if (mode !== 'provider-error') {
+    if (!failure) {
       const nodes = trace.traceEvents.flatMap((event) => event.args?.data?.cpuProfile?.nodes || [])
       assert.ok(
         nodes.some((node) => node.callFrame.functionName === 'cpuProfileDiagnosticWork'),
@@ -119,7 +142,7 @@ try {
     assert.equal(await readFile(savedWindow, 'utf8'), original)
     assert.deepEqual(await snapshot(sessionDirectory), savedSession)
   }
-  assert.equal(new Set(outputs).size, 3)
+  assert.equal(new Set(outputs).size, 4)
   console.log('Integrated startup CPU profiling acceptance passed.')
 } finally {
   if (process.env.KEEP_CPU_PROFILE_TEST) console.log(`Preserved CPU profile acceptance directory: ${directory}`)

@@ -5,6 +5,7 @@ const provideDiagnostics = async (document) => {
   if (!document.text.includes('cpu-profile-acceptance')) throw new Error('Unexpected document opened')
   const uris = await rpc.invoke('Extensions.executeCommand', 'GetActiveEditor.getOpenEditorUris')
   if (uris.length !== 1 || uris[0] !== document.uri) throw new Error('Unexpected restored editors')
+  if (document.text.includes('provider-timeout')) await new Promise(() => {})
   await new Promise((resolve) => setTimeout(resolve, 250))
   if (document.text.includes('provider-error')) throw new Error('CPU profile acceptance provider error')
   function cpuProfileDiagnosticWork() {
