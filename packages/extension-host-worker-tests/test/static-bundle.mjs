@@ -3,9 +3,13 @@ import { createServer } from 'node:http'
 import { mkdir, readFile, writeFile, symlink, rm } from 'node:fs/promises'
 import { resolve, join, extname } from 'node:path'
 import { chromium } from '@playwright/test'
-import { createWorkerFactory } from '../../build/.tmp/server/shared-process/src/parts/BundleStaticWorkers/BundleStaticWorkers.js'
-import { createBundledWorkerConstructor } from '../../build/.tmp/server/shared-process/src/parts/BundledWorkerRuntime/BundledWorkerRuntime.js'
-import { exportStatic } from '../../build/.tmp/server/shared-process/index.js'
+import { pathToFileURL } from 'node:url'
+
+// These artifacts are produced after type-checking by the server build.
+const loadBuiltModule = (path) => import(pathToFileURL(resolve('packages/build/.tmp/server/shared-process', path)).href)
+const { createWorkerFactory } = await loadBuiltModule('src/parts/BundleStaticWorkers/BundleStaticWorkers.js')
+const { createBundledWorkerConstructor } = await loadBuiltModule('src/parts/BundledWorkerRuntime/BundledWorkerRuntime.js')
+const { exportStatic } = await loadBuiltModule('index.js')
 
 const root = resolve('packages/build/.tmp/bundle-acceptance')
 const fixture = join(root, 'extension')
@@ -17,7 +21,7 @@ await writeFile(join(fixture, 'src/main.js'), await readFile('extensions/builtin
 const mimeTypes = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.json': 'application/json', '.svg': 'image/svg+xml' }
 const server = createServer(async (request, response) => {
   try {
-    const pathname = new URL(request.url, 'http://localhost').pathname
+    const pathname = new URL(request.url || '/', 'http://localhost').pathname
     const path = join(root, pathname.endsWith('/') ? pathname + 'index.html' : pathname)
     const content = await readFile(path)
     response.setHeader('Content-Type', mimeTypes[extname(path)] || 'application/octet-stream')
@@ -26,8 +30,9 @@ const server = createServer(async (request, response) => {
     response.writeHead(404).end()
   }
 })
-await new Promise((resolve) => server.listen(0, '127.0.0.1', resolve))
+await new Promise((resolve) => server.listen(0, '127.0.0.1', () => resolve(undefined)))
 const address = server.address()
+assert.ok(address && typeof address !== 'string')
 let browser
 const results = []
 const measureHeaps = async () => {
@@ -123,7 +128,7 @@ try {
     await page.getByRole('treeitem', { name: 'sample.js', exact: true }).waitFor()
     await page.getByRole('textbox').focus()
     await page.keyboard.insertText('// bundled\n')
-    await page.waitForFunction(() => document.body.innerText.includes('// bundled'))
+    await page.locator('body').filter({ hasText: '// bundled' }).waitFor()
     await page.keyboard.press(process.platform === 'darwin' ? 'Meta+s' : 'Control+s')
     await page.waitForFunction(async (url) => {
       const { executeCommand } = await import(url)
@@ -142,7 +147,7 @@ try {
     await page.getByRole('treeitem', { name: 'renamed.js', exact: true }).waitFor()
     const evidence = await page.evaluate(() => ({
       resources: performance.getEntriesByType('resource').map((entry) => entry.name),
-      usedHeap: performance.memory.usedJSHeapSize,
+      usedHeap: /** @type {Performance & {memory: {usedJSHeapSize: number}}} */ (performance).memory.usedJSHeapSize,
     }))
     assert.ok(
       evidence.resources.some((url) => url.endsWith('/file_type_js.svg')),
@@ -198,7 +203,7 @@ try {
         }
         try {
           if ((await next()) !== 'ready') throw new Error('Missing cache worker readiness')
-          const key = new URL('/cache-probe', location).href
+          const key = new URL('/cache-probe', location.href).href
           await invoke('Cache.setCacheStorageItem', key, 'cache works', 'bundle-acceptance')
           const result = await invoke('Cache.getCacheStorageItem', key, 'bundle-acceptance')
           await invoke('Cache.removeCacheStorageItem', key, 'bundle-acceptance')
