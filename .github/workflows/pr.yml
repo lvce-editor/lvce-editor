@@ -213,3 +213,85 @@ jobs:
       - name: Clean up
         run: rm -rf packages/build/.tmp
         shell: bash
+
+  startup-cpu-profile:
+    name: startup-cpu-profile (${{ matrix.attempt }})
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        attempt: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+    steps:
+      - uses: actions/checkout@v7
+      - run: |
+          git fetch --no-tags --prune --depth=1 origin +refs/heads/main:refs/remotes/origin/main
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: '.nvmrc'
+      - name: Setup Python 3
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+      - name: Compute node modules cache key
+        id: nodeModulesCacheKey
+        run: echo "value=$(node packages/build/src/parts/ComputeNodeModulesCacheKey/ComputeNodeModulesCacheKey.ts)" >> $GITHUB_OUTPUT
+        shell: bash
+      - uses: actions/cache@v6
+        id: npm-cache
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-${{ runner.arch }}-cacheNodeModules-${{ steps.nodeModulesCacheKey.outputs.value }}
+      - uses: actions/cache@v6
+        id: electron-rebuild-cache
+        with:
+          path: '~/.electron-gyp'
+          key: ${{ runner.os }}-${{ runner.arch }}-cacheElectronRebuild-${{ steps.nodeModulesCacheKey.outputs.value }}
+      - uses: actions/cache@v6
+        id: electron-builder-cache
+        with:
+          path: '~/.cache/electron-builder'
+          key: ${{ runner.os }}-${{ runner.arch }}-cacheElectronBuilder-${{ steps.nodeModulesCacheKey.outputs.value }}
+      - uses: actions/cache@v6
+        id: build-cache
+        with:
+          path: 'packages/build/.tmp/cachedDependencies'
+          key: ${{ runner.os }}-${{ runner.arch }}-build-cache-${{ steps.nodeModulesCacheKey.outputs.value }}
+      - name: npm ci
+        run: node packages/build/src/parts/InstallDependencies/InstallDependencies.ts
+        if: steps.npm-cache.outputs.cache-hit != 'true'
+        env:
+          DOWNLOAD_BUILTIN_EXTENSIONS: 0
+      - name: Compute builtin extensions cache key
+        id: builtinExtensionsCacheKey
+        run: echo "value=$(node packages/build/src/parts/ComputeBuiltinExtensionsCacheKey/ComputeBuiltinExtensionsCacheKey.ts)" >> $GITHUB_OUTPUT
+        shell: bash
+      - uses: actions/cache@v6
+        id: builtin-extensions-cache
+        with:
+          path: extensions
+          key: builtinExtensions-${{ steps.builtinExtensionsCacheKey.outputs.value }}
+      - name: Download Builtin Extensions
+        run: node packages/build/src/parts/DownloadBuiltinExtensions/DownloadBuiltinExtensions.ts
+        if: steps.builtin-extensions-cache.outputs.cache-hit != 'true'
+      - name: Build Electron App (deb)
+        run: npm run build:electron:deb
+      - name: Test packaged startup CPU profiling
+        shell: bash
+        run: |
+          deb_path=$(find packages/build/.tmp/releases -name '*.deb' -print -quit)
+          test -n "$deb_path"
+          dpkg-deb -x "$deb_path" packages/build/.tmp/cpu-profile-deb
+          app_path=$(find "$PWD/packages/build/.tmp/cpu-profile-deb" -type f -name lvce-oss -executable -print -quit)
+          test -n "$app_path"
+          export TMPDIR="$RUNNER_TEMP/cpu-profile-${{ matrix.attempt }}"
+          mkdir -p "$TMPDIR"
+          KEEP_CPU_PROFILE_TEST=1 LVCE_ELECTRON_PATH="$app_path" LVCE_CPU_PROFILE_PACKAGED=1 xvfb-run -a node scripts/test-startup-cpu-profile.mjs
+      - name: Upload startup CPU profile evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: startup-cpu-profile-${{ matrix.attempt }}
+          path: ${{ runner.temp }}/cpu-profile-${{ matrix.attempt }}/
+          include-hidden-files: true
+          if-no-files-found: warn
