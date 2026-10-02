@@ -45,6 +45,7 @@ try {
   await build({
     bundle: true,
     entryPoints: ['scripts/fixtures/cpu-profile/diagnostics.js'],
+    external: ['node:*', 'electron'],
     format: 'esm',
     outfile: join(extension, 'main.js'),
     platform: 'browser',
@@ -66,7 +67,7 @@ try {
   )
   assert.ifError(baseline.error)
   assert.equal(baseline.status, 0, baseline.stdout + baseline.stderr)
-  const sessionDirectory = join(env.XDG_CACHE_HOME, 'lvce-oss/userdata')
+  const sessionDirectory = join(env.XDG_CACHE_HOME, 'lvce-oss/userdata/Partitions/lvce-oss')
   const savedSession = await snapshot(sessionDirectory)
   assert.ok(Object.keys(savedSession).length > 0, 'Normal startup did not create session storage')
   const savedBytes = await Promise.all(Object.keys(savedSession).map((path) => readFile(path)))

@@ -85,4 +85,4 @@ export const BrowserFind = 97
 export const ShellCommand = 98
 export const PtyHost = 99
 
-export const StartupCpuProfile = 100
+export const StartupCpuProfile = 101
