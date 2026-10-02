@@ -5,7 +5,7 @@ import * as ModuleMap from '../src/parts/ModuleMap/ModuleMap.js'
 
 test('load - StartupCpuProfile.complete', async () => {
   const moduleId = ModuleMap.getModuleId('StartupCpuProfile.complete')
-  expect(await Module.load(moduleId)).toMatchObject({ name: 'StartupCpuProfile', Commands: { complete: expect.any(Function) } })
+  expect(await Module.load(moduleId)).toMatchObject({ Commands: { complete: expect.any(Function) }, name: 'StartupCpuProfile' })
 })
 
 test('getModuleId - Platform.getConfigJsonPath', () => {
