@@ -121,7 +121,12 @@ try {
     const output = result.stdout.match(/CPU profile: (.+)/)?.[1]
     assert.ok(output, result.stdout + result.stderr)
     outputs.push(output)
-    const manifest = JSON.parse(await readFile(join(output, 'manifest.json'), 'utf8'))
+    let manifest
+    try {
+      manifest = JSON.parse(await readFile(join(output, 'manifest.json'), 'utf8'))
+    } catch (error) {
+      throw new Error(`Missing or invalid CPU profile manifest in ${mode} mode.\n${result.stdout}\n${result.stderr}`, { cause: error })
+    }
     if (mode === 'provider-error') assert.match(manifest.errors.join('\n'), /CPU profile acceptance provider error/)
     else if (mode === 'provider-timeout') assert.match(manifest.errors.join('\n'), /timed out/i)
     else assert.deepEqual(manifest.errors, [])

@@ -29,7 +29,7 @@
   "dependencies": {
     "@electron-internal/extract-zip": "^1.0.5",
     "@electron/get": "^5.1.0",
-    "@lvce-editor/main-process": "^6.54.0"
+    "@lvce-editor/main-process": "^6.55.0"
   },
   "devDependencies": {
     "@jest/globals": "^30.5.2",
