@@ -79,6 +79,23 @@ test('loadContent enables preview sash when preview is restored', () => {
   })
 })
 
+test('layout save and restore preserve moved secondary sidebar viewlets', () => {
+  const state = {
+    ...ViewletLayout.create(1),
+    secondarySideBarViewlets: ['Explorer', 'Search'],
+  }
+
+  expect(ViewletLayout.saveState(state).secondarySideBarViewlets).toEqual(['Explorer', 'Search'])
+  expect(
+    ViewletLayout.loadContent(state, {
+      Layout: { bounds: { windowWidth: 1200, windowHeight: 800 } },
+      secondarySideBarViewlets: ['Explorer', 'Search'],
+    }),
+  ).toMatchObject({
+    secondarySideBarViewlets: ['Explorer', 'Search'],
+  })
+})
+
 test('loadContent restores both preview areas independently', () => {
   const state = ViewletLayout.create(1)
 
