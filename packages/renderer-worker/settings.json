@@ -9,6 +9,18 @@
   },
   {
     "category": "applications",
+    "description": "Reduce memory usage by changing Chromium startup options. Restart the application for changes to take effect.",
+    "heading": "Memory Usage",
+    "id": "application.memoryUsage",
+    "options": [
+      { "id": "default", "label": "default" },
+      { "id": "reduce", "label": "reduce" }
+    ],
+    "type": "enum",
+    "value": "default"
+  },
+  {
+    "category": "applications",
     "description": "Controls how application updates are installed",
     "heading": "Update Mode",
     "id": "application.updateMode",
