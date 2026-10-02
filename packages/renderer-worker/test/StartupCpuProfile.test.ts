@@ -8,7 +8,9 @@ const EditorWorker = await import('../src/parts/EditorWorker/EditorWorker.ts')
 const SharedProcess = await import('../src/parts/SharedProcess/SharedProcess.js')
 const Profile = await import('../src/parts/StartupCpuProfile/StartupCpuProfile.js')
 
-beforeEach(() => jest.clearAllMocks())
+beforeEach(() => {
+  jest.clearAllMocks()
+})
 
 test('does not stop capture before diagnostics finish', async () => {
   const pass = Promise.withResolvers<void>()
