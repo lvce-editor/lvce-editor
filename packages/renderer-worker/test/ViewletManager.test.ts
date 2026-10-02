@@ -53,6 +53,33 @@ const Viewlet = await import('../src/parts/Viewlet/Viewlet.js')
 const ViewletExtensionViewRender = await import('../src/parts/ViewletExtensionView/ViewletExtensionViewRender.ts')
 const ViewletLayout = await import('../src/parts/ViewletLayout/ViewletLayout.ipc.js')
 
+test('focus rerenders its commands when load already requested the same focus', async () => {
+  jest.mocked(RendererProcess.invoke).mockResolvedValue(undefined)
+  const selector = '[name="SearchValue"]'
+  const state = { uid: 7, commands: [['Viewlet.focusSelector', selector]] }
+  const factory = {
+    focus(currentState) {
+      return { ...currentState, commands: [['Viewlet.focusSelector', selector]] }
+    },
+    render: [
+      {
+        isEqual(oldState, newState) {
+          return JSON.stringify(oldState.commands) === JSON.stringify(newState.commands)
+        },
+        apply(_oldState, newState) {
+          return [['Viewlet.focusSelector', newState.uid, selector]]
+        },
+        multiple: true,
+      },
+    ],
+  }
+  ViewletStates.set(7, { factory, moduleId: 'TextSearchView', renderedState: state, state })
+
+  await Viewlet.focus(7)
+
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.sendMultiple', [['Viewlet.focusSelector', 7, selector]])
+})
+
 test('UID-targeted async rendering ignores focus and never falls back after disposal', async () => {
   const renderPending = Object.assign(
     jest.fn((state) => state),
