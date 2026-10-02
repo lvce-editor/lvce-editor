@@ -489,8 +489,8 @@
   {
     "name": "builtin.language-features-html",
     "repository": "github.com/lvce-editor/language-features-html",
-    "version": "1.10.0",
-    "sha256": "71b04ec003391d573ca2bb20564ba73efd41816b93ac99b7130a93276961d081",
+    "version": "1.11.1",
+    "sha256": "93ae9d09a88e7a4fe40766c8091471a6d47207b2f4b7d48515e9de9d900fe9c3",
     "created": "2022-06-16"
   },
   {
