@@ -1,5 +1,7 @@
+import * as RuntimeConfig from '../RuntimeConfig/RuntimeConfig.ts'
+
 const state: { paths: Readonly<Record<string, string>> } = {
-  paths: {},
+  paths: RuntimeConfig.runtimeConfig.workerUrls || {},
 }
 
 export const initialize = (paths: Readonly<Record<string, string>> = {}): void => {
@@ -7,5 +9,6 @@ export const initialize = (paths: Readonly<Record<string, string>> = {}): void =
 }
 
 export const get = (key: string): string => {
-  return state.paths[key] || ''
+  const { paths } = state
+  return paths[key] || ''
 }
