@@ -272,10 +272,23 @@ export const settings = {
 export const textSearch = {
   serializeCommands: true,
   serializeRenderPipelines: true,
+  extendCommands(Commands, workerViewlet) {
+    Commands.focus = workerViewlet.focus
+  },
   extendModule(_workerViewlet, { wrapCommand }) {
     return {
       dispose(state) {
         return { ...state }
+      },
+      focus(state) {
+        const { isSearchEditor } = state
+        if (!isSearchEditor) {
+          return state
+        }
+        return {
+          ...state,
+          commands: [['Viewlet.focusSelector', '[name="SearchValue"]']],
+        }
       },
       wrapTextSearchCommand: wrapCommand,
     }

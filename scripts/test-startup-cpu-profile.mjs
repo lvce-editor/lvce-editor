@@ -121,7 +121,12 @@ try {
     const output = result.stdout.match(/CPU profile: (.+)/)?.[1]
     assert.ok(output, result.stdout + result.stderr)
     outputs.push(output)
-    const manifest = JSON.parse(await readFile(join(output, 'manifest.json'), 'utf8'))
+    let manifest
+    try {
+      manifest = JSON.parse(await readFile(join(output, 'manifest.json'), 'utf8'))
+    } catch (error) {
+      throw new Error(`Missing or invalid CPU profile manifest in ${mode} mode.\n${result.stdout}\n${result.stderr}`, { cause: error })
+    }
     if (mode === 'provider-error') assert.match(manifest.errors.join('\n'), /CPU profile acceptance provider error/)
     else if (mode === 'provider-timeout') assert.match(manifest.errors.join('\n'), /timed out/i)
     else assert.deepEqual(manifest.errors, [])
@@ -130,14 +135,19 @@ try {
       const profile = JSON.parse(await readFile(join(output, file), 'utf8'))
       assert.ok(profile.nodes.length && profile.samples.length)
     }
-    const trace = JSON.parse(await readFile(join(output, manifest.trace), 'utf8'))
-    assert.ok(trace.traceEvents.length > 0)
-    if (!failure) {
-      const nodes = trace.traceEvents.flatMap((event) => event.args?.data?.cpuProfile?.nodes || [])
-      assert.ok(
-        nodes.some((node) => node.callFrame.functionName === 'cpuProfileDiagnosticWork'),
-        'Delayed diagnostic work was not captured',
-      )
+    if (manifest.trace === null) {
+      assert.equal(mode, 'provider-timeout', 'Only a timed out provider may produce an incomplete trace')
+      assert.match(manifest.errors.join('\n'), /CPU trace:.*timed out/i)
+    } else {
+      const trace = JSON.parse(await readFile(join(output, manifest.trace), 'utf8'))
+      assert.ok(trace.traceEvents.length > 0)
+      if (!failure) {
+        const nodes = trace.traceEvents.flatMap((event) => event.args?.data?.cpuProfile?.nodes || [])
+        assert.ok(
+          nodes.some((node) => node.callFrame.functionName === 'cpuProfileDiagnosticWork'),
+          'Delayed diagnostic work was not captured',
+        )
+      }
     }
     assert.equal(await readFile(savedWindow, 'utf8'), original)
     assert.deepEqual(await snapshot(sessionDirectory), savedSession)
