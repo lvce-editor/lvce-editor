@@ -135,14 +135,19 @@ try {
       const profile = JSON.parse(await readFile(join(output, file), 'utf8'))
       assert.ok(profile.nodes.length && profile.samples.length)
     }
-    const trace = JSON.parse(await readFile(join(output, manifest.trace), 'utf8'))
-    assert.ok(trace.traceEvents.length > 0)
-    if (!failure) {
-      const nodes = trace.traceEvents.flatMap((event) => event.args?.data?.cpuProfile?.nodes || [])
-      assert.ok(
-        nodes.some((node) => node.callFrame.functionName === 'cpuProfileDiagnosticWork'),
-        'Delayed diagnostic work was not captured',
-      )
+    if (manifest.trace === null) {
+      assert.equal(mode, 'provider-timeout', 'Only a timed out provider may produce an incomplete trace')
+      assert.match(manifest.errors.join('\n'), /CPU trace:.*timed out/i)
+    } else {
+      const trace = JSON.parse(await readFile(join(output, manifest.trace), 'utf8'))
+      assert.ok(trace.traceEvents.length > 0)
+      if (!failure) {
+        const nodes = trace.traceEvents.flatMap((event) => event.args?.data?.cpuProfile?.nodes || [])
+        assert.ok(
+          nodes.some((node) => node.callFrame.functionName === 'cpuProfileDiagnosticWork'),
+          'Delayed diagnostic work was not captured',
+        )
+      }
     }
     assert.equal(await readFile(savedWindow, 'utf8'), original)
     assert.deepEqual(await snapshot(sessionDirectory), savedSession)
