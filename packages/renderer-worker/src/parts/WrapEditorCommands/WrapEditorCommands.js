@@ -95,6 +95,11 @@ export const wrapEditorCommand = (id, { preserveFocus = false } = {}) => {
     if (fullId === 'Editor.openFind' || fullId === 'Editor.openFind2' || fullId === 'Editor.closeFind') {
       return runEditorCommand(editor, fullId, restArgs)
     }
+    // Hover providers can be slow or stop answering. They must not hold the
+    // renderer's editing queue while the editor worker waits for their result.
+    if (fullId === 'Editor.showHover' || fullId === 'Editor.showHover2') {
+      return runEditorCommand(editor, fullId, restArgs, preserveFocus)
+    }
     const queueKey = getQueueKey(editor)
     const previous = queues.get(queueKey)
     const { promise: next, resolve } = Promise.withResolvers()
