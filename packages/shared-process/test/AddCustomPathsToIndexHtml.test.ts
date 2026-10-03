@@ -1,6 +1,8 @@
 import { afterEach, expect, jest, test } from '@jest/globals'
 import * as GetRemoteUrl from '../src/parts/GetRemoteUrl/GetRemoteUrl.js'
 
+const configElementPattern = /<script\b[^>]*\bid="Config"[^>]*>([\s\S]*?)<\/script>/g
+
 jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => ({
   isProduction: false,
 }))
@@ -69,14 +71,14 @@ test('addCustomPathsToIndexHtml - merges linked worker urls into the existing ap
   const mainAreaWorkerUrl = GetRemoteUrl.getRemoteUrl('/test/main-area-worker')
 
   const result = await AddCustomPathsToIndexHtml.addCustomPathsToIndexHtml(content)
-  const configElements = [...result.matchAll(/<script\b[^>]*\bid="Config"[^>]*>([\s\S]*?)<\/script>/g)]
+  const configElements = [...result.matchAll(configElementPattern)]
 
   expect(configElements).toHaveLength(1)
   expect(JSON.parse(configElements[0][1])).toEqual({
     assetDir: '/editor/1.2.3',
+    editorWorkerUrl: GetRemoteUrl.getRemoteUrl('/test/editor-worker'),
     platform: 'web',
     rendererWorkerUrl: '/editor/1.2.3/packages/renderer-worker/dist/rendererWorkerMain.js',
-    editorWorkerUrl: GetRemoteUrl.getRemoteUrl('/test/editor-worker'),
     workerUrls: {
       'develop.editorWorkerPath': GetRemoteUrl.getRemoteUrl('/test/editor-worker'),
       'develop.mainAreaWorkerPath': mainAreaWorkerUrl,
