@@ -27,6 +27,7 @@ test('exportStatic forwards multiple extension paths', async () => {
   // @ts-ignore
   const [options] = ExportStatic.exportStatic.mock.calls[0]
   expect(options).toEqual({
+    bundleMode: false,
     extensionPath: undefined,
     extensionPaths: [join('/test/root', 'packages', 'extension-a'), join('/test/root', 'packages', 'extension-b')],
     onLoadCommands: [],
@@ -53,4 +54,10 @@ test('exportStatic forwards on-load commands', async () => {
   // @ts-ignore
   const [options] = ExportStatic.exportStatic.mock.calls[0]
   expect(options.onLoadCommands).toBe(onLoadCommands)
+})
+
+test('exportStatic forwards bundleMode', async () => {
+  await SharedProcess.exportStatic({ bundleMode: true, root: '/test/root' })
+  // @ts-ignore
+  expect(ExportStatic.exportStatic.mock.calls[0][0].bundleMode).toBe(true)
 })
