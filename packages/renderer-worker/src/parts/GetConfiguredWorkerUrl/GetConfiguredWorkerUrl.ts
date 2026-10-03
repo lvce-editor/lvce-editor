@@ -3,7 +3,7 @@ import * as IsProduction from '../IsProduction/IsProduction.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as RuntimeWorkerPaths from '../RuntimeWorkerPaths/RuntimeWorkerPaths.ts'
 
-const resolveConfiguredWorkerUrl = (preferenceKey: string, fallback: string) => {
+const resolveConfiguredWorkerUrl = (preferenceKey: string, fallback: string): string => {
   const runtimeWorkerUrl = RuntimeWorkerPaths.get(preferenceKey)
   if (runtimeWorkerUrl) {
     return runtimeWorkerUrl
@@ -13,7 +13,7 @@ const resolveConfiguredWorkerUrl = (preferenceKey: string, fallback: string) => 
     const configuredUrlWithSlash = configuredWorkerUrl.startsWith('/') ? configuredWorkerUrl : '/' + configuredWorkerUrl
     configuredWorkerUrl = '/remote' + configuredUrlWithSlash
   }
-  configuredWorkerUrl = configuredWorkerUrl || fallback
+  configuredWorkerUrl ||= fallback
   if (IsProduction.isProduction) {
     configuredWorkerUrl = fallback
   }

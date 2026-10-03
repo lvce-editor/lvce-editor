@@ -43,17 +43,25 @@ const main = async () => {
     to: `packages/build/.tmp/server/shared-process/node_modules/@lvce-editor/verror`,
   })
   let commitHash = ''
+  process.env.PATH_PREFIX = '/test'
   try {
     const result = await module.exportStatic({
       extensionPath,
       testPath,
       root: tmpDir,
-      pathPrefix: '/test',
     })
     commitHash = result.commitHash
   } catch (error) {
     throw new VError(error, `static export failed`)
   }
+  const indexHtml = await ReadFile.readFile(join(tmpDir, 'dist', 'index.html'))
+  const configElement = indexHtml.match(/<script id="Config" type="application\/json">([\s\S]*?)<\/script>/)
+  assert.ok(configElement, 'static export index.html should include runtime configuration')
+  const runtimeConfig = JSON.parse(configElement[1])
+  assert.equal(runtimeConfig.platform, 'web')
+  assert.equal(runtimeConfig.assetDir, `/test/${commitHash}`)
+  assert.equal(runtimeConfig.rendererWorkerUrl, `/test/${commitHash}/packages/renderer-worker/dist/rendererWorkerMain.js`)
+  assert.ok(Object.values(runtimeConfig.workerUrls as Record<string, string>).every((url) => url.startsWith(`/test/${commitHash}/`)))
   await ReadFile.readFile(join(tmpDir, 'dist', commitHash, 'tests', 'sample.test.html'))
   await ReadFile.readFile(join(tmpDir, 'dist', 'tests', 'sample.test.html'))
   const config = JSON.parse(await ReadFile.readFile(join(tmpDir, 'dist', 'config.json')))
