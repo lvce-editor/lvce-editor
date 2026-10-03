@@ -152,7 +152,7 @@ try {
     assert.equal(await readFile(savedWindow, 'utf8'), original)
     assert.deepEqual(await snapshot(sessionDirectory), savedSession)
   }
-  assert.equal(new Set(outputs).size, 4)
+  assert.equal(new Set(outputs).size, 5)
   console.log('Integrated startup CPU profiling acceptance passed.')
 } finally {
   if (process.env.KEEP_CPU_PROFILE_TEST) console.log(`Preserved CPU profile acceptance directory: ${directory}`)
