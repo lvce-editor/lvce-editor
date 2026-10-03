@@ -1,6 +1,5 @@
 import { expect, test } from '@jest/globals'
 import * as HandleIpcAuthProcess from '../src/parts/HandleIpcAuthProcess/HandleIpcAuthProcess.js'
-import * as HandleIpcEmbedsProcess from '../src/parts/HandleIpcEmbedsProcess/HandleIpcEmbedsProcess.js'
 import * as HandleIpcFileWatcherExplorer from '../src/parts/HandleIpcFileWatcherExplorer/HandleIpcFileWatcherExplorer.js'
 import * as HandleIpcModule from '../src/parts/HandleIpcModule/HandleIpcModule.js'
 import * as HandleIpcProcessExplorer from '../src/parts/HandleIpcProcessExplorer/HandleIpcProcessExplorer.js'
@@ -15,10 +14,6 @@ test('auth process', () => {
 
 test('shared process', () => {
   expect(HandleIpcModule.getModule(IpcId.SharedProcess)).toBe(HandleIpcSharedProcess)
-})
-
-test('embeds process', () => {
-  expect(HandleIpcModule.getModule(IpcId.EmbedsProcess)).toBe(HandleIpcEmbedsProcess)
 })
 
 test('terminal process', () => {
