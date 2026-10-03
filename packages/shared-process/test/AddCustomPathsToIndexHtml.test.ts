@@ -57,3 +57,29 @@ test('addCustomPathsToIndexHtml - adds linked worker urls', async () => {
 
   expect(result).toContain(`"develop.mainAreaWorkerPath": "${mainAreaWorkerUrl}"`)
 })
+
+test('addCustomPathsToIndexHtml - merges linked worker urls into the existing app config', async () => {
+  jest.mocked(Preferences.getUserPreferences).mockResolvedValue({})
+  jest.mocked(LinkedWorkerPreferences.getLinkedWorkerPreferences).mockResolvedValue({
+    'develop.editorWorkerPath': '/test/editor-worker',
+    'develop.mainAreaWorkerPath': '/test/main-area-worker',
+  })
+  const content =
+    '<title>Test</title><script id="Config" type="application/json">{"assetDir":"/editor/1.2.3","platform":"web","rendererWorkerUrl":"/editor/1.2.3/packages/renderer-worker/dist/rendererWorkerMain.js","workerUrls":{"develop.mainAreaWorkerPath":"/old/main-area-worker"}}</script>'
+  const mainAreaWorkerUrl = GetRemoteUrl.getRemoteUrl('/test/main-area-worker')
+
+  const result = await AddCustomPathsToIndexHtml.addCustomPathsToIndexHtml(content)
+  const configElements = [...result.matchAll(/<script\b[^>]*\bid="Config"[^>]*>([\s\S]*?)<\/script>/g)]
+
+  expect(configElements).toHaveLength(1)
+  expect(JSON.parse(configElements[0][1])).toEqual({
+    assetDir: '/editor/1.2.3',
+    platform: 'web',
+    rendererWorkerUrl: '/editor/1.2.3/packages/renderer-worker/dist/rendererWorkerMain.js',
+    editorWorkerUrl: GetRemoteUrl.getRemoteUrl('/test/editor-worker'),
+    workerUrls: {
+      'develop.editorWorkerPath': GetRemoteUrl.getRemoteUrl('/test/editor-worker'),
+      'develop.mainAreaWorkerPath': mainAreaWorkerUrl,
+    },
+  })
+})
