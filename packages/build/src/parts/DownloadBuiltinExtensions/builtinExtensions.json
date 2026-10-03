@@ -2,8 +2,8 @@
   {
     "name": "builtin.performance-profile-view",
     "repository": "github.com/lvce-editor/performance-profile-view",
-    "version": "0.1.1",
-    "sha256": "9660dffd1eca59dfe266e187a53a7211ebbdc701d83274306e15875ae031f167",
+    "version": "0.2.1",
+    "sha256": "bea3d65f3abb86613bfe65abfc4a78c28bf583167e5efcff48a7bbb439844933",
     "created": "2026-09-29"
   },
   {
@@ -265,8 +265,8 @@
   {
     "name": "builtin.media-preview",
     "repository": "github.com/lvce-editor/media-preview",
-    "version": "2.17.1",
-    "sha256": "de1534d7edc405631a49079288f582f4e75da2f91355988d71aa558c657da6cc",
+    "version": "2.18.0",
+    "sha256": "0bd53962f6c1174a5230255c61ad0c7947eb7442888fa17d23fcf92043c74956",
     "created": "2024-09-07"
   },
   {

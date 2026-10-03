@@ -15,7 +15,7 @@ const mainProcessRequire = createRequire(join(appRoot, 'packages', 'main-process
 const isVersionRequest = (args) => args.includes('--version') || args.includes('-v')
 
 const isForegroundRequest = (args) => {
-  if (args.some((arg) => ['--built-in-self-test', '--help', '--status', '--verbose', '--wait', '--web'].includes(arg))) {
+  if (args.some((arg) => ['--built-in-self-test', '--cpu-profile', '--help', '--status', '--verbose', '--wait', '--web'].includes(arg))) {
     return true
   }
   return args.some((arg) => foregroundCommands.has(arg))

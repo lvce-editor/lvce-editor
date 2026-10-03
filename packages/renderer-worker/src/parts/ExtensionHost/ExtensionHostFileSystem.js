@@ -70,6 +70,15 @@ export const stat = (uri) => {
   })
 }
 
+export const exists = async (uri) => {
+  try {
+    await stat(uri)
+    return true
+  } catch {
+    return false
+  }
+}
+
 export const getBlob = async (uri, type = '') => {
   const content = await readProviderFile(uri)
   if (content instanceof Blob) {
