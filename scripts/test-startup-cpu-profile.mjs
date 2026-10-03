@@ -99,7 +99,7 @@ try {
   await mkdir(join(env.XDG_CACHE_HOME, 'lvce-oss'), { recursive: true })
   const original = JSON.stringify({ x: 42, y: 42, width: 777, height: 555, maximized: false })
   await writeFile(savedWindow, original)
-  for (const mode of ['configured', 'default', 'provider-error', 'provider-timeout']) {
+  for (const mode of ['configured', 'default', 'provider-error', 'provider-timeout', 'provider-slow']) {
     await writeFile(join(project, 'target.txt'), `cpu-profile-acceptance ${mode}`)
     const args = [
       ...(packaged ? [] : [join(root, 'packages/main-process')]),
@@ -113,9 +113,9 @@ try {
       extension,
     ]
     if (mode !== 'default') args.push('--cpu-profile-dir', directory)
-    const result = spawnSync(electron, args, { cwd: root, env, encoding: 'utf8', timeout: 80_000, maxBuffer: 10 * 1024 * 1024 })
+    const result = spawnSync(electron, args, { cwd: root, env, encoding: 'utf8', timeout: 180_000, maxBuffer: 10 * 1024 * 1024 })
     assert.ifError(result.error)
-    const failure = mode.startsWith('provider-')
+    const failure = mode === 'provider-error' || mode === 'provider-timeout'
     assert.equal(result.status, failure ? 1 : 0, result.stdout + result.stderr)
     await waitForExit(env.XDG_CONFIG_HOME)
     const output = result.stdout.match(/CPU profile: (.+)/)?.[1]
@@ -152,7 +152,7 @@ try {
     assert.equal(await readFile(savedWindow, 'utf8'), original)
     assert.deepEqual(await snapshot(sessionDirectory), savedSession)
   }
-  assert.equal(new Set(outputs).size, 4)
+  assert.equal(new Set(outputs).size, 5)
   console.log('Integrated startup CPU profiling acceptance passed.')
 } finally {
   if (process.env.KEEP_CPU_PROFILE_TEST) console.log(`Preserved CPU profile acceptance directory: ${directory}`)
