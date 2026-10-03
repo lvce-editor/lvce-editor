@@ -42,6 +42,16 @@ export const getQuickPickMenuEntries = async () => {
       aliases: ['Hide Chat'],
     },
     {
+      id: 'Layout.enterChatViewFullScreen',
+      label: 'Layout: Enter Chat Full Screen',
+      aliases: ['Chat Full Screen', 'Chat Fullscreen', 'Show Only Chat'],
+    },
+    {
+      id: 'Layout.leaveChatViewFullScreen',
+      label: 'Layout: Leave Chat Full Screen',
+      aliases: ['Exit Chat Full Screen', 'Restore Layout After Chat'],
+    },
+    {
       id: 'Layout.showSecondarySideBar',
       label: 'Layout: Show Secondary Side Bar',
     },
