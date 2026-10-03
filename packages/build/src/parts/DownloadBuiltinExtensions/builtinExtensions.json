@@ -265,9 +265,9 @@
   {
     "name": "builtin.media-preview",
     "repository": "github.com/lvce-editor/media-preview",
-    "version": "2.17.1",
-    "sha256": "de1534d7edc405631a49079288f582f4e75da2f91355988d71aa558c657da6cc",
-    "created": "2024-09-07"
+    "version": "2.18.0",
+    "sha256": "0bd53962f6c1174a5230255c61ad0c7947eb7442888fa17d23fcf92043c74956",
+    "created": "2026-10-03"
   },
   {
     "name": "builtin.language-basics-java",
