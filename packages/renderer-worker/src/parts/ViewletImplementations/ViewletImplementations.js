@@ -11,14 +11,14 @@ import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 export const create = ViewletLocations.create
 
 export const loadContent = async (state, savedState) => {
-  // @ts-ignore
-  return ViewletLocations.loadContent(state, savedState)
+  return ViewletLocations.loadContent(state, savedState, 'implementations')
 }
 
 export const contentLoaded = (state) => {
   ViewletStates.set('Locations', {
     factory: ViewletLocations,
     state,
+    renderedState: state,
   })
   return []
 }
