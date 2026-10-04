@@ -5,6 +5,7 @@ import { constants } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { basename, dirname, join } from 'node:path'
 import { promisify } from 'node:util'
+import { setTimeout } from 'node:timers/promises'
 
 const execFileAsync = promisify(execFile)
 const testPosix = process.platform === 'win32' ? test.skip : test
@@ -215,6 +216,50 @@ setInterval(() => {}, 1000)
     }
   })
 
+  testPosix('waits for CPU profiles and forwards output and exit status', async () => {
+    const root = await mkdtemp(join(tmpdir(), 'lvce-linux-cli-cpu-profile-'))
+    const binPath = join(root, 'bin')
+    const fakeElectronPath = join(root, 'fake-electron')
+    try {
+      await mkdir(binPath)
+      await writeFile(
+        fakeElectronPath,
+        `#!/usr/bin/env node
+setTimeout(() => {
+  console.log('profile written to /tmp/profile.cpuprofile')
+  process.stderr.write('profile complete\\n')
+  process.exit(Number(process.env.LVCE_TEST_EXIT_CODE || 0))
+}, 100)
+`,
+      )
+      await chmod(fakeElectronPath, 0o755)
+      const cli = (await readTemplate('linux_cli_js')).replace(
+        'spawn(executablePath, launchArgs, {',
+        `spawn(${JSON.stringify(fakeElectronPath)}, launchArgs, {`,
+      )
+      const cliPath = join(binPath, 'cli.js')
+      await writeFile(cliPath, cli)
+
+      for (const flag of ['--cpu-profile', '--wait']) {
+        const success = await execFileAsync(process.execPath, [cliPath, flag])
+        expect(success.stdout).toBe('profile written to /tmp/profile.cpuprofile\n')
+        expect(success.stderr).toBe('profile complete\n')
+
+        await expect(
+          execFileAsync(process.execPath, [cliPath, flag], {
+            env: { ...process.env, LVCE_TEST_EXIT_CODE: '7' },
+          }),
+        ).rejects.toMatchObject({
+          code: 7,
+          stdout: 'profile written to /tmp/profile.cpuprofile\n',
+          stderr: 'profile complete\n',
+        })
+      }
+    } finally {
+      await rm(root, { recursive: true, force: true })
+    }
+  })
+
   test('uses promise resolvers for child process events', async () => {
     const cli = await readTemplate('linux_cli_js')
 
@@ -277,8 +322,10 @@ module.exports = async (_zipPath, { dir }) => {
       await writeFile(
         fakeElectronPath,
         `#!/usr/bin/env node
-const { writeFileSync } = require('node:fs')
-writeFileSync(process.env.LVCE_TEST_LAUNCH_RESULT, JSON.stringify({ args: process.argv.slice(2), runAsNode: process.env.ELECTRON_RUN_AS_NODE }))
+const { renameSync, writeFileSync } = require('node:fs')
+const temporaryResult = process.env.LVCE_TEST_LAUNCH_RESULT + '.tmp'
+writeFileSync(temporaryResult, JSON.stringify({ args: process.argv.slice(2), runAsNode: process.env.ELECTRON_RUN_AS_NODE }))
+renameSync(temporaryResult, process.env.LVCE_TEST_LAUNCH_RESULT)
 `,
       )
       await chmod(fakeElectronPath, 0o755)
@@ -356,8 +403,23 @@ writeFileSync(process.env.LVCE_TEST_LAUNCH_RESULT, JSON.stringify({ args: proces
       }
       expect((await readFile(downloadResultPath, 'utf8')).trim().split('\n')).toHaveLength(1)
 
-      const { stdout: detachedStdout } = await execFileAsync(process.execPath, [cliPath, '--electron-version=44.2.0'], { env })
+      const detachedResultPath = join(root, 'detached-launch.json')
+      const { stdout: detachedStdout } = await execFileAsync(process.execPath, [cliPath, '--electron-version=44.2.0'], {
+        env: { ...env, LVCE_TEST_LAUNCH_RESULT: detachedResultPath },
+      })
       expect(detachedStdout).toContain('Downloading Electron 44.2.0...')
+      // The CLI exits before its detached child. Wait for that child's write before removing its directory.
+      let detachedResult: string | undefined
+      for (let attempt = 0; attempt < 100; attempt++) {
+        try {
+          detachedResult = await readFile(detachedResultPath, 'utf8')
+          if (detachedResult) break
+        } catch (error) {
+          if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error
+        }
+        await setTimeout(20)
+      }
+      expect(JSON.parse(detachedResult || 'null')).toEqual({ args: [realAppRoot] })
 
       await expect(
         execFileAsync(process.execPath, [cliPath, '--electron-version=45.0.0', '--wait'], {

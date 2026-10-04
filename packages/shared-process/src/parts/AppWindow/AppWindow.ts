@@ -40,6 +40,17 @@ const getAbsolutePath = (parsedArgs: any, workingDirectory: any): string => {
 const getAppWindowUrl = async (url: unknown, parsedArgs: any, workingDirectory: any): Promise<string> => {
   const parsedUrl = new URL(getValidatedAppUrl(url))
   const absolutePath = getAbsolutePath(parsedArgs, workingDirectory)
+  if (parsedArgs?.['cpu-profile']) {
+    if (typeof parsedArgs.open !== 'string' || !parsedArgs.open) throw new Error('--cpu-profile requires --open <file>')
+    const workspace = absolutePath || workingDirectory
+    if (!(await stat(workspace)).isDirectory()) throw new Error('CPU profiling requires a project folder')
+    const file = resolve(workspace, parsedArgs.open)
+    if (!(await stat(file)).isFile()) throw new Error('CPU profiling requires a file to open')
+    parsedUrl.searchParams.set('workspace', pathToFileURL(workspace).toString())
+    parsedUrl.searchParams.set('openUri', pathToFileURL(file).toString())
+    parsedUrl.searchParams.set('cpuProfile', '1')
+    return parsedUrl.toString()
+  }
   if (!absolutePath) {
     return parsedUrl.toString()
   }

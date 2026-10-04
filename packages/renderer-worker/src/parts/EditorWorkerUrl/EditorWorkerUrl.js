@@ -1,3 +1,7 @@
 import * as AssetDir from '../AssetDir/AssetDir.js'
+import * as GetRuntimeWorkerUrl from '../GetRuntimeWorkerUrl/GetRuntimeWorkerUrl.ts'
 
-export const editorWorkerUrl = `${AssetDir.assetDir}/packages/renderer-worker/node_modules/@lvce-editor/editor-worker/dist/editorWorkerMain.js`
+export const editorWorkerUrl = GetRuntimeWorkerUrl.getRuntimeWorkerUrl(
+  'develop.editorWorkerPath',
+  `${AssetDir.assetDir}/packages/renderer-worker/node_modules/@lvce-editor/editor-worker/dist/editorWorkerMain.js`,
+)

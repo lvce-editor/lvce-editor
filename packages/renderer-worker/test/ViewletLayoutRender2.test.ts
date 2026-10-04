@@ -50,6 +50,8 @@ test('renderCss serializes valid layout bounds', () => {
       'Viewlet.setCss',
       1,
       `:root {
+  --BrowserDropWidth: 799.6px;
+  --BrowserDropTop: 0px;
   --AppWidth: 100%;
   --AppHeight: 100%;
   --ActivityBarWidth: 48px;
@@ -111,6 +113,8 @@ test('renderCss serializes explicit application bounds', () => {
       'Viewlet.setCss',
       1,
       `:root {
+  --BrowserDropWidth: 799.6px;
+  --BrowserDropTop: 160px;
   --AppWidth: 480px;
   --AppHeight: 320px;
   --ActivityBarWidth: 48px;

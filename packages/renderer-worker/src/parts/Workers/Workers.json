@@ -1959,7 +1959,7 @@
   {
     "id": "textMeasurementWorker",
     "fileName": "textMeasurementWorkerMain.js",
-    "contentSecurityPolicy": ["default-src 'none'", "font-src 'self'", "sandbox allow-same-origin"],
+    "contentSecurityPolicy": ["default-src 'none'", "font-src 'self'", "worker-src 'self'", "sandbox allow-same-origin"],
     "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/text-measurement-worker/dist/textMeasurementWorkerMain.js",
     "productionPath": "/packages/text-measurement-worker/dist/textMeasurementWorkerMain.js",
     "settingName": "develop.textMeasurementWorkerPath",

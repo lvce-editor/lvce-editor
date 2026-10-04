@@ -14,6 +14,10 @@ export const logError = async (error, prefix = '') => {
   return prettyError
 }
 
+export const preparePrettyError = async (error) => {
+  return PrettyError.prepare(error)
+}
+
 export const handleError = async (error, notify = true, prefix = '') => {
   try {
     const prettyError = await logError(error, prefix)

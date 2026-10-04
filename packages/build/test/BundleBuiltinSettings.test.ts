@@ -91,6 +91,62 @@ test('bundles schema-complete renderer settings contributions', async () => {
   }
 })
 
+test('bundles editor worker multi cursor modifier select metadata', async () => {
+  const workersUrl = new URL('../../renderer-worker/src/parts/Workers/Workers.json', import.meta.url)
+  const workers = JSON.parse(await readFile(workersUrl, 'utf8'))
+  const toRoot = await mkdtemp(join(tmpdir(), 'lvce-editor-worker-settings-'))
+  try {
+    await bundleBuiltinSettings({ toRoot, workers })
+
+    const settings = JSON.parse(await readFile(join(toRoot, 'builtin-settings', 'editor-worker.json'), 'utf8'))
+    expect(settings).toEqual(
+      expect.arrayContaining([
+        {
+          category: 'text-editor',
+          description: 'The modifier to be used to add multiple cursors with the mouse',
+          heading: 'Multi Cursor Modifier',
+          id: 'editor.multiCursorModifier',
+          options: [
+            { id: 'alt', label: 'Alt' },
+            { id: 'ctrlCmd', label: 'Ctrl/Cmd' },
+          ],
+          type: 'enum',
+          value: 'alt',
+        },
+      ]),
+    )
+  } finally {
+    await rm(toRoot, { force: true, recursive: true })
+  }
+})
+
+test('bundles the application memory usage setting', async () => {
+  const workersUrl = new URL('../../renderer-worker/src/parts/Workers/Workers.json', import.meta.url)
+  const workers = JSON.parse(await readFile(workersUrl, 'utf8'))
+  const toRoot = await mkdtemp(join(tmpdir(), 'lvce-memory-usage-setting-'))
+  try {
+    await bundleBuiltinSettings({ toRoot, workers })
+
+    const index = JSON.parse(await readFile(join(toRoot, 'builtin-settings', 'index.json'), 'utf8'))
+    const settings = await Promise.all(index.map(async (fileName) => JSON.parse(await readFile(join(toRoot, 'builtin-settings', fileName), 'utf8'))))
+
+    expect(settings.flat()).toContainEqual({
+      category: 'applications',
+      description: 'Reduce memory usage by changing Chromium startup options. Restart the application for changes to take effect.',
+      heading: 'Memory Usage',
+      id: 'application.memoryUsage',
+      options: [
+        { id: 'default', label: 'default' },
+        { id: 'reduce', label: 'reduce' },
+      ],
+      type: 'enum',
+      value: 'default',
+    })
+  } finally {
+    await rm(toRoot, { force: true, recursive: true })
+  }
+})
+
 test('declares every default setting', async () => {
   const defaultSettingsUrl = new URL('../../../static/config/defaultSettings.json', import.meta.url)
   const workersUrl = new URL('../../renderer-worker/src/parts/Workers/Workers.json', import.meta.url)

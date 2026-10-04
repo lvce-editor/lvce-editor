@@ -79,6 +79,23 @@ test('loadContent enables preview sash when preview is restored', () => {
   })
 })
 
+test('layout save and restore preserve moved secondary sidebar viewlets', () => {
+  const state = {
+    ...ViewletLayout.create(1),
+    secondarySideBarViewlets: ['Explorer', 'Search'],
+  }
+
+  expect(ViewletLayout.saveState(state).secondarySideBarViewlets).toEqual(['Explorer', 'Search'])
+  expect(
+    ViewletLayout.loadContent(state, {
+      Layout: { bounds: { windowWidth: 1200, windowHeight: 800 } },
+      secondarySideBarViewlets: ['Explorer', 'Search'],
+    }),
+  ).toMatchObject({
+    secondarySideBarViewlets: ['Explorer', 'Search'],
+  })
+})
+
 test('loadContent restores both preview areas independently', () => {
   const state = ViewletLayout.create(1)
 
@@ -931,4 +948,44 @@ test('showPreview restores the resized preview width after hiding', async () => 
     previewVisible: true,
     previewWidth: 400,
   })
+})
+
+test.each([SideBarLocationType.Left, SideBarLocationType.Right])(
+  'bottom-left browser keeps the right preview full height (%s)',
+  (sideBarLocation) => {
+    const initial = ViewletLayout.loadContent(ViewletLayout.create(1), {
+      Layout: { bounds: { windowWidth: 1200, windowHeight: 800 } },
+      previewVisible: true,
+      previewWidth: 600,
+      previewViewletId: 'SimpleBrowser',
+      sideBarLocation,
+    })
+    const result = LayoutPoints.getPoints({
+      ...initial,
+      secondaryPreviewVisible: true,
+      secondaryPreviewPlacement: 'bottomLeft',
+      secondaryPreviewHeight: 350,
+    })
+    expect(result.previewLeft).toBe(initial.previewLeft)
+    expect(result.previewHeight).toBe(initial.previewHeight)
+    expect(result.secondaryPreviewLeft).toBe(0)
+    expect(result.secondaryPreviewWidth).toBe(initial.previewLeft)
+    expect(result.secondaryPreviewTop).toBe(450)
+    expect(result.secondaryPreviewHeight).toBe(350)
+    expect(result.mainTop + result.mainHeight).toBeLessThanOrEqual(result.secondaryPreviewTop)
+    const resized = LayoutPoints.getPoints({ ...result, windowWidth: 1000, windowHeight: 500 })
+    expect(resized.secondaryPreviewTop + resized.secondaryPreviewHeight).toBe(500)
+    expect(resized.secondaryPreviewWidth).toBe(resized.previewLeft)
+    expect(resized.mainHeight).toBeGreaterThan(0)
+    const closed = LayoutPoints.getPoints({ ...result, secondaryPreviewVisible: false })
+    expect(closed.mainHeight).toBe(initial.mainHeight)
+  },
+)
+
+test('invalid browser drops leave preview slots and source intact', async () => {
+  const state = { ...ViewletLayout.create(1), browserTabDragSource: 3, previewLeft: 600, windowHeight: 800 }
+  const result = await ViewletLayout.handleBrowserTabDrop(state, 900, 700)
+  expect(result.newState).toEqual({ ...state, browserTabDragSource: undefined })
+  expect(ViewletManager.load).not.toHaveBeenCalled()
+  expect(Viewlet.executeViewletCommand).not.toHaveBeenCalled()
 })
