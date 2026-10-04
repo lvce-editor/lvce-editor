@@ -192,7 +192,8 @@ const getCss = (newState: LayoutState) => {
   Assert.number(sashSecondarySideBarLeft)
   const appWidth = explicitBounds ? getPixelValue(windowWidth) : '100%'
   const appHeight = explicitBounds ? getPixelValue(windowHeight) : '100%'
-  return `:root {
+  const rootId = newState.applicationId === undefined ? 'Workbench' : `Workbench-${newState.uid}`
+  return `#${rootId} {
   --BrowserDropWidth: ${getPixelValue(newState.previewLeft)};
   --BrowserDropTop: ${getPixelValue((newState.windowHeight + (newState.titleBarVisible ? newState.titleBarHeight : 0)) / 2)};
   --AppWidth: ${appWidth};
