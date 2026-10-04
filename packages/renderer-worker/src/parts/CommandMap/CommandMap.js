@@ -410,6 +410,7 @@ export const commandMap = {
   'SearchProcess.invoke': lazy('SearchProcess.invoke'),
   'SendMessagePortToElectron.sendMessagePortToElectron': lazy('SendMessagePortToElectron.sendMessagePortToElectron'),
   'SendMessagePortToExtensionHostWorker.sendMessagePortToEditorWorker': lazy('SendMessagePortToExtensionHostWorker.sendMessagePortToEditorWorker'),
+  'SendMessagePortToExtensionHostWorker.sendMessagePortToCacheWorker': lazy('SendMessagePortToExtensionHostWorker.sendMessagePortToCacheWorker'),
   'SendMessagePortToExtensionHostWorker.sendMessagePortToOpenerWorker': lazy('SendMessagePortToExtensionHostWorker.sendMessagePortToOpenerWorker'),
   'SendMessagePortToExtensionHostWorker.sendMessagePortToAuthWorker': lazy('SendMessagePortToExtensionHostWorker.sendMessagePortToAuthWorker'),
   'SendMessagePortToExtensionHostWorker.sendMessagePortToErrorWorker': lazy('SendMessagePortToExtensionHostWorker.sendMessagePortToErrorWorker'),

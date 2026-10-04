@@ -216,6 +216,50 @@ setInterval(() => {}, 1000)
     }
   })
 
+  testPosix('waits for CPU profiles and forwards output and exit status', async () => {
+    const root = await mkdtemp(join(tmpdir(), 'lvce-linux-cli-cpu-profile-'))
+    const binPath = join(root, 'bin')
+    const fakeElectronPath = join(root, 'fake-electron')
+    try {
+      await mkdir(binPath)
+      await writeFile(
+        fakeElectronPath,
+        `#!/usr/bin/env node
+setTimeout(() => {
+  console.log('profile written to /tmp/profile.cpuprofile')
+  process.stderr.write('profile complete\\n')
+  process.exit(Number(process.env.LVCE_TEST_EXIT_CODE || 0))
+}, 100)
+`,
+      )
+      await chmod(fakeElectronPath, 0o755)
+      const cli = (await readTemplate('linux_cli_js')).replace(
+        'spawn(executablePath, launchArgs, {',
+        `spawn(${JSON.stringify(fakeElectronPath)}, launchArgs, {`,
+      )
+      const cliPath = join(binPath, 'cli.js')
+      await writeFile(cliPath, cli)
+
+      for (const flag of ['--cpu-profile', '--wait']) {
+        const success = await execFileAsync(process.execPath, [cliPath, flag])
+        expect(success.stdout).toBe('profile written to /tmp/profile.cpuprofile\n')
+        expect(success.stderr).toBe('profile complete\n')
+
+        await expect(
+          execFileAsync(process.execPath, [cliPath, flag], {
+            env: { ...process.env, LVCE_TEST_EXIT_CODE: '7' },
+          }),
+        ).rejects.toMatchObject({
+          code: 7,
+          stdout: 'profile written to /tmp/profile.cpuprofile\n',
+          stderr: 'profile complete\n',
+        })
+      }
+    } finally {
+      await rm(root, { recursive: true, force: true })
+    }
+  })
+
   test('uses promise resolvers for child process events', async () => {
     const cli = await readTemplate('linux_cli_js')
 
