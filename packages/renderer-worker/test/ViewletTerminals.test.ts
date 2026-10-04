@@ -621,6 +621,34 @@ test('canceling or accepting an empty terminal name preserves the current label'
   expect(ViewletTerminals.acceptRenameTerminal(state, 41, '').tabs[0].label).toBe('bash')
 })
 
+test('accepting a rename with Enter returns focus to the active terminal', () => {
+  const state = {
+    ...createLoadedState(),
+    renamingTabUid: 41,
+  }
+
+  const newState = ViewletTerminals.handleRenameTerminalKeyDown(state, 41, 'Enter', 'build')
+
+  expect(newState.tabs[0].label).toBe('build')
+  expect(newState.focusVersion).toBe(state.focusVersion + 1)
+  expect(focusSetFocus).toHaveBeenCalledWith(WhenExpression.FocusTerminal)
+  expect(ViewletTerminalsRender.renderFocus.apply(state, newState)).toEqual([['Viewlet.focus', state.childUid]])
+})
+
+test('canceling a rename with Escape returns focus to the active terminal', () => {
+  const state = {
+    ...createLoadedState(),
+    renamingTabUid: 41,
+  }
+
+  const newState = ViewletTerminals.handleRenameTerminalKeyDown(state, 41, 'Escape', '')
+
+  expect(newState.tabs[0].label).toBe('bash')
+  expect(newState.focusVersion).toBe(state.focusVersion + 1)
+  expect(focusSetFocus).toHaveBeenCalledWith(WhenExpression.FocusTerminal)
+  expect(ViewletTerminalsRender.renderFocus.apply(state, newState)).toEqual([['Viewlet.focus', state.childUid]])
+})
+
 test('removing a tab cancels its active rename', async () => {
   const state = {
     ...createLoadedState(),
