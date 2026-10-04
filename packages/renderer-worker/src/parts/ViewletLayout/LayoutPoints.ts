@@ -8,6 +8,26 @@ import type { LayoutState } from './LayoutState.ts'
 
 const mainMinWidth = 100
 
+const getPanelHorizontalBounds = (alignment: LayoutState['panelAlignment'], mainLeft: number, mainWidth: number, availableWidth: number) => {
+  switch (alignment) {
+    case 'center':
+      return { left: mainLeft, width: mainWidth }
+    case 'left':
+      return { left: 0, width: mainLeft + mainWidth }
+    case 'right':
+      return { left: mainLeft, width: availableWidth - mainLeft }
+    default:
+      return { left: 0, width: availableWidth }
+  }
+}
+
+const getSideBarHeight = (alignment: LayoutState['panelAlignment'], physicalSide: 'left' | 'right', top: number, panelTop: number, panelBottom: number) => {
+  if (alignment === 'justify' || alignment === physicalSide) {
+    return panelTop - top
+  }
+  return panelBottom - top
+}
+
 const getPreviewHeights = (source: LayoutState, totalHeight: number): readonly [number, number] => {
   if (source.previewOrientation !== PreviewOrientation.Vertical || !source.previewVisible || !source.secondaryPreviewVisible) {
     return [totalHeight, totalHeight]
@@ -211,22 +231,38 @@ export const getPoints = (source: LayoutState, sideBarLocation = source.sideBarL
     const destinationMainHeight = p3 - p2
     const destinationMainVisible = 1
 
-    const destinationPanelLeft = p6
+    const { left: destinationPanelLeft, width: destinationPanelWidth } = getPanelHorizontalBounds(
+      source.panelAlignment,
+      destinationMainLeft,
+      destinationMainWidth,
+      availableWidth,
+    )
     const destinationpanelTop = p3
-    const destinationPanelWidth = availableWidth
     const destinationPanelHeight = p4 - p3
     const destinationPanelVisible = panelVisible
 
     const destinationSideBarLeft = p7
     const destinationSideBarTop = p2 + titleBarlessClearance
     const destinationSideBarWidth = sideBarVisible ? adjustedSideBarWidth : newSideBarWidth
-    const destinationSideBarHeight = p3 - destinationSideBarTop
+    const destinationSideBarHeight = getSideBarHeight(
+      source.panelAlignment,
+      'right',
+      destinationSideBarTop,
+      p3,
+      p4,
+    )
     const destinationSideBarVisible = sideBarVisible
 
     const destinationSecondarySideBarLeft = secondarySideBarLeft
     const destinationSecondarySideBarTop = p2
     const destinationSecondarySideBarWidth = adjustedSecondarySideBarWidth
-    const destinationSecondarySideBarHeight = p3 - p2
+    const destinationSecondarySideBarHeight = getSideBarHeight(
+      source.panelAlignment,
+      'left',
+      destinationSecondarySideBarTop,
+      p3,
+      p4,
+    )
     const destinationSecondarySideBarVisible = secondarySideBarVisible
 
     const destinationStatusBarLeft = p1
@@ -359,22 +395,38 @@ export const getPoints = (source: LayoutState, sideBarLocation = source.sideBarL
     const destinationMainHeight = p3 - p2
     const destinationMainVisible = 1
 
-    const destinationPanelLeft = p6
+    const { left: destinationPanelLeft, width: destinationPanelWidth } = getPanelHorizontalBounds(
+      source.panelAlignment,
+      destinationMainLeft,
+      destinationMainWidth,
+      availableWidth,
+    )
     const destinationpanelTop = p3
-    const destinationPanelWidth = availableWidth
     const destinationPanelHeight = p4 - p3
     const destinationPanelVisible = panelVisible
 
     const destinationSideBarLeft = p7
     const destinationSideBarTop = p2 + titleBarlessClearance
     const destinationSideBarWidth = sideBarVisible ? p8 - p7 : newSideBarWidth
-    const destinationSideBarHeight = p3 - destinationSideBarTop
+    const destinationSideBarHeight = getSideBarHeight(
+      source.panelAlignment,
+      'left',
+      destinationSideBarTop,
+      p3,
+      p4,
+    )
     const destinationSideBarVisible = sideBarVisible
 
     const destinationSecondarySideBarLeft = secondarySideBarLeft
     const destinationSecondarySideBarTop = p2
     const destinationSecondarySideBarWidth = adjustedSecondarySideBarWidth
-    const destinationSecondarySideBarHeight = p3 - p2
+    const destinationSecondarySideBarHeight = getSideBarHeight(
+      source.panelAlignment,
+      'right',
+      destinationSecondarySideBarTop,
+      p3,
+      p4,
+    )
     const destinationSecondarySideBarVisible = secondarySideBarVisible
 
     const destinationStatusBarLeft = p1
