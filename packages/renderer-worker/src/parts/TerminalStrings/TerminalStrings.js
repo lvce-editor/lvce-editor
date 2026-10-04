@@ -7,6 +7,7 @@ const UiStrings = {
   SplitTerminal: 'Split Terminal',
   KillTerminal: 'Kill Terminal',
   NewTerminal: 'New Terminal',
+  RenameTerminal: 'Rename',
 }
 
 export const splitTerminal = () => {
@@ -19,4 +20,8 @@ export const killTerminal = () => {
 
 export const newTerminal = () => {
   return I18NString.i18nString(UiStrings.NewTerminal)
+}
+
+export const renameTerminal = () => {
+  return I18NString.i18nString(UiStrings.RenameTerminal)
 }
