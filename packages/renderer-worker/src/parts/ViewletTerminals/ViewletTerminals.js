@@ -495,6 +495,26 @@ export const resize = async (state, dimensions) => {
   }
 }
 
+export const handleTerminalTabsSashPointerDown = (state) => state
+
+export const handleTerminalTabsSashPointerMove = async (state, clientX) => {
+  const minTabsWidth = Math.min(60, state.width / 2)
+  const minTerminalWidth = Math.min(100, state.width / 2)
+  const maxTabsWidth = Math.max(minTabsWidth, state.width - minTerminalWidth)
+  const tabsWidth = Math.max(minTabsWidth, Math.min(maxTabsWidth, state.x + state.width - clientX))
+  if (tabsWidth === state.tabsWidth) {
+    return state
+  }
+  const newState = {
+    ...state,
+    tabsWidth,
+  }
+  await sendCommands(await resizeTerminals(newState, newState.childUids))
+  return newState
+}
+
+export const handleTerminalTabsSashPointerUp = (state) => state
+
 export const serializeCommands = true
 export const concurrentCommands = ['handleDrop']
 

@@ -7,6 +7,19 @@ export const hasFunctionalRootRender = true
 
 export const renderEventListeners = () => {
   return [
+    {
+      name: DomEventListenerFunctions.HandleTerminalTabsSashPointerDown,
+      params: ['handleTerminalTabsSashPointerDown'],
+      trackPointerEvents: [DomEventListenerFunctions.HandleTerminalTabsSashPointerMove, DomEventListenerFunctions.HandleTerminalTabsSashPointerUp],
+    },
+    {
+      name: DomEventListenerFunctions.HandleTerminalTabsSashPointerMove,
+      params: ['handleTerminalTabsSashPointerMove', 'event.clientX'],
+    },
+    {
+      name: DomEventListenerFunctions.HandleTerminalTabsSashPointerUp,
+      params: ['handleTerminalTabsSashPointerUp'],
+    },
     { name: 'handleTabPointerDown', params: ['handleTabPointerDown', 'event.currentTarget.dataset.terminalUid'] },
     {
       name: DomEventListenerFunctions.HandleContextMenuTerminalTab,
@@ -65,7 +78,12 @@ const renderDom = {
       oldState.activeTerminalUids === newState.activeTerminalUids &&
       oldState.selectedIndex === newState.selectedIndex &&
       oldState.terminalTabsEnabled === newState.terminalTabsEnabled &&
-      oldState.renamingTabUid === newState.renamingTabUid
+      oldState.renamingTabUid === newState.renamingTabUid &&
+      oldState.tabsWidth === newState.tabsWidth &&
+      oldState.x === newState.x &&
+      oldState.y === newState.y &&
+      oldState.width === newState.width &&
+      oldState.height === newState.height
     )
   },
   apply(oldState, newState) {
