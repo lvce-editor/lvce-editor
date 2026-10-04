@@ -120,7 +120,7 @@
 
 .EditorCursor {
   width: 2px;
-  height: var(--EditorLineHeight);
+  height: var(--EditorRowHeight, var(--EditorLineHeight));
   position: absolute;
   top: 0;
   left: 0;
@@ -171,6 +171,10 @@
   /* visibility: hidden; */
 }
 
+.EditorInput textarea {
+  caret-animation: manual;
+}
+
 /* interesting: could do transform via css -> only set data-row, data-column on editor cursor */
 /* .EditorCursor::after {
   position: absolute;
@@ -196,6 +200,10 @@
 
 .Token {
   contain: content;
+}
+
+.Token.EditorTokenUnnecessary {
+  opacity: 0.65;
 }
 
 .LayerCursor,

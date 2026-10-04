@@ -228,6 +228,7 @@ export const create = (id: number): LayoutState => {
     titleBarNative: false,
     sideBarView: '',
     secondarySideBarView: '',
+    secondarySideBarViewlets: [],
     updateState: 'none',
     updateProgress: 0,
     commit: Commit.commit,
@@ -276,6 +277,7 @@ export const saveState = (state: LayoutState) => {
     previewWidth,
     previewHeight,
     previewOrientation,
+    secondaryPreviewPlacement,
     secondaryPreviewUri,
     secondaryPreviewViewletId,
     secondaryPreviewVisible,
@@ -285,6 +287,7 @@ export const saveState = (state: LayoutState) => {
     sideBarVisible,
     sideBarWidth,
     secondarySideBarView,
+    secondarySideBarViewlets = [],
     secondarySideBarVisible,
     secondarySideBarWidth,
   } = stateToSave
@@ -298,6 +301,7 @@ export const saveState = (state: LayoutState) => {
     previewWidth,
     previewHeight,
     previewOrientation,
+    secondaryPreviewPlacement,
     secondaryPreviewUri,
     secondaryPreviewViewletId,
     secondaryPreviewVisible,
@@ -307,6 +311,7 @@ export const saveState = (state: LayoutState) => {
     sideBarVisible,
     sideBarWidth,
     secondarySideBarView,
+    secondarySideBarViewlets,
     secondarySideBarVisible,
     secondarySideBarWidth,
   }
@@ -388,6 +393,13 @@ const getSavedSecondarySideBarView = (savedState) => {
   return ViewletModuleId.Chat
 }
 
+const getSavedSecondarySideBarViewlets = (savedState): readonly string[] => {
+  if (Array.isArray(savedState?.secondarySideBarViewlets)) {
+    return savedState.secondarySideBarViewlets.filter((viewletId) => typeof viewletId === 'string')
+  }
+  return []
+}
+
 const getSavedPreviewViewletId = (savedState) => {
   if (savedState?.previewViewletId === ViewletModuleId.SimpleBrowser) {
     return ViewletModuleId.SimpleBrowser
@@ -453,6 +465,7 @@ export const loadContent = (state: LayoutState, savedState: any): LayoutState =>
   } = getSavedPoints(stateToRestore)
   const savedView = getSavedSideBarView(stateToRestore)
   const savedSecondaryView = getSavedSecondarySideBarView(stateToRestore)
+  const savedSecondaryViewlets = getSavedSecondarySideBarViewlets(stateToRestore)
   const previewUri = stateToRestore?.previewUri || ''
   const previewViewletId = getSavedPreviewViewletId(stateToRestore)
   const secondaryPreviewUri = stateToRestore?.secondaryPreviewUri || ''
@@ -488,6 +501,7 @@ export const loadContent = (state: LayoutState, savedState: any): LayoutState =>
     previewMinWidth: 100,
     previewMaxWidth: Math.max(1800, windowWidth / 2),
     secondaryPreviewVisible,
+    secondaryPreviewPlacement: stateToRestore?.secondaryPreviewPlacement === 'bottomLeft' ? 'bottomLeft' : undefined,
     secondaryPreviewHeight: 350,
     secondaryPreviewMinHeight: 200,
     secondaryPreviewMaxHeight: 1200,
@@ -516,6 +530,7 @@ export const loadContent = (state: LayoutState, savedState: any): LayoutState =>
     sideBarFocusModeTarget: 'primary',
     sideBarView: savedView,
     secondarySideBarView: savedSecondaryView,
+    secondarySideBarViewlets: savedSecondaryViewlets,
     workbenchVisible: true,
     initial: false,
   }
@@ -879,6 +894,15 @@ export const toggleSideBar = (state: LayoutState) => {
 
 export const toggleSideBarView = async (state: LayoutState, moduleId): Promise<LayoutStateResult> => {
   const sideBarView = moduleId || state.sideBarView || ViewletModuleId.Explorer
+  if ((state.secondarySideBarViewlets || []).includes(sideBarView)) {
+    if (state.secondarySideBarVisible && state.secondarySideBarView === sideBarView) {
+      return hideSecondarySideBar(state)
+    }
+    const shown = state.secondarySideBarVisible ? { newState: state, commands: [] } : await showSecondarySideBar(state)
+    const opened = await openSecondarySideBarView(shown.newState, sideBarView, false, undefined)
+    const focusCommands = await Viewlet.getFocusCommands(sideBarView)
+    return { newState: opened.newState, commands: [...(shown.commands || []), ...opened.commands, ...focusCommands] }
+  }
   const preferredLocation = await getPreferredViewLocation(sideBarView)
   if (preferredLocation === 'secondaryPreview') {
     if (state.secondaryPreviewVisible && state.secondaryPreviewUri === sideBarView) {
@@ -2104,6 +2128,9 @@ const getNewStatePointerMoveSecondaryPreview = async (
   x: number,
   y: number,
 ): Promise<{ newState: LayoutState; commands: any[] }> => {
+  if (state.secondaryPreviewPlacement === 'bottomLeft') {
+    return { newState: getPoints({ ...state, secondaryPreviewHeight: state.windowHeight - y }), commands: [] }
+  }
   if (state.previewOrientation === PreviewOrientation.Vertical && state.previewVisible) {
     const previewHeight = y - state.previewTop
     return {
@@ -2981,6 +3008,26 @@ export const openSecondarySideBarView = async (state: LayoutState, moduleId, foc
   }
 }
 
+export const moveViewletToSecondarySideBar = async (state: LayoutState, moduleId: string): Promise<LayoutStateResult> => {
+  const movedViews = state.secondarySideBarViewlets || []
+  const secondarySideBarViewlets = movedViews.includes(moduleId) ? movedViews : [...movedViews, moduleId]
+  const stateWithPlacement = { ...state, secondarySideBarViewlets }
+  let primaryResult: LayoutStateResult = { newState: stateWithPlacement, commands: [] }
+  if (stateWithPlacement.sideBarVisible && stateWithPlacement.sideBarView === moduleId) {
+    const fallbackView = moduleId === ViewletModuleId.Explorer ? ViewletModuleId.Search : ViewletModuleId.Explorer
+    primaryResult = await showSideBar(stateWithPlacement, fallbackView)
+  }
+  const shown = primaryResult.newState.secondarySideBarVisible
+    ? { newState: primaryResult.newState, commands: [] }
+    : await showSecondarySideBar(primaryResult.newState)
+  const opened = await openSecondarySideBarView(shown.newState, moduleId, false, undefined)
+  const focusCommands = await Viewlet.getFocusCommands(moduleId)
+  return {
+    newState: opened.newState,
+    commands: [...primaryResult.commands, ...(shown.commands || []), ...opened.commands, ...focusCommands],
+  }
+}
+
 export const openPanelView = async (state: LayoutState, moduleId, focus = false, args): Promise<LayoutStateResult> => {
   const { newState, commands } = await callGlobalEvent(state, 'handlePanelViewletChange', moduleId)
   return {
@@ -3001,4 +3048,69 @@ export const getHref = (state: LayoutState) => {
   return Location.getHref()
 }
 
-export const afterRender = (oldState: LayoutState, newState: LayoutState) => BrowserFullWidth.afterRender(oldState, newState)
+export const afterRender = async (oldState: LayoutState, newState: LayoutState) => {
+  await BrowserFullWidth.afterRender(oldState, newState)
+  if (newState.secondaryPreviewPlacement !== 'bottomLeft' || !newState.secondaryPreviewVisible) return
+  // Root reconciliation preserves named inputs. Both browser panes use the same
+  // address name, so restore each retained view's own value after reconciliation.
+  const commands = [newState.previewId, newState.secondaryPreviewId].flatMap((uid) => {
+    const browser = ViewletStates.getInstance(uid)
+    return browser?.moduleId === ViewletModuleId.SimpleBrowser
+      ? [['Viewlet.setValueByName', uid, 'simple-browser-address', browser.state.inputValue]]
+      : []
+  })
+  if (commands.length) await RendererProcess.invoke('Viewlet.sendMultiple', commands)
+}
+
+export const beginBrowserTabDrag = (state: LayoutState, sourceUid: number): LayoutStateResult => {
+  const source = ViewletStates.getInstance(sourceUid)?.state
+  const supported =
+    sourceUid === state.previewId &&
+    !state.secondaryPreviewVisible &&
+    !state.browserFullWidth &&
+    !state.sideBarFocusMode &&
+    source?.draggedTab?.browserViewId &&
+    !source?.loginChallenges?.length
+  return { newState: supported ? { ...state, browserTabDragSource: sourceUid } : state, commands: [] }
+}
+
+export const endBrowserTabDrag = (state: LayoutState, sourceUid: number): LayoutStateResult => ({
+  newState: state.browserTabDragSource === sourceUid ? { ...state, browserTabDragSource: undefined } : state,
+  commands: [],
+})
+
+export const handleBrowserTabDragOver = (state: LayoutState): LayoutStateResult => ({ newState: state, commands: [] })
+
+export const handleBrowserTabDrop = async (state: LayoutState, x: number, y: number): Promise<LayoutStateResult> => {
+  const sourceUid = state.browserTabDragSource
+  const source = sourceUid === undefined ? undefined : ViewletStates.getInstance(sourceUid)?.state
+  const browserViewId = source?.draggedTab?.browserViewId
+  const top = (state.windowHeight + (state.titleBarVisible ? state.titleBarHeight : 0)) / 2
+  const cleanState = { ...state, browserTabDragSource: undefined }
+  if (
+    !browserViewId ||
+    !source?.isDraggingTab ||
+    state.secondaryPreviewVisible ||
+    x < 0 ||
+    x >= state.previewLeft ||
+    y < top ||
+    y >= state.windowHeight
+  ) {
+    return { newState: cleanState, commands: [] }
+  }
+  const result = await show(
+    {
+      ...cleanState,
+      secondaryPreviewPlacement: 'bottomLeft',
+      secondaryPreviewHeight: state.windowHeight - top,
+      secondaryPreviewUri: 'simple-browser://transfer',
+      secondaryPreviewViewletId: ViewletModuleId.SimpleBrowser,
+    },
+    LayoutModules.SecondaryPreview,
+    undefined,
+    false,
+  )
+  await RendererProcess.invoke('Viewlet.sendMultiple', result.commands)
+  await Viewlet.executeViewletCommand(sourceUid, 'moveTabToBrowser', browserViewId, result.newState.secondaryPreviewId)
+  return { commands: [], newState: { ...result.newState, browserTabDragSource: undefined, secondaryPreviewUri: 'simple-browser://' } }
+}

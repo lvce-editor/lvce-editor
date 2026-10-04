@@ -1,16 +1,27 @@
 .WorkersView {
   contain: strict;
+  display: flex;
+  flex-direction: column;
   width: 100%;
   height: 100%;
-  overflow: auto;
+  overflow: hidden;
   background: var(--EditorBackground);
   color: var(--WorkbenchForeground, white);
 }
 
-.WorkersViewTitle {
-  margin: 16px 0 8px;
-  font-size: 20px;
-  font-weight: 600;
+.WorkersViewError {
+  box-sizing: border-box;
+  flex: 0 0 30px;
+  height: 30px;
+  margin: 0;
+  overflow: hidden;
+  line-height: 30px;
+}
+
+.WorkersViewTableContainer {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
 }
 
 .WorkersViewTable {
@@ -18,6 +29,7 @@
   border-collapse: collapse;
   table-layout: fixed;
   font-size: 13px;
+  outline: none;
 }
 
 .WorkersViewTableHeaderCell,
@@ -28,6 +40,19 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   text-align: left;
+}
+
+.WorkersViewMemoryTrend {
+  margin-left: 8px;
+  font-size: 12px;
+}
+
+.WorkersViewMemoryTrendGrowing {
+  color: #f48771;
+}
+
+.WorkersViewMemoryTrendShrinking {
+  color: #89d185;
 }
 
 .WorkersViewTableHeaderCell {

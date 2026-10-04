@@ -78,7 +78,7 @@
 }
 
 .QuickPickItemLabel {
-  contain: content;
+  /* The row contains painting; overflow below handles text clipping. */
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: pre;
@@ -88,7 +88,6 @@
 .QuickPickItemDescription {
   font-size: 0.9em;
   pointer-events: none;
-  contain: content;
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;

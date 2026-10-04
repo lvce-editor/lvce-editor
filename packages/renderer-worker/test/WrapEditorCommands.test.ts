@@ -277,3 +277,33 @@ test('preserves global sibling render commands', async () => {
 
   expect(result.commands).toEqual([['Viewlet.setFocusContext', 2, 1]])
 })
+
+test.each(['showHover', 'showHover2'])('does not let pending %s block editing or blur', async (name) => {
+  const provider = Promise.withResolvers<void>()
+  const started = Promise.withResolvers<void>()
+  EditorWorker.invoke.mockImplementation(async (method: string) => {
+    if (method === `Editor.${name}`) {
+      started.resolve()
+      await provider.promise
+    }
+    return []
+  })
+  const editor = { uid: 1, uri: 'file:///hover.ts' }
+  const hover = WrapEditorCommands.wrapEditorCommand(name)(editor)
+  await started.promise
+  let timer: ReturnType<typeof setTimeout> | undefined
+  try {
+    await Promise.race([
+      Promise.all([WrapEditorCommands.wrapEditorCommand('type')(editor, 'x'), WrapEditorCommands.wrapEditorCommand('handleBlur')(editor)]),
+      new Promise((_, reject) => {
+        timer = setTimeout(() => reject(new Error('Hover blocked the editor command queue')), 1000)
+      }),
+    ])
+    expect(EditorWorker.invoke).toHaveBeenCalledWith('Editor.type', 1, 'x')
+    expect(EditorWorker.invoke).toHaveBeenCalledWith('Editor.handleBlur', 1)
+  } finally {
+    clearTimeout(timer)
+    provider.resolve()
+    await hover
+  }
+})
