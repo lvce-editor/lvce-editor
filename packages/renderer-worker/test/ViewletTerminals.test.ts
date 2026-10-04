@@ -8,6 +8,7 @@ const viewletExecuteViewletCommand = jest.fn()
 const viewletResize = jest.fn(async (uid, dimensions) => [['Viewlet.setBounds', uid, dimensions]])
 const viewletStatesGetInstance = jest.fn()
 const viewletStatesRemove = jest.fn()
+const contextMenuShow2 = jest.fn(async (_uid: number, _menuId: number, _x: number, _y: number, _tabUid: number) => undefined)
 let nextId = 42
 let terminalTabsPreference: boolean | undefined
 const terminalSpawnOptions = {
@@ -29,6 +30,10 @@ jest.unstable_mockModule('../src/parts/Command/Command.js', () => {
     execute: commandExecute,
   }
 })
+
+jest.unstable_mockModule('../src/parts/ContextMenu/ContextMenu.js', () => ({
+  show2: contextMenuShow2,
+}))
 
 jest.unstable_mockModule('../src/parts/Id/Id.js', () => {
   return {
@@ -89,6 +94,7 @@ const ViewletTerminals = await import('../src/parts/ViewletTerminals/ViewletTerm
 const ViewletTerminalsRender = await import('../src/parts/ViewletTerminals/ViewletTerminalsRender.js')
 const ViewletTerminalsRenderActions = await import('../src/parts/ViewletTerminals/ViewletTerminalsRenderActions.js')
 const WhenExpression = await import('../src/parts/WhenExpression/WhenExpression.js')
+const MenuEntryId = await import('../src/parts/MenuEntryId/MenuEntryId.js')
 
 const createLoadedState = () => {
   return {
@@ -576,6 +582,54 @@ test('handleClickTab focuses the split identified by its DOM dataset', async () 
     childUids: [41, 42],
     selectedIndex: 0,
   })
+})
+
+test('right-clicking any terminal split opens the context menu for its shared tab', async () => {
+  const state = {
+    ...createLoadedState(),
+    tabs: [{ icon: 'terminal-bash', label: 'bash', terminalUids: [41, 42], uid: 41 }],
+  }
+
+  await ViewletTerminals.handleTabContextMenu(state, '42', 100, 200)
+
+  expect(contextMenuShow2).toHaveBeenCalledWith(state.uid, MenuEntryId.TerminalTab, 100, 200, 41)
+})
+
+test('renaming a terminal tab updates its stable tab identity without changing terminal processes', () => {
+  const state = {
+    ...createLoadedState(),
+    tabs: [
+      { icon: 'terminal-bash', label: 'first', terminalUids: [41], uid: 41 },
+      { icon: 'terminal-bash', label: 'second', terminalUids: [42], uid: 42 },
+    ],
+  }
+  const editing = ViewletTerminals.startRenameTerminal(state, 42)
+  const renamed = ViewletTerminals.acceptRenameTerminal(editing, 42, 'build')
+
+  expect(renamed.tabs.map((tab) => tab.label)).toEqual(['first', 'build'])
+  expect(renamed.childUids).toBe(state.childUids)
+  expect(renamed.renamingTabUid).toBe(-1)
+})
+
+test('canceling or accepting an empty terminal name preserves the current label', () => {
+  const state = {
+    ...createLoadedState(),
+    renamingTabUid: 41,
+  }
+
+  expect(ViewletTerminals.cancelRenameTerminal(state, 41).tabs[0].label).toBe('bash')
+  expect(ViewletTerminals.acceptRenameTerminal(state, 41, '').tabs[0].label).toBe('bash')
+})
+
+test('removing a tab cancels its active rename', async () => {
+  const state = {
+    ...createLoadedState(),
+    renamingTabUid: 41,
+  }
+
+  const newState = await ViewletTerminals.killTerminalTab(state, 0)
+
+  expect(newState.renamingTabUid).toBe(-1)
 })
 
 test('renderDom updates split selection when the focused terminal changes', () => {
