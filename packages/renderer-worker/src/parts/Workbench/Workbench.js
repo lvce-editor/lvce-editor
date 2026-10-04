@@ -16,7 +16,6 @@ import * as HasCodeQueryParam from '../HasCodeQueryParam/HasCodeQueryParam.js'
 import * as HeadlessLayout from '../HeadlessLayout/HeadlessLayout.js'
 import * as IconTheme from '../IconTheme/IconTheme.js'
 import * as Id from '../Id/Id.js'
-import * as InitData from '../InitData/InitData.js'
 import * as IpcState from '../IpcState/IpcState.js'
 import * as IpcTrace from '../IpcTrace/IpcTrace.js'
 import * as KeyBindings from '../KeyBindings/KeyBindings.js'
@@ -118,7 +117,7 @@ const actions = [
 ]
 
 // TODO lazyload parts one by one (Main, SideBar, ActivityBar, TitleBar, StatusBar)
-export const startup = async (platform, assetDir) => {
+export const startup = async (initData, platform, assetDir) => {
   onunhandledrejection = UnhandledErrorHandling.handleUnhandledRejection
   // @ts-ignore
   onerror = UnhandledErrorHandling.handleUnhandledError
@@ -129,8 +128,6 @@ export const startup = async (platform, assetDir) => {
   LifeCycle.mark(LifeCyclePhase.Zero)
 
   Performance.mark(PerformanceMarkerType.WillStartupWorkbench)
-  await RendererProcess.listen()
-  const initData = await InitData.getInitData()
   Location.initialize(initData.Location.href)
   const cpuProfile = platform === PlatformType.Electron && StartupCpuProfile.isEnabled(initData.Location.href)
   if (platform !== PlatformType.Web) {
