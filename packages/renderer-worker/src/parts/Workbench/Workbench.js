@@ -25,7 +25,6 @@ import * as LaunchTestWorker from '../LaunchTestWorker/LaunchTestWorker.ts'
 import * as LifeCycle from '../LifeCycle/LifeCycle.js'
 import * as LifeCyclePhase from '../LifeCyclePhase/LifeCyclePhase.js'
 import * as Location from '../Location/Location.js'
-import * as Module from '../Module/Module.js'
 import * as ModernUi from '../ModernUi/ModernUi.js'
 import * as StartupCpuProfile from '../StartupCpuProfile/StartupCpuProfile.js'
 import * as OpenInitialUri from '../OpenInitialUri/OpenInitialUri.js'
@@ -124,7 +123,6 @@ export const startup = async (initData, platform, assetDir) => {
 
   ViewletModuleInternal.registerAll(ViewletModuleMap.map)
   FileSystemState.registerAll(FileSystemMap.map)
-  Command.setLoad(Module.load)
   LifeCycle.mark(LifeCyclePhase.Zero)
 
   Performance.mark(PerformanceMarkerType.WillStartupWorkbench)
