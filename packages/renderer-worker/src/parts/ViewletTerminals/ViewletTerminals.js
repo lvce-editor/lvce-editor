@@ -384,10 +384,20 @@ export const handleRenameTerminalPointerDown = (state) => state
 
 export const handleRenameTerminalKeyDown = (state, tabUid, key, value) => {
   if (key === 'Enter') {
-    return acceptRenameTerminal(state, tabUid, value)
+    const newState = acceptRenameTerminal(state, tabUid, value)
+    if (newState === state) {
+      return state
+    }
+    Focus.setFocus(WhenExpression.FocusTerminal)
+    return { ...newState, focusVersion: state.focusVersion + 1 }
   }
   if (key === 'Escape') {
-    return cancelRenameTerminal(state, tabUid)
+    const newState = cancelRenameTerminal(state, tabUid)
+    if (newState === state) {
+      return state
+    }
+    Focus.setFocus(WhenExpression.FocusTerminal)
+    return { ...newState, focusVersion: state.focusVersion + 1 }
   }
   return state
 }
