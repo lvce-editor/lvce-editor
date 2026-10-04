@@ -136,6 +136,55 @@ test('loadContent creates the xterm terminal view with the requested cwd', async
   })
 })
 
+test('dragging the terminal tabs sash resizes the tab list and all split terminals', async () => {
+  const state = {
+    ...createLoadedState(),
+    childUids: [41, 42],
+    tabs: [{ icon: 'terminal-bash', label: 'bash', terminalUids: [41, 42], uid: 41 }],
+  }
+
+  const newState = await ViewletTerminals.handleTerminalTabsSashPointerMove(state, 500)
+
+  expect(newState.tabsWidth).toBe(310)
+  expect(rendererProcessInvoke).toHaveBeenCalledWith('Viewlet.sendMultiple', [
+    ['Viewlet.setBounds', 41, { height: 400, width: 245, x: 10, y: 20 }],
+    ['Viewlet.setBounds', 42, { height: 400, width: 245, x: 255, y: 20 }],
+  ])
+})
+
+test('dragging the terminal tabs sash respects minimum widths in narrow panels', async () => {
+  const state = {
+    ...createLoadedState(),
+    width: 120,
+  }
+
+  const newState = await ViewletTerminals.handleTerminalTabsSashPointerMove(state, -100)
+
+  expect(newState.tabsWidth).toBe(60)
+  expect(rendererProcessInvoke).toHaveBeenCalledWith('Viewlet.sendMultiple', [
+    ['Viewlet.setBounds', 41, { height: 400, width: 60, x: 10, y: 20 }],
+  ])
+})
+
+test('terminal tab rendering updates when its width or panel bounds change', () => {
+  const state = createLoadedState()
+  const nextState = { ...state, tabsWidth: 160 }
+
+  expect(ViewletTerminalsRender.render[0].isEqual(state, nextState)).toBe(false)
+  expect(ViewletTerminalsRender.render[0].isEqual(state, { ...state, width: state.width + 1 })).toBe(false)
+})
+
+test('terminal tabs sash tracks pointer movement through release', () => {
+  const listeners = ViewletTerminalsRender.renderEventListeners()
+
+  expect(listeners).toContainEqual(
+    expect.objectContaining({
+      name: 'handleTerminalTabsSashPointerDown',
+      trackPointerEvents: ['handleTerminalTabsSashPointerMove', 'handleTerminalTabsSashPointerUp'],
+    }),
+  )
+})
+
 test('loadContent preserves an explicit disabled terminal tabs preference', async () => {
   terminalTabsPreference = false
   const state = ViewletTerminals.create(1, 'file:///workspace/folder', 10, 20, 800, 400)
