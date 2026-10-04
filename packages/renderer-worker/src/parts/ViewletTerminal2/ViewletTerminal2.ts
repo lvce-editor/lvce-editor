@@ -1,10 +1,11 @@
-import * as TerminalTransfer from '../TerminalTransfer/TerminalTransfer.js'
 import * as Assert from '../Assert/Assert.ts'
 import * as Command from '../Command/Command.js'
+import * as ExtensionHostCommands from '../ExtensionHost/ExtensionHostCommands.js'
 import * as Focus from '../Focus/Focus.js'
 import * as GetTerminalSpawnOptions from '../GetTerminalSpawnOptions/GetTerminalSpawnOptions.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
+import * as TerminalTransfer from '../TerminalTransfer/TerminalTransfer.js'
 import * as TerminalWorker from '../TerminalWorker/TerminalWorker.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
@@ -21,28 +22,35 @@ const getBackend = () => {
 export const create = (id, cwd = '') => {
   Assert.number(id)
   return {
+    args: [],
+    columns: 80,
+    command: '',
+    cwd,
     disposed: false,
     id: 0,
-    uid: id,
-    separateConnection: true,
-    command: '',
-    args: [],
-    setBounds: false,
-    columns: 80,
-    cwd,
     rows: 24,
+    separateConnection: true,
+    setBounds: false,
+    uid: id,
     xtermMounted: false,
   }
 }
 
 export const loadContent = async (state, _savedState?: any, configuredSpawnOptions?: any) => {
-  const { command, args, env, cwd = state.cwd } = configuredSpawnOptions || (await GetTerminalSpawnOptions.getTerminalSpawnOptions(state.cwd))
+  const {
+    args,
+    command,
+    cwd = state.cwd,
+    disposeCommand,
+    env,
+  } = configuredSpawnOptions || (await GetTerminalSpawnOptions.getTerminalSpawnOptions(state.cwd))
   return {
     ...state,
-    command,
     args,
-    env,
+    command,
     cwd,
+    disposeCommand,
+    env,
     xtermMounted: true,
   }
 }
@@ -111,7 +119,15 @@ export const handleBlur = (state) => {
 
 export const dispose = async (state) => {
   TerminalTransfer.forget(state.uid)
-  await TerminalWorker.invoke('Terminal.dispose', state.uid)
+  try {
+    if (state.disposeCommand) {
+      await ExtensionHostCommands.executeCommand(state.disposeCommand.command, ...state.disposeCommand.args)
+    }
+  } catch (error) {
+    console.warn('Failed to clean up the remote terminal', error)
+  } finally {
+    await TerminalWorker.invoke('Terminal.dispose', state.uid)
+  }
   return {
     ...state,
     disposed: true,
@@ -129,17 +145,15 @@ export const handleMouseDown = (state) => {
 
 export const hasFunctionalResize = true
 
-export const resize = (state, dimensions) => {
-  return {
+export const resize = async (state, dimensions) => {
+  const resized = {
     ...state,
     ...dimensions,
   }
-}
-
-export const resizeEffect = async (state) => {
-  const columns = state.columns || Math.max(2, Math.floor(state.width / 9))
-  const rows = state.rows || Math.max(2, Math.floor(state.height / 17))
+  const columns = resized.columns || Math.max(2, Math.floor(resized.width / 9))
+  const rows = resized.rows || Math.max(2, Math.floor(resized.height / 17))
   await TerminalWorker.invoke('Terminal.resize', state.uid, columns, rows)
+  return resized
 }
 
 export const focus = (state) => {
@@ -150,6 +164,6 @@ export const focus = (state) => {
 }
 
 export const clear = async (state) => {
-  await RendererProcess.invoke('Viewlet.send', state.uid, 'write', new TextEncoder().encode('\u001Bc'))
+  await RendererProcess.invoke('Viewlet.send', state.uid, 'write', new TextEncoder().encode('\u{1B}c'))
   return state
 }
