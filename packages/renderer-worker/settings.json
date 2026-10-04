@@ -9,6 +9,18 @@
   },
   {
     "category": "applications",
+    "description": "Reduce memory usage by changing Chromium startup options. Restart the application for changes to take effect.",
+    "heading": "Memory Usage",
+    "id": "application.memoryUsage",
+    "options": [
+      { "id": "default", "label": "default" },
+      { "id": "reduce", "label": "reduce" }
+    ],
+    "type": "enum",
+    "value": "default"
+  },
+  {
+    "category": "applications",
     "description": "Controls how application updates are installed",
     "heading": "Update Mode",
     "id": "application.updateMode",
@@ -173,6 +185,14 @@
     "description": "Cleans up worker resources after they finish loading",
     "heading": "Clean Up Workers After Load",
     "id": "Workers.cleanUpAfterLoad",
+    "type": "boolean",
+    "value": false
+  },
+  {
+    "category": "workbench",
+    "description": "Shows whether worker memory usage is growing or shrinking, measured over the last minute",
+    "heading": "Worker Memory Usage Trend",
+    "id": "workers.memoryUsageTrend.enabled",
     "type": "boolean",
     "value": false
   },

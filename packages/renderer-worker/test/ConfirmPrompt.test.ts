@@ -110,3 +110,28 @@ test('showErrorMessage - preserves test worker mocks', async () => {
   })
   expect(DialogWorker.invoke).not.toHaveBeenCalled()
 })
+
+// Match the two boolean decisions made by the browser three-way prompt.
+test.each([
+  { answers: [true], expected: 'save' },
+  { answers: [false, true], expected: 'discard' },
+  { answers: [false, false], expected: 'cancel' },
+])('prompt3 - preserves confirm mocks for $expected', async ({ answers, expected }) => {
+  const ipc = {}
+  TestWorker.set(ipc)
+  ConfirmPrompt.mock(42)
+  for (const answer of answers) {
+    // @ts-ignore
+    JsonRpc.invoke.mockResolvedValueOnce(answer)
+  }
+  const options = { discardPrompt: 'Discard this file?', title: 'Save Changes' }
+
+  await expect(ConfirmPrompt.prompt3('Save this file?', options)).resolves.toBe(expected)
+
+  expect(JsonRpc.invoke).toHaveBeenNthCalledWith(1, ipc, 'Test.executeMock', 42, 'Save this file?', options)
+  expect(JsonRpc.invoke).toHaveBeenCalledTimes(answers.length)
+  if (answers.length === 2) {
+    expect(JsonRpc.invoke).toHaveBeenNthCalledWith(2, ipc, 'Test.executeMock', 42, 'Discard this file?', options)
+  }
+  expect(DialogWorker.invoke).not.toHaveBeenCalled()
+})

@@ -18,6 +18,7 @@ interface ViewRenderResult {
   readonly css?: string
   readonly dom?: readonly unknown[]
   readonly focusSelector?: string
+  readonly modified?: boolean
   readonly patches?: readonly unknown[]
   readonly scrollPosition?: readonly [selector: string, scrollTop: number]
   readonly title?: string
@@ -116,6 +117,7 @@ const renderVirtualDomResult = (state: ViewletExtensionViewState, result: ViewRe
     dom: result.type === 'setDom' ? result.dom || [] : state.dom,
     focusSelector: typeof result.focusSelector === 'string' ? result.focusSelector : '',
     patches: result.type === 'setPatches' ? result.patches || [] : [],
+    ...(typeof result.modified === 'boolean' && { modified: result.modified }),
     title: typeof result.title === 'string' ? result.title : state.title,
   }
 }
@@ -389,7 +391,26 @@ export const handleActiveEditorChange = async (state: ViewletExtensionViewState,
   return state
 }
 
+export const save = async (state: ViewletExtensionViewState): Promise<ViewletExtensionViewState> => {
+  if (state.modified !== true) {
+    return state
+  }
+  return handleViewCommand(state, 'save')
+}
+
+export const afterRender = async (oldState: ViewletExtensionViewState, newState: ViewletExtensionViewState): Promise<void> => {
+  if (!newState.uri || newState.modified === undefined || oldState.modified === newState.modified) {
+    return
+  }
+  if (newState.applicationId !== undefined) {
+    await Command.execute('Application.execute', newState.applicationId, 'Main.handleModifiedStatusChange', newState.uri, newState.modified)
+  } else {
+    await Command.execute('Main.handleModifiedStatusChange', newState.uri, newState.modified)
+  }
+}
+
 export const Commands = {
+  save,
   handleActiveEditorChange,
   handleBlur,
   handleContextMenu,

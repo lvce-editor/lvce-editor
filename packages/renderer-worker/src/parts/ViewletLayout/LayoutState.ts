@@ -50,6 +50,9 @@ export interface BrowserFullWidthState {
 }
 
 export interface LayoutState {
+  readonly secondaryPreviewPlacement?: 'bottomLeft'
+  readonly browserTabDragSource?: number
+
   readonly browserFullWidth?: BrowserFullWidthState
 
   readonly applicationId?: string
@@ -137,6 +140,7 @@ export interface LayoutState {
   readonly secondarySideBarMinWidth: number
   readonly secondarySideBarTop: number
   readonly secondarySideBarView: string
+  readonly secondarySideBarViewlets?: readonly string[]
   readonly secondarySideBarVisible: boolean
   readonly secondarySideBarWidth: number
   readonly secondaryPreviewActionsEventListeners: readonly unknown[]

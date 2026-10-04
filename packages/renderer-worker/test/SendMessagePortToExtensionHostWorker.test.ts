@@ -11,6 +11,10 @@ jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
   }
 })
 
+jest.unstable_mockModule('../src/parts/CacheWorker/CacheWorker.js', () => ({
+  invokeAndTransfer: jest.fn(),
+}))
+
 jest.unstable_mockModule('../src/parts/HandleDialogWorkerMessagePort/HandleDialogWorkerMessagePort.ts', () => {
   return {
     handleDialogWorkerMessagePort: jest.fn(),
@@ -62,6 +66,7 @@ jest.unstable_mockModule('../src/parts/MenuWorker/MenuWorker.js', () => ({
 }))
 
 const Command = await import('../src/parts/Command/Command.js')
+const CacheWorker = await import('../src/parts/CacheWorker/CacheWorker.js')
 const { commandMap } = await import('../src/parts/CommandMap/CommandMap.js')
 const MenuWorker = await import('../src/parts/MenuWorker/MenuWorker.js')
 const ExtensionManagementWorker = await import('../src/parts/ExtensionManagementWorker/ExtensionManagementWorker.js')
@@ -74,6 +79,12 @@ const SettingsWorker = await import('../src/parts/SettingsWorker/SettingsWorker.
 const SharedProcess = await import('../src/parts/SharedProcess/SharedProcess.js')
 const WorkspaceConnection = await import('../src/parts/WorkspaceConnection/WorkspaceConnection.js')
 const SendMessagePortToExtensionHostWorker = await import('../src/parts/SendMessagePortToExtensionHostWorker/SendMessagePortToExtensionHostWorker.js')
+
+test('sendMessagePortToCacheWorker', async () => {
+  const port = {}
+  await SendMessagePortToExtensionHostWorker.sendMessagePortToCacheWorker(port)
+  expect(CacheWorker.invokeAndTransfer).toHaveBeenCalledWith('CacheWorker.handleMessagePort', port)
+})
 
 test('sendMessagePortToProcessExplorer', async () => {
   const port = {}

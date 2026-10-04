@@ -179,7 +179,7 @@ export const loadContent = async (state, savedState, context) => {
       useCache,
       ...(state.applicationId === undefined ? [] : [state.applicationId]),
     )
-    await EditorWorker.invoke('Editor.loadContent', id, savedState?.editorState, context?.largeFile === true)
+    await EditorWorker.invoke('Editor.loadContent', id, savedState?.editorState, context?.largeFile === true, context?.focus ?? true)
     const initialRender = await rerender(newState2)
     await EditorWorker.invoke('Editor.setSelections2', id, savedSelections)
     const selectionRender = await rerender(newState2)
@@ -327,26 +327,11 @@ export const handleSettingsChanged = async (state) => {
   return rerender(state)
 }
 
-export const hasFunctionalResize = true
-
-export const resize = async (state, dimensions) => {
-  await EditorWorker.invoke('Editor.resize', state.id, dimensions)
-  const newState = Editor.setBounds(state, dimensions.x, dimensions.y, dimensions.width, dimensions.height, state.columnWidth)
-  return rerender(newState)
-}
-
 export const dispose = async (state) => {
   Tokenizer.removeConnectedEditor(state.id)
   const commands = await EditorWorker.invoke('Editor.dispose', state.id)
   await RendererProcess.invoke('Viewlet.sendMultiple', LayoutWidgets.reconcile(commands))
 }
-
-export const hasFunctionalRender = true
-export const hasFunctionalRootRender = true
-
-export const hasFunctionalEvents = true
-
-export const render = Editor.render
 
 export const focus = (state) => {
   return {
@@ -356,8 +341,3 @@ export const focus = (state) => {
 }
 
 export const customErrorRenderer = ViewletModuleId.EditorTextError
-
-export const renderEventListeners = async () => {
-  const listeners = await EditorWorker.invoke('Editor.renderEventListeners')
-  return listeners
-}

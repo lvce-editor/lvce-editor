@@ -162,7 +162,7 @@ export const handleWorkspaceChange = async (state) => {
     ...loadingState,
     actionsDom,
     badgeCount,
-    commands,
+    commands: [...loadingState.commands, ...commands],
   }
 }
 

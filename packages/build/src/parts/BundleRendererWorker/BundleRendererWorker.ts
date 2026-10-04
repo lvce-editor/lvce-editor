@@ -1,5 +1,5 @@
 import { VError } from '@lvce-editor/verror'
-import { readFile, readdir, writeFile } from 'node:fs/promises'
+import { readFile, writeFile } from 'node:fs/promises'
 import * as BundleJs from '../BundleJsRollup/BundleJsRollup.ts'
 import * as Copy from '../Copy/Copy.ts'
 import * as FilterWorkerViewletCss from '../FilterWorkerViewletCss/FilterWorkerViewletCss.ts'
@@ -28,21 +28,6 @@ const getNewCssDeclarationFile = (content, filteredCss) => {
   return newLines.join('\n')
 }
 
-const getPlatformCode = (platform) => {
-  switch (platform) {
-    case 'electron':
-      return `PlatformType.Electron`
-    case 'remote':
-      // workaround for rollup treeshaking out platform variable
-      // which is still needed for static web export
-      return `globalThis.PLATFORM = PlatformType.Remote`
-    case 'web':
-      return 'PlatformType.Web'
-    default:
-      throw new Error(`unsupported platform ${platform}`)
-  }
-}
-
 const getCssDeclarationsFromText = (content) => {
   const lines = content.split('\n')
   const newLines: any[] = []
@@ -68,22 +53,6 @@ const getCssDeclarationsFromText = (content) => {
   return parsed
 }
 
-const getWorkerPathReplacements = async (cachePath) => {
-  const workersJsonPath = Path.join(cachePath, 'src', 'parts', 'Workers', 'Workers.json')
-  const content = await readFile(workersJsonPath, 'utf8')
-  const workers = JSON.parse(content)
-  return workers
-    .filter((worker) => {
-      return worker.defaultPath && worker.productionPath && worker.defaultPath !== worker.productionPath
-    })
-    .map((worker) => {
-      return {
-        occurrence: worker.defaultPath,
-        replacement: worker.productionPath,
-      }
-    })
-}
-
 const filterWorkerViewletCss = async (cachePath) => {
   const workersJsonPath = Path.join(cachePath, 'src', 'parts', 'Workers', 'Workers.json')
   const content = await readFile(workersJsonPath, 'utf8')
@@ -92,41 +61,7 @@ const filterWorkerViewletCss = async (cachePath) => {
   await writeFile(workersJsonPath, `${JSON.stringify(filteredWorkers, undefined, 2)}\n`)
 }
 
-const getSourceFiles = async (path) => {
-  const entries = await readdir(path, { withFileTypes: true })
-  const files: any[] = []
-  for (const entry of entries) {
-    const childPath = Path.join(path, entry.name)
-    if (entry.isDirectory()) {
-      const childFiles = await getSourceFiles(childPath)
-      files.push(...childFiles)
-      continue
-    }
-    if (entry.name.endsWith('.js') || entry.name.endsWith('.ts')) {
-      files.push(childPath)
-    }
-  }
-  return files
-}
-
-const replaceWorkerPaths = async (cachePath) => {
-  const replacements = await getWorkerPathReplacements(cachePath)
-  const sourceFiles = await getSourceFiles(Path.join(cachePath, 'src', 'parts'))
-  for (const sourceFile of sourceFiles) {
-    const content = await readFile(sourceFile, 'utf8')
-    let newContent = content
-    for (const { occurrence, replacement } of replacements) {
-      if (newContent.includes(occurrence)) {
-        newContent = newContent.split(occurrence).join(replacement)
-      }
-    }
-    if (newContent !== content) {
-      await writeFile(sourceFile, newContent)
-    }
-  }
-}
-
-export const bundleRendererWorker = async ({ cachePath, platform, commitHash, assetDir, version, date, product, iconThemeEtag }) => {
+export const bundleRendererWorker = async ({ cachePath, platform, commitHash, version, date, product, iconThemeEtag }) => {
   try {
     await Copy.copy({
       from: 'packages/renderer-worker/src',
@@ -180,49 +115,10 @@ export const bundleRendererWorker = async ({ cachePath, platform, commitHash, as
       replacement: `etag = ${JSON.stringify(iconThemeEtag)}`,
     })
     await Replace.replace({
-      path: `${cachePath}/src/parts/AssetDir/AssetDir.js`,
-      occurrence: `ASSET_DIR`,
-      replacement: `'${assetDir}'`,
-    })
-    const platformCode = getPlatformCode(platform)
-    await Replace.replace({
-      path: `${cachePath}/src/parts/Platform/Platform.js`,
-      occurrence: 'export const platform = getPlatform()',
-      replacement: `export const platform = ${platformCode}`,
-    })
-    await Replace.replace({
-      path: `${cachePath}/src/parts/Platform/Platform.js`,
-      occurrence: `export const getPlatform = () => {
-  // @ts-ignore
-  if (typeof PLATFORM !== 'undefined') {
-    // @ts-ignore
-    return PLATFORM
-  }
-  // @ts-ignore
-  if (typeof process !== 'undefined' && process.env.NODE_ENV === 'test') {
-    return PlatformType.Test
-  }
-  // TODO find a better way to pass runtime environment
-  if (typeof name !== 'undefined' && name.endsWith('(Electron)')) {
-    return PlatformType.Electron
-  }
-  if (typeof name !== 'undefined' && name.endsWith('(Web)')) {
-    return PlatformType.Web
-  }
-  return PlatformType.Remote
-}
-`,
-      replacement: `export const getPlatform = () => {
-  return platform
-}
-`,
-    })
-    await Replace.replace({
       path: `${cachePath}/src/parts/Scheme/Scheme.ts`,
       occurrence: `export const WebView = 'lvce-oss-webview'`,
       replacement: `export const WebView = '${product.applicationName}-webview'`,
     })
-    await replaceWorkerPaths(cachePath)
     await Replace.replace({
       path: `${cachePath}/src/parts/IsProduction/IsProduction.js`,
       occurrence: 'isProduction = false',
@@ -260,8 +156,6 @@ export const bundleRendererWorker = async ({ cachePath, platform, commitHash, as
       replacement: `productNameLong = '${product.nameLong}'`,
     })
 
-    if (platform === 'electron') {
-    }
     if (platform === 'web') {
       await Replace.replace({
         path: `${cachePath}/src/parts/Workbench/Workbench.js`,
@@ -276,13 +170,6 @@ export const bundleRendererWorker = async ({ cachePath, platform, commitHash, as
       platform: 'webworker',
       sourceMap: false,
     })
-    if (platform === 'remote') {
-      await Replace.replace({
-        path: `${cachePath}/dist/rendererWorkerMain.js`,
-        occurrence: `const platform = globalThis.PLATFORM = Remote;`,
-        replacement: `const platform = Remote;`,
-      })
-    }
     await Remove.remove(`${cachePath}/src`)
   } catch (error) {
     throw new VError(error, `Failed to bundle renderer worker`)

@@ -78,6 +78,24 @@ test('stat dispatches through isolated file system providers', async () => {
   expect(ExtensionHostShared.executeProvider).not.toHaveBeenCalled()
 })
 
+test('exists checks files through the provider stat method', async () => {
+  invoke.mockResolvedValue({ found: true, result: 1 })
+
+  await expect(ExtensionHostFileSystem.exists('remote-ssh:///workspace/Main.ts')).resolves.toBe(true)
+  expect(invoke).toHaveBeenCalledWith(
+    'Extensions.executeFileSystemProviderStat',
+    'remote-ssh',
+    'remote-ssh:///workspace/Main.ts',
+  )
+  expect(ExtensionHostShared.executeProvider).not.toHaveBeenCalled()
+})
+
+test('exists returns false when the provider cannot stat a file', async () => {
+  invoke.mockRejectedValue(new Error('File not found'))
+
+  await expect(ExtensionHostFileSystem.exists('remote-ssh:///workspace/missing.ts')).resolves.toBe(false)
+})
+
 test('getOpenExternalPath dispatches through isolated file system providers', async () => {
   invoke.mockResolvedValue({ found: true, result: '\\\\wsl.localhost\\Ubuntu\\workspace' })
 
