@@ -204,3 +204,33 @@
   top: 0;
   width: auto;
 }
+
+.BrowserLeftColumn {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+}
+
+.BrowserLeftColumn > .SecondaryPreviewArea {
+  flex: 0 0 var(--SecondaryPreviewHeight);
+}
+
+.BrowserBottomLeft .SashSecondaryPreview {
+  left: 0;
+  top: calc(var(--SashSecondaryPreviewTop) - var(--TitleBarHeight) - 2px);
+  width: var(--SecondaryPreviewWidth);
+}
+
+.BrowserBottomLeftDropTarget {
+  position: absolute;
+  left: 0;
+  top: var(--BrowserDropTop);
+  bottom: 0;
+  width: var(--BrowserDropWidth);
+  z-index: 100;
+  background: var(--EditorDropBackground, #3879d94d);
+  outline: 2px solid var(--FocusBorder, #007fd4);
+  outline-offset: -2px;
+}

@@ -450,6 +450,22 @@ const getWorkbenchBodyDom = (state: LayoutState) => {
     secondaryPreviewSashVisible,
     secondaryPreviewVisible,
   } = state
+  if (state.secondaryPreviewPlacement === 'bottomLeft' && state.secondaryPreviewVisible) {
+    const right = state.previewVisible ? getPreviewAreaDom(previewId, previewActionsUid, false) : []
+    return [
+      {
+        type: VirtualDomElements.Div,
+        className: 'WorkbenchBody BrowserBottomLeft',
+        childCount: 1 + Number(state.previewVisible) + Number(previewSashVisible),
+      },
+      { type: VirtualDomElements.Div, className: 'BrowserLeftColumn', childCount: 2 + Number(secondaryPreviewSashVisible) },
+      ...getWorkbenchMainDom(state),
+      ...(secondaryPreviewSashVisible ? [getSashSecondaryPreviewDom(true)] : []),
+      ...getPreviewAreaDom(secondaryPreviewId, secondaryPreviewActionsUid, true),
+      ...(previewSashVisible ? [getSashPreviewDom()] : []),
+      ...right,
+    ]
+  }
   const children: any[] = [...getWorkbenchMainDom(state)]
   let childCount = 1
   const previewsAreVertical = state.previewOrientation === PreviewOrientation.Vertical && state.previewVisible && state.secondaryPreviewVisible
@@ -545,6 +561,19 @@ export const getLayoutVirtualDom = (state: LayoutState) => {
         uid: widget.uid,
       })
     }
+  }
+
+  if (state.browserTabDragSource !== undefined) {
+    workbenchChildCount++
+    dom.push({
+      type: VirtualDomElements.Div,
+      className: 'BrowserBottomLeftDropTarget',
+      childCount: 0,
+      onDragOver: 'handleBrowserTabDragOver',
+      onDrop: 'handleBrowserTabDrop',
+      role: 'region',
+      ariaLabel: 'Move browser tab below editor',
+    })
   }
 
   // Update workbench childCount

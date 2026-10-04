@@ -13,6 +13,7 @@ export const executeImplementationProvider = (editor, offset) => {
     method: ExtensionHostCommandType.ImplementationExecuteImplementationProvider,
     args: [offset],
     noProviderFoundMessage: 'No implementation provider found',
+    noProviderFoundResult: [],
     combineResults,
   })
 }
