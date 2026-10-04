@@ -3,6 +3,7 @@ import { beforeEach, expect, jest, test } from '@jest/globals'
 
 const invoke = jest.fn<(...args: readonly unknown[]) => Promise<unknown>>()
 const getTokenizePath = jest.fn<(languageId: string) => string>(() => '/tokenize-javascript.js')
+const readFile = jest.fn<(...args: readonly unknown[]) => Promise<string>>(() => Promise.resolve('const value = 1'))
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -17,7 +18,12 @@ jest.unstable_mockModule('../src/parts/GetTokenizePath/GetTokenizePath.js', () =
   getTokenizePath,
 }))
 
+jest.unstable_mockModule('../src/parts/FileSystem/FileSystemDisk.js', () => ({
+  readFile,
+}))
+
 const PrettyError = await import('../src/parts/PrettyError/PrettyError.js')
+const FileSystemDisk = await import('../src/parts/FileSystem/FileSystemDisk.js')
 
 test('prepare passes the javascript tokenizer path to the error worker', async () => {
   const error = new TypeError('Oops')
@@ -45,6 +51,23 @@ test('prepare passes the javascript tokenizer path to the error worker', async (
       tokenizerPath: '/tokenize-javascript.js',
     },
   )
+})
+
+test('prepare reads packaged file URL source for code frames', async () => {
+  const error = new SyntaxError('Unexpected token')
+  error.stack = 'SyntaxError: Unexpected token\n    at parse (file:///usr/lib/lvce/devcontainer.js:2:7)'
+  const sourceText = 'const value = 1\nconst = 2'
+  readFile.mockResolvedValue(sourceText)
+  invoke.mockResolvedValue({ message: 'SyntaxError: Unexpected token' })
+
+  await PrettyError.prepare(error)
+
+  expect(FileSystemDisk.readFile).toHaveBeenCalledWith('file:///usr/lib/lvce/devcontainer.js')
+  expect(invoke).toHaveBeenCalledWith('Errors.prepare', expect.objectContaining({ stack: error.stack }), {
+    sourceText,
+    sourceUrl: 'file:///usr/lib/lvce/devcontainer.js',
+    tokenizerPath: '/tokenize-javascript.js',
+  })
 })
 
 test('prepare returns the original error when preparation fails', async () => {

@@ -69,7 +69,6 @@ export const bundleWorkers = async ({ commitHash, platform, assetDir, version, d
   const rendererWorkerCachePath = await BundleRendererWorkerCached.bundleRendererWorkerCached({
     commitHash,
     platform,
-    assetDir,
     version,
     date,
     product,

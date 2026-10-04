@@ -302,6 +302,8 @@ export const getModuleId = (commandId: any): any => {
     case 'ShellCommand.getMenuEntries':
     case 'ShellCommand.install':
       return ModuleId.ShellCommand
+    case 'StartupCpuProfile.complete':
+      return ModuleId.StartupCpuProfile
     case 'TemporaryMessagePort.getPortTuple2':
     case 'TemporaryMessagePort.getPortTuple3':
     case 'TemporaryMessagePort.handlePorts':

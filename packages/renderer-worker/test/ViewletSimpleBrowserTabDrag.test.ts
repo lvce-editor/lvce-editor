@@ -98,5 +98,14 @@ test('leaving the tab strip clears the indicator and cancellation clears drag da
   expect(TabDrag.handleTabDragLeave(state, 150, 100).tabDropIndex).toBe(-1)
   const reset = TabDrag.resetTabDrag(state)
   expect(reset.draggedTab).toBeUndefined()
-  expect(TabDrag.renderDragData.apply(state, reset)).toEqual(['Viewlet.setDragData', 7, { items: [], label: 'New Tab' }])
+  expect(TabDrag.renderDragData.apply(state, reset)).toEqual([['Viewlet.setDragData', 7, { items: [], label: 'New Tab' }]])
+})
+
+test('drag data is sent to the renderer command rather than the viewlet factory', async () => {
+  const Manager = await import('../src/parts/ViewletManager/ViewletManager.js')
+  const state = createState()
+  const next = TabDrag.stageTabDrag(state, 1, 0)
+  expect(Manager.render({ render: [TabDrag.renderDragData] }, state, next)).toEqual([
+    ['Viewlet.setDragData', 7, { items: [{ type: 'application/x-lvce-simple-browser-tab', data: '7' }], label: 'Two' }],
+  ])
 })

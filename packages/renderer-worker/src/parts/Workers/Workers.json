@@ -780,6 +780,14 @@
     }
   },
   {
+    "id": "cacheWorker",
+    "fileName": "cacheWorkerMain.js",
+    "contentSecurityPolicy": ["default-src 'none'", "sandbox allow-same-origin"],
+    "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/cache-worker/cacheWorkerMain.js",
+    "productionPath": "/packages/cache-worker/cacheWorkerMain.js",
+    "settingName": "develop.cacheWorkerPath"
+  },
+  {
     "id": "extensionHostSubWorker",
     "fileName": "extensionHostSubWorkerMain.js",
     "contentSecurityPolicy": ["default-src 'none'", "connect-src *", "script-src 'self'", "font-src 'self'"],
@@ -1677,12 +1685,20 @@
           "name": "Workers.resize",
           "parameters": [
             { "source": "state", "name": "uid" },
+            { "source": "argument", "name": "dimensions", "index": "x" },
+            { "source": "argument", "name": "dimensions", "index": "y" },
             { "source": "argument", "name": "dimensions", "index": "width" },
             { "source": "argument", "name": "dimensions", "index": "height" }
           ]
         },
         "getCommandIds": { "name": "Workers.getCommandIds", "parameters": [] },
         "getComponentState": { "name": "Workers.getComponentState", "parameters": [{ "source": "state", "name": "uid" }] },
+        "getKeyBindings": { "name": "Workers.getKeyBindings", "parameters": [] },
+        "getMenuEntryIds": { "name": "Workers.getMenuEntryIds", "parameters": [] },
+        "getMenuEntries": {
+          "name": "Workers.getMenuEntries",
+          "parameters": [{ "source": "argument", "name": "args", "spread": true }]
+        },
         "setComponentState": {
           "name": "Workers.setComponentState",
           "parameters": [{ "source": "state", "name": "uid" }, { "source": "argument", "name": "componentState" }]
@@ -1753,7 +1769,6 @@
         "/css/parts/SettingsItems.css", "/css/parts/SettingsSideBar.css", "/css/parts/ViewletSettings.css"
       ],
       "state": { "idKey": "uid", "fields": ["uri", "x", "y", "width", "height", "parentUid"] },
-      "stateResize": true,
       "commandPrefix": "Settings",
       "methods": {
         "create": {
@@ -1774,6 +1789,10 @@
         "loadContent": {
           "name": "Settings.loadContent",
           "parameters": [{ "source": "state", "name": "uid" }, { "source": "argument", "name": "savedState" }]
+        },
+        "resize": {
+          "name": "Settings.resize",
+          "parameters": [{ "source": "state", "name": "uid" }, { "source": "argument", "name": "dimensions" }]
         },
         "diff": { "name": "Settings.diff2", "parameters": [{ "source": "state", "name": "uid" }] },
         "render": {
@@ -1940,7 +1959,7 @@
   {
     "id": "textMeasurementWorker",
     "fileName": "textMeasurementWorkerMain.js",
-    "contentSecurityPolicy": ["default-src 'none'", "font-src 'self'", "sandbox allow-same-origin"],
+    "contentSecurityPolicy": ["default-src 'none'", "font-src 'self'", "worker-src 'self'", "sandbox allow-same-origin"],
     "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/text-measurement-worker/dist/textMeasurementWorkerMain.js",
     "productionPath": "/packages/text-measurement-worker/dist/textMeasurementWorkerMain.js",
     "settingName": "develop.textMeasurementWorkerPath",

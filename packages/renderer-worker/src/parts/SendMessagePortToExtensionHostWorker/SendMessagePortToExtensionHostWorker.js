@@ -8,6 +8,7 @@ import * as ChatMathWorker from '../ChatMathWorker/ChatMathWorker.js'
 import * as ChatMessageParsingWorker from '../ChatMessageParsingWorker/ChatMessageParsingWorker.js'
 import * as ChatNetworkWorker from '../ChatNetworkWorker/ChatNetworkWorker.js'
 import * as ChatStorageWorker from '../ChatStorageWorker/ChatStorageWorker.js'
+import * as CacheWorker from '../CacheWorker/CacheWorker.js'
 import * as ChatToolWorker from '../ChatToolWorker/ChatToolWorker.js'
 import * as ChatViewModelWorker from '../ChatViewModelWorker/ChatViewModelWorker.js'
 import * as ChatViewWorker from '../ChatViewWorker/ChatViewWorker.js'
@@ -96,6 +97,11 @@ export const sendMessagePortToSharedProcess = async (port, initialCommand, rpcId
 export const sendMessagePortToProcessExplorer = async (port) => {
   Assert.object(port)
   await SharedProcess.invokeAndTransfer('HandleMessagePortForProcessExplorer.handleMessagePortForProcessExplorer', port)
+}
+
+export const sendMessagePortToCacheWorker = async (port) => {
+  Assert.object(port)
+  await CacheWorker.invokeAndTransfer('CacheWorker.handleMessagePort', port)
 }
 
 export const sendMessagePortToFileWatcherExplorer = async (port) => {

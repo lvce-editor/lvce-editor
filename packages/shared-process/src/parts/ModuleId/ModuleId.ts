@@ -83,3 +83,5 @@ export const RemoteCli = 96
 export const BrowserFind = 97
 export const ShellCommand = 98
 export const PtyHost = 99
+
+export const StartupCpuProfile = 101

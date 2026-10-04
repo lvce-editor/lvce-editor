@@ -1,10 +1,11 @@
 import { describe, expect, test } from '@jest/globals'
 import { execFile, spawn } from 'node:child_process'
-import { access, chmod, mkdir, mkdtemp, readFile, realpath, rm, symlink, writeFile } from 'node:fs/promises'
+import { access, chmod, lstat, mkdir, mkdtemp, readFile, realpath, rm, symlink, writeFile } from 'node:fs/promises'
 import { constants } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { basename, dirname, join } from 'node:path'
 import { promisify } from 'node:util'
+import { setTimeout } from 'node:timers/promises'
 
 const execFileAsync = promisify(execFile)
 const testPosix = process.platform === 'win32' ? test.skip : test
@@ -215,6 +216,50 @@ setInterval(() => {}, 1000)
     }
   })
 
+  testPosix('waits for CPU profiles and forwards output and exit status', async () => {
+    const root = await mkdtemp(join(tmpdir(), 'lvce-linux-cli-cpu-profile-'))
+    const binPath = join(root, 'bin')
+    const fakeElectronPath = join(root, 'fake-electron')
+    try {
+      await mkdir(binPath)
+      await writeFile(
+        fakeElectronPath,
+        `#!/usr/bin/env node
+setTimeout(() => {
+  console.log('profile written to /tmp/profile.cpuprofile')
+  process.stderr.write('profile complete\\n')
+  process.exit(Number(process.env.LVCE_TEST_EXIT_CODE || 0))
+}, 100)
+`,
+      )
+      await chmod(fakeElectronPath, 0o755)
+      const cli = (await readTemplate('linux_cli_js')).replace(
+        'spawn(executablePath, launchArgs, {',
+        `spawn(${JSON.stringify(fakeElectronPath)}, launchArgs, {`,
+      )
+      const cliPath = join(binPath, 'cli.js')
+      await writeFile(cliPath, cli)
+
+      for (const flag of ['--cpu-profile', '--wait']) {
+        const success = await execFileAsync(process.execPath, [cliPath, flag])
+        expect(success.stdout).toBe('profile written to /tmp/profile.cpuprofile\n')
+        expect(success.stderr).toBe('profile complete\n')
+
+        await expect(
+          execFileAsync(process.execPath, [cliPath, flag], {
+            env: { ...process.env, LVCE_TEST_EXIT_CODE: '7' },
+          }),
+        ).rejects.toMatchObject({
+          code: 7,
+          stdout: 'profile written to /tmp/profile.cpuprofile\n',
+          stderr: 'profile complete\n',
+        })
+      }
+    } finally {
+      await rm(root, { recursive: true, force: true })
+    }
+  })
+
   test('uses promise resolvers for child process events', async () => {
     const cli = await readTemplate('linux_cli_js')
 
@@ -235,22 +280,23 @@ setInterval(() => {}, 1000)
     const mainProcessPath = join(root, 'packages', 'main-process')
     const artifactDir = join(root, 'electron-artifact')
     const fakeElectronPath =
-      process.platform === 'darwin'
-        ? join(artifactDir, 'Electron.app', 'Contents', 'MacOS', 'Electron')
-        : join(artifactDir, 'electron')
+      process.platform === 'darwin' ? join(artifactDir, 'Electron.app', 'Contents', 'MacOS', 'Electron') : join(artifactDir, 'electron')
+    const fakeSandboxPath = join(artifactDir, 'chrome-sandbox')
     const downloadResultPath = join(root, 'download.json')
     const launchResultPath = join(root, 'launch.json')
     const cachePath = join(root, 'cache')
+    const failingSudoPath = join(root, 'sudo')
     try {
       await mkdir(binPath, { recursive: true })
       await mkdir(join(mainProcessPath, 'node_modules', '@electron', 'get'), { recursive: true })
       await mkdir(join(mainProcessPath, 'node_modules', '@electron-internal', 'extract-zip'), { recursive: true })
       await mkdir(dirname(fakeElectronPath), { recursive: true })
+      await writeFile(fakeSandboxPath, 'fake sandbox helper')
+      await chmod(fakeSandboxPath, 0o755)
+      await writeFile(failingSudoPath, '#!/bin/sh\nexit 72\n')
+      await chmod(failingSudoPath, 0o755)
       await writeFile(join(mainProcessPath, 'package.json'), JSON.stringify({ type: 'module' }))
-      await writeFile(
-        join(mainProcessPath, 'node_modules', '@electron', 'get', 'package.json'),
-        JSON.stringify({ main: 'index.cjs' }),
-      )
+      await writeFile(join(mainProcessPath, 'node_modules', '@electron', 'get', 'package.json'), JSON.stringify({ main: 'index.cjs' }))
       await writeFile(
         join(mainProcessPath, 'node_modules', '@electron', 'get', 'index.cjs'),
         `exports.downloadArtifact = async (options) => {
@@ -276,8 +322,10 @@ module.exports = async (_zipPath, { dir }) => {
       await writeFile(
         fakeElectronPath,
         `#!/usr/bin/env node
-const { writeFileSync } = require('node:fs')
-writeFileSync(process.env.LVCE_TEST_LAUNCH_RESULT, JSON.stringify({ args: process.argv.slice(2), runAsNode: process.env.ELECTRON_RUN_AS_NODE }))
+const { renameSync, writeFileSync } = require('node:fs')
+const temporaryResult = process.env.LVCE_TEST_LAUNCH_RESULT + '.tmp'
+writeFileSync(temporaryResult, JSON.stringify({ args: process.argv.slice(2), runAsNode: process.env.ELECTRON_RUN_AS_NODE }))
+renameSync(temporaryResult, process.env.LVCE_TEST_LAUNCH_RESULT)
 `,
       )
       await chmod(fakeElectronPath, 0o755)
@@ -293,7 +341,7 @@ writeFileSync(process.env.LVCE_TEST_LAUNCH_RESULT, JSON.stringify({ args: proces
         LVCE_TEST_LAUNCH_RESULT: launchResultPath,
         XDG_CACHE_HOME: cachePath,
       }
-      const { stderr } = await execFileAsync(process.execPath, [cliPath, '--electron-version', '44.1.2', '--wait'], { env })
+      const { stdout, stderr } = await execFileAsync(process.execPath, [cliPath, '--electron-version', '44.1.2', '--wait'], { env })
       const download = JSON.parse((await readFile(downloadResultPath, 'utf8')).trim())
       const launch = JSON.parse(await readFile(launchResultPath, 'utf8'))
       const realAppRoot = await realpath(root)
@@ -301,6 +349,7 @@ writeFileSync(process.env.LVCE_TEST_LAUNCH_RESULT, JSON.stringify({ args: proces
       expect(download).toMatchObject({ version: '44.1.2', platform: process.platform, artifactName: 'electron' })
       expect(launch.args).toEqual([realAppRoot, '--wait'])
       expect(launch.runAsNode).toBeUndefined()
+      expect(stdout).toContain('Downloading Electron 44.1.2...')
       expect(stderr).toBe('')
       const cachedExecutablePath =
         process.platform === 'darwin'
@@ -308,17 +357,78 @@ writeFileSync(process.env.LVCE_TEST_LAUNCH_RESULT, JSON.stringify({ args: proces
           : join(cachePath, 'lvce', 'electron', `44.1.2-${process.platform}-${process.arch}`, 'electron')
       await expect(access(cachedExecutablePath, constants.X_OK)).resolves.toBeUndefined()
 
-      await execFileAsync(process.execPath, [cliPath, '--electron-version=44.1.2', '--wait'], { env })
+      if (process.platform === 'linux') {
+        const cachedSandboxPath = join(dirname(cachedExecutablePath), 'chrome-sandbox')
+        const userId = process.getuid?.()
+        const groupId = process.getgid?.()
+        if (userId === undefined || groupId === undefined) {
+          throw new Error('POSIX user and group ids are required for the Linux sandbox test')
+        }
+        const preparedSandboxStats = await lstat(cachedSandboxPath)
+        expect(preparedSandboxStats.uid).toBe(0)
+        expect(preparedSandboxStats.mode & 0o7777).toBe(0o4755)
+
+        const { stdout: cachedStdout } = await execFileAsync(process.execPath, [cliPath, '--electron-version=44.1.2', '--wait'], {
+          env: { ...env, PATH: `${root}:${process.env.PATH}` },
+        })
+        expect(cachedStdout).not.toContain('Downloading Electron')
+
+        await execFileAsync('sudo', ['chown', `${userId}:${groupId}`, cachedSandboxPath])
+        await chmod(cachedSandboxPath, 0o755)
+        await execFileAsync(process.execPath, [cliPath, '--electron-version=44.1.2', '--wait'], { env })
+        const repairedSandboxStats = await lstat(cachedSandboxPath)
+        expect(repairedSandboxStats.uid).toBe(0)
+        expect(repairedSandboxStats.mode & 0o7777).toBe(0o4755)
+
+        await execFileAsync('sudo', ['chown', `${userId}:${groupId}`, cachedSandboxPath])
+        await chmod(cachedSandboxPath, 0o755)
+        await rm(launchResultPath)
+        await expect(
+          execFileAsync(process.execPath, [cliPath, '--electron-version=44.1.2', '--wait'], {
+            env: { ...env, PATH: `${root}:${process.env.PATH}` },
+          }),
+        ).rejects.toMatchObject({ code: 1, stderr: expect.stringContaining('Unable to prepare Electron sandbox helper') })
+        await expect(access(launchResultPath)).rejects.toMatchObject({ code: 'ENOENT' })
+
+        await rm(cachedSandboxPath)
+        await symlink(fakeSandboxPath, cachedSandboxPath)
+        await expect(execFileAsync(process.execPath, [cliPath, '--electron-version=44.1.2', '--wait'], { env })).rejects.toMatchObject({
+          code: 1,
+          stderr: expect.stringContaining('must be a regular file'),
+        })
+        await expect(access(launchResultPath)).rejects.toMatchObject({ code: 'ENOENT' })
+      } else {
+        const { stdout: cachedStdout } = await execFileAsync(process.execPath, [cliPath, '--electron-version=44.1.2', '--wait'], { env })
+        expect(cachedStdout).not.toContain('Downloading Electron')
+      }
       expect((await readFile(downloadResultPath, 'utf8')).trim().split('\n')).toHaveLength(1)
+
+      const detachedResultPath = join(root, 'detached-launch.json')
+      const { stdout: detachedStdout } = await execFileAsync(process.execPath, [cliPath, '--electron-version=44.2.0'], {
+        env: { ...env, LVCE_TEST_LAUNCH_RESULT: detachedResultPath },
+      })
+      expect(detachedStdout).toContain('Downloading Electron 44.2.0...')
+      // The CLI exits before its detached child. Wait for that child's write before removing its directory.
+      let detachedResult: string | undefined
+      for (let attempt = 0; attempt < 100; attempt++) {
+        try {
+          detachedResult = await readFile(detachedResultPath, 'utf8')
+          if (detachedResult) break
+        } catch (error) {
+          if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error
+        }
+        await setTimeout(20)
+      }
+      expect(JSON.parse(detachedResult || 'null')).toEqual({ args: [realAppRoot] })
 
       await expect(
         execFileAsync(process.execPath, [cliPath, '--electron-version=45.0.0', '--wait'], {
           env: { ...env, LVCE_TEST_FAIL_EXTRACTION: '1' },
         }),
       ).rejects.toMatchObject({ code: 1, stderr: expect.stringContaining('fixture extraction failed') })
-      await expect(
-        access(join(cachePath, 'lvce', 'electron', `45.0.0-${process.platform}-${process.arch}`, 'electron')),
-      ).rejects.toMatchObject({ code: 'ENOENT' })
+      await expect(access(join(cachePath, 'lvce', 'electron', `45.0.0-${process.platform}-${process.arch}`, 'electron'))).rejects.toMatchObject({
+        code: 'ENOENT',
+      })
     } finally {
       await rm(root, { recursive: true, force: true })
     }

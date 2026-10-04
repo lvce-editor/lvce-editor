@@ -3,6 +3,7 @@ import { readdir } from 'node:fs/promises'
 import * as BundleCss from '../BundleCss/BundleCss.ts'
 import * as BundleRendererProcess from '../BundleRendererProcess/BundleRendererProcess.ts'
 import * as BundleWorkers from '../BundleWorkers/BundleWorkers.ts'
+import * as AddRuntimeConfigToIndexHtml from '../AddRuntimeConfigToIndexHtml/AddRuntimeConfigToIndexHtml.ts'
 import * as CommitHash from '../CommitHash/CommitHash.ts'
 import * as Console from '../Console/Console.ts'
 import * as Copy from '../Copy/Copy.ts'
@@ -26,12 +27,9 @@ import * as TranspileFiles from '../TranspileFiles/TranspileFiles.ts'
 import * as Version from '../Version/Version.ts'
 import * as WriteFile from '../WriteFile/WriteFile.ts'
 
-const copyRendererProcessFiles = async ({ pathPrefix, commitHash }) => {
+const copyRendererProcessFiles = async ({ commitHash }) => {
   await BundleRendererProcess.bundleRendererProcess({
     cachePath: `packages/build/.tmp/dist/${commitHash}/packages/renderer-process`,
-    commitHash,
-    platform: 'web',
-    assetDir: `${pathPrefix}/${commitHash}`,
   })
 }
 
@@ -139,6 +137,11 @@ const copyStaticFiles = async ({ pathPrefix, ignoreIconTheme, commitHash }) => {
     path: `packages/build/.tmp/dist/index.html`,
     occurrence: '/css',
     replacement: `${pathPrefix}/${commitHash}/css`,
+  })
+  await AddRuntimeConfigToIndexHtml.addRuntimeConfigToIndexHtml({
+    path: `packages/build/.tmp/dist/index.html`,
+    platform: 'web',
+    assetDir: `${pathPrefix}/${commitHash}`,
   })
   await BundleCss.bundleCss({
     outDir: `packages/build/.tmp/dist/${commitHash}/css`,
@@ -564,7 +567,7 @@ export const build = async ({ product }) => {
   Console.timeEnd('copyStaticFiles')
 
   Console.time('copyRendererProcessFiles')
-  await copyRendererProcessFiles({ pathPrefix, commitHash })
+  await copyRendererProcessFiles({ commitHash })
   Console.timeEnd('copyRendererProcessFiles')
 
   Console.time('copyExtensionHostSubWorkerFiles')

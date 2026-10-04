@@ -1,6 +1,6 @@
-import { expect, test } from '@jest/globals'
-import { commandMap } from '../src/parts/CommandMap/CommandMap.js'
+import { expect, jest, test } from '@jest/globals'
 import * as ClipBoardIpc from '../src/parts/ClipBoard/ClipBoard.ipc.js'
+import { commandMap } from '../src/parts/CommandMap/CommandMap.js'
 
 test('registers the go-to-line quick pick command', () => {
   expect(commandMap['QuickPick.openGoToLine']).toBeDefined()
@@ -61,6 +61,10 @@ test('registers the file handles command', () => {
   expect(commandMap['FileHandles.get']).toBeDefined()
 })
 
+test('registers the cache worker message port command', () => {
+  expect(commandMap['SendMessagePortToExtensionHostWorker.sendMessagePortToCacheWorker']).toBeDefined()
+})
+
 test('registers the active text document command', () => {
   expect(commandMap['GetActiveEditor.getTextDocument']).toBeDefined()
 })
@@ -71,4 +75,16 @@ test('registers only direct extension node process commands', () => {
   expect(commandMap['ExtensionNodeRpc.create']).toBeUndefined()
   expect(commandMap['ExtensionNodeRpc.dispose']).toBeUndefined()
   expect(commandMap['ExtensionNodeRpc.invoke']).toBeUndefined()
+})
+
+test('window-close RPC commands preserve dirty results and save failures', async () => {
+  const Command = await import('../src/parts/Command/Command.js')
+  const dirty = jest.fn(() => true)
+  const failure = new Error('disk full')
+  Command.register('Main.hasDirtyTabs', dirty)
+  Command.register('Main.saveAll', async () => {
+    throw failure
+  })
+  await expect(commandMap['Main.hasDirtyTabs']()).resolves.toBe(true)
+  await expect(commandMap['Main.saveAll']()).rejects.toBe(failure)
 })

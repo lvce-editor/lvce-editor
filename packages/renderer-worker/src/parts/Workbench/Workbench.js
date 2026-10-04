@@ -28,6 +28,7 @@ import * as LifeCyclePhase from '../LifeCyclePhase/LifeCyclePhase.js'
 import * as Location from '../Location/Location.js'
 import * as Module from '../Module/Module.js'
 import * as ModernUi from '../ModernUi/ModernUi.js'
+import * as StartupCpuProfile from '../StartupCpuProfile/StartupCpuProfile.js'
 import * as OpenInitialUri from '../OpenInitialUri/OpenInitialUri.js'
 import * as OnLoadCommands from '../OnLoadCommands/OnLoadCommands.js'
 import * as Performance from '../Performance/Performance.js'
@@ -131,6 +132,7 @@ export const startup = async (platform, assetDir) => {
   await RendererProcess.listen()
   const initData = await InitData.getInitData()
   Location.initialize(initData.Location.href)
+  const cpuProfile = platform === PlatformType.Electron && StartupCpuProfile.isEnabled(initData.Location.href)
   if (platform !== PlatformType.Web) {
     await LaunchSharedProcess.launchSharedProcess()
     await IpcTrace.initialize()
@@ -213,7 +215,7 @@ export const startup = async (platform, assetDir) => {
   Performance.mark(PerformanceMarkerType.WillShowLayout)
   const layout = ViewletManager.create(ViewletModule.load, ViewletModuleId.Layout, 0, '', 0, 0, 0, 0)
   layout.uid = Id.create()
-  const layoutState = await SaveState.getSavedViewletState(ViewletModuleId.Layout)
+  const layoutState = cpuProfile ? undefined : await SaveState.getSavedViewletState(ViewletModuleId.Layout)
   const commands = await ViewletManager.load(
     {
       getModule: ViewletModule.load,
@@ -227,7 +229,7 @@ export const startup = async (platform, assetDir) => {
     },
     false,
     false,
-    { ...initData, ...layoutState, restore: !isTestRun },
+    { ...initData, ...layoutState, restore: !isTestRun && !cpuProfile },
   )
   commands.splice(1, 1)
 
@@ -251,6 +253,10 @@ export const startup = async (platform, assetDir) => {
 
   await Promise.all(actions.map((action) => action(platform, assetDir)))
   await OpenInitialUri.openInitialUri(initData.Location.href)
+  if (cpuProfile) {
+    await StartupCpuProfile.complete()
+    return
+  }
   await OnLoadCommands.run(assetDir, platform)
   await CleanUpWorkersAfterLoad.cleanUpWorkersAfterLoad()
 

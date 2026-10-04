@@ -2,8 +2,8 @@
   {
     "name": "builtin.performance-profile-view",
     "repository": "github.com/lvce-editor/performance-profile-view",
-    "version": "0.1.1",
-    "sha256": "9660dffd1eca59dfe266e187a53a7211ebbdc701d83274306e15875ae031f167",
+    "version": "0.2.1",
+    "sha256": "bea3d65f3abb86613bfe65abfc4a78c28bf583167e5efcff48a7bbb439844933",
     "created": "2026-09-29"
   },
   {
@@ -17,22 +17,22 @@
   {
     "name": "builtin.git",
     "repository": "github.com/lvce-editor/git",
-    "version": "5.39.1",
-    "sha256": "975f98576ee941cab07f4c92c8c39fc4038d1e6fc6ff3613c010ee0bf5d91b76",
+    "version": "5.40.1",
+    "sha256": "0c101466608a5170f1ba8f756da9f7a2f7692cf77ff4a334e2d809c776879ff1",
     "created": "2022-07-02"
   },
   {
     "name": "builtin.devcontainer",
     "repository": "github.com/lvce-editor/devcontainer",
-    "version": "0.14.0",
-    "sha256": "0b20635f0ccd5fd0d2a3fa1484d2f5e4de84d3007b0e355fb135c3e6e45b7d50",
+    "version": "0.17.1",
+    "sha256": "0cbe09c4e02b4e2dc63c92afd9fc570b1303f75d87bacaa0c8f8e217e9665189",
     "created": "2026-09-06"
   },
   {
     "name": "builtin.csv-viewer",
     "repository": "github.com/lvce-editor/csv-viewer",
-    "version": "2.15.1",
-    "sha256": "c8d97e043e305e21ae11719fa5ad80cb4d35c1ba8dbf81842f3a5bae9fab9582",
+    "version": "2.15.3",
+    "sha256": "a4132bd4821d4da3aafada771431d62b9c6b821b89516049a9c75ae337b59379",
     "created": "2024-10-13"
   },
   {
@@ -45,8 +45,8 @@
   {
     "name": "builtin.chat-view-2",
     "repository": "github.com/lvce-editor/chat-view-2",
-    "version": "1.28.1",
-    "sha256": "d1759e2163dc4c5f788f5d6525e8ce07af9d838f1109991abd6dd3aeb95272b1",
+    "version": "1.28.4",
+    "sha256": "d2b8ad0d4e1ced89f1d6a773f87ea453f8a16ae873533cd3c89740a48251af36",
     "created": "2026-09-13"
   },
   {
@@ -96,8 +96,8 @@
   {
     "name": "builtin.eslint",
     "repository": "github.com/lvce-editor/eslint",
-    "version": "1.23.1",
-    "sha256": "5d8caa9472e2f41ac69efdd0ed9208d3ce055964ea26019405d346b700dbf6c3",
+    "version": "1.23.5",
+    "sha256": "7904e7ba801737c45fa9c9bafed371c83b199943b84dbff07c98c5004cc0a3b9",
     "created": "2026-08-01"
   },
   {
@@ -265,8 +265,8 @@
   {
     "name": "builtin.media-preview",
     "repository": "github.com/lvce-editor/media-preview",
-    "version": "2.16.4",
-    "sha256": "ea343ba474f86f2c07c9c60bae5691ea18349c0253adf1f72e74dfa6e13e4f06",
+    "version": "2.18.0",
+    "sha256": "0bd53962f6c1174a5230255c61ad0c7947eb7442888fa17d23fcf92043c74956",
     "created": "2024-09-07"
   },
   {
@@ -447,8 +447,8 @@
   {
     "name": "builtin.language-basics-typescript",
     "repository": "github.com/lvce-editor/language-basics-typescript",
-    "version": "3.20.3",
-    "sha256": "58b3afbadbffc71caa61c5f8fdc75f535b1ef4c40743199e6d9192f51bfe1aeb",
+    "version": "3.20.7",
+    "sha256": "64297a1c7217ad69587bbe7cce18f28117fc7df24842a0176581620a997dbc08",
     "created": "2022-06-26"
   },
   {
@@ -489,8 +489,8 @@
   {
     "name": "builtin.language-features-html",
     "repository": "github.com/lvce-editor/language-features-html",
-    "version": "1.10.0",
-    "sha256": "71b04ec003391d573ca2bb20564ba73efd41816b93ac99b7130a93276961d081",
+    "version": "1.11.1",
+    "sha256": "93ae9d09a88e7a4fe40766c8091471a6d47207b2f4b7d48515e9de9d900fe9c3",
     "created": "2022-06-16"
   },
   {
@@ -510,15 +510,15 @@
   {
     "name": "builtin.language-features-typescript",
     "repository": "github.com/lvce-editor/language-features-typescript",
-    "version": "5.23.0",
-    "sha256": "3187e2256fca023c58813a1ca3f6553fb1ba2d5cd707eb495a1ad1a33047a996",
+    "version": "5.26.1",
+    "sha256": "2defa314619b9bfcb4383bb2e3b31d0300175815f4e9bef1837c3c169d294aaa",
     "created": "2022-06-16"
   },
   {
     "name": "builtin.prettier",
     "repository": "github.com/lvce-editor/prettier",
-    "version": "2.23.1",
-    "sha256": "715807883bf727230c4d6af5b471424fdacbb989f6cd55fa089854db702e5b25",
+    "version": "2.26.1",
+    "sha256": "7f0c14edc799342e02d05100457005aec4943760440fb99c7fbbf66f3730923a",
     "created": "2022-06-16"
   },
   {
