@@ -16,7 +16,7 @@ test('does not stop capture before diagnostics finish', async () => {
   const pass = Promise.withResolvers<void>()
   ;(EditorWorker.invoke as any).mockImplementationOnce(() => pass.promise)
   const completion = Profile.complete()
-  expect(EditorWorker.invoke).toHaveBeenCalledWith('Editor.waitForDiagnostics', 42)
+  expect(EditorWorker.invoke).toHaveBeenCalledWith('Editor.waitForDiagnostics', 42, 120_000)
   expect(SharedProcess.invoke).not.toHaveBeenCalled()
   pass.resolve()
   await completion

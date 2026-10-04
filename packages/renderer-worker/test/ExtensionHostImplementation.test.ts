@@ -30,6 +30,7 @@ test('executeImplementationProvider - no implementations found', async () => {
     combineResults: expect.any(Function),
     method: 'ExtensionHostImplementation.executeImplementationProvider',
     noProviderFoundMessage: 'No implementation provider found',
+    noProviderFoundResult: [],
     args: [0],
   })
 })

@@ -121,6 +121,7 @@ export interface LayoutState {
   readonly secondarySideBarMinWidth: number
   readonly secondarySideBarTop: number
   readonly secondarySideBarView: string
+  readonly secondarySideBarViewlets?: readonly string[]
   readonly secondarySideBarVisible: boolean
   readonly secondarySideBarWidth: number
   readonly secondaryPreviewActionsEventListeners: readonly unknown[]
