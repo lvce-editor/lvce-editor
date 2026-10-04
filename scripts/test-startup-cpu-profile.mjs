@@ -207,6 +207,7 @@ try {
   assert.equal(new Set(outputs).size, 5)
   console.log('Integrated startup CPU profiling acceptance passed.')
 } finally {
+  await waitForExit(join(directory, 'config'))
   if (process.env.KEEP_CPU_PROFILE_TEST) console.log(`Preserved CPU profile acceptance directory: ${directory}`)
   else {
     for (const output of outputs) await rm(output, { recursive: true, force: true })
