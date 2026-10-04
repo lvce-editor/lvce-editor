@@ -31,8 +31,8 @@
   {
     "name": "builtin.csv-viewer",
     "repository": "github.com/lvce-editor/csv-viewer",
-    "version": "2.15.3",
-    "sha256": "a4132bd4821d4da3aafada771431d62b9c6b821b89516049a9c75ae337b59379",
+    "version": "2.16.1",
+    "sha256": "5c705cb1ca7bc0a80e1f3410008463dedfcbf8da3715562f46dc8720a74580fa",
     "created": "2024-10-13"
   },
   {
@@ -52,9 +52,9 @@
   {
     "name": "builtin.gpt-voice",
     "repository": "github.com/lvce-editor/gpt-voice-extension",
-    "version": "2.6.0",
-    "sha256": "04dc882dc7ae563fef1ccc39f50a542d7e75d9bc0c4a8ca9bd258efb4c91b1d6",
-    "created": "2026-08-25",
+    "version": "2.12.1",
+    "sha256": "00c0fecddcde7c2a82a493ae67fd26d425434ff2dab3d7a16d7d94ef6fc31e53",
+    "created": "2026-10-04",
     "enabled": false
   },
   {

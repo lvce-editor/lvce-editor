@@ -11,6 +11,23 @@ const getTabsDom = (state) => {
   return GetTerminalTabsDom.getTerminalTabsDom(tabs, width - tabsWidth, y, tabsWidth, height, selectedIndex, activeTerminalUids, renamingTabUid)
 }
 
+const getTabsSashDom = (state) => {
+  const { width, tabsWidth } = state
+  return [
+    {
+      type: VirtualDomElements.Div,
+      className: 'Sash SashVertical TerminalTabsSash',
+      left: width - tabsWidth - 2,
+      onPointerDown: 'handleTerminalTabsSashPointerDown',
+      childCount: 1,
+    },
+    {
+      type: VirtualDomElements.Div,
+      className: 'SashBorder SashBorderVertical',
+    },
+  ]
+}
+
 export const getTerminalsDom = (state) => {
   const { childUids, tabs, terminalTabsEnabled, uid } = state
   const terminalTabsVisible = terminalTabsEnabled && GetTerminalTabsDom.hasVisibleTabs(tabs)
@@ -21,10 +38,11 @@ export const getTerminalsDom = (state) => {
       onDragOver: 'handleDragOver',
       onDrop: 'handleDrop',
       className: MergeClassNames.mergeClassNames('Viewlet', 'Terminals'),
-      childCount: childUids.length + (terminalTabsVisible ? 1 : 0),
+      childCount: childUids.length + (terminalTabsVisible ? 2 : 0),
       onMouseDown: DomEventListenerFunctions.HandleMouseDown,
     },
     ...getTabsDom(state),
+    ...(terminalTabsVisible ? getTabsSashDom(state) : []),
     ...childUids.map((uid) => ({
       type: VirtualDomElements.Reference,
       uid,
