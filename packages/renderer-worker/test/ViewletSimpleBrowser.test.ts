@@ -2855,7 +2855,7 @@ test('keeps the selected tab visible after a title update rerenders the tab stri
 test('preview tabs use independent child viewlets and never allocate native views', async () => {
   let uid = 100
   jest.mocked(SimpleBrowserPreview.materialize).mockImplementation(async (_state, tab) => (tab.previewUid ? tab : { ...tab, previewUid: ++uid }))
-  const url = 'html-preview:///file%3A%2F%2F%2Fhello%20%23%25.html'
+  const url = 'html-preview:///file/hello%20%23%25.html'
   const initial = await ViewletSimpleBrowser.loadContent(ViewletSimpleBrowser.create(7, url, 0, 0, 300, 200))
   expect(initial.tabs[0].previewUid).toBe(101)
   const second = await ViewletSimpleBrowser.openTab(initial, url, 'foreground-tab')

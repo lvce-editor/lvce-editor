@@ -4,6 +4,10 @@ import * as ResetLayout from '../ResetLayout/ResetLayout.ts'
 
 // prettier-ignore
 export const Commands = {
+  beginBrowserTabDrag: ViewletLayout.beginBrowserTabDrag,
+  endBrowserTabDrag: ViewletLayout.endBrowserTabDrag,
+  handleBrowserTabDragOver: ViewletLayout.handleBrowserTabDragOver,
+  handleBrowserTabDrop: ViewletLayout.handleBrowserTabDrop,
   loadContentLater: BrowserFullWidth.loadContentLater,
   toggleSimpleBrowserFullWidth: BrowserFullWidth.toggle,
   handleBrowserFullWidthGesture: BrowserFullWidth.handleGesture,
@@ -83,6 +87,7 @@ export const CommandsWithSideEffects = {
   leaveSideBarFocusMode: ViewletLayout.leaveSideBarFocusMode,
   moveSideBarLeft: ViewletLayout.moveSideBarLeft,
   moveSideBarRight: ViewletLayout.moveSideBarRight,
+  moveViewletToSecondarySideBar: ViewletLayout.moveViewletToSecondarySideBar,
   openChat: ViewletLayout.openChat,
   openCommandPalette: ViewletLayout.openCommandPalette,
   openDebugConsole: ViewletLayout.openDebugConsole,

@@ -1,4 +1,5 @@
 import * as CachingHeaders from '../CachingHeaders/CachingHeaders.ts'
+import * as CrossOriginEmbedderPolicy from '../CrossOriginEmbedderPolicy/CrossOriginEmbedderPolicy.ts'
 import * as GetContentSecurityPolicy from '../GetContentSecurityPolicy/GetContentSecurityPolicy.ts'
 import * as GetHeadersDefault from '../GetHeadersDefault/GetHeadersDefault.ts'
 import * as GetHeadersDocument from '../GetHeadersDocument/GetHeadersDocument.ts'
@@ -6,6 +7,8 @@ import * as GetHeadersExtensionWorker from '../GetHeadersExtensionWorker/GetHead
 import * as GetHeadersRendererWorker from '../GetHeadersRendererWorker/GetHeadersRendererWorker.ts'
 import * as GetHeadersWorker from '../GetHeadersWorker/GetHeadersWorker.ts'
 import * as GetMimeType from '../GetMimeType/GetMimeType.ts'
+import * as HttpHeader from '../HttpHeader/HttpHeader.ts'
+import * as MimeType from '../MimeType/MimeType.ts'
 import * as Path from '../Path/Path.ts'
 import workers from '../../../../renderer-worker/src/parts/Workers/Workers.json' with { type: 'json' }
 
@@ -35,6 +38,14 @@ export const getHeaders = ({
   const defaultCachingHeader = isImmutable ? CachingHeaders.OneYear : CachingHeaders.NoCache
   if (absolutePath.endsWith('index.html')) {
     return GetHeadersDocument.getHeadersDocument({ mime, etag, isForElectronProduction, applicationName })
+  }
+  if (mime === MimeType.FontTtf) {
+    // WebKit applies worker loading checks to FontFace requests from workers.
+    // Keep font responses isolated and allow worker-src 'self' in the text measurement worker's CSP.
+    return {
+      ...GetHeadersDefault.getHeadersDefault(mime, etag, defaultCachingHeader),
+      [HttpHeader.CrossOriginEmbedderPolicy]: CrossOriginEmbedderPolicy.value,
+    }
   }
   const normalizedPath = absolutePath.replaceAll('\\', '/')
   const worker = workers.find((item) => {

@@ -53,6 +53,33 @@ const Viewlet = await import('../src/parts/Viewlet/Viewlet.js')
 const ViewletExtensionViewRender = await import('../src/parts/ViewletExtensionView/ViewletExtensionViewRender.ts')
 const ViewletLayout = await import('../src/parts/ViewletLayout/ViewletLayout.ipc.js')
 
+test('focus rerenders its commands when load already requested the same focus', async () => {
+  jest.mocked(RendererProcess.invoke).mockResolvedValue(undefined)
+  const selector = '[name="SearchValue"]'
+  const state = { uid: 7, commands: [['Viewlet.focusSelector', selector]] }
+  const factory = {
+    focus(currentState) {
+      return { ...currentState, commands: [['Viewlet.focusSelector', selector]] }
+    },
+    render: [
+      {
+        isEqual(oldState, newState) {
+          return JSON.stringify(oldState.commands) === JSON.stringify(newState.commands)
+        },
+        apply(_oldState, newState) {
+          return [['Viewlet.focusSelector', newState.uid, selector]]
+        },
+        multiple: true,
+      },
+    ],
+  }
+  ViewletStates.set(7, { factory, moduleId: 'TextSearchView', renderedState: state, state })
+
+  await Viewlet.focus(7)
+
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.sendMultiple', [['Viewlet.focusSelector', 7, selector]])
+})
+
 test('UID-targeted async rendering ignores focus and never falls back after disposal', async () => {
   const renderPending = Object.assign(
     jest.fn((state) => state),
@@ -994,7 +1021,10 @@ test('load applies the latest resize received before the viewlet instance is reg
       await Viewlet.resize(state.uid, { x: 40, y: 50, width: 800, height: 600 })
       return { ...state, browserViewId: 1 }
     }),
-    resize: jest.fn((state: { browserViewId?: number }, dimensions: { x: number; y: number; width: number; height: number }) => ({ ...state, ...dimensions })),
+    resize: jest.fn((state: { browserViewId?: number }, dimensions: { x: number; y: number; width: number; height: number }) => ({
+      ...state,
+      ...dimensions,
+    })),
     resizeEffect,
   }
   const state = ViewletManager.create(async () => mockModule, 'test', 0, '', 0, 0, 0, 0)
@@ -1658,4 +1688,32 @@ test('a named transfer command can await an attachment on its serialized viewlet
   jest.mocked(RendererProcess.invoke).mockImplementation(async () => {})
   await Command.execute('TransferPanel.drop')
   expect(ViewletStates.getState(96).owner).toBe('panel')
+})
+
+test('load - does not call Viewlet.loadModule for Editor', async () => {
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
+  const mockModule = {
+    hasFunctionalEvents: true,
+    hasFunctionalRootRender: true,
+    create: jest.fn(() => {
+      return {
+        x: 0,
+      }
+    }),
+    loadContent: jest.fn(async () => {
+      return {
+        uid: 1,
+        x: 1,
+      }
+    }),
+  }
+  const getModule = async () => {
+    return mockModule
+  }
+  const state = ViewletManager.create(getModule, 'Editor', 0, '', 0, 0, 0, 0)
+  // @ts-ignore
+  const commands = await ViewletManager.load(state)
+  expect(commands).toEqual(expect.arrayContaining([['Viewlet.createFunctionalRoot', 'Editor', 1, true]]))
+  expect(RendererProcess.invoke).not.toHaveBeenCalledWith('Viewlet.loadModule', 'Editor')
 })

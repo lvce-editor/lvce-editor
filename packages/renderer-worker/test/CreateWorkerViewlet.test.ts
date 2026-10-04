@@ -551,6 +551,18 @@ test('resizes, saves, and hot reloads through configured methods', async () => {
   expect(restart).toHaveBeenCalledWith('Example.terminate')
 })
 
+test('settings view resize forwards allocated bounds to the settings worker', async () => {
+  const invoke = jest.fn(async (_method: string, ..._args: readonly unknown[]) => undefined)
+  const config = getWorkerViewletConfig('settingsView')
+  const viewlet = createWorkerViewletWithDependencies({ config, context: { platform: 1 }, worker: { invoke, restart: jest.fn() } })
+  const state = viewlet.create(9, 'settings:///', 0, 0, 900, 700)
+  const dimensions = { height: 700, width: 450, x: 450, y: 0 }
+
+  await viewlet.resize!(state, dimensions)
+
+  expect(invoke).toHaveBeenCalledWith('Settings.resize', 9, dimensions)
+})
+
 test('rejects invalid parameter sources with a descriptive error', () => {
   const config = createConfig()
   config.methods.create.parameters = [{ name: 'uid', source: 'unknown' }]

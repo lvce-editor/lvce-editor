@@ -30,6 +30,7 @@ import * as Root from '../Root/Root.ts'
 import * as Template from '../Template/Template.ts'
 import * as WriteFile from '../WriteFile/WriteFile.ts'
 import { generateConfigJson } from '../GenerateConfigJson/GenerateConfigJson.ts'
+import * as AddRuntimeConfigToIndexHtml from '../AddRuntimeConfigToIndexHtml/AddRuntimeConfigToIndexHtml.ts'
 
 const getDependencyCacheHash = async ({ electronVersion, arch, supportsAutoUpdate, isMacos, isArchLinux, isAppImage, bundleMainProcess }) => {
   const files = [
@@ -143,6 +144,11 @@ const copyStaticFiles = async ({ resourcesPath, commitHash }) => {
     path: `${resourcesPath}/app/static/index.html`,
     occurrence: '\n    <meta name="description" content="VS Code inspired text editor that mostly runs in a webworker." />',
     replacement: ``,
+  })
+  await AddRuntimeConfigToIndexHtml.addRuntimeConfigToIndexHtml({
+    path: `${resourcesPath}/app/static/index.html`,
+    platform: 'electron',
+    assetDir: `/${commitHash}`,
   })
   await Remove.remove(`${resourcesPath}/app/static/manifest.json`)
   await Remove.remove(`${resourcesPath}/app/static/favicon.ico`)

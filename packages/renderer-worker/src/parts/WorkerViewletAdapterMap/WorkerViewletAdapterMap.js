@@ -22,6 +22,7 @@ const adapters = {
       }
     },
   },
+  componentState: WorkerViewletAdapters.componentState,
   diffView: WorkerViewletAdapters.diffView,
   explorer: WorkerViewletAdapters.explorer,
   extensionSearch: WorkerViewletAdapters.extensions,
