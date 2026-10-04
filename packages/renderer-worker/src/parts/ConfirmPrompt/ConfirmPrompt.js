@@ -26,7 +26,15 @@ export const prompt = async (
   return DialogWorker.invoke('ConfirmPrompt.prompt', message, { cancelMessage, confirmMessage, platform, title })
 }
 
-export const prompt3 = async (message, options) => {
+export const prompt3 = async (message, options = {}) => {
+  if (_mockId) {
+    const shouldSave = await showMockConfirmPrompt(message, options)
+    if (shouldSave) {
+      return 'save'
+    }
+    const shouldDiscard = await showMockConfirmPrompt(options.discardPrompt ?? 'Discard changes?', options)
+    return shouldDiscard ? 'discard' : 'cancel'
+  }
   return DialogWorker.invoke('ConfirmPrompt.prompt3', message, options)
 }
 

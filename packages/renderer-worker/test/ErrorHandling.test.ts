@@ -18,6 +18,15 @@ jest.unstable_mockModule('../src/parts/Ajax/Ajax.js', () => {
   }
 })
 
+jest.unstable_mockModule('../src/parts/PrettyError/PrettyError.js', () => ({
+  prepare: jest.fn(async (error: unknown) => ({
+    codeFrame: '  1 | source',
+    message: error instanceof Error ? error.message : String(error),
+  })),
+  print: jest.fn(),
+  getMessage: jest.fn(),
+}))
+
 jest.unstable_mockModule('../src/parts/Logger/Logger.js', () => {
   return {
     error: jest.fn(),
@@ -28,7 +37,9 @@ jest.unstable_mockModule('../src/parts/Logger/Logger.js', () => {
 const Ajax = await import('../src/parts/Ajax/Ajax.js')
 const Command = await import('../src/parts/Command/Command.js')
 const ErrorHandling = await import('../src/parts/ErrorHandling/ErrorHandling.js')
+const ErrorHandlingIpc = await import('../src/parts/ErrorHandling/ErrorHandling.ipc.js')
 const Logger = await import('../src/parts/Logger/Logger.js')
+const PrettyError = await import('../src/parts/PrettyError/PrettyError.js')
 const RendererProcess = await import('../src/parts/RendererProcess/RendererProcess.js')
 
 beforeAll(() => {
@@ -40,6 +51,22 @@ beforeAll(() => {
         throw new Error(`module not found ${moduleId}`)
     }
   })
+})
+
+test('preparePrettyError formats errors for extension API callers', async () => {
+  const error = new Error('syntax error')
+  jest.mocked(PrettyError.prepare).mockImplementation(async (value) => ({
+    codeFrame: '  1 | source',
+    message: value instanceof Error ? value.message : String(value),
+  }))
+  const prettyError = await ErrorHandling.preparePrettyError(error)
+
+  expect(prettyError).toEqual({
+    codeFrame: '  1 | source',
+    message: 'syntax error',
+  })
+  expect(PrettyError.prepare).toHaveBeenCalledWith(error)
+  expect(ErrorHandlingIpc.Commands.preparePrettyError).toBe(ErrorHandling.preparePrettyError)
 })
 
 test.skip('handleError - normal error', async () => {

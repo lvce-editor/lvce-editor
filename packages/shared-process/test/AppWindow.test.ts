@@ -111,3 +111,27 @@ test('createAppWindow opens a file argument in its parent workspace', async () =
   expect(ParentIpc.invoke).toHaveBeenCalledTimes(1)
   expect(ParentIpc.invoke).toHaveBeenCalledWith('AppWindow.createAppWindow', {}, parsedArgs, otherPath, [], url.toString())
 })
+
+test('CPU profiling opens only the requested file in the requested project', async () => {
+  const filePath = fileURLToPath(import.meta.url)
+  const workspace = dirname(filePath)
+  const parsedArgs = { _: [workspace], 'cpu-profile': true, open: 'AppWindow.test.ts' }
+  await AppWindow.createAppWindow({ parsedArgs, preferences: {}, preloadUrl: 'file:///preload.js', workingDirectory: otherPath })
+  const call = (ParentIpc.invoke as any).mock.calls[0]
+  const url = new URL(call[5])
+  expect(url.searchParams.get('workspace')).toBe(pathToFileURL(workspace).toString())
+  expect(url.searchParams.get('openUri')).toBe(pathToFileURL(filePath).toString())
+  expect(url.searchParams.get('cpuProfile')).toBe('1')
+})
+
+test('CPU profiling rejects a missing file before creating a window', async () => {
+  await expect(
+    AppWindow.createAppWindow({
+      parsedArgs: { _: [dirname(fileURLToPath(import.meta.url))], 'cpu-profile': true, open: 'missing-cpu-profile-file.ts' },
+      preferences: {},
+      preloadUrl: 'file:///preload.js',
+      workingDirectory: otherPath,
+    }),
+  ).rejects.toThrow()
+  expect(ParentIpc.invoke).not.toHaveBeenCalled()
+})

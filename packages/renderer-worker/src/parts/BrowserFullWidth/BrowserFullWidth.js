@@ -35,6 +35,7 @@ const layoutKeys = [
   'secondaryPreviewVisible',
   'secondaryPreviewWidth',
   'secondaryPreviewHeight',
+  'secondaryPreviewPlacement',
   'secondaryPreviewSashVisible',
   'titleBarHeight',
   'titleBarVisible',
