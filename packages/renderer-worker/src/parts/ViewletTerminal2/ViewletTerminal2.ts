@@ -36,21 +36,23 @@ export const create = (id, cwd = '') => {
 }
 
 export const loadContent = async (state, _savedState?: any, configuredSpawnOptions?: any) => {
-  const { command, args, cwd = state.cwd } = configuredSpawnOptions || (await GetTerminalSpawnOptions.getTerminalSpawnOptions(state.cwd))
+  const { command, args, env, cwd = state.cwd } = configuredSpawnOptions || (await GetTerminalSpawnOptions.getTerminalSpawnOptions(state.cwd))
   return {
     ...state,
     command,
     args,
+    env,
     cwd,
     xtermMounted: true,
   }
 }
 
 export const loadContentLater = async (state) => {
-  const { args, command, cwd, uid } = state
+  const { args, command, cwd, env, uid } = state
   try {
     await TerminalWorker.invoke('Terminal.create', uid, cwd || Workspace.state.workspacePath, command, args, {
       backend: getBackend(),
+      ...(env && { env }),
     })
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error)

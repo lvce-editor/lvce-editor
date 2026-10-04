@@ -262,9 +262,7 @@ test('workspace changes show one terminal retry instruction', async () => {
   await ViewletTerminal2.loadContentLater(state)
   const data = rendererProcessInvoke.mock.calls.find((call) => call[2] === 'write')?.[3] as Uint8Array
   const output = new TextDecoder().decode(data)
-  expect(output).toBe(
-    '\r\nFailed to start terminal: Workspace changed while starting the terminal.\r\nCreate a new terminal to retry.\r\n',
-  )
+  expect(output).toBe('\r\nFailed to start terminal: Workspace changed while starting the terminal.\r\nCreate a new terminal to retry.\r\n')
   expect(output.match(/Create a new terminal to retry/g)).toHaveLength(1)
   expect(commandExecute).not.toHaveBeenCalledWith('Terminals.handleTerminalExit', 303)
 })
@@ -275,4 +273,13 @@ test('nonzero process exit keeps its diagnostic visible', async () => {
   const data = rendererProcessInvoke.mock.calls.find((call) => call[2] === 'write')?.[3] as Uint8Array
   expect(new TextDecoder().decode(data)).toContain('exited with code 127')
   expect(commandExecute).not.toHaveBeenCalledWith('Terminals.handleTerminalExit', 302)
+})
+
+test('preserves the container interpreter environment through terminal creation', async () => {
+  const state = ViewletTerminal2.create(3912, 'devcontainers:///abc123')
+  const env = { ELECTRON_RUN_AS_NODE: '1' }
+  const options = { command: '/electron', args: ['devcontainer.js'], cwd: '/host', env }
+  const loaded = await ViewletTerminal2.loadContent(state, undefined, options)
+  await ViewletTerminal2.loadContentLater(loaded)
+  expect(terminalWorkerInvoke).toHaveBeenCalledWith('Terminal.create', 3912, '/host', options.command, options.args, { backend: 'mock', env })
 })
