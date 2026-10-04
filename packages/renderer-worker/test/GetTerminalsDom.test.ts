@@ -123,6 +123,33 @@ test('renders split terminal tabs as connected rows and selects the focused spli
   ])
 })
 
+test('renders an inline rename input once for a shared split tab', () => {
+  const dom = GetTerminalsDom.getTerminalsDom({
+    activeTerminalUids: [42],
+    childUids: [41, 42],
+    height: 400,
+    renamingTabUid: 41,
+    selectedIndex: 0,
+    tabs: [{ icon: 'terminal-bash', label: 'build', terminalUids: [41, 42], uid: 41 }],
+    tabsWidth: 90,
+    terminalTabsEnabled: true,
+    width: 800,
+    y: 20,
+  })
+
+  expect(dom.filter((node) => node.type === VirtualDomElements.Input)).toHaveLength(1)
+  expect(dom).toContainEqual(
+    expect.objectContaining({
+      autoFocus: true,
+      'data-tabUid': 41,
+      name: 'terminal-rename',
+      onBlur: 'handle-terminal-rename-blur',
+      onKeyDown: 'handle-terminal-rename-keydown',
+      value: 'build',
+    }),
+  )
+})
+
 test('shows terminal tabs for a single split group', () => {
   const dom = GetTerminalsDom.getTerminalsDom({
     activeTerminalUids: [42],

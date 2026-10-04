@@ -8,6 +8,11 @@ export const hasFunctionalRootRender = true
 export const renderEventListeners = () => {
   return [
     { name: 'handleTabPointerDown', params: ['handleTabPointerDown', 'event.currentTarget.dataset.terminalUid'] },
+    {
+      name: DomEventListenerFunctions.HandleContextMenuTerminalTab,
+      params: ['handleTabContextMenu', 'event.currentTarget.dataset.terminalUid', 'event.clientX', 'event.clientY'],
+      preventDefault: true,
+    },
     { name: 'handleDragStart', params: ['handleDragStart'], dragEffect: 'move' },
     { name: 'handleDragEnd', params: ['handleDragEnd'] },
     { name: 'handleDragOver', params: ['handleDragOver'], preventDefault: true },
@@ -31,6 +36,24 @@ export const renderEventListeners = () => {
       params: ['handleClickAction', 'event.target.dataset.command'],
       stopPropagation: true,
     },
+    {
+      name: 'handle-terminal-rename-input',
+      params: ['handleRenameTerminalFocus', 'event.currentTarget.value'],
+    },
+    {
+      name: 'handle-terminal-rename-blur',
+      params: ['acceptRenameTerminal', 'event.currentTarget.dataset.tabUid', 'event.currentTarget.value'],
+    },
+    {
+      name: 'handle-terminal-rename-keydown',
+      params: ['handleRenameTerminalKeyDown', 'event.currentTarget.dataset.tabUid', 'event.key', 'event.currentTarget.value'],
+      stopPropagation: true,
+    },
+    {
+      name: 'handle-terminal-rename-pointerdown',
+      params: ['handleRenameTerminalPointerDown'],
+      stopPropagation: true,
+    },
   ]
 }
 
@@ -41,7 +64,8 @@ const renderDom = {
       oldState.childUids === newState.childUids &&
       oldState.activeTerminalUids === newState.activeTerminalUids &&
       oldState.selectedIndex === newState.selectedIndex &&
-      oldState.terminalTabsEnabled === newState.terminalTabsEnabled
+      oldState.terminalTabsEnabled === newState.terminalTabsEnabled &&
+      oldState.renamingTabUid === newState.renamingTabUid
     )
   },
   apply(oldState, newState) {
