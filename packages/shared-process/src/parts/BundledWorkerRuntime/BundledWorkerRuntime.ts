@@ -19,7 +19,10 @@ export const createBundledWorkerConstructor = (factories: any, host: any): any =
     constructor(url: any, options: any = {}) {
       super()
       const resolved = new URL(url, host.location.href)
-      const factory = factories[resolved.href]
+      const factoryUrl = new URL(resolved)
+      factoryUrl.search = ''
+      factoryUrl.hash = ''
+      const factory = factories[resolved.href] || factories[factoryUrl.href]
       if (!factory || options.type !== 'module') {
         return new NativeWorker(url, options)
       }

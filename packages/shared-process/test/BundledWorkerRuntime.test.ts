@@ -212,3 +212,21 @@ test('closed and transferred ports do not accumulate in a long-lived worker', as
     worker.terminate()
   }
 })
+
+
+test('configuration query parameters select the bundled factory and remain in worker location', async () => {
+  const Worker = createBundledWorkerConstructor(
+    {
+      'https://example.test/prefix/worker.js': async (scope: any): Promise<void> => {
+        scope.postMessage(scope.location.href)
+      },
+    },
+    host,
+  )
+  const worker = new Worker('./worker.js?config=%7B%22platform%22%3A%22web%22%7D#startup', { type: 'module' })
+  try {
+    expect((await next(worker)).data).toBe('https://example.test/prefix/worker.js?config=%7B%22platform%22%3A%22web%22%7D#startup')
+  } finally {
+    worker.terminate()
+  }
+})

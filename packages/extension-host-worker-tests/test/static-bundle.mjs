@@ -110,7 +110,7 @@ try {
     page.setDefaultTimeout(15_000)
     const workers = []
     const errors = []
-    page.on('worker', (worker) => workers.push(worker.url()))
+    page.on('worker', (worker) => workers.push(new URL(worker.url()).pathname))
     page.on('pageerror', (error) => errors.push(error.message))
     const start = Date.now()
     await page.goto(`http://127.0.0.1:${address.port}${prefix}/`)
