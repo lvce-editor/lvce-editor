@@ -33,6 +33,7 @@ export interface BrowserFullWidthState {
 }
 
 export interface LayoutState {
+  readonly panelAlignment: 'center' | 'justify' | 'left' | 'right'
   readonly secondaryPreviewPlacement?: 'bottomLeft'
   readonly browserTabDragSource?: number
 

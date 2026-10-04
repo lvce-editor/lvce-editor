@@ -665,6 +665,8 @@ export const commandMap = {
   'Layout.maximizePanel': lazy('Layout.maximizePanel'),
   'Layout.moveSideBarLeft': lazy('Layout.moveSideBarLeft'),
   'Layout.moveSideBarRight': lazy('Layout.moveSideBarRight'),
+  'Layout.setPanelAlignment': lazy('Layout.setPanelAlignment'),
+  'Layout.getPanelAlignment': lazy('Layout.getPanelAlignment'),
   'Layout.openChat': lazy('Layout.openChat'),
   'Layout.openCommandPalette': lazy('Layout.openCommandPalette'),
   'Layout.openDebugConsole': lazy('Layout.openDebugConsole'),

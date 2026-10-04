@@ -122,6 +122,7 @@ export const create = (id: number): LayoutState => {
   AuthAccessToken.clear(id)
   return {
     sideBarLocation: SideBarLocationType.Right,
+    panelAlignment: 'justify',
     uid: id,
     activityBarId: -1,
     activityBarSashId: -1,
@@ -290,11 +291,13 @@ export const saveState = (state: LayoutState) => {
     secondarySideBarViewlets = [],
     secondarySideBarVisible,
     secondarySideBarWidth,
+    panelAlignment,
   } = stateToSave
   return {
     activityBarVisible,
     panelHeight,
     panelVisible,
+    panelAlignment,
     previewUri,
     previewViewletId,
     previewVisible,
@@ -342,6 +345,7 @@ const getSavedPoints = (savedState) => {
       secondaryPreviewVisible: false,
       panelVisible: false,
       panelHeight: 0,
+      panelAlignment: 'justify' as const,
     }
   }
   const {
@@ -357,6 +361,7 @@ const getSavedPoints = (savedState) => {
     secondaryPreviewVisible,
     panelVisible,
     panelHeight,
+    panelAlignment,
   } = savedState
 
   return {
@@ -372,6 +377,7 @@ const getSavedPoints = (savedState) => {
     secondaryPreviewVisible: secondaryPreviewVisible ?? false,
     panelVisible: panelVisible ?? false,
     panelHeight: panelHeight ?? 160,
+    panelAlignment: panelAlignment === 'center' || panelAlignment === 'left' || panelAlignment === 'right' ? panelAlignment : 'justify',
   }
 }
 
@@ -451,6 +457,7 @@ export const loadContent = (state: LayoutState, savedState: any): LayoutState =>
   const stateToRestore = restore ? savedState : undefined
   const {
     panelHeight,
+    panelAlignment,
     panelVisible,
     sideBarVisible,
     sideBarWidth,
@@ -477,6 +484,7 @@ export const loadContent = (state: LayoutState, savedState: any): LayoutState =>
     activityBarWidth: 48,
     mainVisible: true,
     panelHeight,
+    panelAlignment,
     panelMaxHeight: 600,
     panelMinHeight: 150,
     sideBarMaxWidth: 9999999,
@@ -2579,6 +2587,19 @@ export const moveSideBar = async (state: LayoutState, position: any) => {
     },
     commands: allCommands,
   }
+}
+
+export const getPanelAlignment = (state: LayoutState): LayoutState['panelAlignment'] => {
+  return state.panelAlignment
+}
+
+export const setPanelAlignment = async (state: LayoutState, panelAlignment: LayoutState['panelAlignment']) => {
+  if (!['center', 'justify', 'left', 'right'].includes(panelAlignment)) {
+    return { newState: state, commands: [] }
+  }
+  const newState = getPoints({ ...state, panelAlignment })
+  const commands = await getResizeCommands(state, newState)
+  return { newState, commands }
 }
 
 export const moveSideBarLeft = (state: LayoutState) => {
