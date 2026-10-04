@@ -4,8 +4,16 @@ import * as Path from '../Path/Path.ts'
 import * as Remove from '../Remove/Remove.ts'
 import * as Logger from '../Logger/Logger.ts'
 
-export const bundleRendererWorkerCached = async ({ commitHash, platform, assetDir, version, date, product, iconThemeEtag }) => {
-  const rendererWorkerCachePath = await CachePaths.getRendererWorkerCachePath([platform, commitHash, version, date, product, iconThemeEtag])
+export const bundleRendererWorkerCached = async ({ commitHash, platform, version, date, product, iconThemeEtag }) => {
+  const rendererWorkerCachePath = await CachePaths.getRendererWorkerCachePath([
+    platform,
+    commitHash,
+    version,
+    date,
+    product,
+    iconThemeEtag,
+    'runtime-config',
+  ])
   if (existsSync(rendererWorkerCachePath)) {
     Logger.info('[build step skipped] bundleRendererWorker')
   } else {
@@ -16,7 +24,6 @@ export const bundleRendererWorkerCached = async ({ commitHash, platform, assetDi
       cachePath: rendererWorkerCachePath,
       platform,
       commitHash,
-      assetDir,
       version,
       date,
       product,

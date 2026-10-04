@@ -87,6 +87,7 @@ export const CommandsWithSideEffects = {
   leaveSideBarFocusMode: ViewletLayout.leaveSideBarFocusMode,
   moveSideBarLeft: ViewletLayout.moveSideBarLeft,
   moveSideBarRight: ViewletLayout.moveSideBarRight,
+  moveViewletToSecondarySideBar: ViewletLayout.moveViewletToSecondarySideBar,
   openChat: ViewletLayout.openChat,
   openCommandPalette: ViewletLayout.openCommandPalette,
   openDebugConsole: ViewletLayout.openDebugConsole,

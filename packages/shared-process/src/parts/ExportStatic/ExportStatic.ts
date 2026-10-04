@@ -13,6 +13,7 @@ const backslashRegex = /\\/g
 const importFromTsRegex = /(from\s+['"][^'"]+)\.ts(['"])/g
 const sideEffectImportTsRegex = /(import\s+['"][^'"]+)\.ts(['"])/g
 const dynamicImportTsRegex = /(import\(\s*['"][^'"]+)\.ts(['"]\s*\))/g
+const runtimeConfigScriptRegex = /<script id="Config" type="application\/json">([\s\S]*?)<\/script>/
 
 const staticContentSecurityPolicy = GetContentSecurityPolicy.getContentSecurityPolicy([
   `default-src 'none'`,
@@ -143,31 +144,22 @@ export const validateRendererProcessArtifacts = ({ commitHash, root }: any): any
   }
 }
 
-const applyOverridesRendererProcess = async ({ commitHash, pathPrefix, root }: any): Promise<any> => {
-  await replace(
-    Path.join(root, 'dist', commitHash, 'packages', 'renderer-process', 'dist', 'rendererProcessMain.js'),
-    'platform = Remote;',
-    'platform = Web',
-  )
-  await replace(
-    Path.join(root, 'dist', commitHash, 'packages', 'renderer-process', 'dist', 'rendererProcessMain.js'),
-    `/${commitHash}`,
-    `${pathPrefix}/${commitHash}`,
-  )
+const applyRuntimeConfigOverrides = async ({ root }: any): Promise<void> => {
+  const indexHtmlPath = Path.join(root, 'dist', 'index.html')
+  const content = await readFile(indexHtmlPath, 'utf8')
+  const configElement = content.match(runtimeConfigScriptRegex)
+  if (!configElement) {
+    throw new Error(`runtime config not found in ${indexHtmlPath}`)
+  }
+  const config = JSON.parse(configElement[1])
+  config.platform = 'web'
+  const serializedConfig = JSON.stringify(config).replaceAll('<', '\\u003c').replaceAll('>', '\\u003e').replaceAll('&', '\\u0026')
+  const newContent = content.replace(configElement[0], `<script id="Config" type="application/json">${serializedConfig}</script>`)
+  await writeFile(indexHtmlPath, newContent)
 }
 
 const applyOverrides = async ({ commitHash, pathPrefix, root, serverStaticPath }: any): Promise<any> => {
-  await applyOverridesRendererProcess({ commitHash, pathPrefix, root })
-  await replace(
-    Path.join(root, 'dist', commitHash, 'packages', 'renderer-worker', 'dist', 'rendererWorkerMain.js'),
-    'platform = Remote;',
-    'platform = Web$1;',
-  )
-  await replace(
-    Path.join(root, 'dist', commitHash, 'packages', 'renderer-worker', 'dist', 'rendererWorkerMain.js'),
-    `/${commitHash}`,
-    `${pathPrefix}/${commitHash}`,
-  )
+  await applyRuntimeConfigOverrides({ root })
   const extensionDirents = await FileSystem.readDir(Path.join(serverStaticPath, commitHash, 'extensions'))
 
   const languageBasicsDirents = extensionDirents.filter(isLanguageBasics)

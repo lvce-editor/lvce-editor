@@ -1,4 +1,5 @@
 import * as PlatformType from '../PlatformType/PlatformType.js'
+import * as RuntimeConfig from '../RuntimeConfig/RuntimeConfig.ts'
 /* istanbul ignore file */
 
 // TODO this should always be completely tree shaken out during build, maybe need to be marked as @__Pure for terser to work
@@ -9,6 +10,9 @@ import * as PlatformType from '../PlatformType/PlatformType.js'
  * @returns {number}
  */
 export const getPlatform = () => {
+  if (RuntimeConfig.runtimeConfig.platform) {
+    return RuntimeConfig.runtimeConfig.platform
+  }
   // @ts-ignore
   if (typeof PLATFORM !== 'undefined') {
     // @ts-ignore

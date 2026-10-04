@@ -179,7 +179,7 @@ export const loadContent = async (state, savedState, context) => {
       useCache,
       ...(state.applicationId === undefined ? [] : [state.applicationId]),
     )
-    await EditorWorker.invoke('Editor.loadContent', id, savedState?.editorState, context?.largeFile === true)
+    await EditorWorker.invoke('Editor.loadContent', id, savedState?.editorState, context?.largeFile === true, context?.focus ?? true)
     const initialRender = await rerender(newState2)
     await EditorWorker.invoke('Editor.setSelections2', id, savedSelections)
     const selectionRender = await rerender(newState2)
