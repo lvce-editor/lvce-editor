@@ -228,6 +228,7 @@ export const create = (id: number): LayoutState => {
     titleBarNative: false,
     sideBarView: '',
     secondarySideBarView: '',
+    secondarySideBarViewlets: [],
     updateState: 'none',
     updateProgress: 0,
     commit: Commit.commit,
@@ -286,6 +287,7 @@ export const saveState = (state: LayoutState) => {
     sideBarVisible,
     sideBarWidth,
     secondarySideBarView,
+    secondarySideBarViewlets = [],
     secondarySideBarVisible,
     secondarySideBarWidth,
   } = stateToSave
@@ -309,6 +311,7 @@ export const saveState = (state: LayoutState) => {
     sideBarVisible,
     sideBarWidth,
     secondarySideBarView,
+    secondarySideBarViewlets,
     secondarySideBarVisible,
     secondarySideBarWidth,
   }
@@ -390,6 +393,13 @@ const getSavedSecondarySideBarView = (savedState) => {
   return ViewletModuleId.Chat
 }
 
+const getSavedSecondarySideBarViewlets = (savedState): readonly string[] => {
+  if (Array.isArray(savedState?.secondarySideBarViewlets)) {
+    return savedState.secondarySideBarViewlets.filter((viewletId) => typeof viewletId === 'string')
+  }
+  return []
+}
+
 const getSavedPreviewViewletId = (savedState) => {
   if (savedState?.previewViewletId === ViewletModuleId.SimpleBrowser) {
     return ViewletModuleId.SimpleBrowser
@@ -455,6 +465,7 @@ export const loadContent = (state: LayoutState, savedState: any): LayoutState =>
   } = getSavedPoints(stateToRestore)
   const savedView = getSavedSideBarView(stateToRestore)
   const savedSecondaryView = getSavedSecondarySideBarView(stateToRestore)
+  const savedSecondaryViewlets = getSavedSecondarySideBarViewlets(stateToRestore)
   const previewUri = stateToRestore?.previewUri || ''
   const previewViewletId = getSavedPreviewViewletId(stateToRestore)
   const secondaryPreviewUri = stateToRestore?.secondaryPreviewUri || ''
@@ -519,6 +530,7 @@ export const loadContent = (state: LayoutState, savedState: any): LayoutState =>
     sideBarFocusModeTarget: 'primary',
     sideBarView: savedView,
     secondarySideBarView: savedSecondaryView,
+    secondarySideBarViewlets: savedSecondaryViewlets,
     workbenchVisible: true,
     initial: false,
   }
@@ -882,6 +894,15 @@ export const toggleSideBar = (state: LayoutState) => {
 
 export const toggleSideBarView = async (state: LayoutState, moduleId): Promise<LayoutStateResult> => {
   const sideBarView = moduleId || state.sideBarView || ViewletModuleId.Explorer
+  if ((state.secondarySideBarViewlets || []).includes(sideBarView)) {
+    if (state.secondarySideBarVisible && state.secondarySideBarView === sideBarView) {
+      return hideSecondarySideBar(state)
+    }
+    const shown = state.secondarySideBarVisible ? { newState: state, commands: [] } : await showSecondarySideBar(state)
+    const opened = await openSecondarySideBarView(shown.newState, sideBarView, false, undefined)
+    const focusCommands = await Viewlet.getFocusCommands(sideBarView)
+    return { newState: opened.newState, commands: [...(shown.commands || []), ...opened.commands, ...focusCommands] }
+  }
   const preferredLocation = await getPreferredViewLocation(sideBarView)
   if (preferredLocation === 'secondaryPreview') {
     if (state.secondaryPreviewVisible && state.secondaryPreviewUri === sideBarView) {
@@ -2984,6 +3005,26 @@ export const openSecondarySideBarView = async (state: LayoutState, moduleId, foc
   return {
     newState: { ...newState, secondarySideBarView: moduleId },
     commands,
+  }
+}
+
+export const moveViewletToSecondarySideBar = async (state: LayoutState, moduleId: string): Promise<LayoutStateResult> => {
+  const movedViews = state.secondarySideBarViewlets || []
+  const secondarySideBarViewlets = movedViews.includes(moduleId) ? movedViews : [...movedViews, moduleId]
+  const stateWithPlacement = { ...state, secondarySideBarViewlets }
+  let primaryResult: LayoutStateResult = { newState: stateWithPlacement, commands: [] }
+  if (stateWithPlacement.sideBarVisible && stateWithPlacement.sideBarView === moduleId) {
+    const fallbackView = moduleId === ViewletModuleId.Explorer ? ViewletModuleId.Search : ViewletModuleId.Explorer
+    primaryResult = await showSideBar(stateWithPlacement, fallbackView)
+  }
+  const shown = primaryResult.newState.secondarySideBarVisible
+    ? { newState: primaryResult.newState, commands: [] }
+    : await showSecondarySideBar(primaryResult.newState)
+  const opened = await openSecondarySideBarView(shown.newState, moduleId, false, undefined)
+  const focusCommands = await Viewlet.getFocusCommands(moduleId)
+  return {
+    newState: opened.newState,
+    commands: [...primaryResult.commands, ...(shown.commands || []), ...opened.commands, ...focusCommands],
   }
 }
 

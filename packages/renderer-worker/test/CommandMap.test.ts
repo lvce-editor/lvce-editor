@@ -1,6 +1,6 @@
 import { expect, jest, test } from '@jest/globals'
-import { commandMap } from '../src/parts/CommandMap/CommandMap.js'
 import * as ClipBoardIpc from '../src/parts/ClipBoard/ClipBoard.ipc.js'
+import { commandMap } from '../src/parts/CommandMap/CommandMap.js'
 
 test('registers the go-to-line quick pick command', () => {
   expect(commandMap['QuickPick.openGoToLine']).toBeDefined()
@@ -59,6 +59,10 @@ test('registers the drop data command', () => {
 
 test('registers the file handles command', () => {
   expect(commandMap['FileHandles.get']).toBeDefined()
+})
+
+test('registers the cache worker message port command', () => {
+  expect(commandMap['SendMessagePortToExtensionHostWorker.sendMessagePortToCacheWorker']).toBeDefined()
 })
 
 test('registers the active text document command', () => {

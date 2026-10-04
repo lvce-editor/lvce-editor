@@ -9,7 +9,7 @@ export const complete = async () => {
   try {
     const editorId = GetActiveEditor.getActiveEditorId()
     if (editorId === -1) throw new Error('The requested file did not open in a text editor')
-    await EditorWorker.invoke('Editor.waitForDiagnostics', editorId)
+    await EditorWorker.invoke('Editor.waitForDiagnostics', editorId, 120_000)
   } catch (error) {
     failure = String(error)
   }

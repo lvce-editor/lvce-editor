@@ -61,7 +61,7 @@ export const focus = async (id) => {
   if (instance && instance.factory.focus) {
     const oldState = instance.state
     const newState = instance.factory.focus(oldState)
-    commands.push(...ViewletManager.render(instance.factory, oldState, newState))
+    commands.push(...ViewletManager.render(instance.factory, { ...oldState, commands: [] }, newState))
   }
   const oldInstance = ViewletStates.getFocusedInstance()
   if (oldInstance && oldInstance && oldInstance.factory.handleBlur) {

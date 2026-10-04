@@ -202,6 +202,10 @@
   contain: content;
 }
 
+.Token.EditorTokenUnnecessary {
+  opacity: 0.65;
+}
+
 .LayerCursor,
 .LayerDiagnostics {
   position: absolute;
