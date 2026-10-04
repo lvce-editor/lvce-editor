@@ -24,8 +24,8 @@
   {
     "name": "builtin.devcontainer",
     "repository": "github.com/lvce-editor/devcontainer",
-    "version": "0.17.1",
-    "sha256": "0cbe09c4e02b4e2dc63c92afd9fc570b1303f75d87bacaa0c8f8e217e9665189",
+    "version": "0.17.2",
+    "sha256": "0eb2bda57469669b943aba8c4325c807d295f6cf46f743c180af14ae1ee81580",
     "created": "2026-09-06"
   },
   {
