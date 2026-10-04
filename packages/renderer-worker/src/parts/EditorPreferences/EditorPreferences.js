@@ -1,5 +1,6 @@
 import * as Preferences from '../Preferences/Preferences.js'
 import * as SupportsLetterSpacing from '../SupportsLetterSpacing/SupportsLetterSpacing.js'
+import * as Logger from '../Logger/Logger.js'
 
 const kLineHeight = 'editor.lineHeight'
 const kFontSize = 'editor.fontSize'
@@ -16,6 +17,18 @@ const kAutoClosingBrackets = 'editor.autoClosingBrackets'
 const kFontWeight = 'editor.fontWeight'
 const kHover = 'editor.hover'
 const kHoverDelay = 'editor.hoverDelay'
+const kMinFontSize = 10
+const kMaxFontSize = 100
+const kMaxLineHeight = 100
+const lastWarnings = new Map()
+
+const warnIfChanged = (setting, value, bound, direction) => {
+  if (Object.is(lastWarnings.get(setting), value)) {
+    return
+  }
+  lastWarnings.set(setting, value)
+  Logger.warn(`[renderer-worker] ${setting} value ${value} is too ${direction}; using ${bound}`)
+}
 
 export const isAutoClosingBracketsEnabled = () => {
   return Boolean(Preferences.get(kAutoClosingBrackets))
@@ -35,15 +48,39 @@ export const isAutoClosingTagsEnabled = () => {
 
 export const getRowHeight = (preferences) => {
   const lineHeight = preferences ? preferences[kLineHeight] : Preferences.get(kLineHeight)
-  const fontSize = preferences ? preferences[kFontSize] || 15 : getFontSize()
-  if (typeof lineHeight !== 'number' || !Number.isFinite(lineHeight) || lineHeight < fontSize) {
+  const fontSize = getFontSize(preferences)
+  if (typeof lineHeight !== 'number' || !Number.isFinite(lineHeight) || lineHeight === 0) {
+    lastWarnings.delete(kLineHeight)
     return fontSize
   }
+  if (lineHeight > kMaxLineHeight) {
+    warnIfChanged(kLineHeight, lineHeight, kMaxLineHeight, 'large')
+    return kMaxLineHeight
+  }
+  if (lineHeight < fontSize) {
+    warnIfChanged(kLineHeight, lineHeight, fontSize, 'small')
+    return fontSize
+  }
+  lastWarnings.delete(kLineHeight)
   return lineHeight
 }
 
-export const getFontSize = () => {
-  return Preferences.get(kFontSize) || 15 // TODO find out if it is possible to use all numeric values for settings for efficiency, maybe settings could be an array
+export const getFontSize = (preferences) => {
+  const fontSize = preferences ? preferences[kFontSize] : Preferences.get(kFontSize)
+  if (typeof fontSize !== 'number' || !Number.isFinite(fontSize)) {
+    lastWarnings.delete(kFontSize)
+    return 15
+  }
+  if (fontSize < kMinFontSize) {
+    warnIfChanged(kFontSize, fontSize, kMinFontSize, 'small')
+    return kMinFontSize
+  }
+  if (fontSize > kMaxFontSize) {
+    warnIfChanged(kFontSize, fontSize, kMaxFontSize, 'large')
+    return kMaxFontSize
+  }
+  lastWarnings.delete(kFontSize)
+  return fontSize
 }
 
 export const getHoverEnabled = () => {

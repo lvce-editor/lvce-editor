@@ -3,7 +3,7 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { runInNewContext } from 'node:vm'
 import { expect, test } from '@jest/globals'
-import { getServerIsStaticReplacement, setVersionsAndDependencies } from '../src/parts/BuildServer/BuildServer.ts'
+import { getServerIsStaticReplacement, getStaticServerPathReplacement, setVersionsAndDependencies } from '../src/parts/BuildServer/BuildServer.ts'
 
 const writeJson = async (path: string, value: unknown): Promise<void> => {
   await writeFile(path, `${JSON.stringify(value, null, 2)}\n`)
@@ -23,6 +23,10 @@ test('generated server sends index documents through the static server', () => {
   expect(isStatic('/index.html?workspace=/test')).toBe(true)
   expect(isStatic('/abcdefg/packages/renderer-worker.js')).toBe(true)
   expect(isStatic('/api/status')).toBe(false)
+})
+
+test('generated server resolves the installed scoped static server package', () => {
+  expect(getStaticServerPathReplacement()).toBe(`const staticServerPath = fileURLToPath(import.meta.resolve('@lvce-editor/static-server'))`)
 })
 
 test('generated server sends index documents through the shared process when extensions are linked', () => {

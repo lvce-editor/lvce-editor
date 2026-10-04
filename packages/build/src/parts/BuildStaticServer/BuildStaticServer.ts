@@ -1,6 +1,7 @@
 import { readdir } from 'fs/promises'
 import * as BundleCss from '../BundleCss/BundleCss.ts'
 import * as BundleWorkers from '../BundleWorkers/BundleWorkers.ts'
+import * as AddRuntimeConfigToIndexHtml from '../AddRuntimeConfigToIndexHtml/AddRuntimeConfigToIndexHtml.ts'
 import * as CodiconsPath from '../CodiconsPath/CodiconsPath.ts'
 import * as Copy from '../Copy/Copy.ts'
 import * as Path from '../Path/Path.ts'
@@ -80,6 +81,11 @@ const copyStaticFiles = async ({ commitHash }) => {
     path: `packages/build/.tmp/server/static-server/static/index.html`,
     occurrence: '/css',
     replacement: `/${commitHash}/css`,
+  })
+  await AddRuntimeConfigToIndexHtml.addRuntimeConfigToIndexHtml({
+    path: `packages/build/.tmp/server/static-server/static/index.html`,
+    platform: 'remote',
+    assetDir: `/${commitHash}`,
   })
   await BundleCss.bundleCss({
     outDir: `packages/build/.tmp/server/static-server/static/${commitHash}/css`,

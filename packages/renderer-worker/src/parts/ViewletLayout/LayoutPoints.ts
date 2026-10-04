@@ -41,6 +41,37 @@ export const getPoints = (source: LayoutState, sideBarLocation = source.sideBarL
       titleBarWidth: source.windowWidth,
     }
   }
+  if (source.secondaryPreviewPlacement === 'bottomLeft' && source.secondaryPreviewVisible && !source.sideBarFocusMode) {
+    const base = getPoints({ ...source, secondaryPreviewVisible: false }, sideBarLocation)
+    const top = source.titleBarVisible ? source.titleBarHeight : 0
+    const availableHeight = Math.max(0, source.windowHeight - top)
+    const height = Clamp.clamp(source.secondaryPreviewHeight || availableHeight / 2, Math.min(150, availableHeight / 2), availableHeight / 2)
+    const panelMaxHeight = Math.max(0, availableHeight - height - (source.statusBarVisible ? source.statusBarHeight : 0) - 100)
+    const upper = getPoints(
+      {
+        ...source,
+        secondaryPreviewVisible: false,
+        windowHeight: source.windowHeight - height,
+        panelHeight: Math.min(source.panelHeight, panelMaxHeight),
+        panelMinHeight: Math.min(source.panelMinHeight, panelMaxHeight),
+        panelMaxHeight: Math.min(source.panelMaxHeight, panelMaxHeight),
+      },
+      sideBarLocation,
+    )
+    return {
+      ...upper,
+      windowHeight: source.windowHeight,
+      panelMinHeight: source.panelMinHeight,
+      panelMaxHeight: source.panelMaxHeight,
+      previewTop: base.previewTop,
+      previewHeight: base.previewHeight,
+      secondaryPreviewVisible: true,
+      secondaryPreviewLeft: 0,
+      secondaryPreviewTop: source.windowHeight - height,
+      secondaryPreviewWidth: source.windowWidth - (source.previewVisible ? base.previewWidth : 0),
+      secondaryPreviewHeight: height,
+    }
+  }
   const activityBarVisible = source[LayoutKeys.ActivityBarVisible]
   const panelVisible = source[LayoutKeys.PanelVisible]
   const sideBarVisible = source[LayoutKeys.SideBarVisible]

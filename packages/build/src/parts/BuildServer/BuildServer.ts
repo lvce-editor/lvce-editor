@@ -43,6 +43,9 @@ const isStatic = (url) => {
   return false
 }`
 
+export const getStaticServerPathReplacement = (): string =>
+  `const staticServerPath = fileURLToPath(import.meta.resolve('@lvce-editor/static-server'))`
+
 const copyServerFiles = async ({ commitHash, product }) => {
   await Copy.copy({
     from: 'packages/server',
@@ -122,7 +125,7 @@ const copyServerFiles = async ({ commitHash, product }) => {
   await Replace.replace({
     path: 'packages/build/.tmp/server/server/src/server.js',
     occurrence: `const staticServerPath = join(ROOT, 'packages', 'static-server', 'src', 'static-server.ts')`,
-    replacement: `const staticServerPath = fileURLToPath(new URL('../../static-server/dist/static-server.js', import.meta.url))`,
+    replacement: getStaticServerPathReplacement(),
   })
 
   const content = getThirdPartyNoticesContent({ commitHash })

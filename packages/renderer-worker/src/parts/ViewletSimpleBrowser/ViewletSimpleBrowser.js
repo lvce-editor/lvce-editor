@@ -353,6 +353,23 @@ export const loadContent = async (state, savedState) => {
   const shortcuts = SimpleBrowserPreferences.getShortCuts()
   const fallThroughKeyBindings = getFallThroughKeyBindings()
 
+  // A transfer destination starts empty; the existing tab retains its native view.
+  if (uri === 'simple-browser://transfer') {
+    return {
+      ...state,
+      audioIndicatorEnabled,
+      suggestionsEnabled,
+      tabsEnabled,
+      tabHoverEnabled,
+      unloadTabs,
+      headerHeight,
+      searchHistory,
+      visitedSites,
+      history,
+      shortcuts,
+    }
+  }
+
   const specialTabRequested = isHistoryUrl(uri) || HtmlPreviewUrl.isHtmlPreviewUrl(uri) || isSpecialTab(savedSelectedTab)
   if (specialTabRequested) {
     const restoredTabs =
@@ -976,6 +993,12 @@ export const showOverlay = async (state, overlayId) => {
 }
 
 export const afterRender = async (oldState, newState) => {
+  if (oldState.isDraggingTab !== newState.isDraggingTab) {
+    const layout = ViewletStates.getInstance('Layout', ApplicationRegistry.getOwner(newState.uid))
+    if (layout)
+      await Viewlet.executeViewletCommand(layout.state.uid, newState.isDraggingTab ? 'beginBrowserTabDrag' : 'endBrowserTabDrag', newState.uid)
+  }
+
   const oldLoginRequestId = oldState.loginChallenges?.[0]?.requestId
   const newLoginRequestId = newState.loginChallenges?.[0]?.requestId
   if (newLoginRequestId && oldLoginRequestId !== newLoginRequestId) {
@@ -1731,4 +1754,36 @@ export const handleFaviconError = (state, index, src) => {
   const tab = state.tabs[Number(index)]
   if (!tab || tab.favicon !== src) return state
   return updateTab(state, tab.browserViewId, { favicon: '' })
+}
+
+// Runs in the source browser's command queue. No native view is recreated or
+// disposed, and both owners change synchronously before any further IPC.
+export const moveTabToBrowser = async (state, browserViewId, destinationUid) => {
+  const destination = ViewletStates.getInstance(destinationUid)
+  const index = state.tabs.findIndex((tab) => tab.browserViewId === browserViewId)
+  if (index < 0 || !browserViewId || !destination || destination.state.tabs.length) return state
+  let current = await closeFind(state, false)
+  current = await prepareFullWidth(current)
+  const tab = current.tabs[index]
+  const remaining = current.tabs.toSpliced(index, 1)
+  if (!remaining.length) remaining.push(createTab({}))
+  const selectedIndex = Math.min(index, remaining.length - 1)
+  if (!remaining[selectedIndex].browserViewId) remaining[selectedIndex] = await materializeTab(current, remaining[selectedIndex])
+  const sourceState = activateTab(TabDrag.resetTabDrag(current), remaining, selectedIndex)
+  const destinationState = activateTab(destination.state, [tab], 0)
+  const commands = [...Viewlet.setStateFunctional(state.uid, sourceState), ...Viewlet.setStateFunctional(destinationUid, destinationState)]
+  ViewletStates.setRenderedState(state.uid, sourceState)
+  ViewletStates.setRenderedState(destinationUid, destinationState)
+  await RendererProcess.invoke('Viewlet.sendMultiple', commands)
+  await ElectronWebContentsViewFunctions.resizeWebContentsView(
+    browserViewId,
+    destinationState.x,
+    destinationState.y + destinationState.headerHeight,
+    destinationState.width,
+    Math.max(0, destinationState.height - destinationState.headerHeight),
+  )
+  await show(sourceState)
+  await show(destinationState)
+  await ElectronWebContentsViewFunctions.focus(browserViewId)
+  return sourceState
 }

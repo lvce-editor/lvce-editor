@@ -847,7 +847,7 @@ const loadInternal = async (viewlet, focus, restore, restoreState) => {
     await ViewletManagerVisitor.loadInstance(viewlet.id, module)
     state = ViewletState.ContentLoaded
     if (viewlet.show === false) {
-    } else {
+    } else if (!module?.hasFunctionalEvents) {
       await RendererProcess.invoke(/* Viewlet.loadModule */ kLoadModule, /* id */ viewlet.id)
     }
     if (viewlet.disposed) {

@@ -1,6 +1,14 @@
 import { beforeEach, expect, jest, test } from '@jest/globals'
 
 const sourceControlWorkerInvoke = jest.fn()
+const execute = jest.fn()
+const applicationExecute = jest.fn()
+
+jest.unstable_mockModule('../src/parts/Command/Command.js', () => ({ execute }))
+jest.unstable_mockModule('../src/parts/Application/Application.ts', () => ({ execute: applicationExecute }))
+jest.unstable_mockModule('../src/parts/ApplicationRegistry/ApplicationRegistry.ts', () => ({
+  get: (id: string) => ({ workspaceUri: `memfs:///${id}` }),
+}))
 
 jest.unstable_mockModule('../src/parts/SourceControlWorker/SourceControlWorker.js', () => ({
   invoke: sourceControlWorkerInvoke,
@@ -172,4 +180,42 @@ test('gets and sets authoritative source control component state', async () => {
 test('retains the parent view for source control toolbar updates', () => {
   const state = ViewletSourceControl.create(42, '', 0, 0, 200, 300, undefined, 7)
   expect(state.parentUid).toBe(7)
+})
+
+test.each([undefined, 'application-a'])('commits every workspace refresh render for %s', async (applicationId) => {
+  const state = { uid: 42, applicationId, platform: 1, assetDir: '/assets' }
+  let transactionId = 0
+  sourceControlWorkerInvoke.mockImplementation((method) => {
+    switch (method) {
+      case 'SourceControl.create2':
+      case 'SourceControl.loadContent':
+        return undefined
+      case 'SourceControl.diff2':
+        return [11, 10]
+      case 'SourceControl.render2':
+        return [['Viewlet.commitPending', 42, ++transactionId]]
+      case 'SourceControl.renderActions':
+        return []
+      case 'SourceControl.getBadgeCount':
+        return 0
+      default:
+        throw new Error(`unexpected method ${method}`)
+    }
+  })
+
+  const result = await ViewletSourceControl.handleWorkspaceChange(state)
+
+  // Leaving the loading transaction uncommitted blocks all later renders for this view.
+  expect(result.commands).toEqual([
+    ['Viewlet.commitPending', 42, 1],
+    ['Viewlet.commitPending', 42, 2],
+  ])
+  if (applicationId) {
+    expect(sourceControlWorkerInvoke.mock.calls[0][7]).toBe('memfs:///application-a')
+    expect(applicationExecute).toHaveBeenCalledWith(applicationId, 'Layout.setBadgeCount', 'Source Control', 0)
+    expect(execute).not.toHaveBeenCalled()
+  } else {
+    expect(execute).toHaveBeenCalledWith('Layout.setBadgeCount', 'Source Control', 0)
+    expect(applicationExecute).not.toHaveBeenCalled()
+  }
 })

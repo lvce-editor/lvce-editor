@@ -53,6 +53,22 @@ export const chatDebug = {
   },
 }
 
+export const componentState = {
+  extendModule(_workerViewlet, { worker }) {
+    return {
+      getComponentState(state) {
+        const { uid } = state
+        return worker.invoke('ComponentState.getViewState', uid)
+      },
+      async setComponentState(state, componentState) {
+        const { uid } = state
+        await worker.invoke('ComponentState.setViewState', uid, componentState)
+        return worker.invoke('ComponentState.getViewState', uid)
+      },
+    }
+  },
+}
+
 export const diffView = {
   async afterLoadContent({ isHotReload, state, worker }) {
     if (!isHotReload && state.uri.startsWith('inline-diff://')) {
@@ -256,10 +272,23 @@ export const settings = {
 export const textSearch = {
   serializeCommands: true,
   serializeRenderPipelines: true,
+  extendCommands(Commands, workerViewlet) {
+    Commands.focus = workerViewlet.focus
+  },
   extendModule(_workerViewlet, { wrapCommand }) {
     return {
       dispose(state) {
         return { ...state }
+      },
+      focus(state) {
+        const { isSearchEditor } = state
+        if (!isSearchEditor) {
+          return state
+        }
+        return {
+          ...state,
+          commands: [['Viewlet.focusSelector', '[name="SearchValue"]']],
+        }
       },
       wrapTextSearchCommand: wrapCommand,
     }
