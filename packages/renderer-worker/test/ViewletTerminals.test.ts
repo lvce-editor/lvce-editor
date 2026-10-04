@@ -8,7 +8,7 @@ const viewletExecuteViewletCommand = jest.fn()
 const viewletResize = jest.fn(async (uid, dimensions) => [['Viewlet.setBounds', uid, dimensions]])
 const viewletStatesGetInstance = jest.fn()
 const viewletStatesRemove = jest.fn()
-const contextMenuShow2 = jest.fn(async () => undefined)
+const contextMenuShow2 = jest.fn(async (_uid: number, _menuId: number, _x: number, _y: number, _tabUid: number) => undefined)
 let nextId = 42
 let terminalTabsPreference: boolean | undefined
 const terminalSpawnOptions = {
