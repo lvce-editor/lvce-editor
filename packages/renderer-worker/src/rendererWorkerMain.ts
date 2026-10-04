@@ -9,17 +9,28 @@ import * as Module from './parts/Module/Module.js'
 Object.assign(CommandMapRef.commandMapRef, CommandMap.commandMap)
 Command.setLoad(Module.load)
 
+const stage = (name: string) => console.error(`[renderer-worker startup] ${name}`)
+
 const main = async () => {
+  stage('listen:start')
   await RendererProcess.listen()
+  stage('listen:done')
   const initData = await InitData.getInitData()
+  stage('init-data:done')
   RuntimeConfig.initialize(initData.Config)
+  stage('runtime-config:done')
 
   const [Workbench, Platform, AssetDir] = await Promise.all([
     import('./parts/Workbench/Workbench.js'),
     import('./parts/Platform/Platform.js'),
     import('./parts/AssetDir/AssetDir.js'),
   ])
+  stage('imports:done')
   await Workbench.startup(initData, Platform.getPlatform(), AssetDir.assetDir)
+  stage('workbench:done')
 }
 
-await main()
+await main().catch((error) => {
+  console.error('[renderer-worker startup] failed', error)
+  throw error
+})

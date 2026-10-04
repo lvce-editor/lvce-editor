@@ -1,11 +1,56 @@
 import assert from 'node:assert/strict'
 import { createHash } from 'node:crypto'
-import { spawnSync } from 'node:child_process'
+import { spawn } from 'node:child_process'
 import { mkdir, mkdtemp, readFile, readdir, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { setTimeout as delay } from 'node:timers/promises'
 import { build } from 'esbuild'
+
+// Kill the entire Electron process group on timeout: descendants may retain stdio
+// pipes after the parent exits, preventing spawnSync from returning.
+const runElectron = (args, options) =>
+  new Promise((resolve) => {
+    const child = spawn(electron, args, { cwd: options.cwd, env: options.env, detached: true })
+    let stdout = ''
+    let stderr = ''
+    let error
+    let settled = false
+    const finish = (status) => {
+      if (settled) return
+      settled = true
+      clearTimeout(timer)
+      resolve({ status, stdout, stderr, error })
+    }
+    const killGroup = () => {
+      try {
+        process.kill(-child.pid, 'SIGKILL')
+      } catch (killError) {
+        if (killError.code !== 'ESRCH') error ||= killError
+      }
+    }
+    const timer = setTimeout(() => {
+      error = new Error(`Electron startup timed out after ${options.timeout} ms.\n${stdout}\n${stderr}`)
+      killGroup()
+      finish(null)
+    }, options.timeout)
+    const append = (data, stream) => {
+      if (stream === 'stdout') stdout += data
+      else stderr += data
+      if (Buffer.byteLength(stdout) + Buffer.byteLength(stderr) > options.maxBuffer) {
+        error = new Error('Electron output exceeded maxBuffer')
+        killGroup()
+        finish(null)
+      }
+    }
+    child.stdout.on('data', (data) => append(data, 'stdout'))
+    child.stderr.on('data', (data) => append(data, 'stderr'))
+    child.on('error', (spawnError) => {
+      error = spawnError
+      finish(null)
+    })
+    child.on('close', finish)
+  })
 
 const root = process.cwd()
 const electron = process.env.LVCE_ELECTRON_PATH
@@ -79,9 +124,16 @@ try {
   for (const name of ['CONFIG', 'DATA', 'STATE', 'CACHE']) env[`XDG_${name}_HOME`] = join(directory, name.toLowerCase())
   const previous = join(project, 'previous.txt')
   await writeFile(previous, 'previous editor session')
-  const baseline = spawnSync(
-    electron,
-    [...(packaged ? [] : [join(root, 'packages/main-process')]), '--no-sandbox', '--password-store=basic', previous, '--wait-10-seconds'],
+  const baseline = await runElectron(
+    [
+      ...(packaged ? [] : [join(root, 'packages/main-process')]),
+      '--no-sandbox',
+      '--enable-logging=stderr',
+      '--password-store=basic',
+      `--user-data-dir=${join(directory, 'chromium')}`,
+      previous,
+      '--wait-10-seconds',
+    ],
     { cwd: root, env, encoding: 'utf8', timeout: 30_000, maxBuffer: 10 * 1024 * 1024 },
   )
   assert.ifError(baseline.error)
@@ -104,7 +156,9 @@ try {
     const args = [
       ...(packaged ? [] : [join(root, 'packages/main-process')]),
       '--no-sandbox',
+      '--enable-logging=stderr',
       '--password-store=basic',
+      `--user-data-dir=${join(directory, 'chromium')}`,
       project,
       '--open',
       'target.txt',
@@ -113,7 +167,7 @@ try {
       extension,
     ]
     if (mode !== 'default') args.push('--cpu-profile-dir', directory)
-    const result = spawnSync(electron, args, { cwd: root, env, encoding: 'utf8', timeout: 180_000, maxBuffer: 10 * 1024 * 1024 })
+    const result = await runElectron(args, { cwd: root, env, encoding: 'utf8', timeout: 180_000, maxBuffer: 10 * 1024 * 1024 })
     assert.ifError(result.error)
     const failure = mode === 'provider-error' || mode === 'provider-timeout'
     assert.equal(result.status, failure ? 1 : 0, result.stdout + result.stderr)
