@@ -7,6 +7,9 @@ const send = (ipc, message) => {
 }
 
 export const handleJsonRpcMessage = async (ipc, message, execute, resolve, source) => {
+  if (message === 'ready') {
+    return
+  }
   if (!message || typeof message === 'string') {
     console.warn(`unexpected message from ${source}: ${message}`)
     return
