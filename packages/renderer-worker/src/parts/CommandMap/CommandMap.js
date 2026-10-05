@@ -26,6 +26,7 @@ export const commandMap = {
     await logWarning(message)
   },
   'ShellCommand.install': async () => (await import('../ShellCommand/ShellCommand.js')).install(),
+  'Tasks.runDefaultBuildTask': async () => (await import('../RunDefaultBuildTask/RunDefaultBuildTask.js')).runDefaultBuildTask(),
   'PortProvider.getPorts': async (workspaceUri) => (await import('../PortProvider/PortProvider.ts')).getPorts(workspaceUri),
   'Application.create': lazy('Application.create'),
   'Application.dispose': lazy('Application.dispose'),
