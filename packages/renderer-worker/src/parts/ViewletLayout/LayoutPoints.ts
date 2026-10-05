@@ -155,12 +155,13 @@ export const getPoints = (source: LayoutState, sideBarLocation = source.sideBarL
     const contentBottom = statusBarVisible ? windowHeight - statusBarHeight : windowHeight
     const focusSecondarySideBar = source.sideBarFocusModeTarget === 'secondary'
     const aiActivityBarWidth = source.aiNativeLayout ? Math.min(48, windowWidth) : 0
+    const aiActivityBarOnRight = source.aiNativeLayout && sideBarLocation === SideBarLocationType.Right
     return {
       ...source,
       activityBarSashVisible: false,
       activityBarVisible: Boolean(source.aiNativeLayout),
       activityBarWidth: aiActivityBarWidth,
-      activityBarLeft: 0,
+      activityBarLeft: aiActivityBarOnRight ? Math.max(0, windowWidth - aiActivityBarWidth) : 0,
       activityBarTop: contentTop,
       activityBarHeight: Math.max(0, contentBottom - contentTop),
       mainVisible: false,
@@ -176,7 +177,7 @@ export const getPoints = (source: LayoutState, sideBarLocation = source.sideBarL
       secondarySideBarVisible: focusSecondarySideBar,
       secondarySideBarWidth: focusSecondarySideBar ? windowWidth : secondarySideBarWidth,
       sideBarHeight: Math.max(0, contentBottom - contentTop),
-      sideBarLeft: aiActivityBarWidth,
+      sideBarLeft: aiActivityBarOnRight ? 0 : aiActivityBarWidth,
       sideBarSashVisible: false,
       sideBarTop: contentTop,
       sideBarVisible: !focusSecondarySideBar,
