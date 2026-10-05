@@ -1,6 +1,8 @@
 import { expect, jest, test } from '@jest/globals'
 
-const getCommands = jest.fn<() => Promise<{ id: string }[]>>().mockResolvedValue([{ id: 'chat2.toggleAiNativeLayout' }])
+const getCommands = jest
+  .fn<(assetDir: string, platform: number, applicationId?: string) => Promise<{ id: string }[]>>()
+  .mockResolvedValue([{ id: 'chat2.toggleAiNativeLayout' }])
 jest.unstable_mockModule('../src/parts/ExtensionHost/ExtensionHostCommands.js', () => ({ getCommands }))
 const execute = jest.fn<(...args: unknown[]) => Promise<void>>().mockResolvedValue(undefined)
 jest.unstable_mockModule('../src/parts/Command/Command.js', () => ({ execute }))
