@@ -26,6 +26,7 @@ export const commandMap = {
     await logWarning(message)
   },
   'ShellCommand.install': async () => (await import('../ShellCommand/ShellCommand.js')).install(),
+  'Tasks.runDefaultBuildTask': async () => (await import('../RunDefaultBuildTask/RunDefaultBuildTask.js')).runDefaultBuildTask(),
   'PortProvider.getPorts': async (workspaceUri) => (await import('../PortProvider/PortProvider.ts')).getPorts(workspaceUri),
   'Application.create': lazy('Application.create'),
   'Application.dispose': lazy('Application.dispose'),
@@ -609,6 +610,9 @@ export const commandMap = {
   'Layout.getActiveSecondarySideBarView': lazy('Layout.getActiveSecondarySideBarView'),
   'Layout.getSecondarySideBarVisible': lazy('Layout.getSecondarySideBarVisible'),
   'Layout.getStatusBarVisible': lazy('Layout.getStatusBarVisible'),
+  'Layout.enterAiNativeLayout': lazy('Layout.enterAiNativeLayout'),
+  'Layout.handleActivityBarWheel': lazy('Layout.handleActivityBarWheel'),
+  'Layout.getSideBarVisible': lazy('Layout.getSideBarVisible'),
   'Layout.getSideBarFocusMode': lazy('Layout.getSideBarFocusMode'),
   'Layout.getAssetDir': lazy('Layout.getAssetDir'),
   'Layout.getAuthState': lazy('Layout.getAuthState'),

@@ -200,3 +200,36 @@ test('enterSideBarFocusMode is a no-op when the secondary side bar is hidden', a
     commands: [],
   })
 })
+
+test('AI-native layout keeps a left activity bar and restores IDE bounds after resizing', async () => {
+  const state = createState()
+  const result = await ViewletLayout.enterSideBarFocusMode(state, 'primary', true)
+  expect(result.newState).toEqual(
+    expect.objectContaining({
+      aiNativeLayout: true,
+      activityBarVisible: true,
+      activityBarLeft: 0,
+      activityBarWidth: 48,
+      sideBarLeft: 48,
+      sideBarWidth: 1152,
+      sideBarTop: 0,
+      sideBarHeight: 800,
+      titleBarVisible: false,
+      statusBarVisible: false,
+    }),
+  )
+  const resized = LayoutPoints.getPoints({ ...result.newState, windowWidth: 900, windowHeight: 600 })
+  expect(resized.sideBarWidth).toBe(852)
+  const restored = await ViewletLayout.leaveSideBarFocusMode(resized)
+  expect(restored.newState).toEqual(
+    expect.objectContaining({
+      aiNativeLayout: false,
+      sideBarWidth: state.sideBarWidth,
+      sideBarLocation: state.sideBarLocation,
+      titleBarVisible: true,
+      statusBarVisible: true,
+      windowWidth: 900,
+      windowHeight: 600,
+    }),
+  )
+})

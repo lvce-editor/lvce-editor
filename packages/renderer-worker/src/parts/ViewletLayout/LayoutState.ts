@@ -1,4 +1,7 @@
 export interface SideBarFocusModeLayoutStateSnapshot {
+  readonly sideBarLocation: number
+  readonly titleBarVisible: boolean
+  readonly statusBarVisible: boolean
   readonly activityBarSashVisible: boolean
   readonly activityBarVisible: boolean
   readonly mainVisible: boolean
@@ -110,6 +113,8 @@ export interface LayoutState {
   readonly sideBarSashVisible: boolean
   readonly sideBarTop: number
   readonly sideBarView: string
+  readonly aiNativeLayout?: boolean
+  readonly aiNativeLayoutExited?: boolean
   readonly sideBarFocusMode: boolean
   readonly sideBarFocusModeLayout: SideBarFocusModeLayoutStateSnapshot | undefined
   readonly sideBarFocusModeTarget: 'primary' | 'secondary'

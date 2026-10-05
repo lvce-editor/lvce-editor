@@ -4,6 +4,10 @@ export const getQuickPickMenuEntries = async () => {
   return [
     ...(await ShellCommand.getMenuEntries()),
     {
+      id: 'Tasks.runDefaultBuildTask',
+      label: 'Tasks: Run default build task',
+    },
+    {
       id: 'Layout.signIn',
       label: 'Account: Sign In',
       aliases: ['Sign In', 'Log In', 'Account Login'],

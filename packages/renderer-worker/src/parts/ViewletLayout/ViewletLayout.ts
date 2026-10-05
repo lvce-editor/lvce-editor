@@ -722,6 +722,9 @@ const toggle = (state: LayoutState, module: LayoutModules.LayoutModule, moduleId
 
 const getSideBarFocusModeLayoutSnapshot = (state: LayoutState): SideBarFocusModeLayoutStateSnapshot => {
   return {
+    sideBarLocation: state.sideBarLocation,
+    titleBarVisible: state.titleBarVisible,
+    statusBarVisible: state.statusBarVisible,
     activityBarSashVisible: state.activityBarSashVisible,
     activityBarVisible: state.activityBarVisible,
     mainVisible: state.mainVisible,
@@ -743,10 +746,14 @@ export const getSideBarFocusMode = (state: LayoutState): boolean => {
   return state.sideBarFocusMode
 }
 
-export const enterSideBarFocusMode = async (state: LayoutState, target: 'primary' | 'secondary' = 'primary'): Promise<LayoutStateResult> => {
+export const enterSideBarFocusMode = async (
+  state: LayoutState,
+  target: 'primary' | 'secondary' = 'primary',
+  aiNativeLayout = false,
+): Promise<LayoutStateResult> => {
   if (state.browserFullWidth) {
     const restored = await BrowserFullWidth.leave(state)
-    const result = await enterSideBarFocusMode(restored.newState, target)
+    const result = await enterSideBarFocusMode(restored.newState, target, aiNativeLayout)
     return { newState: result.newState, commands: [...restored.commands, ...result.commands] }
   }
   const targetVisible = target === 'secondary' ? state.secondarySideBarVisible : state.sideBarVisible
@@ -758,6 +765,9 @@ export const enterSideBarFocusMode = async (state: LayoutState, target: 'primary
   }
   const newState = getPoints({
     ...state,
+    aiNativeLayout,
+    aiNativeLayoutExited: false,
+    ...(aiNativeLayout ? { titleBarVisible: false, statusBarVisible: false, sideBarLocation: SideBarLocationType.Left } : {}),
     sideBarFocusMode: true,
     sideBarFocusModeLayout: getSideBarFocusModeLayoutSnapshot(state),
     sideBarFocusModeTarget: target,
@@ -778,6 +788,8 @@ export const leaveSideBarFocusMode = async (state: LayoutState): Promise<LayoutS
   const newState = getPoints({
     ...state,
     ...state.sideBarFocusModeLayout,
+    aiNativeLayout: false,
+    aiNativeLayoutExited: state.aiNativeLayout,
     sideBarFocusMode: false,
     sideBarFocusModeLayout: undefined,
     sideBarFocusModeTarget: 'primary',
@@ -3135,3 +3147,8 @@ export const handleBrowserTabDrop = async (state: LayoutState, x: number, y: num
   await Viewlet.executeViewletCommand(sourceUid, 'moveTabToBrowser', browserViewId, result.newState.secondaryPreviewId)
   return { commands: [], newState: { ...result.newState, browserTabDragSource: undefined, secondaryPreviewUri: 'simple-browser://' } }
 }
+
+// Read commands return values without passing them through the layout state renderer.
+getSideBarFocusMode.returnValue = true
+getActiveSideBarView.returnValue = true
+getSideBarVisible.returnValue = true
