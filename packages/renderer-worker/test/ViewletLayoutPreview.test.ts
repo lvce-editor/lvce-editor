@@ -79,6 +79,43 @@ test('loadContent enables preview sash when preview is restored', () => {
   })
 })
 
+test('loadContent places chat 2 in the secondary side bar by default', () => {
+  const result = ViewletLayout.loadContent(ViewletLayout.create(1), {
+    Layout: { bounds: { windowWidth: 1200, windowHeight: 800 } },
+  })
+
+  expect(result).toMatchObject({
+    secondarySideBarView: 'chat2.views.chat',
+    secondarySideBarViewlets: ['chat2.views.chat'],
+  })
+})
+
+test('toggleSecondarySideBar opens the default chat 2 view', async () => {
+  const initial = ViewletLayout.loadContent(ViewletLayout.create(1), {
+    Layout: { bounds: { windowWidth: 1200, windowHeight: 800 } },
+  })
+
+  const result = await ViewletLayout.toggleSecondarySideBar(initial)
+
+  expect(result.newState).toMatchObject({
+    secondarySideBarView: 'chat2.views.chat',
+    secondarySideBarVisible: true,
+  })
+})
+
+test('loadContent migrates the previous default chat placement to chat 2', () => {
+  const result = ViewletLayout.loadContent(ViewletLayout.create(1), {
+    Layout: { bounds: { windowWidth: 1200, windowHeight: 800 } },
+    secondarySideBarView: 'Chat',
+    secondarySideBarViewlets: [],
+  })
+
+  expect(result).toMatchObject({
+    secondarySideBarView: 'chat2.views.chat',
+    secondarySideBarViewlets: ['chat2.views.chat'],
+  })
+})
+
 test('layout save and restore preserve moved secondary sidebar viewlets', () => {
   const state = {
     ...ViewletLayout.create(1),
