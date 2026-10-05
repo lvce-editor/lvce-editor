@@ -370,11 +370,13 @@ test('workspace refresh reloads the matching editor from disk without stealing f
     }
   })
   const commands = await ViewletEditorTextCommands.getCommands()
-  const unchanged = await commands.handleWorkspaceRefresh(editor, { changed: ['file:///workspace/other.ts'] })
+  const unchanged = await commands.handleWorkspaceRefresh(editor, { changed: [editor.uri] })
   expect(unchanged).toBe(editor)
   expect(editorWorkerInvoke).not.toHaveBeenCalledWith('Editor.loadContent', 42, undefined, false, true, true)
+  const unrelated = await commands.handleWorkspaceRefresh(editor, { changed: ['file:///workspace/other.ts'], reloadContent: true })
+  expect(unrelated).toBe(editor)
 
-  const result = await commands.handleWorkspaceRefresh(editor, { changed: [editor.uri] })
+  const result = await commands.handleWorkspaceRefresh(editor, { changed: [editor.uri], reloadContent: true })
   expect(editorWorkerInvoke).toHaveBeenCalledWith('Editor.loadContent', 42, undefined, false, true, true)
   expect(result.commands).toEqual([['Viewlet.setPatches', 42, []]])
 })

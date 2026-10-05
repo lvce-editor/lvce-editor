@@ -140,7 +140,7 @@ const loadContent = (editor, savedState, context) => {
 }
 
 const handleWorkspaceRefresh = (editor, changes) => {
-  if (!changes?.changed?.includes(editor.uri)) {
+  if (!changes?.reloadContent || !changes.changed?.includes(editor.uri)) {
     return editor
   }
   return loadContent(editor, undefined, { forceReload: true, preserveFocus: true })
