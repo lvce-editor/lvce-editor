@@ -2,6 +2,21 @@
    for quickpick to open (3.3ms recalculcate style vs 4.2ms now)  */
 
 /* TODO recalculate style is really slow in chrome for unknown reasons */
+:root:has(.AiNativeLayout) .QuickPick {
+  --QuickPickBackground: #ffffff;
+  --ListForeground: #24292f;
+  --ListHoverForeground: #24292f;
+  --ListHoverBackground: #e8edf2;
+  --ListActiveSelectionBackground: #dceafb;
+  --ListActiveSelectionForeground: #182c43;
+  --InputBoxBackground: #f1f3f5;
+  --InputBoxForeground: #24292f;
+  --InputBoxPlaceholderForeground: #68717d;
+  --InputBoxBorder: #d7dce1;
+  --FocusOutline: #1769ba;
+  --CompletionHighlightForeground: #8a5200;
+}
+
 .QuickPick {
   position: absolute;
   width: min(600px, calc(100% - var(--PreviewAreasWidth, 0px) - 32px));
