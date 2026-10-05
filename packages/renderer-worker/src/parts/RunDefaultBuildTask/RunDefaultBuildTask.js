@@ -1,5 +1,6 @@
+import * as GetTerminalSpawnOptions from '../GetTerminalSpawnOptions/GetTerminalSpawnOptions.js'
 import * as TaskWorker from '../TaskWorker/TaskWorker.js'
-import * as Disk from '../FileSystem/FileSystemDisk.js'
+import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as Notification from '../Notification/Notification.js'
 import * as Command from '../Command/Command.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
@@ -16,7 +17,7 @@ export const runDefaultBuildTask = async () => {
   const taskConfigurationPath = `${workspacePath}${pathSeparator}.lvce${pathSeparator}tasks.json`
   let task
   try {
-    const content = await Disk.readFile(taskConfigurationPath)
+    const content = await FileSystem.readFile(taskConfigurationPath)
     task = await TaskWorker.invoke('Task.getDefaultBuildTask', content)
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error)
@@ -28,9 +29,10 @@ export const runDefaultBuildTask = async () => {
   }
 
   try {
+    const { command: shell } = await GetTerminalSpawnOptions.getTerminalSpawnOptions(workspacePath)
+    const commandLine = await TaskWorker.invoke('Task.getCommandLine', task, shell)
     await Command.execute('Layout.openIntegratedTerminal', workspacePath)
     await ViewletManager.waitForLoadContentLater(ViewletModuleId.Terminals)
-    const commandLine = await TaskWorker.invoke('Task.getCommandLine', task)
     await Command.execute('Terminals.sendText', `${commandLine}\r`)
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error)
