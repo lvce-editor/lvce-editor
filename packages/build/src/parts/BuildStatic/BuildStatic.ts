@@ -7,7 +7,7 @@ import * as AddRuntimeConfigToIndexHtml from '../AddRuntimeConfigToIndexHtml/Add
 import * as CommitHash from '../CommitHash/CommitHash.ts'
 import * as Console from '../Console/Console.ts'
 import * as Copy from '../Copy/Copy.ts'
-import * as CodiconsPath from '../CodiconsPath/CodiconsPath.ts'
+import * as CopyIcons from '../CopyIcons/CopyIcons.ts'
 import * as CopySourceFiles from '../CopySourceFiles/CopySourceFiles.ts'
 import * as GetCommitDate from '../GetCommitDate/GetCommitDate.ts'
 import * as GetAllExtensionsJson from '../GetAllExtensionsJson/GetAllExtensionsJson.ts'
@@ -151,9 +151,11 @@ const copyStaticFiles = async ({ pathPrefix, ignoreIconTheme, commitHash }) => {
   await BundleCss.bundleCss({
     outDir: `packages/build/.tmp/dist/${commitHash}/css`,
     assetDir: `${pathPrefix}/${commitHash}`,
+    iconsDir: pathPrefix,
     pathPrefix,
   })
-  await copyIcons(`packages/build/.tmp/dist/${commitHash}/icons`)
+  await CopyIcons.copyIcons(`packages/build/.tmp/dist/${commitHash}/icons`)
+  await CopyIcons.copyIcons('packages/build/.tmp/dist/icons')
   const themes = await getThemeNames()
   for (const item of themes) {
     await Copy.copy({
@@ -167,19 +169,6 @@ const copyStaticFiles = async ({ pathPrefix, ignoreIconTheme, commitHash }) => {
       to: `packages/build/.tmp/dist/${commitHash}/extensions/builtin.vscode-icons`,
     })
   }
-}
-
-const copyIcons = async (to) => {
-  await Copy.copy({
-    from: CodiconsPath.codiconsIconsPath,
-    to,
-  })
-  const codiconNames = await readdir(CodiconsPath.codiconsIconsPath)
-  await Copy.copy({
-    from: 'static/icons',
-    to,
-    ignore: codiconNames,
-  })
 }
 
 const getThemeNames = async () => {

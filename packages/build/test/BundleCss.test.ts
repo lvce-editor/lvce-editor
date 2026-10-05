@@ -38,6 +38,25 @@ test('bundleCss does not add filename comment to App.css', async () => {
   }
 }, 30_000)
 
+test('bundleCss keeps static icon urls stable across playground deployments', async () => {
+  const dir = await mkdtemp(join(tmpdir(), 'lvce-bundle-css-'))
+
+  try {
+    await bundleCss({
+      outDir: dir,
+      assetDir: '/lvce-editor/abc123',
+      iconsDir: '/lvce-editor',
+    })
+
+    const css = await readFile(join(dir, 'App.css'), 'utf8')
+
+    expect(css).toContain('mask-image: url(/lvce-editor/icons/archive.svg);')
+    expect(css).toContain('/lvce-editor/abc123/fonts/')
+  } finally {
+    await rm(dir, { recursive: true, force: true })
+  }
+}, 30_000)
+
 test('bundleCss scopes debug chat resizer styles', async () => {
   const dir = await mkdtemp(join(tmpdir(), 'lvce-bundle-css-'))
 
