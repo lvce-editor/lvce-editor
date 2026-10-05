@@ -53,6 +53,7 @@ import { getPoints } from './LayoutPoints.ts'
 import type { LayoutState, LayoutStateResult, SideBarFocusModeLayoutStateSnapshot } from './LayoutState.ts'
 
 const mainMinWidth = 100
+const defaultSecondarySideBarViewletId = 'chat2.views.chat'
 
 const getTwoPreviewAreasWidth = (state: LayoutState): number => {
   return state.previewOrientation === PreviewOrientation.Vertical ? state.windowWidth / 2 : state.windowWidth / 3
@@ -394,16 +395,25 @@ const getSavedSideBarView = (savedState) => {
 
 const getSavedSecondarySideBarView = (savedState) => {
   if (savedState && savedState.secondarySideBarView && typeof savedState.secondarySideBarView === 'string') {
+    if (savedState.secondarySideBarView === ViewletModuleId.Chat) {
+      return defaultSecondarySideBarViewletId
+    }
     return savedState.secondarySideBarView
   }
-  return ViewletModuleId.Chat
+  return defaultSecondarySideBarViewletId
 }
 
 const getSavedSecondarySideBarViewlets = (savedState): readonly string[] => {
   if (Array.isArray(savedState?.secondarySideBarViewlets)) {
-    return savedState.secondarySideBarViewlets.filter((viewletId) => typeof viewletId === 'string')
+    const viewlets = savedState.secondarySideBarViewlets.filter((viewletId) => typeof viewletId === 'string')
+    const savedView = savedState.secondarySideBarView
+    const isSavedDefaultChatView = savedView === ViewletModuleId.Chat || savedView === defaultSecondarySideBarViewletId
+    if (!viewlets.includes(defaultSecondarySideBarViewletId) && isSavedDefaultChatView) {
+      return [...viewlets, defaultSecondarySideBarViewletId]
+    }
+    return viewlets
   }
-  return []
+  return [defaultSecondarySideBarViewletId]
 }
 
 const getSavedPreviewViewletId = (savedState) => {
@@ -470,8 +480,12 @@ export const loadContent = (state: LayoutState, savedState: any): LayoutState =>
     secondaryPreviewVisible,
     secondaryPreviewWidth,
   } = getSavedPoints(stateToRestore)
-  const savedView = getSavedSideBarView(stateToRestore)
   const savedSecondaryView = getSavedSecondarySideBarView(stateToRestore)
+  const savedPrimaryView = getSavedSideBarView(stateToRestore)
+  const savedView =
+    savedPrimaryView === defaultSecondarySideBarViewletId && savedSecondaryView === defaultSecondarySideBarViewletId
+      ? ViewletModuleId.Explorer
+      : savedPrimaryView
   const savedSecondaryViewlets = getSavedSecondarySideBarViewlets(stateToRestore)
   const previewUri = stateToRestore?.previewUri || ''
   const previewViewletId = getSavedPreviewViewletId(stateToRestore)
@@ -900,16 +914,34 @@ export const toggleSideBar = (state: LayoutState) => {
   return toggle(state, LayoutModules.SideBar)
 }
 
+const moveChat2OutOfPrimarySideBar = async (state: LayoutState): Promise<LayoutStateResult> => {
+  if (!state.sideBarVisible || state.sideBarView !== defaultSecondarySideBarViewletId) {
+    return { newState: state, commands: [] }
+  }
+  return showSideBar(state, ViewletModuleId.Explorer)
+}
+
 export const toggleSideBarView = async (state: LayoutState, moduleId): Promise<LayoutStateResult> => {
   const sideBarView = moduleId || state.sideBarView || ViewletModuleId.Explorer
-  if ((state.secondarySideBarViewlets || []).includes(sideBarView)) {
-    if (state.secondarySideBarVisible && state.secondarySideBarView === sideBarView) {
-      return hideSecondarySideBar(state)
+  if (sideBarView === defaultSecondarySideBarViewletId || (state.secondarySideBarViewlets || []).includes(sideBarView)) {
+    const secondarySideBarViewlets = state.secondarySideBarViewlets || []
+    const stateWithSecondaryPlacement = secondarySideBarViewlets.includes(sideBarView)
+      ? state
+      : { ...state, secondarySideBarViewlets: [...secondarySideBarViewlets, sideBarView] }
+    const primaryResult = await moveChat2OutOfPrimarySideBar(stateWithSecondaryPlacement)
+    if (primaryResult.newState.secondarySideBarVisible && primaryResult.newState.secondarySideBarView === sideBarView) {
+      const hidden = await hideSecondarySideBar(primaryResult.newState)
+      return { newState: hidden.newState, commands: [...primaryResult.commands, ...hidden.commands] }
     }
-    const shown = state.secondarySideBarVisible ? { newState: state, commands: [] } : await showSecondarySideBar(state)
+    const shown = primaryResult.newState.secondarySideBarVisible
+      ? { newState: primaryResult.newState, commands: [] }
+      : await showSecondarySideBar(primaryResult.newState)
     const opened = await openSecondarySideBarView(shown.newState, sideBarView, false, undefined)
     const focusCommands = await Viewlet.getFocusCommands(sideBarView)
-    return { newState: opened.newState, commands: [...(shown.commands || []), ...opened.commands, ...focusCommands] }
+    return {
+      newState: opened.newState,
+      commands: [...primaryResult.commands, ...(shown.commands || []), ...opened.commands, ...focusCommands],
+    }
   }
   const preferredLocation = await getPreferredViewLocation(sideBarView)
   if (preferredLocation === 'secondaryPreview') {
@@ -975,26 +1007,31 @@ export const toggleSecondarySideBar = (state: LayoutState) => {
 }
 
 export const openChat = async (state: LayoutState, focus = false): Promise<LayoutStateResult> => {
-  if (state.secondarySideBarVisible && state.secondarySideBarView === ViewletModuleId.Chat) {
+  const secondarySideBarViewlets = state.secondarySideBarViewlets || []
+  const stateWithChat2InSecondarySideBar = secondarySideBarViewlets.includes(defaultSecondarySideBarViewletId)
+    ? state
+    : { ...state, secondarySideBarViewlets: [...secondarySideBarViewlets, defaultSecondarySideBarViewletId] }
+  const primaryResult = await moveChat2OutOfPrimarySideBar(stateWithChat2InSecondarySideBar)
+  if (primaryResult.newState.secondarySideBarVisible && primaryResult.newState.secondarySideBarView === defaultSecondarySideBarViewletId) {
     if (focus) {
-      await ViewletManager.waitForLoadContentLater(ViewletModuleId.Chat)
-      await Viewlet.focus(ViewletModuleId.Chat)
+      await ViewletManager.waitForLoadContentLater(defaultSecondarySideBarViewletId)
+      await Viewlet.focus(defaultSecondarySideBarViewletId)
     }
     return {
-      newState: state,
-      commands: [],
+      newState: primaryResult.newState,
+      commands: primaryResult.commands,
     }
   }
   // @ts-ignore
-  const openResult = await openSecondarySideBarView(state, ViewletModuleId.Chat)
+  const openResult = await openSecondarySideBarView(primaryResult.newState, defaultSecondarySideBarViewletId)
   const showResult = await showSecondarySideBar(openResult.newState)
   if (focus) {
-    await ViewletManager.waitForLoadContentLater(ViewletModuleId.Chat)
-    await Viewlet.focus(ViewletModuleId.Chat)
+    await ViewletManager.waitForLoadContentLater(defaultSecondarySideBarViewletId)
+    await Viewlet.focus(defaultSecondarySideBarViewletId)
   }
   return {
     newState: showResult.newState,
-    commands: [...openResult.commands, ...showResult.commands],
+    commands: [...primaryResult.commands, ...openResult.commands, ...showResult.commands],
   }
 }
 
