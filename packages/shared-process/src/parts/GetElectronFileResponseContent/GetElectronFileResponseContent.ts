@@ -37,10 +37,10 @@ export const getElectronFileResponseContent = async (request: any, absolutePath:
   if (!Platform.isProduction && url === `${Platform.scheme}://-/`) {
     // @ts-ignore
     content = content.toString().replace('    <link rel="manifest" href="/manifest.json" crossorigin="use-credentials" />\n', '')
-    content = await AddCustomPathsToIndexHtml.addCustomPathsToIndexHtml(content)
+    content = await AddCustomPathsToIndexHtml.addCustomPathsToIndexHtml(content, { platform: 'electron' })
   }
   if (url === '/') {
-    content = await AddCustomPathsToIndexHtml.addCustomPathsToIndexHtml(content)
+    content = await AddCustomPathsToIndexHtml.addCustomPathsToIndexHtml(content, { platform: 'electron' })
   }
   if (typeof content === 'string') {
     content = Buffer.from(content)
