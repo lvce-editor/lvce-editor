@@ -27,6 +27,7 @@ import * as SecretsViewWorker from '../SecretsViewWorker/SecretsViewWorker.ts'
 import * as SettingsViewWorker from '../SettingsViewWorker/SettingsViewWorker.js'
 import * as StatusBarWorker from '../StatusBarWorker/StatusBarWorker.js'
 import * as TextSearchViewWorker from '../TextSearchViewWorker/TextSearchViewWorker.js'
+import * as TaskWorker from '../TaskWorker/TaskWorker.js'
 import * as TitleBarWorker from '../TitleBarWorker/TitleBarWorker.js'
 import * as WorkersViewWorker from '../WorkersViewWorker/WorkersViewWorker.ts'
 
@@ -60,6 +61,7 @@ const workerInvokers = {
   settingsView: SettingsViewWorker,
   statusBar: StatusBarWorker,
   textSearchView: TextSearchViewWorker,
+  taskWorker: TaskWorker,
   titleBar: TitleBarWorker,
   workersView: WorkersViewWorker,
 }
