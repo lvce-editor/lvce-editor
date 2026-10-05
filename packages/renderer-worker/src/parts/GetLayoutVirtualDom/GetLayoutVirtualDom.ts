@@ -525,8 +525,10 @@ export const getLayoutVirtualDom = (state: LayoutState) => {
     childCount: 0,
   })
 
-  if (state.aiNativeLayout) dom[0].className += ' AiNativeLayout'
-  else if (state.aiNativeLayoutExited) dom[0].className += ' IdeLayoutFromAi'
+  if (state.aiNativeLayout) {
+    dom[0].className += ' AiNativeLayout'
+    if (state.sideBarLocation === SideBarLocationType.Right) dom[0].className += ' AiNativeLayoutRight'
+  } else if (state.aiNativeLayoutExited) dom[0].className += ' IdeLayoutFromAi'
 
   if (titleBarVisible) {
     workbenchChildCount++

@@ -781,7 +781,7 @@ export const enterSideBarFocusMode = async (
     ...state,
     aiNativeLayout,
     aiNativeLayoutExited: false,
-    ...(aiNativeLayout ? { titleBarVisible: false, statusBarVisible: false, sideBarLocation: SideBarLocationType.Left } : {}),
+    ...(aiNativeLayout ? { titleBarVisible: false, statusBarVisible: false } : {}),
     sideBarFocusMode: true,
     sideBarFocusModeLayout: getSideBarFocusModeLayoutSnapshot(state),
     sideBarFocusModeTarget: target,
