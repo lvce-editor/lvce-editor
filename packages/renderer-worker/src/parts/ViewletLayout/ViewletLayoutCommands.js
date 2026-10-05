@@ -1,9 +1,11 @@
+import * as AiNativeLayout from '../AiNativeLayout/AiNativeLayout.ts'
 import * as BrowserFullWidth from '../BrowserFullWidth/BrowserFullWidth.js'
 import * as ViewletLayout from './ViewletLayout.ts'
 import * as ResetLayout from '../ResetLayout/ResetLayout.ts'
 
 // prettier-ignore
 export const Commands = {
+  handleActivityBarWheel: AiNativeLayout.handleActivityBarWheel,
   beginBrowserTabDrag: ViewletLayout.beginBrowserTabDrag,
   endBrowserTabDrag: ViewletLayout.endBrowserTabDrag,
   handleBrowserTabDragOver: ViewletLayout.handleBrowserTabDragOver,
@@ -33,6 +35,7 @@ export const Commands = {
 }
 
 export const CommandsWithSideEffects = {
+  enterAiNativeLayout: AiNativeLayout.enter,
   toggleSimpleBrowserFullWidthInternal: BrowserFullWidth.toggleInternal,
   leaveSimpleBrowserFullWidth: BrowserFullWidth.leave,
   attachViewlet: ViewletLayout.attachViewlet,

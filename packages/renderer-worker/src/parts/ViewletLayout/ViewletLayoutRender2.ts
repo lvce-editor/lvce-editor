@@ -236,6 +236,7 @@ const renderCss = {
 
 export const renderEventListeners = () => {
   return [
+    { name: 'handleActivityBarWheel', params: ['handleActivityBarWheel', 'event.deltaY'] },
     { name: 'handleBrowserTabDragOver', params: ['handleBrowserTabDragOver'], preventDefault: true, stopPropagation: true },
     { name: 'handleBrowserTabDrop', params: ['handleBrowserTabDrop', 'event.clientX', 'event.clientY'], preventDefault: true, stopPropagation: true },
     {
