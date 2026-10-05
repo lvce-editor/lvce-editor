@@ -1,4 +1,5 @@
 import * as Command from '../Command/Command.js'
+import * as ExtensionHostCommands from '../ExtensionHost/ExtensionHostCommands.js'
 import * as ViewletLayout from '../ViewletLayout/ViewletLayout.ts'
 import type { LayoutState } from '../ViewletLayout/LayoutState.ts'
 
@@ -13,6 +14,8 @@ export const handleActivityBarWheel = async (state: LayoutState, deltaY: number)
   if (Math.sign(deltaY) === lastGestureDirection && now - lastGestureTime < 700) return state
   lastGestureTime = now
   lastGestureDirection = Math.sign(deltaY)
+  const commands = await ExtensionHostCommands.getCommands(undefined, undefined, state.applicationId)
+  if (!commands.some((command) => command.id === 'chat2.toggleAiNativeLayout')) return state
   await Command.execute('ExtensionHost.executeCommand', 'chat2.toggleAiNativeLayout')
   return state
 }
