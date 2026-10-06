@@ -45,6 +45,14 @@
   },
   {
     "category": "workbench",
+    "description": "Caches file quick-pick results to reduce data transferred between workers",
+    "heading": "Quick Pick Cache",
+    "id": "quickPick.cache",
+    "type": "boolean",
+    "value": true
+  },
+  {
+    "category": "workbench",
     "description": "Stores the cached color theme",
     "heading": "Color Theme Cache",
     "id": "colorTheme.cache",

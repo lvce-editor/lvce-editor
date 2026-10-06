@@ -153,6 +153,9 @@ jest.unstable_mockModule('../src/parts/SimpleBrowserFavicon/SimpleBrowserFavicon
 }))
 
 jest.unstable_mockModule('../src/parts/Viewlet/Viewlet.js', () => ({ executeViewletCommand: jest.fn() }))
+jest.unstable_mockModule('../src/parts/GetExtensionViews/GetExtensionViews.ts', () => ({
+  getExtensionView: jest.fn(async (id: string) => (id === 'gpt-voice.views.default' ? { title: 'Gpt Voice' } : undefined)),
+}))
 jest.unstable_mockModule('../src/parts/SimpleBrowserPreview/SimpleBrowserPreview.js', () => ({
   materialize: jest.fn(),
   dispose: jest.fn(),
@@ -160,6 +163,7 @@ jest.unstable_mockModule('../src/parts/SimpleBrowserPreview/SimpleBrowserPreview
   resize: jest.fn(),
 }))
 const SimpleBrowserPreview = await import('../src/parts/SimpleBrowserPreview/SimpleBrowserPreview.js')
+const GetExtensionViews = await import('../src/parts/GetExtensionViews/GetExtensionViews.ts')
 const Viewlet = await import('../src/parts/Viewlet/Viewlet.js')
 const BrowserSuggestionRequests = await import('../src/parts/BrowserSuggestionRequests/BrowserSuggestionRequests.js')
 const ViewletSimpleBrowser = await import('../src/parts/ViewletSimpleBrowser/ViewletSimpleBrowser.js')
@@ -2739,6 +2743,20 @@ test('openOrRevealTab preserves existing tabs when opening a new remote', async 
   expect(result.tabs).toHaveLength(3)
   expect(result.tabs.slice(0, 2)).toEqual(state.tabs)
   expect(result.iframeSrc).toBe(url)
+})
+
+test('openOrRevealTab opens and reuses an extension view tab', async () => {
+  let uid = 100
+  jest.mocked(GetExtensionViews.getExtensionView).mockResolvedValue({ title: 'Gpt Voice' } as never)
+  jest.mocked(SimpleBrowserPreview.materialize).mockImplementation(async (_state, tab) => ({ ...tab, previewUid: ++uid }))
+  const state = createTwoTabState()
+  const url = 'extension-view:///gpt-voice.views.default'
+  const opened = await ViewletSimpleBrowser.openOrRevealTab(state, url)
+  expect(opened.tabs).toHaveLength(3)
+  expect(opened.tabs[2]).toMatchObject({ iframeSrc: url, inputValue: url, previewUid: 101, title: 'Gpt Voice' })
+  const revealed = await ViewletSimpleBrowser.openOrRevealTab(opened, url)
+  expect(revealed.tabs).toHaveLength(3)
+  expect(revealed.selectedTabIndex).toBe(2)
 })
 
 test('synchronizes the address after a page starts and finishes navigation', async () => {

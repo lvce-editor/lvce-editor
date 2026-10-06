@@ -123,6 +123,33 @@ test('renders split terminal tabs as connected rows and selects the focused spli
   ])
 })
 
+test('renders an inline rename input once for a shared split tab', () => {
+  const dom = GetTerminalsDom.getTerminalsDom({
+    activeTerminalUids: [42],
+    childUids: [41, 42],
+    height: 400,
+    renamingTabUid: 41,
+    selectedIndex: 0,
+    tabs: [{ icon: 'terminal-bash', label: 'build', terminalUids: [41, 42], uid: 41 }],
+    tabsWidth: 90,
+    terminalTabsEnabled: true,
+    width: 800,
+    y: 20,
+  })
+
+  expect(dom.filter((node) => node.type === VirtualDomElements.Input)).toHaveLength(1)
+  expect(dom).toContainEqual(
+    expect.objectContaining({
+      autoFocus: true,
+      'data-tabUid': 41,
+      name: 'terminal-rename',
+      onBlur: 'handle-terminal-rename-blur',
+      onKeyDown: 'handle-terminal-rename-keydown',
+      value: 'build',
+    }),
+  )
+})
+
 test('shows terminal tabs for a single split group', () => {
   const dom = GetTerminalsDom.getTerminalsDom({
     activeTerminalUids: [42],
@@ -136,7 +163,7 @@ test('shows terminal tabs for a single split group', () => {
     y: 20,
   })
 
-  expect(dom[0]).toMatchObject({ childCount: 3 })
+  expect(dom[0]).toMatchObject({ childCount: 4 })
   expect(dom).toContainEqual(expect.objectContaining({ className: 'TerminalTab TerminalTabSplit TerminalTabSplitFirst' }))
   expect(dom).toContainEqual(expect.objectContaining({ className: 'TerminalTab TerminalTabSelected TerminalTabSplit TerminalTabSplitLast' }))
 })
@@ -153,7 +180,30 @@ test('shows a draggable terminal tab for a single terminal', () => {
     y: 20,
   })
 
-  expect(dom[0]).toMatchObject({ childCount: 2, onDrop: 'handleDrop', onDragOver: 'handleDragOver' })
+  expect(dom[0]).toMatchObject({ childCount: 3, onDrop: 'handleDrop', onDragOver: 'handleDragOver' })
+  expect(dom).toContainEqual(
+    expect.objectContaining({
+      className: 'Sash SashVertical TerminalTabsSash',
+      left: 708,
+      onPointerDown: 'handleTerminalTabsSashPointerDown',
+    }),
+  )
   expect(dom).toContainEqual(expect.objectContaining({ className: 'TerminalTab TerminalTabSelected', draggable: true }))
   expect(dom).toContainEqual({ type: VirtualDomElements.Reference, uid: 41 })
+})
+
+test('does not render the terminal tabs sash when tabs are disabled', () => {
+  const dom = GetTerminalsDom.getTerminalsDom({
+    childUids: [41],
+    height: 400,
+    selectedIndex: 0,
+    tabs: [{ icon: 'terminal-bash', label: 'bash', uid: 41 }],
+    tabsWidth: 90,
+    terminalTabsEnabled: false,
+    width: 800,
+    y: 20,
+  })
+
+  expect(dom[0]).toMatchObject({ childCount: 1 })
+  expect(dom).not.toEqual(expect.arrayContaining([expect.objectContaining({ className: 'Sash SashVertical TerminalTabsSash' })]))
 })

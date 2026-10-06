@@ -85,3 +85,13 @@ test('addCustomPathsToIndexHtml - merges linked worker urls into the existing ap
     },
   })
 })
+
+test('addCustomPathsToIndexHtml - Electron runtime overrides the shared web config', async () => {
+  jest.mocked(Preferences.getUserPreferences).mockResolvedValue({})
+  jest.mocked(LinkedWorkerPreferences.getLinkedWorkerPreferences).mockResolvedValue({})
+  const content = '<title>Test</title><script id="Config" type="application/json">{"assetDir":"","platform":"web","workerUrls":{}}</script>'
+  const result = await AddCustomPathsToIndexHtml.addCustomPathsToIndexHtml(content, { platform: 'electron' })
+  const configElements = [...result.matchAll(configElementPattern)]
+  expect(configElements).toHaveLength(1)
+  expect(JSON.parse(configElements[0][1])).toEqual({ assetDir: '', platform: 'electron', workerUrls: {} })
+})

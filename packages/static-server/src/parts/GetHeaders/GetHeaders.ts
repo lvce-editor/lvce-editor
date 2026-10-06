@@ -58,6 +58,13 @@ export const getHeaders = ({
   if (absolutePath.endsWith('rendererWorkerMain.js') || absolutePath.endsWith('rendererWorkerMain.ts')) {
     return GetHeadersRendererWorker.getHeadersRendererWorker(mime, etag, defaultCachingHeader)
   }
+  if (/\/packages\/renderer-worker\/(?:dist|src)\/.*\.(?:js|ts)$/.test(normalizedPath)) {
+    // WebKit checks isolation headers on module imports from the renderer worker too.
+    return {
+      ...GetHeadersDefault.getHeadersDefault(mime, etag, defaultCachingHeader),
+      [HttpHeader.CrossOriginEmbedderPolicy]: CrossOriginEmbedderPolicy.value,
+    }
+  }
   if (absolutePath.includes('/extensions/') && (absolutePath.endsWith('.js') || absolutePath.endsWith('.ts'))) {
     return GetHeadersExtensionWorker.getHeadersExtensionWorker(mime, etag, defaultCachingHeader)
   }
