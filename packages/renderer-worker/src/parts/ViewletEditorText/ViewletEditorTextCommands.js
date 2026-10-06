@@ -132,8 +132,18 @@ const loadEditorContent = WrapEditorCommands.wrapEditorCommand('Editor.loadConte
 const loadEditorContentPreservingFocus = WrapEditorCommands.wrapEditorCommand('Editor.loadContent', { preserveFocus: true })
 
 const loadContent = (editor, savedState, context) => {
+  if (context?.forceReload) {
+    return loadEditorContentPreservingFocus(editor, savedState, false, true, true)
+  }
   const load = context?.preserveFocus ? loadEditorContentPreservingFocus : loadEditorContent
   return load(editor, savedState)
+}
+
+const handleWorkspaceRefresh = (editor, changes) => {
+  if (!changes?.reloadContent || !changes.changed?.includes(editor.uri)) {
+    return editor
+  }
+  return loadContent(editor, undefined, { forceReload: true, preserveFocus: true })
 }
 
 const updateDiagnostics = WrapEditorCommands.wrapEditorCommand('Editor.updateDiagnostics', { preserveFocus: true })
@@ -175,6 +185,7 @@ export const getCommands = async () => {
     __renderPending: renderPending,
     handleFocus,
     handleUriChange,
+    handleWorkspaceRefresh,
     loadContent,
     loadContentLater,
     renderPending,

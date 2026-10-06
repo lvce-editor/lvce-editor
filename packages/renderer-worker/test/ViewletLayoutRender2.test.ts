@@ -49,7 +49,7 @@ test('renderCss serializes valid layout bounds', () => {
     [
       'Viewlet.setCss',
       1,
-      `:root {
+      `#Workbench {
   --BrowserDropWidth: 799.6px;
   --BrowserDropTop: 0px;
   --AppWidth: 100%;
@@ -84,6 +84,7 @@ test('renderCss serializes explicit application bounds', () => {
   const oldState = {} as any
   const newState = {
     uid: 1,
+    applicationId: 'preview',
     explicitBounds: true,
     windowWidth: 480,
     windowHeight: 320,
@@ -112,7 +113,7 @@ test('renderCss serializes explicit application bounds', () => {
     [
       'Viewlet.setCss',
       1,
-      `:root {
+      `#Workbench-1 {
   --BrowserDropWidth: 799.6px;
   --BrowserDropTop: 160px;
   --AppWidth: 480px;
