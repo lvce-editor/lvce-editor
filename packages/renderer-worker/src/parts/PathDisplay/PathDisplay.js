@@ -35,6 +35,9 @@ export const getTitle = (uri) => {
 }
 
 export const getLabel = (uri) => {
+  if (uri.startsWith('accounts:///')) {
+    return 'Accounts'
+  }
   if (uri.startsWith('settings://')) {
     return 'Settings'
   }
@@ -71,6 +74,9 @@ export const getLabel = (uri) => {
  * @returns
  */
 export const getFileIcon = (uri) => {
+  if (uri.startsWith('accounts:///')) {
+    return `MaskIcon${Icon.RecordKey}`
+  }
   if (uri === 'app://keybindings') {
     return `MaskIcon${Icon.RecordKey}`
   }

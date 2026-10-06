@@ -4,6 +4,7 @@ import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
 export const map = {
   [ViewletModuleId.About]: () => import('../ViewletAbout/ViewletAbout.ipc.ts'),
+  [ViewletModuleId.Accounts]: () => import('../ViewletAccounts/ViewletAccounts.ipc.ts'),
   [ViewletModuleId.NotificationCenter]: () => import('../ViewletNotificationCenter/ViewletNotificationCenter.ipc.ts'),
   [ViewletModuleId.ActivityBar]: () => import('../ViewletActivityBar/ViewletActivityBar.ipc.ts'),
   [ViewletModuleId.Audio]: () => import('../ViewletAudio/ViewletAudio.ipc.js'),

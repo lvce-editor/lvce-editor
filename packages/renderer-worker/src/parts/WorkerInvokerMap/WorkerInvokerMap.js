@@ -1,4 +1,5 @@
 import * as AboutViewWorker from '../AboutViewWorker/AboutViewWorker.js'
+import * as AccountsViewWorker from '../AccountsViewWorker/AccountsViewWorker.ts'
 import * as ActivityBarWorker from '../ActivityBarWorker/ActivityBarWorker.js'
 import * as ChatDebugViewWorker from '../ChatDebugViewWorker/ChatDebugViewWorker.js'
 import * as ChatViewWorker from '../ChatViewWorker/ChatViewWorker.js'
@@ -33,6 +34,7 @@ import * as WorkersViewWorker from '../WorkersViewWorker/WorkersViewWorker.ts'
 
 const workerInvokers = {
   aboutWorker: AboutViewWorker,
+  accountsView: AccountsViewWorker,
   activityBar: ActivityBarWorker,
   chatDebug: ChatDebugViewWorker,
   chatView: ChatViewWorker,

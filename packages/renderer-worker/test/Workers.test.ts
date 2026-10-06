@@ -8,6 +8,24 @@ test('cookie import view should let the main area own its tab title', () => {
   expect(worker?.viewlet?.title).toBeUndefined()
 })
 
+test('accounts view worker is available in development and packaged builds', () => {
+  const worker = Workers.getWorkers().find(({ id }: Readonly<{ id: string }>) => id === 'accountsView')
+
+  expect(worker).toMatchObject({
+    defaultPath: '/packages/renderer-worker/node_modules/@lvce-editor/accounts-view/dist/accountsWorkerMain.js',
+    fileName: 'accountsWorkerMain.js',
+    productionPath: '/packages/accounts-view/dist/accountsWorkerMain.js',
+    settingName: 'develop.accountsViewWorkerPath',
+  })
+  expect(worker?.viewlet?.methods?.render).toEqual({
+    name: 'Accounts.render2',
+    parameters: [
+      { name: 'uid', source: 'state' },
+      { name: 'diff', source: 'result' },
+    ],
+  })
+})
+
 test('workers view resize forwards its position and dimensions', () => {
   const worker = Workers.getWorkers().find(({ id }: Readonly<{ id: string }>) => id === 'workersView')
 

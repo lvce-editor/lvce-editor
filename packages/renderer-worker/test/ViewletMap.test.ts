@@ -48,6 +48,10 @@ test('workers view', async () => {
   expect(await ViewletMap.getModuleId('workers:///1')).toBe(ViewletModuleId.Workers)
 })
 
+test('accounts view', async () => {
+  expect(await ViewletMap.getModuleId('accounts:///1')).toBe(ViewletModuleId.Accounts)
+})
+
 test('cookie import view', async () => {
   expect(await ViewletMap.getModuleId('cookie-import-view:///firefox/default')).toBe(ViewletModuleId.CookieImport)
 })
