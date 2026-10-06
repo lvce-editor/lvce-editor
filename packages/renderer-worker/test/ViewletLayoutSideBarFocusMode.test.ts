@@ -1,7 +1,9 @@
-import { expect, test } from '@jest/globals'
+import { expect, jest, test } from '@jest/globals'
 import * as SideBarLocationType from '../src/parts/SideBarLocationType/SideBarLocationType.js'
 import { getLayoutVirtualDom } from '../src/parts/GetLayoutVirtualDom/GetLayoutVirtualDom.ts'
 
+const activityBarInvoke = jest.fn<(...args: unknown[]) => Promise<unknown[]>>(async () => [])
+jest.unstable_mockModule('../src/parts/ActivityBarWorker/ActivityBarWorker.js', () => ({ invoke: activityBarInvoke }))
 const LayoutPoints = await import('../src/parts/ViewletLayout/LayoutPoints.ts')
 const ViewletLayout = await import('../src/parts/ViewletLayout/ViewletLayout.ts')
 
@@ -241,3 +243,17 @@ test.each([SideBarLocationType.Left, SideBarLocationType.Right])(
     )
   },
 )
+
+test('AI-native layout restricts the existing activity bar and restores it on exit', async () => {
+  activityBarInvoke.mockClear()
+  const state = { ...createState(), activityBarId: 42 }
+
+  const focused = await ViewletLayout.enterSideBarFocusMode(state, 'primary', true)
+  expect(activityBarInvoke).toHaveBeenCalledWith('ActivityBar.setAiNativeLayout', 42, true)
+  expect(activityBarInvoke).toHaveBeenCalledWith('ActivityBar.diff2', 42)
+  expect(activityBarInvoke).toHaveBeenCalledWith('ActivityBar.render2', 42, [])
+
+  activityBarInvoke.mockClear()
+  await ViewletLayout.leaveSideBarFocusMode(focused.newState)
+  expect(activityBarInvoke).toHaveBeenCalledWith('ActivityBar.setAiNativeLayout', 42, false)
+})
