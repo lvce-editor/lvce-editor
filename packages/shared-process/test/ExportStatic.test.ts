@@ -2,7 +2,7 @@ import { expect, test } from '@jest/globals'
 import { mkdir, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
-import { mergeExtensionManifests, transpileFile, validateRendererProcessArtifacts } from '../src/parts/ExportStatic/ExportStatic.js'
+import { mergeExtensionManifests, mergeWebExtensionManifests, transpileFile, validateRendererProcessArtifacts } from '../src/parts/ExportStatic/ExportStatic.js'
 
 test('transpileFile removes typescript annotations', () => {
   const content = `const value: number = 1
@@ -59,6 +59,40 @@ test('mergeExtensionManifests appends local extension when id is new', () => {
   }
 
   expect(mergeExtensionManifests([builtinExtension], [localExtension])).toEqual([builtinExtension, localExtension])
+})
+
+test('mergeWebExtensionManifests preserves other builtins and replaces matching extensions', () => {
+  const builtinChat = {
+    id: 'builtin.chat-view-2',
+    path: '/static/hash/extensions/builtin.chat-view-2',
+  }
+  const builtinGit = {
+    id: 'builtin.git',
+    path: '/static/hash/extensions/builtin.git',
+  }
+  const localChat = {
+    id: 'builtin.chat-view-2',
+    path: '/chat/hash/extensions/builtin.chat-view-2',
+  }
+  const localExtension = {
+    id: 'test.local-extension',
+    path: '/chat/hash/extensions/test.local-extension',
+  }
+
+  expect(mergeWebExtensionManifests([builtinChat, builtinGit], [localChat, localExtension])).toEqual([localChat, builtinGit, localExtension])
+})
+
+test('mergeWebExtensionManifests supports simple extension path entries', () => {
+  expect(
+    mergeWebExtensionManifests(['/static/hash/extensions/builtin.chat-view-2', '/static/hash/extensions/builtin.git'], [
+      '/chat/hash/extensions/builtin.chat-view-2',
+      '/chat/hash/extensions/test.local-extension',
+    ]),
+  ).toEqual([
+    '/chat/hash/extensions/builtin.chat-view-2',
+    '/static/hash/extensions/builtin.git',
+    '/chat/hash/extensions/test.local-extension',
+  ])
 })
 
 test('validateRendererProcessArtifacts accepts copied renderer process chunks', async () => {

@@ -46,6 +46,13 @@ const replace = async (path: any, occurrence: any, replacement: any): Promise<an
   await FileSystem.writeFile(path, newContent)
 }
 
+const replaceIfPresent = async (path: any, occurrence: any, replacement: any): Promise<void> => {
+  const content = await FileSystem.readFile(path)
+  if (content.includes(occurrence)) {
+    await FileSystem.writeFile(path, content.replaceAll(occurrence, replacement))
+  }
+}
+
 const getWorkerById = (id: any): any => {
   const worker = workers.find((item: any) => {
     return item.id === id
@@ -262,11 +269,11 @@ const applyOverrides = async ({ commitHash, pathPrefix, root, serverStaticPath }
 }
 
 const addExtensionSeo = async ({ commitHash, description, name, root }: any): Promise<any> => {
-  await replace(Path.join(root, 'dist', 'index.html'), '<title>Lvce Editor</title>', `<title>${name}</title>`)
-  await replace(Path.join(root, 'dist', commitHash, 'manifest.json'), `"name": "Code Editor Web - OSS"`, `"name": "${name}"`)
-  await replace(Path.join(root, 'dist', commitHash, 'manifest.json'), `"short_name": "Web - OSS"`, `"short_name": "${name}"`)
-  await replace(Path.join(root, 'dist', commitHash, 'manifest.json'), `"description": "Web Code Editor."`, `"description": "${description}"`)
-  await replace(
+  await replaceIfPresent(Path.join(root, 'dist', 'index.html'), '<title>Lvce Editor</title>', `<title>${name}</title>`)
+  await replaceIfPresent(Path.join(root, 'dist', commitHash, 'manifest.json'), `"name": "Code Editor Web - OSS"`, `"name": "${name}"`)
+  await replaceIfPresent(Path.join(root, 'dist', commitHash, 'manifest.json'), `"short_name": "Web - OSS"`, `"short_name": "${name}"`)
+  await replaceIfPresent(Path.join(root, 'dist', commitHash, 'manifest.json'), `"description": "Web Code Editor."`, `"description": "${description}"`)
+  await replaceIfPresent(
     Path.join(root, 'dist', 'index.html'),
     '<meta name="description" content="VS Code inspired text editor that mostly runs in a webworker." />',
     `<meta name="description" content="${description}" />`,
@@ -393,6 +400,60 @@ export const mergeExtensionManifests = (manifests: any, extraExtensions: any): a
   return merged
 }
 
+const getWebExtensionId = (webExtension: any): string => {
+  if (typeof webExtension === 'string') {
+    return webExtension.split('/').filter(Boolean).at(-1) || ''
+  }
+  return webExtension.id
+}
+
+export const mergeWebExtensionManifests = (webExtensions: any, extraExtensions: any): any => {
+  const merged: any[] = []
+  const indexes = new Map<string, number>()
+  for (const webExtension of [...webExtensions, ...extraExtensions]) {
+    const id = getWebExtensionId(webExtension)
+    const existingIndex = indexes.get(id)
+    if (existingIndex === undefined) {
+      indexes.set(id, merged.length)
+      merged.push(webExtension)
+    } else {
+      merged[existingIndex] = webExtension
+    }
+  }
+  return merged
+}
+
+const copyBuiltinWebExtensions = async ({ commitHash, pathPrefix, root }: any): Promise<void> => {
+  const extensionsPath = join(process.cwd(), 'extensions')
+  if (!existsSync(extensionsPath)) {
+    return
+  }
+  const extensionDirents = await FileSystem.readDir(extensionsPath)
+  const builtinWebExtensions = []
+  for (const extensionDirent of extensionDirents) {
+    const extensionPath = Path.join(extensionsPath, extensionDirent)
+    const manifestPath = Path.join(extensionPath, 'extension.json')
+    if (!existsSync(manifestPath)) {
+      continue
+    }
+    const extensionJson = await readExtensionManifest(manifestPath)
+    const isLanguageBasicsExtension = isLanguageBasics(extensionDirent)
+    if (extensionJson.compatibility?.web === false || (!extensionJson.browser && !isLanguageBasicsExtension)) {
+      continue
+    }
+    await FileSystem.copy(extensionPath, Path.join(root, 'dist', commitHash, 'extensions', extensionDirent))
+    builtinWebExtensions.push({
+      ...extensionJson,
+      isWeb: true,
+      path: `${pathPrefix}/${commitHash}/extensions/${extensionDirent}`,
+    })
+  }
+  const webExtensionsPath = Path.join(root, 'dist', commitHash, 'config', 'webExtensions.json')
+  const existingWebExtensions = await JsonFile.readJson(webExtensionsPath)
+  const webExtensions = mergeWebExtensionManifests(existingWebExtensions, builtinWebExtensions)
+  await JsonFile.writeJson(webExtensionsPath, webExtensions)
+}
+
 const updateExtensionsJson = async ({ commitHash, extraExtensions, pathPrefix, root }: any): Promise<any> => {
   const dirents = await FileSystem.readDir(Path.join(root, 'dist', commitHash, 'extensions'))
   const manifests = await Promise.all(
@@ -429,23 +490,25 @@ const addExtensionWebExtension = async ({
     return
   }
   const webExtensionPath = `${pathPrefix}/${commitHash}/extensions/${extensionJson.id}`
+  const webExtensionsPath = Path.join(root, 'dist', commitHash, 'config', 'webExtensions.json')
+  const existingWebExtensions = await JsonFile.readJson(webExtensionsPath)
   if (useSimpleWebExtensionFile) {
-    const webExtensions = [webExtensionPath]
+    const webExtensions = mergeWebExtensionManifests(
+      existingWebExtensions.map((webExtension: any) => (typeof webExtension === 'string' ? webExtension : webExtension.path)),
+      [webExtensionPath],
+    )
     await JsonFile.writeJson(Path.join(root, 'dist', commitHash, 'config', 'webExtensions.json'), webExtensions)
-    return
-  }
-  const webExtensions = [
-    {
+  } else {
+    const webExtension = {
       ...extensionJson,
       isWeb: true,
       path: webExtensionPath,
-    },
-  ]
-  await JsonFile.writeJson(Path.join(root, 'dist', commitHash, 'config', 'webExtensions.json'), webExtensions)
-  await FileSystem.forceRemove(Path.join(root, 'dist', commitHash, 'extensions', extensionJson.id))
-  for (const dirent of ['src', 'extension.json']) {
-    await FileSystem.copy(Path.join(extensionPath, dirent), Path.join(root, 'dist', commitHash, 'extensions', extensionJson.id, dirent))
+    }
+    const webExtensions = mergeWebExtensionManifests(existingWebExtensions, [webExtension])
+    await JsonFile.writeJson(Path.join(root, 'dist', commitHash, 'config', 'webExtensions.json'), webExtensions)
   }
+  await FileSystem.forceRemove(Path.join(root, 'dist', commitHash, 'extensions', extensionJson.id))
+  await FileSystem.copy(extensionPath, Path.join(root, 'dist', commitHash, 'extensions', extensionJson.id))
 }
 
 const addExtension = async ({ commitHash, extensionPath, pathPrefix, root, useSimpleWebExtensionFile }: any): Promise<any> => {
@@ -731,6 +794,7 @@ export const exportStatic = async ({
   })
   console.timeEnd('applyOverrides')
 
+  await copyBuiltinWebExtensions({ commitHash, pathPrefix, root })
   await updateExtensionsJson({ commitHash, extraExtensions: [], pathPrefix, root })
   await JsonFile.writeJson(Path.join(root, 'dist', commitHash, 'config', 'onLoadCommands.json'), onLoadCommands)
 

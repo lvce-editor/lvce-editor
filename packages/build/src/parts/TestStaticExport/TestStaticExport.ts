@@ -21,12 +21,26 @@ const main = async () => {
   await Remove.remove(tmpDir)
   await Mkdir.mkdir(tmpDir)
   const extensionPath = join(tmpDir, 'extension')
+  const secondExtensionPath = join(tmpDir, 'second-extension')
   const testPath = join(tmpDir, 'e2e')
   await Mkdir.mkdir(join(testPath, 'src'))
   await WriteFile.writeFile({
     to: join(extensionPath, 'extension.json'),
-    content: `{ "id": "test" }`,
+    content: JSON.stringify({
+      id: 'test',
+      browser: 'dist/main.js',
+      icon: 'media/icon.svg',
+      rpc: [{ id: 'test.worker', type: 'web-worker', url: 'dist/worker.js' }],
+    }),
   })
+  await WriteFile.writeFile({ to: join(extensionPath, 'dist', 'main.js'), content: `export {}` })
+  await WriteFile.writeFile({ to: join(extensionPath, 'dist', 'worker.js'), content: `export {}` })
+  await WriteFile.writeFile({ to: join(extensionPath, 'media', 'icon.svg'), content: `<svg></svg>` })
+  await WriteFile.writeFile({
+    to: join(secondExtensionPath, 'extension.json'),
+    content: JSON.stringify({ id: 'test.second-extension', browser: 'src/main.js' }),
+  })
+  await WriteFile.writeFile({ to: join(secondExtensionPath, 'src', 'main.js'), content: `export {}` })
   await WriteFile.writeFile({
     to: join(testPath, 'package.json'),
     content: `{}`,
@@ -48,6 +62,7 @@ const main = async () => {
   try {
     const result = await module.exportStatic({
       extensionPath,
+      extensionPaths: [secondExtensionPath],
       testPath,
       root: tmpDir,
     })
@@ -71,6 +86,27 @@ const main = async () => {
   assert.equal(typeof config.version, 'string')
   const commitConfig = JSON.parse(await ReadFile.readFile(join(tmpDir, 'dist', commitHash, 'config.json')))
   assert.deepEqual(commitConfig, config)
+  const webExtensions = JSON.parse(await ReadFile.readFile(join(tmpDir, 'dist', commitHash, 'config', 'webExtensions.json')))
+  const chat2 = webExtensions.find((extension) => extension.id === 'builtin.chat-view-2')
+  assert.ok(chat2, 'static export should retain the builtin Chat 2 web extension')
+  assert.equal(chat2.path, `/test/${commitHash}/extensions/builtin.chat-view-2`)
+  assert.ok(webExtensions.some((extension) => extension.id === 'builtin.chat'), 'static export should retain other builtin web extensions')
+  assert.ok(webExtensions.some((extension) => extension.id === 'test'), 'static export should include an added browser extension')
+  assert.ok(webExtensions.some((extension) => extension.id === 'test.second-extension'), 'static export should include multiple added browser extensions')
+  const chat2Manifest = JSON.parse(await ReadFile.readFile(join(tmpDir, 'dist', commitHash, 'extensions', 'builtin.chat-view-2', 'extension.json')))
+  const chat2Assets = [
+    chat2Manifest.browser,
+    chat2Manifest.icon,
+    ...chat2Manifest.rpc.filter((rpc) => rpc.type === 'web-worker').map((rpc) => rpc.url),
+    'media/chat.css',
+  ]
+  for (const asset of chat2Assets) {
+    await ReadFile.readFile(join(tmpDir, 'dist', commitHash, 'extensions', 'builtin.chat-view-2', asset))
+  }
+  await ReadFile.readFile(join(tmpDir, 'dist', commitHash, 'extensions', 'test', 'dist', 'main.js'))
+  await ReadFile.readFile(join(tmpDir, 'dist', commitHash, 'extensions', 'test', 'dist', 'worker.js'))
+  await ReadFile.readFile(join(tmpDir, 'dist', commitHash, 'extensions', 'test', 'media', 'icon.svg'))
+  await ReadFile.readFile(join(tmpDir, 'dist', commitHash, 'extensions', 'test.second-extension', 'src', 'main.js'))
   // Static e2e pages must start without an optional on-load commands file.
   await Remove.remove(join(tmpDir, 'dist', commitHash, 'config', 'onLoadCommands.json'))
   const testOverview = await ReadFile.readFile(join(tmpDir, 'dist', commitHash, 'tests', 'index.html'))
@@ -97,8 +133,25 @@ const main = async () => {
   await ReadFile.readFile(join(pagesRoot, 'dist', pagesResult.commitHash, 'manifest.json'))
   await ReadFile.readFile(join(pagesRoot, 'dist', pagesResult.commitHash, 'icons', 'extensionDefaultIcon.png'))
   await ReadFile.readFile(join(pagesRoot, 'dist', pagesResult.commitHash, 'config', 'onLoadCommands.json'))
+  const pagesWebExtensions = JSON.parse(await ReadFile.readFile(join(pagesRoot, 'dist', pagesResult.commitHash, 'config', 'webExtensions.json')))
+  const pagesChat2 = pagesWebExtensions.find((extension) => extension.id === 'builtin.chat-view-2')
+  assert.ok(pagesChat2, 'Pages export should retain the builtin Chat 2 web extension')
+  assert.equal(pagesChat2.path, `/lvce-editor/${pagesResult.commitHash}/extensions/builtin.chat-view-2`)
+  await ReadFile.readFile(join(pagesRoot, 'dist', pagesResult.commitHash, 'extensions', 'builtin.chat-view-2', 'dist', 'chatMain.js'))
   assert.equal(existsSync(join(pagesRoot, 'dist', 'tests')), false, 'Pages export should not include test pages')
   assert.equal(existsSync(join(pagesRoot, 'dist', pagesResult.commitHash, 'tests')), false, 'Pages export should not include test assets')
+
+  delete process.env.PATH_PREFIX
+  const rootPrefix = Path.absolute('packages/build/.tmp/export-root-prefix-test')
+  const rootPrefixResult = await ExportStaticSite.exportStaticSite({
+    root: rootPrefix,
+    serverRoot: Path.absolute('packages/build/.tmp/server'),
+  })
+  const rootWebExtensions = JSON.parse(await ReadFile.readFile(join(rootPrefix, 'dist', rootPrefixResult.commitHash, 'config', 'webExtensions.json')))
+  const rootChat2 = rootWebExtensions.find((extension) => extension.id === 'builtin.chat-view-2')
+  assert.ok(rootChat2, 'root export should retain the builtin Chat 2 web extension')
+  assert.equal(rootChat2.path, `/${rootPrefixResult.commitHash}/extensions/builtin.chat-view-2`)
+  await ReadFile.readFile(join(rootPrefix, 'dist', rootPrefixResult.commitHash, 'extensions', 'builtin.chat-view-2', 'dist', 'chatMain.js'))
   await Remove.remove(`packages/build/.tmp/server/shared_process/node_modules`)
 
   const testFiles = await ReadDir.readDir('packages/extension-host-worker-tests/src')
