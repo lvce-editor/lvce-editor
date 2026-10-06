@@ -22,6 +22,8 @@ test('embeds runtime configuration while preserving existing config values', asy
     const html = await readFile(path, 'utf8')
     const textContent = html.match(/<script id="Config" type="application\/json">([\s\S]*?)<\/script>/)?.[1]
     expect(textContent).toBeDefined()
+    expect(textContent).toMatch(/\n\s+"workerUrls": \{\n\s+"develop\./)
+    expect(textContent).toContain('\\u003c/script\\u003e\\u003cscript\\u003ealert(1)\\u003c/script\\u003e')
     const config = JSON.parse(textContent!)
     expect(config).toMatchObject({
       argv: ['--test'],
