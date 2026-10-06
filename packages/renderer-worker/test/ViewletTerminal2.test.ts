@@ -6,6 +6,7 @@ const getViewletState = jest.fn((_key: string) => ({ previewId: 71 }))
 const focusSetFocus = jest.fn()
 const rendererProcessInvoke = jest.fn()
 const terminalWorkerInvoke = jest.fn<(...args: unknown[]) => Promise<void>>()
+const extensionHostExecute = jest.fn<(...args: unknown[]) => Promise<void>>()
 
 beforeEach(() => {
   executeViewletCommand.mockClear()
@@ -14,6 +15,7 @@ beforeEach(() => {
   commandExecute.mockClear()
   rendererProcessInvoke.mockClear()
   terminalWorkerInvoke.mockClear()
+  extensionHostExecute.mockReset()
 })
 
 jest.unstable_mockModule('../src/parts/Command/Command.js', () => {
@@ -21,6 +23,8 @@ jest.unstable_mockModule('../src/parts/Command/Command.js', () => {
     execute: commandExecute,
   }
 })
+
+jest.unstable_mockModule('../src/parts/ExtensionHost/ExtensionHostCommands.js', () => ({ executeCommand: extensionHostExecute }))
 
 jest.unstable_mockModule('../src/parts/Viewlet/Viewlet.js', () => ({ executeViewletCommand }))
 jest.unstable_mockModule('../src/parts/ViewletStates/ViewletStates.js', () => ({ getState: getViewletState }))
@@ -35,8 +39,8 @@ jest.unstable_mockModule('../src/parts/GetTerminalSpawnOptions/GetTerminalSpawnO
   return {
     getTerminalSpawnOptions() {
       return {
-        command: 'bash',
         args: ['-i'],
+        command: 'bash',
       }
     },
   }
@@ -103,6 +107,7 @@ test('loadContent uses spawn options supplied by the terminal tabs parent', asyn
   const spawnOptions = {
     args: ['-l'],
     command: 'zsh',
+    disposeCommand: { args: ['session'], command: 'devcontainer.disposeTerminal' },
   }
 
   const newState = await ViewletTerminal2.loadContent(state, undefined, spawnOptions)
@@ -162,20 +167,20 @@ test('handleExit removes the exited terminal from its parent', async () => {
   expect(commandExecute).toHaveBeenCalledWith('Terminals.handleTerminalExit', 10)
 })
 
-test('resizeEffect forwards xterm dimensions to the terminal worker', async () => {
-  const state = {
-    ...ViewletTerminal2.create(5),
-    columns: 120,
-    rows: 40,
-  }
-  await ViewletTerminal2.resizeEffect(state)
+test('xterm resize command forwards new dimensions to the terminal worker', async () => {
+  const { Commands } = await import('../src/parts/ViewletTerminal2/ViewletTerminal2Commands.ts')
+  const state = ViewletTerminal2.create(5)
+  const resized = await Commands.resize(state, { columns: 120, rows: 40 })
+  expect(resized).toMatchObject({ columns: 120, rows: 40 })
   expect(terminalWorkerInvoke).toHaveBeenCalledWith('Terminal.resize', 5, 120, 40)
+  expect(state.columns).toBe(80)
+  expect(state.rows).toBe(24)
 })
 
 test('clear resets the xterm display', async () => {
   const state = ViewletTerminal2.create(6)
   await expect(ViewletTerminal2.clear(state)).resolves.toBe(state)
-  expect(rendererProcessInvoke).toHaveBeenCalledWith('Viewlet.send', 6, 'write', new TextEncoder().encode('\u001Bc'))
+  expect(rendererProcessInvoke).toHaveBeenCalledWith('Viewlet.send', 6, 'write', new TextEncoder().encode('\u{1B}c'))
 })
 
 test('handleMouseDown focuses the terminal context', () => {
@@ -190,6 +195,29 @@ test('dispose closes the terminal transport', async () => {
     disposed: true,
   })
   expect(terminalWorkerInvoke).toHaveBeenCalledWith('Terminal.dispose', 8)
+})
+
+test('dispose cleans up its remote session before closing the host transport', async () => {
+  const state = { ...ViewletTerminal2.create(8), disposeCommand: { args: ['session'], command: 'devcontainer.disposeTerminal' } }
+  extensionHostExecute.mockImplementationOnce(async () => {
+    expect(terminalWorkerInvoke).not.toHaveBeenCalled()
+  })
+  await expect(ViewletTerminal2.dispose(state)).resolves.toMatchObject({ disposed: true })
+  expect(extensionHostExecute).toHaveBeenCalledWith('devcontainer.disposeTerminal', 'session')
+  expect(terminalWorkerInvoke).toHaveBeenCalledWith('Terminal.dispose', 8)
+})
+
+test('dispose still closes the host transport if remote cleanup fails', async () => {
+  const warning = jest.spyOn(console, 'warn').mockImplementation(() => {})
+  try {
+    extensionHostExecute.mockRejectedValueOnce(new Error('Container host is unavailable'))
+    const state = { ...ViewletTerminal2.create(8), disposeCommand: { args: ['session'], command: 'devcontainer.disposeTerminal' } }
+    await expect(ViewletTerminal2.dispose(state)).resolves.toMatchObject({ disposed: true })
+    expect(terminalWorkerInvoke).toHaveBeenCalledWith('Terminal.dispose', 8)
+    expect(warning).toHaveBeenCalled()
+  } finally {
+    warning.mockRestore()
+  }
 })
 
 test.each(['http://localhost:3333/', 'https://example.com/path?query=value#section'])(
@@ -239,7 +267,7 @@ test('registers the terminal link handler', () => {
 
 test('uses the host launch directory supplied by the container terminal resolver', async () => {
   const state = ViewletTerminal2.create(42, 'devcontainers:///abc123/src')
-  const options = { command: '/usr/bin/node', args: ['devcontainer.js', 'exec', 'sh'], cwd: '/host/project' }
+  const options = { args: ['devcontainer.js', 'exec', 'sh'], command: '/usr/bin/node', cwd: '/host/project' }
   const loaded = await ViewletTerminal2.loadContent(state, undefined, options)
   await ViewletTerminal2.loadContentLater(loaded)
   expect(terminalWorkerInvoke).toHaveBeenCalledWith('Terminal.create', 42, '/host/project', options.command, options.args, { backend: 'mock' })
@@ -262,9 +290,7 @@ test('workspace changes show one terminal retry instruction', async () => {
   await ViewletTerminal2.loadContentLater(state)
   const data = rendererProcessInvoke.mock.calls.find((call) => call[2] === 'write')?.[3] as Uint8Array
   const output = new TextDecoder().decode(data)
-  expect(output).toBe(
-    '\r\nFailed to start terminal: Workspace changed while starting the terminal.\r\nCreate a new terminal to retry.\r\n',
-  )
+  expect(output).toBe('\r\nFailed to start terminal: Workspace changed while starting the terminal.\r\nCreate a new terminal to retry.\r\n')
   expect(output.match(/Create a new terminal to retry/g)).toHaveLength(1)
   expect(commandExecute).not.toHaveBeenCalledWith('Terminals.handleTerminalExit', 303)
 })
@@ -275,4 +301,13 @@ test('nonzero process exit keeps its diagnostic visible', async () => {
   const data = rendererProcessInvoke.mock.calls.find((call) => call[2] === 'write')?.[3] as Uint8Array
   expect(new TextDecoder().decode(data)).toContain('exited with code 127')
   expect(commandExecute).not.toHaveBeenCalledWith('Terminals.handleTerminalExit', 302)
+})
+
+test('preserves the container interpreter environment through terminal creation', async () => {
+  const state = ViewletTerminal2.create(3912, 'devcontainers:///abc123')
+  const env = { ELECTRON_RUN_AS_NODE: '1' }
+  const options = { args: ['devcontainer.js'], command: '/electron', cwd: '/host', env }
+  const loaded = await ViewletTerminal2.loadContent(state, undefined, options)
+  await ViewletTerminal2.loadContentLater(loaded)
+  expect(terminalWorkerInvoke).toHaveBeenCalledWith('Terminal.create', 3912, '/host', options.command, options.args, { backend: 'mock', env })
 })

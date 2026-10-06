@@ -67,3 +67,5 @@ export const SimpleBrowserToolbar = 33
 export const SimpleBrowserDownloads = 34
 
 export const Workers = 35
+
+export const TerminalTab = 36

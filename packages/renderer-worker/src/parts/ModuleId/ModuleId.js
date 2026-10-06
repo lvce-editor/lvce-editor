@@ -123,3 +123,5 @@ export const Application = 157
 export const SimpleBrowserWorkflow = 158
 
 export const TerminalTransfer = 159
+
+export const Tasks = 160

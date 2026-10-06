@@ -1,5 +1,6 @@
 import * as Assert from '../Assert/Assert.ts'
 import * as Command from '../Command/Command.js'
+import * as ContextMenu from '../ContextMenu/ContextMenu.js'
 import * as Focus from '../Focus/Focus.js'
 import * as GetTerminalTabsDom from '../GetTerminalTabsDom/GetTerminalTabsDom.js'
 import * as GetTerminalSpawnOptions from '../GetTerminalSpawnOptions/GetTerminalSpawnOptions.js'
@@ -7,6 +8,7 @@ import * as Id from '../Id/Id.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as WhenExpression from '../WhenExpression/WhenExpression.js'
@@ -28,6 +30,7 @@ export const create = (id, uri, x, y, width, height) => {
     cwd: uri,
     focusVersion: 0,
     selectedIndex: -1,
+    renamingTabUid: -1,
   }
 }
 
@@ -289,6 +292,7 @@ const removeTerminal = async (state, terminalUid, dispose = true) => {
     childUids,
     focusVersion: childUid !== -1 && childUid !== oldChildUid ? focusVersion + 1 : focusVersion,
     selectedIndex,
+    renamingTabUid: tabs.some((item) => item.uid === state.renamingTabUid) ? state.renamingTabUid : -1,
     tabs,
   }
   const commands = dispose ? Viewlet.disposeFunctional(terminalUid) : []
@@ -326,6 +330,78 @@ export const handleClickTab = (state, index, terminalUid) => {
   return focusIndex(state, Number(index), terminalUid)
 }
 
+export const handleTabContextMenu = async (state, terminalUid, x, y) => {
+  Assert.number(x)
+  Assert.number(y)
+  const tab = state.tabs.find((candidate) => getTerminalUids(candidate).includes(Number(terminalUid)))
+  if (!tab) {
+    return state
+  }
+  void ContextMenu.show2(state.uid, MenuEntryId.TerminalTab, x, y, tab.uid).catch((error) => {
+    console.error('[renderer-worker] Failed to open terminal tab menu', error)
+  })
+  return state
+}
+
+export const startRenameTerminal = (state, tabUid) => {
+  const tab = state.tabs.find((candidate) => candidate.uid === Number(tabUid))
+  if (!tab) {
+    return state
+  }
+  return { ...state, renamingTabUid: tab.uid }
+}
+
+export const acceptRenameTerminal = (state, tabUid, value) => {
+  const renamingTabUid = Number(tabUid)
+  if (state.renamingTabUid !== renamingTabUid) {
+    return state
+  }
+  const tabs = state.tabs.map((tab) => {
+    if (tab.uid !== renamingTabUid || !value) {
+      return tab
+    }
+    return value === tab.label ? tab : { ...tab, label: value }
+  })
+  const updated = tabs.some((tab, index) => tab !== state.tabs[index])
+  return { ...state, tabs: updated ? tabs : state.tabs, renamingTabUid: -1 }
+}
+
+export const cancelRenameTerminal = (state, tabUid) => {
+  if (state.renamingTabUid !== Number(tabUid)) {
+    return state
+  }
+  return { ...state, renamingTabUid: -1 }
+}
+
+export const handleRenameTerminalFocus = async (state, value) => {
+  await RendererProcess.invoke('Viewlet.sendMultiple', [
+    ['Viewlet.setSelectionByName', state.uid, 'terminal-rename', 0, value.length, value],
+  ])
+  return state
+}
+
+export const handleRenameTerminalPointerDown = (state) => state
+
+export const handleRenameTerminalKeyDown = (state, tabUid, key, value) => {
+  if (key === 'Enter') {
+    const newState = acceptRenameTerminal(state, tabUid, value)
+    if (newState === state) {
+      return state
+    }
+    Focus.setFocus(WhenExpression.FocusTerminal)
+    return { ...newState, focusVersion: state.focusVersion + 1 }
+  }
+  if (key === 'Escape') {
+    const newState = cancelRenameTerminal(state, tabUid)
+    if (newState === state) {
+      return state
+    }
+    Focus.setFocus(WhenExpression.FocusTerminal)
+    return { ...newState, focusVersion: state.focusVersion + 1 }
+  }
+  return state
+}
+
 export const killTerminalTab = async (state, index) => {
   Assert.number(index)
   const { activeTerminalUids: oldActiveTerminalUids, focusVersion, tabs: oldTabs } = state
@@ -347,6 +423,7 @@ export const killTerminalTab = async (state, index) => {
     hidePanel: tabs.length === 0,
     focusVersion: childUid === -1 ? focusVersion : focusVersion + 1,
     selectedIndex,
+    renamingTabUid: tabs.some((item) => item.uid === state.renamingTabUid) ? state.renamingTabUid : -1,
     tabs,
   }
   const commands = terminalUids.flatMap((uid) => Viewlet.disposeFunctional(uid))
@@ -417,6 +494,26 @@ export const resize = async (state, dimensions) => {
     commands,
   }
 }
+
+export const handleTerminalTabsSashPointerDown = (state) => state
+
+export const handleTerminalTabsSashPointerMove = async (state, clientX) => {
+  const minTabsWidth = Math.min(60, state.width / 2)
+  const minTerminalWidth = Math.min(100, state.width / 2)
+  const maxTabsWidth = Math.max(minTabsWidth, state.width - minTerminalWidth)
+  const tabsWidth = Math.max(minTabsWidth, Math.min(maxTabsWidth, state.x + state.width - clientX))
+  if (tabsWidth === state.tabsWidth) {
+    return state
+  }
+  const newState = {
+    ...state,
+    tabsWidth,
+  }
+  await sendCommands(await resizeTerminals(newState, newState.childUids))
+  return newState
+}
+
+export const handleTerminalTabsSashPointerUp = (state) => state
 
 export const serializeCommands = true
 export const concurrentCommands = ['handleDrop']
