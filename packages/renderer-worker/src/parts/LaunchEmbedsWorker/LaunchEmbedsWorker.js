@@ -6,7 +6,6 @@ import * as IpcParentType from '../IpcParentType/IpcParentType.js'
 import * as IsProduction from '../IsProduction/IsProduction.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as JsonRpc from '../JsonRpc/JsonRpc.js'
-import * as GetWindowId from '../GetWindowId/GetWindowId.js'
 
 const getConfiguredWorkerUrl = () => {
   let configuredWorkerUrl = Preferences.get('develop.embedsWorkerPath') || ''
