@@ -7,6 +7,7 @@ Usage:
   ${Platform.applicationName} [path]
 
 General options:
+  --asar                  Run the application from a cached ASAR archive.
   --transient             Run with temporary data and extension directories.
 
 Extension development:

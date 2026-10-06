@@ -22,6 +22,31 @@
   grid-column: 1;
   grid-row: 2 / 4;
   min-height: 0;
+  position: relative;
+}
+
+.Chat.ChatFocus .ProjectSidebar::before {
+  background: var(--ColorForeground, #d5dbe3);
+  content: '';
+  height: 160px;
+  left: 50%;
+  mask-image: url(/icons/icon.svg);
+  mask-position: center;
+  mask-repeat: no-repeat;
+  mask-size: contain;
+  opacity: 0.08;
+  pointer-events: none;
+  position: absolute;
+  top: calc((100% - var(--ChatListItemHeight, 40px)) / 2);
+  transform: translate(-50%, -50%);
+  width: 160px;
+  z-index: 0;
+}
+
+.Chat.ChatFocus .ProjectList,
+.Chat.ChatFocus .ProjectAddButton {
+  position: relative;
+  z-index: 1;
 }
 
 .Chat.ChatFocus .ProjectList {
