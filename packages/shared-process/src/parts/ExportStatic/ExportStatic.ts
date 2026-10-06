@@ -676,9 +676,10 @@ const getExtensionPaths = (extensionPath: any, extensionPaths: any): any => {
 
 /**
  *
- * @param {{root:string, pathPrefix:string , extensionPath:string, extensionPaths?:string[], onLoadCommands?:readonly unknown[], testPath:string, useSimpleWebExtensionFile?:boolean, serverStaticPath?:string }} param0
+ * @param {{root:string, pathPrefix:string , extensionPath:string, extensionPaths?:string[], onLoadCommands?:readonly unknown[], testPath:string, useSimpleWebExtensionFile?:boolean, serverStaticPath?:string, bundleMode?:boolean }} param0
  */
 export const exportStatic = async ({
+  bundleMode = false,
   extensionPath,
   extensionPaths,
   onLoadCommands = [],
@@ -730,6 +731,11 @@ export const exportStatic = async ({
     serverStaticPath,
   })
   console.timeEnd('applyOverrides')
+
+  if (bundleMode) {
+    const BundleStaticWorkers = await import('../BundleStaticWorkers/BundleStaticWorkers.ts')
+    await BundleStaticWorkers.bundleStaticWorkers({ commitHash, pathPrefix, root, workers })
+  }
 
   await updateExtensionsJson({ commitHash, extraExtensions: [], pathPrefix, root })
   await JsonFile.writeJson(Path.join(root, 'dist', commitHash, 'config', 'onLoadCommands.json'), onLoadCommands)
