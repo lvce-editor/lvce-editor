@@ -45,8 +45,8 @@
   {
     "name": "builtin.chat-view-2",
     "repository": "github.com/lvce-editor/chat-view-2",
-    "version": "1.30.1",
-    "sha256": "a32bba1048cdecfd46a7232d6b82332b1d2f0ce9076fd4e46323ed54bf50dcc1",
+    "version": "1.30.2",
+    "sha256": "0d77fddba134dfff3d7aa50d6be638b4cf89ed21cc9c347981d437182cb76978",
     "created": "2026-09-13"
   },
   {
@@ -251,8 +251,8 @@
   {
     "name": "builtin.heap-snapshot-viewer",
     "repository": "github.com/lvce-editor/heap-snapshot-viewer",
-    "version": "1.27.3",
-    "sha256": "f64ee7f28a27a86063ff8d42f60c28f2dae298003bbcf7a96a758f1e1dcd5cd5",
+    "version": "1.27.4",
+    "sha256": "e245a66733cdf7ede2d2237134bfa3112c9502161b33e4250bc1f7b1009cb1a5",
     "created": "2024-08-09"
   },
   {
