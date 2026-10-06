@@ -108,19 +108,12 @@ const getSashPanelDom = () => {
   }
 }
 
-const getActivityBarDom = (activityBarId: number) => {
-  if (activityBarId === -1) {
-    return {
-      type: VirtualDomElements.Div,
-      className: 'Viewlet ActivityBar',
-      childCount: 0,
-    }
-  }
-  return {
-    type: VirtualDomElements.Reference,
-    uid: activityBarId,
-  }
-}
+const getActivityBarDom = (activityBarId: number) => [
+  { type: VirtualDomElements.Div, className: 'ActivityBarLayout', childCount: 1, onWheel: 'handleActivityBarWheel' },
+  activityBarId === -1
+    ? { type: VirtualDomElements.Div, className: 'Viewlet ActivityBar', childCount: 0 }
+    : { type: VirtualDomElements.Reference, uid: activityBarId },
+]
 
 const getSideBarDom = (sideBarId: number) => {
   if (sideBarId === -1) {
@@ -288,7 +281,8 @@ const getContentAreaVirtualDomLeft = (state: LayoutState) => {
   let delta = 0
   // Add components based on sidebar location
   if (activityBarVisible && activityBarId !== -1) {
-    children.push(getActivityBarDom(activityBarId))
+    children.push(...getActivityBarDom(activityBarId))
+    delta--
   }
   if (sideBarVisible) {
     children.push(getSideBarDom(sideBarId))
@@ -350,7 +344,8 @@ const getContentAreaVirtualDomRight = (state: LayoutState) => {
     children.push(getSideBarDom(sideBarId))
   }
   if (activityBarVisible) {
-    children.push(getActivityBarDom(activityBarId))
+    children.push(...getActivityBarDom(activityBarId))
+    delta--
   }
   return [
     {
@@ -529,6 +524,11 @@ export const getLayoutVirtualDom = (state: LayoutState) => {
     role: 'application',
     childCount: 0,
   })
+
+  if (state.aiNativeLayout) {
+    dom[0].className += ' AiNativeLayout'
+    if (state.sideBarLocation === SideBarLocationType.Right) dom[0].className += ' AiNativeLayoutRight'
+  } else if (state.aiNativeLayoutExited) dom[0].className += ' IdeLayoutFromAi'
 
   if (titleBarVisible) {
     workbenchChildCount++

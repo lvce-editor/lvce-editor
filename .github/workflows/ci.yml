@@ -157,16 +157,16 @@ jobs:
       - name: Build Electron App (AppImage)
         if: matrix.versions.os == 'ubuntu-24.04' && matrix.versions.arch == 'x64'
         run: npm run build:electron:app-image:x64
-      - name: Build static site
+      - name: Export static site from server build
         if: matrix.versions.os == 'ubuntu-24.04' && matrix.versions.arch == 'x64'
-        run: npm run build:static
+        run: npm run export:pages
         env:
           PATH_PREFIX: /lvce-editor
       - name: Upload artifact
         if: matrix.versions.os == 'ubuntu-24.04' && matrix.versions.arch == 'x64'
         uses: actions/upload-pages-artifact@v5
         with:
-          path: ./packages/build/.tmp/dist
+          path: ./packages/build/.tmp/pages-export/dist
       - name: Clean up
         run: rm -rf packages/build/.tmp
         shell: bash

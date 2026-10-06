@@ -1939,6 +1939,15 @@
     "hotReloadCommand": ""
   },
   {
+    "id": "taskWorker",
+    "fileName": "taskWorkerMain.js",
+    "contentSecurityPolicy": ["default-src 'none'", "script-src 'self'", "sandbox allow-same-origin"],
+    "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/task-worker/dist/taskWorkerMain.js",
+    "productionPath": "/packages/task-worker/dist/taskWorkerMain.js",
+    "settingName": "develop.taskWorkerPath",
+    "hotReloadCommand": ""
+  },
+  {
     "id": "terminalWorker",
     "fileName": "terminalWorkerMain.js",
     "contentSecurityPolicy": ["default-src 'none'", "connect-src 'self' https: wss: http://127.0.0.1:* http://localhost:* ws://127.0.0.1:* ws://localhost:*", "script-src 'self'"],

@@ -4,20 +4,11 @@ export type RuntimeConfig = {
   workerUrls?: Readonly<Record<string, string>>
 }
 
-export const parseRuntimeConfig = (url: string): RuntimeConfig => {
-  const { searchParams } = new URL(url)
-  const config = searchParams.get('config')
-  if (!config) {
-    return {}
-  }
-  return JSON.parse(config)
-}
+export const runtimeConfig: RuntimeConfig = {}
 
-const getRuntimeConfig = (): RuntimeConfig => {
-  if (typeof location === 'undefined' || typeof location.href !== 'string') {
-    return {}
+export const initialize = (config: RuntimeConfig = {}): void => {
+  for (const key of Object.keys(runtimeConfig)) {
+    delete runtimeConfig[key]
   }
-  return parseRuntimeConfig(location.href)
+  Object.assign(runtimeConfig, config)
 }
-
-export const runtimeConfig = getRuntimeConfig()

@@ -27,7 +27,7 @@
   z-index: 4;
 }
 
-.Workbench.CompactTitleBar .ContentArea > .ActivityBar,
+.Workbench.CompactTitleBar .ContentArea > .ActivityBarLayout,
 .Workbench.CompactTitleBar .ContentArea > .SideBar:not(.SecondarySideBar) {
   margin-top: var(--TitleBarHeight);
 }
@@ -233,4 +233,56 @@
   background: var(--EditorDropBackground, #3879d94d);
   outline: 2px solid var(--FocusBorder, #007fd4);
   outline-offset: -2px;
+}
+
+.ActivityBarLayout {
+  display: flex;
+  flex: 0 0 48px;
+  min-height: 0;
+}
+.AiNativeLayout {
+  background: #ffffff;
+  color: #202124;
+}
+
+:root:has(.AiNativeLayout) {
+  --MenuBackground: #ffffff;
+  --MenuForeground: #202124;
+  --MenuBoxShadow: 0 2px 8px rgb(60 64 67 / 30%);
+  --MenuItemHoverBackground: #e8eaed;
+  --MenuItemHoverForeground: #202124;
+  --MenuItemDisabledForeground: #80868b;
+  --MenuItemSeparatorBackground: #dadce0;
+  --ContextMenuBackground: #ffffff;
+  --ContextMenuForeground: #202124;
+}
+
+.AiNativeLayout .ActivityBarLayout {
+  background: #f5f5f5;
+  --ActivityBarBackground: #f5f5f5;
+  --ActivityBarForeground: #5f6368;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .AiNativeLayout .ContentArea {
+    animation: ai-layout-enter 280ms ease-out;
+  }
+  .IdeLayoutFromAi .ContentArea {
+    animation: ide-layout-enter 280ms ease-out;
+  }
+}
+@keyframes ai-layout-enter {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+@keyframes ide-layout-enter {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
 }

@@ -6,13 +6,13 @@ import * as Preferences from '../Preferences/Preferences.ts'
 
 const configElementPattern = /(<script\b[^>]*\bid=["']Config["'][^>]*>)([\s\S]*?)(<\/script>)/i
 
-export const addCustomPathsToIndexHtml = async (content: any): Promise<any> => {
+export const addCustomPathsToIndexHtml = async (content: any, runtimeConfig: { platform?: string } = {}): Promise<any> => {
   let preferences = {}
   if (!Platform.isProduction) {
     preferences = ApplyCustomWorkerPathCliOverride.applyCustomWorkerPathCliOverride(await Preferences.getUserPreferences())
   }
   const linkedWorkerPreferences = await LinkedWorkerPreferences.getLinkedWorkerPreferences()
-  const config = GetCustomPathsConfig.getCustomPathsConfig({ ...preferences, ...linkedWorkerPreferences })
+  const config = { ...GetCustomPathsConfig.getCustomPathsConfig({ ...preferences, ...linkedWorkerPreferences }), ...runtimeConfig }
   if (Object.keys(config).length === 0) {
     return content
   }

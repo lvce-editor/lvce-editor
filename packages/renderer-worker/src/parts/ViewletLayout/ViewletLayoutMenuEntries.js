@@ -1,8 +1,14 @@
 import * as ShellCommand from '../ShellCommand/ShellCommand.js'
+import * as AssetDir from '../AssetDir/AssetDir.js'
+import * as GetWebAssetUrl from '../GetWebAssetUrl/GetWebAssetUrl.js'
 
 export const getQuickPickMenuEntries = async () => {
   return [
     ...(await ShellCommand.getMenuEntries()),
+    {
+      id: 'Tasks.runDefaultBuildTask',
+      label: 'Tasks: Run default build task',
+    },
     {
       id: 'Layout.signIn',
       label: 'Account: Sign In',
@@ -21,6 +27,12 @@ export const getQuickPickMenuEntries = async () => {
       id: 'Main.openUri',
       label: 'Show Language Models',
       args: ['language-models:///1'],
+    },
+    {
+      id: 'Main.openUri',
+      label: 'Accounts: Show Accounts',
+      args: [GetWebAssetUrl.getWebAssetUrl(AssetDir.assetDir, 'packages/renderer-worker/node_modules/@lvce-editor/accounts-view/index.html')],
+      aliases: ['Account', 'Accounts'],
     },
     {
       id: 'Layout.toggleSideBar',
