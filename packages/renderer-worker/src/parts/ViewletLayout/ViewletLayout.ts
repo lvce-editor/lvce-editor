@@ -331,6 +331,18 @@ const getSideBarLocationType = () => {
   }
 }
 
+const isPanelAlignment = (value: unknown): value is LayoutState['panelAlignment'] => {
+  return value === 'center' || value === 'justify' || value === 'left' || value === 'right'
+}
+
+const getConfiguredPanelAlignment = (savedPanelAlignment: LayoutState['panelAlignment']) => {
+  const preference = Preferences.get('workbench.panel.alignment')
+  if (preference === undefined) {
+    return savedPanelAlignment
+  }
+  return isPanelAlignment(preference) ? preference : 'justify'
+}
+
 const getSavedPoints = (savedState) => {
   if (!savedState) {
     return {
@@ -346,7 +358,7 @@ const getSavedPoints = (savedState) => {
       secondaryPreviewVisible: false,
       panelVisible: false,
       panelHeight: 0,
-      panelAlignment: 'justify' as const,
+      panelAlignment: getConfiguredPanelAlignment('justify'),
     }
   }
   const {
@@ -362,7 +374,7 @@ const getSavedPoints = (savedState) => {
     secondaryPreviewVisible,
     panelVisible,
     panelHeight,
-    panelAlignment,
+    panelAlignment: savedPanelAlignment,
   } = savedState
 
   return {
@@ -378,7 +390,7 @@ const getSavedPoints = (savedState) => {
     secondaryPreviewVisible: secondaryPreviewVisible ?? false,
     panelVisible: panelVisible ?? false,
     panelHeight: panelHeight ?? 160,
-    panelAlignment: panelAlignment === 'center' || panelAlignment === 'left' || panelAlignment === 'right' ? panelAlignment : 'justify',
+    panelAlignment: getConfiguredPanelAlignment(isPanelAlignment(savedPanelAlignment) ? savedPanelAlignment : 'justify'),
   }
 }
 
@@ -2655,9 +2667,10 @@ export const getPanelAlignment = (state: LayoutState): LayoutState['panelAlignme
 }
 
 export const setPanelAlignment = async (state: LayoutState, panelAlignment: LayoutState['panelAlignment']) => {
-  if (!['center', 'justify', 'left', 'right'].includes(panelAlignment)) {
+  if (!isPanelAlignment(panelAlignment)) {
     return { newState: state, commands: [] }
   }
+  await Preferences.update({ 'workbench.panel.alignment': panelAlignment })
   const newState = getPoints({ ...state, panelAlignment })
   const commands = await getResizeCommands(state, newState)
   return { newState, commands }
@@ -2945,7 +2958,15 @@ export const handleSettingsChanged = async (state: LayoutState) => {
   await Preferences.hydrate()
   await ViewletManagerVisitor.reloadDynamicCss()
   await BrowserFullWidth.configureGesture()
-  return callGlobalEvent(state, 'handleSettingsChanged')
+  const preference = Preferences.get('workbench.panel.alignment')
+  const configuredAlignment = preference === undefined ? state.panelAlignment : isPanelAlignment(preference) ? preference : 'justify'
+  const alignedState = configuredAlignment === state.panelAlignment ? state : getPoints({ ...state, panelAlignment: configuredAlignment })
+  const eventResult = await callGlobalEvent(alignedState, 'handleSettingsChanged')
+  const resizeCommands = alignedState === state ? [] : await getResizeCommands(state, alignedState)
+  return {
+    newState: eventResult.newState,
+    commands: [...resizeCommands, ...eventResult.commands],
+  }
 }
 
 export const refreshSourceControlBadgeCount = async (state: LayoutState): Promise<LayoutStateResult> => {

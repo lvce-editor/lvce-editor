@@ -120,6 +120,8 @@ export const TodoList = 'TodoList'
 
 export const About = 'About'
 
+export const Accounts = 'Accounts'
+
 export const NotificationCenter = 'NotificationCenter'
 
 export const EditorSourceActions = 'EditorSourceActions'

@@ -44,6 +44,9 @@ export const getModuleId = async (uri, opener) => {
   if (uri.startsWith('language-models://')) {
     return ViewletModuleId.LanguageModels
   }
+  if (uri.startsWith('accounts:///')) {
+    return ViewletModuleId.Accounts
+  }
   if (uri.startsWith('settings://')) {
     return ViewletModuleId.Settings
   }

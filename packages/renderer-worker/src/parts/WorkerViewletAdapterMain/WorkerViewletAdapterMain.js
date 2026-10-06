@@ -30,8 +30,10 @@ const openEditorWithType = async () => {
 
 const saveWithoutFormatting = wrapMainAreaCommand('saveWithoutFormatting')
 
-export const extendModule = (workerViewlet) => ({
-  dispose() {},
+export const extendModule = (workerViewlet, { worker }) => ({
+  dispose({ uid }) {
+    return worker.invoke('MainArea.dispose', uid)
+  },
   focus,
   getKeyBindings,
   getQuickPickMenuEntries,
@@ -58,4 +60,11 @@ export const wrapCommand = (command, _defaultWrapCommand, { worker }) => {
     return wrapReturnValueCommand(command, worker)
   }
   return wrapMainAreaCommand(command)
+}
+
+export const extendCommands = (Commands, _workerViewlet, { worker }) => {
+  Commands.loadContentLater = async (state) => {
+    await worker.invoke('MainArea.loadContentLater', state.uid)
+    return state
+  }
 }
