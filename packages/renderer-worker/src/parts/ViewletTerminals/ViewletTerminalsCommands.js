@@ -1,6 +1,9 @@
 import * as ViewletTerminals from './ViewletTerminals.js'
 
 export const Commands = {
+  handleTerminalTabsSashPointerDown: ViewletTerminals.handleTerminalTabsSashPointerDown,
+  handleTerminalTabsSashPointerMove: ViewletTerminals.handleTerminalTabsSashPointerMove,
+  handleTerminalTabsSashPointerUp: ViewletTerminals.handleTerminalTabsSashPointerUp,
   handleDrop: ViewletTerminals.handleDrop,
   attachTerminal: ViewletTerminals.attachTerminal,
   detachTerminal: ViewletTerminals.detachTerminal,
@@ -12,6 +15,13 @@ export const Commands = {
   handleClickAction: ViewletTerminals.handleClickAction,
   handleClickTab: ViewletTerminals.handleClickTab,
   handleClickTerminalTabAction: ViewletTerminals.handleClickTerminalTabAction,
+  handleTabContextMenu: ViewletTerminals.handleTabContextMenu,
+  startRenameTerminal: ViewletTerminals.startRenameTerminal,
+  acceptRenameTerminal: ViewletTerminals.acceptRenameTerminal,
+  cancelRenameTerminal: ViewletTerminals.cancelRenameTerminal,
+  handleRenameTerminalFocus: ViewletTerminals.handleRenameTerminalFocus,
+  handleRenameTerminalPointerDown: ViewletTerminals.handleRenameTerminalPointerDown,
+  handleRenameTerminalKeyDown: ViewletTerminals.handleRenameTerminalKeyDown,
   handleMouseDown: ViewletTerminals.handleMouseDown,
   handleTerminalExit: ViewletTerminals.handleTerminalExit,
   killTerminal: ViewletTerminals.killTerminal,

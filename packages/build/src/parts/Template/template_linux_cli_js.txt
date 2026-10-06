@@ -1,6 +1,7 @@
 import { spawn } from 'node:child_process'
+import { createHash } from 'node:crypto'
 import { createRequire } from 'node:module'
-import { access, chmod, lstat, mkdtemp, mkdir, open, readFile, rename, rm } from 'node:fs/promises'
+import { access, chmod, cp, lstat, mkdtemp, mkdir, open, readFile, readdir, rename, rm, writeFile } from 'node:fs/promises'
 import { constants } from 'node:fs'
 import { homedir, tmpdir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
@@ -23,11 +24,16 @@ const isForegroundRequest = (args) => {
 
 const shellQuote = (value) => `'${value.replaceAll("'", "'\\''")}'`
 
-const parseElectronVersion = (args) => {
+const parseLaunchOptions = (args) => {
   const filteredArgs = []
   let electronVersion
+  let asar = false
   for (let index = 0; index < args.length; index++) {
     const arg = args[index]
+    if (arg === '--asar') {
+      asar = true
+      continue
+    }
     if (arg === '--electron-version' || arg.startsWith('--electron-version=')) {
       const value = arg === '--electron-version' ? args[++index] : arg.slice('--electron-version='.length)
       if (!value || value.startsWith('--') || !/^v?\d+\.\d+\.\d+(?:-[\w.-]+)?$/.test(value)) {
@@ -40,7 +46,7 @@ const parseElectronVersion = (args) => {
     }
     filteredArgs.push(arg)
   }
-  return { electronVersion, args: filteredArgs }
+  return { asar, electronVersion, args: filteredArgs }
 }
 
 const getElectronExecutablePath = (electronDir) => {
@@ -174,6 +180,82 @@ const ensureElectronRuntime = async (electronVersion) => {
   }
 }
 
+const ensureAsarApp = async () => {
+  const packageJson = JSON.parse(await readFile(join(appRoot, 'package.json'), 'utf8'))
+  const staticEntries = await readdir(join(appRoot, 'static'), { withFileTypes: true }).catch(() => [])
+  const buildIds = staticEntries.filter((entry) => entry.isDirectory()).map((entry) => entry.name).sort()
+  const cacheIdentity = createHash('sha256')
+    .update(JSON.stringify({ appRoot, version: packageJson.version, buildIds, platform: process.platform, arch: process.arch }))
+    .digest('hex')
+  const cacheHome = process.env.XDG_CACHE_HOME || join(homedir(), '.cache')
+  const cacheRoot = join(cacheHome, applicationName, 'asar')
+  const cachePath = join(cacheRoot, cacheIdentity)
+  const archivePath = join(cachePath, 'app.asar')
+  try {
+    const cacheEntries = await readdir(cachePath)
+    if (cacheEntries.includes('finished') && cacheEntries.includes('app.asar')) {
+      return archivePath
+    }
+  } catch {}
+
+  await mkdir(cacheRoot, { recursive: true })
+  const stagingPath = await mkdtemp(join(cacheRoot, `.building-${cacheIdentity.slice(0, 12)}-`))
+  const stagingAppPath = join(stagingPath, 'app')
+  const stagingArchivePath = join(stagingPath, 'app.archive')
+  try {
+    await cp(appRoot, stagingAppPath, { recursive: true, dereference: true })
+    console.log('Creating ASAR application...')
+    const { promise, resolve, reject } = Promise.withResolvers()
+    const child = spawn('npx', [
+      '--yes',
+      'asar',
+      'pack',
+      stagingAppPath,
+      stagingArchivePath,
+      '--unpack',
+      '*.node',
+      '--unpack-dir',
+      '**/bin',
+    ], { stdio: 'inherit' })
+    child.once('error', reject)
+    child.once('exit', (code) => {
+      if (code === 0) {
+        resolve()
+      } else {
+        reject(new Error(`npx asar exited with code ${code ?? 1}`))
+      }
+    })
+    await promise
+    const stagingEntries = await readdir(stagingPath)
+    if (!stagingEntries.includes('app.archive')) {
+      throw new Error('npx asar did not create an archive')
+    }
+    await rename(stagingArchivePath, join(stagingPath, 'app.asar'))
+    if (stagingEntries.includes('app.archive.unpacked')) {
+      await rename(join(stagingPath, 'app.archive.unpacked'), join(stagingPath, 'app.asar.unpacked'))
+    }
+    await rm(stagingAppPath, { recursive: true, force: true, maxRetries: 3, retryDelay: 100 })
+    await writeFile(join(stagingPath, 'finished'), cacheIdentity)
+    try {
+      await rename(stagingPath, cachePath)
+    } catch (error) {
+      try {
+        const cacheEntries = await readdir(cachePath)
+        if (!cacheEntries.includes('finished') || !cacheEntries.includes('app.asar')) {
+          throw error
+        }
+      } catch {
+        throw error
+      }
+    }
+    return archivePath
+  } catch (error) {
+    throw new Error(`Failed to prepare ASAR application: ${error instanceof Error ? error.message : error}`, { cause: error })
+  } finally {
+    await rm(stagingPath, { recursive: true, force: true, maxRetries: 5, retryDelay: 100 })
+  }
+}
+
 const getTransientLaunchOptions = async (args) => {
   if (!args.includes('--transient')) {
     return { args, env: {} }
@@ -232,9 +314,10 @@ const launchElectron = async (args, envOverrides) => {
 
   const foreground = isForegroundRequest(args)
   const verbose = args.includes('--verbose')
-  const parsedArgs = parseElectronVersion(args)
+  const parsedArgs = parseLaunchOptions(args)
   const executablePath = parsedArgs.electronVersion ? await ensureElectronRuntime(parsedArgs.electronVersion) : process.execPath
-  const launchArgs = parsedArgs.electronVersion ? [appRoot, ...parsedArgs.args] : args
+  const applicationPath = parsedArgs.asar ? await ensureAsarApp() : appRoot
+  const launchArgs = parsedArgs.asar || parsedArgs.electronVersion ? [applicationPath, ...parsedArgs.args] : parsedArgs.args
   const child = spawn(executablePath, launchArgs, {
     detached: true,
     env,

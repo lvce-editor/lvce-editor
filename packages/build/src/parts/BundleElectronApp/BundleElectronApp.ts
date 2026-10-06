@@ -106,6 +106,11 @@ const copyExtensions = async ({ resourcesPath, commitHash }) => {
 
 const copyStaticFiles = async ({ resourcesPath, commitHash }) => {
   await Copy.copy({
+    from: 'packages/renderer-worker/node_modules/@lvce-editor/accounts-view',
+    to: `${resourcesPath}/app/static/${commitHash}/packages/renderer-worker/node_modules/@lvce-editor/accounts-view`,
+    dereference: true,
+  })
+  await Copy.copy({
     from: 'static',
     to: `${resourcesPath}/app/static/${commitHash}`,
     ignore: ['config.json', 'css'],

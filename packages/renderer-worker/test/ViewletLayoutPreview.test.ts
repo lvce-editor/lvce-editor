@@ -33,6 +33,8 @@ jest.unstable_mockModule('../src/parts/ViewletStates/ViewletStates.js', () => {
 const SaveState = await import('../src/parts/SaveState/SaveState.js')
 const Viewlet = await import('../src/parts/Viewlet/Viewlet.js')
 const ViewletManager = await import('../src/parts/ViewletManager/ViewletManager.js')
+const HtmlPreviewUrl = await import('../src/parts/HtmlPreviewUrl/HtmlPreviewUrl.js')
+const GetWebAssetUrl = await import('../src/parts/GetWebAssetUrl/GetWebAssetUrl.js')
 const SideBarLocationType = await import('../src/parts/SideBarLocationType/SideBarLocationType.js')
 const LayoutPoints = await import('../src/parts/ViewletLayout/LayoutPoints.ts')
 const ViewletLayout = await import('../src/parts/ViewletLayout/ViewletLayout.ts')
@@ -76,6 +78,43 @@ test('loadContent enables preview sash when preview is restored', () => {
     previewVisible: true,
     previewSashVisible: true,
     previewViewletId: 'Preview',
+  })
+})
+
+test('loadContent places chat 2 in the secondary side bar by default', () => {
+  const result = ViewletLayout.loadContent(ViewletLayout.create(1), {
+    Layout: { bounds: { windowWidth: 1200, windowHeight: 800 } },
+  })
+
+  expect(result).toMatchObject({
+    secondarySideBarView: 'chat2.views.chat',
+    secondarySideBarViewlets: ['chat2.views.chat'],
+  })
+})
+
+test('toggleSecondarySideBar opens the default chat 2 view', async () => {
+  const initial = ViewletLayout.loadContent(ViewletLayout.create(1), {
+    Layout: { bounds: { windowWidth: 1200, windowHeight: 800 } },
+  })
+
+  const result = await ViewletLayout.toggleSecondarySideBar(initial)
+
+  expect(result.newState).toMatchObject({
+    secondarySideBarView: 'chat2.views.chat',
+    secondarySideBarVisible: true,
+  })
+})
+
+test('loadContent migrates the previous default chat placement to chat 2', () => {
+  const result = ViewletLayout.loadContent(ViewletLayout.create(1), {
+    Layout: { bounds: { windowWidth: 1200, windowHeight: 800 } },
+    secondarySideBarView: 'Chat',
+    secondarySideBarViewlets: [],
+  })
+
+  expect(result).toMatchObject({
+    secondarySideBarView: 'chat2.views.chat',
+    secondarySideBarViewlets: ['chat2.views.chat'],
   })
 })
 
@@ -413,6 +452,45 @@ test('showPreview opens the simple browser in the preview area', async () => {
     true,
     undefined,
   )
+})
+
+test('showPreview opens the packaged accounts view in the simple browser', async () => {
+  const state = {
+    ...ViewletLayout.create(1),
+    activityBarVisible: true,
+    activityBarWidth: 48,
+    statusBarHeight: 20,
+    titleBarHeight: 35,
+    windowHeight: 800,
+    windowWidth: 1200,
+  }
+  const accountsUrl = GetWebAssetUrl.getWebAssetUrl(
+    '/test',
+    'packages/renderer-worker/node_modules/@lvce-editor/accounts-view/index.html',
+    'lvce-oss://-',
+  )
+  const previewUrl = HtmlPreviewUrl.encode(accountsUrl)
+
+  const result = await ViewletLayout.showPreview(state, accountsUrl)
+
+  expect(result.newState).toMatchObject({
+    previewVisible: true,
+    previewUri: previewUrl,
+    previewViewletId: 'SimpleBrowser',
+  })
+  expect(ViewletManager.load).toHaveBeenCalledWith(
+    expect.objectContaining({
+      id: 'SimpleBrowser',
+      uri: previewUrl,
+    }),
+    false,
+    true,
+    undefined,
+  )
+
+  const reopenedState = { ...result.newState, previewId: 7 }
+  await ViewletLayout.showPreview(reopenedState, accountsUrl)
+  expect(Viewlet.executeViewletCommand).toHaveBeenCalledWith(7, 'openTab', previewUrl, 'foreground-tab')
 })
 
 test('showPreview opens HTML in the existing browser without a second preview area', async () => {

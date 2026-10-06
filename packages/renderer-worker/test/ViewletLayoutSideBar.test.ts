@@ -733,14 +733,15 @@ test('openSideBarView does not request focus by default', async () => {
 test('openChat focuses an already open chat when requested', async () => {
   const state = {
     ...ViewletLayout.create(1),
-    secondarySideBarView: 'Chat',
+    secondarySideBarView: 'chat2.views.chat',
     secondarySideBarVisible: true,
+    secondarySideBarViewlets: ['chat2.views.chat'],
   }
 
   const result = await ViewletLayout.openChat(state, true)
 
-  expect(ViewletManager.waitForLoadContentLater).toHaveBeenCalledWith('Chat')
-  expect(Viewlet.focus).toHaveBeenCalledWith('Chat')
+  expect(ViewletManager.waitForLoadContentLater).toHaveBeenCalledWith('chat2.views.chat')
+  expect(Viewlet.focus).toHaveBeenCalledWith('chat2.views.chat')
   expect(result).toEqual({
     newState: state,
     commands: [],
@@ -758,10 +759,10 @@ test('openChat focuses chat after opening the secondary side bar', async () => {
 
   const result = await ViewletLayout.openChat(state, true)
 
-  expect(ViewletManager.waitForLoadContentLater).toHaveBeenCalledWith('Chat')
-  expect(Viewlet.focus).toHaveBeenCalledWith('Chat')
+  expect(ViewletManager.waitForLoadContentLater).toHaveBeenCalledWith('chat2.views.chat')
+  expect(Viewlet.focus).toHaveBeenCalledWith('chat2.views.chat')
   expect(result.newState).toMatchObject({
-    secondarySideBarView: 'Chat',
+    secondarySideBarView: 'chat2.views.chat',
     secondarySideBarVisible: true,
   })
   expect(result.commands).toEqual([])
@@ -813,8 +814,9 @@ test('showSecondarySideBar preserves left side bar layout and resized preview wi
 test('openChat leaves an already open chat unfocused by default', async () => {
   const state = {
     ...ViewletLayout.create(1),
-    secondarySideBarView: 'Chat',
+    secondarySideBarView: 'chat2.views.chat',
     secondarySideBarVisible: true,
+    secondarySideBarViewlets: ['chat2.views.chat'],
   }
 
   const result = await ViewletLayout.openChat(state)
@@ -822,6 +824,62 @@ test('openChat leaves an already open chat unfocused by default', async () => {
   expect(ViewletManager.waitForLoadContentLater).not.toHaveBeenCalled()
   expect(Viewlet.focus).not.toHaveBeenCalled()
   expect(result).toEqual({ newState: state, commands: [] })
+})
+
+test('openChat is idempotent and records only one secondary chat view', async () => {
+  // @ts-ignore
+  ViewletManager.load.mockResolvedValue([])
+  const state = {
+    ...ViewletLayout.create(1),
+    secondarySideBarViewlets: [],
+  }
+
+  const opened = await ViewletLayout.openChat(state)
+  const openedAgain = await ViewletLayout.openChat(opened.newState)
+
+  expect(openedAgain.newState).toMatchObject({
+    secondarySideBarView: 'chat2.views.chat',
+    secondarySideBarViewlets: ['chat2.views.chat'],
+    secondarySideBarVisible: true,
+  })
+})
+
+test('toggleSideBarView opens chat 2 in the secondary side bar', async () => {
+  // @ts-ignore
+  ViewletManager.load.mockResolvedValue([])
+  const state = {
+    ...ViewletLayout.create(1),
+    secondarySideBarVisible: false,
+  }
+
+  const result = await ViewletLayout.toggleSideBarView(state, 'chat2.views.chat')
+
+  expect(result.newState).toMatchObject({
+    secondarySideBarView: 'chat2.views.chat',
+    secondarySideBarViewlets: ['chat2.views.chat'],
+    secondarySideBarVisible: true,
+  })
+})
+
+test('toggleSideBarView moves an already open chat 2 out of the primary side bar', async () => {
+  mockActivityBarRender()
+  // @ts-ignore
+  ViewletManager.load.mockResolvedValue([])
+  const state = {
+    ...ViewletLayout.create(1),
+    activityBarId: 7,
+    sideBarView: 'chat2.views.chat',
+    sideBarVisible: true,
+    secondarySideBarVisible: false,
+  }
+
+  const result = await ViewletLayout.toggleSideBarView(state, 'chat2.views.chat')
+
+  expect(result.newState).toMatchObject({
+    sideBarView: 'Explorer',
+    secondarySideBarView: 'chat2.views.chat',
+    secondarySideBarVisible: true,
+  })
 })
 
 test('toggleSideBarView opens a preview-preferred extension view alongside the sidebar', async () => {
