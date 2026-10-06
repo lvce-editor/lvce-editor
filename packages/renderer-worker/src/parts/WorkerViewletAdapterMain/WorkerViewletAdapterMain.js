@@ -63,5 +63,8 @@ export const wrapCommand = (command, _defaultWrapCommand, { worker }) => {
 }
 
 export const extendCommands = (Commands, _workerViewlet, { worker }) => {
-  Commands.loadContentLater = ({ uid }) => worker.invoke('MainArea.loadContentLater', uid)
+  Commands.loadContentLater = async (state) => {
+    await worker.invoke('MainArea.loadContentLater', state.uid)
+    return state
+  }
 }

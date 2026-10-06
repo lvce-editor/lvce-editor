@@ -730,5 +730,5 @@ test('Main restores its shell before deferring content and disposes the worker i
   await viewlet.dispose!(state)
   expect(invoke).toHaveBeenCalledWith('MainArea.dispose', 7)
   content.resolve()
-  await loading
+  expect(await loading).toBe(state)
 })
