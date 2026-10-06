@@ -102,6 +102,14 @@ jobs:
       - name: Remove staged split editor regressions
         if: always()
         run: node .tmp/cursor-split-tests/packages/e2e-integration/stage-cursor-tests.mjs . --clean
+      - name: Checkout Accounts view regressions
+        uses: actions/checkout@v7
+        with:
+          repository: lvce-editor/accounts-view
+          ref: 50ebfa103cf4a5de6fa4622f4df9125c11507411
+          path: .tmp/accounts-view-tests
+      - name: Stage Accounts view regression
+        run: node .tmp/accounts-view-tests/packages/e2e-integration/stage-accounts-view-test.mjs .
       - name: Test renderer layout blur dispatch
         if: matrix.os == 'ubuntu-24.04'
         run: node --experimental-vm-modules node_modules/jest/bin/jest.js --config packages/renderer-worker/package.json --runInBand --coverage=false --testPathPatterns=ViewletLayoutBlur.test
@@ -116,6 +124,14 @@ jobs:
         run: npm run test:server
       - name: Test Static Export
         run: npm run test-static-export
+      - name: Test Accounts view application rendering
+        working-directory: ./packages/extension-host-worker-tests
+        run: npm run e2e:headless -- --ci --test-name-prefix=viewlet.accounts-view-open
+        env:
+          PLAYWRIGHT_BROWSERS_PATH: 0
+      - name: Remove staged Accounts view regression
+        if: always()
+        run: node .tmp/accounts-view-tests/packages/e2e-integration/stage-accounts-view-test.mjs . --clean
       - name: Build Electron App (deb)
         if: matrix.os == 'ubuntu-24.04'
         run: npm run build:electron:deb

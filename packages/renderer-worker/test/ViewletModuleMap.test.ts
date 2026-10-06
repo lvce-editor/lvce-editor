@@ -95,6 +95,7 @@ test('simple browser history exposes the placeholder view', async () => {
 
 const genericWorkerViewlets = [
   ViewletModuleId.About,
+  ViewletModuleId.Accounts,
   ViewletModuleId.ActivityBar,
   ViewletModuleId.Chat,
   ViewletModuleId.ChatDebug,

@@ -127,6 +127,37 @@
     }
   },
   {
+    "id": "accountsView",
+    "fileName": "accountsWorkerMain.js",
+    "contentSecurityPolicy": ["default-src 'none'"],
+    "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/accounts-view/dist/accountsWorkerMain.js",
+    "productionPath": "/packages/accounts-view/dist/accountsWorkerMain.js",
+    "settingName": "develop.accountsViewWorkerPath",
+    "hotReloadCommand": "",
+    "viewlet": {
+      "name": "Accounts",
+      "title": "Accounts",
+      "css": ["/css/parts/ViewletAccounts.css", "/css/parts/Button.css"],
+      "state": { "idKey": "uid", "fields": ["uri", "x", "y", "width", "height"] },
+      "commandPrefix": "Accounts",
+      "methods": {
+        "create": { "name": "Accounts.create", "parameters": [{ "source": "state", "name": "uid" }] },
+        "loadContent": { "name": "Accounts.loadContent", "parameters": [{ "source": "state", "name": "uid" }] },
+        "dispose": { "name": "Accounts.dispose", "parameters": [{ "source": "state", "name": "uid" }] },
+        "diff": { "name": "Accounts.diff2", "parameters": [{ "source": "state", "name": "uid" }] },
+        "render": {
+          "name": "Accounts.render2",
+          "parameters": [{ "source": "state", "name": "uid" }, { "source": "result", "name": "diff" }]
+        },
+        "getCommandIds": { "name": "Accounts.getCommandIds", "parameters": [] },
+        "getKeyBindings": { "name": "Accounts.getKeyBindings", "parameters": [] },
+        "renderEventListeners": { "name": "Accounts.renderEventListeners", "parameters": [] }
+      },
+      "capabilities": { "events": true, "render": true, "rootRender": true },
+      "renderComparison": "always"
+    }
+  },
+  {
     "id": "aboutWorker",
     "fileName": "aboutWorkerMain.js",
     "contentSecurityPolicy": ["default-src 'none'", "sandbox allow-same-origin"],

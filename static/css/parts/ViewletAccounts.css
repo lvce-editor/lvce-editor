@@ -1,0 +1,70 @@
+.Accounts {
+  box-sizing: border-box;
+  height: 100%;
+  overflow: auto;
+  padding: 24px;
+}
+
+.AccountsActions {
+  align-items: center;
+  display: flex;
+  gap: 8px;
+  margin: 16px 0;
+}
+
+.AccountsStatus {
+  color: var(--vscode-descriptionForeground);
+}
+
+.AccountsEmptyState {
+  border: 1px solid var(--vscode-panel-border);
+  border-radius: 6px;
+  margin-top: 24px;
+  padding: 24px;
+}
+
+.AccountsEmptyState h2,
+.AccountsEmptyState p {
+  margin: 0 0 8px;
+}
+
+.AccountList {
+  display: grid;
+  gap: 12px;
+  list-style: none;
+  margin: 16px 0;
+  padding: 0;
+}
+
+.AccountCard {
+  align-items: center;
+  border: 1px solid var(--vscode-panel-border);
+  border-radius: 6px;
+  display: flex;
+  gap: 12px;
+  padding: 12px;
+}
+
+.AccountAvatar {
+  align-items: center;
+  background: var(--vscode-button-secondaryBackground);
+  border-radius: 50%;
+  display: inline-flex;
+  height: 36px;
+  justify-content: center;
+  width: 36px;
+}
+
+.AccountDetails {
+  flex: 1;
+}
+
+.AccountDetails h2,
+.AccountDetails p {
+  margin: 0 0 4px;
+}
+
+.AccountProvider {
+  color: var(--vscode-descriptionForeground);
+  font-size: 0.9em;
+}
