@@ -90,6 +90,7 @@
   "workbench.editor.showTabsWhileLoading": false,
   "workbench.sideBar.visible": true,
   "workbench.sideBarLocation": "right",
+  "workbench.panel.alignment": "justify",
   "workbench.saveStateOnVisibilityChange": true,
 
   "workspace.defaultWorkspace": "fetch:///playground",

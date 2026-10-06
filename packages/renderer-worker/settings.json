@@ -305,6 +305,20 @@
   },
   {
     "category": "workbench",
+    "description": "Controls how the panel is aligned with the side bars",
+    "heading": "Panel Alignment",
+    "id": "workbench.panel.alignment",
+    "options": [
+      { "id": "center", "label": "Center" },
+      { "id": "justify", "label": "Justify" },
+      { "id": "left", "label": "Left" },
+      { "id": "right", "label": "Right" }
+    ],
+    "type": "enum",
+    "value": "justify"
+  },
+  {
+    "category": "workbench",
     "description": "Saves workbench state when the window visibility changes",
     "heading": "Save State On Visibility Change",
     "id": "workbench.saveStateOnVisibilityChange",
