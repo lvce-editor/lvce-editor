@@ -6,6 +6,10 @@ import * as Preferences from '../Preferences/Preferences.ts'
 
 const configElementPattern = /(<script\b[^>]*\bid=["']Config["'][^>]*>)([\s\S]*?)(<\/script>)/i
 
+const serializeConfig = (config: object): string => {
+  return JSON.stringify(config, null, 2).replaceAll('<', '\\u003c').replaceAll('>', '\\u003e').replaceAll('&', '\\u0026')
+}
+
 export const addCustomPathsToIndexHtml = async (content: any, runtimeConfig: { platform?: string } = {}): Promise<any> => {
   let preferences = {}
   if (!Platform.isProduction) {
@@ -38,10 +42,10 @@ export const addCustomPathsToIndexHtml = async (content: any, runtimeConfig: { p
         : {}),
     }
     newContent = newContent.toString().replace(configElementPattern, (_match: any, openingTag: string, _config: string, closingTag: string) => {
-      return `${openingTag}${JSON.stringify(mergedConfig)}${closingTag}`
+      return `${openingTag}${serializeConfig(mergedConfig)}${closingTag}`
     })
   } else {
-    const stringifiedConfig = JSON.stringify(config, null, 2)
+    const stringifiedConfig = serializeConfig(config)
     newContent = newContent.toString().replace(
       '</title>',
       `</title>

@@ -25,7 +25,7 @@ const getRuntimeConfig = async ({ platform, assetDir }) => {
 }
 
 const serializeConfig = (config: object): string => {
-  return JSON.stringify(config).replaceAll('<', '\\u003c').replaceAll('>', '\\u003e').replaceAll('&', '\\u0026')
+  return JSON.stringify(config, null, 2).replaceAll('<', '\\u003c').replaceAll('>', '\\u003e').replaceAll('&', '\\u0026')
 }
 
 export const addRuntimeConfigToIndexHtml = async ({ path, platform, assetDir }) => {
