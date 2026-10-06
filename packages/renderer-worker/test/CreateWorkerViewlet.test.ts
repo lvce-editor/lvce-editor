@@ -448,6 +448,7 @@ test('returns the main-area dirty-tab status without treating it as viewlet stat
   })
   const viewlet = createWorkerViewletWithDependencies({
     adapter: getWorkerViewletAdapter('mainArea'),
+    adapter: getWorkerViewletAdapter('mainArea'),
     config: getWorkerViewletConfig('mainArea'),
     context: { assetDir: '/test', platform: 1 },
     worker: { invoke, restart: jest.fn() },
@@ -697,4 +698,37 @@ test('quick pick view commands preserve the renderer custom-input callback', asy
   expect(commands).not.toHaveProperty('executeCallback')
   expect(commands.selectCurrentIndex).toEqual(expect.any(Function))
   expect(commands.close).toEqual(expect.any(Function))
+})
+
+test('Main restores its shell before deferring content and disposes the worker instance', async () => {
+  const content = Promise.withResolvers<void>()
+  const invoke = jest.fn((method: string) => {
+    if (method === 'MainArea.loadContentLater') {
+      return content.promise
+    }
+    if (method === 'MainArea.getCommandIds') {
+      return Promise.resolve(['openUri', 'loadContentLater'])
+    }
+    if (method === 'MainArea.diff2' || method === 'MainArea.render2') {
+      return Promise.resolve([])
+    }
+    return Promise.resolve(undefined)
+  })
+  const viewlet = createWorkerViewletWithDependencies({
+    adapter: getWorkerViewletAdapter('mainArea'),
+    config: getWorkerViewletConfig('mainArea'),
+    context: { assetDir: 'test://assets', platform: 2 },
+    worker: { invoke, restart: jest.fn() },
+  })
+  const state = viewlet.create(7, '', 1, 2, 300, 200)
+  await viewlet.loadContent(state, { restored: true })
+  expect(invoke).toHaveBeenCalledWith('MainArea.loadContentShell', 7, { restored: true })
+  expect(invoke).not.toHaveBeenCalledWith('MainArea.loadContentLater', 7)
+  const commands = await viewlet.getCommands!()
+  const loading = commands.loadContentLater(state)
+  expect(invoke).toHaveBeenCalledWith('MainArea.loadContentLater', 7)
+  await viewlet.dispose!(state)
+  expect(invoke).toHaveBeenCalledWith('MainArea.dispose', 7)
+  content.resolve()
+  await loading
 })

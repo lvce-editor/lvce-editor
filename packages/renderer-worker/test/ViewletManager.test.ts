@@ -1717,3 +1717,29 @@ test('load - does not call Viewlet.loadModule for Editor', async () => {
   expect(commands).toEqual(expect.arrayContaining([['Viewlet.createFunctionalRoot', 'Editor', 1, true]]))
   expect(RendererProcess.invoke).not.toHaveBeenCalledWith('Viewlet.loadModule', 'Editor')
 })
+
+test('Main retains file-opening commands received before shell registration', async () => {
+  jest.mocked(RendererProcess.invoke).mockResolvedValue(undefined)
+  const content = Promise.withResolvers<void>()
+  const started = Promise.withResolvers<void>()
+  const openUri = jest.fn((state, _uri) => state)
+  const factory = {
+    Commands: { openUri },
+    create: () => ({ uid: 42 }),
+    hasFunctionalRender: true,
+    loadContent: async (state) => {
+      started.resolve()
+      await content.promise
+      return state
+    },
+    render: [],
+  }
+  const loading = ViewletManager.load({ getModule: async () => factory, id: 'Main', uid: 42, type: 0 })
+  await started.promise
+  const opening = Command.execute('Main.openUri', 'file:///new.txt')
+  expect(openUri).not.toHaveBeenCalled()
+  content.resolve()
+  await loading
+  await opening
+  expect(openUri).toHaveBeenCalledWith(expect.objectContaining({ uid: 42 }), 'file:///new.txt')
+})
