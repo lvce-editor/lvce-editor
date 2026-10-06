@@ -1,6 +1,6 @@
 export type RuntimeConfig = {
   assetDir?: string
-  platform?: number
+  platform?: number | 'electron' | 'remote' | 'web'
   workerUrls?: Readonly<Record<string, string>>
 }
 
