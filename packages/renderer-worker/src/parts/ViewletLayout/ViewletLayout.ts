@@ -662,6 +662,14 @@ const renderActivityBarCommands = async (activityBarId: number) => {
   return ActivityBarWorker.invoke('ActivityBar.render2', activityBarId, diffResult)
 }
 
+const setActivityBarAiNativeLayout = async (activityBarId: number, enabled: boolean) => {
+  if (activityBarId === -1) {
+    return []
+  }
+  await ActivityBarWorker.invoke('ActivityBar.setAiNativeLayout', activityBarId, enabled)
+  return renderActivityBarCommands(activityBarId)
+}
+
 const renderSideBarActivityBarCommands = async (activityBarId: number, sideBarView: string, sideBarVisible: boolean) => {
   await ActivityBarWorker.invoke('ActivityBar.handleSideBarStateChange', activityBarId, sideBarView, sideBarVisible)
   return renderActivityBarCommands(activityBarId)
@@ -786,9 +794,10 @@ export const enterSideBarFocusMode = async (
     sideBarFocusModeLayout: getSideBarFocusModeLayoutSnapshot(state),
     sideBarFocusModeTarget: target,
   })
+  const activityBarCommands = aiNativeLayout ? await setActivityBarAiNativeLayout(newState.activityBarId, true) : []
   return {
     newState,
-    commands: await getResizeCommands(state, newState),
+    commands: [...activityBarCommands, ...(await getResizeCommands(state, newState))],
   }
 }
 
@@ -808,9 +817,10 @@ export const leaveSideBarFocusMode = async (state: LayoutState): Promise<LayoutS
     sideBarFocusModeLayout: undefined,
     sideBarFocusModeTarget: 'primary',
   })
+  const activityBarCommands = state.aiNativeLayout ? await setActivityBarAiNativeLayout(newState.activityBarId, false) : []
   return {
     newState,
-    commands: await getResizeCommands(state, newState),
+    commands: [...activityBarCommands, ...(await getResizeCommands(state, newState))],
   }
 }
 
@@ -2274,13 +2284,15 @@ export const getResizeCommands = async (oldState: LayoutState, newState: LayoutS
         return []
       }
       const instanceUid = instance.state.uid
+      const activityBarWasCreated = module === LayoutModules.ActivityBar && oldState.activityBarId !== newState.activityBarId
+      const activityBarCommands = activityBarWasCreated && newState.aiNativeLayout ? await setActivityBarAiNativeLayout(instanceUid, true) : []
       const expandedBrowserUid = oldState.browserFullWidth?.browserUid
       const containsExpandedBrowser =
         expandedBrowserUid !== undefined &&
         (instanceUid === expandedBrowserUid ||
           (module === LayoutModules.Main && expandedBrowserUid !== oldState.previewId && expandedBrowserUid !== oldState.secondaryPreviewId))
       if (!containsExpandedBrowser && isEqual(oldState, newState, kTop, kLeft, kWidth, kHeight)) {
-        return []
+        return activityBarCommands
       }
       const newTop = newState[kTop]
       const newLeft = newState[kLeft]
@@ -2300,7 +2312,7 @@ export const getResizeCommands = async (oldState: LayoutState, newState: LayoutS
         return []
       }
       addPreviewBoundsCommand(resizeCommands, instanceUid, newState, module)
-      return [...resizeCommands]
+      return [...activityBarCommands, ...resizeCommands]
     }),
   )
   const commands = individualCommands.flat(1)

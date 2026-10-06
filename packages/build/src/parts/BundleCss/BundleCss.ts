@@ -37,7 +37,7 @@ const prependFileNameComment = async (path, fileName) => {
   })
 }
 
-export const bundleCss = async ({ outDir, additionalCss = '', assetDir = '', iconsDir = assetDir, pathPrefix = '' }) => {
+export const bundleCss = async ({ outDir, additionalCss = '', assetDir = '', pathPrefix = '' }) => {
   try {
     let css = ``
     const cssLibNormalize = Path.join(Root.root, 'static', 'lib-css', 'modern-normalize.css')
@@ -64,7 +64,7 @@ export const bundleCss = async ({ outDir, additionalCss = '', assetDir = '', ico
         if (shouldPrependFileNameComment(dirent)) {
           await prependFileNameComment(outPath, dirent)
         }
-        await RewriteCssAssetUrls.rewriteCssAssetUrlsInFile(outPath, assetDir, iconsDir)
+        await RewriteCssAssetUrls.rewriteCssAssetUrlsInFile(outPath, assetDir)
       }
     }
 
@@ -92,7 +92,7 @@ export const bundleCss = async ({ outDir, additionalCss = '', assetDir = '', ico
 
     await WriteFile.writeFile({
       to: appCssPath,
-      content: RewriteCssAssetUrls.rewriteCssAssetUrls(css, assetDir, iconsDir),
+      content: RewriteCssAssetUrls.rewriteCssAssetUrls(css, assetDir),
     })
   } catch (error) {
     throw new VError(error, `Failed to bundle css`)

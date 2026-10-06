@@ -1,8 +1,8 @@
-import { readdir } from 'node:fs/promises'
+import { readdir } from 'fs/promises'
 import * as BundleCss from '../BundleCss/BundleCss.ts'
 import * as BundleWorkers from '../BundleWorkers/BundleWorkers.ts'
 import * as AddRuntimeConfigToIndexHtml from '../AddRuntimeConfigToIndexHtml/AddRuntimeConfigToIndexHtml.ts'
-import * as CopyIcons from '../CopyIcons/CopyIcons.ts'
+import * as CodiconsPath from '../CodiconsPath/CodiconsPath.ts'
 import * as Copy from '../Copy/Copy.ts'
 import * as Path from '../Path/Path.ts'
 import * as Remove from '../Remove/Remove.ts'
@@ -91,7 +91,7 @@ const copyStaticFiles = async ({ commitHash }) => {
     outDir: `packages/build/.tmp/server/static-server/static/${commitHash}/css`,
     assetDir: `/${commitHash}`,
   })
-  await CopyIcons.copyIcons(`packages/build/.tmp/server/static-server/static/${commitHash}/icons`)
+  await copyIcons(`packages/build/.tmp/server/static-server/static/${commitHash}/icons`)
   await Copy.copy({
     from: 'packages/shared-process/node_modules/@lvce-editor/preview-process/files/previewInjectedCode.js',
     to: `packages/build/.tmp/server/static-server/static/${commitHash}/js/preview-injected.js`,
@@ -103,6 +103,19 @@ const copyStaticFiles = async ({ commitHash }) => {
   await Remove.remove(`packages/build/.tmp/server/static-server/static/images`)
   await Remove.remove(`packages/build/.tmp/server/static-server/static/${commitHash}/sounds`)
   await Remove.remove(`packages/build/.tmp/server/static-server/static/${commitHash}/lib-css/modern-normalize.css`)
+}
+
+const copyIcons = async (to) => {
+  await Copy.copy({
+    from: CodiconsPath.codiconsIconsPath,
+    to,
+  })
+  const codiconNames = await readdir(CodiconsPath.codiconsIconsPath)
+  await Copy.copy({
+    from: 'static/icons',
+    to,
+    ignore: codiconNames,
+  })
 }
 
 const getObjectDependencies = (obj) => {
