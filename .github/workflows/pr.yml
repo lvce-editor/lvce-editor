@@ -106,7 +106,7 @@ jobs:
         uses: actions/checkout@v7
         with:
           repository: lvce-editor/accounts-view
-          ref: 9349a5ae941a77dd616a0f8de53ae8ce48a429b6
+          ref: 50ebfa103cf4a5de6fa4622f4df9125c11507411
           path: .tmp/accounts-view-tests
       - name: Stage Accounts view regression
         run: node .tmp/accounts-view-tests/packages/e2e-integration/stage-accounts-view-test.mjs .
