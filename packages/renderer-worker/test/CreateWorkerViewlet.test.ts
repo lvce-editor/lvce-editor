@@ -448,7 +448,6 @@ test('returns the main-area dirty-tab status without treating it as viewlet stat
   })
   const viewlet = createWorkerViewletWithDependencies({
     adapter: getWorkerViewletAdapter('mainArea'),
-    adapter: getWorkerViewletAdapter('mainArea'),
     config: getWorkerViewletConfig('mainArea'),
     context: { assetDir: '/test', platform: 1 },
     worker: { invoke, restart: jest.fn() },
@@ -707,7 +706,7 @@ test('Main restores its shell before deferring content and disposes the worker i
       return content.promise
     }
     if (method === 'MainArea.getCommandIds') {
-      return Promise.resolve(['openUri', 'loadContentLater'])
+      return Promise.resolve(['openUri'])
     }
     if (method === 'MainArea.diff2' || method === 'MainArea.render2') {
       return Promise.resolve([])
