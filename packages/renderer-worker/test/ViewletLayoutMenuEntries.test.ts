@@ -1,5 +1,10 @@
-import { expect, test } from '@jest/globals'
-import * as ViewletLayoutMenuEntries from '../src/parts/ViewletLayout/ViewletLayoutMenuEntries.js'
+import { expect, jest, test } from '@jest/globals'
+
+jest.unstable_mockModule('../src/parts/Origin/Origin.js', () => ({
+  origin: 'lvce-oss://-',
+}))
+
+const ViewletLayoutMenuEntries = await import('../src/parts/ViewletLayout/ViewletLayoutMenuEntries.js')
 
 test('getQuickPickMenuEntries includes chat commands', async () => {
   const entries = await ViewletLayoutMenuEntries.getQuickPickMenuEntries()
@@ -28,6 +33,19 @@ test('getQuickPickMenuEntries includes chat commands', async () => {
       },
     ]),
   )
+})
+
+test('getQuickPickMenuEntries includes the accounts view command', async () => {
+  const entries = await ViewletLayoutMenuEntries.getQuickPickMenuEntries()
+  const entry = entries.find((item) => item.label === 'Accounts: Show Accounts')
+  expect(entry).toMatchObject({
+    id: 'Main.openUri',
+    label: 'Accounts: Show Accounts',
+    aliases: ['Account', 'Accounts'],
+  })
+  expect(new URL(entry?.args?.[0] || '').pathname).toMatch(/\/packages\/renderer-worker\/node_modules\/@lvce-editor\/accounts-view\/index\.html$/)
+  expect(entries.some((item) => item.label === 'Account: Sign In')).toBe(true)
+  expect(entries.some((item) => item.label === 'Account: Sign Out')).toBe(true)
 })
 
 test('getQuickPickMenuEntries includes reset view locations command', async () => {

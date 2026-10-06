@@ -3,7 +3,7 @@ import { execFile, spawn } from 'node:child_process'
 import { access, chmod, lstat, mkdir, mkdtemp, readFile, realpath, rm, symlink, writeFile } from 'node:fs/promises'
 import { constants } from 'node:fs'
 import { tmpdir } from 'node:os'
-import { basename, dirname, join } from 'node:path'
+import { basename, delimiter, dirname, join } from 'node:path'
 import { promisify } from 'node:util'
 import { setTimeout } from 'node:timers/promises'
 
@@ -57,7 +57,14 @@ describe('linux cli templates', () => {
     const completion = await readTemplate('bash_completion')
 
     expect(completion).toContain('--transient')
+    expect(completion).toContain('--asar')
     expect(completion).toContain('--electron-version')
+  })
+
+  test('includes the ASAR launch flag in CLI help', async () => {
+    const help = await readFile(new URL('../../shared-process/src/parts/GetHelpString/GetHelpString.ts', import.meta.url), 'utf8')
+
+    expect(help).toContain('--asar')
   })
 
   test('prints the packaged version without Electron', async () => {
@@ -277,6 +284,7 @@ setTimeout(() => {
   testPosix('downloads the requested Electron version and forwards app arguments', async () => {
     const root = await mkdtemp(join(tmpdir(), 'lvce-linux-cli-electron-version-'))
     const binPath = join(root, 'bin')
+    const toolsPath = join(root, 'tools')
     const mainProcessPath = join(root, 'packages', 'main-process')
     const artifactDir = join(root, 'electron-artifact')
     const fakeElectronPath =
@@ -284,13 +292,27 @@ setTimeout(() => {
     const fakeSandboxPath = join(artifactDir, 'chrome-sandbox')
     const downloadResultPath = join(root, 'download.json')
     const launchResultPath = join(root, 'launch.json')
-    const cachePath = join(root, 'cache')
+    const cachePath = join(dirname(root), `${basename(root)}-cache`)
+    const fakeNpxPath = join(toolsPath, 'npx')
+    const packResultPath = join(root, 'pack.jsonl')
     const failingSudoPath = join(root, 'sudo')
     try {
       await mkdir(binPath, { recursive: true })
+      await mkdir(toolsPath, { recursive: true })
       await mkdir(join(mainProcessPath, 'node_modules', '@electron', 'get'), { recursive: true })
       await mkdir(join(mainProcessPath, 'node_modules', '@electron-internal', 'extract-zip'), { recursive: true })
+      await mkdir(join(root, 'static', 'build-a'), { recursive: true })
       await mkdir(dirname(fakeElectronPath), { recursive: true })
+      await writeFile(join(root, 'package.json'), JSON.stringify({ type: 'module', version: '1.2.3' }))
+      await writeFile(join(root, 'static', 'build-a', 'index.html'), 'app entry')
+      await writeFile(fakeNpxPath, [
+        '#!/bin/sh',
+        'printf "%s\\n" "$5" >> "$LVCE_TEST_PACK_RESULT"',
+        'mkdir -p "$(dirname "$5")"',
+        "printf 'packed' > \"$5\"",
+        '',
+      ].join('\n'))
+      await chmod(fakeNpxPath, 0o755)
       await writeFile(fakeSandboxPath, 'fake sandbox helper')
       await chmod(fakeSandboxPath, 0o755)
       await writeFile(failingSudoPath, '#!/bin/sh\nexit 72\n')
@@ -339,17 +361,22 @@ renameSync(temporaryResult, process.env.LVCE_TEST_LAUNCH_RESULT)
         LVCE_TEST_ELECTRON_ARTIFACT: fakeElectronPath,
         LVCE_TEST_ELECTRON_ARTIFACT_DIR: artifactDir,
         LVCE_TEST_LAUNCH_RESULT: launchResultPath,
+        LVCE_TEST_PACK_RESULT: packResultPath,
+        PATH: `${toolsPath}${delimiter}${process.env.PATH}`,
         XDG_CACHE_HOME: cachePath,
       }
-      const { stdout, stderr } = await execFileAsync(process.execPath, [cliPath, '--electron-version', '44.1.2', '--wait'], { env })
+      const { stdout, stderr } = await execFileAsync(process.execPath, [cliPath, '--electron-version', '44.1.2', '--asar', '--wait'], { env })
       const download = JSON.parse((await readFile(downloadResultPath, 'utf8')).trim())
       const launch = JSON.parse(await readFile(launchResultPath, 'utf8'))
       const realAppRoot = await realpath(root)
 
       expect(download).toMatchObject({ version: '44.1.2', platform: process.platform, artifactName: 'electron' })
-      expect(launch.args).toEqual([realAppRoot, '--wait'])
+      expect(launch.args[0]).toMatch(/app\.asar$/)
+      expect(launch.args[0]).not.toBe(realAppRoot)
+      expect(launch.args.slice(1)).toEqual(['--wait'])
       expect(launch.runAsNode).toBeUndefined()
       expect(stdout).toContain('Downloading Electron 44.1.2...')
+      expect(stdout).toContain('Creating ASAR application...')
       expect(stderr).toBe('')
       const cachedExecutablePath =
         process.platform === 'darwin'
@@ -368,7 +395,7 @@ renameSync(temporaryResult, process.env.LVCE_TEST_LAUNCH_RESULT)
         expect(preparedSandboxStats.uid).toBe(0)
         expect(preparedSandboxStats.mode & 0o7777).toBe(0o4755)
 
-        const { stdout: cachedStdout } = await execFileAsync(process.execPath, [cliPath, '--electron-version=44.1.2', '--wait'], {
+        const { stdout: cachedStdout } = await execFileAsync(process.execPath, [cliPath, '--electron-version=44.1.2', '--asar', '--wait'], {
           env: { ...env, PATH: `${root}:${process.env.PATH}` },
         })
         expect(cachedStdout).not.toContain('Downloading Electron')
@@ -398,10 +425,11 @@ renameSync(temporaryResult, process.env.LVCE_TEST_LAUNCH_RESULT)
         })
         await expect(access(launchResultPath)).rejects.toMatchObject({ code: 'ENOENT' })
       } else {
-        const { stdout: cachedStdout } = await execFileAsync(process.execPath, [cliPath, '--electron-version=44.1.2', '--wait'], { env })
+        const { stdout: cachedStdout } = await execFileAsync(process.execPath, [cliPath, '--electron-version=44.1.2', '--asar', '--wait'], { env })
         expect(cachedStdout).not.toContain('Downloading Electron')
       }
       expect((await readFile(downloadResultPath, 'utf8')).trim().split('\n')).toHaveLength(1)
+      expect((await readFile(packResultPath, 'utf8')).trim().split('\n')).toHaveLength(1)
 
       const detachedResultPath = join(root, 'detached-launch.json')
       const { stdout: detachedStdout } = await execFileAsync(process.execPath, [cliPath, '--electron-version=44.2.0'], {
@@ -431,6 +459,7 @@ renameSync(temporaryResult, process.env.LVCE_TEST_LAUNCH_RESULT)
       })
     } finally {
       await rm(root, { recursive: true, force: true })
+      await rm(cachePath, { recursive: true, force: true })
     }
   })
 
@@ -446,6 +475,129 @@ renameSync(temporaryResult, process.env.LVCE_TEST_LAUNCH_RESULT)
       })
     } finally {
       await rm(root, { recursive: true, force: true })
+    }
+  })
+
+  testPosix('packs and reuses an ASAR app while forwarding launch arguments', async () => {
+    const root = await mkdtemp(join(tmpdir(), 'lvce-linux-cli-asar-'))
+    const binPath = join(root, 'bin')
+    const fakeNpxPath = join(root, 'npx')
+    const fakeElectronPath = join(root, 'fake-electron')
+    const cliPath = join(binPath, 'cli.js')
+    const resultPath = join(root, 'launch.json')
+    const packResultPath = join(root, 'pack.jsonl')
+    const cacheHome = join(dirname(root), `${basename(root)}-cache`)
+    try {
+      await mkdir(binPath, { recursive: true })
+      await mkdir(join(root, 'static', 'build-a'), { recursive: true })
+      await writeFile(join(root, 'package.json'), JSON.stringify({ type: 'module', version: '1.2.3' }))
+      await writeFile(join(root, 'static', 'build-a', 'index.html'), 'app entry')
+      await writeFile(fakeNpxPath, ['#!/bin/sh', 'printf "%s\\n" "$5" >> "$LVCE_TEST_PACK_RESULT"', 'mkdir -p "$(dirname "$5")"', "printf 'packed' > \"$5\"", ''].join('\n'))
+      await chmod(fakeNpxPath, 0o755)
+      await writeFile(fakeElectronPath, [
+        '#!/usr/bin/env node',
+        "import { writeFileSync } from 'node:fs'",
+        'writeFileSync(process.env.LVCE_TEST_LAUNCH_RESULT, JSON.stringify(process.argv.slice(2)))',
+        '',
+      ].join('\n'))
+      await chmod(fakeElectronPath, 0o755)
+      const cli = (await readTemplate('linux_cli_js'))
+        .replaceAll('@@APPLICATION_NAME@@', 'lvce')
+        .replace('spawn(executablePath, launchArgs, {', `spawn(${JSON.stringify(fakeElectronPath)}, launchArgs, {`)
+      await writeFile(cliPath, cli)
+
+      const env = {
+        ...process.env,
+        LVCE_TEST_PACK_RESULT: packResultPath,
+        LVCE_TEST_LAUNCH_RESULT: resultPath,
+        PATH: `${root}${delimiter}${process.env.PATH}`,
+        XDG_CACHE_HOME: cacheHome,
+      }
+      const first = await execFileAsync(process.execPath, [cliPath, '--asar', '--wait', 'file.txt'], { env })
+      const firstArgs: string[] = JSON.parse(await readFile(resultPath, 'utf8'))
+      const firstArchive = firstArgs[0]
+      expect(firstArgs.slice(1)).toEqual(['--wait', 'file.txt'])
+      expect(first.stdout).toContain('Creating ASAR application...')
+      expect(await readFile(firstArchive, 'utf8')).toBe('packed')
+      await expect(access(join(dirname(firstArchive), 'app'))).rejects.toMatchObject({ code: 'ENOENT' })
+
+      await rm(resultPath)
+      const second = await execFileAsync(process.execPath, [cliPath, '--asar', '--wait'], { env })
+      const secondArgs: string[] = JSON.parse(await readFile(resultPath, 'utf8'))
+      expect(secondArgs[0]).toBe(firstArchive)
+      expect(secondArgs.slice(1)).toEqual(['--wait'])
+      expect(second.stdout).not.toContain('Creating ASAR application...')
+      expect((await readFile(packResultPath, 'utf8')).trim().split('\n')).toHaveLength(1)
+
+      await mkdir(join(root, 'static', 'build-b'))
+      await rm(resultPath)
+      const third = await execFileAsync(process.execPath, [cliPath, '--asar', '--wait'], { env })
+      const thirdArgs: string[] = JSON.parse(await readFile(resultPath, 'utf8'))
+      expect(thirdArgs[0]).not.toBe(firstArchive)
+      expect(third.stdout).toContain('Creating ASAR application...')
+      expect((await readFile(packResultPath, 'utf8')).trim().split('\n')).toHaveLength(2)
+    } finally {
+      await rm(root, { recursive: true, force: true })
+      await rm(cacheHome, { recursive: true, force: true })
+    }
+  })
+
+  testPosix('does not reuse a failed ASAR pack and recovers on retry', async () => {
+    const root = await mkdtemp(join(tmpdir(), 'lvce-linux-cli-asar-failure-'))
+    const binPath = join(root, 'bin')
+    const fakeNpxPath = join(root, 'npx')
+    const fakeElectronPath = join(root, 'fake-electron')
+    const cliPath = join(binPath, 'cli.js')
+    const resultPath = join(root, 'launch.json')
+    const packResultPath = join(root, 'pack.jsonl')
+    const cacheHome = join(dirname(root), `${basename(root)}-cache`)
+    try {
+      await mkdir(binPath, { recursive: true })
+      await writeFile(join(root, 'package.json'), JSON.stringify({ type: 'module', version: '1.2.3' }))
+      await writeFile(fakeNpxPath, [
+        '#!/bin/sh',
+        'printf "%s\\n" "$5" >> "$LVCE_TEST_PACK_RESULT"',
+        'if [ "$LVCE_TEST_FAIL_ASAR" = 1 ]; then exit 9; fi',
+        'mkdir -p "$(dirname "$5")"',
+        "printf 'packed' > \"$5\"",
+        '',
+      ].join('\n'))
+      await chmod(fakeNpxPath, 0o755)
+      await writeFile(fakeElectronPath, [
+        '#!/usr/bin/env node',
+        "import { writeFileSync } from 'node:fs'",
+        "writeFileSync(process.env.LVCE_TEST_LAUNCH_RESULT, 'launched')",
+        '',
+      ].join('\n'))
+      await chmod(fakeElectronPath, 0o755)
+      const cli = (await readTemplate('linux_cli_js'))
+        .replaceAll('@@APPLICATION_NAME@@', 'lvce')
+        .replace('spawn(executablePath, launchArgs, {', `spawn(${JSON.stringify(fakeElectronPath)}, launchArgs, {`)
+      await writeFile(cliPath, cli)
+      const env = {
+        ...process.env,
+        LVCE_TEST_FAIL_ASAR: '1',
+        LVCE_TEST_PACK_RESULT: packResultPath,
+        LVCE_TEST_LAUNCH_RESULT: resultPath,
+        PATH: `${root}${delimiter}${process.env.PATH}`,
+        XDG_CACHE_HOME: cacheHome,
+      }
+
+      await expect(execFileAsync(process.execPath, [cliPath, '--asar', '--wait'], { env })).rejects.toMatchObject({
+        code: 1,
+        stderr: expect.stringContaining('npx asar exited with code 9'),
+      })
+      await expect(access(resultPath)).rejects.toMatchObject({ code: 'ENOENT' })
+
+      const { stdout } = await execFileAsync(process.execPath, [cliPath, '--asar', '--wait'], {
+        env: { ...env, LVCE_TEST_FAIL_ASAR: '0' },
+      })
+      expect(stdout).toContain('Creating ASAR application...')
+      expect(await readFile(resultPath, 'utf8')).toBe('launched')
+      expect((await readFile(packResultPath, 'utf8')).trim().split('\n')).toHaveLength(2)
+    } finally {
+      await rm(root, { recursive: true, force: true })
+      await rm(cacheHome, { recursive: true, force: true })
     }
   })
 })

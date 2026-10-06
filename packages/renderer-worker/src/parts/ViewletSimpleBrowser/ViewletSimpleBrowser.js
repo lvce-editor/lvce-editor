@@ -1,5 +1,6 @@
 import * as SimpleBrowserWorker from '../SimpleBrowserWorker/SimpleBrowserWorker.js'
 import * as HtmlPreviewUrl from '../HtmlPreviewUrl/HtmlPreviewUrl.js'
+import * as ExtensionViewUrl from '../ExtensionViewUrl/ExtensionViewUrl.js'
 import * as SimpleBrowserPreview from '../SimpleBrowserPreview/SimpleBrowserPreview.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as BrowserSuggestionRequests from '../BrowserSuggestionRequests/BrowserSuggestionRequests.js'
@@ -17,6 +18,7 @@ import * as Command from '../Command/Command.js'
 import * as ElectronWebContentsView from '../ElectronWebContentsView/ElectronWebContentsView.js'
 import * as ElectronWebContentsViewFunctions from '../ElectronWebContentsViewFunctions/ElectronWebContentsViewFunctions.js'
 import * as ElectronWindow from '../ElectronWindow/ElectronWindow.js'
+import * as GetExtensionViews from '../GetExtensionViews/GetExtensionViews.ts'
 import * as Focus from '../Focus/Focus.js'
 import * as FocusState from '../FocusState/FocusState.js'
 import * as GetFallThroughKeyBindings from '../GetFallThroughKeyBindings/GetFallThroughKeyBindings.js'
@@ -122,9 +124,14 @@ const createTab = ({
 
 const isHistoryUrl = (url) => typeof url === 'string' && url.startsWith(simpleBrowserHistoryUrl)
 
-const isPreviewTab = (tab) => HtmlPreviewUrl.isHtmlPreviewUrl(tab?.iframeSrc)
+const isPreviewTab = (tab) => HtmlPreviewUrl.isHtmlPreviewUrl(tab?.iframeSrc) || ExtensionViewUrl.isExtensionViewUrl(tab?.iframeSrc)
 const isSpecialTab = (tab) => isHistoryTab(tab) || isPreviewTab(tab)
 const createPreviewTab = (url) => createTab({ iframeSrc: url, inputValue: url, title: 'HTML Preview' })
+const createExtensionViewTab = async (url) => {
+  const view = await GetExtensionViews.getExtensionView(ExtensionViewUrl.decode(url))
+  if (!view) throw new Error(`Extension view not found: ${url}`)
+  return createTab({ iframeSrc: url, inputValue: url, title: view.title })
+}
 
 const isHistoryTab = (tab) => isHistoryUrl(tab?.iframeSrc)
 
@@ -370,12 +377,18 @@ export const loadContent = async (state, savedState) => {
     }
   }
 
-  const specialTabRequested = isHistoryUrl(uri) || HtmlPreviewUrl.isHtmlPreviewUrl(uri) || isSpecialTab(savedSelectedTab)
+  const specialTabRequested = isHistoryUrl(uri) || HtmlPreviewUrl.isHtmlPreviewUrl(uri) || ExtensionViewUrl.isExtensionViewUrl(uri) || isSpecialTab(savedSelectedTab)
   if (specialTabRequested) {
     const restoredTabs =
       savedSelectedTab && isSpecialTab(savedSelectedTab)
         ? savedTabs
-        : [HtmlPreviewUrl.isHtmlPreviewUrl(uri) ? createPreviewTab(uri) : createHistoryTab()]
+        : [
+            HtmlPreviewUrl.isHtmlPreviewUrl(uri)
+              ? createPreviewTab(uri)
+              : ExtensionViewUrl.isExtensionViewUrl(uri)
+                ? await createExtensionViewTab(uri)
+                : createHistoryTab(),
+          ]
     const restoredIndex = savedSelectedTab && isSpecialTab(savedSelectedTab) ? savedSelectedTabIndex : 0
     const tabs = tabsEnabled ? restoredTabs : [restoredTabs[restoredIndex]]
     const selectedTabIndex = tabsEnabled && savedSelectedTab && isSpecialTab(savedSelectedTab) ? savedSelectedTabIndex : 0
@@ -645,6 +658,7 @@ export const reloadTab = async (state, index) => {
   }
   const tab = tabs[tabIndex]
   if (isPreviewTab(tab)) {
+    if (ExtensionViewUrl.isExtensionViewUrl(tab.iframeSrc)) return state
     await SimpleBrowserPreview.reload(tab)
     return state
   }
@@ -670,8 +684,12 @@ export const openOrRevealTab = async (state, url) => {
 export const openTab = async (state, url, disposition) => {
   const { hasSuggestionsOverlay } = state
   const currentState = hasSuggestionsOverlay ? await closeSuggestions(state) : state
-  if (isHistoryUrl(url) || HtmlPreviewUrl.isHtmlPreviewUrl(url)) {
-    const tab = HtmlPreviewUrl.isHtmlPreviewUrl(url) ? createPreviewTab(url) : createHistoryTab()
+  if (isHistoryUrl(url) || HtmlPreviewUrl.isHtmlPreviewUrl(url) || ExtensionViewUrl.isExtensionViewUrl(url)) {
+    const tab = HtmlPreviewUrl.isHtmlPreviewUrl(url)
+      ? createPreviewTab(url)
+      : ExtensionViewUrl.isExtensionViewUrl(url)
+        ? await createExtensionViewTab(url)
+        : createHistoryTab()
     const tabs = [...currentState.tabs, tab]
     if (disposition === 'background-tab') {
       return { ...currentState, tabs }
@@ -1367,8 +1385,8 @@ const navigate = async (state, value) => {
   if (openCookieImportView(value)) {
     return state
   }
-  const iframeSrc = HtmlPreviewUrl.isHtmlPreviewUrl(value) ? value : IframeSrc.toIframeSrc(value, state.shortcuts)
-  if (HtmlPreviewUrl.isHtmlPreviewUrl(iframeSrc)) {
+  const iframeSrc = HtmlPreviewUrl.isHtmlPreviewUrl(value) || ExtensionViewUrl.isExtensionViewUrl(value) ? value : IframeSrc.toIframeSrc(value, state.shortcuts)
+  if (HtmlPreviewUrl.isHtmlPreviewUrl(iframeSrc) || ExtensionViewUrl.isExtensionViewUrl(iframeSrc)) {
     return openTab(state, iframeSrc, 'foreground-tab')
   }
   if (isHistoryUrl(iframeSrc)) {

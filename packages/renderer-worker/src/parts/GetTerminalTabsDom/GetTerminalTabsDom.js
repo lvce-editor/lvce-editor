@@ -1,8 +1,9 @@
-import { button, div, span, text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
+import { button, div, input, span, text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 import * as Assert from '../Assert/Assert.ts'
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as ClassNames from '../ClassNames/ClassNames.js'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.js'
+import * as MergeClassNames from '../MergeClassNames/MergeClassNames.js'
 import * as TerminalStrings from '../TerminalStrings/TerminalStrings.js'
 
 const getTabClassName = (isSelected, splitIndex, splitCount, isGroupStart) => {
@@ -30,8 +31,41 @@ const getTerminalUids = (tab) => {
   return tab.terminalUids || [tab.uid]
 }
 
-const createTabDom = (tab, index, terminalUid, splitIndex, splitCount, isSelected, isGroupStart) => {
-  const { label, icon } = tab
+const getTabLabelDom = (tab, terminalUid, isRenaming) => {
+  if (!isRenaming) {
+    return [
+      span(
+        {
+          className: ClassNames.TerminalTabLabel,
+        },
+        1,
+      ),
+      text(tab.label),
+    ]
+  }
+  return [
+    input(
+      {
+        autoFocus: true,
+        className: MergeClassNames.mergeClassNames(ClassNames.TerminalTabLabel, 'TerminalTabRenameInput'),
+        'data-tabUid': tab.uid,
+        'data-terminalUid': terminalUid,
+        draggable: false,
+        name: 'terminal-rename',
+        onBlur: 'handle-terminal-rename-blur',
+        onClick: 'handle-terminal-rename-pointerdown',
+        onFocus: 'handle-terminal-rename-input',
+        onKeyDown: 'handle-terminal-rename-keydown',
+        onPointerDown: 'handle-terminal-rename-pointerdown',
+        value: tab.label,
+      },
+      0,
+    ),
+  ]
+}
+
+const createTabDom = (tab, index, terminalUid, splitIndex, splitCount, isSelected, isGroupStart, isRenaming) => {
+  const { icon } = tab
   const isSplit = splitCount > 1
   const className = getTabClassName(isSelected, splitIndex, splitCount, isGroupStart)
   return [
@@ -56,13 +90,7 @@ const createTabDom = (tab, index, terminalUid, splitIndex, splitCount, isSelecte
       },
       0,
     ),
-    span(
-      {
-        className: ClassNames.TerminalTabLabel,
-      },
-      1,
-    ),
-    text(label),
+    ...getTabLabelDom(tab, terminalUid, isRenaming),
     button(
       {
         ariaLabel: TerminalStrings.killTerminal(),
@@ -88,7 +116,7 @@ export const hasVisibleTabs = (tabs) => {
   return tabs.length > 0
 }
 
-export const getTerminalTabsDom = (tabs, x, y, width, height, selectedIndex, activeTerminalUids = []) => {
+export const getTerminalTabsDom = (tabs, x, y, width, height, selectedIndex, activeTerminalUids = [], renamingTabUid = -1) => {
   Assert.number(x)
   Assert.number(y)
   Assert.number(width)
@@ -115,7 +143,8 @@ export const getTerminalTabsDom = (tabs, x, y, width, height, selectedIndex, act
       const terminalUid = terminalUids[j]
       const isSelected = i === selectedIndex && terminalUid === activeTerminalUid
       const isGroupStart = i > 0 && j === 0
-      dom.push(...createTabDom(tab, i, terminalUid, j, terminalUids.length, isSelected, isGroupStart))
+      const isRenaming = tab.uid === renamingTabUid && terminalUid === terminalUids[0]
+      dom.push(...createTabDom(tab, i, terminalUid, j, terminalUids.length, isSelected, isGroupStart, isRenaming))
     }
   }
   return dom
