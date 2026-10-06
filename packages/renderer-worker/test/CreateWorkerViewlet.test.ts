@@ -701,7 +701,7 @@ test('quick pick view commands preserve the renderer custom-input callback', asy
 
 test('Main restores its shell before deferring content and disposes the worker instance', async () => {
   const content = Promise.withResolvers<void>()
-  const invoke = jest.fn((method: string) => {
+  const invoke = jest.fn((method: string, ..._args: readonly unknown[]) => {
     if (method === 'MainArea.loadContentLater') {
       return content.promise
     }
