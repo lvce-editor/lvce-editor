@@ -169,7 +169,6 @@ export const bundleRendererWorker = async ({ cachePath, platform, commitHash, ve
       modulePaths: [Path.absolute('packages/renderer-worker/node_modules')],
       platform: 'webworker',
       sourceMap: false,
-      codeSplitting: true,
       entryFileName: 'rendererWorkerMain.js',
     })
     await Remove.remove(`${cachePath}/src`)
