@@ -65,8 +65,8 @@ jobs:
       - name: Download Builtin Extensions
         run: node packages/build/src/parts/DownloadBuiltinExtensions/DownloadBuiltinExtensions.ts
         if: steps.builtin-extensions-cache.outputs.cache-hit != 'true'
-      - name: Test e2e server readiness
-        run: node --test packages/extension-host-worker-tests/test/wait-for-server-ready.test.mjs
+      - name: Test e2e runner lifecycle
+        run: node --test packages/extension-host-worker-tests/test/wait-for-server-ready.test.mjs packages/extension-host-worker-tests/test/browser-launch-cleanup.test.mjs
       - name: Check feature e2e ownership
         run: node scripts/check-e2e-ownership.mjs
       - run: npm run lint
@@ -90,6 +90,10 @@ jobs:
           path: .tmp/cursor-split-tests
       - name: Stage owned split editor regressions
         run: node .tmp/cursor-split-tests/packages/e2e-integration/stage-cursor-tests.mjs .
+      - name: Install Chromium for split editor regressions
+        run: node node_modules/playwright-core/cli.js install --with-deps chromium
+        env:
+          PLAYWRIGHT_BROWSERS_PATH: 0
       - name: Test editor cursor positioning in split groups
         working-directory: ./packages/extension-host-worker-tests
         run: npm run e2e:headless -- --test-name-prefix=viewlet.main-editor-cursor-after-split --browser-test=scripts/test-editor-cursor-splits.mjs

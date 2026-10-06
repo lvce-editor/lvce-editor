@@ -143,29 +143,31 @@ const runTests = async () => {
     console.info('[server] listening on http://localhost:3000')
     return
   }
-  const recordVideos = argv.includes('--record-videos')
-  if (recordVideos) {
-    await rm(join(__dirname, '..', 'videos'), { recursive: true, force: true })
-  }
-  const browser = await chromium.launch({
-    headless,
-    args: [],
-  })
-  const context = await browser.newContext({
-    recordVideo: recordVideos
-      ? {
-          dir: join(__dirname, '..', 'videos'),
-          size: { width: 1280, height: 720 },
-        }
-      : undefined,
-  })
-  if (initialSettings) {
-    await context.addInitScript((value) => {
-      if (location.protocol === 'http:' || location.protocol === 'https:') localStorage.setItem('settings', JSON.stringify(value))
-    }, initialSettings)
-  }
-  const page = await context.newPage()
+  let browser
+  let context
   try {
+    const recordVideos = argv.includes('--record-videos')
+    if (recordVideos) {
+      await rm(join(__dirname, '..', 'videos'), { recursive: true, force: true })
+    }
+    browser = await chromium.launch({
+      headless,
+      args: [],
+    })
+    context = await browser.newContext({
+      recordVideo: recordVideos
+        ? {
+            dir: join(__dirname, '..', 'videos'),
+            size: { width: 1280, height: 720 },
+          }
+        : undefined,
+    })
+    if (initialSettings) {
+      await context.addInitScript((value) => {
+        if (location.protocol === 'http:' || location.protocol === 'https:') localStorage.setItem('settings', JSON.stringify(value))
+      }, initialSettings)
+    }
+    const page = await context.newPage()
     const expectedConsole = argv.find((argument) => argument.startsWith('--expect-console='))?.slice('--expect-console='.length)
     let receivedExpectedConsole = false
     page.on('console', (event) => {
@@ -179,18 +181,21 @@ const runTests = async () => {
       await testFile(page, testName, timeout, browserTest)
     }
     if (expectedConsole && !receivedExpectedConsole) throw new Error(`Missing test assertion: ${expectedConsole}`)
-  } catch (error) {
-    throw error
   } finally {
-    await page.close()
-    await context.close()
-    await browser.close()
-    server.dispose()
-    await Promise.all([
-      rm(configDir, { recursive: true, force: true }),
-      rm(cacheDir, { recursive: true, force: true }),
-      rm(dataDir, { recursive: true, force: true }),
-    ])
+    try {
+      await context?.close()
+    } finally {
+      try {
+        await browser?.close()
+      } finally {
+        server.dispose()
+        await Promise.all([
+          rm(configDir, { recursive: true, force: true }),
+          rm(cacheDir, { recursive: true, force: true }),
+          rm(dataDir, { recursive: true, force: true }),
+        ])
+      }
+    }
   }
 }
 
