@@ -22,7 +22,4 @@ const main = async () => {
   await Workbench.startup(initData, Platform.getPlatform(), AssetDir.assetDir)
 }
 
-// Let inlined dynamic-import modules finish initializing before startup uses them.
-queueMicrotask(() => {
-  void main()
-})
+await main()
