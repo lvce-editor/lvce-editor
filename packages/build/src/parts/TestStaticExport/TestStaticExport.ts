@@ -11,6 +11,7 @@ import * as ReadDir from '../ReadDir/ReadDir.ts'
 import * as Remove from '../Remove/Remove.ts'
 import * as TranspileFiles from '../TranspileFiles/TranspileFiles.ts'
 import * as WriteFile from '../WriteFile/WriteFile.ts'
+import * as ExportStaticSite from '../ExportStaticSite/ExportStaticSite.ts'
 
 const main = async () => {
   const indexPath = Path.absolute('packages/build/.tmp/server/shared-process/index.js')
@@ -76,6 +77,28 @@ const main = async () => {
   if (!testOverview.includes('sample.test.html')) {
     throw new Error('static export test overview does not include sample.test.html')
   }
+
+  const pagesRoot = Path.absolute('packages/build/.tmp/export-pages-test')
+  process.env.PATH_PREFIX = '/lvce-editor'
+  const pagesResult = await ExportStaticSite.exportStaticSite({
+    root: pagesRoot,
+    serverRoot: Path.absolute('packages/build/.tmp/server'),
+  })
+  const pagesIndexHtml = await ReadFile.readFile(join(pagesRoot, 'dist', 'index.html'))
+  const pagesConfigElement = pagesIndexHtml.match(/<script id="Config" type="application\/json">([\s\S]*?)<\/script>/)
+  assert.ok(pagesConfigElement, 'Pages export index.html should include runtime configuration')
+  const pagesRuntimeConfig = JSON.parse(pagesConfigElement[1])
+  assert.equal(pagesRuntimeConfig.platform, 'web')
+  assert.equal(pagesRuntimeConfig.assetDir, `/lvce-editor/${pagesResult.commitHash}`)
+  assert.equal(pagesRuntimeConfig.rendererWorkerUrl, `/lvce-editor/${pagesResult.commitHash}/packages/renderer-worker/dist/rendererWorkerMain.js`)
+  assert.ok(Object.values(pagesRuntimeConfig.workerUrls as Record<string, string>).every((url) => url.startsWith(`/lvce-editor/${pagesResult.commitHash}/`)))
+  await ReadFile.readFile(join(pagesRoot, 'dist', pagesResult.commitHash, 'packages/renderer-worker/dist/rendererWorkerMain.js'))
+  await ReadFile.readFile(join(pagesRoot, 'dist', pagesResult.commitHash, 'css', 'App.css'))
+  await ReadFile.readFile(join(pagesRoot, 'dist', pagesResult.commitHash, 'manifest.json'))
+  await ReadFile.readFile(join(pagesRoot, 'dist', pagesResult.commitHash, 'icons', 'extensionDefaultIcon.png'))
+  await ReadFile.readFile(join(pagesRoot, 'dist', pagesResult.commitHash, 'config', 'onLoadCommands.json'))
+  assert.equal(existsSync(join(pagesRoot, 'dist', 'tests')), false, 'Pages export should not include test pages')
+  assert.equal(existsSync(join(pagesRoot, 'dist', pagesResult.commitHash, 'tests')), false, 'Pages export should not include test assets')
   await Remove.remove(`packages/build/.tmp/server/shared_process/node_modules`)
 
   const testFiles = await ReadDir.readDir('packages/extension-host-worker-tests/src')
