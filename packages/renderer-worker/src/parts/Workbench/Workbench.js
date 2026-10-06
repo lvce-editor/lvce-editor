@@ -17,7 +17,6 @@ import * as HasCodeQueryParam from '../HasCodeQueryParam/HasCodeQueryParam.js'
 import * as HeadlessLayout from '../HeadlessLayout/HeadlessLayout.js'
 import * as IconTheme from '../IconTheme/IconTheme.js'
 import * as Id from '../Id/Id.js'
-import * as InitData from '../InitData/InitData.js'
 import * as IpcState from '../IpcState/IpcState.js'
 import * as IpcTrace from '../IpcTrace/IpcTrace.js'
 import * as KeyBindings from '../KeyBindings/KeyBindings.js'
@@ -27,7 +26,6 @@ import * as LaunchTestWorker from '../LaunchTestWorker/LaunchTestWorker.ts'
 import * as LifeCycle from '../LifeCycle/LifeCycle.js'
 import * as LifeCyclePhase from '../LifeCyclePhase/LifeCyclePhase.js'
 import * as Location from '../Location/Location.js'
-import * as Module from '../Module/Module.js'
 import * as ModernUi from '../ModernUi/ModernUi.js'
 import * as StartupCpuProfile from '../StartupCpuProfile/StartupCpuProfile.js'
 import * as OpenInitialUri from '../OpenInitialUri/OpenInitialUri.js'
@@ -119,19 +117,16 @@ const actions = [
 ]
 
 // TODO lazyload parts one by one (Main, SideBar, ActivityBar, TitleBar, StatusBar)
-export const startup = async (platform, assetDir) => {
+export const startup = async (initData, platform, assetDir) => {
   onunhandledrejection = UnhandledErrorHandling.handleUnhandledRejection
   // @ts-ignore
   onerror = UnhandledErrorHandling.handleUnhandledError
 
   ViewletModuleInternal.registerAll(ViewletModuleMap.map)
   FileSystemState.registerAll(FileSystemMap.map)
-  Command.setLoad(Module.load)
   LifeCycle.mark(LifeCyclePhase.Zero)
 
   Performance.mark(PerformanceMarkerType.WillStartupWorkbench)
-  await RendererProcess.listen()
-  const initData = await InitData.getInitData()
   Location.initialize(initData.Location.href)
   const cpuProfile = platform === PlatformType.Electron && StartupCpuProfile.isEnabled(initData.Location.href)
   if (platform !== PlatformType.Web) {

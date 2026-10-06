@@ -60,6 +60,11 @@ const copyAuthCallbackFile = async ({ pathPrefix }) => {
 
 const copyStaticFiles = async ({ pathPrefix, ignoreIconTheme, commitHash }) => {
   await Copy.copy({
+    from: 'packages/renderer-worker/node_modules/@lvce-editor/accounts-view',
+    to: `packages/build/.tmp/dist/${commitHash}/packages/renderer-worker/node_modules/@lvce-editor/accounts-view`,
+    dereference: true,
+  })
+  await Copy.copy({
     from: 'static/config',
     to: `packages/build/.tmp/dist/${commitHash}/config`,
   })
