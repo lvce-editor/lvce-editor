@@ -129,9 +129,7 @@ export const startup = async (initData, platform, assetDir) => {
   Location.initialize(initData.Location.href)
   const cpuProfile = platform === PlatformType.Electron && StartupCpuProfile.isEnabled(initData.Location.href)
   if (platform !== PlatformType.Web) {
-    console.warn('renderer startup: shared process')
     await LaunchSharedProcess.launchSharedProcess()
-    console.warn('renderer startup: shared process ready')
     await IpcTrace.initialize()
   }
 
