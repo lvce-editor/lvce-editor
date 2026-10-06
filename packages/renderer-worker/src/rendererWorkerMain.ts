@@ -10,8 +10,11 @@ Object.assign(CommandMapRef.commandMapRef, CommandMap.commandMap)
 Command.setLoad(Module.load)
 
 const main = async () => {
+  console.warn('renderer startup: listen')
   await RendererProcess.listen()
+  console.warn('renderer startup: listening')
   const initData = await InitData.getInitData()
+  console.warn('renderer startup: init data', JSON.stringify(initData.Config))
   RuntimeConfig.initialize(initData.Config)
 
   const [Workbench, Platform, AssetDir] = await Promise.all([
@@ -19,7 +22,9 @@ const main = async () => {
     import('./parts/Platform/Platform.js'),
     import('./parts/AssetDir/AssetDir.js'),
   ])
+  console.warn('renderer startup: workbench')
   await Workbench.startup(initData, Platform.getPlatform(), AssetDir.assetDir)
+  console.warn('renderer startup: complete')
 }
 
 // Let inlined dynamic-import modules finish initializing before startup uses them.

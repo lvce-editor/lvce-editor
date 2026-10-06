@@ -128,6 +128,7 @@ try {
     [
       ...(packaged ? [] : [join(root, 'packages/main-process')]),
       '--no-sandbox',
+      '--enable-logging=stderr',
       '--password-store=basic',
       `--user-data-dir=${join(directory, 'chromium')}`,
       previous,
@@ -155,6 +156,7 @@ try {
     const args = [
       ...(packaged ? [] : [join(root, 'packages/main-process')]),
       '--no-sandbox',
+      '--enable-logging=stderr',
       '--password-store=basic',
       `--user-data-dir=${join(directory, 'chromium')}`,
       project,
