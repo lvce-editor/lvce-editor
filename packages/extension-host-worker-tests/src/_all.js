@@ -80,6 +80,13 @@ const launchServer = async ({ ci, configDir, cacheDir, dataDir }) => {
         maxAge: 86400,
       }),
     )
+    app.use(
+      '/test',
+      express.static(CI_DIST_PATH, {
+        immutable: true,
+        maxAge: 86400,
+      }),
+    )
     const { resolve, promise } = Promise.withResolvers()
     const server = app.listen(3000, 'localhost', () => resolve(undefined))
     await promise
