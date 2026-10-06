@@ -82,11 +82,22 @@ jobs:
           node --experimental-vm-modules node_modules/jest/bin/jest.js --config packages/renderer-worker/package.json --runInBand --coverage=false --testPathPatterns='(IpcParentWithNodeAlternate|LaunchFileSystemWorker|WebSocketCapability|ExtensionNodeRpc|WorkspaceConnection|WorkspaceSetUri|LoadProcessExplorerViewletModule|GetTerminalSpawnOptions).test'
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0
+      - name: Checkout owned split editor regressions
+        uses: actions/checkout@v7
+        with:
+          repository: lvce-editor/main-area-worker
+          ref: d9d8897b5dd6a93466180344e11163a775c57f27
+          path: .tmp/cursor-split-tests
+      - name: Stage owned split editor regressions
+        run: node .tmp/cursor-split-tests/packages/e2e-integration/stage-cursor-tests.mjs .
       - name: Test editor cursor positioning in split groups
         working-directory: ./packages/extension-host-worker-tests
         run: npm run e2e:headless -- --test-name-prefix=viewlet.main-editor-cursor-after-split --browser-test=scripts/test-editor-cursor-splits.mjs
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0
+      - name: Remove staged split editor regressions
+        if: always()
+        run: node .tmp/cursor-split-tests/packages/e2e-integration/stage-cursor-tests.mjs . --clean
       - name: Test renderer layout blur dispatch
         if: matrix.os == 'ubuntu-24.04'
         run: node --experimental-vm-modules node_modules/jest/bin/jest.js --config packages/renderer-worker/package.json --runInBand --coverage=false --testPathPatterns=ViewletLayoutBlur.test
