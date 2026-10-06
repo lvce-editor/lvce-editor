@@ -1128,7 +1128,7 @@
           ]
         },
         "loadContent": {
-          "name": "MainArea.loadContent",
+          "name": "MainArea.loadContentShell",
           "parameters": [{ "source": "state", "name": "uid" }, { "source": "argument", "name": "savedState" }]
         },
         "diff": { "name": "MainArea.diff2", "parameters": [{ "source": "state", "name": "uid" }] },

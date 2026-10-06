@@ -25,6 +25,14 @@ import * as ViewletManagerVisitor from '../ViewletManagerVisitor/ViewletManagerV
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
+const pendingMainLoads = new Set()
+
+const waitForMainShell = async (id, applicationId) => {
+  if (id !== 'Main') return
+  const pending = [...pendingMainLoads].find((load) => applicationId === undefined || load.applicationId === applicationId)
+  await pending?.ready
+}
+
 export const state = {
   pendingModules: Object.create(null),
 }
@@ -240,6 +248,7 @@ const wrapViewletCommand = (id, key, fn) => {
     }
     if (!activeInstance) {
       // Fallback to first instance if none focused
+      await waitForMainShell(id)
       activeInstance = ViewletStates.getInstance(id)
     }
     const result = await runFn(activeInstance, id, key, fn, args)
@@ -300,6 +309,9 @@ export const executeForApplication = async (applicationId, command, ...args) => 
   const separator = command.indexOf('.')
   const moduleId = command.slice(0, separator)
   const key = command.slice(separator + 1)
+  if (!ViewletStates.getInstance(moduleId, applicationId)) {
+    await waitForMainShell(moduleId, applicationId)
+  }
   const instance = ViewletStates.getInstance(moduleId, applicationId)
   if (!instance) {
     throw new Error(`No ${moduleId} instance in application ${applicationId}`)
@@ -672,6 +684,24 @@ const pendingLoads = new Set()
  * @param {any} restoreState
  */
 export const load = async (viewlet, focus = false, restore = false, restoreState = undefined) => {
+  if (viewlet.id !== 'Main') {
+    return loadTracked(viewlet, focus, restore, restoreState)
+  }
+  const deferred = Promise.withResolvers()
+  const pending = {
+    applicationId: viewlet.applicationId ?? ApplicationRegistry.getOwner(viewlet.parentUid),
+    ready: deferred.promise,
+  }
+  pendingMainLoads.add(pending)
+  try {
+    return await loadTracked(viewlet, focus, restore, restoreState)
+  } finally {
+    pendingMainLoads.delete(pending)
+    deferred.resolve()
+  }
+}
+
+const loadTracked = async (viewlet, focus = false, restore = false, restoreState = undefined) => {
   const applicationId = viewlet.applicationId ?? ApplicationRegistry.getOwner(viewlet.parentUid)
   if (applicationId === undefined) {
     return loadInternal(viewlet, focus, restore, restoreState)
