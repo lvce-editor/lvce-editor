@@ -9,6 +9,8 @@ import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
+const defaultChat2ViewId = 'chat2.views.chat'
+
 export const create = (id, uri, x, y, width, height) => {
   return {
     uid: id,
@@ -27,7 +29,7 @@ export const create = (id, uri, x, y, width, height) => {
 export const loadContent = async (state, savedState) => {
   let savedViewletId = await Command.execute('Layout.getActiveSecondarySideBarView')
   if (!savedViewletId) {
-    savedViewletId = ViewletModuleId.Chat
+    savedViewletId = defaultChat2ViewId
   }
   return handleSecondarySideBarViewletChange(state, savedViewletId)
 }
@@ -55,14 +57,15 @@ export const handleSecondarySideBarViewletChange = async (state, moduleId) => {
   const uid = state.uid
 
   const childUid = Id.create()
+  const childModuleId = moduleId.includes('.') ? ViewletModuleId.ExtensionView : moduleId
 
   const commands = await ViewletManager.load(
     {
       getModule: ViewletModule.load,
-      id: moduleId,
+      id: childModuleId,
       type: 0,
       // @ts-ignore
-      uri: '',
+      uri: childModuleId === ViewletModuleId.ExtensionView ? moduleId : '',
       show: false,
       focus: false,
       setBounds: false,
@@ -101,7 +104,7 @@ export const openViewlet = async (state, moduleId, focus = false, args) => {
 export const dispose = (state) => {}
 
 export const openDefaultViewlet = async (state) => {
-  await openViewlet(state, ViewletModuleId.Chat)
+  await openViewlet(state, defaultChat2ViewId)
 }
 
 export const close = (state) => {

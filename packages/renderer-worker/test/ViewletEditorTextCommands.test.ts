@@ -350,6 +350,37 @@ test('background loadContent keeps content updates but suppresses focus commands
   ])
 })
 
+test('workspace refresh reloads the matching editor from disk without stealing focus', async () => {
+  const editor = { uid: 42, uri: 'file:///workspace/src/main.ts' }
+  editorWorkerInvoke.mockImplementation((method) => {
+    switch (method) {
+      case 'Editor.getCommandIds':
+        return ['loadContent']
+      case 'Editor.loadContent':
+        return undefined
+      case 'Editor.diff2':
+        return []
+      case 'Editor.render2':
+        return [
+          ['Viewlet.setPatches', 42, []],
+          ['Viewlet.focusSelector', 42, '[name="editor"]'],
+        ]
+      default:
+        throw new Error(`unexpected method ${method}`)
+    }
+  })
+  const commands = await ViewletEditorTextCommands.getCommands()
+  const unchanged = await commands.handleWorkspaceRefresh(editor, { changed: [editor.uri] })
+  expect(unchanged).toBe(editor)
+  expect(editorWorkerInvoke).not.toHaveBeenCalledWith('Editor.loadContent', 42, undefined, false, true, true)
+  const unrelated = await commands.handleWorkspaceRefresh(editor, { changed: ['file:///workspace/other.ts'], reloadContent: true })
+  expect(unrelated).toBe(editor)
+
+  const result = await commands.handleWorkspaceRefresh(editor, { changed: [editor.uri], reloadContent: true })
+  expect(editorWorkerInvoke).toHaveBeenCalledWith('Editor.loadContent', 42, undefined, false, true, true)
+  expect(result.commands).toEqual([['Viewlet.setPatches', 42, []]])
+})
+
 test('background reload also suppresses focus in diagnostic renders before the reload returns', async () => {
   const editor = { uid: 42, uri: 'live-component-state:///1.json' }
   const focusCommands = [['Viewlet.focusSelector', 42, '[name="editor"]']]

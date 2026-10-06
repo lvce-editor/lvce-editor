@@ -229,6 +229,8 @@ export const load = (moduleId) => {
       return import('../Markdown/Markdown.ipc.js')
     case ModuleId.TerminalTransfer:
       return import('../TerminalTransfer/TerminalTransfer.ipc.js')
+    case ModuleId.Tasks:
+      return import('../RunDefaultBuildTask/RunDefaultBuildTask.ipc.js')
     case ModuleId.MeasureTextHeight:
       return import('../MeasureTextHeight/MeasureTextHeight.ipc.js')
     case ModuleId.FileSystemMemory:

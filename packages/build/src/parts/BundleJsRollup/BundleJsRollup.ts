@@ -11,6 +11,7 @@ type BundleOptions = {
   readonly codeSplitting?: boolean
   readonly cwd: string
   readonly exclude?: string[]
+  readonly entryFileName?: string
   readonly external?: Array<string | RegExp>
   readonly from: string
   readonly minify?: boolean
@@ -56,6 +57,7 @@ export const bundleJs = async ({
   modulePaths = [],
   typescript = from.endsWith('.ts'),
   sourceMap = true,
+  entryFileName = 'renderer-process.modern.js',
 }: BundleOptions) => {
   try {
     const allExternal = getExternal(babelExternal, external)
@@ -133,7 +135,7 @@ export const bundleJs = async ({
       extend: false,
       dir: codeSplitting ? join(cwd, 'dist') : undefined,
       file: codeSplitting ? undefined : join(cwd, 'dist', basename(from).replace('.ts', '.js')),
-      entryFileNames: 'renderer-process.modern.js',
+      entryFileNames: entryFileName,
       exports: 'auto',
       sourcemapExcludeSources: true,
       chunkFileNames(x) {

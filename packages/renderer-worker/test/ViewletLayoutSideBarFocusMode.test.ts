@@ -1,5 +1,9 @@
-import { expect, test } from '@jest/globals'
+import { expect, jest, test } from '@jest/globals'
+import * as SideBarLocationType from '../src/parts/SideBarLocationType/SideBarLocationType.js'
+import { getLayoutVirtualDom } from '../src/parts/GetLayoutVirtualDom/GetLayoutVirtualDom.ts'
 
+const activityBarInvoke = jest.fn<(...args: unknown[]) => Promise<unknown[]>>(async () => [])
+jest.unstable_mockModule('../src/parts/ActivityBarWorker/ActivityBarWorker.js', () => ({ invoke: activityBarInvoke }))
 const LayoutPoints = await import('../src/parts/ViewletLayout/LayoutPoints.ts')
 const ViewletLayout = await import('../src/parts/ViewletLayout/ViewletLayout.ts')
 
@@ -199,4 +203,57 @@ test('enterSideBarFocusMode is a no-op when the secondary side bar is hidden', a
     newState: state,
     commands: [],
   })
+})
+
+test.each([SideBarLocationType.Left, SideBarLocationType.Right])(
+  'AI-native layout preserves sidebar location %s and restores IDE bounds after resizing',
+  async (sideBarLocation) => {
+    const state = LayoutPoints.getPoints({ ...createState(), sideBarLocation })
+    const result = await ViewletLayout.enterSideBarFocusMode(state, 'primary', true)
+    expect(result.newState).toEqual(
+      expect.objectContaining({
+        aiNativeLayout: true,
+        activityBarVisible: true,
+        sideBarLocation,
+        activityBarLeft: sideBarLocation === SideBarLocationType.Right ? 1152 : 0,
+        activityBarWidth: 48,
+        sideBarLeft: sideBarLocation === SideBarLocationType.Right ? 0 : 48,
+        sideBarWidth: 1152,
+        sideBarTop: 0,
+        sideBarHeight: 800,
+        titleBarVisible: false,
+        statusBarVisible: false,
+      }),
+    )
+    expect(getLayoutVirtualDom(result.newState)[0].className.includes('AiNativeLayoutRight')).toBe(sideBarLocation === SideBarLocationType.Right)
+    const resized = LayoutPoints.getPoints({ ...result.newState, windowWidth: 900, windowHeight: 600 })
+    expect(resized.sideBarWidth).toBe(852)
+    expect(resized.activityBarLeft).toBe(sideBarLocation === SideBarLocationType.Right ? 852 : 0)
+    const restored = await ViewletLayout.leaveSideBarFocusMode(resized)
+    expect(restored.newState).toEqual(
+      expect.objectContaining({
+        aiNativeLayout: false,
+        sideBarWidth: state.sideBarWidth,
+        sideBarLocation: state.sideBarLocation,
+        titleBarVisible: true,
+        statusBarVisible: true,
+        windowWidth: 900,
+        windowHeight: 600,
+      }),
+    )
+  },
+)
+
+test('AI-native layout restricts the existing activity bar and restores it on exit', async () => {
+  activityBarInvoke.mockClear()
+  const state = { ...createState(), activityBarId: 42 }
+
+  const focused = await ViewletLayout.enterSideBarFocusMode(state, 'primary', true)
+  expect(activityBarInvoke).toHaveBeenCalledWith('ActivityBar.setAiNativeLayout', 42, true)
+  expect(activityBarInvoke).toHaveBeenCalledWith('ActivityBar.diff2', 42)
+  expect(activityBarInvoke).toHaveBeenCalledWith('ActivityBar.render2', 42, [])
+
+  activityBarInvoke.mockClear()
+  await ViewletLayout.leaveSideBarFocusMode(focused.newState)
+  expect(activityBarInvoke).toHaveBeenCalledWith('ActivityBar.setAiNativeLayout', 42, false)
 })
