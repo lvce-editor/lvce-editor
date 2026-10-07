@@ -19,6 +19,7 @@ const extensionViews = {
 
 beforeEach(() => {
   jest.clearAllMocks()
+  extensionViews.view.css = '/extensions/sample/view.css'
   // @ts-ignore
   ExtensionManagementWorker.invoke.mockImplementation(async (method) => {
     if (method === 'Extensions.getViewActionsDom') {
@@ -99,12 +100,19 @@ test('renderEventListeners includes context menu coordinates', () => {
 })
 
 test('loadContent loads css from extension view metadata', async () => {
+  extensionViews.view.css = 'lvce://-/24cb34e/extensions/sample/view.css'
+  globalThis.fetch = jest.fn(async () => {
+    return {
+      ok: true,
+      text: async () => '.Testing { mask: url("./icons/archive.svg"); }',
+    }
+  }) as any
   const state = ViewletExtensionView.create(1, 'sample.views.testing', 0, 0, 100, 100)
 
   const newState = await ViewletExtensionView.loadContent(state, undefined)
 
-  expect(fetch).toHaveBeenCalledWith('/extensions/sample/view.css')
-  expect(newState.css).toBe('.Testing { color: red; }')
+  expect(fetch).toHaveBeenCalledWith('lvce://-/24cb34e/extensions/sample/view.css')
+  expect(newState.css).toBe('.Testing { mask: url("lvce://-/24cb34e/extensions/sample/icons/archive.svg"); }')
   expect(newState.cssId).toBe('ExtensionView:sample.views.testing')
 })
 
