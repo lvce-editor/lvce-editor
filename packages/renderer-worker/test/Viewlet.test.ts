@@ -1008,3 +1008,33 @@ test('save retains the text editor route and skip-formatting option', async () =
   await expect(Viewlet.save(21, true)).resolves.toEqual({ modified: false })
   expect(save).toHaveBeenCalledWith(21, true)
 })
+
+test('layout preparation and view patches commit in one batch with resized geometry', async () => {
+  const oldState = { content: 'old', uid: 2, width: 240 }
+  const nextState = { ...oldState, content: 'new' }
+  const prepareRender = jest.fn(async () => {
+    ViewletStates.setState(2, { ...oldState, width: 1000 })
+    return [['Viewlet.setDom2', 1, ['layout']]]
+  })
+  ViewletStates.set(2, {
+    factory: {
+      Commands: { update: async () => nextState },
+      name: 'Test',
+      prepareRender,
+    },
+    moduleId: 'Test',
+    renderedState: oldState,
+    state: oldState,
+  })
+  jest.mocked(ViewletManager.render).mockReturnValue([['Viewlet.setPatches', 2, ['chat']]])
+  jest.mocked(RendererProcess.invoke).mockResolvedValue(undefined)
+
+  await Viewlet.executeViewletCommand(2, 'update')
+
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.sendMultiple', [
+    ['Viewlet.setDom2', 1, ['layout']],
+    ['Viewlet.setPatches', 2, ['chat']],
+  ])
+  expect(ViewletStates.getInstance(2).state).toEqual({ content: 'new', uid: 2, width: 1000 })
+})
