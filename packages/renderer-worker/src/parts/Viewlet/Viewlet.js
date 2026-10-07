@@ -629,14 +629,17 @@ const executeViewletCommandInternal = async (uid, fnName, ...args) => {
   const oldState = instance.state
   const newState = await fn(oldState, ...args)
   if (newState === oldState) return
-  const actualNewState = RebaseState.rebaseState(oldState, instance.state, 'newState' in newState ? newState.newState : newState)
+  if (ViewletStates.getInstance(uid) !== instance) return
+  const nextState = 'newState' in newState ? newState.newState : newState
+  const preparationCommands = instance.factory.prepareRender ? await instance.factory.prepareRender(nextState) : []
+  const actualNewState = RebaseState.rebaseState(oldState, instance.state, nextState)
   if (oldState === actualNewState) {
     return
   }
-  if (!ViewletStates.getByUid(uid) && !ViewletStates.hasInstance(uid)) {
+  if (ViewletStates.getInstance(uid) !== instance) {
     return
   }
-  const commands = 'newState' in newState ? [...newState.commands] : []
+  const commands = [...preparationCommands, ...('newState' in newState ? newState.commands : [])]
   const renderedState = instance.renderedState
   commands.push(...ViewletManager.render(instance.factory, renderedState, actualNewState))
   UpdateDynamicFocusContext.updateDynamicFocusContext(commands)

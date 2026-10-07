@@ -9,6 +9,7 @@ import * as GetExtensionViews from '../GetExtensionViews/GetExtensionViews.ts'
 import { getPlatform } from '../Platform/Platform.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as VirtualDomHelpers from '../VirtualDomHelpers/VirtualDomHelpers.js'
+import * as ViewWorkbenchLayout from '../ViewWorkbenchLayout/ViewWorkbenchLayout.ts'
 import * as WhenExpression from '../WhenExpression/WhenExpression.js'
 import type { ViewletExtensionViewState } from './ViewletExtensionViewState.ts'
 
@@ -23,6 +24,7 @@ interface ViewRenderResult {
   readonly patches?: readonly unknown[]
   readonly scrollPosition?: readonly [selector: string, scrollTop: number]
   readonly title?: string
+  readonly workbenchLayout?: 'ide' | 'ai-native'
   readonly type: string
 }
 
@@ -138,6 +140,7 @@ const renderVirtualDomResult = (state: ViewletExtensionViewState, result: ViewRe
       commands: [],
       focusSelector: '',
       patches: [],
+      workbenchLayout: undefined,
     }
   }
   return {
@@ -148,6 +151,7 @@ const renderVirtualDomResult = (state: ViewletExtensionViewState, result: ViewRe
     patches: result.type === 'setPatches' ? result.patches || [] : [],
     ...(typeof result.modified === 'boolean' && { modified: result.modified }),
     title: typeof result.title === 'string' ? result.title : state.title,
+    workbenchLayout: result.workbenchLayout,
   }
 }
 
@@ -382,7 +386,8 @@ export const rerender = async (state: ViewletExtensionViewState): Promise<Viewle
   return isExtensionDisabled(updatedState) ? getDisabledState(updatedState) : updatedState
 }
 
-export const isComponentStateAvailable = (state: ViewletExtensionViewState): boolean => !isExtensionDisabled(state) && state.kind === 'virtualDom' && state.stateful
+export const isComponentStateAvailable = (state: ViewletExtensionViewState): boolean =>
+  !isExtensionDisabled(state) && state.kind === 'virtualDom' && state.stateful
 
 export const isComponentDomAvailable = (state: ViewletExtensionViewState): boolean => state.kind === 'virtualDom'
 
@@ -528,3 +533,5 @@ export const saveState = async (state: ViewletExtensionViewState): Promise<unkno
   const savedState = await ExtensionManagementWorker.invoke('Extensions.saveViewInstanceState', state.viewId, state.uid, assetDir, getPlatform())
   return isExtensionDisabled(state) ? undefined : savedState
 }
+
+export const prepareRender = ViewWorkbenchLayout.prepare
