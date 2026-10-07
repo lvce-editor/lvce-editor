@@ -1,4 +1,4 @@
-import { chromium, expect } from '@playwright/test'
+import { chromium, expect, firefox } from '@playwright/test'
 import { fork } from 'child_process'
 import { mkdir, readdir, rm, writeFile } from 'fs/promises'
 import { mkdtemp } from 'node:fs/promises'
@@ -157,7 +157,10 @@ const runTests = async () => {
     if (recordVideos) {
       await rm(join(__dirname, '..', 'videos'), { recursive: true, force: true })
     }
-    browser = await chromium.launch({
+    const browserNameArgument = argv.find((argument) => argument.startsWith('--browser='))
+    const browserName = browserNameArgument ? browserNameArgument.slice('--browser='.length) : 'chromium'
+    const browserType = browserName === 'firefox' ? firefox : chromium
+    browser = await browserType.launch({
       headless,
       args: [],
     })
