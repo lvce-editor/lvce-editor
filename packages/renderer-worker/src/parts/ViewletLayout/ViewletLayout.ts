@@ -295,6 +295,7 @@ export const saveState = (state: LayoutState) => {
     panelAlignment,
   } = stateToSave
   return {
+    aiNativeLayout: state.aiNativeLayout === true,
     activityBarVisible,
     panelHeight,
     panelVisible,
@@ -570,7 +571,22 @@ export const loadContent = (state: LayoutState, savedState: any): LayoutState =>
   }
   // TODO get side bar min width from preferences
   const newState = getPoints(intermediateState, sideBarLocation)
-  return newState
+  if (!restore || savedState?.aiNativeLayout !== true) {
+    return newState
+  }
+  return getPoints(
+    {
+      ...newState,
+      aiNativeLayout: true,
+      aiNativeLayoutExited: false,
+      titleBarVisible: false,
+      statusBarVisible: false,
+      sideBarFocusMode: true,
+      sideBarFocusModeLayout: getSideBarFocusModeLayoutSnapshot(newState),
+      sideBarFocusModeTarget: 'primary',
+    },
+    sideBarLocation,
+  )
 }
 
 const show = async (state: LayoutState, module, currentViewletId, restore?: boolean) => {
