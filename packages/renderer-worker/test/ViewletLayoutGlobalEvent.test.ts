@@ -383,3 +383,12 @@ test('extension refresh commits ready view updates before waiting for a provider
   const result = await refresh
   expect(result.commands).not.toContainEqual(commits[0])
 })
+
+test('extension refresh passes the disabled contribution identity to global viewlets', async () => {
+  const handler = jest.fn((state: { uid: number }, extensionId?: string, disabled?: boolean) => ({ ...state, disabled, extensionId }))
+  ViewletStates.set('extension-view', createInstance(5, 'handleExtensionsChanged', handler))
+
+  await ViewletLayout.handleExtensionsChanged(ViewletLayout.create(1), 'sample.extension', true)
+
+  expect(handler).toHaveBeenCalledWith({ uid: 5 }, 'sample.extension', true)
+})
