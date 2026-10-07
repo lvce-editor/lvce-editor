@@ -168,6 +168,68 @@ test('saveState preserves the normal secondary side bar width while focused', as
   )
 })
 
+test('AI-native layout is restored while keeping the IDE layout available to return to', async () => {
+  const state = createState()
+  const focused = await ViewletLayout.enterSideBarFocusMode(state, 'primary', true)
+  const saved = ViewletLayout.saveState(focused.newState)
+  const restored = ViewletLayout.loadContent(ViewletLayout.create(2), {
+    ...saved,
+    Layout: { bounds: { windowWidth: state.windowWidth, windowHeight: state.windowHeight } },
+  })
+
+  expect(saved.aiNativeLayout).toBe(true)
+  expect(restored).toEqual(
+    expect.objectContaining({
+      aiNativeLayout: true,
+      sideBarFocusMode: true,
+      sideBarFocusModeTarget: 'primary',
+      sideBarFocusModeLayout: expect.objectContaining({
+        activityBarVisible: true,
+        mainVisible: true,
+        panelVisible: true,
+        sideBarVisible: true,
+        sideBarWidth: state.sideBarWidth,
+      }),
+      sideBarWidth: state.windowWidth - 48,
+      titleBarVisible: false,
+      statusBarVisible: false,
+    }),
+  )
+
+  const returnedToIde = await ViewletLayout.leaveSideBarFocusMode(restored)
+  expect(returnedToIde.newState).toEqual(
+    expect.objectContaining({
+      aiNativeLayout: false,
+      sideBarFocusMode: false,
+      sideBarWidth: state.sideBarWidth,
+      mainVisible: true,
+      panelVisible: true,
+      sideBarVisible: true,
+    }),
+  )
+})
+
+test.each([
+  ['older saved state', {}],
+  ['restore false', { aiNativeLayout: true, restore: false }],
+])('%s does not restore AI-native layout', (_name, savedState) => {
+  const state = createState()
+  const restored = ViewletLayout.loadContent(ViewletLayout.create(2), {
+    ...savedState,
+    Layout: { bounds: { windowWidth: state.windowWidth, windowHeight: state.windowHeight } },
+  })
+
+  expect(restored.aiNativeLayout).toBeFalsy()
+  expect(restored).toEqual(
+    expect.objectContaining({
+      sideBarFocusMode: false,
+      mainVisible: true,
+      titleBarVisible: true,
+      statusBarVisible: true,
+    }),
+  )
+})
+
 test('hidden layout visibility commands are no-ops while focus mode is active', async () => {
   const focused = await ViewletLayout.enterSideBarFocusMode(createState())
 
