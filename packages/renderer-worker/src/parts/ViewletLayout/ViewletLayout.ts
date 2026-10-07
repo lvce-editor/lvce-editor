@@ -3027,7 +3027,7 @@ const getActiveSideBarExtensionId = (state: LayoutState): string => {
 }
 
 export const handleExtensionsChanged = async (state: LayoutState, extensionId?: string, disabled?: boolean): Promise<LayoutStateResult> => {
-  const globalEventResult = await callGlobalEvent(state, 'handleExtensionsChanged')
+  const globalEventResult = await callGlobalEvent(state, 'handleExtensionsChanged', extensionId, disabled)
   // Workers have already queued these transactions. Commit them before an extension
   // provider query can delay every subsequent direct render of the same views.
   UpdateDynamicFocusContext.updateDynamicFocusContext(globalEventResult.commands)

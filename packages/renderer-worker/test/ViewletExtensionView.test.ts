@@ -1,7 +1,9 @@
 import { beforeEach, expect, jest, test } from '@jest/globals'
+import * as VirtualDomElements from '../src/parts/VirtualDomElements/VirtualDomElements.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
+  ViewletExtensionView.handleExtensionsChanged(createState(), 'sample.extension', false)
 })
 
 jest.unstable_mockModule('../src/parts/ExtensionManagementWorker/ExtensionManagementWorker.js', () => {
@@ -31,6 +33,7 @@ const createState = () => {
     credentialless: true,
     dom: [],
     eventListeners: [],
+    extensionId: 'sample.extension',
     focusSelector: '',
     height: 100,
     iframeSandbox: [],
@@ -52,6 +55,71 @@ test('create stores parent uid for sidebar title updates', () => {
   const state = ViewletExtensionView.create(1, 'sample.views.testing', 0, 0, 100, 100, undefined, 2)
 
   expect(state.parentUid).toBe(2)
+})
+
+test('disabling the contributing extension replaces virtual dom contents and clears extension actions', () => {
+  const state = {
+    ...createState(),
+    actionsDom: [{ type: 1 }],
+    css: '.view { color: red }',
+    dom: [{ type: VirtualDomElements.Button }],
+    eventListeners: [{ name: 'custom' }],
+  }
+
+  const newState = ViewletExtensionView.handleExtensionsChanged(state, 'sample.extension', true)
+
+  expect(newState).toMatchObject({
+    actionsDom: [],
+    css: '',
+    disabled: true,
+    dom: [{ childCount: 0, text: 'Extension contributing this view has been disabled', type: 12 }],
+    eventListeners: [],
+    kind: 'virtualDom',
+  })
+})
+
+test('disabling an unrelated extension leaves the view unchanged', () => {
+  const state = createState()
+
+  expect(ViewletExtensionView.handleExtensionsChanged(state, 'sample.other-extension', true)).toBe(state)
+})
+
+test('disabling an iframe view clears its iframe and prevents later extension calls', async () => {
+  const state = {
+    ...createState(),
+    iframeSrc: 'https://extension.test/view.html',
+    kind: 'iframe',
+  }
+  const disabled = ViewletExtensionView.handleExtensionsChanged(state, 'sample.extension', true)
+
+  expect(disabled).toMatchObject({
+    disabled: true,
+    iframeSrc: '',
+    kind: 'virtualDom',
+  })
+  await expect(ViewletExtensionView.handleViewEvent(disabled, 'click', 'button')).resolves.toBe(disabled)
+  await expect(ViewletExtensionView.dispose(disabled)).resolves.toBeUndefined()
+  expect(ExtensionManagementWorker.invoke).not.toHaveBeenCalled()
+})
+
+test('a delayed extension event cannot restore content after the extension is disabled', async () => {
+  let resolveEvent: (value: unknown) => void = () => undefined
+  const eventResult = new Promise((resolve) => {
+    resolveEvent = resolve
+  })
+  const invoke = ExtensionManagementWorker.invoke as any
+  invoke.mockReturnValue(eventResult)
+  const state = createState()
+  const event = ViewletExtensionView.handleViewEvent(state, 'click', 'button')
+
+  const disabled = ViewletExtensionView.handleExtensionsChanged(state, 'sample.extension', true)
+  resolveEvent({ dom: [{ type: 1 }], type: 'setDom' })
+
+  await expect(event).resolves.toMatchObject({
+    disabled: true,
+    dom: [{ text: 'Extension contributing this view has been disabled', type: 12 }],
+  })
+  expect(disabled.disabled).toBe(true)
 })
 
 test('loadContent uses displayName as title for virtual dom views', async () => {

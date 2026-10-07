@@ -1,13 +1,14 @@
-import { assetDir } from '../AssetDir/AssetDir.js'
 import * as ActionType from '../ActionType/ActionType.js'
+import { assetDir } from '../AssetDir/AssetDir.js'
 import * as Command from '../Command/Command.js'
 import * as ExtensionManagementWorker from '../ExtensionManagementWorker/ExtensionManagementWorker.js'
 import * as Focus from '../Focus/Focus.js'
+import type { ExtensionView } from '../GetExtensionViews/GetExtensionViews.ts'
 import * as GetActionsVirtualDom from '../GetActionsVirtualDom/GetActionsVirtualDom.js'
 import * as GetExtensionViews from '../GetExtensionViews/GetExtensionViews.ts'
-import type { ExtensionView } from '../GetExtensionViews/GetExtensionViews.ts'
 import { getPlatform } from '../Platform/Platform.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+import * as VirtualDomHelpers from '../VirtualDomHelpers/VirtualDomHelpers.js'
 import * as WhenExpression from '../WhenExpression/WhenExpression.js'
 import type { ViewletExtensionViewState } from './ViewletExtensionViewState.ts'
 
@@ -47,6 +48,34 @@ interface ViewAction {
   readonly command: string
   readonly icon: string
   readonly title: string
+}
+
+const disabledExtensions = new Set<string>()
+
+const getExtensionKey = (applicationId: string | undefined, extensionId: string): string => `${applicationId || ''}\0${extensionId}`
+
+const isExtensionDisabled = ({ applicationId, disabled, extensionId }: ViewletExtensionViewState, changedExtensionId = extensionId): boolean => {
+  return disabled === true || (changedExtensionId !== undefined && disabledExtensions.has(getExtensionKey(applicationId, changedExtensionId)))
+}
+
+const getDisabledState = (state: ViewletExtensionViewState): ViewletExtensionViewState => {
+  return {
+    ...state,
+    actionsDom: [],
+    commands: [],
+    css: '',
+    cssId: '',
+    disabled: true,
+    dom: [VirtualDomHelpers.text('Extension contributing this view has been disabled')],
+    eventListeners: [],
+    focusSelector: '',
+    iframeSandbox: [],
+    iframeSrc: '',
+    kind: 'virtualDom',
+    modified: undefined,
+    patches: [],
+    stateful: false,
+  }
 }
 
 const restoreError = (serializedError: CreateViewInstanceError['error']): Error => {
@@ -127,11 +156,14 @@ const getViewTitle = (view: GetExtensionViews.ExtensionView): string => {
 }
 
 const getActionsDom = async (state: ViewletExtensionViewState): Promise<readonly unknown[]> => {
-  if (state.kind !== 'virtualDom') {
+  if (isExtensionDisabled(state) || state.kind !== 'virtualDom') {
     return []
   }
   const actionsDom = (await ExtensionManagementWorker.invoke('Extensions.getViewActionsDom', state.viewId, state.uid, assetDir, getPlatform())) as
     readonly unknown[] | undefined
+  if (isExtensionDisabled(state)) {
+    return []
+  }
   if (actionsDom !== undefined) {
     return actionsDom
   }
@@ -142,6 +174,9 @@ const getActionsDom = async (state: ViewletExtensionViewState): Promise<readonly
     assetDir,
     getPlatform(),
   )) as readonly ViewAction[]
+  if (isExtensionDisabled(state)) {
+    return []
+  }
   if (actions.length === 0) {
     return []
   }
@@ -201,14 +236,21 @@ export const loadContent = async (
   if (!view) {
     throw new Error(`view ${state.uri} not found`)
   }
-  const title = getViewTitle(view)
-  const css = await loadCss(view)
-  const cssId = css ? getCssId(view) : ''
-  const contributedEventListeners = view.eventListeners || []
   const stateWithViewId = {
     ...state,
+    extensionId: view.extensionId,
     viewId: view.id,
   }
+  if (isExtensionDisabled(stateWithViewId)) {
+    return getDisabledState(stateWithViewId)
+  }
+  const title = getViewTitle(view)
+  const css = await loadCss(view)
+  if (isExtensionDisabled(stateWithViewId)) {
+    return getDisabledState(stateWithViewId)
+  }
+  const cssId = css ? getCssId(view) : ''
+  const contributedEventListeners = view.eventListeners || []
   if (view.kind === 'virtualDom') {
     const result = await ExtensionManagementWorker.invoke(
       'Extensions.createViewInstance',
@@ -222,6 +264,9 @@ export const loadContent = async (
     const createResult = result as CreateViewInstanceResult
     if (createResult.ok === false) {
       throw restoreError(createResult.error)
+    }
+    if (isExtensionDisabled(stateWithViewId)) {
+      return getDisabledState(stateWithViewId)
     }
     const renderResult = createResult.ok === true ? createResult.result : (result as ViewRenderResult)
     const eventListeners = createResult.ok === true ? createResult.eventListeners || contributedEventListeners : contributedEventListeners
@@ -237,15 +282,16 @@ export const loadContent = async (
       kind: view.kind,
       stateful: createResult.ok === true && createResult.stateful === true,
     }
-    return {
+    const loadedState = {
       ...newState,
       actionsDom: await getActionsDom(newState),
     }
+    return isExtensionDisabled(loadedState) ? getDisabledState(loadedState) : loadedState
   }
   if (!view.iframe) {
     throw new Error(`view ${state.uri} is missing iframe contribution`)
   }
-  return {
+  const loadedState = {
     ...stateWithViewId,
     actionsDom: [],
     css,
@@ -258,6 +304,7 @@ export const loadContent = async (
     kind: 'iframe',
     title,
   }
+  return isExtensionDisabled(loadedState) ? getDisabledState(loadedState) : loadedState
 }
 
 export const hasFunctionalResize = true
@@ -270,15 +317,22 @@ export const resize = (state: ViewletExtensionViewState, dimensions: any): Viewl
 }
 
 const dispatchEvent = async (state: ViewletExtensionViewState, event: unknown): Promise<ViewletExtensionViewState> => {
-  if (state.kind !== 'virtualDom') {
+  if (isExtensionDisabled(state) || state.kind !== 'virtualDom') {
     return state
   }
   const result = await ExtensionManagementWorker.invoke('Extensions.dispatchViewEvent', state.viewId, state.uid, event, assetDir, getPlatform())
+  if (isExtensionDisabled(state)) {
+    return getDisabledState(state)
+  }
   const newState = renderVirtualDomResult(state, result as ViewRenderResult | undefined)
-  return {
+  if (isExtensionDisabled(state)) {
+    return getDisabledState(state)
+  }
+  const updatedState = {
     ...newState,
     actionsDom: await getActionsDom(newState),
   }
+  return isExtensionDisabled(updatedState) ? getDisabledState(updatedState) : updatedState
 }
 
 export const handleViewEvent = (
@@ -287,7 +341,7 @@ export const handleViewEvent = (
   name: string,
   value?: unknown,
 ): Promise<ViewletExtensionViewState> => {
-  if (state.kind === 'virtualDom' && (type === 'click' || type === 'focus')) {
+  if (!isExtensionDisabled(state) && state.kind === 'virtualDom' && (type === 'click' || type === 'focus')) {
     Focus.setFocus(WhenExpression.Empty, undefined, state.uid, ViewletModuleId.ExtensionView)
   }
   return dispatchEvent(state, {
@@ -310,28 +364,42 @@ export const handleViewCommand = (
 }
 
 export const rerender = async (state: ViewletExtensionViewState): Promise<ViewletExtensionViewState> => {
-  if (state.kind !== 'virtualDom') {
+  if (isExtensionDisabled(state) || state.kind !== 'virtualDom') {
     return state
   }
   const result = await ExtensionManagementWorker.invoke('Extensions.renderViewInstance', state.viewId, state.uid, assetDir, getPlatform())
+  if (isExtensionDisabled(state)) {
+    return getDisabledState(state)
+  }
   const newState = renderVirtualDomResult(state, result as ViewRenderResult)
-  return {
+  if (isExtensionDisabled(state)) {
+    return getDisabledState(state)
+  }
+  const updatedState = {
     ...newState,
     actionsDom: await getActionsDom(newState),
   }
+  return isExtensionDisabled(updatedState) ? getDisabledState(updatedState) : updatedState
 }
 
-export const isComponentStateAvailable = (state: ViewletExtensionViewState): boolean => state.kind === 'virtualDom' && state.stateful
+export const isComponentStateAvailable = (state: ViewletExtensionViewState): boolean => !isExtensionDisabled(state) && state.kind === 'virtualDom' && state.stateful
 
 export const isComponentDomAvailable = (state: ViewletExtensionViewState): boolean => state.kind === 'virtualDom'
 
 export const getComponentDom = (state: ViewletExtensionViewState): readonly unknown[] => state.dom
 
 export const getComponentState = async (state: ViewletExtensionViewState): Promise<unknown> => {
-  return ExtensionManagementWorker.invoke('Extensions.getViewInstanceState', state.viewId, state.uid, assetDir, getPlatform())
+  if (isExtensionDisabled(state)) {
+    return undefined
+  }
+  const componentState = await ExtensionManagementWorker.invoke('Extensions.getViewInstanceState', state.viewId, state.uid, assetDir, getPlatform())
+  return isExtensionDisabled(state) ? undefined : componentState
 }
 
 export const setComponentState = async (state: ViewletExtensionViewState, componentState: unknown): Promise<ViewletExtensionViewState> => {
+  if (isExtensionDisabled(state)) {
+    return state
+  }
   const result = await ExtensionManagementWorker.invoke(
     'Extensions.setViewInstanceState',
     state.viewId,
@@ -340,17 +408,24 @@ export const setComponentState = async (state: ViewletExtensionViewState, compon
     assetDir,
     getPlatform(),
   )
+  if (isExtensionDisabled(state)) {
+    return getDisabledState(state)
+  }
   const newState = renderVirtualDomResult(state, result as ViewRenderResult | undefined)
-  return {
+  const updatedState = {
     ...newState,
     actionsDom: await getActionsDom(newState),
   }
+  return isExtensionDisabled(updatedState) ? getDisabledState(updatedState) : updatedState
 }
 
 export const handleClickAction = async (state: ViewletExtensionViewState, index: number, command: string): Promise<ViewletExtensionViewState> => {
   void index
+  if (isExtensionDisabled(state)) {
+    return state
+  }
   await Command.execute('ExtensionHost.executeCommand', command)
-  return state
+  return isExtensionDisabled(state) ? getDisabledState(state) : state
 }
 
 export const handleInput = (state: ViewletExtensionViewState, name: string, value: string): Promise<ViewletExtensionViewState> => {
@@ -384,15 +459,15 @@ export const handleContextMenu = (state: ViewletExtensionViewState, name: string
 
 export const handleActiveEditorChange = async (state: ViewletExtensionViewState, activeUri: string): Promise<ViewletExtensionViewState> => {
   const { kind, uid, uri, viewId } = state
-  if (kind !== 'virtualDom') {
+  if (isExtensionDisabled(state) || kind !== 'virtualDom') {
     return state
   }
   await ExtensionManagementWorker.invoke('Extensions.setViewInstanceActive', viewId, uid, uri === activeUri, assetDir, getPlatform())
-  return state
+  return isExtensionDisabled(state) ? getDisabledState(state) : state
 }
 
 export const save = async (state: ViewletExtensionViewState): Promise<ViewletExtensionViewState> => {
-  if (state.modified !== true) {
+  if (isExtensionDisabled(state) || state.modified !== true) {
     return state
   }
   return handleViewCommand(state, 'save')
@@ -411,6 +486,7 @@ export const afterRender = async (oldState: ViewletExtensionViewState, newState:
 
 export const Commands = {
   save,
+  handleExtensionsChanged,
   handleActiveEditorChange,
   handleBlur,
   handleContextMenu,
@@ -425,16 +501,30 @@ export const Commands = {
   rerender,
 }
 
+export function handleExtensionsChanged(state: ViewletExtensionViewState, extensionId?: string, disabled?: boolean): ViewletExtensionViewState {
+  if (!extensionId) {
+    return state
+  }
+  const key = getExtensionKey(state.applicationId, extensionId)
+  if (disabled) {
+    disabledExtensions.add(key)
+  } else {
+    disabledExtensions.delete(key)
+  }
+  return state.extensionId === extensionId && disabled && !state.disabled ? getDisabledState(state) : state
+}
+
 export const dispose = async (state: ViewletExtensionViewState): Promise<void> => {
-  if (state.kind !== 'virtualDom') {
+  if (isExtensionDisabled(state) || state.kind !== 'virtualDom') {
     return
   }
   await ExtensionManagementWorker.invoke('Extensions.disposeViewInstance', state.viewId, state.uid, assetDir, getPlatform())
 }
 
 export const saveState = async (state: ViewletExtensionViewState): Promise<unknown> => {
-  if (state.kind !== 'virtualDom') {
+  if (isExtensionDisabled(state) || state.kind !== 'virtualDom') {
     return undefined
   }
-  return ExtensionManagementWorker.invoke('Extensions.saveViewInstanceState', state.viewId, state.uid, assetDir, getPlatform())
+  const savedState = await ExtensionManagementWorker.invoke('Extensions.saveViewInstanceState', state.viewId, state.uid, assetDir, getPlatform())
+  return isExtensionDisabled(state) ? undefined : savedState
 }
