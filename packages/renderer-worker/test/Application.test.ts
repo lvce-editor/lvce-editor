@@ -2,6 +2,7 @@ import { afterEach, beforeEach, expect, jest, test } from '@jest/globals'
 import * as ApplicationRegistry from '../src/parts/ApplicationRegistry/ApplicationRegistry.ts'
 import * as Id from '../src/parts/Id/Id.js'
 import * as ViewletStates from '../src/parts/ViewletStates/ViewletStates.js'
+import * as WorkspaceState from '../src/parts/WorkspaceState/WorkspaceState.js'
 
 jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () => ({ invoke: jest.fn(async () => {}) }))
 jest.unstable_mockModule('../src/parts/FileSystemWorker/FileSystemWorker.js', () => ({
@@ -44,6 +45,7 @@ const options = (id: string) => ({
 beforeEach(() => {
   jest.clearAllMocks()
   Id.state.id = 0
+  WorkspaceState.state.workspaceUri = ''
   ViewletStates.reset()
 })
 
@@ -223,6 +225,29 @@ test('loads workspace ports before the initial panel is registered', async () =>
     'onPorts:codespaces',
     'ExtensionApi.providePorts',
     'codespaces://test/app',
+  )
+})
+
+test('routes Remote SSH forwarding from the main workspace view', async () => {
+  WorkspaceState.state.workspaceUri = 'remote-ssh://host/work'
+  jest.mocked(ExtensionManagementWorker.invoke).mockResolvedValueOnce({ localPort: 3000 })
+  await expect(Application.executeForView(12345, 'PortProvider.forwardPort', 3000)).resolves.toEqual({ localPort: 3000 })
+  expect(ExtensionManagementWorker.invoke).toHaveBeenCalledWith(
+    'Extensions.executeCommand',
+    'remote-ssh.forwardPort',
+    'remote-ssh://host/work',
+    3000,
+  )
+})
+
+test('routes stopping Remote SSH forwarding from the main workspace view', async () => {
+  WorkspaceState.state.workspaceUri = 'remote-ssh://host/work'
+  await Application.executeForView(12345, 'PortProvider.stopForwardPort', 3000)
+  expect(ExtensionManagementWorker.invoke).toHaveBeenCalledWith(
+    'Extensions.executeCommand',
+    'remote-ssh.stopForwardPort',
+    'remote-ssh://host/work',
+    3000,
   )
 })
 

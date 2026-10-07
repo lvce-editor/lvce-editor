@@ -14,6 +14,7 @@ import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
+import * as Workspace from '../Workspace/Workspace.js'
 
 export interface ApplicationOptions {
   readonly height: number
@@ -226,6 +227,16 @@ export const execute = (applicationId: string, command: string, ...args: readonl
 export const executeForView = (uid: number, command: string, ...args: readonly any[]): Promise<any> => {
   const applicationId = ApplicationRegistry.getOwner(uid)
   if (applicationId === undefined) {
+    if (command === 'PortProvider.forwardPort') {
+      return import('../PortProvider/PortProvider.ts').then(({ forwardPort }) =>
+        forwardPort(Workspace.getWorkspaceUri(), args[0]),
+      )
+    }
+    if (command === 'PortProvider.stopForwardPort') {
+      return import('../PortProvider/PortProvider.ts').then(({ stopForwardPort }) =>
+        stopForwardPort(Workspace.getWorkspaceUri(), args[0]),
+      )
+    }
     // Ports requests its initial content before the view is added to ViewletStates.
     if (command === 'PortProvider.getPorts') {
       return import('../PortProvider/PortProvider.ts').then(({ getPorts }) => getPorts(args[0]))
