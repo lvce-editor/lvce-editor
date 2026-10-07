@@ -106,7 +106,7 @@ jobs:
         uses: actions/checkout@v7
         with:
           repository: lvce-editor/accounts-view
-          ref: 50ebfa103cf4a5de6fa4622f4df9125c11507411
+          ref: c83034be9e611ca64b70211df3a3400e2ee2fa44
           path: .tmp/accounts-view-tests
       - name: Stage Accounts view regression
         run: node .tmp/accounts-view-tests/packages/e2e-integration/stage-accounts-view-test.mjs .
@@ -136,7 +136,7 @@ jobs:
         run: npm run test-static-export
       - name: Test Accounts view application rendering
         working-directory: ./packages/extension-host-worker-tests
-        run: npm run e2e:headless -- --ci --test-name-prefix=viewlet.accounts-view-open
+        run: npm run e2e:headless -- --ci --test-name-prefix=viewlet.accounts-view-open --browser-test=../../scripts/test-accounts-view-layout.mjs
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0
       - name: Remove staged Accounts view regression
