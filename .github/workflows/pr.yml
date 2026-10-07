@@ -86,7 +86,7 @@ jobs:
         uses: actions/checkout@v7
         with:
           repository: lvce-editor/main-area-worker
-          ref: f86d1163bbcdb18cd024a8f7333839f0f35457f5
+          ref: 02a51e61aa8e4ac06353080e719d7c9573e0596c
           path: .tmp/cursor-split-tests
       - name: Stage owned split editor regressions
         run: node .tmp/cursor-split-tests/packages/e2e-integration/stage-cursor-tests.mjs .
@@ -110,6 +110,16 @@ jobs:
           path: .tmp/accounts-view-tests
       - name: Stage Accounts view regression
         run: node .tmp/accounts-view-tests/packages/e2e-integration/stage-accounts-view-test.mjs .
+      - name: Stage owned active split save regression
+        shell: bash
+        run: |
+          node --input-type=module - <<'JS'
+          import { readFile, writeFile } from 'node:fs/promises'
+          import { stripTypeScriptTypes } from 'node:module'
+          const source = '.tmp/cursor-split-tests/packages/e2e-integration/src/viewlet.main-save-active-split-editor.ts'
+          const target = 'packages/extension-host-worker-tests/src/viewlet.main-save-active-split-editor.js'
+          await writeFile(target, stripTypeScriptTypes(await readFile(source, 'utf8')))
+          JS
       - name: Test renderer layout blur dispatch
         if: matrix.os == 'ubuntu-24.04'
         run: node --experimental-vm-modules node_modules/jest/bin/jest.js --config packages/renderer-worker/package.json --runInBand --coverage=false --testPathPatterns=ViewletLayoutBlur.test
@@ -132,6 +142,15 @@ jobs:
       - name: Remove staged Accounts view regression
         if: always()
         run: node .tmp/accounts-view-tests/packages/e2e-integration/stage-accounts-view-test.mjs . --clean
+      - name: Test saving the active split editor with the published worker
+        working-directory: ./packages/extension-host-worker-tests
+        run: npm run e2e:headless -- --ci --test-name-prefix=viewlet.main-save-active-split-editor
+        env:
+          PLAYWRIGHT_BROWSERS_PATH: 0
+      - name: Remove staged active split save regression
+        if: always()
+        run: |
+          node --input-type=module -e "import { rm } from 'node:fs/promises'; await rm('packages/extension-host-worker-tests/src/viewlet.main-save-active-split-editor.js', { force: true })"
       - name: Build Electron App (deb)
         if: matrix.os == 'ubuntu-24.04'
         run: npm run build:electron:deb
