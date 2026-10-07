@@ -30,6 +30,7 @@ export const Commands = {
   getBackendUrl: ViewletLayout.getBackendUrl,
   getBadgeCounts: ViewletLayout.getBadgeCounts,
   getHref: ViewletLayout.getHref,
+  setHash: ViewletLayout.setHash,
   getModuleId: ViewletLayout.getModuleId,
   getUserInfo: ViewletLayout.getUserInfo,
 }

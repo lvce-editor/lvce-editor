@@ -3167,6 +3167,10 @@ export const getHref = (state: LayoutState) => {
   return Location.getHref()
 }
 
+export const setHash = (state: LayoutState, hash: string) => {
+  return Location.setHash(hash)
+}
+
 export const afterRender = async (oldState: LayoutState, newState: LayoutState) => {
   await BrowserFullWidth.afterRender(oldState, newState)
   if (newState.secondaryPreviewPlacement !== 'bottomLeft' || !newState.secondaryPreviewVisible) return
