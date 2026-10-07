@@ -102,7 +102,15 @@ const loadCss = async (view: ExtensionView): Promise<string> => {
     if (!response.ok) {
       throw new Error(response.statusText)
     }
-    return response.text()
+    const css = await response.text()
+    const stylesheetUrl = new URL(view.css, globalThis.location?.href || 'http://localhost/')
+    return css.replace(/url\(\s*(?:(['"])(.*?)\1|([^)]*?))\s*\)/gi, (match, quote, quotedUrl, unquotedUrl) => {
+      const assetUrl = (quotedUrl ?? unquotedUrl ?? '').trim()
+      if (!assetUrl || /^(?:[a-z][\w+.-]*:|\/|#|var\()/i.test(assetUrl)) {
+        return match
+      }
+      return `url("${new URL(assetUrl, stylesheetUrl).href}")`
+    })
   } catch (error) {
     console.warn(`[renderer-worker] Failed to load css for extension view ${view.id}: ${error}`)
     return ''
