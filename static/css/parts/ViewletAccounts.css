@@ -1,6 +1,8 @@
 .Accounts {
   box-sizing: border-box;
+  flex: 1;
   height: 100%;
+  min-width: 0;
   overflow: auto;
   padding: 24px;
 }
