@@ -614,6 +614,8 @@ export const commandMap = {
   'Layout.handleActivityBarWheel': lazy('Layout.handleActivityBarWheel'),
   'Layout.getSideBarVisible': lazy('Layout.getSideBarVisible'),
   'Layout.getSideBarFocusMode': lazy('Layout.getSideBarFocusMode'),
+  'Layout.getHref': lazy('ViewletLayout.getHref'),
+  'Layout.setHash': lazy('ViewletLayout.setHash'),
   'Layout.getAssetDir': lazy('Layout.getAssetDir'),
   'Layout.getAuthState': lazy('Layout.getAuthState'),
   'Layout.getBackendUrl': lazy('Layout.getBackendUrl'),

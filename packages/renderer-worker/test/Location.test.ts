@@ -104,3 +104,15 @@ test('setWorkspaceUri updates the renderer URL once', async () => {
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
   expect(RendererProcess.invoke).toHaveBeenCalledWith('Location.setWorkspaceUri', 'remote-ssh://user@example.com/home')
 })
+
+test('setHash preserves path and query and skips repeated updates', async () => {
+  // @ts-ignore
+  RendererProcess.invoke.mockResolvedValue(undefined)
+  Location.initialize('https://example.com/static/?test=1#old')
+
+  await Location.setHash('#chat-task-1')
+  await Location.setHash('#chat-task-1')
+
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Location.setHash', '#chat-task-1')
+})
