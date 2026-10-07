@@ -414,7 +414,7 @@ test('handleClick stores focus selector from render result', async () => {
 
   expect(newState.focusSelector).toBe('[name="newCardTitle:list-1"]')
   expect(ViewletExtensionViewRender.render[3].apply(state as any, newState as any)).toEqual([
-    ['Viewlet.focusSelector', 1, '[name="newCardTitle:list-1"]'],
+    ['Viewlet.focusSelectorAfterRender', 1, '[name="newCardTitle:list-1"]'],
   ])
 })
 
