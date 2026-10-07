@@ -1971,6 +1971,13 @@ export const loadPanelIfVisible = (state: LayoutState) => {
 
 export const loadActivityBarIfVisible = async (state: LayoutState) => {
   const updated = await loadIfVisible(state, LayoutModules.ActivityBar)
+  if (state.aiNativeLayout && updated.newState.activityBarId !== -1) {
+    const commands = await setActivityBarAiNativeLayout(updated.newState.activityBarId, true)
+    return {
+      ...updated,
+      commands: [...updated.commands, ...commands],
+    }
+  }
   return {
     ...updated,
   }
