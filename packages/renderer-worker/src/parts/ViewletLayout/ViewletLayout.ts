@@ -967,6 +967,12 @@ export const hideSideBar = async (state: LayoutState) => {
 }
 
 export const toggleSideBar = (state: LayoutState) => {
+  if (state.aiNativeLayout) {
+    return Command.execute('ExtensionHost.executeCommand', 'chat2.toggleSessionsList').then(() => ({
+      newState: state,
+      commands: [],
+    }))
+  }
   if (state.sideBarFocusMode) {
     return hideSideBar(state)
   }
