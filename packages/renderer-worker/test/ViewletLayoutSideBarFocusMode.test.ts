@@ -3,7 +3,9 @@ import * as SideBarLocationType from '../src/parts/SideBarLocationType/SideBarLo
 import { getLayoutVirtualDom } from '../src/parts/GetLayoutVirtualDom/GetLayoutVirtualDom.ts'
 
 const activityBarInvoke = jest.fn<(...args: unknown[]) => Promise<unknown[]>>(async () => [])
+const commandExecute = jest.fn(async () => undefined)
 jest.unstable_mockModule('../src/parts/ActivityBarWorker/ActivityBarWorker.js', () => ({ invoke: activityBarInvoke }))
+jest.unstable_mockModule('../src/parts/Command/Command.js', () => ({ execute: commandExecute }))
 const LayoutPoints = await import('../src/parts/ViewletLayout/LayoutPoints.ts')
 const ViewletLayout = await import('../src/parts/ViewletLayout/ViewletLayout.ts')
 
@@ -103,6 +105,16 @@ test('leaveSideBarFocusMode restores the previous layout', async () => {
       sideBarWidth: state.sideBarWidth,
     }),
   )
+})
+
+test('toggleSideBar toggles Chat 2 sessions in AI-native layout', async () => {
+  const state = createState()
+  const aiNativeState = { ...state, aiNativeLayout: true, sideBarFocusMode: true }
+
+  const result = await ViewletLayout.toggleSideBar(aiNativeState)
+
+  expect(commandExecute).toHaveBeenCalledWith('ExtensionHost.executeCommand', 'chat2.toggleSessionsList')
+  expect(result).toEqual({ newState: aiNativeState, commands: [] })
 })
 
 test('leaveSideBarFocusMode restores the secondary side bar width', async () => {
