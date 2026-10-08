@@ -1,5 +1,5 @@
 import { existsSync } from 'node:fs'
-import { readdir } from 'node:fs/promises'
+import { readFile, readdir } from 'node:fs/promises'
 import * as BundleCss from '../BundleCss/BundleCss.ts'
 import * as BundleRendererProcess from '../BundleRendererProcess/BundleRendererProcess.ts'
 import * as BundleWorkers from '../BundleWorkers/BundleWorkers.ts'
@@ -49,9 +49,10 @@ const copyAuthCallbackFile = async () => {
     from: 'static/auth/callback.html',
     to: 'packages/build/.tmp/dist/auth/callback.html',
   })
-  await Copy.copyFile({
-    from: 'static/auth/callback.js',
-    to: 'packages/build/.tmp/dist/auth/callback.js',
+  await Replace.replace({
+    path: 'packages/build/.tmp/dist/auth/callback.html',
+    occurrence: '/* CALLBACK_RETURN_URL_HELPER */',
+    replacement: await readFile('static/auth/callback.js', 'utf8'),
   })
 }
 
