@@ -141,6 +141,11 @@ const copyStaticFiles = async ({ pathPrefix, ignoreIconTheme, commitHash }) => {
     occurrence: '/css',
     replacement: `${pathPrefix}/${commitHash}/css`,
   })
+  await Replace.replace({
+    path: `packages/build/.tmp/dist/index.html`,
+    occurrence: '/js/startupAppearance.js',
+    replacement: `${pathPrefix}/${commitHash}/js/startupAppearance.js`,
+  })
   await AddRuntimeConfigToIndexHtml.addRuntimeConfigToIndexHtml({
     path: `packages/build/.tmp/dist/index.html`,
     platform: 'web',

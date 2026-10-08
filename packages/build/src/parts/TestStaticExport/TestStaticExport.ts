@@ -71,6 +71,8 @@ const main = async () => {
     throw new VError(error, `static export failed`)
   }
   const indexHtml = await ReadFile.readFile(join(tmpDir, 'dist', 'index.html'))
+  assert.ok(indexHtml.includes(`<script src="/test/${commitHash}/js/startupAppearance.js"></script>`))
+  await ReadFile.readFile(join(tmpDir, 'dist', commitHash, 'js', 'startupAppearance.js'))
   const configElement = indexHtml.match(/<script id="Config" type="application\/json">([\s\S]*?)<\/script>/)
   assert.ok(configElement, 'static export index.html should include runtime configuration')
   const runtimeConfig = JSON.parse(configElement[1])
@@ -121,6 +123,7 @@ const main = async () => {
     serverRoot: Path.absolute('packages/build/.tmp/server'),
   })
   const pagesIndexHtml = await ReadFile.readFile(join(pagesRoot, 'dist', 'index.html'))
+  assert.ok(pagesIndexHtml.includes(`<script src="/lvce-editor/${pagesResult.commitHash}/js/startupAppearance.js"></script>`))
   const pagesConfigElement = pagesIndexHtml.match(/<script id="Config" type="application\/json">([\s\S]*?)<\/script>/)
   assert.ok(pagesConfigElement, 'Pages export index.html should include runtime configuration')
   const pagesRuntimeConfig = JSON.parse(pagesConfigElement[1])
@@ -130,6 +133,7 @@ const main = async () => {
   assert.ok(Object.values(pagesRuntimeConfig.workerUrls as Record<string, string>).every((url) => url.startsWith(`/lvce-editor/${pagesResult.commitHash}/`)))
   await ReadFile.readFile(join(pagesRoot, 'dist', pagesResult.commitHash, 'packages/renderer-worker/dist/rendererWorkerMain.js'))
   await ReadFile.readFile(join(pagesRoot, 'dist', pagesResult.commitHash, 'css', 'App.css'))
+  await ReadFile.readFile(join(pagesRoot, 'dist', pagesResult.commitHash, 'js', 'startupAppearance.js'))
   await ReadFile.readFile(join(pagesRoot, 'dist', pagesResult.commitHash, 'manifest.json'))
   await ReadFile.readFile(join(pagesRoot, 'dist', pagesResult.commitHash, 'icons', 'extensionDefaultIcon.png'))
   await ReadFile.readFile(join(pagesRoot, 'dist', pagesResult.commitHash, 'config', 'onLoadCommands.json'))
