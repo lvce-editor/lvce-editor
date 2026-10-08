@@ -50,8 +50,8 @@
   {
     "name": "builtin.chat-view-2",
     "repository": "github.com/lvce-editor/chat-view-2",
-    "version": "1.31.6",
-    "sha256": "08f9bc78f0fc0f350de4722a5269f3465dcc663bcb5bc8b4a15becaf386bf7c3",
+    "version": "1.31.7",
+    "sha256": "60029c3f4f945d97d784307b63f7ea06a32856855aa7fdc34eecdf55271b6d95",
     "created": "2026-09-13"
   },
   {
