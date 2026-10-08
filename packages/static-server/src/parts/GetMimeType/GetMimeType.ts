@@ -44,7 +44,6 @@ export const getMimeType = (fileExtension: string): string => {
     case '':
       return MimeType.TextPlain
     default:
-      console.warn(`[static-server] unsupported file extension: ${fileExtension}`)
-      return ''
+      return MimeType.ApplicationOctetStream
   }
 }

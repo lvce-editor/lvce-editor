@@ -10,3 +10,13 @@ test.each([
   expect(headers['Content-Security-Policy']).toBeDefined()
   expect(headers['Content-Type']).toBe('text/javascript')
 })
+
+test('unknown extensions use the binary MIME type', () => {
+  const headers = getHeaders({
+    absolutePath: '/repo/packages/e2e/fixture.unknown',
+    etag: 'test',
+    isForElectronProduction: false,
+    isImmutable: false,
+  })
+  expect(headers['Content-Type']).toBe('application/octet-stream')
+})
