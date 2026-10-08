@@ -3,7 +3,7 @@ import * as SideBarLocationType from '../src/parts/SideBarLocationType/SideBarLo
 import { getLayoutVirtualDom } from '../src/parts/GetLayoutVirtualDom/GetLayoutVirtualDom.ts'
 
 const activityBarInvoke = jest.fn<(...args: unknown[]) => Promise<unknown[]>>(async () => [])
-const commandExecute = jest.fn(async () => undefined)
+const commandExecute = jest.fn(async (..._args: readonly unknown[]) => undefined)
 jest.unstable_mockModule('../src/parts/ActivityBarWorker/ActivityBarWorker.js', () => ({ invoke: activityBarInvoke }))
 jest.unstable_mockModule('../src/parts/Command/Command.js', () => ({ execute: commandExecute }))
 const LayoutPoints = await import('../src/parts/ViewletLayout/LayoutPoints.ts')
