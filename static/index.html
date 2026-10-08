@@ -6,14 +6,13 @@
     <meta name="description" content="VS Code inspired text editor that mostly runs in a webworker." />
     <meta name="theme-color" content="#282e2f" />
     <title>Lvce Editor</title>
-    <script src="/js/startupAppearance.js"></script>
     <link rel="stylesheet" href="/css/App.css" />
     <link rel="manifest" href="/manifest.json" crossorigin="use-credentials" />
     <link rel="apple-touch-icon" href="/icons/pwa-icon-192.png" />
     <script id="Config" type="application/json">
       { "assetDir": "", "platform": "web", "workerUrls": {} }
     </script>
-    <script type="module" src="/packages/renderer-worker/node_modules/@lvce-editor/renderer-process/dist/rendererProcessMain.js"></script>
+    <script type="module" blocking="render" src="/packages/renderer-worker/node_modules/@lvce-editor/renderer-process/dist/rendererProcessMain.js"></script>
   </head>
   <body class="App"></body>
 </html>
