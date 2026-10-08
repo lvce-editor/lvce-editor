@@ -1,3 +1,4 @@
+import * as Command from '../Command/Command.js'
 import * as WorkerViewletAdapterMain from '../WorkerViewletAdapterMain/WorkerViewletAdapterMain.js'
 import * as WorkerViewletAdapters from '../WorkerViewletAdapters/WorkerViewletAdapters.js'
 
@@ -11,6 +12,11 @@ const adapters = {
   activityBar: WorkerViewletAdapters.activityBar,
   chatDebug: WorkerViewletAdapters.chatDebug,
   chatView: {
+    async afterLoadContent({ state, worker }) {
+      await worker.invoke('Chat.setUseAuthWorker', state.uid, true, false)
+      const userInfo = await Command.execute('Layout.getUserInfo', { includeAccessToken: true })
+      await worker.invoke('Chat.handleAuthStateChange', state.uid, userInfo)
+    },
     extendModule() {
       return {
         focus(state) {

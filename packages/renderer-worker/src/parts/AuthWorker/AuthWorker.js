@@ -24,4 +24,10 @@ export const signOut = (backendUrl) => {
   })
 }
 
+export const getAccounts = () => invoke('Auth.getAccounts')
+
+export const useAccount = (id) => invoke('Auth.useAccount', id)
+
+export const removeAccount = (id) => invoke('Auth.removeAccount', id)
+
 export { invoke, invokeAndTransfer, restart }

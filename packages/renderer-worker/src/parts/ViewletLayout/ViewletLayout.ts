@@ -96,9 +96,12 @@ const toUserInfo = (state) => {
   }
 }
 
-const toFilteredUserInfo = (state: LayoutState, options: { readonly includeTokenUsage?: boolean } = {}) => {
+const toFilteredUserInfo = (state: LayoutState, options: { readonly includeAccessToken?: boolean; readonly includeTokenUsage?: boolean } = {}) => {
   const { includeTokenUsage = true } = options
-  const info = toUserInfo(state)
+  const info = {
+    ...toUserInfo(state),
+    ...(options.includeAccessToken && { authAccessToken: AuthAccessToken.get(state.uid) }),
+  }
   if (!includeTokenUsage) {
     delete info.userUsedTokens
   }
@@ -2817,6 +2820,9 @@ export const getUserInfo = (state: LayoutState, options: { readonly includeAcces
   return toFilteredUserInfo(state, options)
 }
 
+export const getAccounts = async () => AuthWorker.getAccounts()
+getAccounts.returnValue = true
+
 const mergeAuthState = (state: LayoutState, authState) => {
   const authAccessToken = typeof authState?.authAccessToken === 'string' ? authState.authAccessToken : authState?.accessToken
   if (typeof authAccessToken === 'string') {
@@ -2894,6 +2900,24 @@ export const signIn = async (state: LayoutState): Promise<LayoutStateResult> => 
 
 export const signOut = async (state: LayoutState): Promise<LayoutStateResult> => {
   const authState = await AuthWorker.signOut(state.backendUrl)
+  const newState = mergeAuthState(state, authState)
+  return {
+    newState,
+    commands: await getAuthFanoutCommands(newState),
+  }
+}
+
+export const useAccount = async (state: LayoutState, id: string): Promise<LayoutStateResult> => {
+  const authState = await AuthWorker.useAccount(id)
+  const newState = mergeAuthState(state, authState)
+  return {
+    newState,
+    commands: await getAuthFanoutCommands(newState),
+  }
+}
+
+export const removeAccount = async (state: LayoutState, id: string): Promise<LayoutStateResult> => {
+  const authState = await AuthWorker.removeAccount(id)
   const newState = mergeAuthState(state, authState)
   return {
     newState,
