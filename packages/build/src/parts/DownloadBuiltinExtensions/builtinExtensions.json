@@ -26,7 +26,12 @@
     "repository": "github.com/lvce-editor/devcontainer",
     "version": "0.17.5",
     "sha256": "014e2a56894a4470df7cf0af02d940174a4c80731efc4d4216b6102fd1d47457",
-    "created": "2026-09-06"
+    "created": "2026-09-06",
+    "outputChannelOptions": {
+      "dev-containers": {
+        "parseLinks": false
+      }
+    }
   },
   {
     "name": "builtin.csv-viewer",
