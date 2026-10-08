@@ -87,6 +87,11 @@ const copyStaticFiles = async ({ commitHash }) => {
     occurrence: '/css',
     replacement: `/${commitHash}/css`,
   })
+  await Replace.replace({
+    path: `packages/build/.tmp/server/static-server/static/index.html`,
+    occurrence: '/js/startupAppearance.js',
+    replacement: `/${commitHash}/js/startupAppearance.js`,
+  })
   await AddRuntimeConfigToIndexHtml.addRuntimeConfigToIndexHtml({
     path: `packages/build/.tmp/server/static-server/static/index.html`,
     platform: 'remote',

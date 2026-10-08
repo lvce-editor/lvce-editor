@@ -3,3 +3,4 @@
 
 /* application css */
 @import './parts/_Global.css';
+@import './parts/StartupAppearance.css';
