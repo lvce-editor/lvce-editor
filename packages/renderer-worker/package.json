@@ -52,7 +52,7 @@
     "@lvce-editor/chat-network-worker": "^4.14.0",
     "@lvce-editor/chat-storage-worker": "^3.15.0",
     "@lvce-editor/chat-tool-worker": "^9.24.0",
-    "@lvce-editor/chat-view": "^10.22.2",
+    "@lvce-editor/chat-view": "^10.22.3",
     "@lvce-editor/chat-view-model": "^10.22.2",
     "@lvce-editor/clipboard-worker": "^1.31.1",
     "@lvce-editor/color-picker-worker": "^3.17.0",
