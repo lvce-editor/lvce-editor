@@ -1,4 +1,5 @@
 .Workbench {
+  position: relative;
   width: var(--AppWidth);
   height: var(--AppHeight);
   contain: strict;
@@ -6,6 +7,44 @@
   line-height: 1.4;
   display: flex;
   flex-direction: column;
+}
+
+.WorkspaceProgressOverlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--WorkbenchBackground);
+  color: var(--WorkbenchForeground);
+  font-size: 14px;
+}
+
+.WorkspaceProgressMessage {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: min(420px, calc(100% - 48px));
+  padding: 24px 32px;
+  border: 1px solid var(--WidgetBorder, currentColor);
+  border-radius: 4px;
+  box-shadow: var(--WidgetShadow, 0 2px 8px #0004);
+  text-align: center;
+}
+
+.WorkspaceProgressTitle {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.WorkspaceProgressStage {
+  opacity: 0.8;
+}
+
+/* Keep stage text readable while the full workbench is covered. */
+.WorkspaceProgressMessage {
+  background: var(--WorkbenchBackground);
 }
 
 /* Keep window controls in the space reserved above the primary sidebar. */
