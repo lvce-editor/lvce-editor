@@ -1,5 +1,6 @@
 import { beforeEach, expect, jest, test } from '@jest/globals'
 import * as PlatformType from '../src/parts/PlatformType/PlatformType.js'
+import * as ViewletModuleId from '../src/parts/ViewletModuleId/ViewletModuleId.js'
 
 jest.unstable_mockModule('../src/parts/Command/Command.js', () => {
   return {
@@ -18,6 +19,15 @@ jest.unstable_mockModule('../src/parts/AuthWorker/AuthWorker.js', () => {
       throw new Error('not implemented')
     }),
     signOut: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+    getAccounts: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+    useAccount: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+    removeAccount: jest.fn(() => {
       throw new Error('not implemented')
     }),
   }
@@ -145,6 +155,49 @@ test('getUserInfo returns the public auth snapshot without the access token', ()
     userState: 'loggedIn',
     userSubscriptionPlan: 'pro',
     userUsedTokens: 42,
+  })
+})
+
+test('getUserInfo includes the current access token only when requested', async () => {
+  const state = ViewletLayout.create(19)
+  await ViewletLayout.setAuthState(state, { authAccessToken: 'token-19' })
+
+  expect(ViewletLayout.getUserInfo(state, { includeAccessToken: true })).toEqual({
+    authAccessToken: 'token-19',
+    authErrorMessage: '',
+    userName: '',
+    userState: 'loggedOut',
+    userSubscriptionPlan: '',
+    userUsedTokens: 0,
+  })
+  expect(ViewletLayout.getUserInfo(state)).not.toHaveProperty('authAccessToken')
+})
+
+test('account layout commands delegate selection and removal to auth worker', async () => {
+  // @ts-ignore
+  AuthWorker.getAccounts.mockResolvedValue([{ active: true, id: 'account-1' }])
+  // @ts-ignore
+  AuthWorker.useAccount.mockResolvedValue({ authAccessToken: 'token-2', userName: 'User Two', userState: 'loggedIn' })
+  // @ts-ignore
+  AuthWorker.removeAccount.mockResolvedValue({ authAccessToken: '', userName: '', userState: 'loggedOut' })
+
+  const accounts = await ViewletLayout.getAccounts()
+  const stateWithChat = { ...ViewletLayout.create(20), secondarySideBarId: 3, secondarySideBarView: ViewletModuleId.Chat }
+  const selected = await ViewletLayout.useAccount(stateWithChat, 'account-2')
+  const removed = await ViewletLayout.removeAccount(ViewletLayout.create(21), 'account-1')
+
+  expect(accounts).toEqual([{ active: true, id: 'account-1' }])
+  expect(AuthWorker.useAccount).toHaveBeenCalledWith('account-2')
+  expect(AuthWorker.removeAccount).toHaveBeenCalledWith('account-1')
+  expect(selected.newState).toMatchObject({ userName: 'User Two', userState: 'loggedIn' })
+  expect(removed.newState).toMatchObject({ userName: '', userState: 'loggedOut' })
+  expect(ChatViewWorker.invoke).toHaveBeenCalledWith('Chat.handleAuthStateChange', 3, {
+    authAccessToken: 'token-2',
+    authErrorMessage: '',
+    userName: 'User Two',
+    userState: 'loggedIn',
+    userSubscriptionPlan: '',
+    userUsedTokens: 0,
   })
 })
 

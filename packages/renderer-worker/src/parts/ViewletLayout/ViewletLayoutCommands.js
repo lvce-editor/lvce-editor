@@ -33,6 +33,7 @@ export const Commands = {
   setHash: ViewletLayout.setHash,
   getModuleId: ViewletLayout.getModuleId,
   getUserInfo: ViewletLayout.getUserInfo,
+  getAccounts: ViewletLayout.getAccounts,
 }
 
 export const CommandsWithSideEffects = {
@@ -111,6 +112,8 @@ export const CommandsWithSideEffects = {
   setUpdateState: ViewletLayout.setUpdateState,
   signIn: ViewletLayout.signIn,
   signOut: ViewletLayout.signOut,
+  useAccount: ViewletLayout.useAccount,
+  removeAccount: ViewletLayout.removeAccount,
   showActivityBar: ViewletLayout.showActivityBar,
   showE2eTests: ViewletLayout.showE2eTests,
   showMain: ViewletLayout.showMain,
