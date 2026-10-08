@@ -92,19 +92,25 @@ beforeEach(() => {
   Workspace.state.workspaceUri = ''
 })
 
-test('delays workspace progress and clears it when the operation finishes', async () => {
+test('delays workspace progress, updates its message, and clears it when the operation finishes', async () => {
   jest.useFakeTimers()
   const listener = jest.fn()
   GlobalEventBus.addListener('workspace.progress', listener)
 
   const id = Workspace.startProgress('Opening Remote Workspace…')
-  jest.advanceTimersByTime(199)
+  jest.advanceTimersByTime(200)
+  Workspace.updateProgress(id, 'Installing the LVCE Editor server…')
+  jest.advanceTimersByTime(99)
   await Promise.resolve()
   expect(listener).not.toHaveBeenCalled()
 
   jest.advanceTimersByTime(1)
   await Promise.resolve()
-  expect(listener).toHaveBeenCalledWith('Opening Remote Workspace…')
+  expect(listener).toHaveBeenCalledWith('Installing the LVCE Editor server…')
+
+  Workspace.updateProgress(id, 'Starting the LVCE Editor server…')
+  await Promise.resolve()
+  expect(listener).toHaveBeenLastCalledWith('Starting the LVCE Editor server…')
 
   Workspace.endProgress(id)
   await Promise.resolve()
@@ -118,17 +124,32 @@ test('ignores completion from a superseded workspace operation', async () => {
   GlobalEventBus.addListener('workspace.progress', listener)
 
   const firstId = Workspace.startProgress('First')
-  jest.advanceTimersByTime(200)
+  jest.advanceTimersByTime(300)
   await Promise.resolve()
   const secondId = Workspace.startProgress('Second')
+  Workspace.updateProgress(firstId, 'Stale stage')
   Workspace.endProgress(firstId)
-  jest.advanceTimersByTime(200)
+  jest.advanceTimersByTime(300)
   await Promise.resolve()
 
   expect(listener.mock.calls).toEqual([['First'], [''], ['Second']])
   Workspace.endProgress(secondId)
   await Promise.resolve()
   expect(listener).toHaveBeenLastCalledWith('')
+  jest.useRealTimers()
+})
+
+test('does not show progress when a workspace operation completes quickly', async () => {
+  jest.useFakeTimers()
+  const listener = jest.fn()
+  GlobalEventBus.addListener('workspace.progress', listener)
+
+  const id = Workspace.startProgress('Opening Remote Workspace…')
+  Workspace.endProgress(id)
+  jest.advanceTimersByTime(300)
+  await Promise.resolve()
+
+  expect(listener).not.toHaveBeenCalled()
   jest.useRealTimers()
 })
 

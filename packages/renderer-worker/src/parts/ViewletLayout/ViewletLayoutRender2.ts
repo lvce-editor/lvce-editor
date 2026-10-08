@@ -97,6 +97,7 @@ const renderDom = {
       oldState.browserFullWidth === newState.browserFullWidth &&
       oldState.browserTabDragSource === newState.browserTabDragSource &&
       oldState.secondaryPreviewPlacement === newState.secondaryPreviewPlacement &&
+      oldState.workspaceProgressMessage === newState.workspaceProgressMessage &&
       oldState.mainVisible === newState.mainVisible &&
       oldState.mainId === newState.mainId &&
       oldState.titleBarVisible === newState.titleBarVisible &&

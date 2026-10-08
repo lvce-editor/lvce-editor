@@ -6,3 +6,5 @@ export * from './ViewletLayoutKeyBindings.js'
 export * from './ViewletLayoutMenuEntries.js'
 export * from './ViewletLayoutName.js'
 export * from './ViewletLayoutRender2.ts'
+
+export const workspaceProgressEvent = 'workspace.progress'
