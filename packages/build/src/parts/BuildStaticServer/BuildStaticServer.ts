@@ -62,6 +62,10 @@ const copyStaticFiles = async ({ commitHash }) => {
     from: 'static/auth/callback.html',
     to: 'packages/build/.tmp/server/static-server/static/auth/callback.html',
   })
+  await Copy.copyFile({
+    from: 'static/auth/callback.js',
+    to: 'packages/build/.tmp/server/static-server/static/auth/callback.js',
+  })
   await Replace.replace({
     path: `packages/build/.tmp/server/static-server/static/index.html`,
     occurrence: '/packages/renderer-worker/node_modules/@lvce-editor/renderer-process/dist/rendererProcessMain.js',

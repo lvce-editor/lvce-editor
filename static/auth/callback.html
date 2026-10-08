@@ -8,12 +8,13 @@
     <title>Signing In...</title>
   </head>
   <body>
-    <script>
-      // TODO maybe use same code as for normal frontend
-      // in normal frontend, check for url parameters, then redirect
+    <script type="module">
+      import { getSafeReturnUrl } from './callback.js'
+
       const databaseName = 'auth-worker'
       const objectStoreName = 'auth'
       const callbackKey = 'oidcCallbackUrl'
+      const returnUrlKey = 'pendingOidcReturnUrl'
 
       const persistCallbackUrl = async (callbackUrl) => {
         if (typeof indexedDB === 'undefined') {
@@ -40,9 +41,32 @@
         })
       }
 
+      const getReturnUrl = async () => {
+        if (typeof indexedDB === 'undefined') {
+          return ''
+        }
+        return new Promise((resolve, reject) => {
+          const request = indexedDB.open(databaseName, 1)
+          request.addEventListener('success', () => {
+            const database = request.result
+            const transaction = database.transaction(objectStoreName, 'readonly')
+            const getRequest = transaction.objectStore(objectStoreName).get(returnUrlKey)
+            getRequest.addEventListener('success', () => resolve(getRequest.result || ''))
+            getRequest.addEventListener('error', reject)
+          })
+          request.addEventListener('error', reject)
+        })
+      }
+
       const finish = async () => {
         await persistCallbackUrl(window.location.href)
-        window.location.replace('/')
+        let returnUrl = ''
+        try {
+          returnUrl = await getReturnUrl()
+        } catch {
+          // Use the app's deployment path when no saved return URL is available.
+        }
+        window.location.replace(getSafeReturnUrl(returnUrl, window.location.href))
       }
 
       void finish()
