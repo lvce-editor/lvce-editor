@@ -487,6 +487,7 @@ export const loadContent = (state: LayoutState, savedState: any): LayoutState =>
   const { windowWidth, windowHeight } = bounds
   const sideBarLocation = getSideBarLocationType()
   const restore = savedState?.restore !== false
+  const standaloneMobile = restore && bounds.isStandalone === true && windowWidth <= 600
   const stateToRestore = restore ? savedState : undefined
   const {
     panelHeight,
@@ -505,8 +506,9 @@ export const loadContent = (state: LayoutState, savedState: any): LayoutState =>
   } = getSavedPoints(stateToRestore)
   const savedSecondaryView = getSavedSecondarySideBarView(stateToRestore)
   const savedPrimaryView = getSavedSideBarView(stateToRestore)
-  const savedView =
-    savedPrimaryView === defaultSecondarySideBarViewletId && savedSecondaryView === defaultSecondarySideBarViewletId
+  const savedView = standaloneMobile
+    ? defaultSecondarySideBarViewletId
+    : savedPrimaryView === defaultSecondarySideBarViewletId && savedSecondaryView === defaultSecondarySideBarViewletId
       ? ViewletModuleId.Explorer
       : savedPrimaryView
   const savedSecondaryViewlets = getSavedSecondarySideBarViewlets(stateToRestore)
@@ -530,7 +532,7 @@ export const loadContent = (state: LayoutState, savedState: any): LayoutState =>
 
     sideBarMinWidth: 170,
     secondarySideBarMinWidth: 220,
-    sideBarVisible,
+    sideBarVisible: standaloneMobile || sideBarVisible,
     sideBarWidth,
     secondarySideBarVisible,
     secondarySideBarWidth,
@@ -581,7 +583,7 @@ export const loadContent = (state: LayoutState, savedState: any): LayoutState =>
   }
   // TODO get side bar min width from preferences
   const newState = getPoints(intermediateState, sideBarLocation)
-  if (!restore || savedState?.aiNativeLayout !== true) {
+  if (!restore || (savedState?.aiNativeLayout !== true && !standaloneMobile)) {
     return newState
   }
   return getPoints(
