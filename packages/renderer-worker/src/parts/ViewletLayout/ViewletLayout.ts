@@ -2814,6 +2814,7 @@ export const getUserInfo = (state: LayoutState, options: { readonly includeAcces
 }
 
 export const getAccounts = async () => AuthWorker.getAccounts()
+getAccounts.returnValue = true
 
 const mergeAuthState = (state: LayoutState, authState) => {
   const authAccessToken = typeof authState?.authAccessToken === 'string' ? authState.authAccessToken : authState?.accessToken

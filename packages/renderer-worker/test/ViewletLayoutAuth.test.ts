@@ -187,6 +187,7 @@ test('account layout commands delegate selection and removal to auth worker', as
   const removed = await ViewletLayout.removeAccount(ViewletLayout.create(21), 'account-1')
 
   expect(accounts).toEqual([{ active: true, id: 'account-1' }])
+  expect(ViewletLayout.getAccounts.returnValue).toBe(true)
   expect(AuthWorker.useAccount).toHaveBeenCalledWith('account-2')
   expect(AuthWorker.removeAccount).toHaveBeenCalledWith('account-1')
   expect(selected.newState).toMatchObject({ userName: 'User Two', userState: 'loggedIn' })
