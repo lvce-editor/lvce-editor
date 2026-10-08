@@ -160,7 +160,7 @@ const applyRuntimeConfigOverrides = async ({ root }: any): Promise<void> => {
   }
   const config = JSON.parse(configElement[1])
   config.platform = 'web'
-  const serializedConfig = JSON.stringify(config).replaceAll('<', '\\u003c').replaceAll('>', '\\u003e').replaceAll('&', '\\u0026')
+  const serializedConfig = JSON.stringify(config, null, 2).replaceAll('<', '\\u003c').replaceAll('>', '\\u003e').replaceAll('&', '\\u0026')
   const newContent = content.replace(configElement[0], `<script id="Config" type="application/json">${serializedConfig}</script>`)
   await writeFile(indexHtmlPath, newContent)
 }
