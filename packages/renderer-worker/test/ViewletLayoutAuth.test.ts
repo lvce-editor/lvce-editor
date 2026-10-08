@@ -24,6 +24,12 @@ jest.unstable_mockModule('../src/parts/AuthWorker/AuthWorker.js', () => {
     getAccounts: jest.fn(() => {
       throw new Error('not implemented')
     }),
+    getConnectedAccounts: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+    disconnectConnectedAccount: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
     useAccount: jest.fn(() => {
       throw new Error('not implemented')
     }),
@@ -177,6 +183,8 @@ test('account layout commands delegate selection and removal to auth worker', as
   // @ts-ignore
   AuthWorker.getAccounts.mockResolvedValue([{ active: true, id: 'account-1' }])
   // @ts-ignore
+  AuthWorker.getConnectedAccounts.mockResolvedValue([])
+  // @ts-ignore
   AuthWorker.useAccount.mockResolvedValue({ authAccessToken: 'token-2', userName: 'User Two', userState: 'loggedIn' })
   // @ts-ignore
   AuthWorker.removeAccount.mockResolvedValue({ authAccessToken: '', userName: '', userState: 'loggedOut' })
@@ -200,6 +208,37 @@ test('account layout commands delegate selection and removal to auth worker', as
     userSubscriptionPlan: '',
     userUsedTokens: 0,
   })
+})
+
+test('connected provider accounts are listed without secrets and disconnect through auth worker', async () => {
+  // @ts-ignore
+  AuthWorker.getAccounts.mockResolvedValue([{ active: true, id: 'account-1' }])
+  // @ts-ignore
+  AuthWorker.getConnectedAccounts.mockResolvedValue([
+    { apiKey: 'must not be returned', id: 'openrouter', name: 'OpenRouter', provider: 'OpenRouter' },
+  ])
+  // @ts-ignore
+  AuthWorker.disconnectConnectedAccount.mockResolvedValue(undefined)
+
+  const accounts = await ViewletLayout.getAccounts()
+  await ViewletLayout.disconnectConnectedAccount('openrouter')
+
+  expect(accounts).toEqual([
+    { active: true, id: 'account-1' },
+    {
+      color: 'purple',
+      connectionId: 'openrouter',
+      displayName: 'OpenRouter',
+      email: 'Connected integration',
+      id: 'connection:openrouter',
+      kind: 'integration',
+      provider: 'OpenRouter',
+      signedIn: true,
+    },
+  ])
+  expect(accounts[1]).not.toHaveProperty('apiKey')
+  expect(AuthWorker.disconnectConnectedAccount).toHaveBeenCalledWith('openrouter')
+  expect(ViewletLayout.disconnectConnectedAccount.returnValue).toBe(true)
 })
 
 test('getUserInfo can omit auth access token and token usage', () => {

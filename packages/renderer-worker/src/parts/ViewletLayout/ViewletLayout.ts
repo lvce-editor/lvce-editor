@@ -2820,8 +2820,28 @@ export const getUserInfo = (state: LayoutState, options: { readonly includeAcces
   return toFilteredUserInfo(state, options)
 }
 
-export const getAccounts = async () => AuthWorker.getAccounts()
+export const getAccounts = async () => {
+  const [accounts, connections] = await Promise.all([AuthWorker.getAccounts(), AuthWorker.getConnectedAccounts()])
+  return [
+    ...accounts,
+    ...connections.map((connection) => ({
+      color: 'purple',
+      connectionId: connection.id,
+      displayName: connection.name,
+      email: 'Connected integration',
+      id: `connection:${connection.id}`,
+      kind: 'integration',
+      provider: connection.provider,
+      signedIn: true,
+    })),
+  ]
+}
 getAccounts.returnValue = true
+
+export const disconnectConnectedAccount = async (provider: string): Promise<void> => {
+  await AuthWorker.disconnectConnectedAccount(provider)
+}
+disconnectConnectedAccount.returnValue = true
 
 const mergeAuthState = (state: LayoutState, authState) => {
   const authAccessToken = typeof authState?.authAccessToken === 'string' ? authState.authAccessToken : authState?.accessToken

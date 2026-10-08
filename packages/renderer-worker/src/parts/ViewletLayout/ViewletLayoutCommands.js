@@ -35,6 +35,7 @@ export const Commands = {
   getModuleId: ViewletLayout.getModuleId,
   getUserInfo: ViewletLayout.getUserInfo,
   getAccounts: ViewletLayout.getAccounts,
+  disconnectConnectedAccount: ViewletLayout.disconnectConnectedAccount,
 }
 
 export const CommandsWithSideEffects = {
