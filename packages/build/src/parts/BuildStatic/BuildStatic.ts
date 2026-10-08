@@ -44,18 +44,15 @@ const copyTestWorkerFiles = async ({ commitHash }) => {
   // })
 }
 
-const copyAuthCallbackFile = async ({ pathPrefix }) => {
+const copyAuthCallbackFile = async () => {
   await Copy.copyFile({
     from: 'static/auth/callback.html',
     to: 'packages/build/.tmp/dist/auth/callback.html',
   })
-  if (pathPrefix) {
-    await Replace.replace({
-      path: 'packages/build/.tmp/dist/auth/callback.html',
-      occurrence: `window.location.replace('/')`,
-      replacement: `window.location.replace('${pathPrefix}/')`,
-    })
-  }
+  await Copy.copyFile({
+    from: 'static/auth/callback.js',
+    to: 'packages/build/.tmp/dist/auth/callback.js',
+  })
 }
 
 const copyStaticFiles = async ({ pathPrefix, ignoreIconTheme, commitHash }) => {
@@ -108,7 +105,7 @@ const copyStaticFiles = async ({ pathPrefix, ignoreIconTheme, commitHash }) => {
     from: 'static/index.html',
     to: `packages/build/.tmp/dist/index.html`,
   })
-  await copyAuthCallbackFile({ pathPrefix })
+  await copyAuthCallbackFile()
   await Replace.replace({
     path: `packages/build/.tmp/dist/index.html`,
     occurrence: '282e2f" />',
