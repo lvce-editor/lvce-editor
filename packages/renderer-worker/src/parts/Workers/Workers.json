@@ -129,7 +129,7 @@
   {
     "id": "accountsView",
     "fileName": "accountsWorkerMain.js",
-    "contentSecurityPolicy": ["default-src 'none'"],
+    "contentSecurityPolicy": ["default-src 'none'", "connect-src https://avatars.githubusercontent.com"],
     "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/accounts-view/dist/accountsWorkerMain.js",
     "productionPath": "/packages/accounts-view/dist/accountsWorkerMain.js",
     "settingName": "develop.accountsViewWorkerPath",

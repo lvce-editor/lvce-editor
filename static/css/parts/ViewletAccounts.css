@@ -57,6 +57,11 @@
   width: 36px;
 }
 
+.AccountAvatar[src] {
+  object-fit: cover;
+  overflow: hidden;
+}
+
 .AccountDetails {
   flex: 1;
 }
