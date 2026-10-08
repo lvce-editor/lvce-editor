@@ -21,7 +21,7 @@ import * as WorkspaceConnection from '../WorkspaceConnection/WorkspaceConnection
 import { state } from '../WorkspaceState/WorkspaceState.js'
 
 const pathSeparator = '/'
-const workspaceProgressDelay = 200
+const workspaceProgressDelay = 300
 
 let nextWorkspaceProgressId = 0
 let currentWorkspaceProgress
@@ -50,7 +50,7 @@ export const startProgress = (message) => {
         return
       }
       progress.visible = true
-      emitWorkspaceProgress(message)
+      emitWorkspaceProgress(progress.message)
     }, workspaceProgressDelay),
     visible: false,
   }
@@ -67,6 +67,16 @@ export const endProgress = (id) => {
   currentWorkspaceProgress = undefined
   if (wasVisible) {
     emitWorkspaceProgress('')
+  }
+}
+
+export const updateProgress = (id, message) => {
+  if (!currentWorkspaceProgress || currentWorkspaceProgress.id !== id) {
+    return
+  }
+  currentWorkspaceProgress.message = message
+  if (currentWorkspaceProgress.visible) {
+    emitWorkspaceProgress(message)
   }
 }
 

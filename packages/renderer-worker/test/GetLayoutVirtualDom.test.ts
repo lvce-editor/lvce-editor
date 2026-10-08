@@ -86,6 +86,43 @@ test('getLayoutVirtualDom renders sashes with tabIndex -1', () => {
   expect(dom).toContainEqual(expect.objectContaining({ className: 'PreviewAreaContent', childCount: 1 }))
 })
 
+test('getLayoutVirtualDom overlays the workspace with remote progress', () => {
+  const state = {
+    activityBarVisible: false,
+    browserFullWidth: undefined,
+    mainVisible: true,
+    mainId: 1,
+    mountedViewletsBySource: {},
+    panelSashVisible: false,
+    panelVisible: false,
+    panelId: -1,
+    previewSashVisible: false,
+    previewVisible: false,
+    previewId: -1,
+    secondaryPreviewSashVisible: false,
+    secondaryPreviewVisible: false,
+    secondaryPreviewId: -1,
+    secondarySideBarVisible: false,
+    secondarySideBarId: -1,
+    sideBarLocation: SideBarLocationType.Left,
+    sideBarSashVisible: false,
+    sideBarVisible: false,
+    sideBarId: -1,
+    statusBarVisible: false,
+    statusBarId: -1,
+    titleBarVisible: false,
+    titleBarId: -1,
+    widgetReferences: [],
+    workspaceProgressMessage: 'Installing the LVCE Editor server…',
+  }
+  // @ts-ignore
+  const dom = getLayoutVirtualDom(state)
+  const overlay = dom.find((node) => node.className === 'WorkspaceProgressOverlay')
+
+  expect(overlay).toMatchObject({ role: 'status', ariaLive: 'polite', childCount: 1 })
+  expect(dom.map((node) => node.text).filter(Boolean)).toEqual(['Loading Remote SSH Workspace…', 'Installing the LVCE Editor server…'])
+})
+
 test('getLayoutVirtualDom does not render the preview close button when preview is hidden', () => {
   const state = {
     activityBarVisible: false,

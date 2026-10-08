@@ -254,6 +254,13 @@ export const create = (id: number): LayoutState => {
   }
 }
 
+export const handleWorkspaceProgress = (state: LayoutState, message: string): LayoutState => {
+  if (state.workspaceProgressMessage === message) {
+    return state
+  }
+  return { ...state, workspaceProgressMessage: message }
+}
+
 export const setMountedViewlets = (state: LayoutState, sourceUid: number, viewletUids: readonly number[]): LayoutStateResult => {
   Assert.number(sourceUid)
   Assert.array(viewletUids)

@@ -4,6 +4,7 @@ import * as SideBarLocationType from '../SideBarLocationType/SideBarLocationType
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.js'
 import * as PreviewOrientation from '../PreviewOrientation/PreviewOrientation.js'
 import type { LayoutState } from '../ViewletLayout/LayoutState.ts'
+import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
 const getMainContentsVirtualDom = (state: LayoutState) => {
   const { mainVisible, mainId, panelSashVisible, panelVisible, panelId } = state
@@ -574,6 +575,28 @@ export const getLayoutVirtualDom = (state: LayoutState) => {
       role: 'region',
       ariaLabel: 'Move browser tab below editor',
     })
+  }
+
+  if (state.workspaceProgressMessage) {
+    workbenchChildCount++
+    dom.push(
+      {
+        type: VirtualDomElements.Div,
+        className: 'WorkspaceProgressOverlay',
+        role: 'status',
+        ariaLive: 'polite',
+        childCount: 1,
+      },
+      {
+        type: VirtualDomElements.Div,
+        className: 'WorkspaceProgressMessage',
+        childCount: 2,
+      },
+      { type: VirtualDomElements.Span, className: 'WorkspaceProgressTitle', childCount: 1 },
+      text('Loading Remote SSH Workspace…'),
+      { type: VirtualDomElements.Span, className: 'WorkspaceProgressStage', childCount: 1 },
+      text(state.workspaceProgressMessage),
+    )
   }
 
   // Update workbench childCount

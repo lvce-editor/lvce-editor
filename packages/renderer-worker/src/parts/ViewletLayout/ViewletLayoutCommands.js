@@ -6,6 +6,7 @@ import * as ResetLayout from '../ResetLayout/ResetLayout.ts'
 // prettier-ignore
 export const Commands = {
   handleActivityBarWheel: AiNativeLayout.handleActivityBarWheel,
+  handleWorkspaceProgress: ViewletLayout.handleWorkspaceProgress,
   beginBrowserTabDrag: ViewletLayout.beginBrowserTabDrag,
   endBrowserTabDrag: ViewletLayout.endBrowserTabDrag,
   handleBrowserTabDragOver: ViewletLayout.handleBrowserTabDragOver,
