@@ -1,4 +1,4 @@
-import { readdir } from 'fs/promises'
+import { readFile, readdir } from 'fs/promises'
 import * as BundleCss from '../BundleCss/BundleCss.ts'
 import * as BundleWorkers from '../BundleWorkers/BundleWorkers.ts'
 import * as AddRuntimeConfigToIndexHtml from '../AddRuntimeConfigToIndexHtml/AddRuntimeConfigToIndexHtml.ts'
@@ -62,9 +62,10 @@ const copyStaticFiles = async ({ commitHash }) => {
     from: 'static/auth/callback.html',
     to: 'packages/build/.tmp/server/static-server/static/auth/callback.html',
   })
-  await Copy.copyFile({
-    from: 'static/auth/callback.js',
-    to: 'packages/build/.tmp/server/static-server/static/auth/callback.js',
+  await Replace.replace({
+    path: 'packages/build/.tmp/server/static-server/static/auth/callback.html',
+    occurrence: '/* CALLBACK_RETURN_URL_HELPER */',
+    replacement: await readFile('static/auth/callback.js', 'utf8'),
   })
   await Replace.replace({
     path: `packages/build/.tmp/server/static-server/static/index.html`,
