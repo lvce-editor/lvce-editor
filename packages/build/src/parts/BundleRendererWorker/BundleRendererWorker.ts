@@ -164,7 +164,9 @@ export const bundleRendererWorker = async ({ cachePath, platform, commitHash, ve
       })
     }
     await BundleJs.bundleJs({
+      codeSplitting: true,
       cwd: cachePath,
+      entryFileName: 'rendererWorkerMain.js',
       from: `./src/rendererWorkerMain.ts`,
       external: [/^node:/, /^electron(?:\/|$)/],
       modulePaths: [Path.absolute('packages/renderer-worker/node_modules')],
