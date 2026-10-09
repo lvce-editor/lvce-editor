@@ -25,6 +25,7 @@ const workspaceProgressDelay = 300
 
 let nextWorkspaceProgressId = 0
 let currentWorkspaceProgress
+const cancelledWorkspaceProgressIds = new Set()
 
 const clearWorkspaceProgressTimer = () => {
   if (currentWorkspaceProgress?.timer) {
@@ -32,14 +33,17 @@ const clearWorkspaceProgressTimer = () => {
   }
 }
 
-const emitWorkspaceProgress = (message) => {
-  void GlobalEventBus.emitEvent('workspace.progress', message).catch(() => {})
+const emitWorkspaceProgress = (id, message) => {
+  void GlobalEventBus.emitEvent('workspace.progress', { id, message }).catch(() => {})
 }
 
 export const startProgress = (message) => {
   clearWorkspaceProgressTimer()
+  if (currentWorkspaceProgress) {
+    cancelledWorkspaceProgressIds.add(currentWorkspaceProgress.id)
+  }
   if (currentWorkspaceProgress?.visible) {
-    emitWorkspaceProgress('')
+    emitWorkspaceProgress(currentWorkspaceProgress.id, '')
   }
   const id = ++nextWorkspaceProgressId
   const progress = {
@@ -50,7 +54,7 @@ export const startProgress = (message) => {
         return
       }
       progress.visible = true
-      emitWorkspaceProgress(progress.message)
+      emitWorkspaceProgress(progress.id, progress.message)
     }, workspaceProgressDelay),
     visible: false,
   }
@@ -59,6 +63,7 @@ export const startProgress = (message) => {
 }
 
 export const endProgress = (id) => {
+  cancelledWorkspaceProgressIds.delete(id)
   if (!currentWorkspaceProgress || currentWorkspaceProgress.id !== id) {
     return
   }
@@ -66,7 +71,7 @@ export const endProgress = (id) => {
   clearWorkspaceProgressTimer()
   currentWorkspaceProgress = undefined
   if (wasVisible) {
-    emitWorkspaceProgress('')
+    emitWorkspaceProgress(id, '')
   }
 }
 
@@ -76,8 +81,25 @@ export const updateProgress = (id, message) => {
   }
   currentWorkspaceProgress.message = message
   if (currentWorkspaceProgress.visible) {
-    emitWorkspaceProgress(message)
+    emitWorkspaceProgress(id, message)
   }
+}
+
+export const cancelProgress = (id) => {
+  if (!currentWorkspaceProgress || currentWorkspaceProgress.id !== id) {
+    return
+  }
+  cancelledWorkspaceProgressIds.add(id)
+  const wasVisible = currentWorkspaceProgress.visible
+  clearWorkspaceProgressTimer()
+  currentWorkspaceProgress = undefined
+  if (wasVisible) {
+    emitWorkspaceProgress(id, '')
+  }
+}
+
+export const isProgressCancelled = (id) => {
+  return cancelledWorkspaceProgressIds.has(id)
 }
 
 const toWorkspaceUri = (path) => {

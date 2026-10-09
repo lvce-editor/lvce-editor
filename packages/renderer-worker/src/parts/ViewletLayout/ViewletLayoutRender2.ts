@@ -97,6 +97,7 @@ const renderDom = {
       oldState.browserFullWidth === newState.browserFullWidth &&
       oldState.browserTabDragSource === newState.browserTabDragSource &&
       oldState.secondaryPreviewPlacement === newState.secondaryPreviewPlacement &&
+      oldState.workspaceProgressId === newState.workspaceProgressId &&
       oldState.workspaceProgressMessage === newState.workspaceProgressMessage &&
       oldState.mainVisible === newState.mainVisible &&
       oldState.mainId === newState.mainId &&
@@ -237,6 +238,10 @@ const renderCss = {
 
 export const renderEventListeners = () => {
   return [
+    {
+      name: DomEventListenersFunctions.HandleClickCancelWorkspaceProgress,
+      params: ['handleCancelWorkspaceProgress'],
+    },
     { name: 'handleActivityBarWheel', params: ['handleActivityBarWheel', 'event.deltaY'] },
     { name: 'handleBrowserTabDragOver', params: ['handleBrowserTabDragOver'], preventDefault: true, stopPropagation: true },
     { name: 'handleBrowserTabDrop', params: ['handleBrowserTabDrop', 'event.clientX', 'event.clientY'], preventDefault: true, stopPropagation: true },

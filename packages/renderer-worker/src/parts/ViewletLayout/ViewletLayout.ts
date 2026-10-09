@@ -33,6 +33,7 @@ import * as RenderMainAreaPending from '../RenderMainAreaPending/RenderMainAreaP
 import { reorderCommands } from '../ReorderCommands/ReorderCommands.js'
 import * as SashType from '../SashType/SashType.js'
 import * as SaveState from '../SaveState/SaveState.js'
+import * as Workspace from '../Workspace/Workspace.js'
 import * as SideBarLocationType from '../SideBarLocationType/SideBarLocationType.js'
 import * as SourceControlWorker from '../SourceControlWorker/SourceControlWorker.js'
 import * as StatusBarWorker from '../StatusBarWorker/StatusBarWorker.js'
@@ -47,7 +48,6 @@ import * as UpdateDynamicFocusContext from '../UpdateDynamicFocusContext/UpdateD
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
-import * as Workspace from '../Workspace/Workspace.js'
 import type { WorkspaceRefresh } from '../WorkspaceChanges/WorkspaceChanges.ts'
 import { getPoints } from './LayoutPoints.ts'
 import type { LayoutState, LayoutStateResult, SideBarFocusModeLayoutStateSnapshot } from './LayoutState.ts'
@@ -254,11 +254,22 @@ export const create = (id: number): LayoutState => {
   }
 }
 
-export const handleWorkspaceProgress = (state: LayoutState, message: string): LayoutState => {
-  if (state.workspaceProgressMessage === message) {
+export const handleWorkspaceProgress = (state: LayoutState, progress: { readonly id: number; readonly message: string }): LayoutState => {
+  if (state.workspaceProgressId === progress.id && state.workspaceProgressMessage === progress.message) {
     return state
   }
-  return { ...state, workspaceProgressMessage: message }
+  return {
+    ...state,
+    workspaceProgressId: progress.message ? progress.id : undefined,
+    workspaceProgressMessage: progress.message,
+  }
+}
+
+export const handleCancelWorkspaceProgress = (state: LayoutState): LayoutState => {
+  if (typeof state.workspaceProgressId === 'number') {
+    Workspace.cancelProgress(state.workspaceProgressId)
+  }
+  return state
 }
 
 export const setMountedViewlets = (state: LayoutState, sourceUid: number, viewletUids: readonly number[]): LayoutStateResult => {

@@ -11,6 +11,8 @@ export const Commands = {
   getUri: Workspace.getUri,
   hydrate: Workspace.hydrate,
   startProgress: Workspace.startProgress,
+  cancelProgress: Workspace.cancelProgress,
+  isProgressCancelled: Workspace.isProgressCancelled,
   updateProgress: Workspace.updateProgress,
   endProgress: Workspace.endProgress,
   setPath: Workspace.setPath,

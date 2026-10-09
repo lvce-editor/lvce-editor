@@ -106,19 +106,19 @@ test('delays workspace progress, updates its message, and clears it when the ope
 
   jest.advanceTimersByTime(1)
   await Promise.resolve()
-  expect(listener).toHaveBeenCalledWith('Installing the LVCE Editor server…')
+  expect(listener).toHaveBeenCalledWith({ id, message: 'Installing the LVCE Editor server…' })
 
   Workspace.updateProgress(id, 'Starting the LVCE Editor server…')
   await Promise.resolve()
-  expect(listener).toHaveBeenLastCalledWith('Starting the LVCE Editor server…')
+  expect(listener).toHaveBeenLastCalledWith({ id, message: 'Starting the LVCE Editor server…' })
 
   Workspace.endProgress(id)
   await Promise.resolve()
-  expect(listener).toHaveBeenLastCalledWith('')
+  expect(listener).toHaveBeenLastCalledWith({ id, message: '' })
   jest.useRealTimers()
 })
 
-test('ignores completion from a superseded workspace operation', async () => {
+test('cancels a superseded progress operation without affecting its replacement', async () => {
   jest.useFakeTimers()
   const listener = jest.fn()
   GlobalEventBus.addListener('workspace.progress', listener)
@@ -127,15 +127,35 @@ test('ignores completion from a superseded workspace operation', async () => {
   jest.advanceTimersByTime(300)
   await Promise.resolve()
   const secondId = Workspace.startProgress('Second')
+  expect(Workspace.isProgressCancelled(firstId)).toBe(true)
+  expect(Workspace.isProgressCancelled(secondId)).toBe(false)
   Workspace.updateProgress(firstId, 'Stale stage')
   Workspace.endProgress(firstId)
   jest.advanceTimersByTime(300)
   await Promise.resolve()
 
-  expect(listener.mock.calls).toEqual([['First'], [''], ['Second']])
+  expect(listener.mock.calls).toEqual([[{ id: firstId, message: 'First' }], [{ id: firstId, message: '' }], [{ id: secondId, message: 'Second' }]])
   Workspace.endProgress(secondId)
   await Promise.resolve()
-  expect(listener).toHaveBeenLastCalledWith('')
+  expect(listener).toHaveBeenLastCalledWith({ id: secondId, message: '' })
+  jest.useRealTimers()
+})
+
+test('cancelling progress hides the dialog and retains cancellation until it ends', async () => {
+  jest.useFakeTimers()
+  const listener = jest.fn()
+  GlobalEventBus.addListener('workspace.progress', listener)
+  const id = Workspace.startProgress('Connecting…')
+  jest.advanceTimersByTime(300)
+  await Promise.resolve()
+
+  Workspace.cancelProgress(id)
+
+  expect(listener).toHaveBeenLastCalledWith({ id, message: '' })
+  expect(Workspace.isProgressCancelled(id)).toBe(true)
+  expect(Workspace.isProgressCancelled(id)).toBe(true)
+  Workspace.endProgress(id)
+  expect(Workspace.isProgressCancelled(id)).toBe(false)
   jest.useRealTimers()
 })
 
