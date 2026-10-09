@@ -71,6 +71,8 @@ const main = async () => {
     throw new VError(error, `static export failed`)
   }
   const indexHtml = await ReadFile.readFile(join(tmpDir, 'dist', 'index.html'))
+  const chatIndexHtml = await ReadFile.readFile(join(tmpDir, 'dist', 'chat', 'index.html'))
+  assert.equal(chatIndexHtml, indexHtml, 'chat route should use the same processed application shell as the root route')
   assert.ok(!indexHtml.includes('startupAppearance'))
   const executableScripts = indexHtml.match(/<script\b[^>]*>/g)?.filter((tag) => !tag.includes('type="application/json"')) || []
   assert.equal(executableScripts.length, 1)
@@ -137,6 +139,8 @@ const main = async () => {
     serverRoot: Path.absolute('packages/build/.tmp/server'),
   })
   const pagesIndexHtml = await ReadFile.readFile(join(pagesRoot, 'dist', 'index.html'))
+  const pagesChatIndexHtml = await ReadFile.readFile(join(pagesRoot, 'dist', 'chat', 'index.html'))
+  assert.equal(pagesChatIndexHtml, pagesIndexHtml, 'prefixed chat route should use the same application shell as the root route')
   assert.ok(!pagesIndexHtml.includes('startupAppearance'))
   const pagesExecutableScripts = pagesIndexHtml.match(/<script\b[^>]*>/g)?.filter((tag) => !tag.includes('type="application/json"')) || []
   assert.equal(pagesExecutableScripts.length, 1)
@@ -182,6 +186,9 @@ const main = async () => {
     serverRoot: Path.absolute('packages/build/.tmp/server'),
   })
   const rootWebExtensions = JSON.parse(await ReadFile.readFile(join(rootPrefix, 'dist', rootPrefixResult.commitHash, 'config', 'webExtensions.json')))
+  const rootIndexHtml = await ReadFile.readFile(join(rootPrefix, 'dist', 'index.html'))
+  const rootChatIndexHtml = await ReadFile.readFile(join(rootPrefix, 'dist', 'chat', 'index.html'))
+  assert.equal(rootChatIndexHtml, rootIndexHtml, 'root chat route should use the same application shell as the root route')
   const rootChat2 = rootWebExtensions.find((extension) => extension.id === 'builtin.chat-view-2')
   assert.ok(rootChat2, 'root export should retain the builtin Chat 2 web extension')
   assert.equal(rootChat2.path, `/${rootPrefixResult.commitHash}/extensions/builtin.chat-view-2`)

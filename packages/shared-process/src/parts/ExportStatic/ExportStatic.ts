@@ -821,6 +821,9 @@ export const exportStatic = async ({
     })
     console.timeEnd('addTestFiles')
   }
+  const chatPath = Path.join(root, 'dist', 'chat')
+  await FileSystem.mkdir(chatPath)
+  await FileSystem.copyFile(Path.join(root, 'dist', 'index.html'), Path.join(chatPath, 'index.html'))
   return {
     commitHash,
   }
