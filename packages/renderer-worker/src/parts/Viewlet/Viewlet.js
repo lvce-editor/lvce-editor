@@ -383,19 +383,21 @@ export const resize = async (id, dimensions) => {
   Assert.number(id)
   Assert.object(dimensions)
   const instance = ViewletStates.getInstance(id)
-  if (!instance || !instance.factory || (!instance.factory.resize && !instance.factory?.Commands?.resize)) {
-    if (!instance) {
-      ViewletStates.setPendingResize(id, dimensions)
-      return []
-    }
-    console.warn('cannot resize', id)
+  if (!instance || !instance.factory) {
+    ViewletStates.setPendingResize(id, dimensions)
     return []
   }
   const resizeFn = instance.factory?.Commands?.resize || instance.factory.resize
   const oldState = instance.state
   let newState = oldState
   let commands = []
-  if (instance.factory.hasFunctionalResize) {
+  if (!resizeFn) {
+    if (instance.factory.hasFunctionalResize) {
+      console.warn('cannot resize', id)
+    }
+    newState = { ...oldState, ...dimensions }
+    commands = [['Viewlet.setBounds', id, dimensions.x, dimensions.y, dimensions.width, dimensions.height]]
+  } else if (instance.factory.hasFunctionalResize) {
     newState = await resizeFn(oldState, dimensions)
     if ('newState' in newState) {
       throw new Error(`functional resize not supported in ${instance.factory.name}`)
