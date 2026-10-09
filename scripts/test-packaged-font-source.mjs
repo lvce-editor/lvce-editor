@@ -4,7 +4,6 @@ import { mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { setTimeout as delay } from 'node:timers/promises'
-import WebSocket from 'ws'
 
 const electron = process.env.LVCE_ELECTRON_PATH
 assert.ok(electron, 'Set LVCE_ELECTRON_PATH to the packaged Electron executable')
@@ -53,9 +52,7 @@ try {
       '--password-store=basic',
       '--remote-debugging-port=0',
       `--user-data-dir=${directory}/chromium`,
-      project,
-      '--open',
-      'native-font.txt',
+      join(project, 'native-font.txt'),
     ],
     { env, detached: true },
   )
@@ -81,12 +78,12 @@ try {
   assert.ok(target, output)
   socket = new WebSocket(target.webSocketDebuggerUrl)
   await new Promise((resolve, reject) => {
-    socket.once('open', resolve)
-    socket.once('error', reject)
+    socket.addEventListener('open', resolve, { once: true })
+    socket.addEventListener('error', reject, { once: true })
   })
   const fontResponses = []
-  socket.on('message', (bytes) => {
-    const message = JSON.parse(bytes.toString())
+  socket.addEventListener('message', (event) => {
+    const message = JSON.parse(event.data)
     if (message.id) {
       const request = pending.get(message.id)
       pending.delete(message.id)
