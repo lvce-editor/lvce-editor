@@ -221,6 +221,35 @@ test('AI-native layout is restored while keeping the IDE layout available to ret
   )
 })
 
+test('a mobile standalone launch opens Chat 2 in the AI-native layout', () => {
+  const restored = ViewletLayout.loadContent(ViewletLayout.create(2), {
+    Layout: { bounds: { isStandalone: true, windowWidth: 390, windowHeight: 844 } },
+  })
+
+  expect(restored).toEqual(
+    expect.objectContaining({
+      aiNativeLayout: true,
+      sideBarFocusMode: true,
+      sideBarView: 'chat2.views.chat',
+      sideBarVisible: true,
+      sideBarFocusModeLayout: expect.objectContaining({
+        mainVisible: true,
+        sideBarVisible: true,
+        sideBarWidth: expect.any(Number),
+      }),
+    }),
+  )
+})
+
+test('standalone launches on desktop retain the IDE layout', () => {
+  const restored = ViewletLayout.loadContent(ViewletLayout.create(2), {
+    Layout: { bounds: { isStandalone: true, windowWidth: 1200, windowHeight: 800 } },
+  })
+
+  expect(restored.aiNativeLayout).toBeFalsy()
+  expect(restored.sideBarView).toBe('Explorer')
+})
+
 test.each([
   ['older saved state', {}],
   ['restore false', { aiNativeLayout: true, restore: false }],

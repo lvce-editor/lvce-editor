@@ -97,9 +97,18 @@ const main = async () => {
   const chat2 = webExtensions.find((extension) => extension.id === 'builtin.chat-view-2')
   assert.ok(chat2, 'static export should retain the builtin Chat 2 web extension')
   assert.equal(chat2.path, `/test/${commitHash}/extensions/builtin.chat-view-2`)
-  assert.ok(webExtensions.some((extension) => extension.id === 'builtin.chat'), 'static export should retain other builtin web extensions')
-  assert.ok(webExtensions.some((extension) => extension.id === 'test'), 'static export should include an added browser extension')
-  assert.ok(webExtensions.some((extension) => extension.id === 'test.second-extension'), 'static export should include multiple added browser extensions')
+  assert.ok(
+    webExtensions.some((extension) => extension.id === 'builtin.chat'),
+    'static export should retain other builtin web extensions',
+  )
+  assert.ok(
+    webExtensions.some((extension) => extension.id === 'test'),
+    'static export should include an added browser extension',
+  )
+  assert.ok(
+    webExtensions.some((extension) => extension.id === 'test.second-extension'),
+    'static export should include multiple added browser extensions',
+  )
   const chat2Manifest = JSON.parse(await ReadFile.readFile(join(tmpDir, 'dist', commitHash, 'extensions', 'builtin.chat-view-2', 'extension.json')))
   const chat2Assets = [
     chat2Manifest.browser,
@@ -141,10 +150,21 @@ const main = async () => {
   assert.equal(pagesRuntimeConfig.platform, 'web')
   assert.equal(pagesRuntimeConfig.assetDir, `/lvce-editor/${pagesResult.commitHash}`)
   assert.equal(pagesRuntimeConfig.rendererWorkerUrl, `/lvce-editor/${pagesResult.commitHash}/packages/renderer-worker/dist/rendererWorkerMain.js`)
-  assert.ok(Object.values(pagesRuntimeConfig.workerUrls as Record<string, string>).every((url) => url.startsWith(`/lvce-editor/${pagesResult.commitHash}/`)))
+  assert.ok(
+    Object.values(pagesRuntimeConfig.workerUrls as Record<string, string>).every((url) => url.startsWith(`/lvce-editor/${pagesResult.commitHash}/`)),
+  )
   await ReadFile.readFile(join(pagesRoot, 'dist', pagesResult.commitHash, 'packages/renderer-worker/dist/rendererWorkerMain.js'))
   await ReadFile.readFile(join(pagesRoot, 'dist', pagesResult.commitHash, 'css', 'App.css'))
-  await ReadFile.readFile(join(pagesRoot, 'dist', pagesResult.commitHash, 'manifest.json'))
+  const pagesManifest = JSON.parse(await ReadFile.readFile(join(pagesRoot, 'dist', pagesResult.commitHash, 'manifest.json')))
+  assert.equal(pagesManifest.start_url, '/lvce-editor/')
+  assert.equal(pagesManifest.scope, '/lvce-editor/')
+  assert.equal(pagesManifest.display, 'standalone')
+  assert.deepEqual(
+    pagesManifest.icons.map(({ src }) => src),
+    [`/lvce-editor/${pagesResult.commitHash}/icons/pwa-icon-192.png`, `/lvce-editor/${pagesResult.commitHash}/icons/pwa-icon-512.png`],
+  )
+  await ReadFile.readFile(join(pagesRoot, 'dist', pagesResult.commitHash, 'icons', 'pwa-icon-192.png'))
+  await ReadFile.readFile(join(pagesRoot, 'dist', pagesResult.commitHash, 'icons', 'pwa-icon-512.png'))
   await ReadFile.readFile(join(pagesRoot, 'dist', pagesResult.commitHash, 'icons', 'extensionDefaultIcon.png'))
   await ReadFile.readFile(join(pagesRoot, 'dist', pagesResult.commitHash, 'config', 'onLoadCommands.json'))
   const pagesWebExtensions = JSON.parse(await ReadFile.readFile(join(pagesRoot, 'dist', pagesResult.commitHash, 'config', 'webExtensions.json')))

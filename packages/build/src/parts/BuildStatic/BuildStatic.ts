@@ -101,6 +101,11 @@ const copyStaticFiles = async ({ pathPrefix, ignoreIconTheme, commitHash }) => {
       occurrence: '"start_url": "/"',
       replacement: `"start_url": "${pathPrefix}/"`,
     })
+    await Replace.replace({
+      path: `packages/build/.tmp/dist/${commitHash}/manifest.json`,
+      occurrence: '"scope": "/"',
+      replacement: `"scope": "${pathPrefix}/"`,
+    })
   }
   await Copy.copyFile({
     from: 'static/index.html',
