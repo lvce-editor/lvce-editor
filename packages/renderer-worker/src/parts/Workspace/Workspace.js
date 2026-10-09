@@ -1,6 +1,7 @@
 import * as Assert from '../Assert/Assert.ts'
 import * as Character from '../Character/Character.js'
 import * as Command from '../Command/Command.js'
+import * as ExtensionHostCommands from '../ExtensionHost/ExtensionHostCommands.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as FileSystemProtocol from '../FileSystemProtocol/FileSystemProtocol.js'
 import * as GetResolvedRoot from '../GetResolvedRoot/GetResolvedRoot.js'
@@ -23,6 +24,7 @@ import { state } from '../WorkspaceState/WorkspaceState.js'
 const pathSeparator = '/'
 const workspaceProgressDelay = 300
 
+let workspaceChangeId = 0
 let nextWorkspaceProgressId = 0
 let currentWorkspaceProgress
 const cancelledWorkspaceProgressIds = new Set()
@@ -134,12 +136,18 @@ const validateLocalPath = async (path) => {
  */
 export const setPath = async (path) => {
   Assert.string(path)
+  if (GetProtocol.getProtocol(path) === 'remote-ssh') {
+    return setUri(path)
+  }
+  const changeId = ++workspaceChangeId
   await validateLocalPath(path)
+  if (changeId !== workspaceChangeId) return
   await updateWindowTitle(path, pathSeparator)
   const workspaceChanged = path !== state.workspacePath
   if (workspaceChanged) {
     await GlobalEventBus.emitEvent('workspace.beforeChange', state.workspacePath, path)
   }
+  if (changeId !== workspaceChangeId) return
   // @ts-ignore
   state.workspacePath = path
   // @ts-ignore
@@ -155,18 +163,26 @@ export const setPath = async (path) => {
 
 export const setUri = async (uri, connectionOrPathSeparator, legacyConnection, openUri = '') => {
   const connection = legacyConnection || (typeof connectionOrPathSeparator === 'object' ? connectionOrPathSeparator : undefined)
+  const changeId = ++workspaceChangeId
   const protocol = GetProtocol.getProtocol(uri)
+  if (protocol === 'remote-ssh' && !connection) {
+    const prepared = await ExtensionHostCommands.executeCommand('remote-ssh.prepareWorkspace', uri)
+    if (prepared !== true || changeId !== workspaceChangeId) return
+  }
   const path = connection?.workspacePath || (protocol === 'file' ? fileUriToPath(uri) : uri)
   if (protocol === 'file' && !connection) {
     await validateLocalPath(path)
   }
+  if (changeId !== workspaceChangeId) return
   await updateWindowTitle(path, pathSeparator)
+  if (changeId !== workspaceChangeId) return
   if (Platform.getPlatform() === PlatformType.Electron) {
     await Location.setWorkspaceUri(uri)
   }
   if (path !== state.workspacePath) {
     await GlobalEventBus.emitEvent('workspace.beforeChange', state.workspacePath, path)
   }
+  if (changeId !== workspaceChangeId) return
   state.workspacePath = path
   state.workspaceUri = uri
   state.pathSeparator = pathSeparator
