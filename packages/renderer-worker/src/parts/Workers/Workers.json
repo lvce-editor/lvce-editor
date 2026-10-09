@@ -660,7 +660,7 @@
     "productionPath": "/packages/editor-worker/dist/editorWorkerMain.js",
     "settingName": "develop.editorWorkerPath",
     "hotReloadCommand": "Editor.hotReload",
-    "contentSecurityPolicy": ["default-src 'none'", "sandbox allow-same-origin"]
+    "contentSecurityPolicy": ["default-src 'none'", "sandbox allow-same-origin", "script-src 'self'"]
   },
   {
     "id": "embedsWorker",

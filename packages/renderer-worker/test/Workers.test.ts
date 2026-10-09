@@ -58,3 +58,9 @@ test('workers view keybindings are registered', () => {
     parameters: [],
   })
 })
+
+test('editor worker permits same-origin split modules while retaining its sandbox', () => {
+  const worker = Workers.getWorkers().find(({ id }: Readonly<{ id: string }>) => id === 'editor')
+
+  expect(worker?.contentSecurityPolicy).toEqual(["default-src 'none'", 'sandbox allow-same-origin', "script-src 'self'"])
+})
