@@ -27,6 +27,7 @@ import * as Remove from '../Remove/Remove.ts'
 import * as RemoveUnusedLocales from '../RemoveUnusedLocales/RemoveUnusedLocales.ts'
 import * as Replace from '../Replace/Replace.ts'
 import * as Root from '../Root/Root.ts'
+import * as RewriteCssAssetUrls from '../RewriteCssAssetUrls/RewriteCssAssetUrls.ts'
 import * as Template from '../Template/Template.ts'
 import * as WriteFile from '../WriteFile/WriteFile.ts'
 import { generateConfigJson } from '../GenerateConfigJson/GenerateConfigJson.ts'
@@ -162,10 +163,16 @@ const copyStaticFiles = async ({ resourcesPath, commitHash }) => {
   await Remove.remove(`${resourcesPath}/app/static/lib-css/modern-normalize.css`)
 }
 
-const copyCss = async ({ resourcesPath, commitHash }) => {
+const copyCss = async ({ resourcesPath, commitHash, applicationName }) => {
   await BundleCss.bundleCss({
     outDir: `${resourcesPath}/app/static/${commitHash}/css`,
     assetDir: `/${commitHash}`,
+  })
+  const appCssPath = `${resourcesPath}/app/static/${commitHash}/css/App.css`
+  const appCss = await ReadFile.readFile(appCssPath)
+  await WriteFile.writeFile({
+    to: appCssPath,
+    content: RewriteCssAssetUrls.rewriteElectronFontUrl(appCss, `/${commitHash}`, applicationName),
   })
 }
 
@@ -324,7 +331,7 @@ export const build = async ({
   console.timeEnd('copyStaticFiles')
 
   console.time('copyCss')
-  await copyCss({ resourcesPath, commitHash })
+  await copyCss({ resourcesPath, commitHash, applicationName: product.applicationName })
   console.timeEnd('copyCss')
 
   const assetDir = `/${commitHash}`
