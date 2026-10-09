@@ -16,21 +16,30 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--WorkbenchBackground);
+  background: rgb(0 0 0 / 35%);
   color: var(--WorkbenchForeground);
   font-size: 14px;
 }
 
-.WorkspaceProgressMessage {
+.WorkspaceProgressDialog {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 8px;
   max-width: min(420px, calc(100% - 48px));
-  padding: 24px 32px;
-  border: 1px solid var(--WidgetBorder, currentColor);
-  border-radius: 4px;
+  padding: 32px;
+  border: 1px solid var(--WidgetBorder, #454545);
+  border-radius: 6px;
+  background: var(--WidgetBackground, var(--WorkbenchBackground));
+  color: var(--WidgetForeground, var(--WorkbenchForeground));
   box-shadow: var(--WidgetShadow, 0 2px 8px #0004);
   text-align: center;
+}
+
+.WorkspaceProgressClose {
+  position: absolute;
+  top: 6px;
+  right: 6px;
 }
 
 .WorkspaceProgressTitle {
@@ -40,11 +49,6 @@
 
 .WorkspaceProgressStage {
   opacity: 0.8;
-}
-
-/* Keep stage text readable while the full workbench is covered. */
-.WorkspaceProgressMessage {
-  background: var(--WorkbenchBackground);
 }
 
 /* Keep window controls in the space reserved above the primary sidebar. */

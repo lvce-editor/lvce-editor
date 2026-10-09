@@ -119,7 +119,20 @@ test('getLayoutVirtualDom overlays the workspace with remote progress', () => {
   const dom = getLayoutVirtualDom(state)
   const overlay = dom.find((node) => node.className === 'WorkspaceProgressOverlay')
 
-  expect(overlay).toMatchObject({ role: 'status', ariaLive: 'polite', childCount: 1 })
+  expect(overlay).toMatchObject({ className: 'WorkspaceProgressOverlay', childCount: 1 })
+  expect(dom).toContainEqual(
+    expect.objectContaining({
+      className: 'WorkspaceProgressDialog',
+      role: 'dialog',
+      ariaModal: true,
+    }),
+  )
+  expect(dom).toContainEqual(
+    expect.objectContaining({
+      ariaLabel: 'Cancel opening Remote SSH workspace',
+      onClick: DomEventListenerFunctions.HandleClickCancelWorkspaceProgress,
+    }),
+  )
   expect(dom.map((node) => node.text).filter(Boolean)).toEqual(['Loading Remote SSH Workspace…', 'Installing the LVCE Editor server…'])
 })
 
