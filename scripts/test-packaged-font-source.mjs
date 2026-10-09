@@ -81,7 +81,7 @@ try {
     socket.addEventListener('open', resolve, { once: true })
     socket.addEventListener('error', reject, { once: true })
   })
-  const fontResponses = []
+  const responses = []
   socket.addEventListener('message', (event) => {
     const message = JSON.parse(event.data)
     if (message.id) {
@@ -89,8 +89,8 @@ try {
       pending.delete(message.id)
       if (message.error) request?.reject(new Error(JSON.stringify(message.error)))
       else request?.resolve(message.result)
-    } else if (message.method === 'Network.responseReceived' && message.params.response.url.startsWith('lvce-oss-font:')) {
-      fontResponses.push(message.params.response)
+    } else if (message.method === 'Network.responseReceived') {
+      responses.push(message.params.response)
     }
   })
   await send('Network.enable')
@@ -119,10 +119,24 @@ try {
   )
   assert.equal(loaded, 'loaded')
   assert.ok(
-    fontResponses.some((response) => response.url.endsWith('?acceptance') && response.status === 200 && response.mimeType === 'font/ttf'),
+    responses.some((response) => response.url.endsWith('?acceptance') && response.status === 200 && response.mimeType === 'font/ttf'),
     'Native directory source must return the font with the correct MIME type',
   )
-  assert.equal(await evaluate(`fetch('/missing-native-font.ttf').then(response => response.status)`), 404)
+  // Packaged default-src blocks fetches, while font-src permits self.
+  // Use a font request to observe the legacy handler's actual 404 response.
+  assert.equal(
+    await evaluate(`new FontFace('MissingAcceptance', 'url(lvce-oss://-/missing-native-font.ttf)').load().then(() => 'loaded', () => 'rejected')`),
+    'rejected',
+  )
+  assert.ok(
+    responses.some((response) => response.url === 'lvce-oss://-/missing-native-font.ttf' && response.status === 404),
+    'The legacy handler must preserve its missing-resource 404 response',
+  )
+  assert.equal(
+    await evaluate(`fetch('lvce-oss://-/missing-native-font.ttf').then(() => 'allowed', error => error.name)`),
+    'TypeError',
+    'Packaged connect-src must retain its restriction on application-scheme fetches',
+  )
   assert.equal(await evaluate('crossOriginIsolated'), true)
   console.log('Packaged editor startup, native CSS font loading, MIME, isolation, and missing-resource acceptance passed.')
 } finally {
