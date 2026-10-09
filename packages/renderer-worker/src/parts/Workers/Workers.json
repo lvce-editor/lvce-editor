@@ -1966,7 +1966,7 @@
     "contentSecurityPolicy": ["default-src 'none'", "script-src 'self'", "sandbox allow-same-origin"],
     "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/syntax-highlighting-worker/dist/syntaxHighlightingWorkerMain.js",
     "productionPath": "/packages/syntax-highlighting-worker/dist/syntaxHighlightingWorkerMain.js",
-    "settingName": "developer.syntaxHighlightingWorkerPath",
+    "settingName": "develop.syntaxHighlightingWorkerPath",
     "hotReloadCommand": ""
   },
   {

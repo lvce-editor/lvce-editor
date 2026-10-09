@@ -35,6 +35,7 @@ test('embeds runtime configuration while preserving existing config values', asy
         custom: '/custom.js',
         'develop.dragAndDropWorkerPath': '/prefix/test-commit/packages/drag-and-drop-worker/dist/dragAndDropWorkerMain.js',
         'develop.editorWorkerPath': '/custom-editor.js',
+        'develop.syntaxHighlightingWorkerPath': '/prefix/test-commit/packages/syntax-highlighting-worker/dist/syntaxHighlightingWorkerMain.js',
       },
     })
     expect(html).not.toContain('</script><script>alert(1)</script>')
