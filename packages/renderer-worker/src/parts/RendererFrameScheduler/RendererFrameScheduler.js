@@ -79,7 +79,7 @@ const runFrame = async (frame) => {
   try {
     return await invokeWithCacheRecovery(kSendMultiple, commands)
   } finally {
-    state.lastFrameTime = Math.max(timestamp, Timestamp.now())
+    state.lastFrameTime = timestamp
   }
 }
 
