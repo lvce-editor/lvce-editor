@@ -83,17 +83,17 @@ export const getModuleId = (commandId: any): any => {
     case 'ElectronProcess.writeStdout':
       return ModuleId.ElectronProcess
     case 'ElectronWindow.close':
+    case 'ElectronWindow.completeEditorTransfer':
     case 'ElectronWindow.focus':
     case 'ElectronWindow.getZoom':
     case 'ElectronWindow.maximize':
     case 'ElectronWindow.minimize':
     case 'ElectronWindow.openNew':
     case 'ElectronWindow.openNewWithEditorInput':
-    case 'ElectronWindow.takeEditorTransfer':
-    case 'ElectronWindow.completeEditorTransfer':
     case 'ElectronWindow.openNewWithUri':
     case 'ElectronWindow.reload':
     case 'ElectronWindow.setBrowserFullWidthGestureEnabled':
+    case 'ElectronWindow.takeEditorTransfer':
     case 'ElectronWindow.toggleDevtools':
     case 'ElectronWindow.toggleFullScreen':
     case 'ElectronWindow.toggleMaximize':
