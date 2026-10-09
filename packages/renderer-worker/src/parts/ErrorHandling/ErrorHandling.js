@@ -1,5 +1,6 @@
 import * as Command from '../Command/Command.js'
 import * as PrettyError from '../PrettyError/PrettyError.js'
+import * as Logger from '../Logger/Logger.js'
 
 export const state = {
   /**
@@ -25,8 +26,8 @@ export const handleError = async (error, notify = true, prefix = '') => {
       await Command.execute(/* Notification.create */ 'Notification.create', /* type */ 'error', /* text */ PrettyError.getMessage(prettyError))
     }
   } catch (otherError) {
-    console.warn('ErrorHandling error')
-    console.warn(otherError)
+    Logger.warn('ErrorHandling error')
+    Logger.warn(otherError)
     console.error(error)
   }
 }
@@ -49,5 +50,5 @@ export const warn = (...args) => {
     return
   }
   state.seenWarnings.push(stringified)
-  console.warn(...args)
+  Logger.warn(...args)
 }
