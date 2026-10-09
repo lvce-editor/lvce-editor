@@ -498,7 +498,8 @@ export const loadContent = (state: LayoutState, savedState: any): LayoutState =>
   const { windowWidth, windowHeight } = bounds
   const sideBarLocation = getSideBarLocationType()
   const restore = savedState?.restore !== false
-  const standaloneMobile = restore && bounds.isStandalone === true && windowWidth <= 600
+  const isStandalone = bounds.isStandalone === true
+  const standaloneMobile = restore && isStandalone && windowWidth <= 600
   const stateToRestore = restore ? savedState : undefined
   const {
     panelHeight,
@@ -530,6 +531,7 @@ export const loadContent = (state: LayoutState, savedState: any): LayoutState =>
   const titleBarless = state.platform === PlatformType.Electron && Preferences.get('window.titleBarless.enabled') === true
   const intermediateState: LayoutState = {
     ...state,
+    isStandalone,
     activityBarVisible: true,
     activityBarWidth: 48,
     mainVisible: true,
@@ -2919,7 +2921,7 @@ export const signIn = async (state: LayoutState): Promise<LayoutStateResult> => 
   }
   let authState
   try {
-    authState = await AuthWorker.signIn(backendUrl, platform)
+    authState = await AuthWorker.signIn(backendUrl, platform, state.isStandalone === true)
   } finally {
     if (notificationId !== undefined) {
       try {
