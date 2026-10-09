@@ -151,6 +151,11 @@ const copyStaticFiles = async ({ pathPrefix, ignoreIconTheme, commitHash }) => {
     platform: 'web',
     assetDir: `${pathPrefix}/${commitHash}`,
   })
+  await Mkdir.mkdir('packages/build/.tmp/dist/chat')
+  await Copy.copyFile({
+    from: 'packages/build/.tmp/dist/index.html',
+    to: 'packages/build/.tmp/dist/chat/index.html',
+  })
   await BundleCss.bundleCss({
     outDir: `packages/build/.tmp/dist/${commitHash}/css`,
     assetDir: `${pathPrefix}/${commitHash}`,

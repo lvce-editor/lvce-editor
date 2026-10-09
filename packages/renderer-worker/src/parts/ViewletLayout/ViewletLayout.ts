@@ -3237,6 +3237,10 @@ export const setHash = (state: LayoutState, hash: string) => {
   return Location.setHash(hash)
 }
 
+export const setPathName = (state: LayoutState, pathName: string) => {
+  return Location.setPathName(pathName)
+}
+
 export const afterRender = async (oldState: LayoutState, newState: LayoutState) => {
   await BrowserFullWidth.afterRender(oldState, newState)
   if (newState.secondaryPreviewPlacement !== 'bottomLeft' || !newState.secondaryPreviewVisible) return

@@ -10,6 +10,7 @@ import * as Replace from '../Replace/Replace.ts'
 import * as BundleJs from '../BundleJsRollup/BundleJsRollup.ts'
 import * as GetStaticFiles from '../GetStaticFiles/GetStaticFiles.ts'
 import * as GetIconThemeEtag from '../GetIconThemeEtag/GetIconThemeEtag.ts'
+import * as Mkdir from '../Mkdir/Mkdir.ts'
 import * as JsonFile from '../JsonFile/JsonFile.ts'
 
 const copyStaticFiles = async ({ commitHash }) => {
@@ -91,6 +92,11 @@ const copyStaticFiles = async ({ commitHash }) => {
     path: `packages/build/.tmp/server/static-server/static/index.html`,
     platform: 'remote',
     assetDir: `/${commitHash}`,
+  })
+  await Mkdir.mkdir('packages/build/.tmp/server/static-server/static/chat')
+  await Copy.copyFile({
+    from: `packages/build/.tmp/server/static-server/static/index.html`,
+    to: `packages/build/.tmp/server/static-server/static/chat/index.html`,
   })
   await BundleCss.bundleCss({
     outDir: `packages/build/.tmp/server/static-server/static/${commitHash}/css`,
