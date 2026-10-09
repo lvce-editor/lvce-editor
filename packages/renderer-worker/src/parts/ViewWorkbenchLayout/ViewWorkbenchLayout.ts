@@ -22,7 +22,7 @@ export const prepare = async (view: ViewletExtensionViewState): Promise<readonly
     return []
   }
   const enabled = view.workbenchLayout === 'ai-native'
-  if (enabled === state.aiNativeLayout || (!enabled && state.sideBarFocusModeTarget !== target)) {
+  if (enabled === state.aiNativeLayout || (enabled && state.aiNativeLayoutExited) || (!enabled && state.sideBarFocusModeTarget !== target)) {
     return []
   }
   const result = enabled ? await ViewletLayout.enterSideBarFocusMode(state, target, true) : await ViewletLayout.leaveSideBarFocusMode(state)

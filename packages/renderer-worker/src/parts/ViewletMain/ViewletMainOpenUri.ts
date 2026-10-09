@@ -16,6 +16,7 @@ import * as ViewletMainFocusIndex from './ViewletMainFocusIndex.js'
 export const openUri = async (state, uri, focus = true, { preview = false, ...context } = {}) => {
   Assert.object(state)
   Assert.string(uri)
+  await Command.execute('Layout.leaveSideBarFocusMode')
   if (uri.startsWith('simple-browser-history://')) {
     await Command.execute('SimpleBrowser.openHistory')
     return {
