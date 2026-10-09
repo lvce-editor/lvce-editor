@@ -232,6 +232,7 @@ test('connected provider accounts are listed without secrets and disconnect thro
       email: 'Connected integration',
       id: 'connection:openrouter',
       kind: 'integration',
+      parentAccountId: 'account-1',
       provider: 'OpenRouter',
       signedIn: true,
     },

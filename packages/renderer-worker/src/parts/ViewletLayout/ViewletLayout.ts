@@ -2830,6 +2830,7 @@ export const getUserInfo = (state: LayoutState, options: { readonly includeAcces
 
 export const getAccounts = async () => {
   const [accounts, connections] = await Promise.all([AuthWorker.getAccounts(), AuthWorker.getConnectedAccounts()])
+  const activeAccount = accounts.find((account) => account.active)
   return [
     ...accounts,
     ...connections.map((connection) => ({
@@ -2839,6 +2840,7 @@ export const getAccounts = async () => {
       email: 'Connected integration',
       id: `connection:${connection.id}`,
       kind: 'integration',
+      ...(activeAccount && { parentAccountId: activeAccount.id }),
       provider: connection.provider,
       signedIn: true,
     })),
