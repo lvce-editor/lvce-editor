@@ -3,6 +3,7 @@ import * as BundleBuiltinSettings from '../BundleBuiltinSettings/BundleBuiltinSe
 import * as BundleRendererProcessCached from '../BundleRendererProcessCached/BundleRendererProcessCached.ts'
 import * as BundleRendererWorkerCached from '../BundleRendererWorkerCached/BundleRendererWorkerCached.ts'
 import * as Copy from '../Copy/Copy.ts'
+import * as CopyWorkerArtifacts from '../CopyWorkerArtifacts/CopyWorkerArtifacts.ts'
 import * as JsonFile from '../JsonFile/JsonFile.ts'
 import * as Logger from '../Logger/Logger.ts'
 import * as Path from '../Path/Path.ts'
@@ -41,7 +42,7 @@ const copyWorkers = async ({ product, toRoot, workers }) => {
       Logger.info(`[bundleWorkers] skipped missing worker artifact for ${worker.id}: ${defaultPath}`)
       continue
     }
-    await Copy.copyFile({
+    await CopyWorkerArtifacts.copyWorkerArtifacts({
       from,
       to: Path.join(toRoot, stripLeadingSlash(productionPath)),
     })
