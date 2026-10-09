@@ -161,8 +161,9 @@ const applyRuntimeConfigOverrides = async ({ root }: any): Promise<void> => {
   }
   const config = JSON.parse(configElement[1])
   config.platform = 'web'
-  const lineStart = content.lastIndexOf('\n', configElement.index - 1) + 1
-  const lineIndentation = content.slice(lineStart, configElement.index)
+  const configIndex = content.indexOf(configElement[0])
+  const lineStart = content.lastIndexOf('\n', configIndex - 1) + 1
+  const lineIndentation = content.slice(lineStart, configIndex)
   const indentation = whitespaceOnlyRegex.test(lineIndentation) ? lineIndentation : ''
   const contentIndentation = `${indentation}  `
   const serializedConfig = `${contentIndentation}${JSON.stringify(config, null, 2)
