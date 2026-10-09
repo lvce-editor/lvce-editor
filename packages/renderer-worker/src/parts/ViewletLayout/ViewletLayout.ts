@@ -595,6 +595,27 @@ export const loadContent = (state: LayoutState, savedState: any): LayoutState =>
     initial: false,
   }
   // TODO get side bar min width from preferences
+  if (savedState.detachedEditor === true) {
+    return getPoints(
+      {
+        ...intermediateState,
+        activityBarVisible: false,
+        activityBarSashVisible: false,
+        sideBarVisible: false,
+        sideBarSashVisible: false,
+        secondarySideBarVisible: false,
+        panelVisible: false,
+        panelSashVisible: false,
+        previewVisible: false,
+        previewSashVisible: false,
+        secondaryPreviewVisible: false,
+        secondaryPreviewSashVisible: false,
+        statusBarVisible: false,
+        restore: false,
+      },
+      sideBarLocation,
+    )
+  }
   const newState = getPoints(intermediateState, sideBarLocation)
   if (!restore || (savedState?.aiNativeLayout !== true && !standaloneMobile)) {
     return newState
