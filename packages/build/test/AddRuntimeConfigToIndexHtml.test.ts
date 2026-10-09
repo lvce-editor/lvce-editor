@@ -10,7 +10,7 @@ test('embeds runtime configuration while preserving existing config values', asy
   try {
     await writeFile(
       path,
-      '<html><head><script id="Config" type="application/json">{"argv":["--test"],"html":"\\u003c/script>\\u003cscript>alert(1)\\u003c/script>","workerUrls":{"custom":"/custom.js","develop.editorWorkerPath":"/custom-editor.js"}}</script></head></html>',
+      '<html>\n  <head>\n    <script id="Config" type="application/json">{"argv":["--test"],"html":"\\u003c/script>\\u003cscript>alert(1)\\u003c/script>","workerUrls":{"custom":"/custom.js","develop.editorWorkerPath":"/custom-editor.js"}}</script>\n  </head>\n</html>',
     )
 
     await AddRuntimeConfigToIndexHtml.addRuntimeConfigToIndexHtml({
@@ -22,6 +22,8 @@ test('embeds runtime configuration while preserving existing config values', asy
     const html = await readFile(path, 'utf8')
     const textContent = html.match(/<script id="Config" type="application\/json">([\s\S]*?)<\/script>/)?.[1]
     expect(textContent).toBeDefined()
+    expect(html).toMatch(/<script id="Config" type="application\/json">\n      \{\n        "argv"/)
+    expect(html).toContain('\n      }\n    </script>')
     expect(textContent).toMatch(/\n\s+"workerUrls": \{\n\s+"develop\./)
     expect(textContent).toContain('\\u003c/script\\u003e\\u003cscript\\u003ealert(1)\\u003c/script\\u003e')
     const config = JSON.parse(textContent!)

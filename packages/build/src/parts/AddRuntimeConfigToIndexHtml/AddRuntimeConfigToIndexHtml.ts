@@ -24,8 +24,16 @@ const getRuntimeConfig = async ({ platform, assetDir }) => {
   }
 }
 
-const serializeConfig = (config: object): string => {
-  return JSON.stringify(config, null, 2).replaceAll('<', '\\u003c').replaceAll('>', '\\u003e').replaceAll('&', '\\u0026')
+const getHtmlIndentation = (content: string, index: number): string => {
+  const lineStart = content.lastIndexOf('\n', index - 1) + 1
+  const indentation = content.slice(lineStart, index)
+  return /^\s*$/.test(indentation) ? indentation : ''
+}
+
+const serializeConfig = (config: object, indentation: string): string => {
+  const json = JSON.stringify(config, null, 2).replaceAll('<', '\\u003c').replaceAll('>', '\\u003e').replaceAll('&', '\\u0026')
+  const contentIndentation = `${indentation}  `
+  return json.replaceAll('\n', `\n${contentIndentation}`).replace(/^/, contentIndentation)
 }
 
 export const addRuntimeConfigToIndexHtml = async ({ path, platform, assetDir }) => {
@@ -41,8 +49,11 @@ export const addRuntimeConfigToIndexHtml = async ({ path, platform, assetDir }) 
       ...existingConfig.workerUrls,
     },
   }
-  const script = `<script id="Config" type="application/json">${serializeConfig(config)}</script>`
-  const newContent = configElement ? content.replace(configElement[0], script) : content.replace('</head>', `    ${script}\n  </head>`)
+  const indentation = configElement ? getHtmlIndentation(content, configElement.index!) : '    '
+  const script = configElement
+    ? `<script id="Config" type="application/json">\n${serializeConfig(config, indentation)}\n${indentation}</script>`
+    : `    <script id="Config" type="application/json">\n${serializeConfig(config, indentation)}\n    </script>`
+  const newContent = configElement ? content.replace(configElement[0], script) : content.replace('</head>', `${script}\n  </head>`)
   if (newContent === content && !configElement) {
     throw new Error(`Could not add runtime configuration to ${path}`)
   }
