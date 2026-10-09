@@ -42,7 +42,7 @@
   },
   "dependencies": {
     "@lvce-editor/about-view": "^7.33.0",
-    "@lvce-editor/accounts-view": "^0.5.0",
+    "@lvce-editor/accounts-view": "^0.5.3",
     "@lvce-editor/activity-bar-worker": "^7.27.6",
     "@lvce-editor/auth-worker": "^3.17.0",
     "@lvce-editor/cache-worker": "^0.5.0",
@@ -96,7 +96,7 @@
     "@lvce-editor/quick-pick-worker": "^4.28.1",
     "@lvce-editor/references-view": "^2.16.2",
     "@lvce-editor/rename-worker": "^1.41.0",
-    "@lvce-editor/renderer-process": "^30.68.9",
+    "@lvce-editor/renderer-process": "^30.68.10",
     "@lvce-editor/running-extensions-view": "^1.26.0",
     "@lvce-editor/secrets-view": "^0.3.0",
     "@lvce-editor/settings-view": "^2.30.9",
