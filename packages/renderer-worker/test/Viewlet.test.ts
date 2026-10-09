@@ -1038,3 +1038,32 @@ test('layout preparation and view patches commit in one batch with resized geome
   ])
   expect(ViewletStates.getInstance(2).state).toEqual({ content: 'new', uid: 2, width: 1000 })
 })
+
+test('resize applies bounds when a viewlet has no custom resize handler', async () => {
+  const dimensions = { height: 200, width: 300, x: 10, y: 20 }
+  const warn = jest.spyOn(console, 'warn').mockImplementation(() => {})
+  ViewletStates.set(11, {
+    factory: {},
+    moduleId: 'Test',
+    renderedState: { uid: 11 },
+    state: { uid: 11 },
+  })
+
+  await expect(Viewlet.resize(11, dimensions)).resolves.toEqual([['Viewlet.setBounds', 11, 10, 20, 300, 200]])
+  expect(ViewletStates.getState(11)).toEqual({ uid: 11, ...dimensions })
+  expect(warn).not.toHaveBeenCalled()
+})
+
+test('resize warns when a functional resize handler is missing', async () => {
+  const dimensions = { height: 200, width: 300, x: 10, y: 20 }
+  const warn = jest.spyOn(console, 'warn').mockImplementation(() => {})
+  ViewletStates.set(11, {
+    factory: { hasFunctionalResize: true },
+    moduleId: 'Test',
+    renderedState: { uid: 11 },
+    state: { uid: 11 },
+  })
+
+  await expect(Viewlet.resize(11, dimensions)).resolves.toEqual([['Viewlet.setBounds', 11, 10, 20, 300, 200]])
+  expect(warn).toHaveBeenCalledWith('cannot resize', 11)
+})
