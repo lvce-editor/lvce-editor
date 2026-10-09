@@ -224,6 +224,45 @@ test('loadContent exposes managed extension view state', async () => {
   expect(ViewletExtensionView.isComponentStateAvailable(state)).toBe(true)
 })
 
+test('loadContent shows a graceful fallback when the extension view is unavailable', async () => {
+  const invoke = ExtensionManagementWorker.invoke as any
+  invoke.mockImplementation((method) => {
+    if (method === 'Extensions.getViews') {
+      return []
+    }
+    if (method === 'Extensions.getAllExtensions') {
+      return []
+    }
+    throw new Error(`unexpected method ${method}`)
+  })
+  const state = {
+    ...createState(),
+    actionsDom: [{ type: 1 }],
+    css: '.view { color: red }',
+    dom: [{ type: VirtualDomElements.Button }],
+    eventListeners: [{ name: 'custom' }],
+    iframeSrc: 'https://extension.test/view.html',
+    kind: 'iframe',
+  }
+
+  await expect(ViewletExtensionView.loadContent(state, undefined)).resolves.toMatchObject({
+    actionsDom: [],
+    css: '',
+    disabled: true,
+    dom: [
+      {
+        childCount: 0,
+        text: 'This view is unavailable. Its extension may have been disabled or uninstalled.',
+        type: 12,
+      },
+    ],
+    eventListeners: [],
+    iframeSrc: '',
+    kind: 'virtualDom',
+  })
+  expect(invoke).toHaveBeenCalledTimes(2)
+})
+
 test('exposes DOM for virtual DOM views but not iframe views', () => {
   const state = { ...createState(), dom: [{ childCount: 0, type: 4 }] }
   const iframeState = { ...state, kind: 'iframe' }
