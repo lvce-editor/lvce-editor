@@ -11,8 +11,9 @@ export const initialize = (backendUrl, platform, href) => {
   })
 }
 
-export const signIn = (backendUrl, platform) => {
+export const signIn = (backendUrl, platform, authUseRedirect) => {
   return invoke('Auth.login', {
+    authUseRedirect,
     backendUrl,
     platform,
   })

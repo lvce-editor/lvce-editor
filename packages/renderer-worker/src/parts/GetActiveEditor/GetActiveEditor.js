@@ -115,6 +115,25 @@ export const getOpenEditorUris = () => {
   return getOpenEditorUrisWithInvoke(MainAreaWorker.invoke)
 }
 
+export const getActiveUriWithInvoke = async (invoke) => {
+  const instance = ViewletStates.getInstance(ViewletModuleId.Main)
+  if (!instance) {
+    return ''
+  }
+  const savedState = await invoke('MainArea.saveState', instance.state.uid)
+  const { activeGroupId, groups } = savedState.layout
+  const group = groups.find((group) => group.id === activeGroupId)
+  if (!group) {
+    return ''
+  }
+  const activeTab = group.tabs.find((tab) => tab.id === group.activeTabId)
+  return typeof activeTab?.uri === 'string' ? activeTab.uri : ''
+}
+
+export const getActiveUri = () => {
+  return getActiveUriWithInvoke(MainAreaWorker.invoke)
+}
+
 export const updateDiagnosticsWithCommand = async (executeCommand) => {
   const instance = ViewletStates.getInstance(ViewletModuleId.EditorText)
   if (!instance) {

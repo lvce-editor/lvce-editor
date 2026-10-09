@@ -57,8 +57,8 @@
   {
     "name": "builtin.chat-view-2",
     "repository": "github.com/lvce-editor/chat-view-2",
-    "version": "1.31.10",
-    "sha256": "def26110b8125dc63d37ee05ab08c4626fbedc19b1584b210d4b882c865e03d4",
+    "version": "1.31.11",
+    "sha256": "aa3c4268278bb4e0a3acaefea90bf897979be0151f13b2187aa6145d3e0c4853",
     "created": "2026-09-13"
   },
   {
@@ -122,8 +122,8 @@
   {
     "name": "builtin.remote-ssh",
     "repository": "github.com/lvce-editor/remote-ssh",
-    "version": "0.14.8",
-    "sha256": "a27db0e3615a85d0d6ad80d3e5747524c46b2fa2abac2a2905e0b7f2e40845d7",
+    "version": "0.14.9",
+    "sha256": "c0eae4f0613ff644d3cfd5a49754cd02294460c285561837db681fd98a8b4930",
     "created": "2026-10-08"
   },
   {
@@ -522,8 +522,8 @@
   {
     "name": "builtin.language-features-typescript",
     "repository": "github.com/lvce-editor/language-features-typescript",
-    "version": "5.29.4",
-    "sha256": "09d89d12ecc948ed679b88b77bfad08f16210e83e876dc7f86568e36d214caa1",
+    "version": "5.30.1",
+    "sha256": "085e382f15b0b0e328c41a66ca98a228bc6551d12b5d195af50ffce592cc2f66",
     "created": "2022-06-16"
   },
   {

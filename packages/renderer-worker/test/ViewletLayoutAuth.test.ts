@@ -366,12 +366,13 @@ test('signIn merges auth worker state into layout state', async () => {
     ...ViewletLayout.create(1),
     backendUrl: 'https://example.com/',
     platform: 1,
+    isStandalone: true,
   }
 
   const result = await ViewletLayout.signIn(state)
 
   expect(AuthWorker.signIn).toHaveBeenCalledTimes(1)
-  expect(AuthWorker.signIn).toHaveBeenCalledWith('https://example.com/', 1)
+  expect(AuthWorker.signIn).toHaveBeenCalledWith('https://example.com/', 1, true)
   expect(result).toEqual({
     commands: [],
     newState: {
@@ -383,6 +384,23 @@ test('signIn merges auth worker state into layout state', async () => {
       userUsedTokens: 42,
     },
   })
+})
+
+test('signIn uses the normal window flow in the browser', async () => {
+  // @ts-ignore
+  AuthWorker.signIn.mockResolvedValue({
+    authErrorMessage: '',
+    userState: 'loggedOut',
+  })
+  const state = {
+    ...ViewletLayout.create(1),
+    backendUrl: 'https://example.com/',
+    platform: PlatformType.Web,
+  }
+
+  await ViewletLayout.signIn(state)
+
+  expect(AuthWorker.signIn).toHaveBeenCalledWith('https://example.com/', PlatformType.Web, false)
 })
 
 test('signIn immediately explains the external browser flow on Electron', async () => {
@@ -407,7 +425,7 @@ test('signIn immediately explains the external browser flow on Electron', async 
     'info',
     'Continue signing in in your browser. If it did not open, check your system default browser settings.',
   )
-  expect(AuthWorker.signIn).toHaveBeenCalledWith('https://example.com/', PlatformType.Electron)
+  expect(AuthWorker.signIn).toHaveBeenCalledWith('https://example.com/', PlatformType.Electron, false)
 
   authResult.resolve({
     authErrorMessage: '',

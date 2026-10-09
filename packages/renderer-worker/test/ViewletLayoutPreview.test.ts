@@ -92,6 +92,14 @@ test('loadContent places chat 2 in the secondary side bar by default', () => {
   })
 })
 
+test('loadContent preserves standalone display mode for authentication', () => {
+  const result = ViewletLayout.loadContent(ViewletLayout.create(1), {
+    Layout: { bounds: { isStandalone: true, windowWidth: 412, windowHeight: 915 } },
+  })
+
+  expect(result.isStandalone).toBe(true)
+})
+
 test('toggleSecondarySideBar opens the default chat 2 view', async () => {
   const initial = ViewletLayout.loadContent(ViewletLayout.create(1), {
     Layout: { bounds: { windowWidth: 1200, windowHeight: 800 } },

@@ -64,6 +64,7 @@ export interface LayoutState {
   readonly explicitBounds: boolean
   readonly fullScreen: boolean
   readonly initial: boolean
+  readonly isStandalone?: boolean
   readonly mainHeight: number
   readonly mainId: number
   readonly mainLeft: number

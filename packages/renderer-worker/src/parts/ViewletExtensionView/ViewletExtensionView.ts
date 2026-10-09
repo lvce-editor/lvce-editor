@@ -60,7 +60,10 @@ const isExtensionDisabled = ({ applicationId, disabled, extensionId }: ViewletEx
   return disabled === true || (changedExtensionId !== undefined && disabledExtensions.has(getExtensionKey(applicationId, changedExtensionId)))
 }
 
-const getDisabledState = (state: ViewletExtensionViewState): ViewletExtensionViewState => {
+const getDisabledState = (
+  state: ViewletExtensionViewState,
+  message = 'Extension contributing this view has been disabled',
+): ViewletExtensionViewState => {
   return {
     ...state,
     actionsDom: [],
@@ -68,7 +71,7 @@ const getDisabledState = (state: ViewletExtensionViewState): ViewletExtensionVie
     css: '',
     cssId: '',
     disabled: true,
-    dom: [VirtualDomHelpers.text('Extension contributing this view has been disabled')],
+    dom: [VirtualDomHelpers.text(message)],
     eventListeners: [],
     focusSelector: '',
     iframeSandbox: [],
@@ -246,7 +249,7 @@ export const loadContent = async (
 ): Promise<ViewletExtensionViewState> => {
   const view = await GetExtensionViews.getExtensionView(options.opener || state.uri, state.applicationId)
   if (!view) {
-    throw new Error(`view ${state.uri} not found`)
+    return getDisabledState(state, 'This view is unavailable. Its extension may have been disabled or uninstalled.')
   }
   const stateWithViewId = {
     ...state,

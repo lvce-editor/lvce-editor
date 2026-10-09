@@ -254,6 +254,40 @@ test('getOpenEditorUris returns an empty array without a main area', async () =>
   expect(invoke).not.toHaveBeenCalled()
 })
 
+test('getActiveUri returns the selected tab in the active group', async () => {
+  ViewletStates.set('Main', {
+    factory: {},
+    moduleId: 'Main',
+    renderedState: { uid: 1 },
+    state: { uid: 1 },
+  })
+  const invoke = jest.fn(async () => ({
+    layout: {
+      activeGroupId: 2,
+      groups: [
+        { activeTabId: 3, id: 1, tabs: [{ id: 3, uri: 'file:///workspace/src/app.ts' }] },
+        {
+          activeTabId: 4,
+          id: 2,
+          tabs: [
+            { id: 4, uri: 'process-explorer://' },
+            { id: 5, uri: 'file:///workspace/src/other.ts' },
+          ],
+        },
+      ],
+    },
+  }))
+
+  await expect(GetActiveEditor.getActiveUriWithInvoke(invoke)).resolves.toBe('process-explorer://')
+  expect(invoke).toHaveBeenCalledWith('MainArea.saveState', 1)
+})
+
+test('getActiveUri returns an empty string without a main area', async () => {
+  const invoke = jest.fn()
+  await expect(GetActiveEditor.getActiveUriWithInvoke(invoke)).resolves.toBe('')
+  expect(invoke).not.toHaveBeenCalled()
+})
+
 test('getTextDocument reads only the requested application even when another editor is focused', async () => {
   for (const [id, applicationId] of [
     [41, 'source'],
