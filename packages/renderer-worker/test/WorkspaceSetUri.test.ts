@@ -1,6 +1,9 @@
 import { beforeEach, expect, jest, test } from '@jest/globals'
 import * as PlatformType from '../src/parts/PlatformType/PlatformType.js'
 
+const prepareWorkspace = jest.fn<(id: string, uri: string) => Promise<unknown>>(async () => true)
+jest.unstable_mockModule('../src/parts/ExtensionHost/ExtensionHostCommands.js', () => ({ executeCommand: prepareWorkspace }))
+
 const exists = jest.fn<(uri: string) => Promise<boolean>>(async () => true)
 const createNotification = jest.fn<(type: string, text: string) => Promise<void>>(async () => {})
 const setWindowTitle = jest.fn<(title: string) => Promise<void>>(async () => {})
@@ -71,6 +74,8 @@ const Workspace = await import('../src/parts/Workspace/Workspace.js')
 const WorkspaceConnection = await import('../src/parts/WorkspaceConnection/WorkspaceConnection.js')
 
 beforeEach(() => {
+  prepareWorkspace.mockReset()
+  prepareWorkspace.mockResolvedValue(true)
   execute.mockClear()
   createNotification.mockClear()
   exists.mockClear()
@@ -324,4 +329,46 @@ test('opens a requested file after switching workspace', async () => {
   await Workspace.setUri('remote-ssh://host/work', undefined, undefined, 'remote-ssh://host/work/readme.md')
   expect(Workspace.getUri()).toBe('remote-ssh://host/work')
   expect(execute).toHaveBeenCalledWith('Main.openUri', 'remote-ssh://host/work/readme.md')
+})
+
+test('remote URI preparation cancellation preserves the current workspace and location', async () => {
+  await Workspace.setPath('/original')
+  setWorkspaceUri.mockClear()
+  setWindowTitle.mockClear()
+  prepareWorkspace.mockResolvedValue(false)
+  await Workspace.setUri('remote-ssh://host/work')
+  expect(prepareWorkspace).toHaveBeenCalledWith('remote-ssh.prepareWorkspace', 'remote-ssh://host/work')
+  expect(Workspace.getPath()).toBe('/original')
+  expect(setWorkspaceUri).not.toHaveBeenCalled()
+  expect(setWindowTitle).not.toHaveBeenCalled()
+})
+
+test('remote URI waits for successful preparation before switching workspace', async () => {
+  await Workspace.setPath('/original')
+  const { promise, resolve } = Promise.withResolvers<boolean>()
+  prepareWorkspace.mockReturnValue(promise)
+  const opening = Workspace.setUri('remote-ssh://host/work')
+  await new Promise((resolve) => setTimeout(resolve, 0))
+  expect(Workspace.getPath()).toBe('/original')
+  resolve(true)
+  await opening
+  expect(Workspace.getUri()).toBe('remote-ssh://host/work')
+})
+
+test('superseded preparation cannot replace a newer workspace', async () => {
+  const { promise, resolve } = Promise.withResolvers<boolean>()
+  prepareWorkspace.mockReturnValue(promise)
+  const opening = Workspace.setUri('remote-ssh://host/work')
+  await Workspace.setPath('/newer')
+  resolve(true)
+  await opening
+  expect(Workspace.getPath()).toBe('/newer')
+})
+
+test('legacy recent remote paths use cancellable preparation too', async () => {
+  await Workspace.setPath('/original')
+  prepareWorkspace.mockResolvedValue(false)
+  await Workspace.setPath('remote-ssh://host/work')
+  expect(Workspace.getPath()).toBe('/original')
+  expect(prepareWorkspace).toHaveBeenCalledWith('remote-ssh.prepareWorkspace', 'remote-ssh://host/work')
 })
