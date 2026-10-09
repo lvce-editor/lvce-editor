@@ -43,8 +43,18 @@
   border: 1px solid var(--vscode-panel-border);
   border-radius: 6px;
   display: flex;
+  flex-wrap: wrap;
   gap: 12px;
   padding: 12px;
+}
+
+.AccountChildren {
+  display: grid;
+  flex-basis: 100%;
+  gap: 8px;
+  list-style: none;
+  margin: 4px 0 0 48px;
+  padding: 0;
 }
 
 .AccountAvatar {
