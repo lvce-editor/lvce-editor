@@ -1,6 +1,6 @@
 import { VError } from '@lvce-editor/verror'
 import { readFile, writeFile } from 'node:fs/promises'
-import * as BundleJs from '../BundleJs/BundleJs.ts'
+import * as BundleJs from '../BundleJsRollup/BundleJsRollup.ts'
 import * as Copy from '../Copy/Copy.ts'
 import * as FilterWorkerViewletCss from '../FilterWorkerViewletCss/FilterWorkerViewletCss.ts'
 import * as GetCssDeclarationFiles from '../GetCssDeclarationFiles/GetCssDeclarationFiles.ts'
@@ -164,11 +164,13 @@ export const bundleRendererWorker = async ({ cachePath, platform, commitHash, ve
       })
     }
     await BundleJs.bundleJs({
+      codeSplitting: true,
       cwd: cachePath,
+      entryFileName: 'rendererWorkerMain.js',
       from: `./src/rendererWorkerMain.ts`,
+      external: [/^node:/, /^electron(?:\/|$)/],
       modulePaths: [Path.absolute('packages/renderer-worker/node_modules')],
       platform: 'webworker',
-      exclude: ['node:*', 'electron'],
       sourceMap: false,
     })
     await Remove.remove(`${cachePath}/src`)
