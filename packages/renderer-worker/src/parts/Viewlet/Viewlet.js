@@ -167,7 +167,7 @@ export const send = (id, method, ...args) => {
   // console.trace(`viewlet.send is deprecated`)
   const instance = ViewletStates.getInstance(id)
   if (!instance) {
-    console.info('instance disposed', { id, method, args })
+    Logger.info('instance disposed', { id, method, args })
     return
   }
   const fn = instance.factory[method]
@@ -180,12 +180,12 @@ export const send = (id, method, ...args) => {
  */
 export const dispose = async (id, deferDom = false) => {
   if (!id) {
-    console.warn('no instance to dispose')
+    Logger.warn('no instance to dispose')
     return
   }
   const instance = ViewletStates.getInstance(id)
   if (!instance) {
-    console.info('instance may already be disposed')
+    Logger.info('instance may already be disposed')
     return
   }
   const instanceUid = instance.state.uid
@@ -239,7 +239,7 @@ export const hide = async (id) => {
 export const disposeFunctional = (id) => {
   try {
     if (!id) {
-      console.warn('no instance to dispose')
+      Logger.warn('no instance to dispose')
       return []
     }
     const instance = ViewletStates.getInstance(id)
@@ -317,7 +317,7 @@ export const showFunctional = async (id) => {
 export const hideFunctional = (id) => {
   try {
     if (!id) {
-      console.warn('no instance to dispose')
+      Logger.warn('no instance to dispose')
       return []
     }
     const instance = ViewletStates.getInstance(id)
@@ -393,7 +393,7 @@ export const resize = async (id, dimensions) => {
   let commands = []
   if (!resizeFn) {
     if (instance.factory.hasFunctionalResize) {
-      console.warn('cannot resize', id)
+      Logger.warn('cannot resize', id)
     }
     newState = { ...oldState, ...dimensions }
     commands = [['Viewlet.setBounds', id, dimensions.x, dimensions.y, dimensions.width, dimensions.height]]
@@ -670,7 +670,7 @@ export const requestRender = (uid) => {
 export const disposeWidgetWithValue = async (id, value) => {
   try {
     if (!id) {
-      console.warn('no instance to dispose')
+      Logger.warn('no instance to dispose')
       return []
     }
     const instance = ViewletStates.getInstance(id)
