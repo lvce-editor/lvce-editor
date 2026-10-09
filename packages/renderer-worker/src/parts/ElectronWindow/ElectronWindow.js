@@ -37,5 +37,3 @@ export const focus = forward('ElectronWindow.focus')
 export const setBrowserFullWidthGestureEnabled = forward('ElectronWindow.setBrowserFullWidthGestureEnabled')
 
 export const openNewWithUri = forward('ElectronWindow.openNewWithUri')
-
-export { openNewWithEditorInput } from '../DetachedEditor/DetachedEditor.js'

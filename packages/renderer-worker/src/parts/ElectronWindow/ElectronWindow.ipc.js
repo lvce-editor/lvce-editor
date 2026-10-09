@@ -1,3 +1,4 @@
+import * as DetachedEditor from '../DetachedEditor/DetachedEditor.js'
 import * as ElectronWindow from './ElectronWindow.js'
 
 export const name = 'ElectronWindow'
@@ -8,7 +9,7 @@ export const Commands = {
   minimize: ElectronWindow.minimize,
   openNew: ElectronWindow.openNew,
   openNewWithUri: ElectronWindow.openNewWithUri,
-  openNewWithEditorInput: ElectronWindow.openNewWithEditorInput,
+  openNewWithEditorInput: DetachedEditor.openNewWithEditorInput,
   toggleDevtools: ElectronWindow.toggleDevtools,
   toggleFullScreen: ElectronWindow.toggleFullScreen,
   toggleMaximize: ElectronWindow.toggleMaximize,
