@@ -94,6 +94,33 @@ jobs:
         run: node node_modules/playwright-core/cli.js install --with-deps chromium
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0
+      - name: Checkout owned Electron tab move regressions
+        uses: actions/checkout@v7
+        with:
+          repository: lvce-editor/main-area-worker
+          ref: 58e6c499dbd55f289a429ef287ef7e9842de31fa
+          path: .tmp/electron-tab-move-tests
+      - name: Install Electron for tab move regressions
+        run: node node_modules/electron/install.js
+      - name: Test moving tabs with the published worker (Linux)
+        if: runner.os == 'Linux'
+        run: xvfb-run -a node .tmp/electron-tab-move-tests/packages/e2e-integration/scripts/test-move-to-new-window.mjs .
+        env:
+          LVCE_MOVE_USE_PUBLISHED_WORKER: '1'
+          LVCE_MOVE_EVIDENCE_DIR: .tmp/electron-tab-move-evidence
+      - name: Test moving tabs with the published worker
+        if: runner.os != 'Linux'
+        run: node .tmp/electron-tab-move-tests/packages/e2e-integration/scripts/test-move-to-new-window.mjs .
+        env:
+          LVCE_MOVE_USE_PUBLISHED_WORKER: '1'
+          LVCE_MOVE_EVIDENCE_DIR: .tmp/electron-tab-move-evidence
+      - name: Upload Electron tab move evidence
+        uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: electron-tab-move-${{ matrix.os }}
+          path: .tmp/electron-tab-move-evidence
+          if-no-files-found: warn
       - name: Test editor cursor positioning in split groups
         working-directory: ./packages/extension-host-worker-tests
         run: npm run e2e:headless -- --test-name-prefix=viewlet.main-editor-cursor-after-split --browser-test=scripts/test-editor-cursor-splits.mjs
