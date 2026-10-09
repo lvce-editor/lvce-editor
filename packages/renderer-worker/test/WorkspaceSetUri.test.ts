@@ -178,6 +178,26 @@ test('does not show progress when a workspace operation completes quickly', asyn
   jest.useRealTimers()
 })
 
+test('uses extension progress and ignores a response after the workspace operation changes', async () => {
+  jest.useFakeTimers()
+  const listener = jest.fn()
+  GlobalEventBus.addListener('workspace.progress', listener)
+  const id = Workspace.startProgress('Opening workspace…')
+  jest.advanceTimersByTime(300)
+  Workspace.handleExtensionProgressChange(id, { message: 'Starting remote server…', status: 'in-progress' })
+  expect(listener).toHaveBeenLastCalledWith({ id, message: 'Starting remote server…' })
+  Workspace.handleExtensionProgressChange(id, { message: 'Could not connect', status: 'error' })
+  expect(listener).toHaveBeenLastCalledWith({ id, message: 'Error: Could not connect' })
+
+  const nextId = Workspace.startProgress('Opening another workspace…')
+  Workspace.handleExtensionProgressChange(id, { message: 'Stale remote server', status: 'error' })
+  jest.advanceTimersByTime(300)
+  expect(listener).toHaveBeenLastCalledWith({ id: nextId, message: 'Opening another workspace…' })
+  expect(listener).not.toHaveBeenCalledWith({ id, message: 'Stale remote server' })
+  Workspace.endProgress(nextId)
+  jest.useRealTimers()
+})
+
 test('setPath uses the product name for an empty workspace', async () => {
   await Workspace.setPath('')
 
