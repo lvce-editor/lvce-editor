@@ -11,8 +11,10 @@ node bin/build.js --target=electron-deb --force
 Enable `asar` packaging explicitly:
 
 ```sh
-node bin/build.js --target=electron-deb --force --asar
+node bin/build.js --target=electron-builder-deb --force --asar
 ```
+
+The `electron-deb` target does not support `--asar`; use `electron-builder-deb` when ASAR packaging is required.
 
 ## Try out
 
