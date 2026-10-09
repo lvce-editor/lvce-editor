@@ -34,12 +34,13 @@ export const getElectronFileResponseContent = async (request: any, absolutePath:
     return newContentBuffer
   }
   let content = await readFile(absolutePath)
-  if (!Platform.isProduction && url === `${Platform.scheme}://-/`) {
+  const isAppIndex = typeof url === 'string' && (url === '/' || (url.startsWith(`${Platform.scheme}://-/`) && new URL(url).pathname === '/'))
+  if (!Platform.isProduction && isAppIndex) {
     // @ts-ignore
     content = content.toString().replace('    <link rel="manifest" href="/manifest.json" crossorigin="use-credentials" />\n', '')
     content = await AddCustomPathsToIndexHtml.addCustomPathsToIndexHtml(content, { platform: 'electron' })
   }
-  if (url === '/') {
+  if (Platform.isProduction && isAppIndex) {
     content = await AddCustomPathsToIndexHtml.addCustomPathsToIndexHtml(content, { platform: 'electron' })
   }
   if (typeof content === 'string') {

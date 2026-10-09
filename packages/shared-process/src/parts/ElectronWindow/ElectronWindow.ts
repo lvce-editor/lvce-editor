@@ -131,3 +131,5 @@ export const setBrowserFullWidthGestureEnabled = (windowId: number, enabled: boo
     enabled ? 'enableBrowserFullWidthGesture' : 'disableBrowserFullWidthGesture',
   )
 }
+
+export { openNewWithEditorInput, takeEditorTransfer, completeEditorTransfer } from '../EditorTransfer/EditorTransfer.ts'

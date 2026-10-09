@@ -1,3 +1,4 @@
+import { state as locationState } from '../LocationState/LocationState.js'
 import * as SaveBuiltinState from '../SaveBuiltinState/SaveBuiltinState.js'
 import * as SaveExtensionState from '../SaveExtensionState/SaveExtensionState.js'
 import * as SaveTimings from '../SaveTimings/SaveTimings.js'
@@ -6,7 +7,7 @@ import * as VisibilityState from '../VisibilityState/VisibilityState.js'
 import * as Workspace from '../Workspace/Workspace.js'
 
 export const handleVisibilityChange = async (visibilityState) => {
-  if (Workspace.isTest()) {
+  if (Workspace.isTest() || (locationState.href && new URL(locationState.href).searchParams.has('editorTransfer'))) {
     return
   }
   if (visibilityState === VisibilityState.Hidden) {

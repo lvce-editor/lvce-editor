@@ -27,6 +27,7 @@ import * as LifeCyclePhase from '../LifeCyclePhase/LifeCyclePhase.js'
 import * as Location from '../Location/Location.js'
 import * as ModernUi from '../ModernUi/ModernUi.js'
 import * as StartupCpuProfile from '../StartupCpuProfile/StartupCpuProfile.js'
+import * as DetachedEditor from '../DetachedEditor/DetachedEditor.js'
 import * as OpenInitialUri from '../OpenInitialUri/OpenInitialUri.js'
 import * as OnLoadCommands from '../OnLoadCommands/OnLoadCommands.js'
 import * as Performance from '../Performance/Performance.js'
@@ -127,6 +128,7 @@ export const startup = async (initData, platform, assetDir) => {
 
   Performance.mark(PerformanceMarkerType.WillStartupWorkbench)
   Location.initialize(initData.Location.href)
+  const detachedEditor = platform === PlatformType.Electron && new URL(initData.Location.href).searchParams.has('editorTransfer')
   const cpuProfile = platform === PlatformType.Electron && StartupCpuProfile.isEnabled(initData.Location.href)
   if (platform !== PlatformType.Web) {
     await LaunchSharedProcess.launchSharedProcess()
@@ -224,7 +226,7 @@ export const startup = async (initData, platform, assetDir) => {
     },
     false,
     false,
-    { ...initData, ...layoutState, restore: !isTestRun && !cpuProfile },
+    { ...initData, ...layoutState, restore: !isTestRun && !cpuProfile && !detachedEditor, detachedEditor },
   )
   commands.splice(1, 1)
 
@@ -247,6 +249,10 @@ export const startup = async (initData, platform, assetDir) => {
   LifeCycle.mark(LifeCyclePhase.Five)
 
   await Promise.all(actions.map((action) => action(platform, assetDir)))
+  if (detachedEditor) {
+    await DetachedEditor.openTransferredEditor(initData.Location.href)
+    return
+  }
   await OpenInitialUri.openInitialUri(initData.Location.href)
   if (cpuProfile) {
     await StartupCpuProfile.complete()
