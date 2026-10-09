@@ -154,6 +154,8 @@ export const commandMap = {
   'ElectronWindow.close': lazy('ElectronWindow.close'),
   'ElectronWindow.maximize': lazy('ElectronWindow.maximize'),
   'ElectronWindow.minimize': lazy('ElectronWindow.minimize'),
+  'ElectronWindow.openNewWithUri': lazy('ElectronWindow.openNewWithUri'),
+  'ElectronWindow.openNewWithEditorInput': lazy('ElectronWindow.openNewWithEditorInput'),
   'ElectronWindow.openNew': lazy('ElectronWindow.openNew'),
   'ElectronWindow.toggleDevtools': lazy('ElectronWindow.toggleDevtools'),
   'ElectronWindow.toggleMaximize': lazy('ElectronWindow.toggleMaximize'),
