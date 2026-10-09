@@ -4,6 +4,7 @@ export const name = 'GetActiveEditor'
 
 export const Commands = {
   getActiveEditorId: GetActiveEditor.getActiveEditorId,
+  getActiveUri: GetActiveEditor.getActiveUri,
   getDiagnostics: GetActiveEditor.getDiagnostics,
   getOpenEditorUris: GetActiveEditor.getOpenEditorUris,
   getSelections: GetActiveEditor.getSelections,
