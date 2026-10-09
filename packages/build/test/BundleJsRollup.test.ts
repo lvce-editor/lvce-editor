@@ -33,3 +33,34 @@ globalThis.patches = diffTree([], [])
     await rm(cachePath, { force: true, recursive: true })
   }
 })
+
+test('keeps node and electron modules external in web workers', async () => {
+  const cachePath = await mkdtemp(join(tmpdir(), 'lvce-web-worker-bundle-'))
+  try {
+    await mkdir(join(cachePath, 'src'))
+    await writeFile(
+      join(cachePath, 'src', 'index.js'),
+      `import 'node:fs'
+import 'electron'
+import 'electron/some-module'
+globalThis.ready = true
+`,
+    )
+    await bundleJs({
+      cwd: cachePath,
+      from: './src/index.js',
+      external: [/^node:/, /^electron(?:\/|$)/],
+      platform: 'webworker',
+      sourceMap: false,
+    })
+
+    const bundle = await readFile(join(cachePath, 'dist', 'index.js'), 'utf8')
+
+    expect(bundle).toContain("import 'node:fs'")
+    expect(bundle).toContain("import 'electron'")
+    expect(bundle).toContain("import 'electron/some-module'")
+    expect(bundle).toContain('globalThis.ready')
+  } finally {
+    await rm(cachePath, { force: true, recursive: true })
+  }
+})
