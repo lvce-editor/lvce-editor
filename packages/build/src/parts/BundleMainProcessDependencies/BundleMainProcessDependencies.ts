@@ -13,9 +13,8 @@ export const bundleMainProcessDependencies = async ({ to, arch, electronVersion,
     ? 'packages/main-process/node_modules/@lvce-editor/main-process/package.json'
     : 'packages/main-process/package.json'
   const packageJson = await JsonFile.readJson(packageJsonPath)
-  const dependencies = bundleMainProcess
-    ? Object.fromEntries(Object.entries(packageJson.dependencies).filter(([name]) => name !== 'electron'))
-    : packageJson.dependencies
+  const dependencyPackageJson = bundleMainProcess ? await JsonFile.readJson('packages/main-process/package.json') : packageJson
+  const dependencies = FilterMainProcessDependencies.filterPackageDependencies(dependencyPackageJson.dependencies, bundleMainProcess)
   await JsonFile.writeJson({
     to: `${to}/package.json`,
     value: {
