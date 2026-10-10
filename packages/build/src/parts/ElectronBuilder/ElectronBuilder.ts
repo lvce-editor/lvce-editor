@@ -12,6 +12,7 @@ import * as GetElectronVersion from '../GetElectronVersion/GetElectronVersion.ts
 import * as GetWindowsUnpackedDir from '../GetWindowsUnpackedDir/GetWindowsUnpackedDir.ts'
 import * as Logger from '../Logger/Logger.ts'
 import * as Path from '../Path/Path.ts'
+import * as PackElectronApp from '../PackElectronApp/PackElectronApp.ts'
 import * as Remove from '../Remove/Remove.ts'
 import * as Rename from '../Rename/Rename.ts'
 import * as Replace from '../Replace/Replace.ts'
@@ -349,6 +350,9 @@ const copyElectronResult = async ({
       from: `packages/build/.tmp/electron-builder-placeholder-app/dist/${GetWindowsUnpackedDir.getWindowsUnpackedDir(arch)}/${product.windowsExecutableName}.exe`,
       to: `packages/build/.tmp/linux/snap/${debArch}/app/${product.windowsExecutableName}.exe`,
     })
+  }
+  if (asar) {
+    await PackElectronApp.packElectronApp({ resourcesPath })
   }
 }
 
