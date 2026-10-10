@@ -15,6 +15,7 @@ export const Commands = {
   isProgressCancelled: Workspace.isProgressCancelled,
   updateProgress: Workspace.updateProgress,
   endProgress: Workspace.endProgress,
+  handleExtensionProgressChange: Workspace.handleExtensionProgressChange,
   setPath: Workspace.setPath,
   setUri: Workspace.setUri,
   supportsConnectionCommand: Workspace.supportsConnectionCommand,

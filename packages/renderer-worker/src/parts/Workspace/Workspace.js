@@ -49,6 +49,7 @@ export const startProgress = (message) => {
   }
   const id = ++nextWorkspaceProgressId
   const progress = {
+    initialMessage: message,
     id,
     message,
     timer: setTimeout(() => {
@@ -85,6 +86,14 @@ export const updateProgress = (id, message) => {
   if (currentWorkspaceProgress.visible) {
     emitWorkspaceProgress(id, message)
   }
+}
+
+export const handleExtensionProgressChange = (id, data) => {
+  const progress = currentWorkspaceProgress
+  if (!progress || progress.id !== id || !data || typeof data.message !== 'string') return
+  if (!['idle', 'in-progress', 'finished', 'error'].includes(data.status)) return
+  const message = data.status === 'idle' || !data.message ? progress.initialMessage : data.message
+  updateProgress(progress.id, data.status === 'error' ? `Error: ${message}` : message)
 }
 
 export const cancelProgress = (id) => {
