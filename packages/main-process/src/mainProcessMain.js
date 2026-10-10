@@ -1,10 +1,10 @@
 import { app } from 'electron'
 import { join } from 'node:path'
-import * as ArgvConfig from '../../server/src/argvConfig.js'
 import { handleMacOsSaveShortcut } from './handleMacOsSaveShortcut.js'
 
 const root = process.env.LVCE_ROOT || process.cwd()
 if (process.env.LVCE_ARGV_CONFIG_LOADED !== '1') {
+  const ArgvConfig = await import(new URL('../../server/src/argvConfig.js', import.meta.url).href)
   const configArguments = await ArgvConfig.load(ArgvConfig.getArgvConfigPath())
   ArgvConfig.prepend(process.argv, configArguments)
   process.env.LVCE_ARGV_CONFIG_LOADED = '1'
