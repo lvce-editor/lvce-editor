@@ -16,6 +16,10 @@ const stripLeadingSlash = (path) => {
   return path.startsWith('/') ? path.slice(1) : path
 }
 
+export const shouldCopyWorkerEntryOnly = ({ platform, workerId }) => {
+  return platform === 'electron' && workerId === 'editor'
+}
+
 const getWorkerSourcePath = (defaultPath) => {
   const sourcePath = stripLeadingSlash(defaultPath)
   if (existsSync(Path.absolute(sourcePath))) {
@@ -45,7 +49,7 @@ const copyWorkers = async ({ product, toRoot, platform, workers }) => {
     await CopyWorkerArtifacts.copyWorkerArtifacts({
       from,
       to: Path.join(toRoot, stripLeadingSlash(productionPath)),
-      entryOnly: platform === 'electron' && worker.id === 'editor',
+      entryOnly: shouldCopyWorkerEntryOnly({ platform, workerId: worker.id }),
     })
     if (worker.id === 'dialogWorker') {
       await PatchDialogWorkerProductName.patchDialogWorkerProductName({ product, toRoot })

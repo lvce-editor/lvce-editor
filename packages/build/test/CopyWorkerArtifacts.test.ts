@@ -3,6 +3,7 @@ import { access, mkdtemp, mkdir, readFile, rm, writeFile } from 'node:fs/promise
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { pathToFileURL } from 'node:url'
+import { shouldCopyWorkerEntryOnly } from '../src/parts/BundleWorkers/BundleWorkers.ts'
 import { copyWorkerArtifacts } from '../src/parts/CopyWorkerArtifacts/CopyWorkerArtifacts.ts'
 
 test('packaged workers can load split chunks and nested artifacts after source removal', async () => {
@@ -56,4 +57,11 @@ test('electron editor worker copies only its configured entry from dist', async 
   } finally {
     await rm(root, { recursive: true, force: true })
   }
+})
+
+test('only the editor worker uses entry-only copying in electron bundles', () => {
+  expect(shouldCopyWorkerEntryOnly({ platform: 'electron', workerId: 'editor' })).toBe(true)
+  expect(shouldCopyWorkerEntryOnly({ platform: 'web', workerId: 'editor' })).toBe(false)
+  expect(shouldCopyWorkerEntryOnly({ platform: 'remote', workerId: 'editor' })).toBe(false)
+  expect(shouldCopyWorkerEntryOnly({ platform: 'electron', workerId: 'errorWorker' })).toBe(false)
 })
