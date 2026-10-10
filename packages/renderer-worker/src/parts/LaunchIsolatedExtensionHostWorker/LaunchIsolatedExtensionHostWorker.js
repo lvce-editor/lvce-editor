@@ -45,6 +45,7 @@ export const launchIsolatedExtensionHostWorker = async (port, extensionId, url, 
     await RendererProcess.invokeAndTransfer('IpcParent.create', {
       method: RendererProcessIpcParentType.ModuleWorkerWithMessagePort,
       name,
+      parentName: 'Extension Management Worker',
       port: workerPort,
       raw: true,
       url,
