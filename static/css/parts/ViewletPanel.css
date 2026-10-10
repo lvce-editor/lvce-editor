@@ -11,6 +11,7 @@
 .PanelHeader {
   contain: strict;
   display: flex;
+  flex-shrink: 0;
   justify-content: space-between;
   padding: 0 8px;
   padding-left: 18px;
