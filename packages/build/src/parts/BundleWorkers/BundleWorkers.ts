@@ -45,7 +45,7 @@ const copyWorkers = async ({ product, toRoot, platform, workers }) => {
     await CopyWorkerArtifacts.copyWorkerArtifacts({
       from,
       to: Path.join(toRoot, stripLeadingSlash(productionPath)),
-      entryOnly: platform === 'electron' && worker.id === 'editorWorker',
+      entryOnly: platform === 'electron' && worker.id === 'editor',
     })
     if (worker.id === 'dialogWorker') {
       await PatchDialogWorkerProductName.patchDialogWorkerProductName({ product, toRoot })
