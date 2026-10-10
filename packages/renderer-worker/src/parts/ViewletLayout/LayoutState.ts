@@ -1,3 +1,20 @@
+export interface ChatViewFullScreenLayoutStateSnapshot {
+  readonly activityBarVisible: boolean
+  readonly panelHeight: number
+  readonly panelVisible: boolean
+  readonly previewVisible: boolean
+  readonly previewWidth: number
+  readonly sideBarLocation: number
+  readonly sideBarView: string
+  readonly sideBarVisible: boolean
+  readonly sideBarWidth: number
+  readonly secondarySideBarView: string
+  readonly secondarySideBarVisible: boolean
+  readonly secondarySideBarWidth: number
+  readonly statusBarVisible: boolean
+  readonly titleBarVisible: boolean
+}
+
 export interface SideBarFocusModeLayoutStateSnapshot {
   readonly sideBarLocation: number
   readonly titleBarVisible: boolean
@@ -55,6 +72,8 @@ export interface LayoutState {
   readonly activityBarWidth: number
   readonly authErrorMessage: string
   readonly assetDir: string
+  readonly chatViewFullScreen: boolean
+  readonly chatViewFullScreenLayout: ChatViewFullScreenLayoutStateSnapshot | undefined
   readonly backendUrl: string
   readonly badgeCounts: Record<string, number>
   readonly commands: readonly any[]
