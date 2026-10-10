@@ -8,11 +8,6 @@ export const prepareElectronHtmlExtension = async ({ extensionsPath }: { readonl
   const htmlExtensionPath = `${extensionsPath}/${htmlExtensionId}`
   await Remove.remove(`${htmlExtensionPath}/typescript`)
   await Replace.replace({
-    path: `${htmlExtensionPath}/html-worker/src/parts/TypeScriptPath/TypeScriptPath.js`,
-    occurrence: '../../../../typescript/lib',
-    replacement: `../../../../../${typeScriptExtensionId}/typescript/lib`,
-  })
-  await Replace.replace({
     path: `${htmlExtensionPath}/html-worker/dist/htmlWorkerMain.js`,
     occurrence: '../../typescript/lib',
     replacement: `../../../${typeScriptExtensionId}/typescript/lib`,
