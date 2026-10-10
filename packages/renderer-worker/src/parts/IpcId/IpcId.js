@@ -1,4 +1,3 @@
-export const EmbedsProcess = 2
 export const EmbedsWorker = 77
 export const MainProcess = -5
 export const ProcessExplorer = 11
