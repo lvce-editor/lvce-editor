@@ -5,13 +5,13 @@ Generate a `.deb` file that can be installed with the `apt` package manager.
 ## Build
 
 ```sh
-node bin/build.js --target=electron-deb --force
+node bin/build.ts --target=electron-deb --force
 ```
 
 Enable `asar` packaging explicitly:
 
 ```sh
-node bin/build.js --target=electron-builder-deb --force --asar
+node bin/build.ts --target=electron-builder-deb --force --asar
 ```
 
 The `electron-deb` target does not support `--asar`; use `electron-builder-deb` when ASAR packaging is required.
