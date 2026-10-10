@@ -113,5 +113,5 @@ test('addCustomPathsToIndexHtml - merges and safely serializes the Electron work
   const configElement = [...result.matchAll(configElementPattern)][0]
 
   expect(result).toContain('"workspaceUri": "remote-ssh://user@example.com/home/project?name=\\u003cscript\\u003e\\u0026"')
-  expect(JSON.parse(configElement[1])).toMatchObject({ platform: 'electron', workspaceUri, workerUrls: {} })
+  expect(JSON.parse(configElement[1])).toMatchObject({ platform: 'electron', workerUrls: {}, workspaceUri })
 })

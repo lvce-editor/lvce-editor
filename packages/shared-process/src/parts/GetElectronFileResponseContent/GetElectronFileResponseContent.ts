@@ -8,11 +8,11 @@ import * as TranspileTypeScript from '../TranspileTypeScript/TranspileTypeScript
 const useCache = false // TODO enable this
 
 const getWorkspaceUri = (url: string): string | undefined => {
-  try {
-    return new URL(url, `${Platform.scheme}://-/`).searchParams.get('workspace') || undefined
-  } catch {
+  const baseUrl = `${Platform.scheme}://-/`
+  if (!URL.canParse(url, baseUrl)) {
     return undefined
   }
+  return new URL(url, baseUrl).searchParams.get('workspace') || undefined
 }
 
 const readRange = async (absolutePath: string, range: ByteRange): Promise<Buffer> => {
