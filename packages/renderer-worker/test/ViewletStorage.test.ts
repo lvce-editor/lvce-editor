@@ -28,7 +28,10 @@ test('loadContent reads local and session storage', async () => {
   expect(loadedState.sessionStorage).toEqual({ sessionKey: 'sessionValue' })
   expect(WebStorage.getAll).toHaveBeenNthCalledWith(1, WebStorageType.LocalStorage)
   expect(WebStorage.getAll).toHaveBeenNthCalledWith(2, WebStorageType.SessionStorage)
-  const [command, dom] = ViewletStorageRender.render[0].apply(state, loadedState)
+  const [command, dom] = ViewletStorageRender.render[0].apply(state, loadedState) as [
+    string,
+    Array<{ text?: string; className?: string }>,
+  ]
   expect(command).toBe('Viewlet.setDom2')
   expect(dom.map((node) => node.text).filter(Boolean)).toEqual(['Local Storage', 'Key', 'Value', 'localKey', 'localValue'])
 })
@@ -39,7 +42,10 @@ test('loadContent renders an empty storage table', async () => {
   const loadedState = await ViewletStorage.loadContent(state)
 
   expect(loadedState.localStorage).toEqual({})
-  const [, dom] = ViewletStorageRender.render[0].apply(state, loadedState)
+  const [, dom] = ViewletStorageRender.render[0].apply(state, loadedState) as [
+    string,
+    Array<{ text?: string; className?: string }>,
+  ]
   expect(dom.map((node) => node.text).filter(Boolean)).toEqual(['Local Storage', 'Key', 'Value'])
   expect(dom.find((node) => node.className === 'StorageTable')).toBeDefined()
 })
