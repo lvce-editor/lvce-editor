@@ -126,7 +126,7 @@ test('enforces 16ms spacing on high refresh displays', async () => {
   expect(RendererFrameScheduler.state.frameCount).toBe(2)
 })
 
-test('starts frame spacing after the previous RPC completes', async () => {
+test('spaces frame starts without adding the previous RPC duration', async () => {
   let resolveFirst: (() => void) | undefined
   rpc.invoke.mockImplementationOnce(
     () =>
@@ -146,10 +146,6 @@ test('starts frame spacing after the previous RPC completes', async () => {
   await flushMicrotasks()
   await runAnimationFrame(16)
 
-  expect(rpc.invoke).toHaveBeenCalledTimes(1)
-  expect(frameCallbacks).toHaveLength(1)
-
-  await runAnimationFrame(26)
   await second
   expect(rpc.invoke).toHaveBeenCalledTimes(2)
 })
