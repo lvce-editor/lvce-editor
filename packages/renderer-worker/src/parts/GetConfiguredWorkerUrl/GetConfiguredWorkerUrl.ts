@@ -1,3 +1,4 @@
+import * as ConfigState from '../ConfigState/ConfigState.js'
 import * as ComponentWorkerNames from '../ComponentWorkerNames/ComponentWorkerNames.js'
 import * as IsProduction from '../IsProduction/IsProduction.js'
 import * as Preferences from '../Preferences/Preferences.js'
@@ -8,6 +9,9 @@ const resolveConfiguredWorkerUrl = (preferenceKey: string, fallback: string): st
   if (runtimeWorkerUrl) {
     return runtimeWorkerUrl
   }
+  const configKey = (preferenceKey.split('.').at(-1) || '').replace(/Path$/, 'Url')
+  const configUrl = ConfigState.get(configKey)
+  if (configUrl) return configUrl
   let configuredWorkerUrl = Preferences.get(preferenceKey) || ''
   if (configuredWorkerUrl) {
     const configuredUrlWithSlash = configuredWorkerUrl.startsWith('/') ? configuredWorkerUrl : '/' + configuredWorkerUrl
