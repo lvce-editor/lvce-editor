@@ -178,7 +178,7 @@ export const startup = async (initData, platform, assetDir) => {
 
   Performance.mark(PerformanceMarkerType.WillOpenWorkspace)
   const isApplicationHost = platform === PlatformType.Web && new URL(initData.Location.href).searchParams.has('applicationHost')
-  if (!isApplicationHost) await Workspace.hydrate(initData.Location)
+  if (!isApplicationHost) await Workspace.hydrate({ ...initData.Location, workspaceUri: initData.Config?.workspaceUri })
   Performance.mark(PerformanceMarkerType.DidOpenWorkspace)
 
   if (promptOptions !== undefined) {

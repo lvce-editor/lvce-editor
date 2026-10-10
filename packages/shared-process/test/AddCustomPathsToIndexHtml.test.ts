@@ -103,3 +103,15 @@ test('addCustomPathsToIndexHtml - Electron runtime overrides the shared web conf
   expect(configElements).toHaveLength(1)
   expect(JSON.parse(configElements[0][1])).toEqual({ assetDir: '', platform: 'electron', workerUrls: {} })
 })
+
+test('addCustomPathsToIndexHtml - merges and safely serializes the Electron workspace URI', async () => {
+  jest.mocked(Preferences.getUserPreferences).mockResolvedValue({})
+  jest.mocked(LinkedWorkerPreferences.getLinkedWorkerPreferences).mockResolvedValue({})
+  const content = '<title>Test</title><script id="Config" type="application/json">{"platform":"web","workerUrls":{}}</script>'
+  const workspaceUri = 'remote-ssh://user@example.com/home/project?name=<script>&'
+  const result = await AddCustomPathsToIndexHtml.addCustomPathsToIndexHtml(content, { platform: 'electron', workspaceUri })
+  const configElement = [...result.matchAll(configElementPattern)][0]
+
+  expect(result).toContain('"workspaceUri": "remote-ssh://user@example.com/home/project?name=\\u003cscript\\u003e\\u0026"')
+  expect(JSON.parse(configElement[1])).toMatchObject({ platform: 'electron', workerUrls: {}, workspaceUri })
+})

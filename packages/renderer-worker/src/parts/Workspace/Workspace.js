@@ -279,11 +279,11 @@ const onWorkspaceChange = async () => {
   await GlobalEventBus.emitEvent('workspace.change', state.workspacePath)
 }
 
-export const hydrate = async ({ href }) => {
+export const hydrate = async ({ href, workspaceUri = '' }) => {
   if (state.workspacePath) {
     return
   }
-  const resolvedRoot = await GetResolvedRoot.getResolvedRoot(href)
+  const resolvedRoot = await GetResolvedRoot.getResolvedRoot(href, workspaceUri)
   if (state.isTest) {
     state.homeDir = resolvedRoot.homeDir
     return
