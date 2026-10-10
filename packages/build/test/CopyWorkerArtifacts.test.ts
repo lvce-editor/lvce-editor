@@ -39,3 +39,21 @@ test('non-dist worker entries do not copy their package directory', async () => 
     await rm(root, { recursive: true, force: true })
   }
 })
+
+test('electron editor worker copies only its configured entry from dist', async () => {
+  const root = await mkdtemp(join(tmpdir(), 'editor-worker-entry-'))
+  try {
+    const source = join(root, 'source', 'dist')
+    const target = join(root, 'target')
+    await mkdir(join(source, 'api'), { recursive: true })
+    await writeFile(join(source, 'editorWorkerMain.js'), 'worker fixture')
+    await writeFile(join(source, 'settings.json'), '{}')
+    await writeFile(join(source, 'api', 'index.d.ts'), 'export {}')
+    await copyWorkerArtifacts({ from: join(source, 'editorWorkerMain.js'), to: join(target, 'editorWorkerMain.js'), entryOnly: true })
+    expect(await readFile(join(target, 'editorWorkerMain.js'), 'utf8')).toBe('worker fixture')
+    await expect(access(join(target, 'settings.json'))).rejects.toThrow()
+    await expect(access(join(target, 'api'))).rejects.toThrow()
+  } finally {
+    await rm(root, { recursive: true, force: true })
+  }
+})
