@@ -6,6 +6,9 @@ export const name = 'CacheStorage'
 
 export const Commands = {
   clearCache: CacheStorage.clearCache,
+  getEditorFileCache: CacheStorage.getEditorFileCache,
   getJson: CacheStorage.getJson,
+  removeEditorFileCache: CacheStorage.removeEditorFileCache,
+  setEditorFileCache: CacheStorage.setEditorFileCache,
   setJson: CacheStorage.setJson,
 }

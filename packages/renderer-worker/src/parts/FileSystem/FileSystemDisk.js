@@ -1,5 +1,6 @@
 import * as FileSystemWorker from '../FileSystemWorker/FileSystemWorker.js'
 import * as GetRemoteSrc from '../GetRemoteSrc/GetRemoteSrc.js'
+import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 
 export const name = 'Disk'
 
@@ -99,6 +100,11 @@ export const getFileSize = (path) => {
 export const stat = (path) => {
   path = toUri(path)
   return FileSystemWorker.invoke('FileSystem.stat', /* path */ path)
+}
+
+export const statWithMetadata = (path) => {
+  path = toUri(path)
+  return SharedProcess.invoke('FileSystem.statWithMetadata', /* path */ path)
 }
 
 export const getFolderSize = (path) => {

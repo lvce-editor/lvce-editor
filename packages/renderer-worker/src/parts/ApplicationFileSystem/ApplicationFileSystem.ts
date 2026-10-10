@@ -9,6 +9,7 @@ const providerMethods: Readonly<Record<string, string>> = {
   readFile: 'ReadFile',
   remove: 'Remove',
   rename: 'Rename',
+  statWithMetadata: 'Stat',
   writeFile: 'WriteFile',
 }
 

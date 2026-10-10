@@ -66,6 +66,20 @@ test('custom schemes use only the owning application runtime', async () => {
   await expect(FileSystem.execute('source', 'readFile', 'sample:///README.md')).rejects.toThrow('No sample filesystem provider in application source')
 })
 
+test('statWithMetadata routes to the owning application filesystem provider', async () => {
+  const stat = { mtime: 123, size: 42, type: 7 }
+  jest.mocked(Extensions.invoke).mockResolvedValueOnce({ found: true, result: stat })
+
+  await expect(FileSystem.execute('preview', 'statWithMetadata', 'remote-ssh:///workspace/file.txt')).resolves.toEqual(stat)
+  expect(Extensions.invoke).toHaveBeenCalledWith(
+    'Extensions.invokeForApplication',
+    'preview',
+    'Extensions.executeFileSystemProviderStat',
+    'remote-ssh',
+    'remote-ssh:///workspace/file.txt',
+  )
+})
+
 const hash = (content: string): string => createHash('sha256').update(content).digest('hex')
 
 test('batch hashes preserve URI order, content changes, missing files, and application isolation', async () => {

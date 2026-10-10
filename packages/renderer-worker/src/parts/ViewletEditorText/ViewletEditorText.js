@@ -10,6 +10,7 @@ import * as GetFontUrl from '../GetFontUrl/GetFontUrl.js'
 import * as GetTextEditorContent from '../GetTextEditorContent/GetTextEditorContent.js'
 import * as GetTokenizePath from '../GetTokenizePath/GetTokenizePath.js'
 import * as Id from '../Id/Id.js'
+import * as IsTest from '../IsTest/IsTest.js'
 import * as Languages from '../Languages/Languages.js'
 import * as LanguagesState from '../LanguagesState/LanguagesState.js'
 import * as LayoutWidgets from '../LayoutWidgets/LayoutWidgets.ts'
@@ -164,6 +165,7 @@ export const loadContent = async (state, savedState, context) => {
   if (useFunctionalRendering) {
     const tokenizePath = GetTokenizePath.getTokenizePath(languageId)
     const useCache = Preferences.get('editor.cache') ?? true
+    const useFileCache = Preferences.get('editor.fileCache') ?? !IsTest.isTest()
     await EditorWorker.invoke(
       'Editor.create2',
       id,
@@ -177,7 +179,8 @@ export const loadContent = async (state, savedState, context) => {
       languageId,
       tokenizePath,
       useCache,
-      ...(state.applicationId === undefined ? [] : [state.applicationId]),
+      state.applicationId,
+      useFileCache,
     )
     await EditorWorker.invoke('Editor.loadContent', id, savedState?.editorState, context?.largeFile === true, context?.focus ?? true)
     const initialRender = await rerender(newState2)
