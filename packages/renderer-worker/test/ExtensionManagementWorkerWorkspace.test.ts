@@ -40,3 +40,10 @@ test('disposes extensions before changing workspace', async () => {
   expect(invoke).toHaveBeenCalledTimes(1)
   expect(invoke).toHaveBeenCalledWith('Extensions.disposeAllRuntimes')
 })
+
+test('forwards saved file changes to extensions', async () => {
+  ExtensionManagementWorker.hydrate()
+  const changes = { changed: ['memfs:///threejs/src/main.ts'] }
+  await GlobalEventBus.emitEvent('fileSystem.changed', changes)
+  expect(invoke).toHaveBeenCalledWith('Extensions.handleFileChanges', changes)
+})

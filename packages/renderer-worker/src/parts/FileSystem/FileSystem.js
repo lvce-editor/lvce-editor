@@ -1,7 +1,7 @@
 import * as Assert from '../Assert/Assert.ts'
 import * as Command from '../Command/Command.js'
 import * as EncodingType from '../EncodingType/EncodingType.js'
-import * as ExtensionManagementWorker from '../ExtensionManagementWorker/ExtensionManagementWorker.js'
+import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as GetFileSystem from '../GetFileSystem/GetFileSystem.js'
 import * as GetProtocol from '../GetProtocol/GetProtocol.js'
 
@@ -12,7 +12,7 @@ const notifyFileSystemChanged = async (changes = {}, refreshWorkspaceViews = tru
   } else {
     // A handler may call editor RPC while the editor is waiting for this write.
     // Deliver the event without holding that save command open.
-    void Promise.allSettled([ExtensionManagementWorker.invoke('Extensions.handleFileChanges', changes)])
+    void Promise.allSettled([GlobalEventBus.emitEvent('fileSystem.changed', changes)])
   }
   effects.push(Command.execute('Layout.refreshSourceControlBadgeCount'))
   await Promise.allSettled(effects)

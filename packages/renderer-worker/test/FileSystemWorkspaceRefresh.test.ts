@@ -12,7 +12,7 @@ jest.unstable_mockModule('../src/parts/Command/Command.js', () => {
   }
 })
 
-jest.unstable_mockModule('../src/parts/ExtensionManagementWorker/ExtensionManagementWorker.js', () => ({ invoke }))
+jest.unstable_mockModule('../src/parts/GlobalEventBus/GlobalEventBus.js', () => ({ emitEvent: invoke }))
 
 const FileSystem = await import('../src/parts/FileSystem/FileSystem.js')
 const FileSystemState = await import('../src/parts/FileSystemState/FileSystemState.js')
@@ -66,7 +66,7 @@ test('editor saves notify extensions while skipping workspace views and refreshi
 
   expect(writeFile).toHaveBeenCalledWith('test://some-file.txt', 'updated', 'utf8')
   expect(execute).not.toHaveBeenCalledWith('Layout.handleWorkspaceRefresh', expect.anything())
-  expect(invoke).toHaveBeenCalledWith('Extensions.handleFileChanges', { changed: ['test://some-file.txt'] })
+  expect(invoke).toHaveBeenCalledWith('fileSystem.changed', { changed: ['test://some-file.txt'] })
   expect(execute).toHaveBeenCalledWith('Layout.refreshSourceControlBadgeCount')
 })
 
@@ -74,5 +74,5 @@ test('editor save does not wait for an extension reacting to the saved file', as
   invoke.mockImplementationOnce(() => new Promise(() => {}))
   await FileSystem.writeFile('test://some-file.txt', 'updated', 'utf8', false)
   expect(writeFile).toHaveBeenCalledWith('test://some-file.txt', 'updated', 'utf8')
-  expect(invoke).toHaveBeenCalledWith('Extensions.handleFileChanges', { changed: ['test://some-file.txt'] })
+  expect(invoke).toHaveBeenCalledWith('fileSystem.changed', { changed: ['test://some-file.txt'] })
 })
