@@ -392,3 +392,12 @@ test('extension refresh passes the disabled contribution identity to global view
 
   expect(handler).toHaveBeenCalledWith({ uid: 5 }, 'sample.extension', true)
 })
+
+test('workspace refresh does not wait for an extension file-change handler', async () => {
+  extensionManagementInvoke.mockImplementationOnce(() => new Promise(() => {}))
+  const state = ViewletLayout.create(1)
+  const changes = { changed: ['memfs:///threejs/dist/main.js'] }
+  const result = await ViewletLayout.handleWorkspaceRefresh(state, changes)
+  expect(extensionManagementInvoke).toHaveBeenCalledWith('Extensions.handleFileChanges', changes)
+  expect(result.newState).toBeDefined()
+})

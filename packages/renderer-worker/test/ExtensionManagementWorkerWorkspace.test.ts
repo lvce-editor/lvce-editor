@@ -1,6 +1,6 @@
 import { beforeEach, expect, jest, test } from '@jest/globals'
 
-const invoke = jest.fn(async (_method: string) => {})
+const invoke = jest.fn(async (_method: string, _changes?: unknown) => {})
 
 jest.unstable_mockModule('../src/parts/GetOrCreateWorker/GetOrCreateWorker.js', () => ({
   getOrCreateWorker: jest.fn(() => ({
@@ -39,4 +39,11 @@ test('disposes extensions before changing workspace', async () => {
 
   expect(invoke).toHaveBeenCalledTimes(1)
   expect(invoke).toHaveBeenCalledWith('Extensions.disposeAllRuntimes')
+})
+
+test('forwards saved file changes to extensions', async () => {
+  ExtensionManagementWorker.hydrate()
+  const changes = { changed: ['memfs:///threejs/src/main.ts'] }
+  await GlobalEventBus.emitEvent('fileSystem.changed', changes)
+  expect(invoke).toHaveBeenCalledWith('Extensions.handleFileChanges', changes)
 })

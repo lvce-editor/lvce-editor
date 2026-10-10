@@ -3035,11 +3035,10 @@ const handleExtensionFileChanges = async (refresh: WorkspaceRefresh, application
 }
 
 export const handleWorkspaceRefresh = async (state: LayoutState, refresh: WorkspaceRefresh = {}) => {
-  const [result] = await Promise.all([
-    callGlobalEvent(state, 'handleWorkspaceRefresh', refresh),
-    handleExtensionFileChanges(refresh, state.applicationId),
-  ])
-  return result
+  // Extension handlers can write generated files and re-enter this refresh.
+  // Notify them without holding the originating file operation open.
+  void handleExtensionFileChanges(refresh, state.applicationId)
+  return callGlobalEvent(state, 'handleWorkspaceRefresh', refresh)
 }
 
 export const handleSourceControlProgressChange = async (state: LayoutState): Promise<LayoutStateResult> => {
