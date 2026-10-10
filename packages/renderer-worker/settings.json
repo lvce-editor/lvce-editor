@@ -102,6 +102,14 @@
   },
   {
     "category": "text-editor",
+    "description": "Caches eligible editor files for faster reopening",
+    "heading": "Editor File Cache",
+    "id": "editor.fileCache",
+    "type": "boolean",
+    "value": true
+  },
+  {
+    "category": "text-editor",
     "description": "Controls whether semantic tokens are shown in the editor",
     "heading": "Semantic Tokens",
     "id": "editor.semanticTokens",

@@ -70,6 +70,8 @@ export const stat = (uri) => {
   })
 }
 
+export const statWithMetadata = stat
+
 export const exists = async (uri) => {
   try {
     await stat(uri)

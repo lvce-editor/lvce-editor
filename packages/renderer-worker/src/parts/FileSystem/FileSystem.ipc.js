@@ -19,6 +19,7 @@ export const Commands = {
   remove: FileSystem.remove,
   rename: FileSystem.rename,
   stat: FileSystem.stat,
+  statWithMetadata: FileSystem.statWithMetadata,
   writeFile: FileSystem.writeFile,
   writeBlob: FileSystem.writeBlob,
 }

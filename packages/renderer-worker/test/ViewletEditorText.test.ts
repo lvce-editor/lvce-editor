@@ -55,9 +55,12 @@ const ViewletEditorTextIpc = await import('../src/parts/ViewletEditorText/Viewle
 const ViewletEditorTextSaveState = await import('../src/parts/ViewletEditorText/ViewletEditorTextSaveState.js')
 const Languages = await import('../src/parts/Languages/Languages.js')
 const Preferences = await import('../src/parts/Preferences/Preferences.js')
+const IsTest = await import('../src/parts/IsTest/IsTest.js')
 
 beforeEach(() => {
   delete Preferences.state['editor.cache']
+  delete Preferences.state['editor.fileCache']
+  IsTest.state.isTest = false
 })
 
 test('loadContent - renders before diagnostics are requested by loadContentLater', async () => {
@@ -91,6 +94,8 @@ test('loadContent - renders before diagnostics are requested by loadContentLater
     expect.any(String),
     'typescript',
     '/tokenize-typescript.js',
+    true,
+    undefined,
     true,
   )
   expect(editorWorkerInvoke).toHaveBeenCalledWith('Editor.loadContent', 1, undefined, false, true)
@@ -218,6 +223,25 @@ test('loadContent - disables the editor file cache through preferences', async (
   await ViewletEditorText.loadContent(state, {}, {})
 
   const createCall = editorWorkerInvoke.mock.calls.find(([method]) => method === 'Editor.create2')
+  expect(createCall?.[11]).toBe(false)
+})
+
+test('loadContent - disables the editor file cache by default in e2e tests', async () => {
+  IsTest.state.isTest = true
+  editorWorkerInvoke.mockImplementation((method) => {
+    switch (method) {
+      case 'Editor.diff2':
+      case 'Editor.render2':
+        return []
+      default:
+        return undefined
+    }
+  })
+  const state = ViewletEditorText.create(1, '/test/file.txt', 0, 0, 800, 600)
+
+  await ViewletEditorText.loadContent(state, {}, {})
+
+  const createCall = editorWorkerInvoke.mock.calls.find(([method]) => method === 'Editor.create2')
   expect(createCall?.at(-1)).toBe(false)
 })
 
@@ -252,6 +276,8 @@ test('loadContent - detects the language from the first line for an extensionles
     expect.any(String),
     'javascript',
     '/tokenize-javascript.js',
+    true,
+    undefined,
     true,
   )
 })

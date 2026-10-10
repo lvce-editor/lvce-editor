@@ -138,6 +138,15 @@ export const stat = async (uri) => {
   return fileSystem.stat(uri)
 }
 
+export const statWithMetadata = async (uri) => {
+  const protocol = GetProtocol.getProtocol(uri)
+  const fileSystem = await GetFileSystem.getFileSystem(protocol)
+  if (typeof fileSystem.statWithMetadata !== 'function') {
+    throw new Error(`Filesystem doesn't support stat metadata for ${protocol} URIs.`)
+  }
+  return fileSystem.statWithMetadata(uri)
+}
+
 export const getFolderSize = async (uri) => {
   const protocol = GetProtocol.getProtocol(uri)
   const fileSystem = await GetFileSystem.getFileSystem(protocol)
