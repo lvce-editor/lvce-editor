@@ -29,10 +29,11 @@ test('packs the entry point and keeps the Node runtime and external resources on
     await expect(access(join(resourcesPath, 'app'))).rejects.toThrow()
     const archivePath = join(resourcesPath, 'app.asar')
     expect(JSON.parse(extractFile(archivePath, 'package.json').toString()).main).toBe('packages/main-process/dist/mainProcessMain.js')
-    expect(statFile(archivePath, 'packages/main-process/dist/mainProcessMain.js').unpacked).not.toBe(true)
-    expect(extractFile(archivePath, 'packages/main-process/dist/mainProcessMain.js').toString()).toContain('app.asar.unpacked')
+    const mainPath = join('packages', 'main-process', 'dist', 'mainProcessMain.js')
+    expect(statFile(archivePath, mainPath).unpacked).not.toBe(true)
+    expect(extractFile(archivePath, mainPath).toString()).toContain('app.asar.unpacked')
     for (const [relativePath, content] of Object.entries(files).slice(2)) {
-      expect(statFile(archivePath, relativePath).unpacked).toBe(true)
+      expect(statFile(archivePath, join(...relativePath.split('/'))).unpacked).toBe(true)
       expect(await readFile(join(resourcesPath, 'app.asar.unpacked', relativePath), 'utf8')).toBe(content)
     }
   } finally {
