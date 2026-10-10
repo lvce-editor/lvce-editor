@@ -5,7 +5,7 @@ import { access, chmod, cp, lstat, mkdtemp, mkdir, open, readFile, readdir, rena
 import { constants } from 'node:fs'
 import { homedir, tmpdir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
-import { fileURLToPath } from 'node:url'
+import { fileURLToPath, pathToFileURL } from 'node:url'
 
 const applicationName = '@@APPLICATION_NAME@@'
 const foregroundCommands = new Set(['install', 'list'])
@@ -34,19 +34,36 @@ const parseLaunchOptions = (args) => {
       asar = true
       continue
     }
+    if (arg === '--no-asar') {
+      asar = false
+      continue
+    }
     if (arg === '--electron-version' || arg.startsWith('--electron-version=')) {
       const value = arg === '--electron-version' ? args[++index] : arg.slice('--electron-version='.length)
       if (!value || value.startsWith('--') || !/^v?\d+\.\d+\.\d+(?:-[\w.-]+)?$/.test(value)) {
         throw new Error('--electron-version requires a valid Electron version (for example, --electron-version=44.0.0)')
       }
-      if (!electronVersion) {
-        electronVersion = value.replace(/^v/, '')
-      }
+      electronVersion = value.replace(/^v/, '')
       continue
     }
     filteredArgs.push(arg)
   }
   return { asar, electronVersion, args: filteredArgs }
+}
+
+const loadArgvConfigArguments = async (env) => {
+  const modulePath = join(appRoot, 'packages', 'server', 'src', 'argvConfig.js')
+  try {
+    await access(modulePath)
+  } catch (error) {
+    if (error && typeof error === 'object' && 'code' in error && error.code === 'ENOENT') {
+      return []
+    }
+    throw error
+  }
+  const argvConfig = await import(pathToFileURL(modulePath).href)
+  const configPath = argvConfig.getArgvConfigPath(env)
+  return argvConfig.load(configPath)
 }
 
 const getElectronExecutablePath = (electronDir) => {
@@ -312,9 +329,11 @@ const launchElectron = async (args, envOverrides) => {
   const env = { ...process.env, ...envOverrides }
   delete env.ELECTRON_RUN_AS_NODE
 
-  const foreground = isForegroundRequest(args)
-  const verbose = args.includes('--verbose')
-  const parsedArgs = parseLaunchOptions(args)
+  const configArguments = await loadArgvConfigArguments(env)
+  env.LVCE_ARGV_CONFIG_LOADED = '1'
+  const parsedArgs = parseLaunchOptions([...configArguments, ...args])
+  const foreground = isForegroundRequest(parsedArgs.args)
+  const verbose = parsedArgs.args.includes('--verbose')
   const executablePath = parsedArgs.electronVersion ? await ensureElectronRuntime(parsedArgs.electronVersion) : process.execPath
   const applicationPath = parsedArgs.asar ? await ensureAsarApp() : appRoot
   const launchArgs = parsedArgs.asar || parsedArgs.electronVersion ? [applicationPath, ...parsedArgs.args] : parsedArgs.args

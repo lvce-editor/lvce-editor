@@ -423,6 +423,7 @@ export class LanguageServerConnection {
         version: 1,
       }
       this.documents.set(textDocument.uri, next)
+      this.publishedDiagnostics.delete(textDocument.uri)
       this.sendNotification('textDocument/didOpen', {
         textDocument: {
           languageId: next.languageId,
@@ -442,6 +443,7 @@ export class LanguageServerConnection {
       version: previous.version + 1,
     }
     this.documents.set(textDocument.uri, next)
+    this.publishedDiagnostics.delete(textDocument.uri)
     this.sendNotification('textDocument/didChange', {
       contentChanges: [
         {
