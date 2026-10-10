@@ -90,7 +90,7 @@
     "@lvce-editor/output-view": "^2.24.7",
     "@lvce-editor/panel-worker": "^2.14.1",
     "@lvce-editor/ports-view": "^0.9.0",
-    "@lvce-editor/preview-sandbox-worker": "^4.15.2",
+    "@lvce-editor/preview-sandbox-worker": "^4.16.0",
     "@lvce-editor/preview-worker": "^6.18.1",
     "@lvce-editor/problems-view": "^1.40.0",
     "@lvce-editor/process-explorer-worker": "^3.33.0",
