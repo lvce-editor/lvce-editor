@@ -1,8 +1,12 @@
 import * as Copy from '../Copy/Copy.ts'
 import * as Path from '../Path/Path.ts'
 
-export const copyWorkerArtifacts = async ({ from, to }: { from: string; to: string }): Promise<void> => {
+export const copyWorkerArtifacts = async ({ from, to, entryOnly = false }: { from: string; to: string; entryOnly?: boolean }): Promise<void> => {
   if (Path.baseName(Path.dirname(from)) !== 'dist') {
+    await Copy.copyFile({ from, to })
+    return
+  }
+  if (entryOnly) {
     await Copy.copyFile({ from, to })
     return
   }

@@ -16,6 +16,10 @@ const stripLeadingSlash = (path) => {
   return path.startsWith('/') ? path.slice(1) : path
 }
 
+export const shouldCopyWorkerEntryOnly = ({ platform, workerId }) => {
+  return platform === 'electron' && workerId === 'editor'
+}
+
 const getWorkerSourcePath = (defaultPath) => {
   const sourcePath = stripLeadingSlash(defaultPath)
   if (existsSync(Path.absolute(sourcePath))) {
@@ -28,7 +32,7 @@ const getWorkerSourcePath = (defaultPath) => {
   return ''
 }
 
-const copyWorkers = async ({ product, toRoot, workers }) => {
+const copyWorkers = async ({ product, toRoot, platform, workers }) => {
   for (const worker of workers) {
     if (worker.id === 'rendererWorker') {
       continue
@@ -45,6 +49,7 @@ const copyWorkers = async ({ product, toRoot, workers }) => {
     await CopyWorkerArtifacts.copyWorkerArtifacts({
       from,
       to: Path.join(toRoot, stripLeadingSlash(productionPath)),
+      entryOnly: shouldCopyWorkerEntryOnly({ platform, workerId: worker.id }),
     })
     if (worker.id === 'dialogWorker') {
       await PatchDialogWorkerProductName.patchDialogWorkerProductName({ product, toRoot })
@@ -81,7 +86,7 @@ export const bundleWorkers = async ({ commitHash, platform, assetDir, version, d
     ignore: ['static'],
   })
 
-  await copyWorkers({ product, toRoot, workers })
+  await copyWorkers({ platform, product, toRoot, workers })
   await BundleBuiltinSettings.bundleBuiltinSettings({ toRoot, workers })
 
   await Copy.copy({
