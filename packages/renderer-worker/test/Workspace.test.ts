@@ -76,9 +76,9 @@ test('hydrate', async () => {
   })
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
-  await Workspace.hydrate({ href: 'http://localhost:3000' })
+  await Workspace.hydrate({ href: 'http://localhost:3000', workspaceUri: 'remote-ssh://user@example.com/home' })
   expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(SharedProcess.invoke).toHaveBeenCalledWith('Workspace.resolveRoot', 'http://localhost:3000')
+  expect(SharedProcess.invoke).toHaveBeenCalledWith('Workspace.resolveRoot', 'http://localhost:3000', 'remote-ssh://user@example.com/home')
   expect(Workspace.state.pathSeparator).toBe('/')
   const windowTitleCalls = jest.mocked(RendererProcess.invoke).mock.calls.filter(([method]) => method === 'WindowTitle.set')
   expect(windowTitleCalls).toEqual([['WindowTitle.set', 'some-folder']])
@@ -115,7 +115,7 @@ test('hydrate - path changed in the meantime', async () => {
   await promise1
   expect(Workspace.state.workspacePath).toBe('/test')
   expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(SharedProcess.invoke).toHaveBeenCalledWith('Workspace.resolveRoot', 'http://localhost:3000')
+  expect(SharedProcess.invoke).toHaveBeenCalledWith('Workspace.resolveRoot', 'http://localhost:3000', '')
   const windowTitleCalls = jest.mocked(RendererProcess.invoke).mock.calls.filter(([method]) => method === 'WindowTitle.set')
   expect(windowTitleCalls).toEqual([['WindowTitle.set', 'test']])
 })

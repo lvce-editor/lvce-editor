@@ -7,6 +7,14 @@ import * as TranspileTypeScript from '../TranspileTypeScript/TranspileTypeScript
 
 const useCache = false // TODO enable this
 
+const getWorkspaceUri = (url: string): string | undefined => {
+  try {
+    return new URL(url, `${Platform.scheme}://-/`).searchParams.get('workspace') || undefined
+  } catch {
+    return undefined
+  }
+}
+
 const readRange = async (absolutePath: string, range: ByteRange): Promise<Buffer> => {
   const length = range.end - range.start + 1
   const buffer = Buffer.allocUnsafe(length)
@@ -35,13 +43,14 @@ export const getElectronFileResponseContent = async (request: any, absolutePath:
   }
   let content = await readFile(absolutePath)
   const isAppIndex = typeof url === 'string' && (url === '/' || (url.startsWith(`${Platform.scheme}://-/`) && new URL(url).pathname === '/'))
+  const runtimeConfig = { platform: 'electron', workspaceUri: getWorkspaceUri(request?.url || url) }
   if (!Platform.isProduction && isAppIndex) {
     // @ts-ignore
     content = content.toString().replace('    <link rel="manifest" href="/manifest.json" crossorigin="use-credentials" />\n', '')
-    content = await AddCustomPathsToIndexHtml.addCustomPathsToIndexHtml(content, { platform: 'electron' })
+    content = await AddCustomPathsToIndexHtml.addCustomPathsToIndexHtml(content, runtimeConfig)
   }
   if (Platform.isProduction && isAppIndex) {
-    content = await AddCustomPathsToIndexHtml.addCustomPathsToIndexHtml(content, { platform: 'electron' })
+    content = await AddCustomPathsToIndexHtml.addCustomPathsToIndexHtml(content, runtimeConfig)
   }
   if (typeof content === 'string') {
     content = Buffer.from(content)

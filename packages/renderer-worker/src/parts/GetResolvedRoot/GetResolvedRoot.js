@@ -10,8 +10,8 @@ import { state } from '../IsTest/IsTest.js'
 const SharedProcessCliArgSource = 'shared-process-cli-arg'
 const TestHomeDir = '/home/test'
 
-const getResolvedRootFromSharedProcess = async (href) => {
-  const resolvedRoot = await SharedProcess.invoke(/* Workspace.resolveRoot */ SharedProcessCommandType.WorkspaceResolveRoot, href)
+const getResolvedRootFromSharedProcess = async (href, workspaceUri) => {
+  const resolvedRoot = await SharedProcess.invoke(/* Workspace.resolveRoot */ SharedProcessCommandType.WorkspaceResolveRoot, href, workspaceUri)
   return resolvedRoot
 }
 
@@ -72,8 +72,8 @@ const getResolvedRootFromRendererProcess = async (href, resolvedRootFromSharedPr
   return undefined
 }
 
-const getResolvedRootRemote = async (href) => {
-  const resolvedRootFromSharedProcess = await getResolvedRootFromSharedProcess(href)
+const getResolvedRootRemote = async (href, workspaceUri) => {
+  const resolvedRootFromSharedProcess = await getResolvedRootFromSharedProcess(href, workspaceUri)
   if (resolvedRootFromSharedProcess?.source === SharedProcessCliArgSource) {
     return resolvedRootFromSharedProcess
   }
@@ -84,11 +84,11 @@ const getResolvedRootRemote = async (href) => {
   return resolvedRootFromSharedProcess
 }
 
-export const getResolvedRoot = async (href) => {
+export const getResolvedRoot = async (href, workspaceUri = '') => {
   switch (Platform.getPlatform()) {
     case PlatformType.Web:
       return getResolvedRootFromRendererProcess(href)
     default:
-      return getResolvedRootRemote(href)
+      return getResolvedRootRemote(href, workspaceUri)
   }
 }

@@ -56,7 +56,7 @@ export const setWorkspaceUri = async (workspaceUri) => {
     return RendererProcess.invoke(/* Location.setWorkspaceUri */ 'Location.setWorkspaceUri', /* workspaceUri */ workspaceUri)
   }
   const url = new URL(href)
-  url.searchParams.set('workspace', workspaceUri)
+  url.searchParams.delete('workspace')
   if (url.href === href) {
     return
   }
