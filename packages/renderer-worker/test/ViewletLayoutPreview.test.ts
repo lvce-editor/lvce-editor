@@ -393,6 +393,26 @@ test('showPreview enables preview sash', async () => {
   })
 })
 
+test('showPreview opens memfs HTML with a readable preview URL', async () => {
+  const state = {
+    ...ViewletLayout.create(1),
+    activityBarVisible: true,
+    activityBarWidth: 48,
+    statusBarHeight: 20,
+    titleBarHeight: 35,
+    windowHeight: 800,
+    windowWidth: 1200,
+  }
+
+  const result = await ViewletLayout.showPreview(state, 'memfs://inventing-on-principles.html')
+
+  expect(result.newState).toMatchObject({
+    previewVisible: true,
+    previewUri: 'html-preview:///memfs/inventing-on-principles.html',
+    previewViewletId: 'SimpleBrowser',
+  })
+})
+
 test('showPreview keeps the preview hidden until its viewlet has loaded', async () => {
   let resolveLoad: (commands: unknown[][]) => void = () => {}
   const loading = new Promise<unknown[][]>((resolve) => {

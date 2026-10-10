@@ -12,6 +12,31 @@ test('file URLs keep path separators readable', () => {
   expect(decode(url)).toBe(uri)
 })
 
+test('memfs URLs keep path separators readable', () => {
+  const uri = 'memfs://inventing-on-principles.html'
+  const url = encode(uri)
+  expect(url).toBe('html-preview:///memfs/inventing-on-principles.html')
+  expect(decode(url)).toBe(uri)
+})
+
+test.each([
+  'memfs://inventing-on-principles/inventing-on-principle.html',
+  'memfs:////inventing-on-principles/inventing-on-principle.html',
+])('nested memfs URLs retain their source path: %s', (uri) => {
+  const url = encode(uri)
+  expect(url).toContain('/memfs/')
+  expect(url).not.toContain('%2F')
+  expect(decode(url)).toBe(uri)
+})
+
+test.each([
+  'memfs://folder/a b%#.html?x=one#heading',
+  'memfs://folder/%2520.html',
+])('memfs URLs escape reserved characters and round trip: %s', (uri) => {
+  const url = encode(uri)
+  expect(decode(url)).toBe(uri)
+})
+
 test.each([
   'file:///home/example/a b%#.html?x=one#heading',
   'file:///C:/Users/example/index.html',
@@ -24,6 +49,11 @@ test.each([
 
 test('legacy fully encoded file URLs remain decodable', () => {
   const uri = 'file:///hello #%.html'
+  expect(decode(`html-preview:///${encodeURIComponent(uri)}`)).toBe(uri)
+})
+
+test('legacy fully encoded memfs URLs remain decodable', () => {
+  const uri = 'memfs://folder/a b%#.html?x=one#heading'
   expect(decode(`html-preview:///${encodeURIComponent(uri)}`)).toBe(uri)
 })
 
