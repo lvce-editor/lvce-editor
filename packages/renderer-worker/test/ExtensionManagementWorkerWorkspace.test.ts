@@ -1,6 +1,6 @@
 import { beforeEach, expect, jest, test } from '@jest/globals'
 
-const invoke = jest.fn(async (_method: string) => {})
+const invoke = jest.fn(async (_method: string, _changes?: unknown) => {})
 
 jest.unstable_mockModule('../src/parts/GetOrCreateWorker/GetOrCreateWorker.js', () => ({
   getOrCreateWorker: jest.fn(() => ({
