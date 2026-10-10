@@ -317,6 +317,7 @@ export const saveState = (state: LayoutState) => {
   } = stateToSave
   return {
     aiNativeLayout: state.aiNativeLayout === true,
+    aiNativeActivityBarVisible: state.aiNativeActivityBarVisible ?? true,
     activityBarVisible,
     panelHeight,
     panelVisible,
@@ -623,8 +624,10 @@ export const loadContent = (state: LayoutState, savedState: any): LayoutState =>
   return getPoints(
     {
       ...newState,
+      aiNativeActivityBarVisible: stateToRestore?.aiNativeActivityBarVisible ?? true,
       aiNativeLayout: true,
       aiNativeLayoutExited: false,
+      activityBarVisible: stateToRestore?.aiNativeActivityBarVisible ?? true,
       titleBarVisible: false,
       statusBarVisible: false,
       sideBarFocusMode: true,
@@ -641,7 +644,13 @@ const show = async (state: LayoutState, module, currentViewletId, restore?: bool
     const result = await show(restored.newState, module, currentViewletId, restore)
     return { newState: result.newState, commands: [...restored.commands, ...result.commands] }
   }
-  if (state.sideBarFocusMode && module !== LayoutModules.SideBar && module !== LayoutModules.StatusBar && module !== LayoutModules.TitleBar) {
+  if (
+    state.sideBarFocusMode &&
+    module !== LayoutModules.SideBar &&
+    module !== LayoutModules.StatusBar &&
+    module !== LayoutModules.TitleBar &&
+    !(state.aiNativeLayout && module === LayoutModules.ActivityBar)
+  ) {
     return {
       newState: state,
       commands: [],
@@ -659,6 +668,7 @@ const show = async (state: LayoutState, module, currentViewletId, restore?: bool
   const intermediateState: LayoutState = getPoints({
     ...state,
     [kVisible]: true,
+    ...(state.aiNativeLayout && module === LayoutModules.ActivityBar ? { aiNativeActivityBarVisible: true } : {}),
     ...(module === LayoutModules.Preview ? { previewSashVisible: true } : {}),
     ...(module === LayoutModules.SecondaryPreview ? { secondaryPreviewSashVisible: true } : {}),
     ...(module === LayoutModules.SideBar ? { sideBarSashVisible: true } : {}),
@@ -862,6 +872,12 @@ export const enterSideBarFocusMode = async (
   const newState = getPoints({
     ...state,
     aiNativeLayout,
+    ...(aiNativeLayout
+      ? {
+          aiNativeActivityBarVisible: state.aiNativeActivityBarVisible ?? true,
+          activityBarVisible: state.aiNativeActivityBarVisible ?? true,
+        }
+      : {}),
     aiNativeLayoutExited: false,
     ...(aiNativeLayout ? { titleBarVisible: false, statusBarVisible: false } : {}),
     sideBarFocusMode: true,
@@ -932,7 +948,13 @@ export const showSideBar = async (state: LayoutState, moduleId?: string, restore
 }
 
 const hide = async (state: LayoutState, module): Promise<{ newState: LayoutState; commands: any }> => {
-  if (state.sideBarFocusMode && module !== LayoutModules.SideBar && module !== LayoutModules.StatusBar && module !== LayoutModules.TitleBar) {
+  if (
+    state.sideBarFocusMode &&
+    module !== LayoutModules.SideBar &&
+    module !== LayoutModules.StatusBar &&
+    module !== LayoutModules.TitleBar &&
+    !(state.aiNativeLayout && module === LayoutModules.ActivityBar)
+  ) {
     return {
       newState: state,
       commands: [],
@@ -945,6 +967,7 @@ const hide = async (state: LayoutState, module): Promise<{ newState: LayoutState
   const newState = getPoints({
     ...state,
     [kVisible]: false,
+    ...(state.aiNativeLayout && module === LayoutModules.ActivityBar ? { aiNativeActivityBarVisible: false } : {}),
     ...(module === LayoutModules.Preview
       ? {
           previewActionsEventListeners: [],
