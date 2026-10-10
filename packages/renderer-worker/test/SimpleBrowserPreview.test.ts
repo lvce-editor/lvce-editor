@@ -40,6 +40,23 @@ test('creates a detached child preview with the exact decoded URI and content bo
   expect(ViewletManager.load).toHaveBeenCalledTimes(1)
 })
 
+test('materializes and reloads a readable memfs preview URL', async () => {
+  jest.mocked(ViewletManager.load).mockResolvedValue([['create']])
+  const iframeSrc = 'html-preview:///memfs/inventing-on-principles.html'
+  const tab = await Preview.materialize(
+    { uid: 7, x: 10, y: 20, width: 300, height: 200, headerHeight: 65 },
+    { iframeSrc },
+  )
+
+  expect(ViewletManager.load).toHaveBeenCalledWith(
+    expect.objectContaining({ uri: 'memfs://inventing-on-principles.html' }),
+  )
+
+  await Preview.reload(tab)
+
+  expect(Viewlet.executeViewletCommand).toHaveBeenCalledWith(tab.previewUid, 'setUri', 'memfs://inventing-on-principles.html')
+})
+
 test('resize updates all materialized previews while leaving native tabs alone', async () => {
   jest.mocked(Viewlet.resize).mockResolvedValue([['resize']])
   await Preview.resize({
