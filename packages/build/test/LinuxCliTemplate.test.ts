@@ -154,6 +154,69 @@ writeFileSync(process.env.LVCE_TEST_RESULT, JSON.stringify({
     }
   })
 
+  testPosix('loads argv.json before explicit CLI arguments and forwards configured links', async () => {
+    const root = await mkdtemp(join(tmpdir(), 'lvce-linux-cli-argv-config-'))
+    const binPath = join(root, 'bin')
+    const serverSourcePath = join(root, 'packages', 'server', 'src')
+    const configPath = join(root, '.config', 'lvce-oss', 'argv.json')
+    const resultPath = join(root, 'result.json')
+    const fakeElectronPath = join(root, 'fake-electron')
+    try {
+      await mkdir(binPath, { recursive: true })
+      await mkdir(serverSourcePath, { recursive: true })
+      await mkdir(dirname(configPath), { recursive: true })
+      await writeFile(
+        join(serverSourcePath, 'argvConfig.js'),
+        `import { readFile } from 'node:fs/promises'
+import { join } from 'node:path'
+export const getArgvConfigPath = (env) => join(env.XDG_CONFIG_HOME, 'lvce-oss', 'argv.json')
+export const load = async (path) => {
+  const config = JSON.parse(await readFile(path, 'utf8'))
+  return Object.entries(config).flatMap(([key, value]) => Array.isArray(value) ? value.map((item) => '--' + key + '=' + item) : ['--' + key + '=' + value])
+}
+`,
+      )
+      await writeFile(configPath, `{
+  "link": ["/extensions/first", "/extensions/with spaces"],
+  "theme": "configured"
+}`)
+      await writeFile(
+        fakeElectronPath,
+        `#!/usr/bin/env node
+import { writeFileSync } from 'node:fs'
+writeFileSync(process.env.LVCE_TEST_RESULT, JSON.stringify({ args: process.argv.slice(2), loaded: process.env.LVCE_ARGV_CONFIG_LOADED }))
+`,
+      )
+      await chmod(fakeElectronPath, 0o755)
+      const cli = (await readTemplate('linux_cli_js'))
+        .replaceAll('@@APPLICATION_NAME@@', 'lvce')
+        .replace('spawn(executablePath, launchArgs, {', `spawn(${JSON.stringify(fakeElectronPath)}, launchArgs, {`)
+      const cliPath = join(binPath, 'cli.js')
+      await writeFile(cliPath, cli)
+
+      await execFileAsync(process.execPath, [cliPath, '--wait', '--theme=explicit', '/workspace/with spaces'], {
+        env: {
+          ...process.env,
+          LVCE_TEST_RESULT: resultPath,
+          XDG_CONFIG_HOME: join(root, '.config'),
+        },
+      })
+      const result = JSON.parse(await readFile(resultPath, 'utf8'))
+
+      expect(result.args).toEqual([
+        '--link=/extensions/first',
+        '--link=/extensions/with spaces',
+        '--theme=configured',
+        '--wait',
+        '--theme=explicit',
+        '/workspace/with spaces',
+      ])
+      expect(result.loaded).toBe('1')
+    } finally {
+      await rm(root, { recursive: true, force: true })
+    }
+  })
+
   testPosix('forwards SIGINT to the foreground Electron process', async () => {
     const root = await mkdtemp(join(tmpdir(), 'lvce-linux-cli-sigint-'))
     const binPath = join(root, 'bin')
@@ -286,6 +349,7 @@ setTimeout(() => {
     const binPath = join(root, 'bin')
     const toolsPath = join(root, 'tools')
     const mainProcessPath = join(root, 'packages', 'main-process')
+    const serverSourcePath = join(root, 'packages', 'server', 'src')
     const artifactDir = join(root, 'electron-artifact')
     const fakeElectronPath =
       process.platform === 'darwin' ? join(artifactDir, 'Electron.app', 'Contents', 'MacOS', 'Electron') : join(artifactDir, 'electron')
@@ -299,6 +363,7 @@ setTimeout(() => {
     try {
       await mkdir(binPath, { recursive: true })
       await mkdir(toolsPath, { recursive: true })
+      await mkdir(serverSourcePath, { recursive: true })
       await mkdir(join(mainProcessPath, 'node_modules', '@electron', 'get'), { recursive: true })
       await mkdir(join(mainProcessPath, 'node_modules', '@electron-internal', 'extract-zip'), { recursive: true })
       await mkdir(join(root, 'static', 'build-a'), { recursive: true })
@@ -318,6 +383,12 @@ setTimeout(() => {
       await writeFile(failingSudoPath, '#!/bin/sh\nexit 72\n')
       await chmod(failingSudoPath, 0o755)
       await writeFile(join(mainProcessPath, 'package.json'), JSON.stringify({ type: 'module' }))
+      await writeFile(
+        join(serverSourcePath, 'argvConfig.js'),
+        `export const getArgvConfigPath = () => '/fixture/argv.json'
+export const load = async () => ['--electron-version=44.1.2', '--asar', '--link=/extensions/from argv.json']
+`,
+      )
       await writeFile(join(mainProcessPath, 'node_modules', '@electron', 'get', 'package.json'), JSON.stringify({ main: 'index.cjs' }))
       await writeFile(
         join(mainProcessPath, 'node_modules', '@electron', 'get', 'index.cjs'),
@@ -365,7 +436,7 @@ renameSync(temporaryResult, process.env.LVCE_TEST_LAUNCH_RESULT)
         PATH: `${toolsPath}${delimiter}${process.env.PATH}`,
         XDG_CACHE_HOME: cachePath,
       }
-      const { stdout, stderr } = await execFileAsync(process.execPath, [cliPath, '--electron-version', '44.1.2', '--asar', '--wait'], { env })
+      const { stdout, stderr } = await execFileAsync(process.execPath, [cliPath, '--wait'], { env })
       const download = JSON.parse((await readFile(downloadResultPath, 'utf8')).trim())
       const launch = JSON.parse(await readFile(launchResultPath, 'utf8'))
       const realAppRoot = await realpath(root)
@@ -373,11 +444,12 @@ renameSync(temporaryResult, process.env.LVCE_TEST_LAUNCH_RESULT)
       expect(download).toMatchObject({ version: '44.1.2', platform: process.platform, artifactName: 'electron' })
       expect(launch.args[0]).toMatch(/app\.asar$/)
       expect(launch.args[0]).not.toBe(realAppRoot)
-      expect(launch.args.slice(1)).toEqual(['--wait'])
+      expect(launch.args.slice(1)).toEqual(['--link=/extensions/from argv.json', '--wait'])
       expect(launch.runAsNode).toBeUndefined()
       expect(stdout).toContain('Downloading Electron 44.1.2...')
       expect(stdout).toContain('Creating ASAR application...')
       expect(stderr).toBe('')
+      await rm(join(serverSourcePath, 'argvConfig.js'))
       const cachedExecutablePath =
         process.platform === 'darwin'
           ? join(cachePath, 'lvce', 'electron', `44.1.2-${process.platform}-${process.arch}`, 'Electron.app', 'Contents', 'MacOS', 'Electron')
