@@ -5,4 +5,8 @@ export const copyElectronLicense = async ({ resourcesPath }) => {
     from: 'LICENSE',
     to: `${resourcesPath}/app/LICENSE`,
   })
+  await Copy.copyFile({
+    from: 'ThirdPartyNotices.txt',
+    to: `${resourcesPath}/app/ThirdPartyNotices.txt`,
+  })
 }
