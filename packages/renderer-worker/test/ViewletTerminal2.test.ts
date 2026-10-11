@@ -311,3 +311,14 @@ test('preserves the container interpreter environment through terminal creation'
   await ViewletTerminal2.loadContentLater(loaded)
   expect(terminalWorkerInvoke).toHaveBeenCalledWith('Terminal.create', 3912, '/host', options.command, options.args, { backend: 'mock', env })
 })
+
+test('an unavailable web terminal shows its explanation without creating a process', async () => {
+  const spawnError = 'Terminals are unavailable in this web workspace. Connect to a remote workspace to run a shell.'
+  const state = await ViewletTerminal2.loadContent(ViewletTerminal2.create(55), undefined, { args: [], command: '', spawnError })
+  await ViewletTerminal2.loadContentLater(state)
+  await ViewletTerminal2.handleInput(state, 'input')
+  await ViewletTerminal2.resize(state, { width: 800, height: 600 })
+  await ViewletTerminal2.dispose(state)
+  expect(terminalWorkerInvoke).not.toHaveBeenCalled()
+  expect(rendererProcessInvoke).toHaveBeenCalledWith('Viewlet.send', 55, 'write', new TextEncoder().encode(`\r\n${spawnError}\r\n`))
+})
