@@ -491,6 +491,17 @@ export const hide = async (state) => {
   await Promise.all(state.tabs.filter((tab) => tab.browserViewId).map((tab) => ElectronWebContentsViewFunctions.hide(tab.browserViewId)))
 }
 
+export const hideForTabDrag = async (state) => {
+  const selectedTab = state.tabs[state.selectedTabIndex]
+  if (selectedTab?.browserViewId) await ElectronWebContentsViewFunctions.hide(selectedTab.browserViewId)
+  return state
+}
+
+export const showAfterTabDrag = async (state) => {
+  await show(state)
+  return state
+}
+
 const createUnloadedTab = async (state) => {
   const { headerHeight, height, width, x, y } = state
   const browserViewId = await ElectronWebContentsView.createWebContentsView(0, getFallThroughKeyBindings())
@@ -1779,16 +1790,18 @@ export const handleFaviconError = (state, index, src) => {
 export const moveTabToBrowser = async (state, browserViewId, destinationUid) => {
   const destination = ViewletStates.getInstance(destinationUid)
   const index = state.tabs.findIndex((tab) => tab.browserViewId === browserViewId)
-  if (index < 0 || !browserViewId || !destination || destination.state.tabs.length) return state
+  if (index < 0 || !browserViewId || !destination || destinationUid === state.uid) return state
   let current = await closeFind(state, false)
   current = await prepareFullWidth(current)
   const tab = current.tabs[index]
+  if (destination.state.tabs.some((destinationTab) => destinationTab.browserViewId === browserViewId)) return state
   const remaining = current.tabs.toSpliced(index, 1)
   if (!remaining.length) remaining.push(createTab({}))
   const selectedIndex = Math.min(index, remaining.length - 1)
   if (!remaining[selectedIndex].browserViewId) remaining[selectedIndex] = await materializeTab(current, remaining[selectedIndex])
   const sourceState = activateTab(TabDrag.resetTabDrag(current), remaining, selectedIndex)
-  const destinationState = activateTab(destination.state, [tab], 0)
+  const destinationTabs = [...destination.state.tabs, tab]
+  const destinationState = activateTab(destination.state, destinationTabs, destinationTabs.length - 1)
   const commands = [...Viewlet.setStateFunctional(state.uid, sourceState), ...Viewlet.setStateFunctional(destinationUid, destinationState)]
   ViewletStates.setRenderedState(state.uid, sourceState)
   ViewletStates.setRenderedState(destinationUid, destinationState)

@@ -3326,22 +3326,33 @@ export const afterRender = async (oldState: LayoutState, newState: LayoutState) 
   if (commands.length) await RendererProcess.invoke('Viewlet.sendMultiple', commands)
 }
 
-export const beginBrowserTabDrag = (state: LayoutState, sourceUid: number): LayoutStateResult => {
+export const beginBrowserTabDrag = async (state: LayoutState, sourceUid: number): Promise<LayoutStateResult> => {
   const source = ViewletStates.getInstance(sourceUid)?.state
+  const movingToBottomLeft = sourceUid === state.previewId && !state.secondaryPreviewVisible
+  const movingToPreview =
+    sourceUid === state.secondaryPreviewId &&
+    state.secondaryPreviewPlacement === 'bottomLeft' &&
+    state.secondaryPreviewVisible &&
+    state.previewVisible &&
+    state.previewViewletId === ViewletModuleId.SimpleBrowser
   const supported =
-    sourceUid === state.previewId &&
-    !state.secondaryPreviewVisible &&
+    (movingToBottomLeft || movingToPreview) &&
     !state.browserFullWidth &&
     !state.sideBarFocusMode &&
+    source?.isDraggingTab &&
     source?.draggedTab?.browserViewId &&
     !source?.loginChallenges?.length
+  if (supported && movingToPreview) await Viewlet.executeViewletCommand(state.previewId, 'hideForTabDrag')
   return { newState: supported ? { ...state, browserTabDragSource: sourceUid } : state, commands: [] }
 }
 
-export const endBrowserTabDrag = (state: LayoutState, sourceUid: number): LayoutStateResult => ({
-  newState: state.browserTabDragSource === sourceUid ? { ...state, browserTabDragSource: undefined } : state,
-  commands: [],
-})
+export const endBrowserTabDrag = async (state: LayoutState, sourceUid: number): Promise<LayoutStateResult> => {
+  if (state.browserTabDragSource !== sourceUid) return { newState: state, commands: [] }
+  if (sourceUid === state.secondaryPreviewId && state.secondaryPreviewPlacement === 'bottomLeft') {
+    await Viewlet.executeViewletCommand(state.previewId, 'showAfterTabDrag')
+  }
+  return { newState: { ...state, browserTabDragSource: undefined }, commands: [] }
+}
 
 export const handleBrowserTabDragOver = (state: LayoutState): LayoutStateResult => ({ newState: state, commands: [] })
 
@@ -3351,6 +3362,29 @@ export const handleBrowserTabDrop = async (state: LayoutState, x: number, y: num
   const browserViewId = source?.draggedTab?.browserViewId
   const top = (state.windowHeight + (state.titleBarVisible ? state.titleBarHeight : 0)) / 2
   const cleanState = { ...state, browserTabDragSource: undefined }
+  if (sourceUid === state.secondaryPreviewId && state.secondaryPreviewPlacement === 'bottomLeft') {
+    if (
+      !browserViewId ||
+      !source?.isDraggingTab ||
+      !state.secondaryPreviewVisible ||
+      !state.previewVisible ||
+      state.previewViewletId !== ViewletModuleId.SimpleBrowser ||
+      x < state.previewLeft ||
+      x >= state.windowWidth ||
+      y < (state.titleBarVisible ? state.titleBarHeight : 0) ||
+      y >= state.windowHeight
+    ) {
+      await Viewlet.executeViewletCommand(state.previewId, 'showAfterTabDrag')
+      return { newState: cleanState, commands: [] }
+    }
+    try {
+      await Viewlet.executeViewletCommand(sourceUid, 'moveTabToBrowser', browserViewId, state.previewId)
+    } catch (error) {
+      await Viewlet.executeViewletCommand(state.previewId, 'showAfterTabDrag')
+      throw error
+    }
+    return { newState: cleanState, commands: [] }
+  }
   if (
     !browserViewId ||
     !source?.isDraggingTab ||

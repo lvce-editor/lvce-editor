@@ -566,14 +566,16 @@ export const getLayoutVirtualDom = (state: LayoutState) => {
 
   if (state.browserTabDragSource !== undefined) {
     workbenchChildCount++
+    const returningToPreview =
+      state.browserTabDragSource === state.secondaryPreviewId && state.secondaryPreviewPlacement === 'bottomLeft'
     dom.push({
       type: VirtualDomElements.Div,
-      className: 'BrowserBottomLeftDropTarget',
+      className: returningToPreview ? 'BrowserPreviewDropTarget' : 'BrowserBottomLeftDropTarget',
       childCount: 0,
       onDragOver: 'handleBrowserTabDragOver',
       onDrop: 'handleBrowserTabDrop',
       role: 'region',
-      ariaLabel: 'Move browser tab below editor',
+      ariaLabel: returningToPreview ? 'Move browser tab to preview' : 'Move browser tab below editor',
     })
   }
 

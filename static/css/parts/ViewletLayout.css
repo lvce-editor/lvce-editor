@@ -278,6 +278,18 @@
   outline-offset: -2px;
 }
 
+.BrowserPreviewDropTarget {
+  position: absolute;
+  left: var(--BrowserDropWidth);
+  top: var(--BrowserReturnDropTop);
+  right: 0;
+  bottom: 0;
+  z-index: 100;
+  background: var(--EditorDropBackground, #3879d94d);
+  outline: 2px solid var(--FocusBorder, #007fd4);
+  outline-offset: -2px;
+}
+
 .ActivityBarLayout {
   display: flex;
   flex: 0 0 48px;

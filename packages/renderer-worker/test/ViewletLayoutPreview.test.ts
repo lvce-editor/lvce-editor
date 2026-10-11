@@ -1095,3 +1095,61 @@ test('invalid browser drops leave preview slots and source intact', async () => 
   expect(ViewletManager.load).not.toHaveBeenCalled()
   expect(Viewlet.executeViewletCommand).not.toHaveBeenCalled()
 })
+
+test('allows a bottom-left browser tab drag back to a right Simple Browser preview', async () => {
+  const source = { draggedTab: { browserViewId: 10 }, isDraggingTab: true }
+  // @ts-ignore
+  ViewletStates.getInstance.mockReturnValue({ state: source })
+  const state = {
+    ...ViewletLayout.create(1),
+    browserTabDragSource: 3,
+    previewId: 4,
+    previewLeft: 600,
+    previewVisible: true,
+    previewViewletId: 'SimpleBrowser',
+    secondaryPreviewId: 3,
+    secondaryPreviewPlacement: 'bottomLeft' as const,
+    secondaryPreviewVisible: true,
+    titleBarVisible: true,
+    titleBarHeight: 40,
+    windowHeight: 800,
+    windowWidth: 1200,
+  }
+  const result = await ViewletLayout.handleBrowserTabDrop(state, 900, 500)
+  expect(result.newState).toEqual({ ...state, browserTabDragSource: undefined })
+  expect(Viewlet.executeViewletCommand).toHaveBeenCalledWith(3, 'moveTabToBrowser', 10, 4)
+})
+
+test('begins a return drag only from a bottom-left browser with an active tab drag', async () => {
+  const source = { draggedTab: { browserViewId: 10 }, isDraggingTab: true, loginChallenges: [] }
+  // @ts-ignore
+  ViewletStates.getInstance.mockReturnValue({ state: source })
+  const state = {
+    ...ViewletLayout.create(1),
+    previewId: 4,
+    previewVisible: true,
+    previewViewletId: 'SimpleBrowser',
+    secondaryPreviewId: 3,
+    secondaryPreviewPlacement: 'bottomLeft' as const,
+    secondaryPreviewVisible: true,
+  }
+  const result = await ViewletLayout.beginBrowserTabDrag(state, 3)
+  expect(result.newState.browserTabDragSource).toBe(3)
+  expect(Viewlet.executeViewletCommand).toHaveBeenCalledWith(4, 'hideForTabDrag')
+  const unsupported = (await ViewletLayout.beginBrowserTabDrag({ ...state, previewViewletId: 'Preview' }, 3)).newState
+  expect(unsupported.previewViewletId).toBe('Preview')
+  expect(unsupported.browserTabDragSource).toBeUndefined()
+})
+
+test('restores the right preview after a cancelled return drag', async () => {
+  const state = {
+    ...ViewletLayout.create(1),
+    browserTabDragSource: 3,
+    previewId: 4,
+    secondaryPreviewId: 3,
+    secondaryPreviewPlacement: 'bottomLeft' as const,
+  }
+  const result = await ViewletLayout.endBrowserTabDrag(state, 3)
+  expect(result.newState).toEqual({ ...state, browserTabDragSource: undefined })
+  expect(Viewlet.executeViewletCommand).toHaveBeenCalledWith(4, 'showAfterTabDrag')
+})

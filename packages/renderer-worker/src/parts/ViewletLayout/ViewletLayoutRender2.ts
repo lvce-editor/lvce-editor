@@ -198,6 +198,7 @@ const getCss = (newState: LayoutState) => {
   return `#${rootId} {
   --BrowserDropWidth: ${getPixelValue(newState.previewLeft)};
   --BrowserDropTop: ${getPixelValue((newState.windowHeight + (newState.titleBarVisible ? newState.titleBarHeight : 0)) / 2)};
+  --BrowserReturnDropTop: ${getPixelValue(newState.titleBarVisible ? newState.titleBarHeight : 0)};
   --AppWidth: ${appWidth};
   --AppHeight: ${appHeight};
   --ActivityBarWidth: ${getPixelValue(activityBarWidth)};
