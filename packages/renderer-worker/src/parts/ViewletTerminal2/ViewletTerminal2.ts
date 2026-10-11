@@ -43,6 +43,7 @@ export const loadContent = async (state, _savedState?: any, configuredSpawnOptio
     cwd = state.cwd,
     disposeCommand,
     env,
+    spawnError,
   } = configuredSpawnOptions || (await GetTerminalSpawnOptions.getTerminalSpawnOptions(state.cwd))
   return {
     ...state,
@@ -51,12 +52,17 @@ export const loadContent = async (state, _savedState?: any, configuredSpawnOptio
     cwd,
     disposeCommand,
     env,
+    spawnError,
     xtermMounted: true,
   }
 }
 
 export const loadContentLater = async (state) => {
-  const { args, command, cwd, env, uid } = state
+  const { args, command, cwd, env, spawnError, uid } = state
+  if (spawnError) {
+    await handleData(state, new TextEncoder().encode(`\r\n${spawnError}\r\n`))
+    return
+  }
   try {
     await TerminalWorker.invoke('Terminal.create', uid, cwd || Workspace.state.workspacePath, command, args, {
       backend: getBackend(),
@@ -79,6 +85,9 @@ const showError = async (state, message) => {
 }
 
 export const handleInput = async (state, data) => {
+  if (state.spawnError) {
+    return state
+  }
   await TerminalWorker.invoke('Terminal.write', state.uid, data)
   return state
 }
@@ -126,7 +135,9 @@ export const dispose = async (state) => {
   } catch (error) {
     console.warn('Failed to clean up the remote terminal', error)
   } finally {
-    await TerminalWorker.invoke('Terminal.dispose', state.uid)
+    if (!state.spawnError) {
+      await TerminalWorker.invoke('Terminal.dispose', state.uid)
+    }
   }
   return {
     ...state,
@@ -152,7 +163,9 @@ export const resize = async (state, dimensions) => {
   }
   const columns = resized.columns || Math.max(2, Math.floor(resized.width / 9))
   const rows = resized.rows || Math.max(2, Math.floor(resized.height / 17))
-  await TerminalWorker.invoke('Terminal.resize', state.uid, columns, rows)
+  if (!state.spawnError) {
+    await TerminalWorker.invoke('Terminal.resize', state.uid, columns, rows)
+  }
   return resized
 }
 
