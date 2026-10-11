@@ -1779,16 +1779,18 @@ export const handleFaviconError = (state, index, src) => {
 export const moveTabToBrowser = async (state, browserViewId, destinationUid) => {
   const destination = ViewletStates.getInstance(destinationUid)
   const index = state.tabs.findIndex((tab) => tab.browserViewId === browserViewId)
-  if (index < 0 || !browserViewId || !destination || destination.state.tabs.length) return state
+  if (index < 0 || !browserViewId || !destination || destinationUid === state.uid) return state
   let current = await closeFind(state, false)
   current = await prepareFullWidth(current)
   const tab = current.tabs[index]
+  if (destination.state.tabs.some((destinationTab) => destinationTab.browserViewId === browserViewId)) return state
   const remaining = current.tabs.toSpliced(index, 1)
   if (!remaining.length) remaining.push(createTab({}))
   const selectedIndex = Math.min(index, remaining.length - 1)
   if (!remaining[selectedIndex].browserViewId) remaining[selectedIndex] = await materializeTab(current, remaining[selectedIndex])
   const sourceState = activateTab(TabDrag.resetTabDrag(current), remaining, selectedIndex)
-  const destinationState = activateTab(destination.state, [tab], 0)
+  const destinationTabs = [...destination.state.tabs, tab]
+  const destinationState = activateTab(destination.state, destinationTabs, destinationTabs.length - 1)
   const commands = [...Viewlet.setStateFunctional(state.uid, sourceState), ...Viewlet.setStateFunctional(destinationUid, destinationState)]
   ViewletStates.setRenderedState(state.uid, sourceState)
   ViewletStates.setRenderedState(destinationUid, destinationState)

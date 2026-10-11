@@ -3328,11 +3328,18 @@ export const afterRender = async (oldState: LayoutState, newState: LayoutState) 
 
 export const beginBrowserTabDrag = (state: LayoutState, sourceUid: number): LayoutStateResult => {
   const source = ViewletStates.getInstance(sourceUid)?.state
+  const movingToBottomLeft = sourceUid === state.previewId && !state.secondaryPreviewVisible
+  const movingToPreview =
+    sourceUid === state.secondaryPreviewId &&
+    state.secondaryPreviewPlacement === 'bottomLeft' &&
+    state.secondaryPreviewVisible &&
+    state.previewVisible &&
+    state.previewViewletId === ViewletModuleId.SimpleBrowser
   const supported =
-    sourceUid === state.previewId &&
-    !state.secondaryPreviewVisible &&
+    (movingToBottomLeft || movingToPreview) &&
     !state.browserFullWidth &&
     !state.sideBarFocusMode &&
+    source?.isDraggingTab &&
     source?.draggedTab?.browserViewId &&
     !source?.loginChallenges?.length
   return { newState: supported ? { ...state, browserTabDragSource: sourceUid } : state, commands: [] }
@@ -3351,6 +3358,23 @@ export const handleBrowserTabDrop = async (state: LayoutState, x: number, y: num
   const browserViewId = source?.draggedTab?.browserViewId
   const top = (state.windowHeight + (state.titleBarVisible ? state.titleBarHeight : 0)) / 2
   const cleanState = { ...state, browserTabDragSource: undefined }
+  if (sourceUid === state.secondaryPreviewId && state.secondaryPreviewPlacement === 'bottomLeft') {
+    if (
+      !browserViewId ||
+      !source?.isDraggingTab ||
+      !state.secondaryPreviewVisible ||
+      !state.previewVisible ||
+      state.previewViewletId !== ViewletModuleId.SimpleBrowser ||
+      x < state.previewLeft ||
+      x >= state.windowWidth ||
+      y < (state.titleBarVisible ? state.titleBarHeight : 0) ||
+      y >= state.windowHeight
+    ) {
+      return { newState: cleanState, commands: [] }
+    }
+    await Viewlet.executeViewletCommand(sourceUid, 'moveTabToBrowser', browserViewId, state.previewId)
+    return { newState: cleanState, commands: [] }
+  }
   if (
     !browserViewId ||
     !source?.isDraggingTab ||
