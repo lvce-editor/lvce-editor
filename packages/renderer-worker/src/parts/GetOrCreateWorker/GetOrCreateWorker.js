@@ -9,7 +9,7 @@ const getOrCreate = (fn) => {
   return workers.get(fn)
 }
 
-export const getOrCreateWorker = (fn, terminateCommand) => {
+export const getOrCreateWorker = (fn, terminateCommand = '') => {
   return {
     isCreated() {
       return workers.has(fn)
