@@ -320,6 +320,5 @@ test('an unavailable web terminal shows its explanation without creating a proce
   await ViewletTerminal2.resize(state, { width: 800, height: 600 })
   await ViewletTerminal2.dispose(state)
   expect(terminalWorkerInvoke).not.toHaveBeenCalled()
-  const data = rendererProcessInvoke.mock.calls.find((call) => call[0] === 'Viewlet.send')?.[3]
-  expect(new TextDecoder().decode(data)).toContain(spawnError)
+  expect(rendererProcessInvoke).toHaveBeenCalledWith('Viewlet.send', 55, 'write', new TextEncoder().encode(`\r\n${spawnError}\r\n`))
 })
