@@ -339,3 +339,23 @@ test('registers the worker-owned address focus and blur listeners', async () => 
     ]),
   )
 })
+
+
+test('patches web preview tab hover without replacing the live preview or close button', () => {
+  const oldState = {
+    ...state,
+    browserViewId: 0,
+    tabsEnabled: true,
+    selectedTabIndex: 0,
+    overlayIds: [],
+    tabs: [{ browserViewId: 0, previewUid: 100, title: 'HTML Preview' }],
+  }
+  const newState = { ...oldState, tabWidth: 158 }
+  const commands = ViewletSimpleBrowserRender.render[0].apply(oldState, newState)
+  expect(commands[0].slice(0, 2)).toEqual(['Viewlet.setTreePatches', 42])
+  expect(commands[0][2]).toEqual([
+    { index: 0, type: 7 },
+    expect.objectContaining({ key: 'className', value: 'SimpleBrowserTabs SimpleBrowserTabsFrozen' }),
+    expect.objectContaining({ key: 'style', value: '--SimpleBrowserTabWidth: 158px;' }),
+  ])
+})
