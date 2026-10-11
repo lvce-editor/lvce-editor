@@ -1120,7 +1120,7 @@ test('allows a bottom-left browser tab drag back to a right Simple Browser previ
   expect(Viewlet.executeViewletCommand).toHaveBeenCalledWith(3, 'moveTabToBrowser', 10, 4)
 })
 
-test('begins a return drag only from a bottom-left browser with an active tab drag', () => {
+test('begins a return drag only from a bottom-left browser with an active tab drag', async () => {
   const source = { draggedTab: { browserViewId: 10 }, isDraggingTab: true, loginChallenges: [] }
   // @ts-ignore
   ViewletStates.getInstance.mockReturnValue({ state: source })
@@ -1133,8 +1133,23 @@ test('begins a return drag only from a bottom-left browser with an active tab dr
     secondaryPreviewPlacement: 'bottomLeft' as const,
     secondaryPreviewVisible: true,
   }
-  expect(ViewletLayout.beginBrowserTabDrag(state, 3).newState.browserTabDragSource).toBe(3)
-  const unsupported = ViewletLayout.beginBrowserTabDrag({ ...state, previewViewletId: 'Preview' }, 3).newState
+  const result = await ViewletLayout.beginBrowserTabDrag(state, 3)
+  expect(result.newState.browserTabDragSource).toBe(3)
+  expect(Viewlet.executeViewletCommand).toHaveBeenCalledWith(4, 'hideForTabDrag')
+  const unsupported = (await ViewletLayout.beginBrowserTabDrag({ ...state, previewViewletId: 'Preview' }, 3)).newState
   expect(unsupported.previewViewletId).toBe('Preview')
   expect(unsupported.browserTabDragSource).toBeUndefined()
+})
+
+test('restores the right preview after a cancelled return drag', async () => {
+  const state = {
+    ...ViewletLayout.create(1),
+    browserTabDragSource: 3,
+    previewId: 4,
+    secondaryPreviewId: 3,
+    secondaryPreviewPlacement: 'bottomLeft' as const,
+  }
+  const result = await ViewletLayout.endBrowserTabDrag(state, 3)
+  expect(result.newState).toEqual({ ...state, browserTabDragSource: undefined })
+  expect(Viewlet.executeViewletCommand).toHaveBeenCalledWith(4, 'showAfterTabDrag')
 })

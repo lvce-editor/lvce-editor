@@ -491,6 +491,17 @@ export const hide = async (state) => {
   await Promise.all(state.tabs.filter((tab) => tab.browserViewId).map((tab) => ElectronWebContentsViewFunctions.hide(tab.browserViewId)))
 }
 
+export const hideForTabDrag = async (state) => {
+  const selectedTab = state.tabs[state.selectedTabIndex]
+  if (selectedTab?.browserViewId) await ElectronWebContentsViewFunctions.hide(selectedTab.browserViewId)
+  return state
+}
+
+export const showAfterTabDrag = async (state) => {
+  await show(state)
+  return state
+}
+
 const createUnloadedTab = async (state) => {
   const { headerHeight, height, width, x, y } = state
   const browserViewId = await ElectronWebContentsView.createWebContentsView(0, getFallThroughKeyBindings())

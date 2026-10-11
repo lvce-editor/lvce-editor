@@ -11,6 +11,8 @@ import * as TabDrag from './ViewletSimpleBrowserTabDrag.js'
 
 export const Commands = {
   moveTabToBrowser: SimpleBrowser.moveTabToBrowser,
+  hideForTabDrag: SimpleBrowser.hideForTabDrag,
+  showAfterTabDrag: SimpleBrowser.showAfterTabDrag,
   escapeAddress: SimpleBrowser.escapeAddress,
   applyFindResult: BrowserFind.applyFindResult,
   toggleFind: SimpleBrowser.toggleFind,

@@ -3326,7 +3326,7 @@ export const afterRender = async (oldState: LayoutState, newState: LayoutState) 
   if (commands.length) await RendererProcess.invoke('Viewlet.sendMultiple', commands)
 }
 
-export const beginBrowserTabDrag = (state: LayoutState, sourceUid: number): LayoutStateResult => {
+export const beginBrowserTabDrag = async (state: LayoutState, sourceUid: number): Promise<LayoutStateResult> => {
   const source = ViewletStates.getInstance(sourceUid)?.state
   const movingToBottomLeft = sourceUid === state.previewId && !state.secondaryPreviewVisible
   const movingToPreview =
@@ -3342,13 +3342,17 @@ export const beginBrowserTabDrag = (state: LayoutState, sourceUid: number): Layo
     source?.isDraggingTab &&
     source?.draggedTab?.browserViewId &&
     !source?.loginChallenges?.length
+  if (supported && movingToPreview) await Viewlet.executeViewletCommand(state.previewId, 'hideForTabDrag')
   return { newState: supported ? { ...state, browserTabDragSource: sourceUid } : state, commands: [] }
 }
 
-export const endBrowserTabDrag = (state: LayoutState, sourceUid: number): LayoutStateResult => ({
-  newState: state.browserTabDragSource === sourceUid ? { ...state, browserTabDragSource: undefined } : state,
-  commands: [],
-})
+export const endBrowserTabDrag = async (state: LayoutState, sourceUid: number): Promise<LayoutStateResult> => {
+  if (state.browserTabDragSource !== sourceUid) return { newState: state, commands: [] }
+  if (sourceUid === state.secondaryPreviewId && state.secondaryPreviewPlacement === 'bottomLeft') {
+    await Viewlet.executeViewletCommand(state.previewId, 'showAfterTabDrag')
+  }
+  return { newState: { ...state, browserTabDragSource: undefined }, commands: [] }
+}
 
 export const handleBrowserTabDragOver = (state: LayoutState): LayoutStateResult => ({ newState: state, commands: [] })
 
@@ -3370,9 +3374,15 @@ export const handleBrowserTabDrop = async (state: LayoutState, x: number, y: num
       y < (state.titleBarVisible ? state.titleBarHeight : 0) ||
       y >= state.windowHeight
     ) {
+      await Viewlet.executeViewletCommand(state.previewId, 'showAfterTabDrag')
       return { newState: cleanState, commands: [] }
     }
-    await Viewlet.executeViewletCommand(sourceUid, 'moveTabToBrowser', browserViewId, state.previewId)
+    try {
+      await Viewlet.executeViewletCommand(sourceUid, 'moveTabToBrowser', browserViewId, state.previewId)
+    } catch (error) {
+      await Viewlet.executeViewletCommand(state.previewId, 'showAfterTabDrag')
+      throw error
+    }
     return { newState: cleanState, commands: [] }
   }
   if (
