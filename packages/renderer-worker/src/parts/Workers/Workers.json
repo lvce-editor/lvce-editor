@@ -1304,7 +1304,8 @@
             { "source": "state", "name": "y" },
             { "source": "state", "name": "width" },
             { "source": "state", "name": "height" },
-            { "source": "literal", "value": null }
+            { "source": "context", "name": "platform" },
+            { "source": "context", "name": "assetDir" }
           ]
         },
         "loadContent": {

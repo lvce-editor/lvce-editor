@@ -59,6 +59,21 @@ test('workers view keybindings are registered', () => {
   })
 })
 
+test('panel worker receives the runtime platform and asset directory', () => {
+  const worker = Workers.getWorkers().find(({ id }: Readonly<{ id: string }>) => id === 'panel')
+
+  expect(worker?.viewlet?.methods?.create?.parameters).toEqual([
+    { name: 'uid', source: 'state' },
+    { source: 'literal', value: '' },
+    { name: 'x', source: 'state' },
+    { name: 'y', source: 'state' },
+    { name: 'width', source: 'state' },
+    { name: 'height', source: 'state' },
+    { name: 'platform', source: 'context' },
+    { name: 'assetDir', source: 'context' },
+  ])
+})
+
 test('editor worker permits same-origin split modules while retaining its sandbox', () => {
   const worker = Workers.getWorkers().find(({ id }: Readonly<{ id: string }>) => id === 'editor')
 
