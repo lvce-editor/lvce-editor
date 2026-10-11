@@ -21,6 +21,10 @@ export const create2 = async (canvasId, width, height) => {
 
 export const createForPreview = async (callbackId, width, height) => {
   const canvasId = Id.create()
-  const canvas = await create2(canvasId, width, height)
-  await PreviewWorker.invokeAndTransfer('Preview.executeCallback', callbackId, canvas, canvasId)
+  const objectId = Id.create()
+  const portId = Id.create()
+  const manualPresentation = await RendererProcess.invoke('OffscreenCanvas.createForPreview', canvasId, objectId, portId, width, height)
+  const canvas = Transferrable.acquire(objectId)
+  const port = manualPresentation ? Transferrable.acquire(portId) : undefined
+  await PreviewWorker.invokeAndTransfer('Preview.executeCallback', callbackId, canvas, canvasId, port)
 }
