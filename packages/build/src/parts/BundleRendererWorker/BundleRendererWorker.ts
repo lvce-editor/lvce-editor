@@ -83,7 +83,7 @@ export const bundleRendererWorker = async ({ cachePath, platform, commitHash, ve
       from: 'static/js',
       to: Path.join(cachePath, 'static', 'js'),
     })
-    for (const file of ['PrettyBytes', 'JsonRpc', 'RendererProcess']) {
+    for (const file of ['PrettyBytes', 'JsonRpc', 'RendererProcess', 'IconThemeWorker']) {
       await Replace.replace({
         path: `${cachePath}/src/parts/${file}/${file}.js`,
         occurrence: `../../../../../static/`,

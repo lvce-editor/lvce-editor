@@ -1,3 +1,4 @@
+import * as RuntimeConfig from '../RuntimeConfig/RuntimeConfig.ts'
 import * as HtmlPreviewUrl from '../HtmlPreviewUrl/HtmlPreviewUrl.js'
 import * as BrowserFullWidth from '../BrowserFullWidth/BrowserFullWidth.js'
 import * as ActivityBarWorker from '../ActivityBarWorker/ActivityBarWorker.js'
@@ -594,6 +595,7 @@ export const loadContent = (state: LayoutState, savedState: any): LayoutState =>
     secondarySideBarViewlets: savedSecondaryViewlets,
     workbenchVisible: true,
     initial: false,
+    ...RuntimeConfig.runtimeConfig.initialLayout,
   }
   // TODO get side bar min width from preferences
   if (savedState.detachedEditor === true) {
@@ -755,6 +757,9 @@ const setActivityBarAiNativeLayout = async (activityBarId: number, enabled: bool
 }
 
 const renderSideBarActivityBarCommands = async (activityBarId: number, sideBarView: string, sideBarVisible: boolean) => {
+  if (activityBarId === -1) {
+    return []
+  }
   await ActivityBarWorker.invoke('ActivityBar.handleSideBarStateChange', activityBarId, sideBarView, sideBarVisible)
   return renderActivityBarCommands(activityBarId)
 }
@@ -3046,6 +3051,9 @@ export const handleSourceControlProgressChange = async (state: LayoutState): Pro
 }
 
 export const refreshProblemsSummary = async (state: LayoutState): Promise<LayoutStateResult> => {
+  if (!state.statusBarVisible && !state.panelVisible) {
+    return { newState: state, commands: [] }
+  }
   try {
     const summary = await ProblemsWorker.invoke('Problems.getProblemsSummary')
     return callGlobalEvent(state, 'handleProblemsSummaryChange', summary)
@@ -3079,7 +3087,9 @@ export const handleActiveEditorChange = async (state: LayoutState, activeUri: st
   const restored = state.browserFullWidth ? await BrowserFullWidth.leave(state) : { newState: state, commands: [] }
   const eventResult = await callGlobalEvent(restored.newState, 'handleActiveEditorChange', activeUri)
   try {
-    await StatusBarWorker.invoke('StatusBar.handleEditorStatusVisibilityChanged', activeIsTextEditor)
+    if (state.statusBarVisible) {
+      await StatusBarWorker.invoke('StatusBar.handleEditorStatusVisibilityChanged', activeIsTextEditor)
+    }
   } catch {
     // Older status bar workers do not support active editor visibility updates.
   }
@@ -3110,6 +3120,9 @@ export const handleSettingsChanged = async (state: LayoutState) => {
 }
 
 export const refreshSourceControlBadgeCount = async (state: LayoutState): Promise<LayoutStateResult> => {
+  if (!state.activityBarVisible) {
+    return { newState: state, commands: [] }
+  }
   try {
     const badgeCount = await SourceControlWorker.invoke(
       'SourceControl.getWorkspaceBadgeCount',

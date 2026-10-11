@@ -1,3 +1,4 @@
+import * as RuntimeConfig from '../RuntimeConfig/RuntimeConfig.ts'
 import * as ExtensionManagementWorker from '../ExtensionManagementWorker/ExtensionManagementWorker.js'
 import * as GetIconThemeEtag from '../GetIconThemeEtag/GetIconThemeEtag.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
@@ -31,6 +32,9 @@ export const getIconThemePlatform = (platform, assetDir) => {
 }
 
 const doSetIconTheme = async (iconThemeId, platform, assetDir) => {
+  if (RuntimeConfig.runtimeConfig.staticFileIcons) {
+    return
+  }
   try {
     const useCache = Preferences.get('icon-theme.cache') ?? true
     const extensions = iconThemeId === null ? [] : await ExtensionManagementWorker.invoke('Extensions.getAllExtensions', assetDir, platform)
@@ -69,6 +73,9 @@ export const reload = async () => {
 }
 
 export const hydrate = async (platform, assetDir) => {
+  if (RuntimeConfig.runtimeConfig.staticFileIcons) {
+    return
+  }
   // TODO do this all in worker
   state.platform = platform
   state.assetDir = assetDir
