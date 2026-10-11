@@ -92,3 +92,31 @@ test('preserves dynamic imports in split web worker bundles', async () => {
     await rm(cachePath, { force: true, recursive: true })
   }
 })
+
+test('inlines dynamic imports in single-file web worker bundles', async () => {
+  const cachePath = await mkdtemp(join(tmpdir(), 'lvce-web-worker-bundle-'))
+  try {
+    await mkdir(join(cachePath, 'src'))
+    await writeFile(join(cachePath, 'package.json'), JSON.stringify({ type: 'module' }))
+    await writeFile(join(cachePath, 'src', 'index.js'), `export const load = () => import('./lazy.js')\n`)
+    await writeFile(join(cachePath, 'src', 'lazy.js'), `export const loaded = true\n`)
+    await bundleJs({
+      cwd: cachePath,
+      from: './src/index.js',
+      platform: 'webworker',
+      sourceMap: false,
+    })
+
+    const outputPath = join(cachePath, 'dist')
+    const outputFiles = await readdir(outputPath)
+    const bundle = await readFile(join(outputPath, 'index.js'), 'utf8')
+    const { load } = await import(new URL(`file://${join(outputPath, 'index.js')}`).href)
+    const lazyModule = await load()
+
+    expect(outputFiles).toEqual(['index.js'])
+    expect(bundle).not.toContain("import('./lazy.js')")
+    expect(lazyModule.loaded).toBe(true)
+  } finally {
+    await rm(cachePath, { force: true, recursive: true })
+  }
+})
