@@ -15,10 +15,10 @@ beforeEach(() => {
 })
 
 test.each([false, true])('forwards the canvas and optional presentation port (%s)', async (manual) => {
-  Id.create.mockReturnValueOnce(1).mockReturnValueOnce(2).mockReturnValueOnce(3)
+  jest.mocked(Id.create).mockReturnValueOnce(1).mockReturnValueOnce(2).mockReturnValueOnce(3)
   const canvas = { canvas: true }
   const port = { port: true }
-  RendererProcess.invoke.mockImplementation(async () => {
+  jest.mocked(RendererProcess.invoke).mockImplementation(async () => {
     Transferrable.transfer(2, canvas)
     if (manual) Transferrable.transfer(3, port)
     return manual
