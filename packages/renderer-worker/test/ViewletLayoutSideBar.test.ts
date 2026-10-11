@@ -287,6 +287,7 @@ test('handleExtensionsChanged recomputes the source control badge count', async 
   SourceControlWorker.invoke.mockResolvedValue(0)
   const state = {
     ...ViewletLayout.create(1),
+    activityBarVisible: true,
     badgeCounts: {
       'Source Control': 3,
     },
