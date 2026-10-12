@@ -123,3 +123,10 @@ test('selected results preserve deduplication and live enablement even when iden
   expect((await getExtensionManifests('/app/extensions'))[0].builtin).toBeUndefined()
   expect(readDir).toHaveBeenCalledTimes(1)
 })
+
+test('field selection cannot hide rejected manifests from cache retry', async () => {
+  getManifest.mockResolvedValueOnce({ id: 'builtin.example', reason: new Error('invalid manifest'), status: Rejected })
+  expect(await getExtensionManifests('/app/extensions', ['id'])).toEqual([{ id: 'builtin.example' }])
+  expect((await getExtensionManifests('/app/extensions'))[0].status).toBe(Resolved)
+  expect(readDir).toHaveBeenCalledTimes(2)
+})
