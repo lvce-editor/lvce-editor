@@ -197,8 +197,9 @@ export const mkdir = async (uri) => {
   }
 }
 
-export const isReadonly = () => {
-  return false
+export const isReadonly = async (uri) => {
+  const handle = await PersistentFileHandle.getHandle(uri)
+  return Boolean(handle?.readonly)
 }
 
 export const getBlobSrc = async (uri) => {
@@ -206,7 +207,7 @@ export const getBlobSrc = async (uri) => {
   if (!handle) {
     throw new Error(`file not found`)
   }
-  const file = await handle.getFile()
+  const file = await FileSystemFileHandle.getFile(handle)
   const blobUrl = URL.createObjectURL(file)
   return blobUrl
 }
@@ -216,7 +217,7 @@ export const getBlob = async (uri, type) => {
   if (!handle) {
     throw new Error(`file not found`)
   }
-  const file = await handle.getFile()
+  const file = await FileSystemFileHandle.getFile(handle)
   // TODO convert handle to blob mime type?
   return file
 }
