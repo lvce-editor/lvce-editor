@@ -460,3 +460,25 @@ test('concurrent diagnostic requests wait for the changed document', async () =>
 
   await expect(Promise.all([diagnostic(changed), diagnostic(changed)])).resolves.toEqual([[], []])
 })
+
+test('diagnostics collect intermediate publications after changing a document', async () => {
+  const options = {
+    argv: [pushDiagnosticsServerScript, '--staged-diagnostics'],
+    extensionId: 'sample.extension',
+    id: 'sample.staged-push-diagnostics-fixture',
+    rootUri: 'file:///tmp/sample-workspace',
+    textDocument: {
+      languageId: 'elm',
+      text: 'invalid',
+      uri: '/tmp/sample-workspace/src/Main.elm',
+    },
+    uri: pathToFileURL(process.execPath).href,
+  }
+  await expect(diagnostic(options)).resolves.toHaveLength(1)
+  const changed = { ...options, textDocument: { ...options.textDocument, text: 'valid' } }
+  const first = diagnostic(changed)
+  // A concurrent reader must join the pending pass rather than use its
+  // intermediate cached publication.
+  await new Promise((resolve) => setTimeout(resolve, 25))
+  await expect(Promise.all([first, diagnostic(changed)])).resolves.toEqual([[], []])
+})
