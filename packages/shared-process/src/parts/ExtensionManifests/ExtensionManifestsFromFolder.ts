@@ -7,6 +7,7 @@ import * as IsEnoentError from '../IsEnoentError/IsEnoentError.ts'
 import * as Platform from '../Platform/Platform.ts'
 import * as ToAbsolutePaths from '../ToAbsolutePaths/ToAbsolutePaths.ts'
 import { VError } from '../VError/VError.ts'
+import { selectExtensionManifestFields } from './SelectExtensionManifestFields.ts'
 
 let builtinManifests: { path: string; promise: Promise<any[]> } | undefined
 
@@ -17,7 +18,7 @@ const readExtensionManifests = async (path: string): Promise<any[]> => {
   return Promise.all(absolutePaths.map(ExtensionManifest.get))
 }
 
-export const getExtensionManifests = async (path: any): Promise<any> => {
+export const getExtensionManifests = async (path: any, fields?: readonly string[]): Promise<any> => {
   let cached: typeof builtinManifests
   try {
     if (!path) {
@@ -25,7 +26,7 @@ export const getExtensionManifests = async (path: any): Promise<any> => {
     }
     // Packaged builtins are fixed for this process. User and development extensions stay live.
     if (!Platform.isProduction || path !== BuiltinExtensionsPath.getBuiltinExtensionsPath()) {
-      return await readExtensionManifests(path)
+      return selectExtensionManifestFields(await readExtensionManifests(path), fields)
     }
     if (!builtinManifests || builtinManifests.path !== path) {
       builtinManifests = { path, promise: readExtensionManifests(path) }
@@ -36,10 +37,10 @@ export const getExtensionManifests = async (path: any): Promise<any> => {
       if (builtinManifests === cached) {
         builtinManifests = undefined
       }
-      return manifests
+      return selectExtensionManifestFields(manifests, fields)
     }
     // Keep request-local metadata and nested contributions independent of the cached values.
-    return structuredClone(manifests)
+    return structuredClone(selectExtensionManifestFields(manifests, fields))
   } catch (error) {
     if (cached && builtinManifests === cached) {
       builtinManifests = undefined
