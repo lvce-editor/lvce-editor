@@ -142,6 +142,7 @@ export const getModuleId = (commandId: any): any => {
     case 'FileSystem.readJson':
     case 'FileSystem.remove':
     case 'FileSystem.rename':
+    case 'FileSystem.statWithMetadata':
     case 'FileSystem.writeFile':
       return ModuleId.FileSystem
     case 'FileSystemDisk.chmod':
