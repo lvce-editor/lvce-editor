@@ -48,6 +48,11 @@ const handleMessage = (message) => {
     return
   }
   if (message.method === 'textDocument/didChange') {
+    if (process.argv.includes('--staged-diagnostics')) {
+      publishDiagnostics(message.params.textDocument.uri, 'invalid')
+      setTimeout(() => publishDiagnostics(message.params.textDocument.uri, message.params.contentChanges[0].text), 50)
+      return
+    }
     publishDiagnostics(message.params.textDocument.uri, message.params.contentChanges[0].text)
   }
 }
