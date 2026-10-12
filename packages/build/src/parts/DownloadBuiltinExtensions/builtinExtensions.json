@@ -522,8 +522,8 @@
   {
     "name": "builtin.language-features-typescript",
     "repository": "github.com/lvce-editor/language-features-typescript",
-    "version": "5.33.1",
-    "sha256": "aaa9fd7799c9b5d91a04b363db3ab2d8244c4018eb62405071ee084067cbc4aa",
+    "version": "5.34.1",
+    "sha256": "483f871592928f1275240cc481155d0a91184e31a4bdb749ae6d8f1d06b3a246",
     "created": "2022-06-16"
   },
   {
