@@ -1,4 +1,5 @@
 import { beforeEach, expect, jest, test } from '@jest/globals'
+import { WidgetId } from '@lvce-editor/constants'
 
 const editorWorkerInvoke = jest.fn()
 const getTextEditorContent = jest.fn<() => string>()
@@ -137,6 +138,24 @@ test('loadContent - restores the editor worker state', async () => {
   await ViewletEditorText.loadContent(state, { editorState }, {})
 
   expect(editorWorkerInvoke).toHaveBeenCalledWith('Editor.loadContent', 1, editorState, false, true)
+})
+
+test('loadContent restores saved persistent editor widgets', async () => {
+  editorWorkerInvoke.mockImplementation((method) => {
+    switch (method) {
+      case 'Editor.diff2':
+      case 'Editor.render2':
+        return []
+      default:
+        return undefined
+    }
+  })
+  const state = ViewletEditorText.create(1, '/test/file.txt', 0, 0, 800, 600)
+  const widgets = [{ id: WidgetId.Find, state: { value: 'search' } }]
+
+  await ViewletEditorText.loadContent(state, { editorState: { widgets } }, {})
+
+  expect(editorWorkerInvoke).toHaveBeenCalledWith('Editor.restorePersistentWidgets', 1, widgets)
 })
 
 test('loadContent passes false focus to the editor worker', async () => {
