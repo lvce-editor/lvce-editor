@@ -6,12 +6,12 @@ const getEnablement = jest.fn<any>()
 let production = true
 
 jest.unstable_mockModule('../src/parts/Platform/Platform.ts', () => ({
-  get isProduction() {
+  get isProduction(): boolean {
     return production
   },
 }))
 jest.unstable_mockModule('../src/parts/BuiltinExtensionsPath/BuiltinExtensionsPath.ts', () => ({
-  getBuiltinExtensionsPath: () => '/app/extensions',
+  getBuiltinExtensionsPath: (): string => '/app/extensions',
 }))
 jest.unstable_mockModule('../src/parts/FileSystem/FileSystem.ts', () => ({ readDirWithFileTypes: readDir }))
 jest.unstable_mockModule('../src/parts/ExtensionManifest/ExtensionManifest.ts', () => ({ get: getManifest }))
@@ -19,7 +19,7 @@ jest.unstable_mockModule('../src/parts/ExtensionManifest/ExtensionManifest.ts', 
 jest.unstable_mockModule('../src/parts/ExtensionManagement/ExtensionManagement.ts', () => ({ getExtensionEnablement: getEnablement }))
 
 const { Directory } = await import('../src/parts/DirentType/DirentType.ts')
-const { Resolved, Rejected } = await import('../src/parts/ExtensionManifestStatus/ExtensionManifestStatus.ts')
+const { Rejected, Resolved } = await import('../src/parts/ExtensionManifestStatus/ExtensionManifestStatus.ts')
 let getExtensionManifests: (path: string) => Promise<any>
 
 beforeEach(async () => {
@@ -29,10 +29,10 @@ beforeEach(async () => {
   getEnablement.mockResolvedValue({ disabledExtensionIds: [], enabledExtensionIds: [] })
   readDir.mockResolvedValue([{ name: 'builtin.example', type: Directory }])
   getManifest.mockResolvedValue({
+    contributes: { commands: ['example'] },
     id: 'builtin.example',
     path: '/app/extensions/builtin.example',
     status: Resolved,
-    contributes: { commands: ['example'] },
   })
   const module = await import('../src/parts/ExtensionManifests/ExtensionManifestsFromFolder.ts')
   getExtensionManifests = module.getExtensionManifests
@@ -44,7 +44,7 @@ test('concurrent and repeated production builtin reads share one filesystem load
   results[0][0].disabled = true
   results[0][0].contributes.commands.push('changed')
   expect(await getExtensionManifests('/app/extensions')).toEqual([
-    { id: 'builtin.example', path: '/app/extensions/builtin.example', status: Resolved, contributes: { commands: ['example'] } },
+    { contributes: { commands: ['example'] }, id: 'builtin.example', path: '/app/extensions/builtin.example', status: Resolved },
   ])
   expect(readDir).toHaveBeenCalledTimes(1)
   expect(getManifest).toHaveBeenCalledTimes(1)
@@ -76,7 +76,7 @@ test('failed directory loads are retried', async () => {
 
 test('rejected manifests are retried without losing error details', async () => {
   const reason = new Error('invalid manifest')
-  getManifest.mockResolvedValueOnce({ status: Rejected, reason })
+  getManifest.mockResolvedValueOnce({ reason, status: Rejected })
   expect((await getExtensionManifests('/app/extensions'))[0].reason).toBe(reason)
   expect((await getExtensionManifests('/app/extensions'))[0].status).toBe(Resolved)
   expect(readDir).toHaveBeenCalledTimes(2)
