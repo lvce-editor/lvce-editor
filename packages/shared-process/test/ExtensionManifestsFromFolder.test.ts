@@ -20,7 +20,7 @@ jest.unstable_mockModule('../src/parts/ExtensionManagement/ExtensionManagement.t
 
 const { Directory } = await import('../src/parts/DirentType/DirentType.ts')
 const { Rejected, Resolved } = await import('../src/parts/ExtensionManifestStatus/ExtensionManifestStatus.ts')
-let getExtensionManifests: (path: string) => Promise<any>
+let getExtensionManifests: (path: string, fields?: readonly string[]) => Promise<any>
 
 beforeEach(async () => {
   jest.resetModules()
@@ -98,5 +98,35 @@ test('unexpected filesystem errors propagate and do not poison the cache', async
   readDir.mockRejectedValueOnce(Object.assign(new Error('permission denied'), { code: 'EACCES' }))
   await expect(getExtensionManifests('/app/extensions')).rejects.toThrow('Failed to get extension manifests')
   expect(await getExtensionManifests('/app/extensions')).toHaveLength(1)
+  expect(readDir).toHaveBeenCalledTimes(2)
+})
+
+test('field selection clones only requested metadata without changing the full cached manifest', async () => {
+  const selected = await getExtensionManifests('/app/extensions', ['id', 'contributes', 'missing', 'toString'])
+  expect(selected).toEqual([{ contributes: { commands: ['example'] }, id: 'builtin.example' }])
+  selected[0].contributes.commands.push('changed')
+  expect((await getExtensionManifests('/app/extensions'))[0].contributes.commands).toEqual(['example'])
+  expect(await getExtensionManifests('/app/extensions', [])).toEqual([{}])
+  expect(readDir).toHaveBeenCalledTimes(1)
+})
+
+test('selected results preserve deduplication and live enablement even when identity fields are omitted', async () => {
+  const { getAll } = await import('../src/parts/ExtensionManifests/ExtensionManifests.ts')
+  const { Folder } = await import('../src/parts/ExtensionManifestInputType/ExtensionManifestInputType.ts')
+  const inputs = [
+    { path: '/app/extensions', type: Folder },
+    { path: '/app/extensions', type: Folder },
+  ]
+  expect(await getAll(inputs, '/app/extensions', ['disabled', 'builtin'])).toEqual([{ builtin: true, disabled: false }])
+  getEnablement.mockResolvedValue({ disabledExtensionIds: ['builtin.example'], enabledExtensionIds: [] })
+  expect(await getAll(inputs, '/app/extensions', ['disabled', 'builtin'])).toEqual([{ builtin: true, disabled: true }])
+  expect((await getExtensionManifests('/app/extensions'))[0].builtin).toBeUndefined()
+  expect(readDir).toHaveBeenCalledTimes(1)
+})
+
+test('field selection cannot hide rejected manifests from cache retry', async () => {
+  getManifest.mockResolvedValueOnce({ id: 'builtin.example', reason: new Error('invalid manifest'), status: Rejected })
+  expect(await getExtensionManifests('/app/extensions', ['id'])).toEqual([{ id: 'builtin.example' }])
+  expect((await getExtensionManifests('/app/extensions'))[0].status).toBe(Resolved)
   expect(readDir).toHaveBeenCalledTimes(2)
 })

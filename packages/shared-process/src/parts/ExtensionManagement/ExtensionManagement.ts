@@ -1,3 +1,4 @@
+import * as Assert from '@lvce-editor/assert'
 import { existsSync } from 'node:fs'
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import { dirname } from 'node:path'
@@ -116,7 +117,13 @@ export const getInstalledExtensions = (): any => {
   )
 }
 
-export const getExtensions = (): any => {
+export const getExtensions = (fields?: readonly string[]): any => {
+  if (fields !== undefined) {
+    Assert.array(fields)
+    for (const field of fields) {
+      Assert.string(field)
+    }
+  }
   const transientLinkedExtensions = TransientLinkedExtensions.getLinkedExtensions().map((link: any) => {
     return {
       path: link.resolvedPath,
@@ -140,6 +147,7 @@ export const getExtensions = (): any => {
       },
     ],
     BuiltinExtensionsPath.getBuiltinExtensionsPath(),
+    fields,
   )
 }
 
