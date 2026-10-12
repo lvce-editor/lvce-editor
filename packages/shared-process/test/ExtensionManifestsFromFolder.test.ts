@@ -1,8 +1,8 @@
 import { beforeEach, expect, jest, test } from '@jest/globals'
 
-const readDir = jest.fn<any>()
-const getManifest = jest.fn<any>()
-const getEnablement = jest.fn<any>()
+const readDir = jest.fn<(path: string) => Promise<any>>()
+const getManifest = jest.fn<(path: string) => Promise<any>>()
+const getEnablement = jest.fn<() => Promise<{ disabledExtensionIds: string[]; enabledExtensionIds: string[] }>>()
 let production = true
 
 jest.unstable_mockModule('../src/parts/Platform/Platform.ts', () => ({
