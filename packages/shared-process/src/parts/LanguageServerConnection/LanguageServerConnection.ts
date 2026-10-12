@@ -21,6 +21,7 @@ interface PendingRequest {
 }
 
 interface PendingDiagnostics {
+  readonly publish: (value: readonly unknown[]) => void
   readonly reject: (error: Error) => void
   readonly resolve: (value: readonly unknown[]) => void
 }
@@ -147,6 +148,9 @@ const wait = (duration: number): Promise<void> => {
 }
 
 const PublishDiagnosticsTimeout = 1_000
+// Push servers can publish several diagnostic stages, including an unchanged
+// intermediate result after didChange. Collect the burst before returning it.
+const PublishDiagnosticsSettleTime = 300
 
 export class LanguageServerConnection {
   private readonly child: ChildProcessWithoutNullStreams
@@ -267,7 +271,7 @@ export class LanguageServerConnection {
     const previous = this.documents.get(textDocument.uri)
     const documentChanged = !previous || previous.languageId !== textDocument.languageId || previous.text !== textDocument.text
     const cached = this.publishedDiagnostics.get(textDocument.uri)
-    if (!documentChanged && cached) {
+    if (!documentChanged && cached && !this.diagnosticWaiters.has(textDocument.uri)) {
       return cached
     }
     const diagnostics = this.waitForPublishedDiagnostics(textDocument.uri)
@@ -510,9 +514,8 @@ export class LanguageServerConnection {
     if (!waiters) {
       return
     }
-    this.diagnosticWaiters.delete(normalizedUri)
     for (const waiter of waiters) {
-      waiter.resolve(diagnostics)
+      waiter.publish(diagnostics)
     }
   }
 
@@ -614,22 +617,31 @@ export class LanguageServerConnection {
     return new Promise<readonly unknown[]>((resolve, reject) => {
       const waiters = this.diagnosticWaiters.get(uri) || new Set()
       let timeout: ReturnType<typeof setTimeout>
-      const waiter = {
-        reject(error: Error): void {
-          clearTimeout(timeout)
-          reject(error)
-        },
-        resolve(value: readonly unknown[]): void {
-          clearTimeout(timeout)
-          resolve(value)
-        },
-      }
-      timeout = setTimeout(() => {
+      let settling: ReturnType<typeof setTimeout> | undefined
+      const removeWaiter = (): void => {
+        clearTimeout(timeout)
+        clearTimeout(settling)
         waiters.delete(waiter)
         if (waiters.size === 0) {
           this.diagnosticWaiters.delete(uri)
         }
-        resolve(this.publishedDiagnostics.get(uri) || [])
+      }
+      const waiter = {
+        publish(value: readonly unknown[]): void {
+          clearTimeout(settling)
+          settling = setTimeout(() => waiter.resolve(value), PublishDiagnosticsSettleTime)
+        },
+        reject(error: Error): void {
+          removeWaiter()
+          reject(error)
+        },
+        resolve(value: readonly unknown[]): void {
+          removeWaiter()
+          resolve(value)
+        },
+      }
+      timeout = setTimeout(() => {
+        waiter.resolve(this.publishedDiagnostics.get(uri) || [])
       }, PublishDiagnosticsTimeout)
       waiters.add(waiter)
       this.diagnosticWaiters.set(uri, waiters)
