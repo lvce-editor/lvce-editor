@@ -3,6 +3,7 @@ import * as AdjustCommands from '../AdjustCommands/AdjustCommands.js'
 import * as ApplicationRegistry from '../ApplicationRegistry/ApplicationRegistry.ts'
 import * as AssetDir from '../AssetDir/AssetDir.js'
 import * as Platform from '../Platform/Platform.js'
+import * as ProcessExplorerPreferences from '../ProcessExplorerPreferences/ProcessExplorerPreferences.js'
 import * as WorkerInvokerMap from '../WorkerInvokerMap/WorkerInvokerMap.js'
 import * as WorkerViewletAdapterMap from '../WorkerViewletAdapterMap/WorkerViewletAdapterMap.js'
 import * as WorkerViewletConfig from '../WorkerViewletConfig/WorkerViewletConfig.js'
@@ -12,6 +13,12 @@ const createContext = (getPlatform) => ({
   assetDir: AssetDir.assetDir,
   get isTest() {
     return Workspace.isTest?.() ?? false
+  },
+  get processExplorerArgs() {
+    return { updateInterval: this.processExplorerUpdateInterval }
+  },
+  get processExplorerUpdateInterval() {
+    return ProcessExplorerPreferences.getUpdateInterval()
   },
   get platform() {
     return getPlatform()
@@ -80,7 +87,8 @@ const cloneStateValue = (value) => {
 }
 
 const getApplicationContext = (state, context) => {
-  const applicationId = state.applicationId ?? ApplicationRegistry.getOwner(state.uid ?? state.id)
+  const { applicationId: currentApplicationId, id, uid } = state
+  const applicationId = currentApplicationId ?? ApplicationRegistry.getOwner(uid ?? id)
   if (applicationId === undefined) {
     return context
   }

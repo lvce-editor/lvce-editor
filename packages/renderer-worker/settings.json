@@ -53,6 +53,16 @@
   },
   {
     "category": "workbench",
+    "description": "Controls how often the Process Explorer refreshes, in milliseconds",
+    "heading": "Process Explorer Update Interval",
+    "id": "processExplorer.updateInterval",
+    "maximum": 5000,
+    "minimum": 500,
+    "type": "number",
+    "value": 1000
+  },
+  {
+    "category": "workbench",
     "description": "Stores the cached color theme",
     "heading": "Color Theme Cache",
     "id": "colorTheme.cache",
