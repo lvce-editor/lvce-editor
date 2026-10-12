@@ -62,6 +62,10 @@ test('getModuleId - FileWatcherExplorer.decreaseRefCount', () => {
   expect(ModuleMap.getModuleId('FileWatcherExplorer.decreaseRefCount')).toBe(ModuleId.FileWatcherExplorer)
 })
 
+test('getModuleId - FileSystem.statWithMetadata', () => {
+  expect(ModuleMap.getModuleId('FileSystem.statWithMetadata')).toBe(ModuleId.FileSystem)
+})
+
 test('getModuleId - ExtensionManagement.getLinkedExtensionDevelopmentConfig', () => {
   expect(ModuleMap.getModuleId('ExtensionManagement.getLinkedExtensionDevelopmentConfig')).toBe(ModuleId.ExtensionManagement)
 })
