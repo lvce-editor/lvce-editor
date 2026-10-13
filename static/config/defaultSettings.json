@@ -2,6 +2,7 @@
   "git.remoteHosts": { "github.com": "https://github.com" },
   "application.updateMode": "none",
   "application.memoryUsage": "default",
+  "application.useProtocolRegisterSource": false,
   "application.useOnLoadJson": false,
 
   "breadcrumbs.enabled": false,
