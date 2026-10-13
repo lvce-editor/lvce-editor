@@ -44,6 +44,14 @@ try {
   const env = { ...process.env }
   for (const key of ['ELECTRON_RUN_AS_NODE', 'LVCE_ROOT', 'LVCE_SHARED_PROCESS_PATH', 'DEV']) delete env[key]
   for (const key of ['CONFIG', 'DATA', 'CACHE', 'STATE']) env[`XDG_${key}_HOME`] = join(directory, key.toLowerCase())
+  if (process.env.LVCE_USE_PROTOCOL_REGISTER_SOURCE !== undefined) {
+    const configDirectory = join(env.XDG_CONFIG_HOME, 'lvce-oss')
+    await mkdir(configDirectory, { recursive: true })
+    await writeFile(
+      join(configDirectory, 'settings.json'),
+      JSON.stringify({ 'application.useProtocolRegisterSource': process.env.LVCE_USE_PROTOCOL_REGISTER_SOURCE === 'true' }),
+    )
+  }
   child = spawn(
     electron,
     [
@@ -96,7 +104,7 @@ try {
   await send('Network.enable')
   while (Date.now() < deadline) {
     if (
-      await evaluate(`Boolean(document.querySelector('.Editor') && Array.from(document.styleSheets).some(sheet => {
+      await evaluate(`Boolean(document.querySelector('.Editor')?.textContent.includes('acceptance') && Array.from(document.styleSheets).some(sheet => {
       try { return Array.from(sheet.cssRules).some(rule => rule.cssText.includes('lvce-oss-font://-/fonts/FiraCode-VariableFont.ttf')) } catch { return false }
     }))`)
     )
@@ -104,6 +112,11 @@ try {
     await delay(100)
   }
   assert.equal(await evaluate(`Boolean(document.querySelector('.Editor'))`), true, 'Packaged editor and renderer worker must start')
+  assert.equal(
+    await evaluate(`document.querySelector('.Editor').textContent.includes('acceptance')`),
+    true,
+    'The editor must load and render the project file through dynamic resource loading',
+  )
   assert.equal(
     await evaluate(`Array.from(document.styleSheets).some(sheet => {
     try { return Array.from(sheet.cssRules).some(rule => rule.cssText.includes('lvce-oss-font://-/fonts/FiraCode-VariableFont.ttf')) } catch { return false }
