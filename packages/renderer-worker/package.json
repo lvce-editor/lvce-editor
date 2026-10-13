@@ -41,7 +41,7 @@
     }
   },
   "dependencies": {
-    "@lvce-editor/about-view": "^7.35.0",
+    "@lvce-editor/about-view": "^7.36.0",
     "@lvce-editor/accounts-view": "^0.5.4",
     "@lvce-editor/activity-bar-worker": "^7.28.0",
     "@lvce-editor/auth-worker": "^3.18.0",
