@@ -174,12 +174,16 @@ export const load = async (path) => {
   const config = JSON.parse(await readFile(path, 'utf8'))
   return Object.entries(config).flatMap(([key, value]) => Array.isArray(value) ? value.map((item) => '--' + key + '=' + item) : ['--' + key + '=' + value])
 }
+export const addDefaultMemoryReclaimerFeature = (args) => ['--enable-features=PartitionAllocMemoryReclaimer:interval/1800s', ...args]
 `,
       )
-      await writeFile(configPath, `{
+      await writeFile(
+        configPath,
+        `{
   "link": ["/extensions/first", "/extensions/with spaces"],
   "theme": "configured"
-}`)
+}`,
+      )
       await writeFile(
         fakeElectronPath,
         `#!/usr/bin/env node
@@ -204,6 +208,7 @@ writeFileSync(process.env.LVCE_TEST_RESULT, JSON.stringify({ args: process.argv.
       const result = JSON.parse(await readFile(resultPath, 'utf8'))
 
       expect(result.args).toEqual([
+        '--enable-features=PartitionAllocMemoryReclaimer:interval/1800s',
         '--link=/extensions/first',
         '--link=/extensions/with spaces',
         '--theme=configured',
@@ -370,13 +375,10 @@ setTimeout(() => {
       await mkdir(dirname(fakeElectronPath), { recursive: true })
       await writeFile(join(root, 'package.json'), JSON.stringify({ type: 'module', version: '1.2.3' }))
       await writeFile(join(root, 'static', 'build-a', 'index.html'), 'app entry')
-      await writeFile(fakeNpxPath, [
-        '#!/bin/sh',
-        'printf "%s\\n" "$5" >> "$LVCE_TEST_PACK_RESULT"',
-        'mkdir -p "$(dirname "$5")"',
-        "printf 'packed' > \"$5\"",
-        '',
-      ].join('\n'))
+      await writeFile(
+        fakeNpxPath,
+        ['#!/bin/sh', 'printf "%s\\n" "$5" >> "$LVCE_TEST_PACK_RESULT"', 'mkdir -p "$(dirname "$5")"', 'printf \'packed\' > "$5"', ''].join('\n'),
+      )
       await chmod(fakeNpxPath, 0o755)
       await writeFile(fakeSandboxPath, 'fake sandbox helper')
       await chmod(fakeSandboxPath, 0o755)
@@ -387,6 +389,7 @@ setTimeout(() => {
         join(serverSourcePath, 'argvConfig.js'),
         `export const getArgvConfigPath = () => '/fixture/argv.json'
 export const load = async () => ['--electron-version=44.1.2', '--asar', '--link=/extensions/from argv.json']
+export const addDefaultMemoryReclaimerFeature = (args) => ['--enable-features=PartitionAllocMemoryReclaimer:interval/1800s', ...args]
 `,
       )
       await writeFile(join(mainProcessPath, 'node_modules', '@electron', 'get', 'package.json'), JSON.stringify({ main: 'index.cjs' }))
@@ -442,9 +445,13 @@ renameSync(temporaryResult, process.env.LVCE_TEST_LAUNCH_RESULT)
       const realAppRoot = await realpath(root)
 
       expect(download).toMatchObject({ version: '44.1.2', platform: process.platform, artifactName: 'electron' })
-      expect(launch.args[0]).toMatch(/app\.asar$/)
-      expect(launch.args[0]).not.toBe(realAppRoot)
-      expect(launch.args.slice(1)).toEqual(['--link=/extensions/from argv.json', '--wait'])
+      expect(launch.args).toEqual([
+        '--enable-features=PartitionAllocMemoryReclaimer:interval/1800s',
+        expect.stringMatching(/app\.asar$/),
+        '--link=/extensions/from argv.json',
+        '--wait',
+      ])
+      expect(launch.args[1]).not.toBe(realAppRoot)
       expect(launch.runAsNode).toBeUndefined()
       expect(stdout).toContain('Downloading Electron 44.1.2...')
       expect(stdout).toContain('Creating ASAR application...')
@@ -564,14 +571,20 @@ renameSync(temporaryResult, process.env.LVCE_TEST_LAUNCH_RESULT)
       await mkdir(join(root, 'static', 'build-a'), { recursive: true })
       await writeFile(join(root, 'package.json'), JSON.stringify({ type: 'module', version: '1.2.3' }))
       await writeFile(join(root, 'static', 'build-a', 'index.html'), 'app entry')
-      await writeFile(fakeNpxPath, ['#!/bin/sh', 'printf "%s\\n" "$5" >> "$LVCE_TEST_PACK_RESULT"', 'mkdir -p "$(dirname "$5")"', "printf 'packed' > \"$5\"", ''].join('\n'))
+      await writeFile(
+        fakeNpxPath,
+        ['#!/bin/sh', 'printf "%s\\n" "$5" >> "$LVCE_TEST_PACK_RESULT"', 'mkdir -p "$(dirname "$5")"', 'printf \'packed\' > "$5"', ''].join('\n'),
+      )
       await chmod(fakeNpxPath, 0o755)
-      await writeFile(fakeElectronPath, [
-        '#!/usr/bin/env node',
-        "import { writeFileSync } from 'node:fs'",
-        'writeFileSync(process.env.LVCE_TEST_LAUNCH_RESULT, JSON.stringify(process.argv.slice(2)))',
-        '',
-      ].join('\n'))
+      await writeFile(
+        fakeElectronPath,
+        [
+          '#!/usr/bin/env node',
+          "import { writeFileSync } from 'node:fs'",
+          'writeFileSync(process.env.LVCE_TEST_LAUNCH_RESULT, JSON.stringify(process.argv.slice(2)))',
+          '',
+        ].join('\n'),
+      )
       await chmod(fakeElectronPath, 0o755)
       const cli = (await readTemplate('linux_cli_js'))
         .replaceAll('@@APPLICATION_NAME@@', 'lvce')
@@ -626,21 +639,24 @@ renameSync(temporaryResult, process.env.LVCE_TEST_LAUNCH_RESULT)
     try {
       await mkdir(binPath, { recursive: true })
       await writeFile(join(root, 'package.json'), JSON.stringify({ type: 'module', version: '1.2.3' }))
-      await writeFile(fakeNpxPath, [
-        '#!/bin/sh',
-        'printf "%s\\n" "$5" >> "$LVCE_TEST_PACK_RESULT"',
-        'if [ "$LVCE_TEST_FAIL_ASAR" = 1 ]; then exit 9; fi',
-        'mkdir -p "$(dirname "$5")"',
-        "printf 'packed' > \"$5\"",
-        '',
-      ].join('\n'))
+      await writeFile(
+        fakeNpxPath,
+        [
+          '#!/bin/sh',
+          'printf "%s\\n" "$5" >> "$LVCE_TEST_PACK_RESULT"',
+          'if [ "$LVCE_TEST_FAIL_ASAR" = 1 ]; then exit 9; fi',
+          'mkdir -p "$(dirname "$5")"',
+          'printf \'packed\' > "$5"',
+          '',
+        ].join('\n'),
+      )
       await chmod(fakeNpxPath, 0o755)
-      await writeFile(fakeElectronPath, [
-        '#!/usr/bin/env node',
-        "import { writeFileSync } from 'node:fs'",
-        "writeFileSync(process.env.LVCE_TEST_LAUNCH_RESULT, 'launched')",
-        '',
-      ].join('\n'))
+      await writeFile(
+        fakeElectronPath,
+        ['#!/usr/bin/env node', "import { writeFileSync } from 'node:fs'", "writeFileSync(process.env.LVCE_TEST_LAUNCH_RESULT, 'launched')", ''].join(
+          '\n',
+        ),
+      )
       await chmod(fakeElectronPath, 0o755)
       const cli = (await readTemplate('linux_cli_js'))
         .replaceAll('@@APPLICATION_NAME@@', 'lvce')

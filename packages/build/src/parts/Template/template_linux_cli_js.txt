@@ -66,6 +66,39 @@ const loadArgvConfigArguments = async (env) => {
   return argvConfig.load(configPath)
 }
 
+const addDefaultMemoryReclaimerFeature = async (args) => {
+  const modulePath = join(appRoot, 'packages', 'server', 'src', 'argvConfig.js')
+  try {
+    await access(modulePath)
+  } catch (error) {
+    if (error && typeof error === 'object' && 'code' in error && error.code === 'ENOENT') {
+      return args
+    }
+    throw error
+  }
+  const argvConfig = await import(pathToFileURL(modulePath).href)
+  return argvConfig.addDefaultMemoryReclaimerFeature(args)
+}
+
+const splitFeatureArguments = (args) => {
+  const featureArguments = []
+  const applicationArguments = []
+  for (let index = 0; index < args.length; index++) {
+    const arg = args[index]
+    if (arg === '--enable-features' || arg === '--disable-features') {
+      featureArguments.push(arg)
+      if (args[index + 1] !== undefined) {
+        featureArguments.push(args[++index])
+      }
+    } else if (arg.startsWith('--enable-features=') || arg.startsWith('--disable-features=')) {
+      featureArguments.push(arg)
+    } else {
+      applicationArguments.push(arg)
+    }
+  }
+  return { featureArguments, applicationArguments }
+}
+
 const getElectronExecutablePath = (electronDir) => {
   if (process.platform === 'darwin') {
     return join(electronDir, 'Electron.app', 'Contents', 'MacOS', 'Electron')
@@ -331,12 +364,16 @@ const launchElectron = async (args, envOverrides) => {
 
   const configArguments = await loadArgvConfigArguments(env)
   env.LVCE_ARGV_CONFIG_LOADED = '1'
-  const parsedArgs = parseLaunchOptions([...configArguments, ...args])
+  const parsedArgs = parseLaunchOptions(await addDefaultMemoryReclaimerFeature([...configArguments, ...args]))
   const foreground = isForegroundRequest(parsedArgs.args)
   const verbose = parsedArgs.args.includes('--verbose')
   const executablePath = parsedArgs.electronVersion ? await ensureElectronRuntime(parsedArgs.electronVersion) : process.execPath
   const applicationPath = parsedArgs.asar ? await ensureAsarApp() : appRoot
-  const launchArgs = parsedArgs.asar || parsedArgs.electronVersion ? [applicationPath, ...parsedArgs.args] : parsedArgs.args
+  const { featureArguments, applicationArguments } = splitFeatureArguments(parsedArgs.args)
+  const launchArgs =
+    parsedArgs.asar || parsedArgs.electronVersion
+      ? [...featureArguments, applicationPath, ...applicationArguments]
+      : [...featureArguments, ...applicationArguments]
   const child = spawn(executablePath, launchArgs, {
     detached: true,
     env,
