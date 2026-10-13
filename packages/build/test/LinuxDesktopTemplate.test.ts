@@ -3,7 +3,7 @@ import { readFile } from 'node:fs/promises'
 
 const defaultReplacements: Record<string, string> = {
   '@@APPLICATION_NAME@@': 'lvce',
-  '@@EXEC@@': '/usr/lib/lvce/lvce %U',
+  '@@EXEC@@': '/usr/bin/lvce %U',
   '@@ICON@@': 'lvce',
   '@@KEYWORDS@@': 'lvce;',
   '@@NAME@@': 'lvce',
@@ -30,10 +30,11 @@ describe('linux desktop template', () => {
     expect(desktopFile).toContain('X-GNOME-WMClass=lvce')
   })
 
-  test('launches Electron directly from the desktop', async () => {
+  test('launches the app through its Electron argument wrapper', async () => {
     const desktopFile = await renderTemplate('linux_desktop')
 
-    expect(desktopFile).toContain('Exec=/usr/lib/lvce/lvce %U')
+    expect(desktopFile).toContain('Exec=/usr/bin/lvce %U')
+    expect(desktopFile).toContain('Exec=/usr/bin/lvce --new-window %F')
   })
 
   test('registers as a folder handler', async () => {
