@@ -52,6 +52,11 @@ const copyElectronResult = async ({ product, version, arch, debArch, platform, t
     from: 'packages/server/src/argvConfig.js',
     to: `packages/build/.tmp/linux/deb/${debArch}/app/usr/lib/${product.applicationName}/resources/app/packages/server/src/argvConfig.js`,
   })
+  await Copy.copy({
+    from: 'packages/shared-process/node_modules/@lvce-editor/jsonc-parser',
+    to: `packages/build/.tmp/linux/deb/${debArch}/app/usr/lib/${product.applicationName}/resources/app/packages/server/node_modules/@lvce-editor/jsonc-parser`,
+    dereference: true,
+  })
   await Remove.remove(
     `packages/build/.tmp/linux/deb/${debArch}/app/usr/lib/${product.applicationName}/resources/app/packages/shared-process/node_modules/@lvce-editor/ripgrep`,
   )
