@@ -29,6 +29,14 @@
   },
   {
     "category": "applications",
+    "description": "Loads bundled desktop resources through Electron's native loader. Applies to packaged desktop builds after restarting the application.",
+    "heading": "Native Resource Loading",
+    "id": "application.useProtocolRegisterSource",
+    "type": "boolean",
+    "value": false
+  },
+  {
+    "category": "applications",
     "description": "Emulates the current application version for update checks. Use numeric major.minor.patch format, or leave empty to use the installed version.",
     "heading": "Emulate Current Version",
     "id": "update.emulateCurrentVersion",
