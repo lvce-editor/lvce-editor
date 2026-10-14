@@ -733,7 +733,7 @@ test('Main restores its shell before deferring content and disposes the worker i
 })
 
 test('passes application context to output creation and hot reload', async () => {
-  const invoke = jest.fn(async (method: string) => (method === 'Output.getCommandIds' ? [] : undefined))
+  const invoke = jest.fn(async (method: string, ..._args: readonly unknown[]) => (method === 'Output.getCommandIds' ? [] : undefined))
   const viewlet = createWorkerViewletWithDependencies({
     config: getWorkerViewletConfig('output'),
     context: { platform: 2, applicationId: 'preview' },
