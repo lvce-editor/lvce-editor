@@ -70,3 +70,16 @@ test('disposing a scoped watch during setup cancels the registration', async () 
   resolve({ ok: true })
   await rejected
 })
+
+test('shared process disconnect invalidates extension watchers', async () => {
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation(async (method) => (method === 'FileWatcher.watch' ? { ok: true } : undefined))
+  await FileWatcher.watchExtension('lost-process', { roots: ['file:///workspace'] })
+  FileWatcher.handleSharedProcessClose()
+  expect(ExtensionManagementWorker.invoke).toHaveBeenCalledWith(
+    'Extensions.handleFileWatcherEvent',
+    'lost-process',
+    expect.objectContaining({ eventName: 'error' }),
+  )
+  await FileWatcher.disposeExtension('lost-process')
+})

@@ -100,3 +100,13 @@ export const watchFile = async (rpcId, callBackCommandId, uri) => {
   await SharedProcess.invoke('FileWatcher.watchFile2', id, uri)
   return map[id]
 }
+
+export const handleSharedProcessClose = () => {
+  for (const id of Object.keys(map)) {
+    void handleEvent(id, {
+      eventName: 'error',
+      error: { name: 'Error', message: 'Shared process disconnected' },
+      uri: '',
+    })
+  }
+}

@@ -39,7 +39,7 @@
     "@lvce-editor/embeds-process": "^4.25.0",
     "@lvce-editor/file-system-process": "^5.17.1",
     "@lvce-editor/file-watcher-explorer": "^0.1.1",
-    "@lvce-editor/file-watcher-process": "^4.14.1",
+    "@lvce-editor/file-watcher-process": "^4.15.0",
     "@lvce-editor/network-process": "^5.2.0",
     "@lvce-editor/preload": "^1.5.1",
     "@lvce-editor/preview-process": "^11.0.0",

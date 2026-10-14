@@ -96,3 +96,16 @@ export const handleChange = (event: any): any => {
   }
   handleEvents(ref.id, ref.ipc, event)
 }
+
+export const handleProcessClose = (): void => {
+  for (const [internalId, ref] of Object.entries(internalIdMap)) {
+    const { handleClose, id, ipc } = ref as any
+    removeCloseListener(ipc, handleClose)
+    delete internalIdMap[internalId]
+    handleEvents(id, ipc, {
+      error: { message: 'File watcher process disconnected', name: 'Error' },
+      eventName: 'error',
+      uri: '',
+    })
+  }
+}

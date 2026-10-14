@@ -140,3 +140,16 @@ test('watch - forwards shallow root depth to the watcher process', async () => {
   expect(FileWatcherProcess.invoke).toHaveBeenCalledWith('FileWatcher.watchFolders', { depth: 0, exclude: [], id: 123, roots: ['file:///workspace'] })
   await FileWatcher.dispose(ipc, 1)
 })
+
+test('watcher process disconnect invalidates all active registrations', async () => {
+  // @ts-ignore
+  FileWatcherProcess.invoke.mockResolvedValue({ ok: true })
+  const ipc = createIpc()
+  await FileWatcher.watch(ipc, 1, { exclude: [], roots: ['file:///workspace'] })
+  FileWatcher.handleProcessClose()
+  expect(JsonRpc.send).toHaveBeenCalledWith(ipc, 'FileWatcher.handleEvent', 1, expect.objectContaining({ eventName: 'error' }))
+  expect(ipc.removeEventListener).toHaveBeenCalledWith('close', expect.any(Function))
+  jest.clearAllMocks()
+  FileWatcher.handleChange({ eventName: 'change', id: 123, uri: 'file:///workspace/stale.ts' })
+  expect(JsonRpc.send).not.toHaveBeenCalled()
+})
