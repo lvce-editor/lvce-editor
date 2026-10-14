@@ -268,6 +268,7 @@ export const commandMap = {
   'GetActiveEditor.getActiveEditorId': lazy('GetActiveEditor.getActiveEditorId'),
   'GetActiveEditor.getDiagnostics': lazy('GetActiveEditor.getDiagnostics'),
   'GetActiveEditor.getOpenEditorUris': lazy('GetActiveEditor.getOpenEditorUris'),
+  'GetActiveEditor.getVisibleEditorUris': lazy('GetActiveEditor.getVisibleEditorUris'),
   'GetActiveEditor.getSelections': lazy('GetActiveEditor.getSelections'),
   'GetActiveEditor.getTextDocument': lazy('GetActiveEditor.getTextDocument'),
   'GetActiveEditor.getTextDocumentWithScroll': lazy('GetActiveEditor.getTextDocumentWithScroll'),
