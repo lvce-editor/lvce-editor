@@ -60,6 +60,7 @@ export const watchExtension = async (id, options) => {
   const target = createTarget()
   extensionWatchers.set(id, target)
   target.addEventListener('watcher-event', (event) => {
+    if (!('detail' in event)) return
     void ExtensionManagementWorker.invoke('Extensions.handleFileWatcherEvent', id, event.detail).catch(console.error)
   })
   try {
