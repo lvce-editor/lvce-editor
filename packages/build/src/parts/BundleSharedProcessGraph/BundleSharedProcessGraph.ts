@@ -1,9 +1,9 @@
 import { build } from 'esbuild'
-import { readFile, writeFile } from 'node:fs/promises'
+import { readFile, realpath, writeFile } from 'node:fs/promises'
 import { join, relative, resolve, sep } from 'node:path'
 
 export const bundleSharedProcessGraph = async (sharedProcessPath: string) => {
-  const cwd = resolve(sharedProcessPath)
+  const cwd = await realpath(resolve(sharedProcessPath))
   const entry = join(cwd, 'src', 'sharedProcessMain.js')
   const outdir = join(cwd, 'dist-startup')
   const result = await build({

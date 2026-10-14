@@ -1,13 +1,14 @@
 import { execFileSync } from 'node:child_process'
-import { mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises'
+import { mkdir, mkdtemp, realpath, rm, symlink, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { expect, test } from '@jest/globals'
 import { bundleSharedProcessGraph } from '../src/parts/BundleSharedProcessGraph/BundleSharedProcessGraph.ts'
 
-test('shared-process graph retains dynamic initialization, singleton state, names, package resolution and root URLs', async () => {
-  const cwd = await mkdtemp(join(tmpdir(), 'lvce-shared-graph-'))
+test.each([false, true])('shared-process graph retains initialization and paths (symlink: %s)', async (useSymlink) => {
+  const cwd = await realpath(await mkdtemp(join(tmpdir(), 'lvce-shared-graph-')))
+  const alias = `${cwd}-link`
   try {
     const src = join(cwd, 'src')
     await mkdir(join(src, 'parts', 'Root'), { recursive: true })
@@ -35,7 +36,10 @@ console.log(JSON.stringify({ before, after: state.value, value: lazy.load(), nam
     )
     const run = () => JSON.parse(execFileSync(process.execPath, [join(src, 'sharedProcessMain.js')], { encoding: 'utf8' }))
     const original = run()
-    await bundleSharedProcessGraph(cwd)
+    if (useSymlink) {
+      await symlink(cwd, alias, 'junction')
+    }
+    await bundleSharedProcessGraph(useSymlink ? alias : cwd)
     expect(run()).toEqual(original)
     expect(original).toEqual({
       before: 0,
@@ -47,6 +51,7 @@ console.log(JSON.stringify({ before, after: state.value, value: lazy.load(), nam
       packageUrl: pathToFileURL(join(cwd, 'node_modules', 'fixture-package', 'index.js')).href,
     })
   } finally {
+    await rm(alias, { recursive: true, force: true })
     await rm(cwd, { recursive: true, force: true })
   }
 })
