@@ -17,6 +17,7 @@ import * as Product from '../Product/Product.js'
 import * as RemoteCli from '../RemoteCli/RemoteCli.js'
 import * as StatusBarWorker from '../StatusBarWorker/StatusBarWorker.js'
 import * as TerminalWorker from '../TerminalWorker/TerminalWorker.js'
+import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as WindowTitle from '../WindowTitle/WindowTitle.js'
 import * as WorkspaceConnection from '../WorkspaceConnection/WorkspaceConnection.js'
 import { state } from '../WorkspaceState/WorkspaceState.js'
@@ -140,6 +141,14 @@ const validateLocalPath = async (path) => {
   }
 }
 
+const canChangeWorkspace = async () => {
+  if (!ViewletStates.getInstance('Main') || !(await Command.execute('Main.hasDirtyTabs'))) {
+    return true
+  }
+  await Command.execute('Main.closeAllEditorsAndSave')
+  return !(await Command.execute('Main.hasDirtyTabs'))
+}
+
 /**
  * @param {string|undefined} path
  */
@@ -151,8 +160,10 @@ export const setPath = async (path) => {
   const changeId = ++workspaceChangeId
   await validateLocalPath(path)
   if (changeId !== workspaceChangeId) return
-  await updateWindowTitle(path, pathSeparator)
   const workspaceChanged = path !== state.workspacePath
+  if (workspaceChanged && !(await canChangeWorkspace())) return
+  if (changeId !== workspaceChangeId) return
+  await updateWindowTitle(path, pathSeparator)
   if (workspaceChanged) {
     await GlobalEventBus.emitEvent('workspace.beforeChange', state.workspacePath, path)
   }
@@ -182,6 +193,8 @@ export const setUri = async (uri, connectionOrPathSeparator, legacyConnection, o
   if (protocol === 'file' && !connection) {
     await validateLocalPath(path)
   }
+  if (changeId !== workspaceChangeId) return
+  if (path !== state.workspacePath && !(await canChangeWorkspace())) return
   if (changeId !== workspaceChangeId) return
   await updateWindowTitle(path, pathSeparator)
   if (changeId !== workspaceChangeId) return
