@@ -254,6 +254,48 @@ test('getOpenEditorUris returns an empty array without a main area', async () =>
   expect(invoke).not.toHaveBeenCalled()
 })
 
+test('getVisibleEditorUris returns the selected tab from every editor group', async () => {
+  ViewletStates.set('Main', {
+    factory: {},
+    moduleId: 'Main',
+    renderedState: { uid: 1 },
+    state: { uid: 1 },
+  })
+  const invoke = jest.fn(async () => ({
+    layout: {
+      groups: [
+        {
+          activeTabId: 2,
+          tabs: [
+            { id: 1, uri: 'file:///workspace/hidden.ts' },
+            { id: 2, uri: 'file:///workspace/visible.ts' },
+          ],
+        },
+        {
+          activeTabId: 3,
+          tabs: [
+            { id: 3, uri: 'file:///workspace/other-group.ts' },
+            { id: 4, uri: 'search-editor://1/Search' },
+          ],
+        },
+        { activeTabId: 5, tabs: [{ id: 5, label: 'untitled' }] },
+      ],
+    },
+  }))
+
+  await expect(GetActiveEditor.getVisibleEditorUrisWithInvoke(invoke)).resolves.toEqual([
+    'file:///workspace/visible.ts',
+    'file:///workspace/other-group.ts',
+  ])
+  expect(invoke).toHaveBeenCalledWith('MainArea.saveState', 1)
+})
+
+test('getVisibleEditorUris returns an empty array without a main area', async () => {
+  const invoke = jest.fn()
+  await expect(GetActiveEditor.getVisibleEditorUrisWithInvoke(invoke)).resolves.toEqual([])
+  expect(invoke).not.toHaveBeenCalled()
+})
+
 test('getActiveUri returns the selected tab in the active group', async () => {
   ViewletStates.set('Main', {
     factory: {},

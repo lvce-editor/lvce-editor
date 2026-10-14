@@ -237,7 +237,7 @@ test('handleActiveEditorChange refreshes the problems summary for loaded viewlet
   const state = { ...ViewletLayout.create(1), statusBarVisible: true }
   const result = await ViewletLayout.handleActiveEditorChange(state, 'file:///test.ts')
 
-  expect(problemsInvoke).toHaveBeenCalledWith('Problems.getProblemsSummary')
+  expect(problemsInvoke).toHaveBeenCalledWith('Problems.getProblemsSummary', 'file:///test.ts')
   expect(panelHandler).toHaveBeenCalledWith({ uid: 1 }, summary)
   expect(statusBarHandler).toHaveBeenCalledWith({ uid: 2 }, summary)
   expect(result).toEqual({

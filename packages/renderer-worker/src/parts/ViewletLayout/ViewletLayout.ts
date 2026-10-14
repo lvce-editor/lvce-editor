@@ -3050,12 +3050,12 @@ export const handleSourceControlProgressChange = async (state: LayoutState): Pro
   return callGlobalEvent(state, 'handleSourceControlProgressChange')
 }
 
-export const refreshProblemsSummary = async (state: LayoutState): Promise<LayoutStateResult> => {
+export const refreshProblemsSummary = async (state: LayoutState, activeUri = ''): Promise<LayoutStateResult> => {
   if (!state.statusBarVisible && !state.panelVisible) {
     return { newState: state, commands: [] }
   }
   try {
-    const summary = await ProblemsWorker.invoke('Problems.getProblemsSummary')
+    const summary = await ProblemsWorker.invoke('Problems.getProblemsSummary', activeUri)
     return callGlobalEvent(state, 'handleProblemsSummaryChange', summary)
   } catch {
     return {
@@ -3093,7 +3093,7 @@ export const handleActiveEditorChange = async (state: LayoutState, activeUri: st
   } catch {
     // Older status bar workers do not support active editor visibility updates.
   }
-  const summaryResult = activeUri ? await refreshProblemsSummary(eventResult.newState) : await clearProblemsSummary(eventResult.newState)
+  const summaryResult = activeUri ? await refreshProblemsSummary(eventResult.newState, activeUri) : await clearProblemsSummary(eventResult.newState)
   return {
     newState: summaryResult.newState,
     commands: [...restored.commands, ...eventResult.commands, ...summaryResult.commands],
