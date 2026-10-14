@@ -1251,7 +1251,11 @@ export const openOutput = async (state: LayoutState, channelId?: string): Promis
   }
   // Commit the panel's DOM before updating the channel value in its toolbar.
   await Viewlet.executeViewletCommand(state.uid, 'showPanel', ViewletModuleId.Output, channelId)
-  await Command.execute('Output.selectChannel', channelId)
+  if (state.applicationId === undefined) {
+    await Command.execute('Output.selectChannel', channelId)
+  } else {
+    await ViewletManager.executeForApplication(state.applicationId, 'Output.selectChannel', channelId)
+  }
   return {
     newState: state,
     commands: [],

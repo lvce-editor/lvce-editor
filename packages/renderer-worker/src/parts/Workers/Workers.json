@@ -1236,7 +1236,8 @@
           "parameters": [
             { "source": "state", "name": "id" }, { "source": "state", "name": "uri" }, { "source": "state", "name": "x" },
             { "source": "state", "name": "y" }, { "source": "state", "name": "width" }, { "source": "state", "name": "height" },
-            { "source": "state", "name": "platform" }, { "source": "state", "name": "parentUid" }
+            { "source": "state", "name": "platform" }, { "source": "state", "name": "parentUid" },
+            { "source": "context", "name": "applicationId" }
           ]
         },
         "hotReloadCreate": {
@@ -1244,7 +1245,8 @@
           "parameters": [
             { "source": "state", "name": "uid" }, { "source": "state", "name": "uri" }, { "source": "state", "name": "x" },
             { "source": "state", "name": "y" }, { "source": "state", "name": "width" }, { "source": "state", "name": "height" },
-            { "source": "state", "name": "parentUid" }, { "source": "state", "name": "platform" }
+            { "source": "state", "name": "platform" }, { "source": "state", "name": "parentUid" },
+            { "source": "context", "name": "applicationId" }
           ]
         },
         "loadContent": {

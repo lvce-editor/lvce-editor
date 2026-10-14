@@ -731,3 +731,18 @@ test('Main restores its shell before deferring content and disposes the worker i
   content.resolve()
   expect(await loading).toBe(state)
 })
+
+test('passes application context to output creation and hot reload', async () => {
+  const invoke = jest.fn(async (method: string) => (method === 'Output.getCommandIds' ? [] : undefined))
+  const viewlet = createWorkerViewletWithDependencies({
+    config: getWorkerViewletConfig('output'),
+    context: { platform: 2, applicationId: 'preview' },
+    worker: { invoke, restart: jest.fn() },
+  })
+  const state = viewlet.create(7, 'sample-build', 1, 2, 300, 200, undefined, 9)
+  await viewlet.loadContent(state, {})
+  expect(invoke).toHaveBeenCalledWith('Output.create', 7, 'sample-build', 1, 2, 300, 200, 2, 9, 'preview')
+  invoke.mockClear()
+  await viewlet.hotReload!(state)
+  expect(invoke).toHaveBeenCalledWith('Output.create', 7, 'sample-build', 1, 2, 300, 200, 2, 9, 'preview')
+})
