@@ -5,6 +5,7 @@ import * as BundleCss from '../BundleCss/BundleCss.ts'
 import * as BundleMainProcessCached from '../BundleMainProcessCached/BundleMainProcessCached.ts'
 import * as BundleOptions from '../BundleOptions/BundleOptions.ts'
 import * as BundleSharedProcessCached from '../BundleSharedProcessCached/BundleSharedProcessCached.ts'
+import * as BundleSharedProcessGraph from '../BundleSharedProcessGraph/BundleSharedProcessGraph.ts'
 import * as BundleWorkers from '../BundleWorkers/BundleWorkers.ts'
 import * as CommitHash from '../CommitHash/CommitHash.ts'
 import * as Copy from '../Copy/Copy.ts'
@@ -317,6 +318,8 @@ export const build = async ({
     to: `${resourcesPath}/app/packages/shared-process`,
   })
   console.timeEnd('copySharedProcessFiles')
+
+  await BundleSharedProcessGraph.bundleSharedProcessGraph(Path.absolute(`${resourcesPath}/app/packages/shared-process`))
 
   console.time('copyExtensions')
   await copyExtensions({ resourcesPath, commitHash })
