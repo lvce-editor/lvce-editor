@@ -7,6 +7,7 @@ type BundleOptions = {
   readonly exclude?: string[]
   readonly from: string
   readonly minify?: boolean
+  readonly minifyWhitespace?: boolean
   readonly modulePaths?: string[]
   readonly sourceMap?: boolean
   readonly platform: 'node' | 'webworker' | 'web' | 'node/cjs'
@@ -31,6 +32,7 @@ export const bundleJs = async ({
   platform,
   exclude,
   minify = false,
+  minifyWhitespace,
   codeSplitting = false,
   modulePaths = [],
   sourceMap = true,
@@ -49,6 +51,8 @@ export const bundleJs = async ({
       format: platform === 'node/cjs' ? 'cjs' : 'esm',
       sourcemap: sourceMap,
       minify,
+      minifyWhitespace,
+      legalComments: minifyWhitespace ? 'inline' : undefined,
       splitting: codeSplitting,
       // Code splitting not really possible in nodejs due to esbuild Error: Dynamic require of "assert" is not supported
       // see https://github.com/evanw/esbuild/issues/700
