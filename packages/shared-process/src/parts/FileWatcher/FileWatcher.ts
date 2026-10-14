@@ -26,7 +26,7 @@ const removeCloseListener = (ipc: any, listener: any): void => {
   }
 }
 
-export const watch = async (ipc: any, id: any, { exclude, roots, useGitIgnore }: any): Promise<any> => {
+export const watch = async (ipc: any, id: any, { depth, exclude, roots, useGitIgnore }: any): Promise<any> => {
   const internalId = Id.create()
   const handleClose = async (): Promise<void> => {
     removeCloseListener(ipc, handleClose)
@@ -40,6 +40,7 @@ export const watch = async (ipc: any, id: any, { exclude, roots, useGitIgnore }:
       exclude,
       id: internalId,
       roots,
+      ...(depth === undefined ? {} : { depth }),
       ...(useGitIgnore === undefined ? {} : { useGitIgnore }),
     })
     if (!internalIdMap[internalId]) {

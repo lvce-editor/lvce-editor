@@ -131,3 +131,12 @@ test('watch - closes pending registration when the owning connection closes', as
   FileWatcher.handleChange({ eventName: 'change', id: 123, uri: 'file:///workspace/stale.ts' })
   expect(JsonRpc.send).not.toHaveBeenCalled()
 })
+
+test('watch - forwards shallow root depth to the watcher process', async () => {
+  // @ts-ignore
+  FileWatcherProcess.invoke.mockResolvedValue({ ok: true })
+  const ipc = createIpc()
+  await FileWatcher.watch(ipc, 1, { depth: 0, exclude: [], roots: ['file:///workspace'] })
+  expect(FileWatcherProcess.invoke).toHaveBeenCalledWith('FileWatcher.watchFolders', { depth: 0, exclude: [], id: 123, roots: ['file:///workspace'] })
+  await FileWatcher.dispose(ipc, 1)
+})
