@@ -153,3 +153,18 @@ test('watcher process disconnect invalidates all active registrations', async ()
   FileWatcher.handleChange({ eventName: 'change', id: 123, uri: 'file:///workspace/stale.ts' })
   expect(JsonRpc.send).not.toHaveBeenCalled()
 })
+
+test('targeted child scope reaches the watcher process unchanged', async () => {
+  // @ts-ignore
+  FileWatcherProcess.invoke.mockResolvedValue({ ok: true })
+  const ipc = createIpc()
+  await FileWatcher.watch(ipc, 1, { childNames: ['tsconfig.json'], depth: 0, exclude: [], roots: ['file:///workspace'] })
+  expect(FileWatcherProcess.invoke).toHaveBeenCalledWith('FileWatcher.watchFolders', {
+    childNames: ['tsconfig.json'],
+    depth: 0,
+    exclude: [],
+    id: 123,
+    roots: ['file:///workspace'],
+  })
+  await FileWatcher.dispose(ipc, 1)
+})
