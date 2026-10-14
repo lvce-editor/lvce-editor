@@ -49,7 +49,7 @@ test.each([
 
   await expect(FileWatcher.watch(ipc, 1, options)).resolves.toBe(result)
 
-  expect(FileWatcherProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(FileWatcherProcess.invoke).toHaveBeenCalledTimes(result.ok ? 1 : 2)
   expect(FileWatcherProcess.invoke).toHaveBeenCalledWith('FileWatcher.watchFolders', {
     exclude: options.exclude,
     id: 123,
@@ -115,5 +115,19 @@ test('handleChange - ignores events after disposal', async () => {
     uri: 'file:///workspace/new.txt',
   })
 
+  expect(JsonRpc.send).not.toHaveBeenCalled()
+})
+
+test('watch - closes pending registration when the owning connection closes', async () => {
+  const { promise, resolve } = Promise.withResolvers<any>()
+  // @ts-ignore
+  FileWatcherProcess.invoke.mockImplementation(async (method: string) => (method === 'FileWatcher.watchFolders' ? promise : undefined))
+  const ipc = createIpc()
+  const pending = FileWatcher.watch(ipc, 1, { exclude: [], roots: ['file:///workspace'] })
+  const rejected = pending.catch((error: unknown) => error)
+  await ipc.addEventListener.mock.calls[0][1]()
+  resolve({ ok: true })
+  await rejected
+  FileWatcher.handleChange({ eventName: 'change', id: 123, uri: 'file:///workspace/stale.ts' })
   expect(JsonRpc.send).not.toHaveBeenCalled()
 })

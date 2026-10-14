@@ -35,12 +35,25 @@ export const watch = async (ipc: any, id: any, { exclude, roots, useGitIgnore }:
   }
   addCloseListener(ipc, handleClose)
   internalIdMap[internalId] = { handleClose, id, ipc }
-  return FileWatcherProcess.invoke('FileWatcher.watchFolders', {
-    exclude,
-    id: internalId,
-    roots,
-    ...(useGitIgnore === undefined ? {} : { useGitIgnore }),
-  })
+  try {
+    const result = await FileWatcherProcess.invoke('FileWatcher.watchFolders', {
+      exclude,
+      id: internalId,
+      roots,
+      ...(useGitIgnore === undefined ? {} : { useGitIgnore }),
+    })
+    if (!internalIdMap[internalId]) {
+      await disposeFileWatcher(internalId)
+      throw new Error('File watcher connection closed during registration')
+    }
+    if (result?.ok === false) {
+      await handleClose()
+    }
+    return result
+  } catch (error) {
+    await handleClose()
+    throw error
+  }
 }
 
 const disposeFileWatcher = async (internalId: any): Promise<any> => {

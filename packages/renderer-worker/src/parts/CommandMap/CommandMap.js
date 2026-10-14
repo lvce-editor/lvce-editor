@@ -258,6 +258,8 @@ export const commandMap = {
   'FileHandles.get': lazy('FileSystemHandle.getFileHandles'),
   'FileSystemHandle.addFileHandle': lazy('FileSystemHandle.addFileHandle'),
   'FileSystemHandle.getFilePathElectron': lazy('FileSystemHandle.getFilePathElectron'),
+  'FileWatcher.watchExtension': lazy('FileWatcher.watchExtension'),
+  'FileWatcher.disposeExtension': lazy('FileWatcher.disposeExtension'),
   'FileWatcher.handleEvent': lazy('FileWatcher.handleEvent'),
   'FileWatcher.watchFile': lazy('FileWatcher.watchFile'),
   'Focus.removeAdditionalFocus': lazy('Focus.removeAdditionalFocus'),
