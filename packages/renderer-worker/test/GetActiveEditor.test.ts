@@ -349,3 +349,25 @@ test('getTextDocument reads only the requested application even when another edi
   expect(invoke).toHaveBeenCalledWith('Editor.getText', 41)
   await expect(GetActiveEditor.getTextDocumentWithInvoke(invoke, 'missing')).resolves.toBeUndefined()
 })
+
+test('selection reads and writes stay in the requested application', async () => {
+  for (const [id, applicationId] of [
+    [41, 'source'],
+    [42, 'preview'],
+  ]) {
+    ApplicationRegistry.create({ id: applicationId, layoutUid: id + 100, workspaceUri: 'memfs:///', workspacePath: '/', href: '/samples' })
+    ViewletStates.set(id, { factory: {}, moduleId: 'EditorText', renderedState: { uid: id }, state: { id, uid: id, applicationId } })
+  }
+  ViewletStates.setFocusedInstanceByType(41, 'EditorText')
+  const invoke = jest.fn(async () => new Uint32Array([0, 1, 0, 4]))
+  await expect(GetActiveEditor.getSelectionsWithInvoke(invoke, 'preview')).resolves.toEqual([0, 1, 0, 4])
+  expect(invoke).toHaveBeenCalledWith('Editor.getSelections2', 42)
+  await GetActiveEditor.setSelectionsWithCommand(executeCommand, [0, 4, 0, 4], 'preview')
+  expect(executeCommand).toHaveBeenCalledWith('Viewlet.executeViewletCommand', 42, 'setSelections', new Uint32Array([0, 4, 0, 4]))
+  invoke.mockClear()
+  executeCommand.mockClear()
+  await expect(GetActiveEditor.getSelectionsWithInvoke(invoke, 'missing')).resolves.toEqual([])
+  await GetActiveEditor.setSelectionsWithCommand(executeCommand, [0, 0, 0, 0], 'missing')
+  expect(invoke).not.toHaveBeenCalled()
+  expect(executeCommand).not.toHaveBeenCalled()
+})

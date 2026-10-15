@@ -64,8 +64,8 @@ export const getTextDocument = async (applicationId) => {
   return getTextDocumentWithInvoke(EditorWorker.invoke, applicationId)
 }
 
-export const getSelectionsWithInvoke = async (invoke) => {
-  const instance = ViewletStates.getInstance(ViewletModuleId.EditorText)
+export const getSelectionsWithInvoke = async (invoke, applicationId) => {
+  const instance = ViewletStates.getInstance(ViewletModuleId.EditorText, applicationId)
   if (!instance) {
     return []
   }
@@ -73,8 +73,8 @@ export const getSelectionsWithInvoke = async (invoke) => {
   return Array.from(selections)
 }
 
-export const getSelections = async () => {
-  return getSelectionsWithInvoke(EditorWorker.invoke)
+export const getSelections = async (applicationId) => {
+  return getSelectionsWithInvoke(EditorWorker.invoke, applicationId)
 }
 
 export const getSelectionTextWithInvoke = async (invoke) => {
@@ -162,16 +162,16 @@ export const updateDiagnostics = async () => {
   await updateDiagnosticsWithCommand(Command.execute)
 }
 
-export const setSelectionsWithCommand = async (executeCommand, selections) => {
-  const instance = ViewletStates.getInstance(ViewletModuleId.EditorText)
+export const setSelectionsWithCommand = async (executeCommand, selections, applicationId) => {
+  const instance = ViewletStates.getInstance(ViewletModuleId.EditorText, applicationId)
   if (!instance) {
     return
   }
   await executeCommand('Viewlet.executeViewletCommand', instance.state.id, 'setSelections', new Uint32Array(selections))
 }
 
-export const setSelections = async (selections) => {
-  await setSelectionsWithCommand(Command.execute, selections)
+export const setSelections = async (selections, applicationId) => {
+  await setSelectionsWithCommand(Command.execute, selections, applicationId)
 }
 
 export const updateAllDiagnosticsWithCommand = async (invoke) => {
