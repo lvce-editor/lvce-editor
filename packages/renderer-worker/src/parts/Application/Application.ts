@@ -151,6 +151,14 @@ export const execute = (applicationId: string, command: string, ...args: readonl
     })
   }
   switch (command) {
+    case 'Viewlet.executeViewletCommand':
+      return ApplicationRegistry.track(applicationId, () => {
+        const [uid, method, ...commandArgs] = args
+        if (ApplicationRegistry.getOwner(uid) !== applicationId) {
+          throw new Error(`Component not found in application ${applicationId}: ${uid}`)
+        }
+        return Viewlet.executeViewletCommand(uid, method, ...commandArgs)
+      })
     case 'Notification.create':
       return ApplicationRegistry.track(applicationId, () => RendererProcess.invoke('Notification.create', args[0], args[1], application.layoutUid))
     case 'Dialog.show':

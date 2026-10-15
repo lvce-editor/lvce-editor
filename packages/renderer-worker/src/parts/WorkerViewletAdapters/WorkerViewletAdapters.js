@@ -1,3 +1,4 @@
+import * as GetActiveEditor from '../GetActiveEditor/GetActiveEditor.js'
 import * as InputSource from '../InputSource/InputSource.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as StorageKey from '../StorageKey/StorageKey.ts'
@@ -191,6 +192,12 @@ export const preview = {
 }
 
 export const problems = {
+  async afterLoadContent({ context, state, worker }) {
+    if (context.applicationId !== undefined) {
+      const activeUri = await GetActiveEditor.getActiveUri(context.applicationId)
+      await worker.invoke('Problems.handleActiveEditorChange', state.uid, activeUri)
+    }
+  },
   extendModule(_workerViewlet, { worker }) {
     const resizeWithDependencies = async (state, dimensions, invoke) => {
       await invoke('Problems.resize', state.uid, dimensions)
