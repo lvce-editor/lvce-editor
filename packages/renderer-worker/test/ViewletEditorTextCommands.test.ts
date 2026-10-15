@@ -509,3 +509,46 @@ test('standalone editor deferred loading keeps the existing diagnostics route', 
   await commands.loadContentLater({ uid: 42 })
   expect(commandExecute.mock.calls).toEqual([['Viewlet.executeViewletCommand', 42, 'updateDiagnostics']])
 })
+
+test('late hosted DOM focus responses preserve the newer application focus', async () => {
+  const pendingSource = Promise.withResolvers<void>()
+  const sourceStarted = Promise.withResolvers<void>()
+  editorWorkerInvoke.mockImplementation(async (method, uid) => {
+    if (method === 'Editor.getCommandIds') return []
+    if (method === 'Editor.handleFocus' && uid === 42) {
+      sourceStarted.resolve()
+      await pendingSource.promise
+    }
+    if (method === 'Editor.diff2') return []
+    if (method === 'Editor.render2')
+      return [
+        ['Viewlet.focusSelector', uid, '.EditorInput textarea'],
+        ['Viewlet.setText', uid, 'updated'],
+      ]
+    return undefined
+  })
+  const commands = await ViewletEditorTextCommands.getCommands()
+  const source = commands.handleFocus({ uid: 42, applicationId: 'source', uri: 'memfs:///main.ts' })
+  await sourceStarted.promise
+  const preview = await commands.handleFocus({ uid: 43, applicationId: 'preview', uri: 'memfs:///example.txt' })
+  pendingSource.resolve()
+  const lateSource = await source
+  expect(preview.commands).toEqual([['Viewlet.setText', 43, 'updated']])
+  expect(lateSource.commands).toEqual([['Viewlet.setText', 42, 'updated']])
+  expect(setFocus.mock.calls).toEqual([
+    [12, undefined, 42, 'Editor'],
+    [12, undefined, 43, 'Editor'],
+  ])
+})
+
+test('standalone focus handling retains its renderer focus commands', async () => {
+  editorWorkerInvoke.mockImplementation(async (method, uid) => {
+    if (method === 'Editor.getCommandIds' || method === 'Editor.diff2') return []
+    if (method === 'Editor.render2') return [['Viewlet.focusSelector', uid, '.EditorInput textarea']]
+    return undefined
+  })
+  const commands = await ViewletEditorTextCommands.getCommands()
+  const result = await commands.handleFocus({ uid: 42, uri: 'file:///main.ts' })
+  expect(result.commands).toEqual([['Viewlet.focusSelector', 42, '.EditorInput textarea']])
+  expect(setFocus).not.toHaveBeenCalled()
+})
