@@ -151,6 +151,14 @@ export const execute = (applicationId: string, command: string, ...args: readonl
     })
   }
   switch (command) {
+    case 'Viewlet.executeViewletCommand':
+      return ApplicationRegistry.track(applicationId, () => {
+        const [uid, method, ...commandArgs] = args
+        if (ApplicationRegistry.getOwner(uid) !== applicationId) {
+          throw new Error(`Component not found in application ${applicationId}: ${uid}`)
+        }
+        return Viewlet.executeViewletCommand(uid, method, ...commandArgs)
+      })
     case 'Notification.create':
       return ApplicationRegistry.track(applicationId, () => RendererProcess.invoke('Notification.create', args[0], args[1], application.layoutUid))
     case 'Dialog.show':
@@ -159,14 +167,6 @@ export const execute = (applicationId: string, command: string, ...args: readonl
       return ApplicationRegistry.track(applicationId, () =>
         Viewlet.openWidgetForApplication(applicationId, ViewletModuleId.Dialog, { ...args[0], type: 'warning' }),
       )
-    case 'Viewlet.executeViewletCommand':
-      return ApplicationRegistry.track(applicationId, async () => {
-        const [uid, key, ...commandArgs] = args
-        if (ApplicationRegistry.getOwner(uid) !== applicationId) {
-          throw new Error(`Component not owned by application ${applicationId}: ${uid}`)
-        }
-        return Viewlet.executeViewletCommand(uid, key, ...commandArgs)
-      })
     case 'Viewlet.openWidget':
       return ApplicationRegistry.track(applicationId, () => Viewlet.openWidgetForApplication(applicationId, args[0], ...args.slice(1)))
     case 'QuickPick.showCustom':
@@ -240,14 +240,10 @@ export const executeForView = (uid: number, command: string, ...args: readonly a
   const applicationId = ApplicationRegistry.getOwner(uid)
   if (applicationId === undefined) {
     if (command === 'PortProvider.forwardPort') {
-      return import('../PortProvider/PortProvider.ts').then(({ forwardPort }) =>
-        forwardPort(Workspace.getWorkspaceUri(), args[0]),
-      )
+      return import('../PortProvider/PortProvider.ts').then(({ forwardPort }) => forwardPort(Workspace.getWorkspaceUri(), args[0]))
     }
     if (command === 'PortProvider.stopForwardPort') {
-      return import('../PortProvider/PortProvider.ts').then(({ stopForwardPort }) =>
-        stopForwardPort(Workspace.getWorkspaceUri(), args[0]),
-      )
+      return import('../PortProvider/PortProvider.ts').then(({ stopForwardPort }) => stopForwardPort(Workspace.getWorkspaceUri(), args[0]))
     }
     // Ports requests its initial content before the view is added to ViewletStates.
     if (command === 'PortProvider.getPorts') {

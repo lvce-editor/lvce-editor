@@ -84,6 +84,16 @@ test('failed mounting releases partial ownership and permits retrying the same a
   expect(await Application.create(options('preview'))).toBe(2)
 })
 
+test('worker callbacks execute commands only on views owned by their application', async () => {
+  const source = await Application.create(options('source'))
+  const preview = await Application.create(options('preview'))
+  await Application.execute('source', 'Viewlet.executeViewletCommand', source, 'handleBlur')
+  expect(Viewlet.executeViewletCommand).toHaveBeenCalledWith(source, 'handleBlur')
+  jest.mocked(Viewlet.executeViewletCommand).mockClear()
+  await expect(Application.execute('source', 'Viewlet.executeViewletCommand', preview, 'handleBlur')).rejects.toThrow('Component not found')
+  expect(Viewlet.executeViewletCommand).not.toHaveBeenCalled()
+})
+
 test('concurrent disposal shares one teardown and preserves the sibling layout', async () => {
   const source = await Application.create(options('source'))
   const preview = await Application.create(options('preview'))
@@ -232,12 +242,7 @@ test('routes Remote SSH forwarding from the main workspace view', async () => {
   WorkspaceState.state.workspaceUri = 'remote-ssh://host/work'
   jest.mocked(ExtensionManagementWorker.invoke).mockResolvedValueOnce({ localPort: 3000 })
   await expect(Application.executeForView(12345, 'PortProvider.forwardPort', 3000)).resolves.toEqual({ localPort: 3000 })
-  expect(ExtensionManagementWorker.invoke).toHaveBeenCalledWith(
-    'Extensions.executeCommand',
-    'remote-ssh.forwardPort',
-    'remote-ssh://host/work',
-    3000,
-  )
+  expect(ExtensionManagementWorker.invoke).toHaveBeenCalledWith('Extensions.executeCommand', 'remote-ssh.forwardPort', 'remote-ssh://host/work', 3000)
 })
 
 test('routes stopping Remote SSH forwarding from the main workspace view', async () => {
@@ -314,10 +319,10 @@ test('dispatches editor lifecycle commands only to components owned by the appli
   expect(ViewletManager.executeForApplication).not.toHaveBeenCalledWith('source', 'Viewlet.executeViewletCommand', 100, 'handleBlur')
   jest.mocked(Viewlet.executeViewletCommand).mockClear()
   await expect(Application.execute('source', 'Viewlet.executeViewletCommand', 101, 'handleBlur')).rejects.toThrow(
-    'Component not owned by application source: 101',
+    'Component not found in application source: 101',
   )
   await expect(Application.execute('source', 'Viewlet.executeViewletCommand', 999, 'handleBlur')).rejects.toThrow(
-    'Component not owned by application source: 999',
+    'Component not found in application source: 999',
   )
   expect(Viewlet.executeViewletCommand).not.toHaveBeenCalled()
 })

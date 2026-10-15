@@ -392,3 +392,24 @@ test('active editor and visible URIs stay within their application while another
   await expect(GetActiveEditor.getActiveUriWithInvoke(invoke, 'source')).resolves.toBe('memfs:///141.txt')
   await expect(GetActiveEditor.getVisibleEditorUrisWithInvoke(invoke, 'missing')).resolves.toEqual([])
 })
+
+test('getActiveUri reads the main area owned by the requested application', async () => {
+  for (const [uid, applicationId] of [
+    [41, 'source'],
+    [42, 'preview'],
+  ]) {
+    ApplicationRegistry.create({ id: applicationId, layoutUid: uid + 100, workspaceUri: 'memfs:///', workspacePath: '/', href: '/samples' })
+    ViewletStates.set(uid, {
+      factory: {},
+      moduleId: 'Main',
+      renderedState: { uid },
+      state: { uid, applicationId },
+    })
+  }
+  ViewletStates.setFocusedInstanceByType(41, 'Main')
+  const invoke = jest.fn(async (_command, uid) => ({
+    layout: { activeGroupId: 1, groups: [{ id: 1, activeTabId: 1, tabs: [{ id: 1, uri: `memfs:///${uid}.txt` }] }] },
+  }))
+  await expect(GetActiveEditor.getActiveUriWithInvoke(invoke, 'preview')).resolves.toBe('memfs:///42.txt')
+  expect(invoke).toHaveBeenCalledWith('MainArea.saveState', 42)
+})
