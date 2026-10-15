@@ -59,7 +59,7 @@ test('workers view keybindings are registered', () => {
   })
 })
 
-test('panel worker receives the runtime platform and asset directory', () => {
+test('panel worker receives runtime configuration and application ownership', () => {
   const worker = Workers.getWorkers().find(({ id }: Readonly<{ id: string }>) => id === 'panel')
 
   expect(worker?.viewlet?.methods?.create?.parameters).toEqual([
@@ -71,6 +71,7 @@ test('panel worker receives the runtime platform and asset directory', () => {
     { name: 'height', source: 'state' },
     { name: 'platform', source: 'context' },
     { name: 'assetDir', source: 'context' },
+    { name: 'applicationId', source: 'context' },
   ])
 })
 
