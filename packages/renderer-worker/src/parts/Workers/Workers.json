@@ -1478,7 +1478,7 @@
         "create": { "name": "Problems.create", "parameters": [
           { "source": "state", "name": "uid" }, { "source": "state", "name": "uri" }, { "source": "state", "name": "x" },
           { "source": "state", "name": "y" }, { "source": "state", "name": "width" }, { "source": "state", "name": "height" },
-          { "source": "context", "name": "workspaceUri" }
+          { "source": "context", "name": "workspaceUri" }, { "source": "context", "name": "applicationId" }
         ] },
         "loadContent": { "name": "Problems.loadContent", "parameters": [{ "source": "state", "name": "uid" }, { "source": "argument", "name": "savedState" }] },
         "diff": { "name": "Problems.diff2", "parameters": [{ "source": "state", "name": "uid" }] },

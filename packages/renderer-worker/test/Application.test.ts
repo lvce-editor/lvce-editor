@@ -303,3 +303,21 @@ test('dialog entry points create a widget in the calling application before an i
   expect(Viewlet.openWidgetForApplication).toHaveBeenNthCalledWith(2, 'source', 'Dialog', { message: 'Source dialog', type: 'info' })
   expect(ViewletManager.executeForApplication).not.toHaveBeenCalled()
 })
+
+test('dispatches editor lifecycle commands only to components owned by the application', async () => {
+  await Application.create(options('source'))
+  await Application.create(options('preview'))
+  ApplicationRegistry.own('source', 100)
+  ApplicationRegistry.own('preview', 101)
+  await Application.execute('source', 'Viewlet.executeViewletCommand', 100, 'handleBlur')
+  expect(Viewlet.executeViewletCommand).toHaveBeenCalledWith(100, 'handleBlur')
+  expect(ViewletManager.executeForApplication).not.toHaveBeenCalledWith('source', 'Viewlet.executeViewletCommand', 100, 'handleBlur')
+  jest.mocked(Viewlet.executeViewletCommand).mockClear()
+  await expect(Application.execute('source', 'Viewlet.executeViewletCommand', 101, 'handleBlur')).rejects.toThrow(
+    'Component not owned by application source: 101',
+  )
+  await expect(Application.execute('source', 'Viewlet.executeViewletCommand', 999, 'handleBlur')).rejects.toThrow(
+    'Component not owned by application source: 999',
+  )
+  expect(Viewlet.executeViewletCommand).not.toHaveBeenCalled()
+})

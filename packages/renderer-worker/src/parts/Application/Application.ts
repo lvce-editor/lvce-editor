@@ -159,6 +159,14 @@ export const execute = (applicationId: string, command: string, ...args: readonl
       return ApplicationRegistry.track(applicationId, () =>
         Viewlet.openWidgetForApplication(applicationId, ViewletModuleId.Dialog, { ...args[0], type: 'warning' }),
       )
+    case 'Viewlet.executeViewletCommand':
+      return ApplicationRegistry.track(applicationId, async () => {
+        const [uid, key, ...commandArgs] = args
+        if (ApplicationRegistry.getOwner(uid) !== applicationId) {
+          throw new Error(`Component not owned by application ${applicationId}: ${uid}`)
+        }
+        return Viewlet.executeViewletCommand(uid, key, ...commandArgs)
+      })
     case 'Viewlet.openWidget':
       return ApplicationRegistry.track(applicationId, () => Viewlet.openWidgetForApplication(applicationId, args[0], ...args.slice(1)))
     case 'QuickPick.showCustom':
@@ -189,6 +197,12 @@ export const execute = (applicationId: string, command: string, ...args: readonl
         }
         await ViewletManager.executeForApplication(applicationId, 'Layout.handleWorkspaceRefresh')
       })
+    case 'GetActiveEditor.getActiveEditorId':
+      return ApplicationRegistry.track(applicationId, async () => GetActiveEditor.getActiveEditorId(applicationId))
+    case 'GetActiveEditor.getVisibleEditorUris':
+      return ApplicationRegistry.track(applicationId, () => GetActiveEditor.getVisibleEditorUris(applicationId))
+    case 'GetActiveEditor.getActiveUri':
+      return ApplicationRegistry.track(applicationId, () => GetActiveEditor.getActiveUri(applicationId))
     case 'GetActiveEditor.getTextDocument':
       return ApplicationRegistry.track(applicationId, () => GetActiveEditor.getTextDocument(applicationId))
     case 'PortProvider.forwardPort':

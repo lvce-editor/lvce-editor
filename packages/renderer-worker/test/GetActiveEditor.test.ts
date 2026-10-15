@@ -349,3 +349,46 @@ test('getTextDocument reads only the requested application even when another edi
   expect(invoke).toHaveBeenCalledWith('Editor.getText', 41)
   await expect(GetActiveEditor.getTextDocumentWithInvoke(invoke, 'missing')).resolves.toBeUndefined()
 })
+
+test('active editor and visible URIs stay within their application while another application is focused', async () => {
+  for (const [id, applicationId] of [
+    [41, 'source'],
+    [42, 'preview'],
+  ]) {
+    ApplicationRegistry.create({ id: applicationId, layoutUid: id + 100, workspaceUri: 'memfs:///', workspacePath: '/', href: '/samples' })
+    ViewletStates.set(id, {
+      factory: {},
+      moduleId: 'EditorText',
+      renderedState: { uid: id },
+      state: { id, uid: id, applicationId },
+    })
+    ViewletStates.set(id + 100, {
+      factory: {},
+      moduleId: 'Main',
+      renderedState: { uid: id + 100 },
+      state: { uid: id + 100, applicationId },
+    })
+  }
+  ViewletStates.setFocusedInstanceByType(42, 'EditorText')
+  ViewletStates.setFocusedInstanceByType(142, 'Main')
+  const invoke = jest.fn(async (_command, uid) => ({
+    layout: {
+      activeGroupId: 1,
+      groups: [
+        {
+          id: 1,
+          activeTabId: 2,
+          tabs: [
+            { id: 2, uri: `memfs:///${uid}.txt` },
+            { id: 3, uri: 'memfs:///hidden.txt' },
+          ],
+        },
+      ],
+    },
+  }))
+  expect(GetActiveEditor.getActiveEditorId('source')).toBe(41)
+  expect(GetActiveEditor.getActiveEditorId('missing')).toBe(-1)
+  await expect(GetActiveEditor.getVisibleEditorUrisWithInvoke(invoke, 'source')).resolves.toEqual(['memfs:///141.txt'])
+  await expect(GetActiveEditor.getActiveUriWithInvoke(invoke, 'source')).resolves.toBe('memfs:///141.txt')
+  await expect(GetActiveEditor.getVisibleEditorUrisWithInvoke(invoke, 'missing')).resolves.toEqual([])
+})

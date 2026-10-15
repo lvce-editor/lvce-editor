@@ -11,8 +11,8 @@ export const getActiveEditor = () => {
   return ViewletStates.getState(ViewletModuleId.EditorText)
 }
 
-export const getActiveEditorId = () => {
-  const instance = ViewletStates.getInstance(ViewletModuleId.EditorText)
+export const getActiveEditorId = (applicationId) => {
+  const instance = ViewletStates.getInstance(ViewletModuleId.EditorText, applicationId)
   if (!instance) {
     return -1
   }
@@ -115,8 +115,8 @@ export const getOpenEditorUris = () => {
   return getOpenEditorUrisWithInvoke(MainAreaWorker.invoke)
 }
 
-export const getVisibleEditorUrisWithInvoke = async (invoke) => {
-  const instance = ViewletStates.getInstance(ViewletModuleId.Main)
+export const getVisibleEditorUrisWithInvoke = async (invoke, applicationId) => {
+  const instance = ViewletStates.getInstance(ViewletModuleId.Main, applicationId)
   if (!instance) {
     return []
   }
@@ -127,12 +127,12 @@ export const getVisibleEditorUrisWithInvoke = async (invoke) => {
   })
 }
 
-export const getVisibleEditorUris = () => {
-  return getVisibleEditorUrisWithInvoke(MainAreaWorker.invoke)
+export const getVisibleEditorUris = (applicationId) => {
+  return getVisibleEditorUrisWithInvoke(MainAreaWorker.invoke, applicationId)
 }
 
-export const getActiveUriWithInvoke = async (invoke) => {
-  const instance = ViewletStates.getInstance(ViewletModuleId.Main)
+export const getActiveUriWithInvoke = async (invoke, applicationId) => {
+  const instance = ViewletStates.getInstance(ViewletModuleId.Main, applicationId)
   if (!instance) {
     return ''
   }
@@ -146,8 +146,8 @@ export const getActiveUriWithInvoke = async (invoke) => {
   return typeof activeTab?.uri === 'string' ? activeTab.uri : ''
 }
 
-export const getActiveUri = () => {
-  return getActiveUriWithInvoke(MainAreaWorker.invoke)
+export const getActiveUri = (applicationId) => {
+  return getActiveUriWithInvoke(MainAreaWorker.invoke, applicationId)
 }
 
 export const updateDiagnosticsWithCommand = async (executeCommand) => {
