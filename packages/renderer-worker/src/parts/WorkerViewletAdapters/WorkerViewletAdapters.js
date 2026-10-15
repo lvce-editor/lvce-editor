@@ -360,6 +360,7 @@ export const titleBar = {
     return {
       ...state,
       controlsOverlayEnabled: Preferences.get('window.controlsOverlay.enabled') === true && Preferences.get('window.titleBarless.enabled') !== true,
+      showSideBarThings: Preferences.get('window.titleBarless.enabled') !== true,
       titleBarStyleCustom: Preferences.get('window.titleBarStyle') === 'custom' || Preferences.get('window.titleBarless.enabled') === true,
     }
   },

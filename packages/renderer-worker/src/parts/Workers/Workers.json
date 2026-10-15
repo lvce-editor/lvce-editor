@@ -2042,7 +2042,8 @@
         "idKey": "uid", "fields": ["uri", "x", "y", "width", "height"], "contextFields": ["platform", "assetDir"],
         "defaults": {
           "disposed": false, "titleBarIconWidth": 30, "isFocused": false, "titleBarIconEnabled": true,
-          "titleBarMenuBarEnabled": true, "titleBarButtonsEnabled": true, "titleBarButtonsWidth": 138, "titleBarTitleEnabled": true
+          "titleBarMenuBarEnabled": true, "titleBarButtonsEnabled": true, "titleBarButtonsWidth": 138, "titleBarTitleEnabled": true,
+          "showSideBarThings": true
         }
       },
       "commandPrefix": "TitleBar",

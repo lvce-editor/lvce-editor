@@ -3318,6 +3318,17 @@ export const setPathName = (state: LayoutState, pathName: string) => {
 
 export const afterRender = async (oldState: LayoutState, newState: LayoutState) => {
   await BrowserFullWidth.afterRender(oldState, newState)
+  const oldShowSideBarThings = !oldState.titleBarless && oldState.browserFullWidth?.hideTitleBar !== true
+  const showSideBarThings = !newState.titleBarless && newState.browserFullWidth?.hideTitleBar !== true
+  if (oldShowSideBarThings !== showSideBarThings) {
+    const titleBar = ViewletStates.getInstance(LayoutModules.TitleBar.moduleId, newState.applicationId)
+    if (titleBar) {
+      const titleBarState = await TitleBarWorker.invoke('TitleBar.getComponentState', titleBar.state.uid)
+      if (titleBarState.showSideBarThings !== showSideBarThings) {
+        await Viewlet.executeViewletCommand(titleBar.state.uid, 'setShowSideBarThings', showSideBarThings)
+      }
+    }
+  }
   if (newState.secondaryPreviewPlacement !== 'bottomLeft' || !newState.secondaryPreviewVisible) return
   // Root reconciliation preserves named inputs. Both browser panes use the same
   // address name, so restore each retained view's own value after reconciliation.
