@@ -773,3 +773,15 @@ test('passes application ownership to the panel that creates its child views', a
   await viewlet.loadContent(state, {})
   expect(invoke).toHaveBeenCalledWith('Panel.create', 7, '', 1, 2, 300, 200, 2, '/runtime/test', 'preview')
 })
+
+test('passes application ownership to Problems creation', async () => {
+  const invoke = jest.fn(async (method: string, ..._args: readonly unknown[]) => (method === 'Problems.getCommandIds' ? [] : undefined))
+  const viewlet = createWorkerViewletWithDependencies({
+    config: getWorkerViewletConfig('problemsViewWorker'),
+    context: { workspaceUri: 'memfs:///preview', applicationId: 'preview' },
+    worker: { invoke, restart: jest.fn() },
+  })
+  const state = viewlet.create(7, '', 1, 2, 300, 200)
+  await viewlet.loadContent(state, {})
+  expect(invoke).toHaveBeenCalledWith('Problems.create', 7, '', 1, 2, 300, 200, 'memfs:///preview', 'preview')
+})

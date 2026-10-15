@@ -248,12 +248,7 @@ test('routes Remote SSH forwarding from the main workspace view', async () => {
   WorkspaceState.state.workspaceUri = 'remote-ssh://host/work'
   jest.mocked(ExtensionManagementWorker.invoke).mockResolvedValueOnce({ localPort: 3000 })
   await expect(Application.executeForView(12345, 'PortProvider.forwardPort', 3000)).resolves.toEqual({ localPort: 3000 })
-  expect(ExtensionManagementWorker.invoke).toHaveBeenCalledWith(
-    'Extensions.executeCommand',
-    'remote-ssh.forwardPort',
-    'remote-ssh://host/work',
-    3000,
-  )
+  expect(ExtensionManagementWorker.invoke).toHaveBeenCalledWith('Extensions.executeCommand', 'remote-ssh.forwardPort', 'remote-ssh://host/work', 3000)
 })
 
 test('routes stopping Remote SSH forwarding from the main workspace view', async () => {
@@ -328,4 +323,22 @@ test('routes public selection APIs through the requesting application', async ()
   const selections = [0, 4, 0, 4]
   await Application.execute('preview', 'GetActiveEditor.setSelections', selections)
   expect(GetActiveEditor.setSelections).toHaveBeenCalledWith(selections, 'preview')
+})
+
+test('dispatches editor lifecycle commands only to components owned by the application', async () => {
+  await Application.create(options('source'))
+  await Application.create(options('preview'))
+  ApplicationRegistry.own('source', 100)
+  ApplicationRegistry.own('preview', 101)
+  await Application.execute('source', 'Viewlet.executeViewletCommand', 100, 'handleBlur')
+  expect(Viewlet.executeViewletCommand).toHaveBeenCalledWith(100, 'handleBlur')
+  expect(ViewletManager.executeForApplication).not.toHaveBeenCalledWith('source', 'Viewlet.executeViewletCommand', 100, 'handleBlur')
+  jest.mocked(Viewlet.executeViewletCommand).mockClear()
+  await expect(Application.execute('source', 'Viewlet.executeViewletCommand', 101, 'handleBlur')).rejects.toThrow(
+    'Component not found in application source: 101',
+  )
+  await expect(Application.execute('source', 'Viewlet.executeViewletCommand', 999, 'handleBlur')).rejects.toThrow(
+    'Component not found in application source: 999',
+  )
+  expect(Viewlet.executeViewletCommand).not.toHaveBeenCalled()
 })

@@ -197,6 +197,12 @@ export const execute = (applicationId: string, command: string, ...args: readonl
         }
         await ViewletManager.executeForApplication(applicationId, 'Layout.handleWorkspaceRefresh')
       })
+    case 'GetActiveEditor.getActiveEditorId':
+      return ApplicationRegistry.track(applicationId, async () => GetActiveEditor.getActiveEditorId(applicationId))
+    case 'GetActiveEditor.getVisibleEditorUris':
+      return ApplicationRegistry.track(applicationId, () => GetActiveEditor.getVisibleEditorUris(applicationId))
+    case 'GetActiveEditor.getActiveUri':
+      return ApplicationRegistry.track(applicationId, () => GetActiveEditor.getActiveUri(applicationId))
     case 'GetActiveEditor.getSelections':
       return ApplicationRegistry.track(applicationId, () => GetActiveEditor.getSelections(applicationId))
     case 'GetActiveEditor.setSelections':
@@ -238,14 +244,10 @@ export const executeForView = (uid: number, command: string, ...args: readonly a
   const applicationId = ApplicationRegistry.getOwner(uid)
   if (applicationId === undefined) {
     if (command === 'PortProvider.forwardPort') {
-      return import('../PortProvider/PortProvider.ts').then(({ forwardPort }) =>
-        forwardPort(Workspace.getWorkspaceUri(), args[0]),
-      )
+      return import('../PortProvider/PortProvider.ts').then(({ forwardPort }) => forwardPort(Workspace.getWorkspaceUri(), args[0]))
     }
     if (command === 'PortProvider.stopForwardPort') {
-      return import('../PortProvider/PortProvider.ts').then(({ stopForwardPort }) =>
-        stopForwardPort(Workspace.getWorkspaceUri(), args[0]),
-      )
+      return import('../PortProvider/PortProvider.ts').then(({ stopForwardPort }) => stopForwardPort(Workspace.getWorkspaceUri(), args[0]))
     }
     // Ports requests its initial content before the view is added to ViewletStates.
     if (command === 'PortProvider.getPorts') {

@@ -3059,7 +3059,7 @@ export const refreshProblemsSummary = async (state: LayoutState, activeUri = '')
     return { newState: state, commands: [] }
   }
   try {
-    const summary = await ProblemsWorker.invoke('Problems.getProblemsSummary', activeUri)
+    const summary = await ProblemsWorker.invoke('Problems.getProblemsSummary', activeUri, state.applicationId)
     return callGlobalEvent(state, 'handleProblemsSummaryChange', summary)
   } catch {
     return {
