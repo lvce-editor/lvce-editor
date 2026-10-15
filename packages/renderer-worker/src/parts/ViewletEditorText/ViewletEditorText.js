@@ -1,3 +1,4 @@
+import * as ApplicationPreferences from '../ApplicationPreferences/ApplicationPreferences.ts'
 import * as AssetDir from '../AssetDir/AssetDir.js'
 import * as ApplicationFileSystem from '../ApplicationFileSystem/ApplicationFileSystem.ts'
 import * as Command from '../Command/Command.js'
@@ -120,23 +121,24 @@ const getLanguageId = (state, content, savedState) => {
 }
 
 export const loadContent = async (state, savedState, context) => {
-  const { uri, id, x, y, width, height, platform, assetDir, useFunctionalRendering } = state
-  const rowHeight = EditorPreferences.getRowHeight()
-  const fontSize = EditorPreferences.getFontSize()
-  const hoverEnabled = EditorPreferences.getHoverEnabled()
-  const hoverDelay = EditorPreferences.getHoverDelay()
-  const fontFamily = EditorPreferences.getFontFamily()
-  const letterSpacing = EditorPreferences.getLetterSpacing()
-  const tabSize = EditorPreferences.getTabSize()
-  const links = EditorPreferences.getLinks()
-  const lineNumbers = EditorPreferences.getLineNumbers()
-  const formatOnSave = EditorPreferences.getFormatOnSave()
-  const isAutoClosingBracketsEnabled = EditorPreferences.isAutoClosingBracketsEnabled()
+  const { applicationId, uri, id, x, y, width, height, platform, assetDir, useFunctionalRendering } = state
+  const editorPreferences = applicationId === undefined ? undefined : ApplicationPreferences.getAll(applicationId)
+  const rowHeight = EditorPreferences.getRowHeight(editorPreferences)
+  const fontSize = EditorPreferences.getFontSize(editorPreferences)
+  const hoverEnabled = EditorPreferences.getHoverEnabled(editorPreferences)
+  const hoverDelay = EditorPreferences.getHoverDelay(editorPreferences)
+  const fontFamily = EditorPreferences.getFontFamily(editorPreferences)
+  const letterSpacing = EditorPreferences.getLetterSpacing(editorPreferences)
+  const tabSize = EditorPreferences.getTabSize(editorPreferences)
+  const links = EditorPreferences.getLinks(editorPreferences)
+  const lineNumbers = EditorPreferences.getLineNumbers(editorPreferences)
+  const formatOnSave = EditorPreferences.getFormatOnSave(editorPreferences)
+  const isAutoClosingBracketsEnabled = EditorPreferences.isAutoClosingBracketsEnabled(editorPreferences)
   const isAutoClosingTagsEnabled = EditorPreferences.isAutoClosingTagsEnabled()
-  const isAutoClosingQuotesEnabled = EditorPreferences.isAutoClosingQuotesEnabled()
-  const isQuickSuggestionsEnabled = EditorPreferences.isQuickSuggestionsEnabled()
+  const isAutoClosingQuotesEnabled = EditorPreferences.isAutoClosingQuotesEnabled(editorPreferences)
+  const isQuickSuggestionsEnabled = EditorPreferences.isQuickSuggestionsEnabled(editorPreferences)
   const completionTriggerCharacters = EditorPreferences.getCompletionTriggerCharacters()
-  const diagnosticsEnabled = EditorPreferences.diagnosticsEnabled()
+  const diagnosticsEnabled = EditorPreferences.diagnosticsEnabled(editorPreferences)
   const content =
     useFunctionalRendering && context?.largeFile === true
       ? ''
@@ -158,7 +160,7 @@ export const loadContent = async (state, savedState, context) => {
     await EditorWorker.invoke('Font.ensure', fontName, fontUrl)
   }
   const isMonospaceFont = isFiraCode // TODO an actual check for monospace font
-  const fontWeight = EditorPreferences.getFontWeight()
+  const fontWeight = EditorPreferences.getFontWeight(editorPreferences)
   const lineToReveal = context?.rowIndex || 0
   const columnToReveal = context?.columnIndex || 0
 
