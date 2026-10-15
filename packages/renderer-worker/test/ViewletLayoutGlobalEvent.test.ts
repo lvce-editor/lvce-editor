@@ -237,7 +237,7 @@ test('handleActiveEditorChange refreshes the problems summary for loaded viewlet
   const state = { ...ViewletLayout.create(1), statusBarVisible: true }
   const result = await ViewletLayout.handleActiveEditorChange(state, 'file:///test.ts')
 
-  expect(problemsInvoke).toHaveBeenCalledWith('Problems.getProblemsSummary', 'file:///test.ts')
+  expect(problemsInvoke).toHaveBeenCalledWith('Problems.getProblemsSummary', 'file:///test.ts', undefined)
   expect(panelHandler).toHaveBeenCalledWith({ uid: 1 }, summary)
   expect(statusBarHandler).toHaveBeenCalledWith({ uid: 2 }, summary)
   expect(result).toEqual({
@@ -413,4 +413,11 @@ test('hidden status and panel views do not start workers on editor or diagnostic
 test('hidden activity bar does not query source control badges', async () => {
   await ViewletLayout.refreshSourceControlBadgeCount(ViewletLayout.create(1))
   expect(sourceControlInvoke).not.toHaveBeenCalled()
+})
+
+
+test('refreshProblemsSummary queries the owning embedded application', async () => {
+  const state = { ...ViewletLayout.create(1), applicationId: 'preview', statusBarVisible: true }
+  await ViewletLayout.refreshProblemsSummary(state, 'memfs:///preview/example.txt')
+  expect(problemsInvoke).toHaveBeenCalledWith('Problems.getProblemsSummary', 'memfs:///preview/example.txt', 'preview')
 })
