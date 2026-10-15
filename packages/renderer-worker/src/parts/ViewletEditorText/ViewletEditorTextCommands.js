@@ -199,7 +199,7 @@ export const getCommands = async () => {
   return Commands
 }
 
-export const CommandsWithSideEffectsLazy = {
+export const LazyCommands = {
   typeWithAutoClosing: () => {
     return {
       typeWithAutoClosing: WrapEditorCommands.wrapEditorCommand('typeWithAutoClosing'),

@@ -465,3 +465,30 @@ test('refreshing all gutter decorations does not require or forward an active ed
   expect(editorWorkerInvoke).toHaveBeenCalledTimes(1)
   expect(editorWorkerInvoke).toHaveBeenCalledWith('Editor.refreshGutterDecorationsAll')
 })
+
+test('application auto-closing dispatch uses the editor command state contract', async () => {
+  const ApplicationRegistry = await import('../src/parts/ApplicationRegistry/ApplicationRegistry.ts')
+  const ViewletManager = await import('../src/parts/ViewletManager/ViewletManager.js')
+  const ViewletStates = await import('../src/parts/ViewletStates/ViewletStates.js')
+  editorWorkerInvoke.mockImplementation((method) => {
+    if (method === 'Editor.getCommandIds') return ['typeWithAutoClosing']
+    if (method === 'Editor.diff2' || method === 'Editor.render2') return []
+    return undefined
+  })
+  const commands = await ViewletEditorTextCommands.getCommands()
+  const editor = { applicationId: 'preview', uid: 42, uri: 'memfs:///example.txt' }
+  ApplicationRegistry.create({ href: '/samples', id: 'preview', layoutUid: 100, workspacePath: '/', workspaceUri: 'memfs:///' })
+  ViewletStates.set(42, {
+    factory: { ...ViewletEditorTextCommands, Commands: commands, hasFunctionalRender: false },
+    moduleId: 'Editor',
+    renderedState: editor,
+    state: editor,
+  })
+  try {
+    await expect(ViewletManager.executeForApplication('preview', 'Editor.typeWithAutoClosing', '/')).resolves.toEqual({ ...editor, commands: [] })
+    expect(editorWorkerInvoke).toHaveBeenCalledWith('Editor.typeWithAutoClosing', 42, '/')
+  } finally {
+    ViewletStates.remove(42)
+    await ApplicationRegistry.remove('preview')
+  }
+})

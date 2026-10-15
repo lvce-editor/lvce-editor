@@ -25,6 +25,12 @@ jest.unstable_mockModule('../src/parts/ViewletManager/ViewletManager.js', () => 
   executeForApplication: jest.fn(async () => {}),
 }))
 
+jest.unstable_mockModule('../src/parts/GetActiveEditor/GetActiveEditor.js', () => ({
+  getSelections: jest.fn(async () => [0, 1, 0, 4]),
+  setSelections: jest.fn(async () => {}),
+}))
+
+const GetActiveEditor = await import('../src/parts/GetActiveEditor/GetActiveEditor.js')
 const Application = await import('../src/parts/Application/Application.ts')
 const RendererProcess = await import('../src/parts/RendererProcess/RendererProcess.js')
 const FileSystemWorker = await import('../src/parts/FileSystemWorker/FileSystemWorker.js')
@@ -312,4 +318,14 @@ test('dialog entry points create a widget in the calling application before an i
   expect(Viewlet.openWidgetForApplication).toHaveBeenNthCalledWith(1, 'preview', 'Dialog', { ...warning, type: 'warning' })
   expect(Viewlet.openWidgetForApplication).toHaveBeenNthCalledWith(2, 'source', 'Dialog', { message: 'Source dialog', type: 'info' })
   expect(ViewletManager.executeForApplication).not.toHaveBeenCalled()
+})
+
+test('routes public selection APIs through the requesting application', async () => {
+  await Application.create(options('source'))
+  await Application.create(options('preview'))
+  await expect(Application.execute('preview', 'GetActiveEditor.getSelections')).resolves.toEqual([0, 1, 0, 4])
+  expect(GetActiveEditor.getSelections).toHaveBeenCalledWith('preview')
+  const selections = [0, 4, 0, 4]
+  await Application.execute('preview', 'GetActiveEditor.setSelections', selections)
+  expect(GetActiveEditor.setSelections).toHaveBeenCalledWith(selections, 'preview')
 })
