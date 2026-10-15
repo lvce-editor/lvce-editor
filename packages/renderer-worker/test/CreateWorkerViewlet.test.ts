@@ -747,6 +747,21 @@ test('passes application context to output creation and hot reload', async () =>
   expect(invoke).toHaveBeenCalledWith('Output.create', 7, 'sample-build', 1, 2, 300, 200, 2, 9, 'preview')
 })
 
+test('passes application context to status bar creation and hot reload', async () => {
+  const invoke = jest.fn(async (method: string, ..._args: readonly unknown[]) => (method === 'StatusBar.getCommandIds' ? [] : undefined))
+  const viewlet = createWorkerViewletWithDependencies({
+    config: getWorkerViewletConfig('statusBar'),
+    context: { platform: 1, assetDir: '/runtime/release', applicationId: 'preview' },
+    worker: { invoke, restart: jest.fn() },
+  })
+  const state = viewlet.create(7, '', 1, 2, 300, 200)
+  await viewlet.loadContent(state, {})
+  expect(invoke).toHaveBeenCalledWith('StatusBar.create', 7, '', 1, 2, 300, 200, 1, '/runtime/release', 'preview')
+  invoke.mockClear()
+  await viewlet.hotReload!(state)
+  expect(invoke).toHaveBeenCalledWith('StatusBar.create', 7, '', 1, 2, 300, 200, 1, '/runtime/release', 'preview')
+})
+
 test('passes application ownership to the panel that creates its child views', async () => {
   const invoke = jest.fn(async (method: string, ..._args: readonly unknown[]) => (method === 'Panel.getCommandIds' ? [] : undefined))
   const viewlet = createWorkerViewletWithDependencies({
