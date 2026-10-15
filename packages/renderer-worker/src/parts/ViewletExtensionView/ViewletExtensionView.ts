@@ -71,7 +71,7 @@ const getDisabledState = (
     css: '',
     cssId: '',
     disabled: true,
-    dom: [VirtualDomHelpers.text(message)],
+    dom: [VirtualDomHelpers.div({ className: 'Viewlet ExtensionView' }, 1), VirtualDomHelpers.text(message)],
     eventListeners: [],
     focusSelector: '',
     iframeSandbox: [],
