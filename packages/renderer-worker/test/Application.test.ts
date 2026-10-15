@@ -90,6 +90,16 @@ test('failed mounting releases partial ownership and permits retrying the same a
   expect(await Application.create(options('preview'))).toBe(2)
 })
 
+test('worker callbacks execute commands only on views owned by their application', async () => {
+  const source = await Application.create(options('source'))
+  const preview = await Application.create(options('preview'))
+  await Application.execute('source', 'Viewlet.executeViewletCommand', source, 'handleBlur')
+  expect(Viewlet.executeViewletCommand).toHaveBeenCalledWith(source, 'handleBlur')
+  jest.mocked(Viewlet.executeViewletCommand).mockClear()
+  await expect(Application.execute('source', 'Viewlet.executeViewletCommand', preview, 'handleBlur')).rejects.toThrow('Component not found')
+  expect(Viewlet.executeViewletCommand).not.toHaveBeenCalled()
+})
+
 test('concurrent disposal shares one teardown and preserves the sibling layout', async () => {
   const source = await Application.create(options('source'))
   const preview = await Application.create(options('preview'))
