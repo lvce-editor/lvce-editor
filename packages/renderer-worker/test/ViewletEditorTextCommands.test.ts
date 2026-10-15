@@ -494,7 +494,7 @@ test('application auto-closing dispatch uses the editor command state contract',
 })
 
 test('refreshes hosted editor preferences after registration before requesting diagnostics', async () => {
-  editorWorkerInvoke.mockResolvedValue([])
+  editorWorkerInvoke.mockImplementation(async () => [])
   const commands = await ViewletEditorTextCommands.getCommands()
   await commands.loadContentLater({ uid: 42, applicationId: 'preview' })
   expect(commandExecute.mock.calls).toEqual([
@@ -504,7 +504,7 @@ test('refreshes hosted editor preferences after registration before requesting d
 })
 
 test('standalone editor deferred loading keeps the existing diagnostics route', async () => {
-  editorWorkerInvoke.mockResolvedValue([])
+  editorWorkerInvoke.mockImplementation(async () => [])
   const commands = await ViewletEditorTextCommands.getCommands()
   await commands.loadContentLater({ uid: 42 })
   expect(commandExecute.mock.calls).toEqual([['Viewlet.executeViewletCommand', 42, 'updateDiagnostics']])
