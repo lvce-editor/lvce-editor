@@ -1,4 +1,5 @@
 import * as ApplicationFileSystem from '../ApplicationFileSystem/ApplicationFileSystem.ts'
+import * as ApplicationPreferences from '../ApplicationPreferences/ApplicationPreferences.ts'
 import * as ApplicationRegistry from '../ApplicationRegistry/ApplicationRegistry.ts'
 import * as Command from '../Command/Command.js'
 import * as ExtensionHostCommands from '../ExtensionHost/ExtensionHostCommands.js'
@@ -233,8 +234,9 @@ export const execute = (applicationId: string, command: string, ...args: readonl
     case 'Layout.getHref':
       return Promise.resolve(application.href)
     case 'Preferences.get':
+      return Promise.resolve(ApplicationPreferences.get(applicationId, args[0]))
     case 'Preferences.update':
-      return Promise.resolve(Command.execute(command, ...args))
+      return ApplicationPreferences.update(applicationId, args[0])
     default:
       return ApplicationRegistry.track(applicationId, () => ViewletManager.executeForApplication(applicationId, command, ...args))
   }
@@ -293,7 +295,7 @@ const disposeApplication = async (applicationId: string): Promise<void> => {
       }
     }
   }
-  for (const cleanup of [ApplicationRegistry.remove, ApplicationFileSystem.dispose]) {
+  for (const cleanup of [ApplicationPreferences.dispose, ApplicationRegistry.remove, ApplicationFileSystem.dispose]) {
     try {
       await cleanup(applicationId)
     } catch (error) {
