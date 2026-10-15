@@ -40,3 +40,27 @@ test('openNew forwards url', async () => {
   expect(AppWindow.openNew).toHaveBeenCalledTimes(1)
   expect(AppWindow.openNew).toHaveBeenCalledWith('lvce-oss://-/?test=1')
 })
+
+test('zoomIn allows zooming beyond the previous maximum and clamps at the new maximum', async () => {
+  const invoke = jest.mocked(ParentIpc.invoke)
+  invoke.mockResolvedValueOnce(5.8).mockResolvedValueOnce(undefined).mockResolvedValueOnce(6)
+
+  await ElectronWindow.zoomIn(1)
+  await ElectronWindow.zoomIn(1)
+
+  expect(invoke).toHaveBeenNthCalledWith(1, 'ElectronWindow.executeWebContentsFunction', 1, 'getZoomLevel')
+  expect(invoke).toHaveBeenNthCalledWith(2, 'ElectronWindow.executeWebContentsFunction', 1, 'setZoomLevel', 6)
+  expect(invoke).toHaveBeenNthCalledWith(3, 'ElectronWindow.executeWebContentsFunction', 1, 'getZoomLevel')
+  expect(invoke).toHaveBeenNthCalledWith(4, 'ElectronWindow.executeWebContentsFunction', 1, 'setZoomLevel', 6)
+})
+
+test('zoomOut and zoomReset remain available at the new maximum', async () => {
+  const invoke = jest.mocked(ParentIpc.invoke)
+  invoke.mockResolvedValueOnce(6)
+
+  await ElectronWindow.zoomOut(1)
+  await ElectronWindow.zoomReset(1)
+
+  expect(invoke).toHaveBeenNthCalledWith(2, 'ElectronWindow.executeWebContentsFunction', 1, 'setZoomLevel', 5.8)
+  expect(invoke).toHaveBeenNthCalledWith(3, 'ElectronWindow.executeWebContentsFunction', 1, 'setZoomLevel', 0)
+})

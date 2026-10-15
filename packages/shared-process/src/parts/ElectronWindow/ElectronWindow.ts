@@ -80,7 +80,7 @@ const getMinZoomLevel = (): any => {
 }
 
 const getMaxZoomLevel = (): any => {
-  return 3
+  return 6
 }
 
 const getZoomInDelta = (): any => {
