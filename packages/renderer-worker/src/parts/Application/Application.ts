@@ -30,9 +30,7 @@ export interface ApplicationOptions {
 }
 
 const disposals = new Map<string, Promise<void>>()
-const hostReady = Promise.withResolvers<void>()
-export const markHostReady = (): void => hostReady.resolve()
-export const waitForHost = (): Promise<void> => hostReady.promise
+export { markHostReady, waitForHost } from '../ApplicationHostReady/ApplicationHostReady.ts'
 
 const initialize = async (options: ApplicationOptions, layoutUid: number): Promise<number> => {
   await ExtensionManagementWorker.invoke('Extensions.createApplication', options.id, Platform.getPlatform(), options.extensions || [])
