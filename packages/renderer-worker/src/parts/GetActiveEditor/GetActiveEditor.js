@@ -131,8 +131,8 @@ export const getVisibleEditorUris = () => {
   return getVisibleEditorUrisWithInvoke(MainAreaWorker.invoke)
 }
 
-export const getActiveUriWithInvoke = async (invoke) => {
-  const instance = ViewletStates.getInstance(ViewletModuleId.Main)
+export const getActiveUriWithInvoke = async (invoke, applicationId) => {
+  const instance = ViewletStates.getInstance(ViewletModuleId.Main, applicationId)
   if (!instance) {
     return ''
   }
@@ -146,8 +146,8 @@ export const getActiveUriWithInvoke = async (invoke) => {
   return typeof activeTab?.uri === 'string' ? activeTab.uri : ''
 }
 
-export const getActiveUri = () => {
-  return getActiveUriWithInvoke(MainAreaWorker.invoke)
+export const getActiveUri = (applicationId) => {
+  return getActiveUriWithInvoke(MainAreaWorker.invoke, applicationId)
 }
 
 export const updateDiagnosticsWithCommand = async (executeCommand) => {
