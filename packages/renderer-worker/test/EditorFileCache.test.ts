@@ -126,6 +126,28 @@ test('setEditorFileCache stores text with an expiry after confirming freshness',
 })
 
 test.each([
+  ['application', 'remote-ssh:///project/script.js?raw#source', 'application/javascript; charset=utf-8'],
+  ['', 'file:///project/script.mjs#source', 'application/javascript; charset=utf-8'],
+  ['', 'file:///project/style.css?theme=dark', 'text/css; charset=utf-8'],
+  ['application', 'remote-ssh:///project/index.html?raw', 'text/html; charset=utf-8'],
+  ['', 'file:///project/data.unknown#source', 'text/plain; charset=utf-8'],
+])('setEditorFileCache selects a text content type for %s %s', async (applicationId, uri, contentType) => {
+  applicationFileSystemExecute.mockResolvedValue({ mtimeMs: 123, size: 4, type: 7 })
+  fileSystemStat.mockResolvedValue({ mtimeMs: 123, size: 4, type: 7 })
+  cacheWorkerInvoke.mockResolvedValue({ success: true })
+
+  await EditorFileCache.set(applicationId, uri, '[7,4,123]', 'text')
+
+  expect(cacheWorkerInvoke).toHaveBeenCalledWith(
+    'Cache.setCacheStorageItem',
+    expect.any(String),
+    'text',
+    'editor-file-cache',
+    expect.objectContaining({ 'content-type': contentType }),
+  )
+})
+
+test.each([
   ['ASCII content', 'text', '4'],
   ['multibyte Unicode content', 'café 🌍', '10'],
   ['empty content', '', '0'],

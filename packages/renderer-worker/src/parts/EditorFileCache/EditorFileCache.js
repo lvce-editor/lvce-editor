@@ -1,10 +1,12 @@
 import * as ApplicationFileSystem from '../ApplicationFileSystem/ApplicationFileSystem.ts'
 import * as CacheWorker from '../CacheWorker/CacheWorker.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
+import * as Mime from '../Mime/Mime.js'
 
 const cacheName = 'editor-file-cache'
 const maxBytes = 500_000
 const expiresIn = 90 * 24 * 60 * 60 * 1000
+const uriSuffixRegex = /[?#]/
 const writeQueues = new Map()
 const writeVersions = new Map()
 
@@ -51,11 +53,18 @@ const getFingerprint = (stat) => {
   return JSON.stringify(fingerprint)
 }
 
+const getContentType = (uri) => {
+  const path = uri.split(uriSuffixRegex, 1)[0]
+  const mime = Mime.getTextMime(path)
+  const contentType = mime === 'text/javascript' ? 'application/javascript' : mime || 'text/plain'
+  return `${contentType}; charset=utf-8`
+}
+
 const getStat = (applicationId, uri) =>
   applicationId ? ApplicationFileSystem.execute(applicationId, 'statWithMetadata', uri) : FileSystem.statWithMetadata(uri)
 
 const isExcluded = (uri) => {
-  const path = uri.split(/[?#]/, 1)[0]
+  const path = uri.split(uriSuffixRegex, 1)[0]
   const fileName = path.slice(path.lastIndexOf('/') + 1)
   return fileName === '.env' || fileName.startsWith('.env.')
 }
@@ -114,7 +123,7 @@ export const set = async (applicationId, uri, fingerprint, content) => {
     const result = await CacheWorker.invoke('Cache.setCacheStorageItem', key, content, cacheName, {
       'cache-control': 'public, max-age=7776000',
       'content-length': String(contentLength),
-      'content-type': 'text/plain; charset=utf-8',
+      'content-type': getContentType(uri),
       expires,
       'x-lvce-editor-file-stat': fingerprint,
     })
