@@ -17,4 +17,8 @@ const getAssetDir = () => {
   return ''
 }
 
-export const assetDir = getAssetDir()
+export let assetDir = getAssetDir()
+
+export const initialize = () => {
+  assetDir = getAssetDir()
+}

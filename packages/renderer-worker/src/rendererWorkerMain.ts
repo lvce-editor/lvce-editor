@@ -19,6 +19,7 @@ const main = async () => {
     import('./parts/Platform/Platform.js'),
     import('./parts/AssetDir/AssetDir.js'),
   ])
+  AssetDir.initialize()
   await Workbench.startup(initData, Platform.getPlatform(), AssetDir.assetDir)
 }
 

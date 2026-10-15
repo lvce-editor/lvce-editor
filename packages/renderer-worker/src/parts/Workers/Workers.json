@@ -1917,7 +1917,8 @@
             { "source": "state", "name": "width" },
             { "source": "state", "name": "height" },
             { "source": "state", "name": "platform" },
-            { "source": "state", "name": "assetDir" }
+            { "source": "state", "name": "assetDir" },
+            { "source": "context", "name": "applicationId" }
           ]
         },
         "loadContent": {
@@ -1933,7 +1934,9 @@
             { "source": "state", "name": "y" },
             { "source": "state", "name": "width" },
             { "source": "state", "name": "height" },
-            { "source": "literal", "value": null }
+            { "source": "state", "name": "platform" },
+            { "source": "state", "name": "assetDir" },
+            { "source": "context", "name": "applicationId" }
           ]
         },
         "hotReloadLoadContent": {
