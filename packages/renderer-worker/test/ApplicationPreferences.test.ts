@@ -1,5 +1,6 @@
 import { afterEach, expect, jest, test } from '@jest/globals'
 import * as ApplicationRegistry from '../src/parts/ApplicationRegistry/ApplicationRegistry.ts'
+import * as GlobalEventBus from '../src/parts/GlobalEventBus/GlobalEventBus.js'
 import * as PreferencesState from '../src/parts/PreferencesState/PreferencesState.js'
 import * as ViewletModuleId from '../src/parts/ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../src/parts/ViewletStates/ViewletStates.js'
@@ -53,4 +54,35 @@ test('removes overrides with the application and rejects updates after closing',
   expect(() => ApplicationPreferences.get('preview', 'editor.fontSize')).toThrow('not found')
   create('preview', 2)
   expect(ApplicationPreferences.get('preview', 'editor.fontSize')).toBe(15)
+})
+
+test('global default changes refresh hosted editors while preserving explicit overrides', async () => {
+  PreferencesState.set('editor.fontSize', 15)
+  create('source', 1)
+  create('preview', 2)
+  await ApplicationPreferences.update('preview', { 'editor.fontSize': 18 })
+  addCssStyleSheet.mockClear()
+  PreferencesState.set('editor.fontSize', 16)
+  await GlobalEventBus.emitEvent('preferences.changed')
+  expect(ApplicationPreferences.get('source', 'editor.fontSize')).toBe(16)
+  expect(ApplicationPreferences.get('preview', 'editor.fontSize')).toBe(18)
+  expect(addCssStyleSheet).toHaveBeenCalledWith('ApplicationPreferences-1', expect.stringContaining('--EditorFontSize: 16px'))
+  expect(addCssStyleSheet).toHaveBeenCalledWith('ApplicationPreferences-2', expect.stringContaining('--EditorFontSize: 18px'))
+})
+
+test('global refresh tolerates an application disposed while another application refreshes', async () => {
+  create('source', 1)
+  create('preview', 2)
+  addCssStyleSheet.mockImplementationOnce(async () => {
+    ApplicationRegistry.close('preview')
+    await ApplicationRegistry.remove('preview')
+  })
+  await expect(GlobalEventBus.emitEvent('preferences.changed')).resolves.toBeUndefined()
+  expect(addCssStyleSheet.mock.calls.map(([id]) => id)).toEqual(['ApplicationPreferences-1'])
+})
+
+test('global refresh propagates errors from an application that is still open', async () => {
+  create('source', 1)
+  addCssStyleSheet.mockRejectedValueOnce(new Error('stylesheet failure'))
+  await expect(GlobalEventBus.emitEvent('preferences.changed')).rejects.toThrow('stylesheet failure')
 })

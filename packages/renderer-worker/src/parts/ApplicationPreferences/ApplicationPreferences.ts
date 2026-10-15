@@ -1,5 +1,6 @@
 import * as ApplicationRegistry from '../ApplicationRegistry/ApplicationRegistry.ts'
 import * as Css from '../Css/Css.js'
+import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
@@ -39,3 +40,13 @@ export const dispose = async (applicationId: string): Promise<void> => {
   overrides.delete(application)
   await RendererProcess.invoke('Css.removeCssStyleSheet', `ApplicationPreferences-${application.layoutUid}`)
 }
+
+GlobalEventBus.addListener('preferences.changed', async () => {
+  for (const applicationId of ApplicationRegistry.getOpenIds()) {
+    try {
+      await update(applicationId, {})
+    } catch (error) {
+      if (ApplicationRegistry.isOpen(applicationId)) throw error
+    }
+  }
+})
