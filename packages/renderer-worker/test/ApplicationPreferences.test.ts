@@ -1,6 +1,7 @@
 import { afterEach, expect, jest, test } from '@jest/globals'
 import * as ApplicationRegistry from '../src/parts/ApplicationRegistry/ApplicationRegistry.ts'
 import * as GlobalEventBus from '../src/parts/GlobalEventBus/GlobalEventBus.js'
+import * as NormalizeRendererCommands from '../src/parts/NormalizeRendererCommands/NormalizeRendererCommands.js'
 import * as PreferencesState from '../src/parts/PreferencesState/PreferencesState.js'
 import * as ViewletModuleId from '../src/parts/ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../src/parts/ViewletStates/ViewletStates.js'
@@ -48,7 +49,9 @@ test('removes overrides with the application and rejects updates after closing',
   await ApplicationPreferences.update('preview', { 'editor.fontSize': 18 })
   ApplicationRegistry.close('preview')
   await expect(ApplicationPreferences.update('preview', { 'editor.fontSize': 20 })).rejects.toThrow('closing')
+  NormalizeRendererCommands.setCssText('ApplicationPreferences-2', 'cached stylesheet')
   await ApplicationPreferences.dispose('preview')
+  expect(NormalizeRendererCommands.getCssText('ApplicationPreferences-2')).toBeUndefined()
   expect(rendererInvoke).toHaveBeenCalledWith('Css.removeCssStyleSheet', 'ApplicationPreferences-2')
   await ApplicationRegistry.remove('preview')
   expect(() => ApplicationPreferences.get('preview', 'editor.fontSize')).toThrow('not found')

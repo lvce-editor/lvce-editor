@@ -1,6 +1,7 @@
 import * as ApplicationRegistry from '../ApplicationRegistry/ApplicationRegistry.ts'
 import * as Css from '../Css/Css.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
+import * as NormalizeRendererCommands from '../NormalizeRendererCommands/NormalizeRendererCommands.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
@@ -38,7 +39,9 @@ export const dispose = async (applicationId: string): Promise<void> => {
   const application = ApplicationRegistry.get(applicationId)
   if (!overrides.has(application)) return
   overrides.delete(application)
-  await RendererProcess.invoke('Css.removeCssStyleSheet', `ApplicationPreferences-${application.layoutUid}`)
+  const cssId = `ApplicationPreferences-${application.layoutUid}`
+  NormalizeRendererCommands.removeCssText(cssId)
+  await RendererProcess.invoke('Css.removeCssStyleSheet', cssId)
 }
 
 GlobalEventBus.addListener('preferences.changed', async () => {
