@@ -37,9 +37,62 @@ test('getEditorFileCache reads only a matching, unexpired text entry', async () 
   await expect(EditorFileCache.get('application', 'remote-ssh:///project/file.txt', '[7,14,123]')).resolves.toBe('cached content')
   expect(cacheWorkerInvoke).toHaveBeenCalledWith(
     'Cache.getCacheStorageItem',
-    expect.stringContaining(encodeURIComponent(JSON.stringify(['application', 'remote-ssh:///project/file.txt']))),
+    'https://lvce-editor.invalid/editor-file-cache/remote-ssh/project/file.txt?applicationId=application&leadingSlashes=3',
     'editor-file-cache',
   )
+})
+
+test('getEditorFileCache uses readable file and memfs cache paths', async () => {
+  cacheWorkerInvoke.mockResolvedValue(undefined)
+
+  await EditorFileCache.get('', 'file:///home/user/project/package.json', '[7,14,123]')
+  await EditorFileCache.get('', 'memfs:///workspace/src/index.ts', '[7,14,123]')
+
+  expect(cacheWorkerInvoke.mock.calls[0][1]).toBe('https://lvce-editor.invalid/editor-file-cache/file/home/user/project/package.json?leadingSlashes=3')
+  expect(cacheWorkerInvoke.mock.calls[1][1]).toBe('https://lvce-editor.invalid/editor-file-cache/memfs/workspace/src/index.ts?leadingSlashes=3')
+})
+
+test('getEditorFileCache keeps application and URI identities distinct', async () => {
+  cacheWorkerInvoke.mockResolvedValue(undefined)
+
+  await EditorFileCache.get('application-a', 'memfs:///workspace/file.ts', '[7,14,123]')
+  await EditorFileCache.get('application-b', 'memfs:///workspace/file.ts', '[7,14,123]')
+  await EditorFileCache.get('application-a', 'memfs:/workspace/file.ts', '[7,14,123]')
+  await EditorFileCache.get('application-a', 'memfs:///workspace/file%2F.ts', '[7,14,123]')
+  await EditorFileCache.get('application-a', 'memfs:///workspace/file.ts?version=1#section', '[7,14,123]')
+  await EditorFileCache.get('application-a', 'memfs:///workspace/../file.ts', '[7,14,123]')
+
+  const keys = cacheWorkerInvoke.mock.calls.map((call) => call[1])
+  expect(new Set(keys).size).toBe(keys.length)
+  expect(keys[0]).toBe('https://lvce-editor.invalid/editor-file-cache/memfs/workspace/file.ts?applicationId=application-a&leadingSlashes=3')
+  expect(keys[1]).toBe('https://lvce-editor.invalid/editor-file-cache/memfs/workspace/file.ts?applicationId=application-b&leadingSlashes=3')
+  expect(keys[2]).toBe('https://lvce-editor.invalid/editor-file-cache/memfs/workspace/file.ts?applicationId=application-a&leadingSlashes=1')
+  expect(keys[3]).toContain('file%252F.ts?applicationId=application-a')
+  expect(keys[4]).toContain('file.ts%3Fversion%3D1%23section?applicationId=application-a&leadingSlashes=3')
+  expect(keys[5]).toContain('%252E%252E/file.ts?applicationId=application-a&leadingSlashes=3')
+})
+
+test('get, set, and remove use the same cache key', async () => {
+  cacheWorkerInvoke.mockImplementation(async (command) => {
+    if (command === 'Cache.getCacheStorageItem') {
+      return {
+        body: new ArrayBuffer(0),
+        headers: {
+          expires: new Date(Date.now() + 60_000).toUTCString(),
+          'x-lvce-editor-file-stat': '[7,4,123]',
+        },
+      }
+    }
+    return { success: true }
+  })
+  fileSystemStat.mockResolvedValue({ mtimeMs: 123, size: 4, type: 7 })
+
+  await EditorFileCache.get('', 'file:///project/file.txt', '[7,4,123]')
+  await EditorFileCache.set('', 'file:///project/file.txt', '[7,4,123]', 'text')
+  await EditorFileCache.remove('', 'file:///project/file.txt')
+
+  const cacheKeys = cacheWorkerInvoke.mock.calls.filter(([command]) => command.startsWith('Cache.')).map((call) => call[1])
+  expect(new Set(cacheKeys).size).toBe(1)
 })
 
 test('getEditorFileCache removes expired entries', async () => {
