@@ -96,7 +96,7 @@
     "@lvce-editor/process-explorer-worker": "^3.34.0",
     "@lvce-editor/quick-pick-worker": "^4.28.1",
     "@lvce-editor/references-view": "^2.18.0",
-    "@lvce-editor/rename-worker": "^1.42.0",
+    "@lvce-editor/rename-worker": "^1.42.1",
     "@lvce-editor/renderer-process": "^30.69.3",
     "@lvce-editor/running-extensions-view": "^1.27.0",
     "@lvce-editor/secrets-view": "^0.3.0",
