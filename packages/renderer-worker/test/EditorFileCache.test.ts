@@ -67,8 +67,24 @@ test('setEditorFileCache stores text with an expiry after confirming freshness',
   expect(applicationFileSystemExecute).toHaveBeenCalledWith('application', 'statWithMetadata', 'remote-ssh:///project/file.txt')
   const [, , , , headers] = cacheWorkerInvoke.mock.calls[0]
   expect(headers['content-type']).toBe('text/plain; charset=utf-8')
+  expect(headers['content-length']).toBe('4')
   expect(headers['x-lvce-editor-file-stat']).toBe('[7,4,123]')
   expect(Date.parse(headers.expires)).toBeGreaterThan(Date.now() + 89 * 24 * 60 * 60 * 1000)
+})
+
+test.each([
+  ['ASCII content', 'text', '4'],
+  ['multibyte Unicode content', 'café 🌍', '10'],
+  ['empty content', '', '0'],
+])('setEditorFileCache sets the UTF-8 content length for %s', async (_description, content, expectedLength) => {
+  const contentLength = new TextEncoder().encode(content).byteLength
+  fileSystemStat.mockResolvedValue({ mtimeMs: 123, size: contentLength, type: 7 })
+  cacheWorkerInvoke.mockResolvedValue({ success: true })
+
+  await EditorFileCache.set('', 'file:///project/file.txt', `[7,${contentLength},123]`, content)
+
+  const headers = cacheWorkerInvoke.mock.calls[0][4]
+  expect(headers['content-length']).toBe(expectedLength)
 })
 
 test('setEditorFileCache does not store a file changed after it was read', async () => {
