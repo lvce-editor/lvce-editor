@@ -75,7 +75,8 @@ export const remove = async (applicationId, uri) => {
 }
 
 export const set = async (applicationId, uri, fingerprint, content) => {
-  if (isExcluded(uri) || new TextEncoder().encode(content).byteLength > maxBytes) {
+  const contentLength = new TextEncoder().encode(content).byteLength
+  if (isExcluded(uri) || contentLength > maxBytes) {
     return
   }
   const key = getKey(applicationId, uri)
@@ -93,6 +94,7 @@ export const set = async (applicationId, uri, fingerprint, content) => {
     const expires = new Date(Date.now() + expiresIn).toUTCString()
     const result = await CacheWorker.invoke('Cache.setCacheStorageItem', key, content, cacheName, {
       'cache-control': 'public, max-age=7776000',
+      'content-length': String(contentLength),
       'content-type': 'text/plain; charset=utf-8',
       expires,
       'x-lvce-editor-file-stat': fingerprint,
