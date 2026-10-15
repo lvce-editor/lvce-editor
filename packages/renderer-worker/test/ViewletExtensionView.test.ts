@@ -72,7 +72,10 @@ test('disabling the contributing extension replaces virtual dom contents and cle
     actionsDom: [],
     css: '',
     disabled: true,
-    dom: [{ childCount: 0, text: 'Extension contributing this view has been disabled', type: 12 }],
+    dom: [
+      { childCount: 1, className: 'Viewlet ExtensionView', type: VirtualDomElements.Div },
+      { childCount: 0, text: 'Extension contributing this view has been disabled', type: 12 },
+    ],
     eventListeners: [],
     kind: 'virtualDom',
   })
@@ -117,7 +120,10 @@ test('a delayed extension event cannot restore content after the extension is di
 
   await expect(event).resolves.toMatchObject({
     disabled: true,
-    dom: [{ text: 'Extension contributing this view has been disabled', type: 12 }],
+    dom: [
+      { childCount: 1, className: 'Viewlet ExtensionView', type: VirtualDomElements.Div },
+      { text: 'Extension contributing this view has been disabled', type: 12 },
+    ],
   })
   expect(disabled.disabled).toBe(true)
 })
@@ -250,6 +256,7 @@ test('loadContent shows a graceful fallback when the extension view is unavailab
     css: '',
     disabled: true,
     dom: [
+      { childCount: 1, className: 'Viewlet ExtensionView', type: VirtualDomElements.Div },
       {
         childCount: 0,
         text: 'This view is unavailable. Its extension may have been disabled or uninstalled.',
