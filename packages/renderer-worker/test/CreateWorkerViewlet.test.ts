@@ -746,3 +746,15 @@ test('passes application context to output creation and hot reload', async () =>
   await viewlet.hotReload!(state)
   expect(invoke).toHaveBeenCalledWith('Output.create', 7, 'sample-build', 1, 2, 300, 200, 2, 9, 'preview')
 })
+
+test('passes application ownership to the panel that creates its child views', async () => {
+  const invoke = jest.fn(async (method: string, ..._args: readonly unknown[]) => (method === 'Panel.getCommandIds' ? [] : undefined))
+  const viewlet = createWorkerViewletWithDependencies({
+    config: getWorkerViewletConfig('panel'),
+    context: { platform: 2, assetDir: '/runtime/test', applicationId: 'preview' },
+    worker: { invoke, restart: jest.fn() },
+  })
+  const state = viewlet.create(7, '', 1, 2, 300, 200)
+  await viewlet.loadContent(state, {})
+  expect(invoke).toHaveBeenCalledWith('Panel.create', 7, '', 1, 2, 300, 200, 2, '/runtime/test', 'preview')
+})

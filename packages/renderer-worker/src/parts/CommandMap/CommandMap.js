@@ -1,3 +1,4 @@
+import { waitForHost } from '../ApplicationHostReady/ApplicationHostReady.ts'
 import { execute, loadCommand } from '../Command/Command.js'
 
 const lazy =
@@ -33,7 +34,7 @@ export const commandMap = {
   'Application.execute': lazy('Application.execute'),
   'Application.executeForView': lazy('Application.executeForView'),
   'Application.resize': lazy('Application.resize'),
-  'Application.waitForHost': lazy('Application.waitForHost'),
+  'Application.waitForHost': waitForHost,
   'About.showAbout': lazy('About.showAbout'),
   'Ajax.getBlob': lazy('Ajax.getBlob'),
   'Ajax.getJson': lazy('Ajax.getJson'),
