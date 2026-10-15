@@ -1307,7 +1307,8 @@
             { "source": "state", "name": "width" },
             { "source": "state", "name": "height" },
             { "source": "context", "name": "platform" },
-            { "source": "context", "name": "assetDir" }
+            { "source": "context", "name": "assetDir" },
+            { "source": "context", "name": "applicationId" }
           ]
         },
         "loadContent": {
