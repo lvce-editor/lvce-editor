@@ -203,6 +203,10 @@ export const execute = (applicationId: string, command: string, ...args: readonl
       return ApplicationRegistry.track(applicationId, () => GetActiveEditor.getVisibleEditorUris(applicationId))
     case 'GetActiveEditor.getActiveUri':
       return ApplicationRegistry.track(applicationId, () => GetActiveEditor.getActiveUri(applicationId))
+    case 'GetActiveEditor.getSelections':
+      return ApplicationRegistry.track(applicationId, () => GetActiveEditor.getSelections(applicationId))
+    case 'GetActiveEditor.setSelections':
+      return ApplicationRegistry.track(applicationId, () => GetActiveEditor.setSelections(args[0], applicationId))
     case 'GetActiveEditor.getTextDocument':
       return ApplicationRegistry.track(applicationId, () => GetActiveEditor.getTextDocument(applicationId))
     case 'PortProvider.forwardPort':

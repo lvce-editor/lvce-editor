@@ -350,6 +350,49 @@ test('getTextDocument reads only the requested application even when another edi
   await expect(GetActiveEditor.getTextDocumentWithInvoke(invoke, 'missing')).resolves.toBeUndefined()
 })
 
+test('selection reads and writes stay in the requested application', async () => {
+  for (const [id, applicationId] of [
+    [41, 'source'],
+    [42, 'preview'],
+  ]) {
+    ApplicationRegistry.create({ id: applicationId, layoutUid: id + 100, workspaceUri: 'memfs:///', workspacePath: '/', href: '/samples' })
+    ViewletStates.set(id, { factory: {}, moduleId: 'EditorText', renderedState: { uid: id }, state: { id, uid: id, applicationId } })
+  }
+  ViewletStates.setFocusedInstanceByType(41, 'EditorText')
+  const invoke = jest.fn(async () => new Uint32Array([0, 1, 0, 4]))
+  await expect(GetActiveEditor.getSelectionsWithInvoke(invoke, 'preview')).resolves.toEqual([0, 1, 0, 4])
+  expect(invoke).toHaveBeenCalledWith('Editor.getSelections2', 42)
+  await GetActiveEditor.setSelectionsWithCommand(executeCommand, [0, 4, 0, 4], 'preview')
+  expect(executeCommand).toHaveBeenCalledWith('Viewlet.executeViewletCommand', 42, 'setSelections', new Uint32Array([0, 4, 0, 4]))
+  invoke.mockClear()
+  executeCommand.mockClear()
+  await expect(GetActiveEditor.getSelectionsWithInvoke(invoke, 'missing')).resolves.toEqual([])
+  await GetActiveEditor.setSelectionsWithCommand(executeCommand, [0, 0, 0, 0], 'missing')
+  expect(invoke).not.toHaveBeenCalled()
+  expect(executeCommand).not.toHaveBeenCalled()
+})
+
+test('getActiveUri reads the main area owned by the requested application', async () => {
+  for (const [uid, applicationId] of [
+    [41, 'source'],
+    [42, 'preview'],
+  ]) {
+    ApplicationRegistry.create({ id: applicationId, layoutUid: uid + 100, workspaceUri: 'memfs:///', workspacePath: '/', href: '/samples' })
+    ViewletStates.set(uid, {
+      factory: {},
+      moduleId: 'Main',
+      renderedState: { uid },
+      state: { uid, applicationId },
+    })
+  }
+  ViewletStates.setFocusedInstanceByType(41, 'Main')
+  const invoke = jest.fn(async (_command, uid) => ({
+    layout: { activeGroupId: 1, groups: [{ id: 1, activeTabId: 1, tabs: [{ id: 1, uri: `memfs:///${uid}.txt` }] }] },
+  }))
+  await expect(GetActiveEditor.getActiveUriWithInvoke(invoke, 'preview')).resolves.toBe('memfs:///42.txt')
+  expect(invoke).toHaveBeenCalledWith('MainArea.saveState', 42)
+})
+
 test('active editor and visible URIs stay within their application while another application is focused', async () => {
   for (const [id, applicationId] of [
     [41, 'source'],
@@ -391,25 +434,4 @@ test('active editor and visible URIs stay within their application while another
   await expect(GetActiveEditor.getVisibleEditorUrisWithInvoke(invoke, 'source')).resolves.toEqual(['memfs:///141.txt'])
   await expect(GetActiveEditor.getActiveUriWithInvoke(invoke, 'source')).resolves.toBe('memfs:///141.txt')
   await expect(GetActiveEditor.getVisibleEditorUrisWithInvoke(invoke, 'missing')).resolves.toEqual([])
-})
-
-test('getActiveUri reads the main area owned by the requested application', async () => {
-  for (const [uid, applicationId] of [
-    [41, 'source'],
-    [42, 'preview'],
-  ]) {
-    ApplicationRegistry.create({ id: applicationId, layoutUid: uid + 100, workspaceUri: 'memfs:///', workspacePath: '/', href: '/samples' })
-    ViewletStates.set(uid, {
-      factory: {},
-      moduleId: 'Main',
-      renderedState: { uid },
-      state: { uid, applicationId },
-    })
-  }
-  ViewletStates.setFocusedInstanceByType(41, 'Main')
-  const invoke = jest.fn(async (_command, uid) => ({
-    layout: { activeGroupId: 1, groups: [{ id: 1, activeTabId: 1, tabs: [{ id: 1, uri: `memfs:///${uid}.txt` }] }] },
-  }))
-  await expect(GetActiveEditor.getActiveUriWithInvoke(invoke, 'preview')).resolves.toBe('memfs:///42.txt')
-  expect(invoke).toHaveBeenCalledWith('MainArea.saveState', 42)
 })
