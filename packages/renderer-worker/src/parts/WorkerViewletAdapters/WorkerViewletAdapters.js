@@ -333,6 +333,11 @@ export const textSearch = {
 }
 
 export const titleBar = {
+  async afterLoadContent({ state, worker }) {
+    if (Preferences.get('window.titleBarless.enabled') === true) {
+      await worker.invoke('TitleBar.setShowSideBarThings', state.uid, false)
+    }
+  },
   extendModule() {
     return {
       afterRender: TitleBarMenuOverlay.afterRender,
