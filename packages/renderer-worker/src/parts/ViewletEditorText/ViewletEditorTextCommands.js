@@ -125,6 +125,9 @@ const handleUriChange = async (editor, editorUidOrNewUri, maybeNewUri) => {
 }
 
 const loadContentLater = async (editor) => {
+  if (editor.applicationId !== undefined) {
+    await Command.execute('Viewlet.executeViewletCommand', editor.uid, 'handleSettingsChanged')
+  }
   await Command.execute('Viewlet.executeViewletCommand', editor.uid, 'updateDiagnostics')
 }
 
@@ -184,6 +187,7 @@ export const getCommands = async () => {
     'Editor.save': Object.assign(WrapEditorCommands.wrapEditorCommand('Editor.save'), { acceptsTargetUid: true }),
     __renderPending: renderPending,
     handleFocus,
+    handleSettingsChanged: WrapEditorCommands.wrapEditorCommand('Editor.handleSettingsChanged', { preserveFocus: true }),
     handleUriChange,
     handleWorkspaceRefresh,
     loadContent,
