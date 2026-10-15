@@ -8,9 +8,28 @@ const expiresIn = 90 * 24 * 60 * 60 * 1000
 const writeQueues = new Map()
 const writeVersions = new Map()
 
+const encodeUriPath = (value) => {
+  return encodeURIComponent(value)
+    .replaceAll('%2F', '/')
+    .replace(/(^|\/)(\.{1,2})(?=\/|$)/g, (_match, separator, dotSegment) => `${separator}${'%252E'.repeat(dotSegment.length)}`)
+}
+
 const getKey = (applicationId, uri) => {
-  const identity = encodeURIComponent(JSON.stringify([applicationId, uri]))
-  return `https://lvce-editor.invalid/editor-file-cache/${identity}`
+  const schemeSeparator = uri.indexOf(':')
+  const scheme = schemeSeparator === -1 ? 'unknown' : uri.slice(0, schemeSeparator)
+  const uriPath = schemeSeparator === -1 ? uri : uri.slice(schemeSeparator + 1)
+  const leadingSlashes = uriPath.match(/^\/+/)
+  const leadingSlashCount = leadingSlashes ? leadingSlashes[0].length : 0
+  const readablePath = uriPath.slice(leadingSlashCount)
+  const query = new URLSearchParams()
+  if (applicationId) {
+    query.set('applicationId', applicationId)
+  }
+  if (leadingSlashCount) {
+    query.set('leadingSlashes', String(leadingSlashCount))
+  }
+  const queryString = query.toString()
+  return `https://lvce-editor.invalid/editor-file-cache/${scheme}/${encodeUriPath(readablePath)}${queryString ? `?${queryString}` : ''}`
 }
 
 const getFingerprint = (stat) => {
