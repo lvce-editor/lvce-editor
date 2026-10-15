@@ -51,11 +51,6 @@
   opacity: 0.8;
 }
 
-/* Keep window controls in the space reserved above the primary sidebar. */
-.Workbench.TitleBarless > .TitleBar > :not(.TitleBarButtons) {
-  display: none;
-}
-
 .Workbench.TitleBarless > .TitleBar {
   -webkit-app-region: drag;
   flex-shrink: 0;
@@ -233,10 +228,6 @@
   top: 0;
   width: 100%;
   z-index: 4;
-}
-
-.Workbench.BrowserFullWidthHideTitleBar > .TitleBar > :not(.TitleBarButtons) {
-  display: none;
 }
 
 .Workbench.BrowserFullWidthHideTitleBar > .TitleBar > .TitleBarButtons {
