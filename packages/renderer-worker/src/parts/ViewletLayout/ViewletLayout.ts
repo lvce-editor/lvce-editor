@@ -3301,7 +3301,7 @@ export const getBadgeCounts = (state: LayoutState) => {
 }
 
 export const getModuleId = (state: LayoutState, uri: string, opener?: string) => {
-  return ViewletMap.getModuleId(uri, opener)
+  return ViewletMap.getModuleId(uri, opener, state.applicationId)
 }
 
 export const getHref = (state: LayoutState) => {
