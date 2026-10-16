@@ -12,11 +12,11 @@ const mapExtToEditorType = {
   '.weba': ViewletModuleId.Audio,
 }
 
-const getModuleIdForOpener = async (opener) => {
+const getModuleIdForOpener = async (opener, applicationId) => {
   if (!opener) {
     return undefined
   }
-  const extensionViews = await GetExtensionViews.getExtensionViews()
+  const extensionViews = await GetExtensionViews.getExtensionViews(applicationId)
   if (GetExtensionViews.findExtensionView(extensionViews, opener)) {
     return ViewletModuleId.ExtensionView
   }
@@ -27,7 +27,7 @@ const getModuleIdForOpener = async (opener) => {
   return undefined
 }
 
-export const getModuleId = async (uri, opener) => {
+export const getModuleId = async (uri, opener, applicationId) => {
   // TODO rename scheme to keybindings://
   if (uri === 'app://keybindings') {
     return ViewletModuleId.KeyBindings
@@ -101,7 +101,7 @@ export const getModuleId = async (uri, opener) => {
   if (uri.startsWith('iframe-inspector://')) {
     return ViewletModuleId.IframeInspector
   }
-  const openerModuleId = await getModuleIdForOpener(opener)
+  const openerModuleId = await getModuleIdForOpener(opener, applicationId)
   if (openerModuleId) {
     return openerModuleId
   }
@@ -109,7 +109,7 @@ export const getModuleId = async (uri, opener) => {
     return ViewletModuleId.EditorText
   }
 
-  const extensionViews = await GetExtensionViews.getExtensionViews()
+  const extensionViews = await GetExtensionViews.getExtensionViews(applicationId)
   if (GetExtensionViews.findExtensionView(extensionViews, uri)) {
     return ViewletModuleId.ExtensionView
   }
