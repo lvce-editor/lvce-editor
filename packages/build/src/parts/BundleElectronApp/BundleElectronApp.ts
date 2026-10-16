@@ -19,6 +19,7 @@ import * as GetIconThemeEtag from '../GetIconThemeEtag/GetIconThemeEtag.ts'
 import * as Hash from '../Hash/Hash.ts'
 import * as Rename from '../Rename/Rename.ts'
 import * as Logger from '../Logger/Logger.ts'
+import * as MinifyWorkerBundles from '../MinifyWorkerBundles/MinifyWorkerBundles.ts'
 import * as Path from '../Path/Path.ts'
 import * as Platform from '../Platform/Platform.ts'
 import * as PrepareElectronCss from '../PrepareElectronCss/PrepareElectronCss.ts'
@@ -39,6 +40,7 @@ const getDependencyCacheHash = async ({ electronVersion, arch, supportsAutoUpdat
     'packages/main-process/package-lock.json',
     'packages/shared-process/package-lock.json',
     'packages/build/src/parts/BundleElectronApp/BundleElectronApp.ts',
+    'packages/build/src/parts/MinifyWorkerBundles/MinifyWorkerBundles.ts',
     'packages/build/src/parts/BundleElectronAppDependencies/BundleElectronAppDependencies.ts',
     'packages/build/src/parts/BundleSharedProcessDependencies/BundleSharedProcessDependencies.ts',
     'packages/build/src/parts/FilterSharedProcessDependencies/FilterSharedProcessDependencies.ts',
@@ -351,6 +353,8 @@ export const build = async ({
     product,
     iconThemeEtag,
   })
+
+  await MinifyWorkerBundles.minifyWorkerBundles(toRoot)
 
   const etag = `W/"${commitHash}"`
 
