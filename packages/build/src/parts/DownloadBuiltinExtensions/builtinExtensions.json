@@ -36,8 +36,8 @@
   {
     "name": "builtin.csv-viewer",
     "repository": "github.com/lvce-editor/csv-viewer",
-    "version": "2.16.1",
-    "sha256": "5c705cb1ca7bc0a80e1f3410008463dedfcbf8da3715562f46dc8720a74580fa",
+    "version": "2.17.0",
+    "sha256": "ea0b63344c643c1c095e13753926f3865b264008b51e7f3490d99b825241c0d6",
     "created": "2024-10-13"
   },
   {
