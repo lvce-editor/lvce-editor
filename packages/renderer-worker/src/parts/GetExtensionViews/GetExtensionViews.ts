@@ -100,10 +100,11 @@ export const getExtensionViews = async (applicationId?: string): Promise<readonl
     applicationId === undefined
       ? ExtensionManagementWorker.invoke(command, ...args)
       : ExtensionManagementWorker.invoke('Extensions.invokeForApplication', applicationId, command, ...args)
-  const [views, extensions] = await Promise.all([
-    invoke('Extensions.getViews', assetDir, getPlatform()) as Promise<readonly ExtensionView[]>,
-    invoke('Extensions.getAllExtensions', assetDir, getPlatform()) as Promise<readonly ExtensionManifest[]>,
-  ])
+  const views: readonly ExtensionView[] = await invoke('Extensions.getViews', assetDir, getPlatform())
+  if (views.every((view) => view.css)) {
+    return views
+  }
+  const extensions: readonly ExtensionManifest[] = await invoke('Extensions.getAllExtensions', assetDir, getPlatform())
   return mergeCss(views, extensions)
 }
 
