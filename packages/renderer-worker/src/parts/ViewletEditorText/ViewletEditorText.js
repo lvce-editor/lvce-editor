@@ -240,8 +240,8 @@ export const loadContent = async (state, savedState, context) => {
 
 export const rerender = async (state) => {
   if (state.useFunctionalRendering) {
-    // render2 calculates the diff and advances the rendered snapshot in one RPC.
-    const commands = await EditorWorker.invoke('Editor.render2', state.id, [])
+    const diffResult = await EditorWorker.invoke('Editor.diff2', state.id)
+    const commands = await EditorWorker.invoke('Editor.render2', state.id, diffResult)
     return {
       ...state,
       commands,
