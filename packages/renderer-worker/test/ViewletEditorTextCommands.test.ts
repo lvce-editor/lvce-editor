@@ -512,7 +512,7 @@ test('late hosted DOM focus responses preserve the newer application focus', asy
   ])
 })
 
-test('standalone focus handling retains its renderer focus commands', async () => {
+test('standalone focus handling selects its editor and retains renderer focus commands', async () => {
   editorWorkerInvoke.mockImplementation(async (method, uid) => {
     if (method === 'Editor.getCommandIds') return []
     if (method === 'Editor.render2') return [['Viewlet.focusSelector', uid, '.EditorInput textarea']]
@@ -521,5 +521,31 @@ test('standalone focus handling retains its renderer focus commands', async () =
   const commands = await ViewletEditorTextCommands.getCommands()
   const result = await commands.handleFocus({ uid: 42, uri: 'file:///main.ts' })
   expect(result.commands).toEqual([['Viewlet.focusSelector', 42, '.EditorInput textarea']])
-  expect(setFocus).not.toHaveBeenCalled()
+  expect(setFocus).toHaveBeenCalledWith(12, undefined, 42, 'Editor')
+})
+
+test('a DOM focus event selects the desktop editor before its worker reply', async () => {
+  const worker = Promise.withResolvers<void>()
+  editorWorkerInvoke.mockImplementation((method) => {
+    if (method === 'Editor.getCommandIds') return []
+    if (method === 'Editor.render2')
+      return [
+        ['Viewlet.setFocusContext', 42, 12],
+        ['Viewlet.focusSelector', 42, '.EditorInput textarea'],
+      ]
+    if (method === 'Editor.handleFocus') return worker.promise
+    throw new Error(`unexpected method ${method}`)
+  })
+  const commands = await ViewletEditorTextCommands.getCommands()
+  const pending = commands.handleFocus({ uid: 42, uri: 'file:///right.txt' })
+  try {
+    expect(setFocus).toHaveBeenCalledWith(12, undefined, 42, 'Editor')
+  } finally {
+    worker.resolve()
+    const result = await pending
+    expect(result.commands).toEqual([
+      ['Viewlet.setFocusContext', 42, 12],
+      ['Viewlet.focusSelector', 42, '.EditorInput textarea'],
+    ])
+  }
 })
