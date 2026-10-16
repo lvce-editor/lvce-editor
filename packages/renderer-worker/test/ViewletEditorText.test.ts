@@ -102,13 +102,7 @@ test('loadContent - renders before diagnostics are requested by loadContentLater
   const editorMethods = editorWorkerInvoke.mock.calls
     .map(([method]) => method)
     .filter((method): method is string => typeof method === 'string' && method.startsWith('Editor.'))
-  expect(editorMethods).toEqual([
-    'Editor.create2',
-    'Editor.loadContent',
-    'Editor.render2',
-    'Editor.setSelections2',
-    'Editor.render2',
-  ])
+  expect(editorMethods).toEqual(['Editor.create2', 'Editor.loadContent', 'Editor.render2', 'Editor.setSelections2', 'Editor.render2'])
   const createCall = editorWorkerInvoke.mock.calls.find(([method]) => method === 'Editor.create2')
   expect(createCall?.at(-1)).toBe(true)
   expect(newState.commands).toEqual([...initialCommands, ...selectionCommands])

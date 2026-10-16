@@ -67,9 +67,7 @@ test('getCommands registers worker commands, sub-widget commands, and local comm
 })
 
 test('a DOM focus event selects its application editor even if the worker returns no focus diff', async () => {
-  editorWorkerInvoke.mockImplementation((method) =>
-    method === 'Editor.getCommandIds' || method === 'Editor.render2' ? [] : undefined,
-  )
+  editorWorkerInvoke.mockImplementation((method) => (method === 'Editor.getCommandIds' || method === 'Editor.render2' ? [] : undefined))
   const commands = await ViewletEditorTextCommands.getCommands()
   await commands.handleFocus({ uid: 42, applicationId: 'source', uri: 'memfs:///main.ts' })
   expect(setFocus).toHaveBeenCalledWith(12, undefined, 42, 'Editor')
