@@ -267,7 +267,7 @@ test('loadContent shows a graceful fallback when the extension view is unavailab
     iframeSrc: '',
     kind: 'virtualDom',
   })
-  expect(invoke).toHaveBeenCalledTimes(2)
+  expect(invoke).toHaveBeenCalledTimes(1)
 })
 
 test('exposes DOM for virtual DOM views but not iframe views', () => {
