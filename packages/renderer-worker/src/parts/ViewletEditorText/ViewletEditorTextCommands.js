@@ -165,8 +165,8 @@ const renderPending = Object.assign(WrapEditorCommands.renderPendingEditors, { t
 const handleEditorFocus = WrapEditorCommands.wrapEditorCommand('Editor.handleFocus')
 const handleApplicationEditorFocus = WrapEditorCommands.wrapEditorCommand('Editor.handleFocus', { preserveFocus: true })
 const handleFocus = (editor, ...args) => {
-  if (editor.applicationId === undefined) return handleEditorFocus(editor, ...args)
   Focus.setFocus(WhenExpression.FocusEditorText, undefined, editor.uid, 'Editor')
+  if (editor.applicationId === undefined) return handleEditorFocus(editor, ...args)
   // The DOM is already focused. A delayed focus diff must not refocus an editor
   // after the user has moved into another application.
   return handleApplicationEditorFocus(editor, ...args)
