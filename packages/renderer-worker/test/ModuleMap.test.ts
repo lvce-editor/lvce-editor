@@ -24,11 +24,11 @@ test('getModule', () => {
 test('getModule - sidebar command', async () => {
   const moduleId = ModuleMap.getModuleId('SideBar.show')
   const loadedModule = await Module.load(moduleId)
-  const commands = (loadedModule as { Commands: Record<string, unknown> }).Commands
+  const sidebarModule = loadedModule as { name: string; Commands: Record<string, unknown> }
 
   expect(moduleId).toBe(ModuleId.SideBar)
-  expect(loadedModule.name).toBe('SideBar')
-  expect(commands.show).toBeDefined()
+  expect(sidebarModule.name).toBe('SideBar')
+  expect(sidebarModule.Commands.show).toBeDefined()
 })
 
 test('getModule - reveal in explorer', async () => {
