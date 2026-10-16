@@ -70,8 +70,6 @@ test('loadContent - renders before diagnostics are requested by loadContentLater
   let renderCount = 0
   editorWorkerInvoke.mockImplementation((method) => {
     switch (method) {
-      case 'Editor.diff2':
-        return []
       case 'Editor.render2':
         return renderCount++ === 0 ? initialCommands : selectionCommands
       default:
@@ -107,10 +105,8 @@ test('loadContent - renders before diagnostics are requested by loadContentLater
   expect(editorMethods).toEqual([
     'Editor.create2',
     'Editor.loadContent',
-    'Editor.diff2',
     'Editor.render2',
     'Editor.setSelections2',
-    'Editor.diff2',
     'Editor.render2',
   ])
   const createCall = editorWorkerInvoke.mock.calls.find(([method]) => method === 'Editor.create2')
@@ -121,7 +117,6 @@ test('loadContent - renders before diagnostics are requested by loadContentLater
 test('loadContent - restores the editor worker state', async () => {
   editorWorkerInvoke.mockImplementation((method) => {
     switch (method) {
-      case 'Editor.diff2':
       case 'Editor.render2':
         return []
       default:
@@ -143,7 +138,6 @@ test('loadContent - restores the editor worker state', async () => {
 test('loadContent restores saved persistent editor widgets', async () => {
   editorWorkerInvoke.mockImplementation((method) => {
     switch (method) {
-      case 'Editor.diff2':
       case 'Editor.render2':
         return []
       default:
@@ -161,7 +155,6 @@ test('loadContent restores saved persistent editor widgets', async () => {
 test('loadContent passes false focus to the editor worker', async () => {
   editorWorkerInvoke.mockImplementation((method) => {
     switch (method) {
-      case 'Editor.diff2':
       case 'Editor.render2':
         return []
       default:
@@ -202,7 +195,6 @@ test('saveState - saves editor history under a URI-scoped key', async () => {
 test('loadContent - restores the definition range supplied by the opener', async () => {
   editorWorkerInvoke.mockImplementation((method) => {
     switch (method) {
-      case 'Editor.diff2':
       case 'Editor.render2':
         return []
       default:
@@ -230,7 +222,6 @@ test('loadContent - disables the editor file cache through preferences', async (
   Preferences.state['editor.cache'] = false
   editorWorkerInvoke.mockImplementation((method) => {
     switch (method) {
-      case 'Editor.diff2':
       case 'Editor.render2':
         return []
       default:
@@ -249,7 +240,6 @@ test('loadContent - disables the editor file cache by default in e2e tests', asy
   IsTest.state.isTest = true
   editorWorkerInvoke.mockImplementation((method) => {
     switch (method) {
-      case 'Editor.diff2':
       case 'Editor.render2':
         return []
       default:
@@ -272,7 +262,6 @@ test('loadContent - detects the language from the first line for an extensionles
   getTextEditorContent.mockReturnValue('#!/usr/bin/env node\n"use strict"')
   editorWorkerInvoke.mockImplementation((method) => {
     switch (method) {
-      case 'Editor.diff2':
       case 'Editor.render2':
         return []
       default:
@@ -324,8 +313,6 @@ test('handleSettingsChanged updates and rerenders the editor worker', async () =
     switch (method) {
       case 'Editor.handleSettingsChanged':
         return undefined
-      case 'Editor.diff2':
-        return [1]
       case 'Editor.render2':
         return commands
       default:
@@ -337,8 +324,7 @@ test('handleSettingsChanged updates and rerenders the editor worker', async () =
   const newState = await ViewletEditorText.handleSettingsChanged(state)
 
   expect(editorWorkerInvoke).toHaveBeenNthCalledWith(1, 'Editor.handleSettingsChanged', 1)
-  expect(editorWorkerInvoke).toHaveBeenNthCalledWith(2, 'Editor.diff2', 1)
-  expect(editorWorkerInvoke).toHaveBeenNthCalledWith(3, 'Editor.render2', 1, [1])
+  expect(editorWorkerInvoke).toHaveBeenNthCalledWith(2, 'Editor.render2', 1, [])
   expect(newState.commands).toEqual(commands)
   expect(ViewletEditorTextIpc.Events['preferences.changed']).toBe(ViewletEditorText.handleSettingsChanged)
 })
@@ -348,8 +334,6 @@ test('resize - increase height', async () => {
     switch (method) {
       case 'Editor.resize':
         return undefined
-      case 'Editor.diff2':
-        return [1]
       case 'Editor.render2':
         return [['setRows']]
       default:
@@ -387,8 +371,7 @@ test('resize - increase height', async () => {
     width: 200,
     height: 60,
   })
-  expect(editorWorkerInvoke).toHaveBeenNthCalledWith(2, 'Editor.diff2', 0)
-  expect(editorWorkerInvoke).toHaveBeenNthCalledWith(3, 'Editor.render2', 0, [1])
+  expect(editorWorkerInvoke).toHaveBeenNthCalledWith(2, 'Editor.render2', 0, [])
   expect(newState.commands).toEqual([['setRows']])
 })
 
@@ -397,8 +380,6 @@ test('resize - same height', async () => {
     switch (method) {
       case 'Editor.resize':
         return undefined
-      case 'Editor.diff2':
-        return []
       case 'Editor.render2':
         return []
       default:
@@ -437,8 +418,6 @@ test('resize - reduce height', async () => {
     switch (method) {
       case 'Editor.resize':
         return undefined
-      case 'Editor.diff2':
-        return []
       case 'Editor.render2':
         return []
       default:
@@ -478,8 +457,6 @@ test('resize - increase height while scrolled clamps visible rows to bottom', as
     switch (method) {
       case 'Editor.resize':
         return undefined
-      case 'Editor.diff2':
-        return []
       case 'Editor.render2':
         return []
       default:
@@ -519,7 +496,7 @@ test('resize - increase height while scrolled clamps visible rows to bottom', as
 })
 
 test('confirmed large files are read only by editor worker in reduced mode', async () => {
-  editorWorkerInvoke.mockImplementation((method) => (method === 'Editor.diff2' || method === 'Editor.render2' ? [] : undefined))
+  editorWorkerInvoke.mockImplementation((method) => (method === 'Editor.render2' ? [] : undefined))
   const state = ViewletEditorText.create(1, '/tmp/snapshot.heapsnapshot', 0, 0, 800, 600)
   await ViewletEditorText.loadContent(state, undefined, { largeFile: true })
   expect(getTextEditorContent).not.toHaveBeenCalled()

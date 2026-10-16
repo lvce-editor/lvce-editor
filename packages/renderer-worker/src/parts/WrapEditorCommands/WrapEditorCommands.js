@@ -56,8 +56,8 @@ const isEditorDisposed = async (uid) => {
 
 const renderEditor = async (uid, sourceUid) => {
   try {
-    const diffResult = await EditorWorker.invoke('Editor.diff2', uid)
-    const commands = await EditorWorker.invoke('Editor.render2', uid, diffResult)
+    // render2 calculates the diff and advances the rendered snapshot in one RPC.
+    const commands = await EditorWorker.invoke('Editor.render2', uid, [])
     return uid === sourceUid ? commands : adjustCommands(commands, uid)
   } catch (error) {
     if (await isEditorDisposed(uid)) {

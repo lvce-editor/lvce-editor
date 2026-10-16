@@ -21,8 +21,8 @@ test('pending rendering never consumes a sibling application diff for the same U
     })
     EditorWorker.invoke.mockResolvedValue([])
     await WrapEditorCommands.renderPendingEditors({ uid: 1, uri: 'memfs:///same.ts' })
-    expect(EditorWorker.invoke).toHaveBeenCalledWith('Editor.diff2', 1)
-    expect(EditorWorker.invoke).not.toHaveBeenCalledWith('Editor.diff2', 2)
+    expect(EditorWorker.invoke).toHaveBeenCalledWith('Editor.render2', 1, [])
+    expect(EditorWorker.invoke).not.toHaveBeenCalledWith('Editor.render2', 2, [])
   } finally {
     ViewletStates.remove(2)
     Applications.remove('sibling')
@@ -41,9 +41,6 @@ test('does not serialize find widget intents', async () => {
       return new Promise<void>((resolve) => {
         resolveOpen = resolve
       })
-    }
-    if (method === 'Editor.diff2') {
-      return Promise.resolve([])
     }
     if (method === 'Editor.render2') {
       return Promise.resolve([])
@@ -78,9 +75,6 @@ test('renders every text editor showing the same uri', async () => {
     if (method === 'Editor.getKeys') {
       return Promise.resolve(['1', '2'])
     }
-    if (method === 'Editor.diff2') {
-      return Promise.resolve([uid])
-    }
     if (method === 'Editor.render2') {
       return Promise.resolve(uid === 1 ? [['setText', 'left']] : [['setText', 'right']])
     }
@@ -90,8 +84,8 @@ test('renders every text editor showing the same uri', async () => {
 
   const result = await type({ uid: 1, uri: 'file:///same.txt' }, 'x')
 
-  expect(EditorWorker.invoke).toHaveBeenCalledWith('Editor.diff2', 1)
-  expect(EditorWorker.invoke).toHaveBeenCalledWith('Editor.diff2', 2)
+  expect(EditorWorker.invoke).toHaveBeenCalledWith('Editor.render2', 1, [])
+  expect(EditorWorker.invoke).toHaveBeenCalledWith('Editor.render2', 2, [])
   expect(result.commands).toEqual([
     ['setText', 'left'],
     ['Viewlet.send', 2, 'setText', 'right'],
@@ -112,9 +106,6 @@ test('renders pending state for every text editor showing the same uri', async (
     if (method === 'Editor.getKeys') {
       return Promise.resolve(['1', '2'])
     }
-    if (method === 'Editor.diff2') {
-      return Promise.resolve([uid])
-    }
     if (method === 'Editor.render2') {
       return Promise.resolve(uid === 1 ? [['setText', 'left']] : [['setText', 'right']])
     }
@@ -131,7 +122,7 @@ test('renders pending state for every text editor showing the same uri', async (
 
 test('ignores an editor disposed while rendering pending state', async () => {
   EditorWorker.invoke.mockImplementation((method: string) => {
-    if (method === 'Editor.diff2') {
+    if (method === 'Editor.render2') {
       return Promise.reject(new Error('Editor not found'))
     }
     if (method === 'Editor.getKeys') {
@@ -143,13 +134,13 @@ test('ignores an editor disposed while rendering pending state', async () => {
   const result = await WrapEditorCommands.renderPendingEditors({ uid: 1, uri: 'file:///same.txt' })
 
   expect(result.commands).toEqual([])
-  expect(EditorWorker.invoke).not.toHaveBeenCalledWith('Editor.render2', 1, expect.anything())
+  expect(EditorWorker.invoke).toHaveBeenCalledWith('Editor.render2', 1, [])
 })
 
 test('rethrows a render error when the editor still exists', async () => {
   const renderError = new Error('render failed')
   EditorWorker.invoke.mockImplementation((method: string) => {
-    if (method === 'Editor.diff2') {
+    if (method === 'Editor.render2') {
       return Promise.reject(renderError)
     }
     if (method === 'Editor.getKeys') {
@@ -177,9 +168,6 @@ test('renders one hundred text editors showing the same uri', async () => {
     if (method === 'Editor.getKeys') {
       return Promise.resolve(Array.from({ length: 100 }, (_, index) => String(index + 1)))
     }
-    if (method === 'Editor.diff2') {
-      return Promise.resolve([uid])
-    }
     if (method === 'Editor.render2') {
       return Promise.resolve([['setText', `editor-${uid}`]])
     }
@@ -190,8 +178,7 @@ test('renders one hundred text editors showing the same uri', async () => {
   const result = await type({ uid: 50, uri: 'file:///same.txt' }, 'x')
 
   for (let uid = 1; uid <= 100; uid++) {
-    expect(EditorWorker.invoke).toHaveBeenCalledWith('Editor.diff2', uid)
-    expect(EditorWorker.invoke).toHaveBeenCalledWith('Editor.render2', uid, [uid])
+    expect(EditorWorker.invoke).toHaveBeenCalledWith('Editor.render2', uid, [])
   }
   expect(result.commands).toHaveLength(100)
   expect(result.commands[0]).toEqual(['setText', 'editor-50'])
@@ -210,7 +197,7 @@ test('does not render a text editor showing another uri', async () => {
     },
   })
   EditorWorker.invoke.mockImplementation((method: string) => {
-    if (method === 'Editor.diff2' || method === 'Editor.render2') {
+    if (method === 'Editor.render2') {
       return Promise.resolve([])
     }
     return Promise.resolve(undefined)
@@ -219,7 +206,7 @@ test('does not render a text editor showing another uri', async () => {
 
   await type({ uid: 1, uri: 'file:///same.txt' }, 'x')
 
-  expect(EditorWorker.invoke).not.toHaveBeenCalledWith('Editor.diff2', 2)
+  expect(EditorWorker.invoke).not.toHaveBeenCalledWith('Editor.render2', 2, [])
 })
 
 test('does not render a sibling removed by an editor lifecycle command', async () => {
@@ -236,7 +223,7 @@ test('does not render a sibling removed by an editor lifecycle command', async (
     if (method === 'Editor.getKeys') {
       return Promise.resolve(['1'])
     }
-    if (method === 'Editor.diff2' || method === 'Editor.render2') {
+    if (method === 'Editor.render2') {
       return Promise.resolve([])
     }
     return Promise.resolve(undefined)
@@ -245,8 +232,8 @@ test('does not render a sibling removed by an editor lifecycle command', async (
 
   await save({ uid: 1, uri: 'file:///same.txt' })
 
-  expect(EditorWorker.invoke).toHaveBeenCalledWith('Editor.diff2', 1)
-  expect(EditorWorker.invoke).not.toHaveBeenCalledWith('Editor.diff2', 2)
+  expect(EditorWorker.invoke).toHaveBeenCalledWith('Editor.render2', 1, [])
+  expect(EditorWorker.invoke).not.toHaveBeenCalledWith('Editor.render2', 2, [])
 })
 
 test('preserves global sibling render commands', async () => {
@@ -262,9 +249,6 @@ test('preserves global sibling render commands', async () => {
   EditorWorker.invoke.mockImplementation((method: string, uid: number) => {
     if (method === 'Editor.getKeys') {
       return Promise.resolve(['1', '2'])
-    }
-    if (method === 'Editor.diff2') {
-      return Promise.resolve([uid])
     }
     if (method === 'Editor.render2') {
       return Promise.resolve(uid === 1 ? [] : [['Viewlet.setFocusContext', 2, 1]])
@@ -306,4 +290,42 @@ test.each(['showHover', 'showHover2'])('does not let pending %s block editing or
     provider.resolve()
     await hover
   }
+})
+
+test('waits for the combined diff and render before starting the next edit', async () => {
+  const started = Promise.withResolvers<void>()
+  const rendered = Promise.withResolvers<readonly any[]>()
+  let renderCount = 0
+  EditorWorker.invoke.mockImplementation(async (method: string) => {
+    if (method === 'Editor.render2') {
+      if (renderCount++ === 0) {
+        started.resolve()
+        return rendered.promise
+      }
+      return [['setText', 'second']]
+    }
+    if (method === 'Editor.type') {
+      return undefined
+    }
+    throw new Error(`unexpected method ${method}`)
+  })
+  const editor = { uid: 1, uri: 'file:///render-order.txt' }
+  const type = WrapEditorCommands.wrapEditorCommand('type')
+  const first = type(editor, 'first')
+  await started.promise
+  const second = type(editor, 'second')
+  await Promise.resolve()
+  expect(EditorWorker.invoke.mock.calls).toEqual([
+    ['Editor.type', 1, 'first'],
+    ['Editor.render2', 1, []],
+  ])
+  rendered.resolve([['setText', 'first']])
+  const results = await Promise.all([first, second])
+  expect(results.map((result) => result.commands)).toEqual([[['setText', 'first']], [['setText', 'second']]])
+  expect(EditorWorker.invoke.mock.calls).toEqual([
+    ['Editor.type', 1, 'first'],
+    ['Editor.render2', 1, []],
+    ['Editor.type', 1, 'second'],
+    ['Editor.render2', 1, []],
+  ])
 })

@@ -68,7 +68,7 @@ test('getCommands registers worker commands, sub-widget commands, and local comm
 
 test('a DOM focus event selects its application editor even if the worker returns no focus diff', async () => {
   editorWorkerInvoke.mockImplementation((method) =>
-    method === 'Editor.getCommandIds' || method === 'Editor.diff2' || method === 'Editor.render2' ? [] : undefined,
+    method === 'Editor.getCommandIds' || method === 'Editor.render2' ? [] : undefined,
   )
   const commands = await ViewletEditorTextCommands.getCommands()
   await commands.handleFocus({ uid: 42, applicationId: 'source', uri: 'memfs:///main.ts' })
@@ -85,8 +85,6 @@ test('color picker slider escape closes the picker', async () => {
     switch (method) {
       case 'Editor.closeColorPicker':
         return undefined
-      case 'Editor.diff2':
-        return [1]
       case 'Editor.getCommandIds':
         return []
       case 'Editor.render2':
@@ -100,8 +98,7 @@ test('color picker slider escape closes the picker', async () => {
   const result = await commands['ColorPicker.handleSliderKeyDown'](editor, 'ColorPicker', 'ColorPicker.handleSliderKeyDown', 42, 7, 'Escape')
 
   expect(editorWorkerInvoke).toHaveBeenNthCalledWith(2, 'Editor.closeColorPicker', 42)
-  expect(editorWorkerInvoke).toHaveBeenNthCalledWith(3, 'Editor.diff2', 42)
-  expect(editorWorkerInvoke).toHaveBeenNthCalledWith(4, 'Editor.render2', 42, [1])
+  expect(editorWorkerInvoke).toHaveBeenNthCalledWith(3, 'Editor.render2', 42, [])
   expect(result.commands).toEqual([['Viewlet.focus', 42]])
 })
 
@@ -112,8 +109,6 @@ test('color picker slider navigation keys continue to execute the widget command
   }
   editorWorkerInvoke.mockImplementation((method) => {
     switch (method) {
-      case 'Editor.diff2':
-        return [1]
       case 'Editor.executeWidgetCommand':
         return undefined
       case 'Editor.getCommandIds':
@@ -161,8 +156,6 @@ test('renderPending renders editor-worker state changed by an asynchronous effec
   }
   editorWorkerInvoke.mockImplementation((method) => {
     switch (method) {
-      case 'Editor.diff2':
-        return [1]
       case 'Editor.getCommandIds':
         return []
       case 'Editor.render2':
@@ -175,15 +168,14 @@ test('renderPending renders editor-worker state changed by an asynchronous effec
   const commands = await ViewletEditorTextCommands.getCommands()
   const result = await commands.__renderPending(editor)
 
-  expect(editorWorkerInvoke).toHaveBeenNthCalledWith(2, 'Editor.diff2', 42)
-  expect(editorWorkerInvoke).toHaveBeenNthCalledWith(3, 'Editor.render2', 42, [1])
+  expect(editorWorkerInvoke).toHaveBeenNthCalledWith(2, 'Editor.render2', 42, [])
   expect(result).toEqual({
     ...editor,
     commands: [['Viewlet.createFunctionalRoot', 'EditorCompletion', 99, true]],
   })
 })
 
-test('worker command wrapper invokes editor command, diff, and render', async () => {
+test('worker command wrapper invokes editor command and render', async () => {
   const editor = {
     commands: [],
     uid: 42,
@@ -192,8 +184,6 @@ test('worker command wrapper invokes editor command, diff, and render', async ()
     switch (method) {
       case 'Editor.cursorLeft':
         return undefined
-      case 'Editor.diff2':
-        return [1]
       case 'Editor.getCommandIds':
         return ['cursorLeft']
       case 'Editor.render2':
@@ -208,25 +198,21 @@ test('worker command wrapper invokes editor command, diff, and render', async ()
 
   expect(editorWorkerInvoke).toHaveBeenNthCalledWith(1, 'Editor.getCommandIds')
   expect(editorWorkerInvoke).toHaveBeenNthCalledWith(2, 'Editor.cursorLeft', 42, 'arg')
-  expect(editorWorkerInvoke).toHaveBeenNthCalledWith(3, 'Editor.diff2', 42)
-  expect(editorWorkerInvoke).toHaveBeenNthCalledWith(4, 'Editor.render2', 42, [1])
+  expect(editorWorkerInvoke).toHaveBeenNthCalledWith(3, 'Editor.render2', 42, [])
   expect(result).toEqual({
     ...editor,
     commands: [['Viewlet.send', 42, 'setDeltaY', 0]],
   })
 })
 
-test('worker command wrapper serializes command, diff, and render per editor', async () => {
+test('worker command wrapper serializes command and render per editor', async () => {
   const editor = {
     commands: [],
     uid: 42,
   }
   const { promise: firstCommand, resolve: resolveFirstCommand } = Promise.withResolvers<void>()
-  let diffCount = 0
   editorWorkerInvoke.mockImplementation(async (method, uid, argument) => {
     switch (method) {
-      case 'Editor.diff2':
-        return [++diffCount]
       case 'Editor.getCommandIds':
         return ['handleWheel']
       case 'Editor.handleWheel':
@@ -249,11 +235,9 @@ test('worker command wrapper serializes command, diff, and render per editor', a
   resolveFirstCommand()
   await Promise.all([first, second])
 
-  expect(editorWorkerInvoke).toHaveBeenNthCalledWith(3, 'Editor.diff2', 42)
-  expect(editorWorkerInvoke).toHaveBeenNthCalledWith(4, 'Editor.render2', 42, [1])
-  expect(editorWorkerInvoke).toHaveBeenNthCalledWith(5, 'Editor.handleWheel', 42, 'second')
-  expect(editorWorkerInvoke).toHaveBeenNthCalledWith(6, 'Editor.diff2', 42)
-  expect(editorWorkerInvoke).toHaveBeenNthCalledWith(7, 'Editor.render2', 42, [2])
+  expect(editorWorkerInvoke).toHaveBeenNthCalledWith(3, 'Editor.render2', 42, [])
+  expect(editorWorkerInvoke).toHaveBeenNthCalledWith(4, 'Editor.handleWheel', 42, 'second')
+  expect(editorWorkerInvoke).toHaveBeenNthCalledWith(5, 'Editor.render2', 42, [])
 })
 
 test('handleUriChange skips the duplicated viewlet uid and updates the renderer editor uri', async () => {
@@ -327,8 +311,6 @@ test('background loadContent keeps content updates but suppresses focus commands
         return ['loadContent']
       case 'Editor.loadContent':
         return undefined
-      case 'Editor.diff2':
-        return []
       case 'Editor.render2':
         return [
           ['Viewlet.setDom2', 42, []],
@@ -358,8 +340,6 @@ test('workspace refresh reloads the matching editor from disk without stealing f
         return ['loadContent']
       case 'Editor.loadContent':
         return undefined
-      case 'Editor.diff2':
-        return []
       case 'Editor.render2':
         return [
           ['Viewlet.setPatches', 42, []],
@@ -393,8 +373,6 @@ test('background reload also suppresses focus in diagnostic renders before the r
       case 'Editor.loadContent':
         pendingCommands = (await commands.__renderPending(editor)).commands
         return undefined
-      case 'Editor.diff2':
-        return []
       case 'Editor.render2':
         return [...contentCommands, ...focusCommands]
       default:
@@ -417,8 +395,6 @@ test('failed background reloads leave idle diagnostic renders unable to steal fo
         return ['loadContent']
       case 'Editor.loadContent':
         throw new Error('reload failed')
-      case 'Editor.diff2':
-        return []
       case 'Editor.render2':
         return [['Viewlet.focusSelector', 42, '[name="editor"]']]
       default:
@@ -441,8 +417,6 @@ test('diagnostic renders after a background reload preserve focus while navigati
       case 'Editor.loadContent':
       case 'Editor.updateDiagnostics':
         return undefined
-      case 'Editor.diff2':
-        return []
       case 'Editor.render2':
         return [...contentCommands, ...focusCommands]
       default:
@@ -472,7 +446,7 @@ test('application auto-closing dispatch uses the editor command state contract',
   const ViewletStates = await import('../src/parts/ViewletStates/ViewletStates.js')
   editorWorkerInvoke.mockImplementation((method) => {
     if (method === 'Editor.getCommandIds') return ['typeWithAutoClosing']
-    if (method === 'Editor.diff2' || method === 'Editor.render2') return []
+    if (method === 'Editor.render2') return []
     return undefined
   })
   const commands = await ViewletEditorTextCommands.getCommands()
@@ -519,7 +493,6 @@ test('late hosted DOM focus responses preserve the newer application focus', asy
       sourceStarted.resolve()
       await pendingSource.promise
     }
-    if (method === 'Editor.diff2') return []
     if (method === 'Editor.render2')
       return [
         ['Viewlet.focusSelector', uid, '.EditorInput textarea'],
@@ -543,7 +516,7 @@ test('late hosted DOM focus responses preserve the newer application focus', asy
 
 test('standalone focus handling retains its renderer focus commands', async () => {
   editorWorkerInvoke.mockImplementation(async (method, uid) => {
-    if (method === 'Editor.getCommandIds' || method === 'Editor.diff2') return []
+    if (method === 'Editor.getCommandIds') return []
     if (method === 'Editor.render2') return [['Viewlet.focusSelector', uid, '.EditorInput textarea']]
     return undefined
   })
