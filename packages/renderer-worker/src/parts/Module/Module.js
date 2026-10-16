@@ -154,6 +154,8 @@ export const load = (moduleId) => {
       return import('../Url/Url.ipc.js')
     case ModuleId.Viewlet:
       return import('../Viewlet/Viewlet.ipc.js')
+    case ModuleId.SideBar:
+      return import('../ViewletSideBar/ViewletSideBar.ipc.js')
     case ModuleId.Window:
       return import('../Window/Window.ipc.js')
     case ModuleId.Workspace:
