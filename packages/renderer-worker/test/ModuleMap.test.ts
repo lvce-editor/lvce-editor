@@ -17,7 +17,18 @@ test('getModule', () => {
   expect(ModuleMap.getModuleId('ExtensionHostTextDocument.syncFull')).toBe(ModuleId.ExtensionHostCode)
   expect(ModuleMap.getModuleId('License.openLicense')).toBe(ModuleId.License)
   expect(ModuleMap.getModuleId('RevealInExplorer.reveal')).toBe(ModuleId.RevealInExplorer)
+  expect(ModuleMap.getModuleId('SideBar.show')).toBe(ModuleId.SideBar)
   expect(ModuleMap.getModuleId('SendMessagePortToMainProcess.sendMessagePortToMainProcess')).toBe(ModuleId.SendMessagePortToMainProcess)
+})
+
+test('getModule - sidebar command', async () => {
+  const moduleId = ModuleMap.getModuleId('SideBar.show')
+  const loadedModule = await Module.load(moduleId)
+  const commands = (loadedModule as { Commands: Record<string, unknown> }).Commands
+
+  expect(moduleId).toBe(ModuleId.SideBar)
+  expect(loadedModule.name).toBe('SideBar')
+  expect(commands.show).toBeDefined()
 })
 
 test('getModule - reveal in explorer', async () => {

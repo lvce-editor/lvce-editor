@@ -125,3 +125,5 @@ export const SimpleBrowserWorkflow = 158
 export const TerminalTransfer = 159
 
 export const Tasks = 160
+
+export const SideBar = 161
