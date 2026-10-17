@@ -18,6 +18,7 @@ export const launchSyntaxHighlightingWorker = async () => {
   let ipc = await IpcParent.create({
     method: IpcParentType.ModuleWorkerAndWorkaroundForChromeDevtoolsBug,
     name,
+    parentName: 'Editor Worker',
     url: configuredWorkerUrl,
     id,
   })
