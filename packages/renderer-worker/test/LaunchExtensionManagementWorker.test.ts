@@ -54,6 +54,7 @@ test('launchExtensionManagementWorker - launches web worker without shared proce
   expect(IpcParent.create).toHaveBeenCalledWith({
     method: IpcParentType.ModuleWorkerAndWorkaroundForChromeDevtoolsBug,
     name: 'Extension Management Worker',
+    parentName: 'Renderer Worker',
     url: 'https://example.com/extension-management-worker.js',
   })
   expect(HandleIpc.handleIpc).toHaveBeenCalledWith(ipc)

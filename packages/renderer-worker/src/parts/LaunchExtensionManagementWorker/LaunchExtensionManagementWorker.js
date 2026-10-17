@@ -22,6 +22,7 @@ export const launchExtensionManagementWorker = async () => {
   const ipc = await IpcParent.create({
     method: IpcParentType.ModuleWorkerAndWorkaroundForChromeDevtoolsBug,
     name,
+    parentName: 'Renderer Worker',
     url: GetConfiguredWorkerUrl.getConfiguredWorkerUrl(
       'develop.extensionManagementWorkerPath',
       ExtensionManagementWorkerUrl.extensionManagementWorkerUrl,
