@@ -81,6 +81,10 @@ export const renderPendingEditors = async (editor, preserveFocusOverride) => {
 }
 
 const runEditorCommand = async (editor, fullId, restArgs, preserveFocus = false) => {
+  // Only Alt release clears a definition link in Editor.handleKeyUp.
+  if (fullId === 'Editor.handleKeyUp' && restArgs[0] !== 'Alt') {
+    return { ...editor, commands: [] }
+  }
   await EditorWorker.invoke(fullId, editor.uid, ...restArgs)
   return renderPendingEditors(editor, preserveFocus)
 }
