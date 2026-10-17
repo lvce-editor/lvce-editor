@@ -74,8 +74,8 @@ export const handleMouseEnter = async (level, index, enterX, enterY, enterTimeSt
   await MenuWorker.invoke('Menu.handleMouseEnter', level, index, enterX, enterY, enterTimeStamp)
 }
 
-export const handleMouseLeave = async () => {
-  await MenuWorker.invoke('Menu.handleMouseLeave')
+export const handleMouseLeave = async (level) => {
+  await MenuWorker.invoke('Menu.handleMouseLeave', level)
 }
 
 export const focusIndex = async (menu, index) => {
