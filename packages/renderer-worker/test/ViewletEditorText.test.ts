@@ -64,14 +64,16 @@ beforeEach(() => {
   IsTest.state.isTest = false
 })
 
-test('loadContent - renders content and restored selections together before later diagnostics', async () => {
-  const initialCommands = [['Viewlet.setDom2'], ['Viewlet.setPatches']]
+test('loadContent - renders before diagnostics are requested by loadContentLater', async () => {
+  const initialCommands = [['Viewlet.setDom2']]
+  const selectionCommands = [['Viewlet.setPatches']]
+  let renderCount = 0
   editorWorkerInvoke.mockImplementation((method) => {
     switch (method) {
       case 'Editor.diff2':
         return []
       case 'Editor.render2':
-        return initialCommands
+        return renderCount++ === 0 ? initialCommands : selectionCommands
       default:
         return undefined
     }
@@ -102,10 +104,18 @@ test('loadContent - renders content and restored selections together before late
   const editorMethods = editorWorkerInvoke.mock.calls
     .map(([method]) => method)
     .filter((method): method is string => typeof method === 'string' && method.startsWith('Editor.'))
-  expect(editorMethods).toEqual(['Editor.create2', 'Editor.loadContent', 'Editor.setSelections2', 'Editor.diff2', 'Editor.render2'])
+  expect(editorMethods).toEqual([
+    'Editor.create2',
+    'Editor.loadContent',
+    'Editor.diff2',
+    'Editor.render2',
+    'Editor.setSelections2',
+    'Editor.diff2',
+    'Editor.render2',
+  ])
   const createCall = editorWorkerInvoke.mock.calls.find(([method]) => method === 'Editor.create2')
   expect(createCall?.at(-1)).toBe(true)
-  expect(newState.commands).toEqual(initialCommands)
+  expect(newState.commands).toEqual([...initialCommands, ...selectionCommands])
 })
 
 test('loadContent - restores the editor worker state', async () => {
@@ -516,21 +526,31 @@ test('confirmed large files are read only by editor worker in reduced mode', asy
   expect(editorWorkerInvoke).toHaveBeenCalledWith('Editor.loadContent', 1, undefined, true, true)
 })
 
-test('loadContent waits for restored selections before the first render', async () => {
+test('loadContent retains the initial DOM if selection restoration consumes a later diff', async () => {
   const { promise, resolve } = Promise.withResolvers<void>()
   const { promise: started, resolve: start } = Promise.withResolvers<void>()
-  editorWorkerInvoke.mockImplementation((method) => {
+  const initialCommands = [['Viewlet.setDom2']]
+  let rendered = false
+  editorWorkerInvoke.mockImplementation(async (method) => {
     if (method === 'Editor.setSelections2') {
       start()
-      return promise
+      await promise
+      // A background render can commit the worker's render baseline during this await.
+      rendered = true
+      return undefined
+    }
+    if (method === 'Editor.render2' && !rendered) {
+      rendered = true
+      return initialCommands
     }
     return []
   })
   const state = ViewletEditorText.create(1, '/test/file.txt', 0, 0, 800, 600)
   const pending = ViewletEditorText.loadContent(state, { selections: [1, 0, 1, 6] }, {})
   await started
-  expect(editorWorkerInvoke.mock.calls.some(([method]) => method === 'Editor.render2')).toBe(false)
-  resolve()
-  await pending
   expect(editorWorkerInvoke.mock.calls.filter(([method]) => method === 'Editor.render2')).toHaveLength(1)
+  resolve()
+  const restored = await pending
+  expect(restored.commands).toEqual(initialCommands)
+  expect(editorWorkerInvoke.mock.calls.filter(([method]) => method === 'Editor.render2')).toHaveLength(2)
 })
