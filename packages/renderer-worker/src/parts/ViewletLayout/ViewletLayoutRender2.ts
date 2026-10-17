@@ -99,6 +99,7 @@ const renderDom = {
       oldState.secondaryPreviewPlacement === newState.secondaryPreviewPlacement &&
       oldState.workspaceProgressId === newState.workspaceProgressId &&
       oldState.workspaceProgressMessage === newState.workspaceProgressMessage &&
+      oldState.workspaceProgressKind === newState.workspaceProgressKind &&
       oldState.mainVisible === newState.mainVisible &&
       oldState.mainId === newState.mainId &&
       oldState.titleBarVisible === newState.titleBarVisible &&
