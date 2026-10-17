@@ -161,7 +161,9 @@ const main = async () => {
   assert.ok(
     Object.values(pagesRuntimeConfig.workerUrls as Record<string, string>).every((url) => url.startsWith(`/lvce-editor/${pagesResult.commitHash}/`)),
   )
-  await ReadFile.readFile(join(pagesRoot, 'dist', pagesResult.commitHash, 'packages/renderer-worker/dist/rendererWorkerMain.js'))
+  const pagesRendererWorker = await ReadFile.readFile(join(pagesRoot, 'dist', pagesResult.commitHash, 'packages/renderer-worker/dist/rendererWorkerMain.js'))
+  assert.ok(pagesRendererWorker.includes('\n'), 'Pages renderer worker should retain readable line breaks')
+  assert.ok(pagesRendererWorker.includes('var main = async () => {'), 'Pages renderer worker should retain readable function names')
   await ReadFile.readFile(join(pagesRoot, 'dist', pagesResult.commitHash, 'css', 'App.css'))
   const pagesManifest = JSON.parse(await ReadFile.readFile(join(pagesRoot, 'dist', pagesResult.commitHash, 'manifest.json')))
   assert.equal(pagesManifest.start_url, '/lvce-editor/')
