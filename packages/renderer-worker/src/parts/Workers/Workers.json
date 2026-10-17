@@ -720,8 +720,6 @@
         "getComponentDom": { "name": "Explorer.getComponentDom", "parameters": [{ "source": "state", "name": "uid" }] },
         "getComponentState": { "name": "Explorer.getComponentState", "parameters": [{ "source": "state", "name": "uid" }] },
         "getKeyBindings": { "name": "Explorer.getKeyBindings", "parameters": [] },
-        "getMenuEntryIds": { "name": "Explorer.getMenuIds", "parameters": [] },
-        "getMenuEntries": { "name": "Explorer.getMenuEntries", "parameters": [{ "source": "argument", "name": "args", "spread": true }] },
         "getTitle": { "name": "Explorer.getTitle", "parameters": [{ "source": "state", "name": "uid" }], "fallback": "Explorer" },
         "renderEventListeners": { "name": "Explorer.renderEventListeners", "parameters": [] },
         "setComponentState": {
