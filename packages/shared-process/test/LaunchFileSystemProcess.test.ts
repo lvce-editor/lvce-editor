@@ -14,7 +14,6 @@ const setup = async (): Promise<any> => {
     RpcId: {
       AuthWorker: 1,
       ClipBoardProcess: 2,
-      EmbedsProcess: 3,
       EmbedsWorker: 4,
       ExtensionHostWorker: 5,
       FileSystemProcess: 6,
