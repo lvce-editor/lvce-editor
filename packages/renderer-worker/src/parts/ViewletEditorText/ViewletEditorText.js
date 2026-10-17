@@ -188,13 +188,8 @@ export const loadContent = async (state, savedState, context) => {
     if (Array.isArray(savedState?.editorState?.widgets)) {
       await EditorWorker.invoke('Editor.restorePersistentWidgets', id, savedState.editorState.widgets)
     }
-    const initialRender = await rerender(newState2)
     await EditorWorker.invoke('Editor.setSelections2', id, savedSelections)
-    const selectionRender = await rerender(newState2)
-    return {
-      ...selectionRender,
-      commands: [...initialRender.commands, ...selectionRender.commands],
-    }
+    return rerender(newState2)
   } else {
     await EditorWorker.invoke('Editor.create', {
       assetDir,
