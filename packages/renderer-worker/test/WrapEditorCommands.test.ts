@@ -307,3 +307,46 @@ test.each(['showHover', 'showHover2'])('does not let pending %s block editing or
     await hover
   }
 })
+
+test('ordinary key releases do not invoke the editor or render again', async () => {
+  const editor = { uid: 1, commands: [['previous']] }
+  const keyUp = WrapEditorCommands.wrapEditorCommand('handleKeyUp')
+  for (const key of ['a', 'Shift', 'Control', 'Enter', 'ArrowLeft']) {
+    expect(await keyUp(editor, key)).toEqual({ ...editor, commands: [] })
+  }
+  expect(EditorWorker.invoke).not.toHaveBeenCalled()
+})
+
+test('Alt release still clears definition links and renders the result', async () => {
+  EditorWorker.invoke.mockResolvedValue([])
+  const keyUp = WrapEditorCommands.wrapEditorCommand('handleKeyUp')
+  await keyUp({ uid: 1 }, 'Alt')
+  expect(EditorWorker.invoke.mock.calls).toEqual([
+    ['Editor.handleKeyUp', 1, 'Alt'],
+    ['Editor.diff2', 1],
+    ['Editor.render2', 1, []],
+  ])
+})
+
+test('ordinary key releases retain ordering behind pending typing', async () => {
+  let resolveType: (() => void) | undefined
+  EditorWorker.invoke.mockImplementation((method: string) => {
+    if (method === 'Editor.type')
+      return new Promise<void>((resolve) => {
+        resolveType = resolve
+      })
+    return Promise.resolve([])
+  })
+  const editor = { uid: 1 }
+  const typing = WrapEditorCommands.wrapEditorCommand('type')(editor, 'a')
+  let released = false
+  const keyUp = WrapEditorCommands.wrapEditorCommand('handleKeyUp')(editor, 'a').then(() => {
+    released = true
+  })
+  await Promise.resolve()
+  expect(released).toBe(false)
+  resolveType!()
+  await Promise.all([typing, keyUp])
+  expect(EditorWorker.invoke).not.toHaveBeenCalledWith('Editor.handleKeyUp', 1, 'a')
+  expect(EditorWorker.invoke.mock.calls.filter(([method]) => method === 'Editor.render2')).toHaveLength(1)
+})
