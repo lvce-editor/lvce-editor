@@ -307,8 +307,7 @@ test('Alt release still clears definition links and renders the result', async (
   await keyUp({ uid: 1 }, 'Alt')
   expect(EditorWorker.invoke.mock.calls).toEqual([
     ['Editor.handleKeyUp', 1, 'Alt'],
-    ['Editor.diff2', 1],
-    ['Editor.render2', 1, []],
+    ['Editor.renderDirect2', 1, false],
   ])
 })
 
@@ -332,5 +331,5 @@ test('ordinary key releases retain ordering behind pending typing', async () => 
   resolveType!()
   await Promise.all([typing, keyUp])
   expect(EditorWorker.invoke).not.toHaveBeenCalledWith('Editor.handleKeyUp', 1, 'a')
-  expect(EditorWorker.invoke.mock.calls.filter(([method]) => method === 'Editor.render2')).toHaveLength(1)
+  expect(EditorWorker.invoke.mock.calls.filter(([method]) => method === 'Editor.renderDirect2')).toHaveLength(1)
 })
