@@ -178,6 +178,32 @@ jobs:
         if: always()
         run: |
           node --input-type=module -e "import { rm } from 'node:fs/promises'; await rm('packages/extension-host-worker-tests/src/viewlet.main-save-active-split-editor.js', { force: true })"
+      - name: Checkout direct editor event regressions
+        uses: actions/checkout@v7
+        with:
+          repository: lvce-editor/editor-worker
+          ref: 7c250c9a7f24f0f83b012294738d886f977e94dc
+          path: .tmp/direct-editor-tests
+      - name: Prepare source runtime settings
+        run: node .tmp/direct-editor-tests/packages/e2e-integration/copy-builtin-settings.mjs .
+      - name: Stage direct editor event regression
+        run: node .tmp/direct-editor-tests/packages/e2e-integration/stage-direct-editor-test.mjs .
+      - name: Test native direct events with published editor and renderer packages
+        working-directory: ./packages/extension-host-worker-tests
+        run: npm run e2e:headless -- --test-name-prefix=viewlet.editor-direct-events --browser-test=../../.tmp/direct-editor-tests/packages/e2e-integration/scripts/test-direct-editor-events.mjs
+        env:
+          PLAYWRIGHT_BROWSERS_PATH: 0
+          LVCE_DIRECT_EVENTS_EVIDENCE_DIR: ${{ github.workspace }}/.tmp/direct-editor-events
+      - name: Upload direct editor event trace
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: direct-editor-events-${{ matrix.os }}
+          path: .tmp/direct-editor-events
+          if-no-files-found: warn
+      - name: Remove staged direct editor event regression
+        if: always()
+        run: node .tmp/direct-editor-tests/packages/e2e-integration/stage-direct-editor-test.mjs . --clean
       - name: Build Electron App (deb)
         if: matrix.os == 'ubuntu-24.04'
         run: npm run build:electron:deb

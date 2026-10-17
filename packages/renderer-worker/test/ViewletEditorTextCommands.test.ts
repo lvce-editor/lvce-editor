@@ -67,9 +67,7 @@ test('getCommands registers worker commands, sub-widget commands, and local comm
 })
 
 test('a DOM focus event selects its application editor even if the worker returns no focus diff', async () => {
-  editorWorkerInvoke.mockImplementation((method) =>
-    method === 'Editor.getCommandIds' || method === 'Editor.diff2' || method === 'Editor.render2' ? [] : undefined,
-  )
+  editorWorkerInvoke.mockImplementation((method) => (method === 'Editor.getCommandIds' || method === 'Editor.renderDirect2' ? [] : undefined))
   const commands = await ViewletEditorTextCommands.getCommands()
   await commands.handleFocus({ uid: 42, applicationId: 'source', uri: 'memfs:///main.ts' })
   expect(setFocus).toHaveBeenCalledWith(12, undefined, 42, 'Editor')
@@ -85,11 +83,9 @@ test('color picker slider escape closes the picker', async () => {
     switch (method) {
       case 'Editor.closeColorPicker':
         return undefined
-      case 'Editor.diff2':
-        return [1]
       case 'Editor.getCommandIds':
         return []
-      case 'Editor.render2':
+      case 'Editor.renderDirect2':
         return [['Viewlet.focus', 42]]
       default:
         throw new Error(`unexpected method ${method}`)
@@ -100,8 +96,7 @@ test('color picker slider escape closes the picker', async () => {
   const result = await commands['ColorPicker.handleSliderKeyDown'](editor, 'ColorPicker', 'ColorPicker.handleSliderKeyDown', 42, 7, 'Escape')
 
   expect(editorWorkerInvoke).toHaveBeenNthCalledWith(2, 'Editor.closeColorPicker', 42)
-  expect(editorWorkerInvoke).toHaveBeenNthCalledWith(3, 'Editor.diff2', 42)
-  expect(editorWorkerInvoke).toHaveBeenNthCalledWith(4, 'Editor.render2', 42, [1])
+  expect(editorWorkerInvoke).toHaveBeenNthCalledWith(3, 'Editor.renderDirect2', 42, false)
   expect(result.commands).toEqual([['Viewlet.focus', 42]])
 })
 
@@ -112,13 +107,11 @@ test('color picker slider navigation keys continue to execute the widget command
   }
   editorWorkerInvoke.mockImplementation((method) => {
     switch (method) {
-      case 'Editor.diff2':
-        return [1]
       case 'Editor.executeWidgetCommand':
         return undefined
       case 'Editor.getCommandIds':
         return []
-      case 'Editor.render2':
+      case 'Editor.renderDirect2':
         return []
       default:
         throw new Error(`unexpected method ${method}`)
@@ -161,11 +154,9 @@ test('renderPending renders editor-worker state changed by an asynchronous effec
   }
   editorWorkerInvoke.mockImplementation((method) => {
     switch (method) {
-      case 'Editor.diff2':
-        return [1]
       case 'Editor.getCommandIds':
         return []
-      case 'Editor.render2':
+      case 'Editor.renderDirect2':
         return [['Viewlet.createFunctionalRoot', 'EditorCompletion', 99, true]]
       default:
         throw new Error(`unexpected method ${method}`)
@@ -175,15 +166,14 @@ test('renderPending renders editor-worker state changed by an asynchronous effec
   const commands = await ViewletEditorTextCommands.getCommands()
   const result = await commands.__renderPending(editor)
 
-  expect(editorWorkerInvoke).toHaveBeenNthCalledWith(2, 'Editor.diff2', 42)
-  expect(editorWorkerInvoke).toHaveBeenNthCalledWith(3, 'Editor.render2', 42, [1])
+  expect(editorWorkerInvoke).toHaveBeenNthCalledWith(2, 'Editor.renderDirect2', 42, true)
   expect(result).toEqual({
     ...editor,
     commands: [['Viewlet.createFunctionalRoot', 'EditorCompletion', 99, true]],
   })
 })
 
-test('worker command wrapper invokes editor command, diff, and render', async () => {
+test('worker command wrapper invokes editor command and direct rendering', async () => {
   const editor = {
     commands: [],
     uid: 42,
@@ -192,11 +182,9 @@ test('worker command wrapper invokes editor command, diff, and render', async ()
     switch (method) {
       case 'Editor.cursorLeft':
         return undefined
-      case 'Editor.diff2':
-        return [1]
       case 'Editor.getCommandIds':
         return ['cursorLeft']
-      case 'Editor.render2':
+      case 'Editor.renderDirect2':
         return [['Viewlet.send', 42, 'setDeltaY', 0]]
       default:
         throw new Error(`unexpected method ${method}`)
@@ -208,30 +196,26 @@ test('worker command wrapper invokes editor command, diff, and render', async ()
 
   expect(editorWorkerInvoke).toHaveBeenNthCalledWith(1, 'Editor.getCommandIds')
   expect(editorWorkerInvoke).toHaveBeenNthCalledWith(2, 'Editor.cursorLeft', 42, 'arg')
-  expect(editorWorkerInvoke).toHaveBeenNthCalledWith(3, 'Editor.diff2', 42)
-  expect(editorWorkerInvoke).toHaveBeenNthCalledWith(4, 'Editor.render2', 42, [1])
+  expect(editorWorkerInvoke).toHaveBeenNthCalledWith(3, 'Editor.renderDirect2', 42, false)
   expect(result).toEqual({
     ...editor,
     commands: [['Viewlet.send', 42, 'setDeltaY', 0]],
   })
 })
 
-test('worker command wrapper serializes command, diff, and render per editor', async () => {
+test('worker command wrapper serializes command and direct rendering per editor', async () => {
   const editor = {
     commands: [],
     uid: 42,
   }
   const { promise: firstCommand, resolve: resolveFirstCommand } = Promise.withResolvers<void>()
-  let diffCount = 0
   editorWorkerInvoke.mockImplementation(async (method, uid, argument) => {
     switch (method) {
-      case 'Editor.diff2':
-        return [++diffCount]
       case 'Editor.getCommandIds':
         return ['handleWheel']
       case 'Editor.handleWheel':
         return argument === 'first' ? firstCommand : undefined
-      case 'Editor.render2':
+      case 'Editor.renderDirect2':
         return [[method, uid, argument]]
       default:
         throw new Error(`unexpected method ${method}`)
@@ -249,11 +233,9 @@ test('worker command wrapper serializes command, diff, and render per editor', a
   resolveFirstCommand()
   await Promise.all([first, second])
 
-  expect(editorWorkerInvoke).toHaveBeenNthCalledWith(3, 'Editor.diff2', 42)
-  expect(editorWorkerInvoke).toHaveBeenNthCalledWith(4, 'Editor.render2', 42, [1])
-  expect(editorWorkerInvoke).toHaveBeenNthCalledWith(5, 'Editor.handleWheel', 42, 'second')
-  expect(editorWorkerInvoke).toHaveBeenNthCalledWith(6, 'Editor.diff2', 42)
-  expect(editorWorkerInvoke).toHaveBeenNthCalledWith(7, 'Editor.render2', 42, [2])
+  expect(editorWorkerInvoke).toHaveBeenNthCalledWith(3, 'Editor.renderDirect2', 42, false)
+  expect(editorWorkerInvoke).toHaveBeenNthCalledWith(4, 'Editor.handleWheel', 42, 'second')
+  expect(editorWorkerInvoke).toHaveBeenNthCalledWith(5, 'Editor.renderDirect2', 42, false)
 })
 
 test('handleUriChange skips the duplicated viewlet uid and updates the renderer editor uri', async () => {
@@ -327,9 +309,7 @@ test('background loadContent keeps content updates but suppresses focus commands
         return ['loadContent']
       case 'Editor.loadContent':
         return undefined
-      case 'Editor.diff2':
-        return []
-      case 'Editor.render2':
+      case 'Editor.renderDirect2':
         return [
           ['Viewlet.setDom2', 42, []],
           ['Viewlet.focusSelector', 42, '[name="editor"]'],
@@ -358,9 +338,7 @@ test('workspace refresh reloads the matching editor from disk without stealing f
         return ['loadContent']
       case 'Editor.loadContent':
         return undefined
-      case 'Editor.diff2':
-        return []
-      case 'Editor.render2':
+      case 'Editor.renderDirect2':
         return [
           ['Viewlet.setPatches', 42, []],
           ['Viewlet.focusSelector', 42, '[name="editor"]'],
@@ -393,9 +371,7 @@ test('background reload also suppresses focus in diagnostic renders before the r
       case 'Editor.loadContent':
         pendingCommands = (await commands.__renderPending(editor)).commands
         return undefined
-      case 'Editor.diff2':
-        return []
-      case 'Editor.render2':
+      case 'Editor.renderDirect2':
         return [...contentCommands, ...focusCommands]
       default:
         throw new Error(`unexpected method ${method}`)
@@ -417,9 +393,7 @@ test('failed background reloads leave idle diagnostic renders unable to steal fo
         return ['loadContent']
       case 'Editor.loadContent':
         throw new Error('reload failed')
-      case 'Editor.diff2':
-        return []
-      case 'Editor.render2':
+      case 'Editor.renderDirect2':
         return [['Viewlet.focusSelector', 42, '[name="editor"]']]
       default:
         throw new Error(`unexpected method ${method}`)
@@ -441,9 +415,7 @@ test('diagnostic renders after a background reload preserve focus while navigati
       case 'Editor.loadContent':
       case 'Editor.updateDiagnostics':
         return undefined
-      case 'Editor.diff2':
-        return []
-      case 'Editor.render2':
+      case 'Editor.renderDirect2':
         return [...contentCommands, ...focusCommands]
       default:
         throw new Error(`unexpected method ${method}`)
@@ -472,7 +444,7 @@ test('application auto-closing dispatch uses the editor command state contract',
   const ViewletStates = await import('../src/parts/ViewletStates/ViewletStates.js')
   editorWorkerInvoke.mockImplementation((method) => {
     if (method === 'Editor.getCommandIds') return ['typeWithAutoClosing']
-    if (method === 'Editor.diff2' || method === 'Editor.render2') return []
+    if (method === 'Editor.diff2' || method === 'Editor.renderDirect2') return []
     return undefined
   })
   const commands = await ViewletEditorTextCommands.getCommands()
@@ -519,8 +491,7 @@ test('late hosted DOM focus responses preserve the newer application focus', asy
       sourceStarted.resolve()
       await pendingSource.promise
     }
-    if (method === 'Editor.diff2') return []
-    if (method === 'Editor.render2')
+    if (method === 'Editor.renderDirect2')
       return [
         ['Viewlet.focusSelector', uid, '.EditorInput textarea'],
         ['Viewlet.setText', uid, 'updated'],
@@ -541,23 +512,23 @@ test('late hosted DOM focus responses preserve the newer application focus', asy
   ])
 })
 
-test('standalone focus handling selects its editor and retains renderer focus commands', async () => {
+test('a standalone DOM focus event selects its editor without refocusing it later', async () => {
   editorWorkerInvoke.mockImplementation(async (method, uid) => {
-    if (method === 'Editor.getCommandIds' || method === 'Editor.diff2') return []
-    if (method === 'Editor.render2') return [['Viewlet.focusSelector', uid, '.EditorInput textarea']]
+    if (method === 'Editor.getCommandIds') return []
+    if (method === 'Editor.renderDirect2') return [['Viewlet.focusSelector', uid, '.EditorInput textarea']]
     return undefined
   })
   const commands = await ViewletEditorTextCommands.getCommands()
   const result = await commands.handleFocus({ uid: 42, uri: 'file:///main.ts' })
-  expect(result.commands).toEqual([['Viewlet.focusSelector', 42, '.EditorInput textarea']])
+  expect(result.commands).toEqual([])
   expect(setFocus).toHaveBeenCalledWith(12, undefined, 42, 'Editor')
 })
 
 test('a DOM focus event selects the desktop editor before its worker reply', async () => {
   const worker = Promise.withResolvers<void>()
   editorWorkerInvoke.mockImplementation((method) => {
-    if (method === 'Editor.getCommandIds' || method === 'Editor.diff2') return []
-    if (method === 'Editor.render2')
+    if (method === 'Editor.getCommandIds') return []
+    if (method === 'Editor.renderDirect2')
       return [
         ['Viewlet.setFocusContext', 42, 12],
         ['Viewlet.focusSelector', 42, '.EditorInput textarea'],
@@ -572,9 +543,72 @@ test('a DOM focus event selects the desktop editor before its worker reply', asy
   } finally {
     worker.resolve()
     const result = await pending
-    expect(result.commands).toEqual([
-      ['Viewlet.setFocusContext', 42, 12],
-      ['Viewlet.focusSelector', 42, '.EditorInput textarea'],
-    ])
+    expect(result.commands).toEqual([])
   }
+})
+
+test('layout resize retains initial patches and returns inline patches without queueing a transaction', async () => {
+  const initial = ['Viewlet.setPatches', 42, ['initial']]
+  const resized = ['Viewlet.setPatches', 42, ['resized']]
+  editorWorkerInvoke.mockImplementation((method) => {
+    if (method === 'Editor.getCommandIds') return ['resize']
+    if (method === 'Editor.diff2') return []
+    if (method === 'Editor.render2') return [resized]
+    if (method === 'Editor.resize') return undefined
+    throw new Error(`unexpected method ${method}`)
+  })
+  const commands = await ViewletEditorTextCommands.getCommands()
+  const dimensions = { x: 20, y: 30, width: 400, height: 200 }
+  const editor = { uid: 42, id: 42, commands: [initial], useFunctionalRendering: true, lines: [], deltaY: 0, itemHeight: 20, rowHeight: 20 }
+  const result = await commands.resize(editor, dimensions)
+  expect(result).toMatchObject(dimensions)
+  expect(result.commands).toEqual([initial, resized])
+  expect(editorWorkerInvoke).toHaveBeenCalledWith('Editor.resize', 42, dimensions)
+  expect(editorWorkerInvoke).not.toHaveBeenCalledWith('Editor.renderDirect2', expect.anything(), expect.anything())
+})
+
+test('pointer focus is emitted even when the worker reports no focus change', async () => {
+  editorWorkerInvoke.mockImplementation((method) => {
+    if (method === 'Editor.getCommandIds') return ['handleMouseDown']
+    if (method === 'Editor.renderDirect2') return []
+    if (method === 'Editor.handleMouseDown') return undefined
+    throw new Error(`unexpected method ${method}`)
+  })
+  const commands = await ViewletEditorTextCommands.getCommands()
+  const result = await commands.handleMouseDown({ uid: 42, uri: 'memfs:///pointer.ts' }, 0, false, false, 40, 80, 1, false)
+  expect(editorWorkerInvoke).toHaveBeenCalledWith('Editor.handleMouseDown', 42, 0, false, false, 40, 80, 1, false)
+  expect(result.commands).toContainEqual(['Viewlet.focusSelector', 42, '.EditorInput textarea'])
+})
+
+test('pointer listeners prevent native blur while other listener options are retained', async () => {
+  const Render = await import('../src/parts/ViewletEditorText/ViewletEditorTextRender.js')
+  const pointer = { name: 18, params: ['handleMouseDown'], stopPropagation: true }
+  const input = { name: 20, params: ['handleBeforeInput'], preventDefault: true }
+  editorWorkerInvoke.mockImplementation(() => [pointer, input])
+  expect(await Render.renderEventListeners()).toEqual([{ ...pointer, preventDefault: true }, input])
+})
+
+test('a delayed standalone focus reply cannot refocus the previously active split', async () => {
+  const slow = Promise.withResolvers<void>()
+  editorWorkerInvoke.mockImplementation(async (method, uid) => {
+    if (method === 'Editor.getCommandIds') return []
+    if (method === 'Editor.handleFocus' && uid === 41) await slow.promise
+    if (method === 'Editor.renderDirect2')
+      return [
+        ['Viewlet.focusSelector', uid, '.EditorInput textarea'],
+        ['Viewlet.setText', uid, 'updated'],
+      ]
+    return undefined
+  })
+  const commands = await ViewletEditorTextCommands.getCommands()
+  const oldFocus = commands.handleFocus({ uid: 41, uri: 'file:///left.txt' })
+  const current = await commands.handleFocus({ uid: 42, uri: 'file:///right.txt' })
+  slow.resolve()
+  const stale = await oldFocus
+  expect(current.commands).toEqual([['Viewlet.setText', 42, 'updated']])
+  expect(stale.commands).toEqual([['Viewlet.setText', 41, 'updated']])
+  expect(setFocus.mock.calls).toEqual([
+    [12, undefined, 41, 'Editor'],
+    [12, undefined, 42, 'Editor'],
+  ])
 })

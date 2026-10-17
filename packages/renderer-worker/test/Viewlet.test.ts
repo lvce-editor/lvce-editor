@@ -1106,3 +1106,20 @@ test('requestRender does not deliver an old notification to a recreated uid', as
   expect(oldRender).not.toHaveBeenCalled()
   expect(newRender).not.toHaveBeenCalled()
 })
+
+test('coalesced foreground input keeps focus permission when a background notification follows', async () => {
+  const state = { uid: 21 }
+  const renderPending = jest.fn(async (_state: typeof state, _preserveFocus: boolean) => state)
+  ViewletStates.set(21, {
+    state,
+    renderedState: state,
+    moduleId: 'Editor',
+    factory: { Commands: { __renderPending: renderPending } },
+  })
+  const background = Viewlet.requestRender(21)
+  const input = Viewlet.requestRender(21, false)
+  const diagnostic = Viewlet.requestRender(21)
+  await Promise.all([background, input, diagnostic])
+  expect(renderPending).toHaveBeenCalledTimes(1)
+  expect(renderPending).toHaveBeenCalledWith(state, false)
+})

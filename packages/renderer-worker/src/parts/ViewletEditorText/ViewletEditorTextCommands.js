@@ -9,6 +9,7 @@ import * as LanguagesState from '../LanguagesState/LanguagesState.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SaveState from '../SaveState/SaveState.js'
 import * as WrapEditorCommands from '../WrapEditorCommands/WrapEditorCommands.js'
+import { resize } from './ViewletEditorTextRender.js'
 
 const subWidgetCommandIds = [
   'ColorPicker.handleColorAreaPointerDown',
@@ -96,6 +97,7 @@ const subWidgetCommandIds = [
 ]
 
 export const Commands = {}
+Object.defineProperty(Commands, '__directEventRpcId', { value: 'Editor' })
 
 const showOverlayMessage = async (state, editor, ...args) => {
   await RendererProcess.invoke(...args)
@@ -162,14 +164,23 @@ const setLanguageId = async (editor, languageId, tokenizePath, isExplicit) => {
 }
 
 const renderPending = Object.assign(WrapEditorCommands.renderPendingEditors, { targetUid: true })
-const handleEditorFocus = WrapEditorCommands.wrapEditorCommand('Editor.handleFocus')
-const handleApplicationEditorFocus = WrapEditorCommands.wrapEditorCommand('Editor.handleFocus', { preserveFocus: true })
+const handleEditorMouseDown = WrapEditorCommands.wrapEditorCommand('Editor.handleMouseDown')
+const handleMouseDown = async (editor, ...args) => {
+  const newState = await handleEditorMouseDown(editor, ...args)
+  // Pointer focus is a renderer effect even if this editor's worker already
+  // considers it focused (for example, when switching between split groups).
+  return {
+    ...newState,
+    commands: [...newState.commands, ['Viewlet.focusSelector', editor.uid, '.EditorInput textarea']],
+  }
+}
+
+const handleEditorFocus = WrapEditorCommands.wrapEditorCommand('Editor.handleFocus', { preserveFocus: true })
 const handleFocus = (editor, ...args) => {
   Focus.setFocus(WhenExpression.FocusEditorText, undefined, editor.uid, 'Editor')
-  if (editor.applicationId === undefined) return handleEditorFocus(editor, ...args)
   // The DOM is already focused. A delayed focus diff must not refocus an editor
-  // after the user has moved into another application.
-  return handleApplicationEditorFocus(editor, ...args)
+  // after the user has moved into another editor or application.
+  return handleEditorFocus(editor, ...args)
 }
 
 const executeWidgetCommand = WrapEditorCommands.wrapEditorCommand('Editor.executeWidgetCommand')
@@ -191,12 +202,15 @@ export const getCommands = async () => {
     'Editor.save': Object.assign(WrapEditorCommands.wrapEditorCommand('Editor.save'), { acceptsTargetUid: true }),
     __renderPending: renderPending,
     handleFocus,
+    handleMouseDown,
     handleSettingsChanged: WrapEditorCommands.wrapEditorCommand('Editor.handleSettingsChanged', { preserveFocus: true }),
     handleUriChange,
     handleWorkspaceRefresh,
     loadContent,
     loadContentLater,
     renderPending,
+    // Layout resize callers need inline patches, including before root creation.
+    resize,
     refreshGutterDecorationsAll,
     setLanguageId,
     showOverlayMessage,
