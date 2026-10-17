@@ -9,6 +9,7 @@ import * as LanguagesState from '../LanguagesState/LanguagesState.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SaveState from '../SaveState/SaveState.js'
 import * as WrapEditorCommands from '../WrapEditorCommands/WrapEditorCommands.js'
+import { resize } from './ViewletEditorTextRender.js'
 
 const subWidgetCommandIds = [
   'ColorPicker.handleColorAreaPointerDown',
@@ -164,6 +165,17 @@ const setLanguageId = async (editor, languageId, tokenizePath, isExplicit) => {
 
 const renderPending = Object.assign(WrapEditorCommands.renderPendingEditors, { targetUid: true })
 const handleEditorFocus = WrapEditorCommands.wrapEditorCommand('Editor.handleFocus')
+const handleEditorMouseDown = WrapEditorCommands.wrapEditorCommand('Editor.handleMouseDown')
+const handleMouseDown = async (editor, ...args) => {
+  const newState = await handleEditorMouseDown(editor, ...args)
+  // Pointer focus is a renderer effect even if this editor's worker already
+  // considers it focused (for example, when switching between split groups).
+  return {
+    ...newState,
+    commands: [...newState.commands, ['Viewlet.focusSelector', editor.uid, '.EditorInput textarea']],
+  }
+}
+
 const handleApplicationEditorFocus = WrapEditorCommands.wrapEditorCommand('Editor.handleFocus', { preserveFocus: true })
 const handleFocus = (editor, ...args) => {
   Focus.setFocus(WhenExpression.FocusEditorText, undefined, editor.uid, 'Editor')
@@ -192,12 +204,15 @@ export const getCommands = async () => {
     'Editor.save': Object.assign(WrapEditorCommands.wrapEditorCommand('Editor.save'), { acceptsTargetUid: true }),
     __renderPending: renderPending,
     handleFocus,
+    handleMouseDown,
     handleSettingsChanged: WrapEditorCommands.wrapEditorCommand('Editor.handleSettingsChanged', { preserveFocus: true }),
     handleUriChange,
     handleWorkspaceRefresh,
     loadContent,
     loadContentLater,
     renderPending,
+    // Layout resize callers need inline patches, including before root creation.
+    resize,
     refreshGutterDecorationsAll,
     setLanguageId,
     showOverlayMessage,

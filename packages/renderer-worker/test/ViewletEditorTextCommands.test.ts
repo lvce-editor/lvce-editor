@@ -549,3 +549,44 @@ test('a DOM focus event selects the desktop editor before its worker reply', asy
     ])
   }
 })
+
+test('layout resize retains initial patches and returns inline patches without queueing a transaction', async () => {
+  const initial = ['Viewlet.setPatches', 42, ['initial']]
+  const resized = ['Viewlet.setPatches', 42, ['resized']]
+  editorWorkerInvoke.mockImplementation((method) => {
+    if (method === 'Editor.getCommandIds') return ['resize']
+    if (method === 'Editor.diff2') return []
+    if (method === 'Editor.render2') return [resized]
+    if (method === 'Editor.resize') return undefined
+    throw new Error(`unexpected method ${method}`)
+  })
+  const commands = await ViewletEditorTextCommands.getCommands()
+  const dimensions = { x: 20, y: 30, width: 400, height: 200 }
+  const editor = { uid: 42, id: 42, commands: [initial], useFunctionalRendering: true, lines: [], deltaY: 0, itemHeight: 20, rowHeight: 20 }
+  const result = await commands.resize(editor, dimensions)
+  expect(result).toMatchObject(dimensions)
+  expect(result.commands).toEqual([initial, resized])
+  expect(editorWorkerInvoke).toHaveBeenCalledWith('Editor.resize', 42, dimensions)
+  expect(editorWorkerInvoke).not.toHaveBeenCalledWith('Editor.renderDirect2', expect.anything(), expect.anything())
+})
+
+test('pointer focus is emitted even when the worker reports no focus change', async () => {
+  editorWorkerInvoke.mockImplementation((method) => {
+    if (method === 'Editor.getCommandIds') return ['handleMouseDown']
+    if (method === 'Editor.renderDirect2') return []
+    if (method === 'Editor.handleMouseDown') return undefined
+    throw new Error(`unexpected method ${method}`)
+  })
+  const commands = await ViewletEditorTextCommands.getCommands()
+  const result = await commands.handleMouseDown({ uid: 42, uri: 'memfs:///pointer.ts' }, 0, false, false, 40, 80, 1, false)
+  expect(editorWorkerInvoke).toHaveBeenCalledWith('Editor.handleMouseDown', 42, 0, false, false, 40, 80, 1, false)
+  expect(result.commands).toContainEqual(['Viewlet.focusSelector', 42, '.EditorInput textarea'])
+})
+
+test('pointer listeners prevent native blur while other listener options are retained', async () => {
+  const Render = await import('../src/parts/ViewletEditorText/ViewletEditorTextRender.js')
+  const pointer = { name: 18, params: ['handleMouseDown'], stopPropagation: true }
+  const input = { name: 20, params: ['handleBeforeInput'], preventDefault: true }
+  editorWorkerInvoke.mockImplementation(() => [pointer, input])
+  expect(await Render.renderEventListeners()).toEqual([{ ...pointer, preventDefault: true }, input])
+})
