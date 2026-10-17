@@ -1,5 +1,7 @@
 import * as EditorWorkerUrl from '../EditorWorkerUrl/EditorWorkerUrl.js'
 import * as GetConfiguredWorkerUrl from '../GetConfiguredWorkerUrl/GetConfiguredWorkerUrl.ts'
+import * as GetPortTuple from '../GetPortTuple/GetPortTuple.js'
+import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as HandleIpc from '../HandleIpc/HandleIpc.js'
 import * as Id from '../Id/Id.js'
 import * as IpcParent from '../IpcParent/IpcParent.js'
@@ -30,5 +32,10 @@ export const launchEditorWorker = async () => {
   const syntaxHighlightingWorker = true
   const syncIncremental = true
   await JsonRpc.invoke(ipc, 'Initialize.initialize', syntaxHighlightingWorker, syncIncremental)
+  const { port1, port2 } = GetPortTuple.getPortTuple()
+  await Promise.all([
+    JsonRpc.invokeAndTransfer(ipc, 'Editor.handleDirectMessagePort', port1),
+    RendererProcess.invokeAndTransfer('HandleMessagePort.handleMessagePort', port2, 'Editor'),
+  ])
   return ipc
 }

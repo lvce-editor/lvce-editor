@@ -21,8 +21,8 @@ test('pending rendering never consumes a sibling application diff for the same U
     })
     EditorWorker.invoke.mockResolvedValue([])
     await WrapEditorCommands.renderPendingEditors({ uid: 1, uri: 'memfs:///same.ts' })
-    expect(EditorWorker.invoke).toHaveBeenCalledWith('Editor.diff2', 1)
-    expect(EditorWorker.invoke).not.toHaveBeenCalledWith('Editor.diff2', 2)
+    expect(EditorWorker.invoke).toHaveBeenCalledWith('Editor.renderDirect2', 1, expect.any(Boolean))
+    expect(EditorWorker.invoke).not.toHaveBeenCalledWith('Editor.renderDirect2', 2, expect.any(Boolean))
   } finally {
     ViewletStates.remove(2)
     Applications.remove('sibling')
@@ -42,10 +42,7 @@ test('does not serialize find widget intents', async () => {
         resolveOpen = resolve
       })
     }
-    if (method === 'Editor.diff2') {
-      return Promise.resolve([])
-    }
-    if (method === 'Editor.render2') {
+    if (method === 'Editor.renderDirect2') {
       return Promise.resolve([])
     }
     return Promise.resolve(undefined)
@@ -78,10 +75,7 @@ test('renders every text editor showing the same uri', async () => {
     if (method === 'Editor.getKeys') {
       return Promise.resolve(['1', '2'])
     }
-    if (method === 'Editor.diff2') {
-      return Promise.resolve([uid])
-    }
-    if (method === 'Editor.render2') {
+    if (method === 'Editor.renderDirect2') {
       return Promise.resolve(uid === 1 ? [['setText', 'left']] : [['setText', 'right']])
     }
     return Promise.resolve(undefined)
@@ -90,8 +84,8 @@ test('renders every text editor showing the same uri', async () => {
 
   const result = await type({ uid: 1, uri: 'file:///same.txt' }, 'x')
 
-  expect(EditorWorker.invoke).toHaveBeenCalledWith('Editor.diff2', 1)
-  expect(EditorWorker.invoke).toHaveBeenCalledWith('Editor.diff2', 2)
+  expect(EditorWorker.invoke).toHaveBeenCalledWith('Editor.renderDirect2', 1, expect.any(Boolean))
+  expect(EditorWorker.invoke).toHaveBeenCalledWith('Editor.renderDirect2', 2, expect.any(Boolean))
   expect(result.commands).toEqual([
     ['setText', 'left'],
     ['Viewlet.send', 2, 'setText', 'right'],
@@ -112,10 +106,7 @@ test('renders pending state for every text editor showing the same uri', async (
     if (method === 'Editor.getKeys') {
       return Promise.resolve(['1', '2'])
     }
-    if (method === 'Editor.diff2') {
-      return Promise.resolve([uid])
-    }
-    if (method === 'Editor.render2') {
+    if (method === 'Editor.renderDirect2') {
       return Promise.resolve(uid === 1 ? [['setText', 'left']] : [['setText', 'right']])
     }
     throw new Error(`unexpected method ${method}`)
@@ -131,7 +122,7 @@ test('renders pending state for every text editor showing the same uri', async (
 
 test('ignores an editor disposed while rendering pending state', async () => {
   EditorWorker.invoke.mockImplementation((method: string) => {
-    if (method === 'Editor.diff2') {
+    if (method === 'Editor.renderDirect2') {
       return Promise.reject(new Error('Editor not found'))
     }
     if (method === 'Editor.getKeys') {
@@ -143,13 +134,13 @@ test('ignores an editor disposed while rendering pending state', async () => {
   const result = await WrapEditorCommands.renderPendingEditors({ uid: 1, uri: 'file:///same.txt' })
 
   expect(result.commands).toEqual([])
-  expect(EditorWorker.invoke).not.toHaveBeenCalledWith('Editor.render2', 1, expect.anything())
+  expect(EditorWorker.invoke).toHaveBeenCalledWith('Editor.renderDirect2', 1, true)
 })
 
 test('rethrows a render error when the editor still exists', async () => {
   const renderError = new Error('render failed')
   EditorWorker.invoke.mockImplementation((method: string) => {
-    if (method === 'Editor.diff2') {
+    if (method === 'Editor.renderDirect2') {
       return Promise.reject(renderError)
     }
     if (method === 'Editor.getKeys') {
@@ -177,10 +168,7 @@ test('renders one hundred text editors showing the same uri', async () => {
     if (method === 'Editor.getKeys') {
       return Promise.resolve(Array.from({ length: 100 }, (_, index) => String(index + 1)))
     }
-    if (method === 'Editor.diff2') {
-      return Promise.resolve([uid])
-    }
-    if (method === 'Editor.render2') {
+    if (method === 'Editor.renderDirect2') {
       return Promise.resolve([['setText', `editor-${uid}`]])
     }
     return Promise.resolve(undefined)
@@ -190,8 +178,7 @@ test('renders one hundred text editors showing the same uri', async () => {
   const result = await type({ uid: 50, uri: 'file:///same.txt' }, 'x')
 
   for (let uid = 1; uid <= 100; uid++) {
-    expect(EditorWorker.invoke).toHaveBeenCalledWith('Editor.diff2', uid)
-    expect(EditorWorker.invoke).toHaveBeenCalledWith('Editor.render2', uid, [uid])
+    expect(EditorWorker.invoke).toHaveBeenCalledWith('Editor.renderDirect2', uid, uid !== 50)
   }
   expect(result.commands).toHaveLength(100)
   expect(result.commands[0]).toEqual(['setText', 'editor-50'])
@@ -210,7 +197,7 @@ test('does not render a text editor showing another uri', async () => {
     },
   })
   EditorWorker.invoke.mockImplementation((method: string) => {
-    if (method === 'Editor.diff2' || method === 'Editor.render2') {
+    if (method === 'Editor.renderDirect2') {
       return Promise.resolve([])
     }
     return Promise.resolve(undefined)
@@ -219,7 +206,7 @@ test('does not render a text editor showing another uri', async () => {
 
   await type({ uid: 1, uri: 'file:///same.txt' }, 'x')
 
-  expect(EditorWorker.invoke).not.toHaveBeenCalledWith('Editor.diff2', 2)
+  expect(EditorWorker.invoke).not.toHaveBeenCalledWith('Editor.renderDirect2', 2, expect.any(Boolean))
 })
 
 test('does not render a sibling removed by an editor lifecycle command', async () => {
@@ -236,7 +223,7 @@ test('does not render a sibling removed by an editor lifecycle command', async (
     if (method === 'Editor.getKeys') {
       return Promise.resolve(['1'])
     }
-    if (method === 'Editor.diff2' || method === 'Editor.render2') {
+    if (method === 'Editor.renderDirect2') {
       return Promise.resolve([])
     }
     return Promise.resolve(undefined)
@@ -245,11 +232,11 @@ test('does not render a sibling removed by an editor lifecycle command', async (
 
   await save({ uid: 1, uri: 'file:///same.txt' })
 
-  expect(EditorWorker.invoke).toHaveBeenCalledWith('Editor.diff2', 1)
-  expect(EditorWorker.invoke).not.toHaveBeenCalledWith('Editor.diff2', 2)
+  expect(EditorWorker.invoke).toHaveBeenCalledWith('Editor.renderDirect2', 1, expect.any(Boolean))
+  expect(EditorWorker.invoke).not.toHaveBeenCalledWith('Editor.renderDirect2', 2, expect.any(Boolean))
 })
 
-test('preserves global sibling render commands', async () => {
+test('does not let a sibling render change focus', async () => {
   ViewletStates.set(2, {
     factory: {},
     moduleId: 'Editor',
@@ -263,10 +250,7 @@ test('preserves global sibling render commands', async () => {
     if (method === 'Editor.getKeys') {
       return Promise.resolve(['1', '2'])
     }
-    if (method === 'Editor.diff2') {
-      return Promise.resolve([uid])
-    }
-    if (method === 'Editor.render2') {
+    if (method === 'Editor.renderDirect2') {
       return Promise.resolve(uid === 1 ? [] : [['Viewlet.setFocusContext', 2, 1]])
     }
     return Promise.resolve(undefined)
@@ -275,7 +259,7 @@ test('preserves global sibling render commands', async () => {
 
   const result = await focus({ uid: 1, uri: 'file:///same.txt' })
 
-  expect(result.commands).toEqual([['Viewlet.setFocusContext', 2, 1]])
+  expect(result.commands).toEqual([])
 })
 
 test.each(['showHover', 'showHover2'])('does not let pending %s block editing or blur', async (name) => {

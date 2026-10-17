@@ -96,6 +96,7 @@ const subWidgetCommandIds = [
 ]
 
 export const Commands = {}
+Object.defineProperty(Commands, '__directEventRpcId', { value: 'Editor' })
 
 const showOverlayMessage = async (state, editor, ...args) => {
   await RendererProcess.invoke(...args)

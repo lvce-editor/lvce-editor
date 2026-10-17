@@ -664,11 +664,18 @@ export const executeViewletCommand = (uid, fnName, ...args) => {
   return executeViewletCommandInternal(uid, fnName, args)
 }
 
-export const requestRender = (uid) => {
+const pendingRenderFocus = new WeakMap()
+
+export const requestRender = (uid, preserveFocus = true) => {
   const instance = ViewletStates.getInstance(uid)
   if (!instance) return Promise.resolve()
+  const pendingFocus = pendingRenderFocus.get(instance)
+  pendingRenderFocus.set(instance, pendingFocus === undefined ? preserveFocus : pendingFocus && preserveFocus)
   return ViewletRenderScheduler.schedule(instance, () => {
-    const render = () => executeViewletCommandInternal(uid, '__renderPending', [], instance)
+    const keepFocus = pendingRenderFocus.get(instance)
+    pendingRenderFocus.delete(instance)
+    const args = keepFocus === false ? [false] : []
+    const render = () => executeViewletCommandInternal(uid, '__renderPending', args, instance)
     return instance.factory.serializeCommands ? ViewletCommandQueue.enqueue(uid, render) : render()
   })
 }
