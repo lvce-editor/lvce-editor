@@ -22,6 +22,7 @@ import { wrapExplorerCommand } from '../WrapExplorerCommand/WrapExplorerCommand.
 import { wrapExtensionSearchCommand } from '../WrapExtensionSearchCommand/WrapExtensionSearchCommand.ts'
 import { wrapProblemsCommand } from '../WrapProblemsCommand/WrapProblemsCommand.ts'
 import { wrapProcessExplorerCommand } from '../WrapProcessExplorerCommand/WrapProcessExplorerCommand.ts'
+import * as ViewletSourceControlHandleFocus from '../ViewletSourceControl/ViewletSourceControlHandleFocus.js'
 
 export const activityBar = {
   extendModule() {
@@ -217,6 +218,19 @@ export const problems = {
     }
   },
   wrapCommand: wrapProblemsCommand,
+}
+
+export const sourceControl = {
+  wrapCommand(command, defaultWrapCommand) {
+    const wrappedCommand = defaultWrapCommand(command)
+    if (command !== 'handleFocus') {
+      return wrappedCommand
+    }
+    return async (state, ...args) => {
+      const focusedState = await ViewletSourceControlHandleFocus.handleFocus(state)
+      return wrappedCommand(focusedState, ...args)
+    }
+  },
 }
 
 export const processExplorer = {

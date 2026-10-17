@@ -22,6 +22,7 @@ import * as ViewletManagerVisitor from '../ViewletManagerVisitor/ViewletManagerV
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
+import * as ViewletRenderScheduler from '../ViewletRenderScheduler/ViewletRenderScheduler.js'
 import * as ViewletElectron from './ViewletElectron.js'
 
 const getKeyBindingSetId = (instance, fallback) => {
@@ -618,8 +619,9 @@ export const getFocusCommands = async (id) => {
   return commands
 }
 
-const executeViewletCommandInternal = async (uid, fnName, ...args) => {
+const executeViewletCommandInternal = async (uid, fnName, args, expectedInstance) => {
   const instance = ViewletStates.getInstance(uid)
+  if (expectedInstance && instance !== expectedInstance) return
   if (!instance) {
     // Worker render notifications can arrive or leave the command queue after disposal.
     if (fnName !== DomEventListenerFunctions.HandleBlur && fnName !== '__renderPending' && fnName !== 'updateGitIgnoredUris') {
@@ -657,13 +659,18 @@ const executeViewletCommandInternal = async (uid, fnName, ...args) => {
 export const executeViewletCommand = (uid, fnName, ...args) => {
   const instance = ViewletStates.getInstance(uid)
   if (instance?.factory.serializeCommands && !instance.factory.concurrentCommands?.includes(fnName)) {
-    return ViewletCommandQueue.enqueue(uid, () => executeViewletCommandInternal(uid, fnName, ...args))
+    return ViewletCommandQueue.enqueue(uid, () => executeViewletCommandInternal(uid, fnName, args))
   }
-  return executeViewletCommandInternal(uid, fnName, ...args)
+  return executeViewletCommandInternal(uid, fnName, args)
 }
 
 export const requestRender = (uid) => {
-  return executeViewletCommand(uid, '__renderPending')
+  const instance = ViewletStates.getInstance(uid)
+  if (!instance) return Promise.resolve()
+  return ViewletRenderScheduler.schedule(instance, () => {
+    const render = () => executeViewletCommandInternal(uid, '__renderPending', [], instance)
+    return instance.factory.serializeCommands ? ViewletCommandQueue.enqueue(uid, render) : render()
+  })
 }
 
 // @ts-ignore

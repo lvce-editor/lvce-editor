@@ -1,7 +1,9 @@
 import { beforeEach, expect, jest, test } from '@jest/globals'
 import * as ViewletStates from '../src/parts/ViewletStates/ViewletStates.js'
+import * as IsTest from '../src/parts/IsTest/IsTest.js'
 
 beforeEach(() => {
+  IsTest.state.isTest = true
   jest.resetAllMocks()
   jest.mocked(Id.create).mockReturnValue(2)
   ViewletStates.reset()
@@ -1066,4 +1068,41 @@ test('resize warns when a functional resize handler is missing', async () => {
 
   await expect(Viewlet.resize(11, dimensions)).resolves.toEqual([['Viewlet.setBounds', 11, 10, 20, 300, 200]])
   expect(warn).toHaveBeenCalledWith('cannot resize', 11)
+})
+
+test('requestRender does not deliver an old notification to a recreated uid', async () => {
+  const { promise: gate, resolve } = Promise.withResolvers<void>()
+  const { promise: started, resolve: start } = Promise.withResolvers<void>()
+  const state = { uid: 20 }
+  const oldRender = jest.fn(async () => state)
+  ViewletStates.set(20, {
+    state,
+    renderedState: state,
+    moduleId: 'Test',
+    factory: {
+      serializeCommands: true,
+      Commands: {
+        __renderPending: oldRender,
+        update: async () => {
+          start()
+          await gate
+          return state
+        },
+      },
+    },
+  })
+  const update = Viewlet.executeViewletCommand(20, 'update')
+  await started
+  const render = Viewlet.requestRender(20)
+  const newRender = jest.fn(async () => state)
+  ViewletStates.set(20, {
+    state,
+    renderedState: state,
+    moduleId: 'Test',
+    factory: { Commands: { __renderPending: newRender } },
+  })
+  resolve()
+  await Promise.all([update, render])
+  expect(oldRender).not.toHaveBeenCalled()
+  expect(newRender).not.toHaveBeenCalled()
 })

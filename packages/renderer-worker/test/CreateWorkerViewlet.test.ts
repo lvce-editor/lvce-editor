@@ -84,6 +84,18 @@ test('passes test mode to the explorer worker', async () => {
   expect(invoke.mock.calls[0]).toEqual(['Explorer.create', 7, 'test://explorer', 1, 2, 300, 200, null, 5, 2, 'test://assets', true])
 })
 
+test('uses static explorer menus instead of unsupported dynamic menu discovery', () => {
+  const viewlet = createWorkerViewletWithDependencies({
+    adapter: getWorkerViewletAdapter('explorer'),
+    config: getWorkerViewletConfig('explorer'),
+    worker: { invoke: jest.fn(), restart: jest.fn() },
+  })
+
+  expect(viewlet.getMenus).toBeUndefined()
+  expect(viewlet.menus).toHaveLength(1)
+  expect(typeof viewlet.menus[0].getMenuEntries).toBe('function')
+})
+
 test('exposes the configured workspace change behavior', () => {
   const viewlet = createWorkerViewletWithDependencies({
     config: createConfig({ workspaceChangeEvent: 'workspace.titleChange', workspaceChangeEventPrepend: true }),
