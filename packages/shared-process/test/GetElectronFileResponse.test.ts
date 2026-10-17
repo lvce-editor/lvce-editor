@@ -13,6 +13,7 @@ jest.unstable_mockModule('../src/parts/GetElectronFileResponseContent/GetElectro
 jest.unstable_mockModule('../src/parts/GetElectronFileResponseAbsolutePath/GetElectronFileResponseAbsolutePath', () => {
   return {
     getElectronFileResponseAbsolutePath: jest.fn(() => '/test.ts'),
+    isInvalidRemotePathError: jest.fn(() => false),
   }
 })
 
@@ -55,4 +56,15 @@ test('getElectronFileResponse - other error', async () => {
       statusText: 'server-error',
     },
   })
+})
+
+const GetElectronFileResponseAbsolutePath = await import('../src/parts/GetElectronFileResponseAbsolutePath/GetElectronFileResponseAbsolutePath.ts')
+
+test('getElectronFileResponse - malformed remote path', async () => {
+  jest.mocked(GetElectronFileResponseAbsolutePath.getElectronFileResponseAbsolutePath).mockImplementationOnce(() => {
+    throw new Error('Invalid remote path')
+  })
+  jest.mocked(GetElectronFileResponseAbsolutePath.isInvalidRemotePathError).mockReturnValueOnce(true)
+  const response = await GetElectronFileResponse.getElectronFileResponse('/remote/D:asample.js', undefined)
+  expect(response.init.status).toBe(400)
 })

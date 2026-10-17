@@ -14,3 +14,29 @@ test('falls back to static/icons for non-codicon assets', () => {
 
   expect(normalizePath(absolutePath)).toContain('/static/icons/squiggly-error.svg')
 })
+
+test('maps remote posix requests to absolute paths', () => {
+  const absolutePath = GetElectronFileResponseAbsolutePath.getElectronFileResponseAbsolutePath('/remote/tmp/sample.js')
+
+  expect(normalizePath(absolutePath)).toBe('/tmp/sample.js')
+})
+
+test('maps remote windows drive letter requests to absolute paths', () => {
+  const absolutePath = GetElectronFileResponseAbsolutePath.getElectronFileResponseAbsolutePath('/remote/D:/a/sample.js')
+  const expected = process.platform === 'win32' ? 'D:/a/sample.js' : '/D:/a/sample.js'
+
+  expect(normalizePath(absolutePath)).toBe(expected)
+})
+
+test('maps remote windows drive letter requests with backslashes to absolute paths', () => {
+  const absolutePath = GetElectronFileResponseAbsolutePath.getElectronFileResponseAbsolutePath('/remote/D:\\a\\sample.js')
+  const expected = process.platform === 'win32' ? 'D:/a/sample.js' : '/D:/a/sample.js'
+
+  expect(normalizePath(absolutePath)).toBe(expected)
+})
+
+test('rejects malformed remote windows drive letter requests', () => {
+  expect(() => GetElectronFileResponseAbsolutePath.getElectronFileResponseAbsolutePath('/remote/D:asample.js')).toThrow(
+    GetElectronFileResponseAbsolutePath.InvalidRemotePathError,
+  )
+})

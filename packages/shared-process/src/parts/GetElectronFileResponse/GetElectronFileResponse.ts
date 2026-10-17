@@ -1,3 +1,4 @@
+import * as GetBadRequestResponse from '../GetBadRequestResponse/GetBadRequestResponse.js'
 import { pathToFileURL } from 'node:url'
 import * as GetByteRange from '../GetByteRange/GetByteRange.ts'
 import * as GetContentResponse from '../GetContentResponse/GetContentResponse.ts'
@@ -73,6 +74,9 @@ export const getElectronFileResponse = async (url: any, request: any): Promise<a
     headers[HttpHeader.CacheControl] = 'public, max-age=0, must-revalidate'
     return GetContentResponse.getContentResponse(content, headers)
   } catch (error) {
+    if (GetElectronFileResponseAbsolutePath.isInvalidRemotePathError(error)) {
+      return GetBadRequestResponse.getBadRequestResponse()
+    }
     if (IsEnoentError.isEnoentError(error)) {
       return GetNotFoundResponse.getNotFoundResponse()
     }
