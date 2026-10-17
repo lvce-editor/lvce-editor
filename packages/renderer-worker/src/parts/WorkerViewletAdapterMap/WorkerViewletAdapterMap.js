@@ -48,6 +48,7 @@ const adapters = {
   problemsViewWorker: WorkerViewletAdapters.problems,
   processExplorer: WorkerViewletAdapters.processExplorer,
   quickPickWorker: WorkerViewletAdapters.quickPick,
+  sourceControl: WorkerViewletAdapters.sourceControl,
   settingsView: Object.assign({}, clearItemsOnHotReload, WorkerViewletAdapters.settings),
   textSearchView: WorkerViewletAdapters.textSearch,
   titleBar: WorkerViewletAdapters.titleBar,
