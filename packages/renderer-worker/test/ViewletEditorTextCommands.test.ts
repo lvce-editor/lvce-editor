@@ -512,7 +512,7 @@ test('late hosted DOM focus responses preserve the newer application focus', asy
   ])
 })
 
-test('standalone focus handling selects its editor and retains renderer focus commands', async () => {
+test('a standalone DOM focus event selects its editor without refocusing it later', async () => {
   editorWorkerInvoke.mockImplementation(async (method, uid) => {
     if (method === 'Editor.getCommandIds') return []
     if (method === 'Editor.renderDirect2') return [['Viewlet.focusSelector', uid, '.EditorInput textarea']]
@@ -520,7 +520,7 @@ test('standalone focus handling selects its editor and retains renderer focus co
   })
   const commands = await ViewletEditorTextCommands.getCommands()
   const result = await commands.handleFocus({ uid: 42, uri: 'file:///main.ts' })
-  expect(result.commands).toEqual([['Viewlet.focusSelector', 42, '.EditorInput textarea']])
+  expect(result.commands).toEqual([])
   expect(setFocus).toHaveBeenCalledWith(12, undefined, 42, 'Editor')
 })
 
@@ -543,10 +543,7 @@ test('a DOM focus event selects the desktop editor before its worker reply', asy
   } finally {
     worker.resolve()
     const result = await pending
-    expect(result.commands).toEqual([
-      ['Viewlet.setFocusContext', 42, 12],
-      ['Viewlet.focusSelector', 42, '.EditorInput textarea'],
-    ])
+    expect(result.commands).toEqual([])
   }
 })
 
@@ -589,4 +586,29 @@ test('pointer listeners prevent native blur while other listener options are ret
   const input = { name: 20, params: ['handleBeforeInput'], preventDefault: true }
   editorWorkerInvoke.mockImplementation(() => [pointer, input])
   expect(await Render.renderEventListeners()).toEqual([{ ...pointer, preventDefault: true }, input])
+})
+
+test('a delayed standalone focus reply cannot refocus the previously active split', async () => {
+  const slow = Promise.withResolvers<void>()
+  editorWorkerInvoke.mockImplementation(async (method, uid) => {
+    if (method === 'Editor.getCommandIds') return []
+    if (method === 'Editor.handleFocus' && uid === 41) await slow.promise
+    if (method === 'Editor.renderDirect2')
+      return [
+        ['Viewlet.focusSelector', uid, '.EditorInput textarea'],
+        ['Viewlet.setText', uid, 'updated'],
+      ]
+    return undefined
+  })
+  const commands = await ViewletEditorTextCommands.getCommands()
+  const oldFocus = commands.handleFocus({ uid: 41, uri: 'file:///left.txt' })
+  const current = await commands.handleFocus({ uid: 42, uri: 'file:///right.txt' })
+  slow.resolve()
+  const stale = await oldFocus
+  expect(current.commands).toEqual([['Viewlet.setText', 42, 'updated']])
+  expect(stale.commands).toEqual([['Viewlet.setText', 41, 'updated']])
+  expect(setFocus.mock.calls).toEqual([
+    [12, undefined, 41, 'Editor'],
+    [12, undefined, 42, 'Editor'],
+  ])
 })

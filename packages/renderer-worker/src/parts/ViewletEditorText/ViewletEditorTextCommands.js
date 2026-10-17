@@ -164,7 +164,6 @@ const setLanguageId = async (editor, languageId, tokenizePath, isExplicit) => {
 }
 
 const renderPending = Object.assign(WrapEditorCommands.renderPendingEditors, { targetUid: true })
-const handleEditorFocus = WrapEditorCommands.wrapEditorCommand('Editor.handleFocus')
 const handleEditorMouseDown = WrapEditorCommands.wrapEditorCommand('Editor.handleMouseDown')
 const handleMouseDown = async (editor, ...args) => {
   const newState = await handleEditorMouseDown(editor, ...args)
@@ -176,13 +175,12 @@ const handleMouseDown = async (editor, ...args) => {
   }
 }
 
-const handleApplicationEditorFocus = WrapEditorCommands.wrapEditorCommand('Editor.handleFocus', { preserveFocus: true })
+const handleEditorFocus = WrapEditorCommands.wrapEditorCommand('Editor.handleFocus', { preserveFocus: true })
 const handleFocus = (editor, ...args) => {
   Focus.setFocus(WhenExpression.FocusEditorText, undefined, editor.uid, 'Editor')
-  if (editor.applicationId === undefined) return handleEditorFocus(editor, ...args)
   // The DOM is already focused. A delayed focus diff must not refocus an editor
-  // after the user has moved into another application.
-  return handleApplicationEditorFocus(editor, ...args)
+  // after the user has moved into another editor or application.
+  return handleEditorFocus(editor, ...args)
 }
 
 const executeWidgetCommand = WrapEditorCommands.wrapEditorCommand('Editor.executeWidgetCommand')
