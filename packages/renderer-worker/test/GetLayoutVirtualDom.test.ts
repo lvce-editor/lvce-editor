@@ -3,6 +3,40 @@ import * as DomEventListenerFunctions from '../src/parts/DomEventListenerFunctio
 import * as SideBarLocationType from '../src/parts/SideBarLocationType/SideBarLocationType.js'
 import { getLayoutVirtualDom } from '../src/parts/GetLayoutVirtualDom/GetLayoutVirtualDom.ts'
 
+const getProgressDom = (workspaceProgressMessage: string, workspaceProgressKind?: 'container') => {
+  const state = {
+    activityBarVisible: false,
+    browserFullWidth: undefined,
+    mainVisible: true,
+    mainId: 1,
+    mountedViewletsBySource: {},
+    panelSashVisible: false,
+    panelVisible: false,
+    panelId: -1,
+    previewSashVisible: false,
+    previewVisible: false,
+    previewId: -1,
+    secondaryPreviewSashVisible: false,
+    secondaryPreviewVisible: false,
+    secondaryPreviewId: -1,
+    secondarySideBarVisible: false,
+    secondarySideBarId: -1,
+    sideBarLocation: SideBarLocationType.Left,
+    sideBarSashVisible: false,
+    sideBarVisible: false,
+    sideBarId: -1,
+    statusBarVisible: false,
+    statusBarId: -1,
+    titleBarVisible: false,
+    titleBarId: -1,
+    widgetReferences: [],
+    workspaceProgressKind,
+    workspaceProgressMessage,
+  }
+  // @ts-ignore
+  return getLayoutVirtualDom(state)
+}
+
 const parseVirtualDom = (dom: readonly any[]) => {
   let index = 0
   const parseNode = (): any => {
@@ -86,42 +120,15 @@ test('getLayoutVirtualDom renders sashes with tabIndex -1', () => {
   expect(dom).toContainEqual(expect.objectContaining({ className: 'PreviewAreaContent', childCount: 1 }))
 })
 
-test('getLayoutVirtualDom overlays the workspace with remote progress', () => {
-  const state = {
-    activityBarVisible: false,
-    browserFullWidth: undefined,
-    mainVisible: true,
-    mainId: 1,
-    mountedViewletsBySource: {},
-    panelSashVisible: false,
-    panelVisible: false,
-    panelId: -1,
-    previewSashVisible: false,
-    previewVisible: false,
-    previewId: -1,
-    secondaryPreviewSashVisible: false,
-    secondaryPreviewVisible: false,
-    secondaryPreviewId: -1,
-    secondarySideBarVisible: false,
-    secondarySideBarId: -1,
-    sideBarLocation: SideBarLocationType.Left,
-    sideBarSashVisible: false,
-    sideBarVisible: false,
-    sideBarId: -1,
-    statusBarVisible: false,
-    statusBarId: -1,
-    titleBarVisible: false,
-    titleBarId: -1,
-    widgetReferences: [],
-    workspaceProgressMessage: 'Installing the LVCE Editor server…',
-  }
+test('getLayoutVirtualDom overlays the workspace with remote SSH progress', () => {
   // @ts-ignore
-  const dom = getLayoutVirtualDom(state)
+  const dom = getProgressDom('Installing the LVCE Editor server…')
   const overlay = dom.find((node) => node.className === 'WorkspaceProgressOverlay')
 
   expect(overlay).toMatchObject({ className: 'WorkspaceProgressOverlay', childCount: 1 })
   expect(dom).toContainEqual(
     expect.objectContaining({
+      ariaLabel: 'Loading Remote SSH Workspace…',
       className: 'WorkspaceProgressDialog',
       role: 'dialog',
       ariaModal: true,
@@ -130,10 +137,34 @@ test('getLayoutVirtualDom overlays the workspace with remote progress', () => {
   expect(dom).toContainEqual(
     expect.objectContaining({
       ariaLabel: 'Cancel opening Remote SSH workspace',
+      title: 'Cancel opening Remote SSH workspace',
       onClick: DomEventListenerFunctions.HandleClickCancelWorkspaceProgress,
     }),
   )
   expect(dom.map((node) => node.text).filter(Boolean)).toEqual(['Loading Remote SSH Workspace…', 'Installing the LVCE Editor server…'])
+})
+
+test('getLayoutVirtualDom labels container progress and preserves long stage text for CSS truncation', () => {
+  const stage = `Downloading image sha256:${'a'.repeat(64)}`
+  // @ts-ignore
+  const dom = getProgressDom(stage, 'container')
+
+  expect(dom).toContainEqual(
+    expect.objectContaining({
+      ariaLabel: 'Reopening in Container…',
+      className: 'WorkspaceProgressDialog',
+      role: 'dialog',
+      ariaModal: true,
+    }),
+  )
+  expect(dom).toContainEqual(
+    expect.objectContaining({
+      ariaLabel: 'Cancel reopening in container',
+      title: 'Cancel reopening in container',
+      onClick: DomEventListenerFunctions.HandleClickCancelWorkspaceProgress,
+    }),
+  )
+  expect(dom.map((node) => node.text).filter(Boolean)).toEqual(['Reopening in Container…', stage])
 })
 
 test('getLayoutVirtualDom does not render the preview close button when preview is hidden', () => {

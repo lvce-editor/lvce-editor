@@ -38,6 +38,7 @@ export interface BrowserFullWidthState {
 export interface LayoutState {
   readonly workspaceProgressMessage?: string
   readonly workspaceProgressId?: number
+  readonly workspaceProgressKind?: 'container'
   readonly panelAlignment: 'center' | 'justify' | 'left' | 'right'
   readonly secondaryPreviewPlacement?: 'bottomLeft'
   readonly browserTabDragSource?: number

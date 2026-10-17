@@ -22,11 +22,13 @@
 }
 
 .WorkspaceProgressDialog {
+  box-sizing: border-box;
   position: relative;
   display: flex;
   flex-direction: column;
   gap: 8px;
-  max-width: min(420px, calc(100% - 48px));
+  width: min(420px, calc(100% - 48px));
+  min-width: 0;
   padding: 32px;
   border: 1px solid var(--WidgetBorder, #454545);
   border-radius: 6px;
@@ -48,7 +50,11 @@
 }
 
 .WorkspaceProgressStage {
+  min-width: 0;
+  overflow: hidden;
   opacity: 0.8;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .Workbench.TitleBarless > .TitleBar {

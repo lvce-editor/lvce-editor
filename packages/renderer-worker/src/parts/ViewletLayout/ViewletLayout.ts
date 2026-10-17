@@ -259,10 +259,18 @@ export const handleWorkspaceProgress = (state: LayoutState, progress: { readonly
   if (state.workspaceProgressId === progress.id && state.workspaceProgressMessage === progress.message) {
     return state
   }
+  const isNewProgress = state.workspaceProgressId !== progress.id
   return {
     ...state,
     workspaceProgressId: progress.message ? progress.id : undefined,
     workspaceProgressMessage: progress.message,
+    workspaceProgressKind: progress.message
+      ? isNewProgress
+        ? progress.message.startsWith('Starting Dev Containers for ')
+          ? 'container'
+          : undefined
+        : state.workspaceProgressKind
+      : undefined,
   }
 }
 
