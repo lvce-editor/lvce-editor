@@ -18,7 +18,9 @@ beforeEach(() => {
   frames.length = 0
   IsTest.state.isTest = false
 })
-afterEach(() => jest.useRealTimers())
+afterEach(() => {
+  jest.useRealTimers()
+})
 
 test('coalesces notifications and renders each dirty view once at the frame boundary', async () => {
   const firstView = {}
