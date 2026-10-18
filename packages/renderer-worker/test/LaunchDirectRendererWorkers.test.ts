@@ -75,7 +75,6 @@ test.each([
   ['Preview', LaunchPreviewWorker.launchPreviewWorker, 'Preview.handleMessagePort', 'Preview'],
   ['ComponentState', LaunchComponentStateWorker.launchComponentStateWorker, 'ComponentState.handleMessagePort', 'ComponentState'],
   ['Dialog', LaunchDialogWorker.launchDialogWorker, 'Dialog.handleMessagePort', 'Dialog'],
-  ['IframeInspector', LaunchIframeInspectorWorker.launchIframeInspectorWorker, 'IframeInspector.handleMessagePort', 'IframeInspector'],
 
   ['about', LaunchAboutViewWorker.launchAboutViewWorker, 'About.handleMessagePort', 'About'],
   ['activity bar', LaunchActivityBarWorker.launchActivityBarWorker, 'ActivityBar.handleMessagePort', 'ActivityBar'],
@@ -108,6 +107,14 @@ test.each([
   expect(GetPortTuple.getPortTuple).toHaveBeenCalledTimes(1)
   expect(JsonRpc.invokeAndTransfer).toHaveBeenCalledWith(ipc, command, 'worker-port')
   expect(RendererProcess.invokeAndTransfer).toHaveBeenCalledWith('HandleMessagePort.handleMessagePort', 'renderer-process-port', rpcId)
+})
+
+test('Iframe Inspector retains its legacy renderer connection', async () => {
+  await LaunchIframeInspectorWorker.launchIframeInspectorWorker()
+
+  expect(GetPortTuple.getPortTuple).not.toHaveBeenCalled()
+  expect(JsonRpc.invokeAndTransfer).not.toHaveBeenCalled()
+  expect(RendererProcess.invokeAndTransfer).not.toHaveBeenCalled()
 })
 
 test('main area worker connects directly to the renderer process', async () => {

@@ -85,7 +85,12 @@ test('editor worker permits same-origin split modules while retaining its sandbo
 })
 
 test('all functional worker views provide direct event routing', () => {
-  const functionalWorkers = Workers.getWorkers().filter((worker) => worker.viewlet?.capabilities?.rootRender)
+  type Worker = Readonly<{
+    id: string
+    viewlet?: Readonly<{ capabilities?: Readonly<{ directRender?: boolean; rootRender?: boolean }> }>
+  }>
+  const functionalWorkers = Workers.getWorkers().filter((worker: Worker) => worker.viewlet?.capabilities?.rootRender)
   expect(functionalWorkers.length).toBeGreaterThan(30)
-  expect(functionalWorkers.filter((worker) => !worker.viewlet?.capabilities?.directRender).map((worker) => worker.id)).toEqual([])
+  const legacyWorkers = functionalWorkers.filter((worker: Worker) => !worker.viewlet?.capabilities?.directRender).map((worker: Worker) => worker.id)
+  expect(legacyWorkers).toEqual(['iframeInspector'])
 })

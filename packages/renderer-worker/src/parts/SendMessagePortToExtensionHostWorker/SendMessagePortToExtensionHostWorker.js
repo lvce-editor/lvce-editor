@@ -30,7 +30,6 @@ import * as FileSystemWorker from '../FileSystemWorker/FileSystemWorker.js'
 import * as FileWatcherViewWorker from '../FileWatcherViewWorker/FileWatcherViewWorker.js'
 import * as HandleDialogWorkerMessagePort from '../HandleDialogWorkerMessagePort/HandleDialogWorkerMessagePort.ts'
 import * as IconThemeWorker from '../IconThemeWorker/IconThemeWorker.js'
-import * as IframeInspectorWorker from '../IframeInspectorWorker/IframeInspectorWorker.js'
 import * as IframeWorker from '../IframeWorker/IframeWorker.js'
 import * as KeyBindingsViewWorker from '../KeyBindingsViewWorker/KeyBindingsViewWorker.js'
 import * as LanguageModelsViewWorker from '../LanguageModelsViewWorker/LanguageModelsViewWorker.js'
@@ -75,7 +74,6 @@ const directViewWorkers = {
   Explorer: [ExplorerViewWorker, 'Explorer.handleMessagePort'],
   ExtensionDetail: [ExtensionDetailViewWorker, 'ExtensionDetail.handleMessagePort'],
   FileWatcherExplorer: [FileWatcherViewWorker, 'FileWatcherExplorer.handleMessagePort'],
-  IframeInspector: [IframeInspectorWorker, 'IframeInspector.handleMessagePort'],
   KeyBindings: [KeyBindingsViewWorker, 'KeyBindings.handleMessagePort'],
   LanguageModels: [LanguageModelsViewWorker, 'LanguageModels.handleMessagePort'],
   MainArea: [MainAreaWorker, 'MainArea.handleMessagePort'],
