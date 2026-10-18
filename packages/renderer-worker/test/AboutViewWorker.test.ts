@@ -1,21 +1,21 @@
-import { expect, jest, test } from '@jest/globals'
+import { beforeEach, expect, jest, test } from '@jest/globals'
 
-const setup = async () => {
-  jest.resetModules()
-  const worker = {
-    dispose: jest.fn(async () => {}),
-    invoke: jest.fn<(...args: unknown[]) => Promise<unknown>>(),
-    invokeAndTransfer: jest.fn<(...args: unknown[]) => Promise<unknown>>(),
-  }
-  jest.unstable_mockModule('../src/parts/GetOrCreateWorker/GetOrCreateWorker.js', () => ({
-    getOrCreateWorker: () => worker,
-  }))
-  const AboutViewWorker = await import('../src/parts/AboutViewWorker/AboutViewWorker.js')
-  return { AboutViewWorker, worker }
+const worker = {
+  dispose: jest.fn(async () => {}),
+  invoke: jest.fn<(...args: readonly unknown[]) => Promise<unknown>>(),
+  invokeAndTransfer: jest.fn<(...args: readonly unknown[]) => Promise<unknown>>(),
 }
+// eslint-disable-next-line jest/no-restricted-jest-methods -- Control transport completion to reproduce disposal before an RPC response.
+jest.unstable_mockModule('../src/parts/GetOrCreateWorker/GetOrCreateWorker.js', () => ({
+  getOrCreateWorker: (): typeof worker => worker,
+}))
+const AboutViewWorker = await import('../src/parts/AboutViewWorker/AboutViewWorker.js')
+
+beforeEach(() => {
+  jest.resetAllMocks()
+})
 
 test('closing About preserves the pending response to the RPC that opened it', async () => {
-  const { AboutViewWorker, worker } = await setup()
   const opening = Promise.withResolvers<string>()
   worker.invoke.mockReturnValueOnce(opening.promise)
   const result = AboutViewWorker.invoke('About.showAbout', 1)
@@ -31,7 +31,6 @@ test('closing About preserves the pending response to the RPC that opened it', a
 })
 
 test('disposal waits for every active RPC, including transferred ports and rejected calls', async () => {
-  const { AboutViewWorker, worker } = await setup()
   const opening = Promise.withResolvers<void>()
   const connection = Promise.withResolvers<void>()
   worker.invoke.mockReturnValueOnce(opening.promise)
@@ -45,14 +44,12 @@ test('disposal waits for every active RPC, including transferred ports and rejec
   expect(worker.dispose).not.toHaveBeenCalled()
 
   const failure = new Error('connection failed')
-  const rejected = expect(second).rejects.toBe(failure)
   connection.reject(failure)
-  await rejected
+  await expect(second).rejects.toBe(failure)
   expect(worker.dispose).toHaveBeenCalledTimes(1)
 })
 
 test('an idle worker can be disposed immediately and used again', async () => {
-  const { AboutViewWorker, worker } = await setup()
   await AboutViewWorker.dispose()
   expect(worker.dispose).toHaveBeenCalledTimes(1)
 
