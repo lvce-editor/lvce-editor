@@ -89,6 +89,11 @@ export const getBlob = async (uri, type = '') => {
   return new Blob([content], { type })
 }
 
+export const getFileSize = async (uri) => {
+  const blob = await getBlob(uri)
+  return blob.size
+}
+
 export const getBlobUrl = async (uri, type = '') => {
   const blob = await getBlob(uri, type)
   return RendererProcess.invoke('ObjectUrl.create', blob)

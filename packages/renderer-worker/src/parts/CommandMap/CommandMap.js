@@ -352,6 +352,7 @@ export const commandMap = {
   'Navigation.focusTitleBar': lazy('Navigation.focusTitleBar'),
   'Notification.create': lazy('Notification.create'),
   'Notification.dispose': lazy('Notification.dispose'),
+  'Notification.update': lazy('Notification.update'),
   'Notification.handleClick': lazy('Notification.handleClick'),
   'Notification.showWithOptions': lazy('Notification.showWithOptions'),
   'OffscreenCanvas.create': lazy('OffscreenCanvas.create'),

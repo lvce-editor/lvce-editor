@@ -7,4 +7,5 @@ export const Commands = {
   dispose: Notification.dispose,
   handleClick: Notification.handleClick,
   showWithOptions: Notification.showWithOptions,
+  update: Notification.update,
 }
