@@ -60,11 +60,22 @@ const LaunchTextSearchViewWorker = await import('../src/parts/LaunchTextSearchVi
 const LaunchTitleBarWorker = await import('../src/parts/LaunchTitleBarWorker/LaunchTitleBarWorker.js')
 const RendererProcess = await import('../src/parts/RendererProcess/RendererProcess.js')
 
+const LaunchPortsViewWorker = await import('../src/parts/LaunchPortsViewWorker/LaunchPortsViewWorker.ts')
+const LaunchPreviewWorker = await import('../src/parts/LaunchPreviewWorker/LaunchPreviewWorker.js')
+const LaunchComponentStateWorker = await import('../src/parts/LaunchComponentStateWorker/LaunchComponentStateWorker.js')
+const LaunchDialogWorker = await import('../src/parts/LaunchDialogWorker/LaunchDialogWorker.js')
+const LaunchIframeInspectorWorker = await import('../src/parts/LaunchIframeInspectorWorker/LaunchIframeInspectorWorker.js')
+
 beforeEach(() => {
   jest.clearAllMocks()
 })
 
 test.each([
+  ['Ports', LaunchPortsViewWorker.launchPortsViewWorker, 'Ports.handleMessagePort', 'Ports'],
+  ['Preview', LaunchPreviewWorker.launchPreviewWorker, 'Preview.handleMessagePort', 'Preview'],
+  ['ComponentState', LaunchComponentStateWorker.launchComponentStateWorker, 'ComponentState.handleMessagePort', 'ComponentState'],
+  ['Dialog', LaunchDialogWorker.launchDialogWorker, 'Dialog.handleMessagePort', 'Dialog'],
+
   ['about', LaunchAboutViewWorker.launchAboutViewWorker, 'About.handleMessagePort', 'About'],
   ['activity bar', LaunchActivityBarWorker.launchActivityBarWorker, 'ActivityBar.handleMessagePort', 'ActivityBar'],
   ['chat', LaunchChatViewWorker.launchChatViewWorker, 'Chat.handleMessagePort', 'Chat'],
@@ -96,6 +107,14 @@ test.each([
   expect(GetPortTuple.getPortTuple).toHaveBeenCalledTimes(1)
   expect(JsonRpc.invokeAndTransfer).toHaveBeenCalledWith(ipc, command, 'worker-port')
   expect(RendererProcess.invokeAndTransfer).toHaveBeenCalledWith('HandleMessagePort.handleMessagePort', 'renderer-process-port', rpcId)
+})
+
+test('Iframe Inspector retains its legacy renderer connection', async () => {
+  await LaunchIframeInspectorWorker.launchIframeInspectorWorker()
+
+  expect(GetPortTuple.getPortTuple).not.toHaveBeenCalled()
+  expect(JsonRpc.invokeAndTransfer).not.toHaveBeenCalled()
+  expect(RendererProcess.invokeAndTransfer).not.toHaveBeenCalled()
 })
 
 test('main area worker connects directly to the renderer process', async () => {

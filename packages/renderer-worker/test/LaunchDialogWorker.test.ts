@@ -19,6 +19,13 @@ jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => ({
   getPlatform: jest.fn(),
 }))
 
+jest.unstable_mockModule('../src/parts/JsonRpc/JsonRpc.js', () => ({
+  invokeAndTransfer: jest.fn(async () => undefined),
+}))
+jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () => ({
+  invokeAndTransfer: jest.fn(async () => undefined),
+}))
+
 const GetConfiguredWorkerUrl = await import('../src/parts/GetConfiguredWorkerUrl/GetConfiguredWorkerUrl.ts')
 const HandleIpc = await import('../src/parts/HandleIpc/HandleIpc.js')
 const IpcParent = await import('../src/parts/IpcParent/IpcParent.js')

@@ -33,6 +33,7 @@ export const {
   getQuickPickMenuEntries,
   getStorageKey,
   getTitle,
+  hasDirectRender,
   hasFunctionalEvents,
   hasFunctionalRender,
   hasFunctionalResize,

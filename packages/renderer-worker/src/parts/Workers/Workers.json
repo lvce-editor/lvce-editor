@@ -53,7 +53,7 @@
         },
         "renderEventListeners": { "name": "ComponentState.renderEventListeners", "parameters": [] }
       },
-      "capabilities": { "events": true, "render": true, "resize": true, "rootRender": true },
+      "capabilities": { "directRender": true, "events": true, "render": true, "resize": true, "rootRender": true },
       "renderComparison": "always",
       "title": "Component State"
     }
@@ -153,7 +153,7 @@
         "getKeyBindings": { "name": "Accounts.getKeyBindings", "parameters": [] },
         "renderEventListeners": { "name": "Accounts.renderEventListeners", "parameters": [] }
       },
-      "capabilities": { "events": true, "render": true, "rootRender": true },
+      "capabilities": { "directRender": true, "events": true, "render": true, "rootRender": true },
       "renderComparison": "always"
     }
   },
@@ -598,7 +598,7 @@
         "getKeyBindings": { "name": "Dialog.getKeyBindings", "parameters": [] },
         "renderEventListeners": { "name": "Dialog.renderEventListeners", "parameters": [] }
       },
-      "capabilities": { "events": true, "render": true, "rootRender": true },
+      "capabilities": { "directRender": true, "events": true, "render": true, "rootRender": true },
       "renderComparison": "always"
     }
   },
@@ -1388,7 +1388,7 @@
         "getCommandIds": { "name": "Preview.getCommandIds", "parameters": [] },
         "renderEventListeners": { "name": "Preview.renderEventListeners", "parameters": [] }
       },
-      "capabilities": { "events": true, "render": true, "resize": true, "rootRender": true }
+      "capabilities": { "directRender": true, "events": true, "render": true, "resize": true, "rootRender": true }
     }
   },
   {
@@ -1452,7 +1452,7 @@
         "setComponentState": { "name": "Ports.setComponentState", "parameters": [{ "source": "state", "name": "uid" }, { "source": "argument", "name": "componentState" }] }
       },
       "renderComparison": "emptyCommands",
-      "capabilities": { "events": true, "render": true, "resize": true, "rootRender": true }
+      "capabilities": { "directRender": true, "events": true, "render": true, "resize": true, "rootRender": true }
     }
   },
   {

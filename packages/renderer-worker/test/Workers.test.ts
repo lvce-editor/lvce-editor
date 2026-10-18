@@ -16,6 +16,9 @@ test('accounts view worker is available in development and packaged builds', () 
     fileName: 'accountsWorkerMain.js',
     productionPath: '/packages/accounts-view/dist/accountsWorkerMain.js',
     settingName: 'develop.accountsViewWorkerPath',
+    viewlet: {
+      capabilities: { directRender: true },
+    },
   })
   expect(worker?.viewlet?.methods?.render).toEqual({
     name: 'Accounts.render2',
@@ -79,4 +82,15 @@ test('editor worker permits same-origin split modules while retaining its sandbo
   const worker = Workers.getWorkers().find(({ id }: Readonly<{ id: string }>) => id === 'editor')
 
   expect(worker?.contentSecurityPolicy).toEqual(["default-src 'none'", 'sandbox allow-same-origin', "script-src 'self'"])
+})
+
+test('Iframe Inspector and Notification Center use renderer-worker event routing', () => {
+  type Worker = Readonly<{
+    id: string
+    viewlet?: Readonly<{ capabilities?: Readonly<{ directRender?: boolean; rootRender?: boolean }> }>
+  }>
+  const functionalWorkers = Workers.getWorkers().filter((worker: Worker) => worker.viewlet?.capabilities?.rootRender)
+  expect(functionalWorkers.length).toBeGreaterThan(30)
+  const legacyWorkers = functionalWorkers.filter((worker: Worker) => !worker.viewlet?.capabilities?.directRender).map((worker: Worker) => worker.id)
+  expect(legacyWorkers).toEqual(['notificationCenterView', 'iframeInspector'])
 })
