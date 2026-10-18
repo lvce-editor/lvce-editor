@@ -580,6 +580,9 @@ export const getLayoutVirtualDom = (state: LayoutState) => {
   }
 
   if (state.workspaceProgressMessage) {
+    const isContainerProgress = state.workspaceProgressKind === 'container'
+    const progressTitle = isContainerProgress ? 'Reopening in Container…' : 'Loading Remote SSH Workspace…'
+    const cancelLabel = isContainerProgress ? 'Cancel reopening in container' : 'Cancel opening Remote SSH workspace'
     workbenchChildCount++
     dom.push(
       {
@@ -591,15 +594,15 @@ export const getLayoutVirtualDom = (state: LayoutState) => {
         type: VirtualDomElements.Div,
         className: 'WorkspaceProgressDialog',
         role: 'dialog',
-        ariaLabel: 'Loading Remote SSH Workspace',
+        ariaLabel: progressTitle,
         ariaModal: true,
         childCount: 3,
       },
       {
         type: VirtualDomElements.Button,
         className: 'WorkspaceProgressClose IconButton',
-        ariaLabel: 'Cancel opening Remote SSH workspace',
-        title: 'Cancel opening Remote SSH workspace',
+        ariaLabel: cancelLabel,
+        title: cancelLabel,
         onClick: DomEventListenerFunctions.HandleClickCancelWorkspaceProgress,
         childCount: 1,
       },
@@ -609,7 +612,7 @@ export const getLayoutVirtualDom = (state: LayoutState) => {
         childCount: 0,
       },
       { type: VirtualDomElements.Span, className: 'WorkspaceProgressTitle', childCount: 1 },
-      text('Loading Remote SSH Workspace…'),
+      text(progressTitle),
       { type: VirtualDomElements.Span, className: 'WorkspaceProgressStage', childCount: 1 },
       text(state.workspaceProgressMessage),
     )
