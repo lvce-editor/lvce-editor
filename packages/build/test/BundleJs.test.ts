@@ -6,7 +6,7 @@ import { pathToFileURL } from 'node:url'
 import { expect, test } from '@jest/globals'
 import { bundleJs } from '../src/parts/BundleJs/BundleJs.ts'
 
-test('bundles dynamic modules into one file while preserving initialization after IPC configuration', async () => {
+test.each([false, true])('bundles dynamic modules after IPC configuration (compact whitespace: %s)', async (minifyWhitespace) => {
   const cachePath = await mkdtemp(join(tmpdir(), 'lvce-worker-lazy-initialization-'))
   try {
     await mkdir(join(cachePath, 'src'))
@@ -16,6 +16,7 @@ test('bundles dynamic modules into one file while preserving initialization afte
       `import { config } from './config.js'
 export const assetDir = config.assetDir
 export const workerUrl = config.workerUrls.editor
+export function getWorkerUrl() { return config.workerUrls.editor }
 `,
     )
     await writeFile(
@@ -26,7 +27,7 @@ Object.assign(config, await Promise.resolve({ assetDir: '/configured', workerUrl
 export const loaded = await import('./lazy.js')
 `,
     )
-    await bundleJs({ cwd: cachePath, from: './src/index.js', platform: 'webworker', sourceMap: false })
+    await bundleJs({ cwd: cachePath, from: './src/index.js', platform: 'webworker', sourceMap: false, minifyWhitespace })
     expect(await readdir(join(cachePath, 'dist'))).toEqual(['index.js'])
     const source = await readFile(join(cachePath, 'dist', 'index.js'), 'utf8')
     expect(source).not.toMatch(/import\(['"]\.\//)
@@ -34,12 +35,18 @@ export const loaded = await import('./lazy.js')
     const loaded = JSON.parse(
       execFileSync(
         process.execPath,
-        ['--input-type=module', '-e', `const { loaded } = await import(${JSON.stringify(bundleUrl)}); console.log(JSON.stringify(loaded))`],
+        [
+          '--input-type=module',
+          '-e',
+          `const { loaded } = await import(${JSON.stringify(bundleUrl)}); console.log(JSON.stringify({ ...loaded, name: loaded.getWorkerUrl.name, result: loaded.getWorkerUrl() }))`,
+        ],
         { encoding: 'utf8' },
       ),
     )
     expect(loaded.assetDir).toBe('/configured')
     expect(loaded.workerUrl).toBe('/configured/editor.js')
+    expect(loaded.name).toBe('getWorkerUrl')
+    expect(loaded.result).toBe('/configured/editor.js')
   } finally {
     await rm(cachePath, { recursive: true, force: true })
   }

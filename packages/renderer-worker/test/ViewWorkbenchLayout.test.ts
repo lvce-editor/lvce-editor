@@ -76,3 +76,17 @@ test('ignores detached, disabled, unchanged and omitted layout requests', async 
   expect(ViewletLayout.enterSideBarFocusMode).not.toHaveBeenCalled()
   expect(ViewletLayout.leaveSideBarFocusMode).not.toHaveBeenCalled()
 })
+
+test('does not re-enter AI-native layout when the owning chat rerenders after exiting it', async () => {
+  const view = { ...ViewletExtensionView.create(4, 'sample', 0, 0, 240, 500), workbenchLayout: 'ai-native' as const }
+  const state = setup(false)
+  ViewletStates.set(1, {
+    moduleId: 'Layout',
+    factory: {},
+    state: { ...state, aiNativeLayoutExited: true },
+    renderedState: { ...state, aiNativeLayoutExited: true },
+  })
+
+  expect(await ViewWorkbenchLayout.prepare(view)).toEqual([])
+  expect(ViewletLayout.enterSideBarFocusMode).not.toHaveBeenCalled()
+})

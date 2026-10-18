@@ -94,6 +94,23 @@ test('openFile - web', async () => {
   expect(Command.execute).toHaveBeenNthCalledWith(3, 'Main.openUri', 'html:///test.txt', true, {})
 })
 
+test('openFile - web - opens cloneable fallback File as read-only', async () => {
+  const file = new File(['selected content'], 'test.txt', { type: 'text/plain' })
+  const fallbackFile = { file, kind: 'file', name: file.name, readonly: true }
+  jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => ({
+    getPlatform: () => PlatformType.Web,
+    assetDir: '',
+  }))
+  jest.unstable_mockModule('../src/parts/Command/Command.js', () => ({
+    execute: jest.fn((command) => (command === 'FilePicker.showFilePicker' ? [fallbackFile] : undefined)),
+  }))
+  const Command = await import('../src/parts/Command/Command.js')
+  const Dialog = await import('../src/parts/Dialog/Dialog.js')
+  await Dialog.openFile()
+  expect(Command.execute).toHaveBeenNthCalledWith(2, 'PersistentFileHandle.addHandle', 'html:///test.txt', fallbackFile)
+  expect(Command.execute).toHaveBeenNthCalledWith(3, 'Main.openUri', 'html:///test.txt', true, {})
+})
+
 test('openFile - web - canceled', async () => {
   jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
     return {

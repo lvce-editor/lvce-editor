@@ -437,3 +437,48 @@ test('dispose stops every language server owned by an extension', async () => {
   await expect(getProcessId(firstExtensionSecondServerOptions)).resolves.not.toBe(firstExtensionSecondProcessId)
   await expect(getProcessId(secondExtensionOptions)).resolves.toBe(secondProcessId)
 })
+
+test('concurrent diagnostic requests wait for the changed document', async () => {
+  const options = {
+    argv: [pushDiagnosticsServerScript],
+    extensionId: 'sample.extension',
+    id: 'sample.concurrent-push-diagnostics-fixture',
+    rootUri: 'file:///tmp/sample-workspace',
+    textDocument: {
+      languageId: 'elm',
+      text: 'invalid',
+      uri: '/tmp/sample-workspace/src/Main.elm',
+    },
+    uri: pathToFileURL(process.execPath).href,
+  }
+  const initial = await diagnostic(options)
+  expect(initial).toHaveLength(1)
+  const changed = {
+    ...options,
+    textDocument: { ...options.textDocument, text: 'valid' },
+  }
+
+  await expect(Promise.all([diagnostic(changed), diagnostic(changed)])).resolves.toEqual([[], []])
+})
+
+test('diagnostics collect intermediate publications after changing a document', async () => {
+  const options = {
+    argv: [pushDiagnosticsServerScript, '--staged-diagnostics'],
+    extensionId: 'sample.extension',
+    id: 'sample.staged-push-diagnostics-fixture',
+    rootUri: 'file:///tmp/sample-workspace',
+    textDocument: {
+      languageId: 'elm',
+      text: 'invalid',
+      uri: '/tmp/sample-workspace/src/Main.elm',
+    },
+    uri: pathToFileURL(process.execPath).href,
+  }
+  await expect(diagnostic(options)).resolves.toHaveLength(1)
+  const changed = { ...options, textDocument: { ...options.textDocument, text: 'valid' } }
+  const first = diagnostic(changed)
+  // A concurrent reader must join the pending pass rather than use its
+  // intermediate cached publication.
+  await new Promise((resolve) => setTimeout(resolve, 25))
+  await expect(Promise.all([first, diagnostic(changed)])).resolves.toEqual([[], []])
+})

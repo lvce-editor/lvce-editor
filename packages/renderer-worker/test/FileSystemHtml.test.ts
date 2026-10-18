@@ -351,6 +351,15 @@ test('readFile', async () => {
   expect(await FileSystemHtml.readFile('html:///test/file.txt')).toBe('test')
 })
 
+test('readFile - Firefox file picker fallback is persisted as a read-only File', async () => {
+  const file = new File(['selected content'], 'test.txt', { type: 'text/plain' })
+  // @ts-ignore
+  PersistentFileHandle.getHandle.mockResolvedValue({ file, kind: 'file', name: file.name, readonly: true })
+  expect(await FileSystemHtml.readFile('html:///test.txt')).toBe('selected content')
+  await expect(FileSystemHtml.isReadonly('html:///test.txt')).resolves.toBe(true)
+  await expect(FileSystemHtml.writeFile('html:///test.txt', 'changed')).rejects.toThrow('File test.txt is read-only')
+})
+
 test('readFile - not found', async () => {
   let i = 0
   // @ts-ignore

@@ -1,4 +1,4 @@
-import { readdir } from 'fs/promises'
+import { readFile, readdir } from 'fs/promises'
 import * as BundleCss from '../BundleCss/BundleCss.ts'
 import * as BundleWorkers from '../BundleWorkers/BundleWorkers.ts'
 import * as AddRuntimeConfigToIndexHtml from '../AddRuntimeConfigToIndexHtml/AddRuntimeConfigToIndexHtml.ts'
@@ -10,6 +10,7 @@ import * as Replace from '../Replace/Replace.ts'
 import * as BundleJs from '../BundleJsRollup/BundleJsRollup.ts'
 import * as GetStaticFiles from '../GetStaticFiles/GetStaticFiles.ts'
 import * as GetIconThemeEtag from '../GetIconThemeEtag/GetIconThemeEtag.ts'
+import * as Mkdir from '../Mkdir/Mkdir.ts'
 import * as JsonFile from '../JsonFile/JsonFile.ts'
 
 const copyStaticFiles = async ({ commitHash }) => {
@@ -63,6 +64,11 @@ const copyStaticFiles = async ({ commitHash }) => {
     to: 'packages/build/.tmp/server/static-server/static/auth/callback.html',
   })
   await Replace.replace({
+    path: 'packages/build/.tmp/server/static-server/static/auth/callback.html',
+    occurrence: '/* CALLBACK_RETURN_URL_HELPER */',
+    replacement: await readFile('static/auth/callback.js', 'utf8'),
+  })
+  await Replace.replace({
     path: `packages/build/.tmp/server/static-server/static/index.html`,
     occurrence: '/packages/renderer-worker/node_modules/@lvce-editor/renderer-process/dist/rendererProcessMain.js',
     replacement: `/${commitHash}/packages/renderer-process/dist/rendererProcessMain.js`,
@@ -86,6 +92,11 @@ const copyStaticFiles = async ({ commitHash }) => {
     path: `packages/build/.tmp/server/static-server/static/index.html`,
     platform: 'remote',
     assetDir: `/${commitHash}`,
+  })
+  await Mkdir.mkdir('packages/build/.tmp/server/static-server/static/chat')
+  await Copy.copyFile({
+    from: `packages/build/.tmp/server/static-server/static/index.html`,
+    to: `packages/build/.tmp/server/static-server/static/chat/index.html`,
   })
   await BundleCss.bundleCss({
     outDir: `packages/build/.tmp/server/static-server/static/${commitHash}/css`,
@@ -468,6 +479,7 @@ const copyPlaygroundFiles = async ({ commitHash }) => {
 
 export const shouldBeCopied = (extensionName) => {
   return (
+    extensionName === 'builtin.codex' ||
     extensionName === 'builtin.media-preview' ||
     extensionName === 'builtin.video-preview' ||
     extensionName === 'builtin.vscode-icons' ||

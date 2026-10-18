@@ -56,6 +56,10 @@ export const get = (applicationId: string): Application => {
   return application
 }
 
+export const isOpen = (applicationId: string): boolean => applications.has(applicationId) && !closing.has(applicationId)
+
+export const getOpenIds = (): readonly string[] => [...applications.keys()].filter(isOpen)
+
 export const getOwner = (uid: number): string | undefined => owners.get(uid)
 
 export const own = (applicationId: string, uid: number): void => {

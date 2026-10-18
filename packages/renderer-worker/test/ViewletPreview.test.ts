@@ -1,5 +1,6 @@
 /* eslint-disable jest/no-restricted-jest-methods -- Preview disposal tests use ESM module mocks for worker dependencies. */
 import { expect, jest, test } from '@jest/globals'
+import * as RuntimeConfig from '../src/parts/RuntimeConfig/RuntimeConfig.ts'
 
 const disposePreviewSandBoxWorker = jest.fn<() => Promise<void>>()
 const disposePreviewWorker = jest.fn<(_state: unknown) => Promise<void>>()
@@ -57,4 +58,16 @@ test('preview lifecycle shows and hides the preview sandbox output channel', asy
   await ViewletPreview.dispose({ uid: 21 })
   expect(invokeOutputViewWorker).toHaveBeenCalledTimes(2)
   expect(invokeOutputViewWorker).toHaveBeenLastCalledWith('Output.setPreviewSandboxActive', false)
+})
+
+test('embedded preview can run without creating an output channel', async () => {
+  RuntimeConfig.initialize({ previewOutputEnabled: false })
+  invokeOutputViewWorker.mockClear()
+  try {
+    await ViewletPreview.loadContent({ uid: 30 })
+    await ViewletPreview.dispose({ uid: 30 })
+    expect(invokeOutputViewWorker).not.toHaveBeenCalled()
+  } finally {
+    RuntimeConfig.initialize()
+  }
 })

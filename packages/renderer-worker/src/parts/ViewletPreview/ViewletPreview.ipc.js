@@ -1,3 +1,4 @@
+import * as RuntimeConfig from '../RuntimeConfig/RuntimeConfig.ts'
 import { createWorkerViewlet } from '../CreateWorkerViewlet/CreateWorkerViewlet.js'
 import * as OutputViewWorker from '../OutputViewWorker/OutputViewWorker.js'
 import * as PreviewSandBoxWorker from '../PreviewSandBoxWorker/PreviewSandBoxWorker.js'
@@ -8,6 +9,9 @@ const instances = new Set()
 let outputChannelActive = false
 
 const updateOutputChannelState = async () => {
+  if (RuntimeConfig.runtimeConfig.previewOutputEnabled === false) {
+    return
+  }
   const active = instances.size > 0
   if (outputChannelActive === active) {
     return

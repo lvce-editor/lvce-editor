@@ -28,6 +28,45 @@ test('disposes only the owned source control worker state', async () => {
   expect(state.disposed).toBe(false)
 })
 
+test('refreshes source control icons through its worker after an icon theme change', async () => {
+  const state = {
+    ...ViewletSourceControl.create(42, '', 0, 0, 200, 300, undefined, 7),
+    badgeCount: 3,
+    inputValue: 'commit message',
+  }
+  sourceControlWorkerInvoke.mockImplementation((method) => {
+    switch (method) {
+      case 'SourceControl.updateIcons':
+        return undefined
+      case 'SourceControl.diff2':
+        return [1]
+      case 'SourceControl.render2':
+        return [['Viewlet.commitPending', 42, 9]]
+      case 'SourceControl.renderActions':
+        return ['actions']
+      case 'SourceControl.getBadgeCount':
+        return 3
+      default:
+        throw new Error(`unexpected method ${method}`)
+    }
+  })
+
+  const firstResult = await ViewletSourceControl.handleIconThemeChange(state)
+  const result = await ViewletSourceControl.handleIconThemeChange(firstResult)
+
+  expect(state).not.toHaveProperty('items')
+  expect(sourceControlWorkerInvoke.mock.calls.filter(([method]) => method === 'SourceControl.updateIcons')).toEqual([
+    ['SourceControl.updateIcons', 42],
+    ['SourceControl.updateIcons', 42],
+  ])
+  expect(sourceControlWorkerInvoke.mock.calls).toContainEqual(['SourceControl.render2', 42, [1]])
+  expect(result).toEqual({
+    ...state,
+    actionsDom: ['actions'],
+    commands: [['Viewlet.commitPending', 42, 9]],
+  })
+})
+
 test('renders pending source control worker state without replaying a command', async () => {
   const state = {
     badgeCount: 2,

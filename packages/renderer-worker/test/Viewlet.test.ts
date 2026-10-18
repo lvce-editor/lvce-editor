@@ -1,7 +1,9 @@
 import { beforeEach, expect, jest, test } from '@jest/globals'
 import * as ViewletStates from '../src/parts/ViewletStates/ViewletStates.js'
+import * as IsTest from '../src/parts/IsTest/IsTest.js'
 
 beforeEach(() => {
+  IsTest.state.isTest = true
   jest.resetAllMocks()
   jest.mocked(Id.create).mockReturnValue(2)
   ViewletStates.reset()
@@ -1037,4 +1039,87 @@ test('layout preparation and view patches commit in one batch with resized geome
     ['Viewlet.setPatches', 2, ['chat']],
   ])
   expect(ViewletStates.getInstance(2).state).toEqual({ content: 'new', uid: 2, width: 1000 })
+})
+
+test('resize applies bounds when a viewlet has no custom resize handler', async () => {
+  const dimensions = { height: 200, width: 300, x: 10, y: 20 }
+  const warn = jest.spyOn(console, 'warn').mockImplementation(() => {})
+  ViewletStates.set(11, {
+    factory: {},
+    moduleId: 'Test',
+    renderedState: { uid: 11 },
+    state: { uid: 11 },
+  })
+
+  await expect(Viewlet.resize(11, dimensions)).resolves.toEqual([['Viewlet.setBounds', 11, 10, 20, 300, 200]])
+  expect(ViewletStates.getState(11)).toEqual({ uid: 11, ...dimensions })
+  expect(warn).not.toHaveBeenCalled()
+})
+
+test('resize warns when a functional resize handler is missing', async () => {
+  const dimensions = { height: 200, width: 300, x: 10, y: 20 }
+  const warn = jest.spyOn(console, 'warn').mockImplementation(() => {})
+  ViewletStates.set(11, {
+    factory: { hasFunctionalResize: true },
+    moduleId: 'Test',
+    renderedState: { uid: 11 },
+    state: { uid: 11 },
+  })
+
+  await expect(Viewlet.resize(11, dimensions)).resolves.toEqual([['Viewlet.setBounds', 11, 10, 20, 300, 200]])
+  expect(warn).toHaveBeenCalledWith('cannot resize', 11)
+})
+
+test('requestRender does not deliver an old notification to a recreated uid', async () => {
+  const { promise: gate, resolve } = Promise.withResolvers<void>()
+  const { promise: started, resolve: start } = Promise.withResolvers<void>()
+  const state = { uid: 20 }
+  const oldRender = jest.fn(async () => state)
+  ViewletStates.set(20, {
+    state,
+    renderedState: state,
+    moduleId: 'Test',
+    factory: {
+      serializeCommands: true,
+      Commands: {
+        __renderPending: oldRender,
+        update: async () => {
+          start()
+          await gate
+          return state
+        },
+      },
+    },
+  })
+  const update = Viewlet.executeViewletCommand(20, 'update')
+  await started
+  const render = Viewlet.requestRender(20)
+  const newRender = jest.fn(async () => state)
+  ViewletStates.set(20, {
+    state,
+    renderedState: state,
+    moduleId: 'Test',
+    factory: { Commands: { __renderPending: newRender } },
+  })
+  resolve()
+  await Promise.all([update, render])
+  expect(oldRender).not.toHaveBeenCalled()
+  expect(newRender).not.toHaveBeenCalled()
+})
+
+test('coalesced foreground input keeps focus permission when a background notification follows', async () => {
+  const state = { uid: 21 }
+  const renderPending = jest.fn(async (_state: typeof state, _preserveFocus: boolean) => state)
+  ViewletStates.set(21, {
+    state,
+    renderedState: state,
+    moduleId: 'Editor',
+    factory: { Commands: { __renderPending: renderPending } },
+  })
+  const background = Viewlet.requestRender(21)
+  const input = Viewlet.requestRender(21, false)
+  const diagnostic = Viewlet.requestRender(21)
+  await Promise.all([background, input, diagnostic])
+  expect(renderPending).toHaveBeenCalledTimes(1)
+  expect(renderPending).toHaveBeenCalledWith(state, false)
 })

@@ -13,3 +13,13 @@ test('preserves canvas commands emitted by the editor worker', () => {
   expect(result).toEqual([command])
   expect(newState.commands).toEqual([])
 })
+
+
+test('preserves direct editor patch commit markers in command order', () => {
+  const commands = [
+    ['Viewlet.setCss', 42, 'css'],
+    ['Viewlet.commitPending', 42, 123],
+    ['Viewlet.setWidgets', 42, 2, []],
+  ]
+  expect(Editor.render[0].apply({}, { commands, uid: 42 })).toEqual(commands)
+})

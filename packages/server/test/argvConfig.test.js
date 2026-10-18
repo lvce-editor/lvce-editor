@@ -24,6 +24,36 @@ test('prepends config arguments before explicit command line arguments', () => {
   assert.deepEqual(argv, ['/usr/bin/node', '/usr/lib/lvce/server.js', '--link=/test/extension', '--theme=configured', '--theme=explicit'])
 })
 
+test('adds the default native memory reclaimer feature without losing enabled features', () => {
+  assert.deepEqual(ArgvConfig.addDefaultMemoryReclaimerFeature(['--enable-features=ExampleFeature', '/workspace']), [
+    '--enable-features=ExampleFeature,PartitionAllocMemoryReclaimer:interval/1800s',
+    '/workspace',
+  ])
+})
+
+test('preserves an explicitly configured native memory reclaimer interval', () => {
+  assert.deepEqual(ArgvConfig.addDefaultMemoryReclaimerFeature(['--enable-features=ExampleFeature,PartitionAllocMemoryReclaimer:interval/32s']), [
+    '--enable-features=ExampleFeature,PartitionAllocMemoryReclaimer:interval/32s',
+  ])
+})
+
+test('honors an explicit native memory reclaimer disable', () => {
+  const args = ['--disable-features=ExampleFeature,PartitionAllocMemoryReclaimer', '/workspace']
+  assert.equal(ArgvConfig.addDefaultMemoryReclaimerFeature(args), args)
+})
+
+test('combines repeated feature switches and replaces a bare native reclaimer entry', () => {
+  assert.deepEqual(
+    ArgvConfig.addDefaultMemoryReclaimerFeature([
+      '--enable-features',
+      'ExampleFeature,PartitionAllocMemoryReclaimer',
+      '--enable-features=OtherFeature,PartitionAllocMemoryReclaimer:interval/45s',
+      '/workspace',
+    ]),
+    ['--enable-features=ExampleFeature,PartitionAllocMemoryReclaimer:interval/45s,OtherFeature', '/workspace'],
+  )
+})
+
 test('finds the workspace while ignoring repeated link arguments', () => {
   assert.equal(ArgvConfig.getWorkspaceArgument(['--link', '/test/one', '/test/workspace', '--link=/test/two']), '/test/workspace')
 })

@@ -179,7 +179,7 @@ test('handleActiveEditorChange forwards the active uri to loaded viewlets', asyn
   })
   ViewletStates.set('problems', createInstance(1, 'handleActiveEditorChange', handler))
 
-  const state = ViewletLayout.create(1)
+  const state = { ...ViewletLayout.create(1), statusBarVisible: true }
   const result = await ViewletLayout.handleActiveEditorChange(state, 'file:///test.ts')
 
   expect(handler).toHaveBeenCalledWith({ uid: 1 }, 'file:///test.ts')
@@ -194,7 +194,7 @@ test('handleActiveEditorChange forwards the active uri to loaded viewlets', asyn
 })
 
 test('handleActiveEditorChange hides editor status for non-text editors', async () => {
-  const state = ViewletLayout.create(1)
+  const state = { ...ViewletLayout.create(1), statusBarVisible: true }
 
   await ViewletLayout.handleActiveEditorChange(state, 'file:///test.png', false)
 
@@ -234,10 +234,10 @@ test('handleActiveEditorChange refreshes the problems summary for loaded viewlet
   ViewletStates.set('panel', createInstance(1, 'handleProblemsSummaryChange', panelHandler))
   ViewletStates.set('status-bar', createInstance(2, 'handleProblemsSummaryChange', statusBarHandler))
 
-  const state = ViewletLayout.create(1)
+  const state = { ...ViewletLayout.create(1), statusBarVisible: true }
   const result = await ViewletLayout.handleActiveEditorChange(state, 'file:///test.ts')
 
-  expect(problemsInvoke).toHaveBeenCalledWith('Problems.getProblemsSummary')
+  expect(problemsInvoke).toHaveBeenCalledWith('Problems.getProblemsSummary', 'file:///test.ts', undefined)
   expect(panelHandler).toHaveBeenCalledWith({ uid: 1 }, summary)
   expect(statusBarHandler).toHaveBeenCalledWith({ uid: 2 }, summary)
   expect(result).toEqual({
@@ -369,7 +369,7 @@ test('extension refresh commits ready view updates before waiting for a provider
   const handler = jest.fn((state: { uid: number }) => ({ ...state, commands: commits }))
   ViewletStates.set('status-bar', createInstance(5, 'handleExtensionsChanged', handler))
   jest.mocked(ViewletManager.render).mockReturnValueOnce(commits)
-  const state = ViewletLayout.create(1)
+  const state = { ...ViewletLayout.create(1), activityBarVisible: true }
   const refresh = ViewletLayout.handleExtensionsChanged(state)
   try {
     await badgeStarted.promise
@@ -391,4 +391,33 @@ test('extension refresh passes the disabled contribution identity to global view
   await ViewletLayout.handleExtensionsChanged(ViewletLayout.create(1), 'sample.extension', true)
 
   expect(handler).toHaveBeenCalledWith({ uid: 5 }, 'sample.extension', true)
+})
+
+test('workspace refresh does not wait for an extension file-change handler', async () => {
+  extensionManagementInvoke.mockImplementationOnce(() => new Promise(() => {}))
+  const state = ViewletLayout.create(1)
+  const changes = { changed: ['memfs:///threejs/dist/main.js'] }
+  const result = await ViewletLayout.handleWorkspaceRefresh(state, changes)
+  expect(extensionManagementInvoke).toHaveBeenCalledWith('Extensions.handleFileChanges', changes)
+  expect(result.newState).toBeDefined()
+})
+
+test('hidden status and panel views do not start workers on editor or diagnostic changes', async () => {
+  const state = ViewletLayout.create(1)
+  await ViewletLayout.handleActiveEditorChange(state, 'memfs:///demo/main.ts')
+  await ViewletLayout.handleDiagnosticsChange(state, 'memfs:///demo/main.ts')
+  expect(statusBarInvoke).not.toHaveBeenCalled()
+  expect(problemsInvoke).not.toHaveBeenCalled()
+})
+
+test('hidden activity bar does not query source control badges', async () => {
+  await ViewletLayout.refreshSourceControlBadgeCount(ViewletLayout.create(1))
+  expect(sourceControlInvoke).not.toHaveBeenCalled()
+})
+
+
+test('refreshProblemsSummary queries the owning embedded application', async () => {
+  const state = { ...ViewletLayout.create(1), applicationId: 'preview', statusBarVisible: true }
+  await ViewletLayout.refreshProblemsSummary(state, 'memfs:///preview/example.txt')
+  expect(problemsInvoke).toHaveBeenCalledWith('Problems.getProblemsSummary', 'memfs:///preview/example.txt', 'preview')
 })

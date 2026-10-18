@@ -87,3 +87,11 @@ test('prepareContextMenu restores the browser when connection fails', async () =
   await expect(Menu.prepareContextMenu({} as MessagePort)).rejects.toThrow('connection failed')
   expect(SimpleBrowserOverlay.hide).toHaveBeenCalledWith('menu')
 })
+
+test('handleMouseLeave forwards the menu level', async () => {
+  await Menu.handleMouseLeave(0)
+  await Menu.handleMouseLeave(1)
+
+  expect(MenuWorker.invoke).toHaveBeenNthCalledWith(1, 'Menu.handleMouseLeave', 0)
+  expect(MenuWorker.invoke).toHaveBeenNthCalledWith(2, 'Menu.handleMouseLeave', 1)
+})

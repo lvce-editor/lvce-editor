@@ -129,7 +129,7 @@
   {
     "id": "accountsView",
     "fileName": "accountsWorkerMain.js",
-    "contentSecurityPolicy": ["default-src 'none'"],
+    "contentSecurityPolicy": ["default-src 'none'", "connect-src https://avatars.githubusercontent.com"],
     "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/accounts-view/dist/accountsWorkerMain.js",
     "productionPath": "/packages/accounts-view/dist/accountsWorkerMain.js",
     "settingName": "develop.accountsViewWorkerPath",
@@ -660,7 +660,7 @@
     "productionPath": "/packages/editor-worker/dist/editorWorkerMain.js",
     "settingName": "develop.editorWorkerPath",
     "hotReloadCommand": "Editor.hotReload",
-    "contentSecurityPolicy": ["default-src 'none'", "sandbox allow-same-origin"]
+    "contentSecurityPolicy": ["default-src 'none'", "sandbox allow-same-origin", "script-src 'self'"]
   },
   {
     "id": "embedsWorker",
@@ -720,8 +720,6 @@
         "getComponentDom": { "name": "Explorer.getComponentDom", "parameters": [{ "source": "state", "name": "uid" }] },
         "getComponentState": { "name": "Explorer.getComponentState", "parameters": [{ "source": "state", "name": "uid" }] },
         "getKeyBindings": { "name": "Explorer.getKeyBindings", "parameters": [] },
-        "getMenuEntryIds": { "name": "Explorer.getMenuIds", "parameters": [] },
-        "getMenuEntries": { "name": "Explorer.getMenuEntries", "parameters": [{ "source": "argument", "name": "args", "spread": true }] },
         "getTitle": { "name": "Explorer.getTitle", "parameters": [{ "source": "state", "name": "uid" }], "fallback": "Explorer" },
         "renderEventListeners": { "name": "Explorer.renderEventListeners", "parameters": [] },
         "setComponentState": {
@@ -1236,7 +1234,8 @@
           "parameters": [
             { "source": "state", "name": "id" }, { "source": "state", "name": "uri" }, { "source": "state", "name": "x" },
             { "source": "state", "name": "y" }, { "source": "state", "name": "width" }, { "source": "state", "name": "height" },
-            { "source": "state", "name": "platform" }, { "source": "state", "name": "parentUid" }
+            { "source": "state", "name": "platform" }, { "source": "state", "name": "parentUid" },
+            { "source": "context", "name": "applicationId" }
           ]
         },
         "hotReloadCreate": {
@@ -1244,7 +1243,8 @@
           "parameters": [
             { "source": "state", "name": "uid" }, { "source": "state", "name": "uri" }, { "source": "state", "name": "x" },
             { "source": "state", "name": "y" }, { "source": "state", "name": "width" }, { "source": "state", "name": "height" },
-            { "source": "state", "name": "parentUid" }, { "source": "state", "name": "platform" }
+            { "source": "state", "name": "platform" }, { "source": "state", "name": "parentUid" },
+            { "source": "context", "name": "applicationId" }
           ]
         },
         "loadContent": {
@@ -1304,7 +1304,9 @@
             { "source": "state", "name": "y" },
             { "source": "state", "name": "width" },
             { "source": "state", "name": "height" },
-            { "source": "literal", "value": null }
+            { "source": "context", "name": "platform" },
+            { "source": "context", "name": "assetDir" },
+            { "source": "context", "name": "applicationId" }
           ]
         },
         "loadContent": {
@@ -1474,7 +1476,7 @@
         "create": { "name": "Problems.create", "parameters": [
           { "source": "state", "name": "uid" }, { "source": "state", "name": "uri" }, { "source": "state", "name": "x" },
           { "source": "state", "name": "y" }, { "source": "state", "name": "width" }, { "source": "state", "name": "height" },
-          { "source": "context", "name": "workspaceUri" }
+          { "source": "context", "name": "workspaceUri" }, { "source": "context", "name": "applicationId" }
         ] },
         "loadContent": { "name": "Problems.loadContent", "parameters": [{ "source": "state", "name": "uid" }, { "source": "argument", "name": "savedState" }] },
         "diff": { "name": "Problems.diff2", "parameters": [{ "source": "state", "name": "uid" }] },
@@ -1541,13 +1543,13 @@
     "viewlet": {
       "name": "ProcessExplorer",
       "css": ["/css/parts/MaskIcon.css", "/css/parts/ViewletProcessExplorer.css"],
-      "state": { "idKey": "uid", "fields": ["parentUid", "uri", "x", "y", "width", "height"], "contextFields": ["platform", "assetDir"] },
+      "state": { "idKey": "uid", "fields": ["parentUid", "uri", "x", "y", "width", "height"], "contextFields": ["platform", "assetDir", "processExplorerUpdateInterval"] },
       "commandPrefix": "ProcessExplorer",
       "methods": {
         "create": { "name": "ProcessExplorer.create", "parameters": [
           { "source": "state", "name": "uid" }, { "source": "state", "name": "uri" }, { "source": "state", "name": "x" },
           { "source": "state", "name": "y" }, { "source": "state", "name": "width" }, { "source": "state", "name": "height" },
-          { "source": "literal", "value": null }, { "source": "state", "name": "parentUid" }, { "source": "state", "name": "platform" },
+          { "source": "context", "name": "processExplorerArgs" }, { "source": "state", "name": "parentUid" }, { "source": "state", "name": "platform" },
           { "source": "state", "name": "assetDir" }
         ] },
         "loadContent": { "name": "ProcessExplorer.loadContent", "parameters": [{ "source": "state", "name": "uid" }, { "source": "argument", "name": "savedState" }] },
@@ -1914,7 +1916,8 @@
             { "source": "state", "name": "width" },
             { "source": "state", "name": "height" },
             { "source": "state", "name": "platform" },
-            { "source": "state", "name": "assetDir" }
+            { "source": "state", "name": "assetDir" },
+            { "source": "context", "name": "applicationId" }
           ]
         },
         "loadContent": {
@@ -1930,7 +1933,9 @@
             { "source": "state", "name": "y" },
             { "source": "state", "name": "width" },
             { "source": "state", "name": "height" },
-            { "source": "literal", "value": null }
+            { "source": "state", "name": "platform" },
+            { "source": "state", "name": "assetDir" },
+            { "source": "context", "name": "applicationId" }
           ]
         },
         "hotReloadLoadContent": {
@@ -1966,7 +1971,7 @@
     "contentSecurityPolicy": ["default-src 'none'", "script-src 'self'", "sandbox allow-same-origin"],
     "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/syntax-highlighting-worker/dist/syntaxHighlightingWorkerMain.js",
     "productionPath": "/packages/syntax-highlighting-worker/dist/syntaxHighlightingWorkerMain.js",
-    "settingName": "developer.syntaxHighlightingWorkerPath",
+    "settingName": "develop.syntaxHighlightingWorkerPath",
     "hotReloadCommand": ""
   },
   {
@@ -2035,7 +2040,8 @@
         "idKey": "uid", "fields": ["uri", "x", "y", "width", "height"], "contextFields": ["platform", "assetDir"],
         "defaults": {
           "disposed": false, "titleBarIconWidth": 30, "isFocused": false, "titleBarIconEnabled": true,
-          "titleBarMenuBarEnabled": true, "titleBarButtonsEnabled": true, "titleBarButtonsWidth": 138, "titleBarTitleEnabled": true
+          "titleBarMenuBarEnabled": true, "titleBarButtonsEnabled": true, "titleBarButtonsWidth": 138, "titleBarTitleEnabled": true,
+          "showSideBarThings": true
         }
       },
       "commandPrefix": "TitleBar",

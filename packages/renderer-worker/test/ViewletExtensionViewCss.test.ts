@@ -20,6 +20,7 @@ const extensionViews = {
 beforeEach(() => {
   jest.clearAllMocks()
   extensionViews.view.css = '/extensions/sample/view.css'
+  Object.assign(extensionViews.view, { iframe: undefined, kind: 'virtualDom' })
   // @ts-ignore
   ExtensionManagementWorker.invoke.mockImplementation(async (method) => {
     if (method === 'Extensions.getViewActionsDom') {
@@ -133,6 +134,28 @@ test('loadContent stores virtual dom without duplicate commands', async () => {
   expect(newState.eventListeners).toBe(extensionViews.view.eventListeners)
   expect(newState.focusSelector).toBe('')
   expect(newState.patches).toEqual([])
+})
+
+test('loadContent continues to load available iframe views', async () => {
+  Object.assign(extensionViews.view, {
+    iframe: {
+      csp: "default-src 'self'",
+      credentialless: true,
+      sandbox: ['allow-scripts'],
+      src: 'https://extension.test/view.html',
+    },
+    kind: 'iframe',
+  })
+  const state = ViewletExtensionView.create(1, 'sample.views.testing', 0, 0, 100, 100)
+
+  const newState = await ViewletExtensionView.loadContent(state, undefined)
+
+  expect(newState).toMatchObject({
+    csp: "default-src 'self'",
+    iframeSandbox: ['allow-scripts'],
+    iframeSrc: 'https://extension.test/view.html',
+    kind: 'iframe',
+  })
 })
 
 test('loadContent prefers event listeners registered through the isolated extension api', async () => {

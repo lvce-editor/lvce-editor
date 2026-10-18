@@ -6,6 +6,7 @@ import * as ResetLayout from '../ResetLayout/ResetLayout.ts'
 // prettier-ignore
 export const Commands = {
   handleActivityBarWheel: AiNativeLayout.handleActivityBarWheel,
+  handleWorkspaceProgress: ViewletLayout.handleWorkspaceProgress,
   beginBrowserTabDrag: ViewletLayout.beginBrowserTabDrag,
   endBrowserTabDrag: ViewletLayout.endBrowserTabDrag,
   handleBrowserTabDragOver: ViewletLayout.handleBrowserTabDragOver,
@@ -31,11 +32,15 @@ export const Commands = {
   getBadgeCounts: ViewletLayout.getBadgeCounts,
   getHref: ViewletLayout.getHref,
   setHash: ViewletLayout.setHash,
+  setPathName: ViewletLayout.setPathName,
   getModuleId: ViewletLayout.getModuleId,
   getUserInfo: ViewletLayout.getUserInfo,
+  getAccounts: ViewletLayout.getAccounts,
+  disconnectConnectedAccount: ViewletLayout.disconnectConnectedAccount,
 }
 
 export const CommandsWithSideEffects = {
+  handleCancelWorkspaceProgress: ViewletLayout.handleCancelWorkspaceProgress,
   enterAiNativeLayout: AiNativeLayout.enter,
   toggleSimpleBrowserFullWidthInternal: BrowserFullWidth.toggleInternal,
   leaveSimpleBrowserFullWidth: BrowserFullWidth.leave,
@@ -111,6 +116,8 @@ export const CommandsWithSideEffects = {
   setUpdateState: ViewletLayout.setUpdateState,
   signIn: ViewletLayout.signIn,
   signOut: ViewletLayout.signOut,
+  useAccount: ViewletLayout.useAccount,
+  removeAccount: ViewletLayout.removeAccount,
   showActivityBar: ViewletLayout.showActivityBar,
   showE2eTests: ViewletLayout.showE2eTests,
   showMain: ViewletLayout.showMain,

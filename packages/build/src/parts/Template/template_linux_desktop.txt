@@ -16,5 +16,5 @@ Keywords=@@KEYWORDS@@
 
 [Desktop Action new-empty-window]
 Name=New Empty Window
-Exec=/usr/lib/@@APPLICATION_NAME@@/@@APPLICATION_NAME@@ --new-window %F
+Exec=/usr/bin/@@APPLICATION_NAME@@ --new-window %F
 Icon=@@APPLICATION_NAME@@

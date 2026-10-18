@@ -14,6 +14,7 @@ const importFromTsRegex = /(from\s+['"][^'"]+)\.ts(['"])/g
 const sideEffectImportTsRegex = /(import\s+['"][^'"]+)\.ts(['"])/g
 const dynamicImportTsRegex = /(import\(\s*['"][^'"]+)\.ts(['"]\s*\))/g
 const runtimeConfigScriptRegex = /<script id="Config" type="application\/json">([\s\S]*?)<\/script>/
+const whitespaceOnlyRegex = /^\s*$/
 
 const staticContentSecurityPolicy = GetContentSecurityPolicy.getContentSecurityPolicy([
   `default-src 'none'`,
@@ -160,8 +161,17 @@ const applyRuntimeConfigOverrides = async ({ root }: any): Promise<void> => {
   }
   const config = JSON.parse(configElement[1])
   config.platform = 'web'
-  const serializedConfig = JSON.stringify(config).replaceAll('<', '\\u003c').replaceAll('>', '\\u003e').replaceAll('&', '\\u0026')
-  const newContent = content.replace(configElement[0], `<script id="Config" type="application/json">${serializedConfig}</script>`)
+  const configIndex = content.indexOf(configElement[0])
+  const lineStart = content.lastIndexOf('\n', configIndex - 1) + 1
+  const lineIndentation = content.slice(lineStart, configIndex)
+  const indentation = whitespaceOnlyRegex.test(lineIndentation) ? lineIndentation : ''
+  const contentIndentation = `${indentation}  `
+  const serializedConfig = `${contentIndentation}${JSON.stringify(config, null, 2)
+    .replaceAll('<', '\\u003c')
+    .replaceAll('>', '\\u003e')
+    .replaceAll('&', '\\u0026')
+    .replaceAll('\n', `\n${contentIndentation}`)}`
+  const newContent = content.replace(configElement[0], `<script id="Config" type="application/json">\n${serializedConfig}\n${indentation}</script>`)
   await writeFile(indexHtmlPath, newContent)
 }
 
@@ -263,7 +273,8 @@ const applyOverrides = async ({ commitHash, pathPrefix, root, serverStaticPath }
   }
   if (pathPrefix) {
     await replace(Path.join(root, 'dist', commitHash, 'manifest.json'), `/${commitHash}`, `${pathPrefix}/${commitHash}`)
-    await replace(Path.join(root, 'dist', commitHash, 'manifest.json'), `"start_url": "/"`, `"start_url": "${pathPrefix}"`)
+    await replace(Path.join(root, 'dist', commitHash, 'manifest.json'), `"start_url": "/"`, `"start_url": "${pathPrefix}/"`)
+    await replace(Path.join(root, 'dist', commitHash, 'manifest.json'), `"scope": "/"`, `"scope": "${pathPrefix}/"`)
     await replace(Path.join(root, 'dist', commitHash, 'css', 'App.css'), `/${commitHash}`, `${pathPrefix}/${commitHash}`)
   }
 }
@@ -820,6 +831,9 @@ export const exportStatic = async ({
     })
     console.timeEnd('addTestFiles')
   }
+  const chatPath = Path.join(root, 'dist', 'chat')
+  await FileSystem.mkdir(chatPath)
+  await FileSystem.copyFile(Path.join(root, 'dist', 'index.html'), Path.join(chatPath, 'index.html'))
   return {
     commitHash,
   }

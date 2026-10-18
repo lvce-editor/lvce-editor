@@ -71,8 +71,19 @@ const main = async () => {
     throw new VError(error, `static export failed`)
   }
   const indexHtml = await ReadFile.readFile(join(tmpDir, 'dist', 'index.html'))
+  const chatIndexHtml = await ReadFile.readFile(join(tmpDir, 'dist', 'chat', 'index.html'))
+  assert.equal(chatIndexHtml, indexHtml, 'chat route should use the same processed application shell as the root route')
+  assert.ok(!indexHtml.includes('startupAppearance'))
+  const executableScripts = indexHtml.match(/<script\b[^>]*>/g)?.filter((tag) => !tag.includes('type="application/json"')) || []
+  assert.equal(executableScripts.length, 1)
+  assert.ok(executableScripts[0].includes('rendererProcessMain.js'))
+  assert.ok(executableScripts[0].includes('blocking="render"'))
+  assert.equal(executableScripts[0].includes('startupAppearance'), false)
   const configElement = indexHtml.match(/<script id="Config" type="application\/json">([\s\S]*?)<\/script>/)
   assert.ok(configElement, 'static export index.html should include runtime configuration')
+  assert.ok(indexHtml.includes('<script id="Config" type="application/json">\n      {\n        "assetDir":'), 'static export runtime configuration should start on an indented new line')
+  assert.ok(indexHtml.includes('\n      }\n    </script>'), 'static export runtime configuration should align with its script element')
+  assert.ok(configElement[1].includes('\n        "workerUrls": {\n'), 'static export runtime configuration should be formatted across multiple lines')
   const runtimeConfig = JSON.parse(configElement[1])
   assert.equal(runtimeConfig.platform, 'web')
   assert.equal(runtimeConfig.assetDir, `/test/${commitHash}`)
@@ -90,9 +101,18 @@ const main = async () => {
   const chat2 = webExtensions.find((extension) => extension.id === 'builtin.chat-view-2')
   assert.ok(chat2, 'static export should retain the builtin Chat 2 web extension')
   assert.equal(chat2.path, `/test/${commitHash}/extensions/builtin.chat-view-2`)
-  assert.ok(webExtensions.some((extension) => extension.id === 'builtin.chat'), 'static export should retain other builtin web extensions')
-  assert.ok(webExtensions.some((extension) => extension.id === 'test'), 'static export should include an added browser extension')
-  assert.ok(webExtensions.some((extension) => extension.id === 'test.second-extension'), 'static export should include multiple added browser extensions')
+  assert.ok(
+    webExtensions.some((extension) => extension.id === 'builtin.chat'),
+    'static export should retain other builtin web extensions',
+  )
+  assert.ok(
+    webExtensions.some((extension) => extension.id === 'test'),
+    'static export should include an added browser extension',
+  )
+  assert.ok(
+    webExtensions.some((extension) => extension.id === 'test.second-extension'),
+    'static export should include multiple added browser extensions',
+  )
   const chat2Manifest = JSON.parse(await ReadFile.readFile(join(tmpDir, 'dist', commitHash, 'extensions', 'builtin.chat-view-2', 'extension.json')))
   const chat2Assets = [
     chat2Manifest.browser,
@@ -121,16 +141,40 @@ const main = async () => {
     serverRoot: Path.absolute('packages/build/.tmp/server'),
   })
   const pagesIndexHtml = await ReadFile.readFile(join(pagesRoot, 'dist', 'index.html'))
+  const pagesChatIndexHtml = await ReadFile.readFile(join(pagesRoot, 'dist', 'chat', 'index.html'))
+  assert.equal(pagesChatIndexHtml, pagesIndexHtml, 'prefixed chat route should use the same application shell as the root route')
+  assert.ok(!pagesIndexHtml.includes('startupAppearance'))
+  const pagesExecutableScripts = pagesIndexHtml.match(/<script\b[^>]*>/g)?.filter((tag) => !tag.includes('type="application/json"')) || []
+  assert.equal(pagesExecutableScripts.length, 1)
+  assert.ok(pagesExecutableScripts[0].includes('rendererProcessMain.js'))
+  assert.ok(pagesExecutableScripts[0].includes('blocking="render"'))
+  assert.equal(pagesExecutableScripts[0].includes('startupAppearance'), false)
   const pagesConfigElement = pagesIndexHtml.match(/<script id="Config" type="application\/json">([\s\S]*?)<\/script>/)
   assert.ok(pagesConfigElement, 'Pages export index.html should include runtime configuration')
+  assert.ok(pagesIndexHtml.includes('<script id="Config" type="application/json">\n      {\n        "assetDir":'), 'Pages runtime configuration should start on an indented new line')
+  assert.ok(pagesIndexHtml.includes('\n      }\n    </script>'), 'Pages runtime configuration should align with its script element')
+  assert.ok(pagesConfigElement[1].includes('\n        "workerUrls": {\n'), 'Pages export runtime configuration should be formatted across multiple lines')
   const pagesRuntimeConfig = JSON.parse(pagesConfigElement[1])
   assert.equal(pagesRuntimeConfig.platform, 'web')
   assert.equal(pagesRuntimeConfig.assetDir, `/lvce-editor/${pagesResult.commitHash}`)
   assert.equal(pagesRuntimeConfig.rendererWorkerUrl, `/lvce-editor/${pagesResult.commitHash}/packages/renderer-worker/dist/rendererWorkerMain.js`)
-  assert.ok(Object.values(pagesRuntimeConfig.workerUrls as Record<string, string>).every((url) => url.startsWith(`/lvce-editor/${pagesResult.commitHash}/`)))
-  await ReadFile.readFile(join(pagesRoot, 'dist', pagesResult.commitHash, 'packages/renderer-worker/dist/rendererWorkerMain.js'))
+  assert.ok(
+    Object.values(pagesRuntimeConfig.workerUrls as Record<string, string>).every((url) => url.startsWith(`/lvce-editor/${pagesResult.commitHash}/`)),
+  )
+  const pagesRendererWorker = await ReadFile.readFile(join(pagesRoot, 'dist', pagesResult.commitHash, 'packages/renderer-worker/dist/rendererWorkerMain.js'))
+  assert.ok(pagesRendererWorker.includes('\n'), 'Pages renderer worker should retain readable line breaks')
+  assert.ok(pagesRendererWorker.includes('var main = async () => {'), 'Pages renderer worker should retain readable function names')
   await ReadFile.readFile(join(pagesRoot, 'dist', pagesResult.commitHash, 'css', 'App.css'))
-  await ReadFile.readFile(join(pagesRoot, 'dist', pagesResult.commitHash, 'manifest.json'))
+  const pagesManifest = JSON.parse(await ReadFile.readFile(join(pagesRoot, 'dist', pagesResult.commitHash, 'manifest.json')))
+  assert.equal(pagesManifest.start_url, '/lvce-editor/')
+  assert.equal(pagesManifest.scope, '/lvce-editor/')
+  assert.equal(pagesManifest.display, 'standalone')
+  assert.deepEqual(
+    pagesManifest.icons.map(({ src }) => src),
+    [`/lvce-editor/${pagesResult.commitHash}/icons/pwa-icon-192.png`, `/lvce-editor/${pagesResult.commitHash}/icons/pwa-icon-512.png`],
+  )
+  await ReadFile.readFile(join(pagesRoot, 'dist', pagesResult.commitHash, 'icons', 'pwa-icon-192.png'))
+  await ReadFile.readFile(join(pagesRoot, 'dist', pagesResult.commitHash, 'icons', 'pwa-icon-512.png'))
   await ReadFile.readFile(join(pagesRoot, 'dist', pagesResult.commitHash, 'icons', 'extensionDefaultIcon.png'))
   await ReadFile.readFile(join(pagesRoot, 'dist', pagesResult.commitHash, 'config', 'onLoadCommands.json'))
   const pagesWebExtensions = JSON.parse(await ReadFile.readFile(join(pagesRoot, 'dist', pagesResult.commitHash, 'config', 'webExtensions.json')))
@@ -148,6 +192,9 @@ const main = async () => {
     serverRoot: Path.absolute('packages/build/.tmp/server'),
   })
   const rootWebExtensions = JSON.parse(await ReadFile.readFile(join(rootPrefix, 'dist', rootPrefixResult.commitHash, 'config', 'webExtensions.json')))
+  const rootIndexHtml = await ReadFile.readFile(join(rootPrefix, 'dist', 'index.html'))
+  const rootChatIndexHtml = await ReadFile.readFile(join(rootPrefix, 'dist', 'chat', 'index.html'))
+  assert.equal(rootChatIndexHtml, rootIndexHtml, 'root chat route should use the same application shell as the root route')
   const rootChat2 = rootWebExtensions.find((extension) => extension.id === 'builtin.chat-view-2')
   assert.ok(rootChat2, 'root export should retain the builtin Chat 2 web extension')
   assert.equal(rootChat2.path, `/${rootPrefixResult.commitHash}/extensions/builtin.chat-view-2`)

@@ -144,6 +144,7 @@
 }
 
 .PortsFooter {
+  contain: strict;
   display: flex;
   align-items: center;
   padding-left: 52px;

@@ -25,6 +25,12 @@ jest.unstable_mockModule('../src/parts/ViewletManager/ViewletManager.js', () => 
   executeForApplication: jest.fn(async () => {}),
 }))
 
+jest.unstable_mockModule('../src/parts/GetActiveEditor/GetActiveEditor.js', () => ({
+  getSelections: jest.fn(async () => [0, 1, 0, 4]),
+  setSelections: jest.fn(async () => {}),
+}))
+
+const GetActiveEditor = await import('../src/parts/GetActiveEditor/GetActiveEditor.js')
 const Application = await import('../src/parts/Application/Application.ts')
 const RendererProcess = await import('../src/parts/RendererProcess/RendererProcess.js')
 const FileSystemWorker = await import('../src/parts/FileSystemWorker/FileSystemWorker.js')
@@ -82,6 +88,16 @@ test('failed mounting releases partial ownership and permits retrying the same a
   expect(() => ApplicationRegistry.get('preview')).toThrow('Application not found')
   expect(ApplicationRegistry.getOwner(1)).toBeUndefined()
   expect(await Application.create(options('preview'))).toBe(2)
+})
+
+test('worker callbacks execute commands only on views owned by their application', async () => {
+  const source = await Application.create(options('source'))
+  const preview = await Application.create(options('preview'))
+  await Application.execute('source', 'Viewlet.executeViewletCommand', source, 'handleBlur')
+  expect(Viewlet.executeViewletCommand).toHaveBeenCalledWith(source, 'handleBlur')
+  jest.mocked(Viewlet.executeViewletCommand).mockClear()
+  await expect(Application.execute('source', 'Viewlet.executeViewletCommand', preview, 'handleBlur')).rejects.toThrow('Component not found')
+  expect(Viewlet.executeViewletCommand).not.toHaveBeenCalled()
 })
 
 test('concurrent disposal shares one teardown and preserves the sibling layout', async () => {
@@ -232,12 +248,7 @@ test('routes Remote SSH forwarding from the main workspace view', async () => {
   WorkspaceState.state.workspaceUri = 'remote-ssh://host/work'
   jest.mocked(ExtensionManagementWorker.invoke).mockResolvedValueOnce({ localPort: 3000 })
   await expect(Application.executeForView(12345, 'PortProvider.forwardPort', 3000)).resolves.toEqual({ localPort: 3000 })
-  expect(ExtensionManagementWorker.invoke).toHaveBeenCalledWith(
-    'Extensions.executeCommand',
-    'remote-ssh.forwardPort',
-    'remote-ssh://host/work',
-    3000,
-  )
+  expect(ExtensionManagementWorker.invoke).toHaveBeenCalledWith('Extensions.executeCommand', 'remote-ssh.forwardPort', 'remote-ssh://host/work', 3000)
 })
 
 test('routes stopping Remote SSH forwarding from the main workspace view', async () => {
@@ -302,4 +313,32 @@ test('dialog entry points create a widget in the calling application before an i
   expect(Viewlet.openWidgetForApplication).toHaveBeenNthCalledWith(1, 'preview', 'Dialog', { ...warning, type: 'warning' })
   expect(Viewlet.openWidgetForApplication).toHaveBeenNthCalledWith(2, 'source', 'Dialog', { message: 'Source dialog', type: 'info' })
   expect(ViewletManager.executeForApplication).not.toHaveBeenCalled()
+})
+
+test('routes public selection APIs through the requesting application', async () => {
+  await Application.create(options('source'))
+  await Application.create(options('preview'))
+  await expect(Application.execute('preview', 'GetActiveEditor.getSelections')).resolves.toEqual([0, 1, 0, 4])
+  expect(GetActiveEditor.getSelections).toHaveBeenCalledWith('preview')
+  const selections = [0, 4, 0, 4]
+  await Application.execute('preview', 'GetActiveEditor.setSelections', selections)
+  expect(GetActiveEditor.setSelections).toHaveBeenCalledWith(selections, 'preview')
+})
+
+test('dispatches editor lifecycle commands only to components owned by the application', async () => {
+  await Application.create(options('source'))
+  await Application.create(options('preview'))
+  ApplicationRegistry.own('source', 100)
+  ApplicationRegistry.own('preview', 101)
+  await Application.execute('source', 'Viewlet.executeViewletCommand', 100, 'handleBlur')
+  expect(Viewlet.executeViewletCommand).toHaveBeenCalledWith(100, 'handleBlur')
+  expect(ViewletManager.executeForApplication).not.toHaveBeenCalledWith('source', 'Viewlet.executeViewletCommand', 100, 'handleBlur')
+  jest.mocked(Viewlet.executeViewletCommand).mockClear()
+  await expect(Application.execute('source', 'Viewlet.executeViewletCommand', 101, 'handleBlur')).rejects.toThrow(
+    'Component not found in application source: 101',
+  )
+  await expect(Application.execute('source', 'Viewlet.executeViewletCommand', 999, 'handleBlur')).rejects.toThrow(
+    'Component not found in application source: 999',
+  )
+  expect(Viewlet.executeViewletCommand).not.toHaveBeenCalled()
 })

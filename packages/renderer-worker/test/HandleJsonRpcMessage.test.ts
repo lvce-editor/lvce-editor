@@ -28,3 +28,21 @@ test('preserves the send-based ipc response path', async () => {
     result: 'value',
   })
 })
+
+test('ignores the ready handshake message', async () => {
+  const warn = jest.spyOn(console, 'warn').mockImplementation(() => {})
+  const execute = jest.fn()
+  const ipc = {
+    postMessage: jest.fn(),
+  }
+
+  try {
+    await HandleJsonRpcMessage.handleJsonRpcMessage(ipc, 'ready', execute, jest.fn(), 'test')
+
+    expect(warn).not.toHaveBeenCalled()
+    expect(execute).not.toHaveBeenCalled()
+    expect(ipc.postMessage).not.toHaveBeenCalled()
+  } finally {
+    warn.mockRestore()
+  }
+})

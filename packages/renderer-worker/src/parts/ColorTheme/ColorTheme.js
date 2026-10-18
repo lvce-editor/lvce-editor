@@ -25,10 +25,10 @@ const FALLBACK_COLOR_THEME_ID = 'slime'
 // TODO json parsing should also happen in renderer worker
 // so that all validation is here (json parsing errors, invalid shape, ...)
 
-const applyColorTheme = async (colorThemeId) => {
+const applyColorTheme = async (colorThemeId, forceReload = false) => {
   try {
     Assert.string(colorThemeId)
-    const colorThemeCss = await GetColorThemeCss.getColorThemeCss(colorThemeId)
+    const colorThemeCss = await GetColorThemeCss.getColorThemeCss(colorThemeId, forceReload)
     if (!colorThemeCss) {
       return new Error(`Color theme is empty`)
     }
@@ -80,9 +80,9 @@ const getPreferredColorTheme = () => {
   return Preferences.get('workbench.colorTheme') || FALLBACK_COLOR_THEME_ID
 }
 
-const applyPreferredColorTheme = async () => {
+const applyPreferredColorTheme = async (forceReload = false) => {
   const colorThemeId = getPreferredColorTheme()
-  const error = await applyColorTheme(colorThemeId)
+  const error = await applyColorTheme(colorThemeId, forceReload)
   if (!error) {
     return
   }
@@ -90,7 +90,7 @@ const applyPreferredColorTheme = async () => {
     throw error
   }
   await ErrorHandling.handleError(error)
-  const fallbackError = await applyColorTheme(FALLBACK_COLOR_THEME_ID)
+  const fallbackError = await applyColorTheme(FALLBACK_COLOR_THEME_ID, forceReload)
   if (fallbackError) {
     throw fallbackError
   }
@@ -108,10 +108,10 @@ export const reload = async () => {
       return
     }
   }
-  await applyPreferredColorTheme()
+  await applyPreferredColorTheme(true)
 }
 
 // TODO have icon theme, color theme together (maybe)
-export const hydrate = async () => {
-  await applyPreferredColorTheme()
+export const hydrate = async (forceReload = false) => {
+  await applyPreferredColorTheme(forceReload)
 }

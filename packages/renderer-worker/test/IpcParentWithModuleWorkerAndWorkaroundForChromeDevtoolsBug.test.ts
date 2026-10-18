@@ -43,6 +43,7 @@ test('create', async () => {
   const ipc = await IpcParentWithModuleWorkerAndWorkaroundForChromeDevtoolsBug.create({
     url: 'https://example.com/worker.js',
     name: 'test worker',
+    parentName: 'Parent Worker',
     port: undefined,
     id: 0,
   })
@@ -51,6 +52,7 @@ test('create', async () => {
   expect(RendererProcess.invokeAndTransfer).toHaveBeenCalledWith('IpcParent.create', {
     method: RendererProcessIpcParentType.ModuleWorkerWithMessagePort,
     name: 'test worker',
+    parentName: 'Parent Worker',
     raw: true,
     url: 'https://example.com/worker.js',
     port: new MessagePort(),

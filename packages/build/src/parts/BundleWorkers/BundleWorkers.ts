@@ -3,6 +3,7 @@ import * as BundleBuiltinSettings from '../BundleBuiltinSettings/BundleBuiltinSe
 import * as BundleRendererProcessCached from '../BundleRendererProcessCached/BundleRendererProcessCached.ts'
 import * as BundleRendererWorkerCached from '../BundleRendererWorkerCached/BundleRendererWorkerCached.ts'
 import * as Copy from '../Copy/Copy.ts'
+import * as CopyWorkerArtifacts from '../CopyWorkerArtifacts/CopyWorkerArtifacts.ts'
 import * as JsonFile from '../JsonFile/JsonFile.ts'
 import * as Logger from '../Logger/Logger.ts'
 import * as Path from '../Path/Path.ts'
@@ -13,6 +14,10 @@ const workersJsonPath = 'packages/renderer-worker/src/parts/Workers/Workers.json
 
 const stripLeadingSlash = (path) => {
   return path.startsWith('/') ? path.slice(1) : path
+}
+
+export const shouldCopyWorkerEntryOnly = ({ platform, workerId }) => {
+  return platform === 'electron' && workerId === 'editor'
 }
 
 const getWorkerSourcePath = (defaultPath) => {
@@ -27,7 +32,7 @@ const getWorkerSourcePath = (defaultPath) => {
   return ''
 }
 
-const copyWorkers = async ({ product, toRoot, workers }) => {
+const copyWorkers = async ({ product, toRoot, platform, workers }) => {
   for (const worker of workers) {
     if (worker.id === 'rendererWorker') {
       continue
@@ -41,9 +46,10 @@ const copyWorkers = async ({ product, toRoot, workers }) => {
       Logger.info(`[bundleWorkers] skipped missing worker artifact for ${worker.id}: ${defaultPath}`)
       continue
     }
-    await Copy.copyFile({
+    await CopyWorkerArtifacts.copyWorkerArtifacts({
       from,
       to: Path.join(toRoot, stripLeadingSlash(productionPath)),
+      entryOnly: shouldCopyWorkerEntryOnly({ platform, workerId: worker.id }),
     })
     if (worker.id === 'dialogWorker') {
       await PatchDialogWorkerProductName.patchDialogWorkerProductName({ product, toRoot })
@@ -80,7 +86,7 @@ export const bundleWorkers = async ({ commitHash, platform, assetDir, version, d
     ignore: ['static'],
   })
 
-  await copyWorkers({ product, toRoot, workers })
+  await copyWorkers({ platform, product, toRoot, workers })
   await BundleBuiltinSettings.bundleBuiltinSettings({ toRoot, workers })
 
   await Copy.copy({

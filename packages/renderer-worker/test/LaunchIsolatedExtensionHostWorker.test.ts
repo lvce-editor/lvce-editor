@@ -62,6 +62,7 @@ test('launchIsolatedExtensionHostWorker', async () => {
     expect.objectContaining({
       method: RendererProcessIpcParentType.ModuleWorkerWithMessagePort,
       name: 'Extension API: sample.extension',
+      parentName: 'Extension Management Worker',
       port,
       raw: true,
       url: '/test/extension-host-worker/packages/e2e/fixtures/sample/main.js',
@@ -87,6 +88,7 @@ test('launchIsolatedExtensionHostWorker - uses custom worker name', async () => 
     expect.objectContaining({
       method: RendererProcessIpcParentType.ModuleWorkerWithMessagePort,
       name: 'Trello Worker',
+      parentName: 'Extension Management Worker',
       port,
       raw: true,
       url: '/test/trello/packages/extension/dist/trelloMain.js',

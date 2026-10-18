@@ -52,6 +52,7 @@ test('renderCss serializes valid layout bounds', () => {
       `#Workbench {
   --BrowserDropWidth: 799.6px;
   --BrowserDropTop: 0px;
+  --BrowserReturnDropTop: 0px;
   --AppWidth: 100%;
   --AppHeight: 100%;
   --ActivityBarWidth: 48px;
@@ -116,6 +117,7 @@ test('renderCss serializes explicit application bounds', () => {
       `#Workbench-1 {
   --BrowserDropWidth: 799.6px;
   --BrowserDropTop: 160px;
+  --BrowserReturnDropTop: 0px;
   --AppWidth: 480px;
   --AppHeight: 320px;
   --ActivityBarWidth: 48px;

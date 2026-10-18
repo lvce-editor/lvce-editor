@@ -36,6 +36,9 @@ export interface BrowserFullWidthState {
 }
 
 export interface LayoutState {
+  readonly workspaceProgressMessage?: string
+  readonly workspaceProgressId?: number
+  readonly workspaceProgressKind?: 'container'
   readonly panelAlignment: 'center' | 'justify' | 'left' | 'right'
   readonly secondaryPreviewPlacement?: 'bottomLeft'
   readonly browserTabDragSource?: number
@@ -62,6 +65,7 @@ export interface LayoutState {
   readonly explicitBounds: boolean
   readonly fullScreen: boolean
   readonly initial: boolean
+  readonly isStandalone?: boolean
   readonly mainHeight: number
   readonly mainId: number
   readonly mainLeft: number
@@ -114,6 +118,7 @@ export interface LayoutState {
   readonly sideBarTop: number
   readonly sideBarView: string
   readonly aiNativeLayout?: boolean
+  readonly aiNativeActivityBarVisible?: boolean
   readonly aiNativeLayoutExited?: boolean
   readonly sideBarFocusMode: boolean
   readonly sideBarFocusModeLayout: SideBarFocusModeLayoutStateSnapshot | undefined

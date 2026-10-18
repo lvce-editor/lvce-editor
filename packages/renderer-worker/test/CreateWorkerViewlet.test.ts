@@ -84,6 +84,18 @@ test('passes test mode to the explorer worker', async () => {
   expect(invoke.mock.calls[0]).toEqual(['Explorer.create', 7, 'test://explorer', 1, 2, 300, 200, null, 5, 2, 'test://assets', true])
 })
 
+test('uses static explorer menus instead of unsupported dynamic menu discovery', () => {
+  const viewlet = createWorkerViewletWithDependencies({
+    adapter: getWorkerViewletAdapter('explorer'),
+    config: getWorkerViewletConfig('explorer'),
+    worker: { invoke: jest.fn(), restart: jest.fn() },
+  })
+
+  expect(viewlet.getMenus).toBeUndefined()
+  expect(viewlet.menus).toHaveLength(1)
+  expect(typeof viewlet.menus[0].getMenuEntries).toBe('function')
+})
+
 test('exposes the configured workspace change behavior', () => {
   const viewlet = createWorkerViewletWithDependencies({
     config: createConfig({ workspaceChangeEvent: 'workspace.titleChange', workspaceChangeEventPrepend: true }),
@@ -730,4 +742,58 @@ test('Main restores its shell before deferring content and disposes the worker i
   expect(invoke).toHaveBeenCalledWith('MainArea.dispose', 7)
   content.resolve()
   expect(await loading).toBe(state)
+})
+
+test('passes application context to output creation and hot reload', async () => {
+  const invoke = jest.fn(async (method: string, ..._args: readonly unknown[]) => (method === 'Output.getCommandIds' ? [] : undefined))
+  const viewlet = createWorkerViewletWithDependencies({
+    config: getWorkerViewletConfig('output'),
+    context: { platform: 2, applicationId: 'preview' },
+    worker: { invoke, restart: jest.fn() },
+  })
+  const state = viewlet.create(7, 'sample-build', 1, 2, 300, 200, undefined, 9)
+  await viewlet.loadContent(state, {})
+  expect(invoke).toHaveBeenCalledWith('Output.create', 7, 'sample-build', 1, 2, 300, 200, 2, 9, 'preview')
+  invoke.mockClear()
+  await viewlet.hotReload!(state)
+  expect(invoke).toHaveBeenCalledWith('Output.create', 7, 'sample-build', 1, 2, 300, 200, 2, 9, 'preview')
+})
+
+test('passes application context to status bar creation and hot reload', async () => {
+  const invoke = jest.fn(async (method: string, ..._args: readonly unknown[]) => (method === 'StatusBar.getCommandIds' ? [] : undefined))
+  const viewlet = createWorkerViewletWithDependencies({
+    config: getWorkerViewletConfig('statusBar'),
+    context: { platform: 1, assetDir: '/runtime/release', applicationId: 'preview' },
+    worker: { invoke, restart: jest.fn() },
+  })
+  const state = viewlet.create(7, '', 1, 2, 300, 200)
+  await viewlet.loadContent(state, {})
+  expect(invoke).toHaveBeenCalledWith('StatusBar.create', 7, '', 1, 2, 300, 200, 1, '/runtime/release', 'preview')
+  invoke.mockClear()
+  await viewlet.hotReload!(state)
+  expect(invoke).toHaveBeenCalledWith('StatusBar.create', 7, '', 1, 2, 300, 200, 1, '/runtime/release', 'preview')
+})
+
+test('passes application ownership to the panel that creates its child views', async () => {
+  const invoke = jest.fn(async (method: string, ..._args: readonly unknown[]) => (method === 'Panel.getCommandIds' ? [] : undefined))
+  const viewlet = createWorkerViewletWithDependencies({
+    config: getWorkerViewletConfig('panel'),
+    context: { platform: 2, assetDir: '/runtime/test', applicationId: 'preview' },
+    worker: { invoke, restart: jest.fn() },
+  })
+  const state = viewlet.create(7, '', 1, 2, 300, 200)
+  await viewlet.loadContent(state, {})
+  expect(invoke).toHaveBeenCalledWith('Panel.create', 7, '', 1, 2, 300, 200, 2, '/runtime/test', 'preview')
+})
+
+test('passes application ownership to Problems creation', async () => {
+  const invoke = jest.fn(async (method: string, ..._args: readonly unknown[]) => (method === 'Problems.getCommandIds' ? [] : undefined))
+  const viewlet = createWorkerViewletWithDependencies({
+    config: getWorkerViewletConfig('problemsViewWorker'),
+    context: { workspaceUri: 'memfs:///preview', applicationId: 'preview' },
+    worker: { invoke, restart: jest.fn() },
+  })
+  const state = viewlet.create(7, '', 1, 2, 300, 200)
+  await viewlet.loadContent(state, {})
+  expect(invoke).toHaveBeenCalledWith('Problems.create', 7, '', 1, 2, 300, 200, 'memfs:///preview', 'preview')
 })

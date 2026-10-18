@@ -23,8 +23,9 @@ test('applyCustomWorkerPathCliOverride - removes custom worker paths when disabl
     'develop.portsViewPath': '/test/ports-view-worker',
     'develop.rendererProcessPath': '/test/renderer-process',
     'develop.runningExtensionsViewPath': '/test/running-extensions-view-worker',
+    'develop.syntaxHighlightingWorkerPath': '/test/syntax-highlighting-worker',
     'develop.workersViewPath': '/test/workers-view-worker',
-    'developer.syntaxHighlightingWorkerPath': '/test/syntax-highlighting-worker',
+    'developer.syntaxHighlightingWorkerPath': '/test/legacy-syntax-highlighting-worker',
     'workbench.colorTheme': 'test-theme',
   }
 

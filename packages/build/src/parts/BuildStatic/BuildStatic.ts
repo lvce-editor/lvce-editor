@@ -1,5 +1,5 @@
 import { existsSync } from 'node:fs'
-import { readdir } from 'node:fs/promises'
+import { readFile, readdir } from 'node:fs/promises'
 import * as BundleCss from '../BundleCss/BundleCss.ts'
 import * as BundleRendererProcess from '../BundleRendererProcess/BundleRendererProcess.ts'
 import * as BundleWorkers from '../BundleWorkers/BundleWorkers.ts'
@@ -44,18 +44,16 @@ const copyTestWorkerFiles = async ({ commitHash }) => {
   // })
 }
 
-const copyAuthCallbackFile = async ({ pathPrefix }) => {
+const copyAuthCallbackFile = async () => {
   await Copy.copyFile({
     from: 'static/auth/callback.html',
     to: 'packages/build/.tmp/dist/auth/callback.html',
   })
-  if (pathPrefix) {
-    await Replace.replace({
-      path: 'packages/build/.tmp/dist/auth/callback.html',
-      occurrence: `window.location.replace('/')`,
-      replacement: `window.location.replace('${pathPrefix}/')`,
-    })
-  }
+  await Replace.replace({
+    path: 'packages/build/.tmp/dist/auth/callback.html',
+    occurrence: '/* CALLBACK_RETURN_URL_HELPER */',
+    replacement: await readFile('static/auth/callback.js', 'utf8'),
+  })
 }
 
 const copyStaticFiles = async ({ pathPrefix, ignoreIconTheme, commitHash }) => {
@@ -103,12 +101,17 @@ const copyStaticFiles = async ({ pathPrefix, ignoreIconTheme, commitHash }) => {
       occurrence: '"start_url": "/"',
       replacement: `"start_url": "${pathPrefix}/"`,
     })
+    await Replace.replace({
+      path: `packages/build/.tmp/dist/${commitHash}/manifest.json`,
+      occurrence: '"scope": "/"',
+      replacement: `"scope": "${pathPrefix}/"`,
+    })
   }
   await Copy.copyFile({
     from: 'static/index.html',
     to: `packages/build/.tmp/dist/index.html`,
   })
-  await copyAuthCallbackFile({ pathPrefix })
+  await copyAuthCallbackFile()
   await Replace.replace({
     path: `packages/build/.tmp/dist/index.html`,
     occurrence: '282e2f" />',
@@ -147,6 +150,11 @@ const copyStaticFiles = async ({ pathPrefix, ignoreIconTheme, commitHash }) => {
     path: `packages/build/.tmp/dist/index.html`,
     platform: 'web',
     assetDir: `${pathPrefix}/${commitHash}`,
+  })
+  await Mkdir.mkdir('packages/build/.tmp/dist/chat')
+  await Copy.copyFile({
+    from: 'packages/build/.tmp/dist/index.html',
+    to: 'packages/build/.tmp/dist/chat/index.html',
   })
   await BundleCss.bundleCss({
     outDir: `packages/build/.tmp/dist/${commitHash}/css`,

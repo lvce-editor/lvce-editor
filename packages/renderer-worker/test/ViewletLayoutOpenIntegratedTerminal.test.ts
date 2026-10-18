@@ -1,6 +1,7 @@
 import { beforeEach, expect, jest, test } from '@jest/globals'
 
 const commandExecute = jest.fn()
+const executeForApplication = jest.fn()
 const executeViewletCommand = jest.fn()
 const panelWorkerInvocations: any[] = []
 
@@ -9,6 +10,8 @@ jest.unstable_mockModule('../src/parts/Command/Command.js', () => {
     execute: commandExecute,
   }
 })
+
+jest.unstable_mockModule('../src/parts/ViewletManager/ViewletManager.js', () => ({ executeForApplication }))
 
 jest.unstable_mockModule('../src/parts/PanelWorker/PanelWorker.js', () => {
   return {
@@ -35,6 +38,7 @@ const ViewletStates = await import('../src/parts/ViewletStates/ViewletStates.js'
 
 beforeEach(() => {
   commandExecute.mockClear()
+  executeForApplication.mockClear()
   executeViewletCommand.mockReset()
   panelWorkerInvocations.length = 0
   ViewletStates.reset()
@@ -150,4 +154,12 @@ test('renders the output panel before selecting the requested channel', async ()
 
   expect(commandExecute).toHaveBeenCalledWith('Output.selectChannel', 'Window')
   expect(result).toEqual({ newState: state, commands: [] })
+})
+
+test('selects the output channel in the application that opened the panel', async () => {
+  const state = { ...ViewletLayout.create(1), applicationId: 'preview' }
+  await ViewletLayout.openOutput(state, 'sample-build')
+  expect(executeViewletCommand).toHaveBeenCalledWith(state.uid, 'showPanel', 'Output', 'sample-build')
+  expect(executeForApplication).toHaveBeenCalledWith('preview', 'Output.selectChannel', 'sample-build')
+  expect(commandExecute).not.toHaveBeenCalled()
 })

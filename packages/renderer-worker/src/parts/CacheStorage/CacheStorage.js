@@ -1,4 +1,5 @@
 import * as CacheExpiration from '../CacheExpiration/CacheExpiration.js'
+import * as EditorFileCache from '../EditorFileCache/EditorFileCache.js'
 import * as Character from '../Character/Character.js'
 import * as Logger from '../Logger/Logger.js'
 import * as MimeType from '../MimeType/MimeType.js'
@@ -15,6 +16,10 @@ const getCache = async () => {
   const cacheName = PlatformPaths.getCacheName()
   return await caches.open(cacheName)
 }
+
+export const getEditorFileCache = EditorFileCache.get
+export const removeEditorFileCache = EditorFileCache.remove
+export const setEditorFileCache = EditorFileCache.set
 
 const getResponse = async (key) => {
   if (typeof caches === 'undefined') {

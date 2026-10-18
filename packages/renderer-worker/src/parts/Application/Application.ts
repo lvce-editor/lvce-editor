@@ -1,4 +1,5 @@
 import * as ApplicationFileSystem from '../ApplicationFileSystem/ApplicationFileSystem.ts'
+import * as ApplicationPreferences from '../ApplicationPreferences/ApplicationPreferences.ts'
 import * as ApplicationRegistry from '../ApplicationRegistry/ApplicationRegistry.ts'
 import * as Command from '../Command/Command.js'
 import * as ExtensionHostCommands from '../ExtensionHost/ExtensionHostCommands.js'
@@ -30,9 +31,7 @@ export interface ApplicationOptions {
 }
 
 const disposals = new Map<string, Promise<void>>()
-const hostReady = Promise.withResolvers<void>()
-export const markHostReady = (): void => hostReady.resolve()
-export const waitForHost = (): Promise<void> => hostReady.promise
+export { markHostReady, waitForHost } from '../ApplicationHostReady/ApplicationHostReady.ts'
 
 const initialize = async (options: ApplicationOptions, layoutUid: number): Promise<number> => {
   await ExtensionManagementWorker.invoke('Extensions.createApplication', options.id, Platform.getPlatform(), options.extensions || [])
@@ -153,6 +152,14 @@ export const execute = (applicationId: string, command: string, ...args: readonl
     })
   }
   switch (command) {
+    case 'Viewlet.executeViewletCommand':
+      return ApplicationRegistry.track(applicationId, () => {
+        const [uid, method, ...commandArgs] = args
+        if (ApplicationRegistry.getOwner(uid) !== applicationId) {
+          throw new Error(`Component not found in application ${applicationId}: ${uid}`)
+        }
+        return Viewlet.executeViewletCommand(uid, method, ...commandArgs)
+      })
     case 'Notification.create':
       return ApplicationRegistry.track(applicationId, () => RendererProcess.invoke('Notification.create', args[0], args[1], application.layoutUid))
     case 'Dialog.show':
@@ -191,6 +198,16 @@ export const execute = (applicationId: string, command: string, ...args: readonl
         }
         await ViewletManager.executeForApplication(applicationId, 'Layout.handleWorkspaceRefresh')
       })
+    case 'GetActiveEditor.getActiveEditorId':
+      return ApplicationRegistry.track(applicationId, async () => GetActiveEditor.getActiveEditorId(applicationId))
+    case 'GetActiveEditor.getVisibleEditorUris':
+      return ApplicationRegistry.track(applicationId, () => GetActiveEditor.getVisibleEditorUris(applicationId))
+    case 'GetActiveEditor.getActiveUri':
+      return ApplicationRegistry.track(applicationId, () => GetActiveEditor.getActiveUri(applicationId))
+    case 'GetActiveEditor.getSelections':
+      return ApplicationRegistry.track(applicationId, () => GetActiveEditor.getSelections(applicationId))
+    case 'GetActiveEditor.setSelections':
+      return ApplicationRegistry.track(applicationId, () => GetActiveEditor.setSelections(args[0], applicationId))
     case 'GetActiveEditor.getTextDocument':
       return ApplicationRegistry.track(applicationId, () => GetActiveEditor.getTextDocument(applicationId))
     case 'PortProvider.forwardPort':
@@ -217,8 +234,9 @@ export const execute = (applicationId: string, command: string, ...args: readonl
     case 'Layout.getHref':
       return Promise.resolve(application.href)
     case 'Preferences.get':
+      return Promise.resolve(ApplicationPreferences.get(applicationId, args[0]))
     case 'Preferences.update':
-      return Promise.resolve(Command.execute(command, ...args))
+      return ApplicationPreferences.update(applicationId, args[0])
     default:
       return ApplicationRegistry.track(applicationId, () => ViewletManager.executeForApplication(applicationId, command, ...args))
   }
@@ -228,14 +246,10 @@ export const executeForView = (uid: number, command: string, ...args: readonly a
   const applicationId = ApplicationRegistry.getOwner(uid)
   if (applicationId === undefined) {
     if (command === 'PortProvider.forwardPort') {
-      return import('../PortProvider/PortProvider.ts').then(({ forwardPort }) =>
-        forwardPort(Workspace.getWorkspaceUri(), args[0]),
-      )
+      return import('../PortProvider/PortProvider.ts').then(({ forwardPort }) => forwardPort(Workspace.getWorkspaceUri(), args[0]))
     }
     if (command === 'PortProvider.stopForwardPort') {
-      return import('../PortProvider/PortProvider.ts').then(({ stopForwardPort }) =>
-        stopForwardPort(Workspace.getWorkspaceUri(), args[0]),
-      )
+      return import('../PortProvider/PortProvider.ts').then(({ stopForwardPort }) => stopForwardPort(Workspace.getWorkspaceUri(), args[0]))
     }
     // Ports requests its initial content before the view is added to ViewletStates.
     if (command === 'PortProvider.getPorts') {
@@ -281,7 +295,7 @@ const disposeApplication = async (applicationId: string): Promise<void> => {
       }
     }
   }
-  for (const cleanup of [ApplicationRegistry.remove, ApplicationFileSystem.dispose]) {
+  for (const cleanup of [ApplicationPreferences.dispose, ApplicationRegistry.remove, ApplicationFileSystem.dispose]) {
     try {
       await cleanup(applicationId)
     } catch (error) {

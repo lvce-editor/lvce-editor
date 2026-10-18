@@ -30,6 +30,7 @@ const getRendererWorkerCacheHash = async (extraContents) => {
       'packages/build/src/parts/BundleElectronApp/BundleElectronApp.ts',
       'packages/build/src/parts/BuildServer/BuildServer.ts',
       'packages/build/src/parts/BundleJs/BundleJs.ts',
+      'packages/build/src/parts/BundleJsRollup/BundleJsRollup.ts',
       'packages/build/src/parts/CachePaths/CachePaths.ts',
       'packages/build/src/parts/BundleRendererWorker/BundleRendererWorker.ts',
       'packages/build/src/parts/BundleRendererWorkerCached/BundleRendererWorkerCached.ts',

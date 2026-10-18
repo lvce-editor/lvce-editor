@@ -80,7 +80,7 @@ const getMinZoomLevel = (): any => {
 }
 
 const getMaxZoomLevel = (): any => {
-  return 3
+  return 6
 }
 
 const getZoomInDelta = (): any => {
@@ -131,3 +131,5 @@ export const setBrowserFullWidthGestureEnabled = (windowId: number, enabled: boo
     enabled ? 'enableBrowserFullWidthGesture' : 'disableBrowserFullWidthGesture',
   )
 }
+
+export { openNewWithEditorInput, takeEditorTransfer, completeEditorTransfer } from '../EditorTransfer/EditorTransfer.ts'

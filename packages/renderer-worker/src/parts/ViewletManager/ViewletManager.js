@@ -12,6 +12,7 @@ import * as GetViewletErrorVirtualDom from '../GetViewletErrorVirtualDom/GetView
 import * as Id from '../Id/Id.js'
 import * as KeyBindingsState from '../KeyBindingsState/KeyBindingsState.js'
 import * as LayoutWidgets from '../LayoutWidgets/LayoutWidgets.ts'
+import * as Logger from '../Logger/Logger.js'
 import * as MenuEntriesRegistryState from '../MenuEntriesRegistryState/MenuEntriesRegistryState.js'
 import * as MouseActions from '../MouseActions/MouseActions.ts'
 import * as NameAnonymousFunction from '../NameAnonymousFunction/NameAnonymousFunction.js'
@@ -96,7 +97,7 @@ const kDispose = 'Viewlet.dispose'
 
 const runFnInternal = async (instance, id, key, fn, args) => {
   if (!instance) {
-    console.info(`cannot execute viewlet command ${id}.${key}: no active instance for ${id}`)
+    Logger.info(`cannot execute viewlet command ${id}.${key}: no active instance for ${id}`)
     return
   }
   id = instance.state.uid
@@ -131,9 +132,6 @@ const runFnInternal = async (instance, id, key, fn, args) => {
     ) {
       return newState
     }
-    if (!newState) {
-      console.log({ fn })
-    }
     Assert.object(newState)
     // console.log({ fn, newState })
     if (oldState === newState) {
@@ -156,7 +154,7 @@ const runFnInternal = async (instance, id, key, fn, args) => {
 
 const runFnWithSideEffectInternal = async (instance, id, key, fn, ...args) => {
   if (!instance) {
-    console.info(`cannot execute viewlet command ${id}.${key}: no active instance for ${id}`)
+    Logger.info(`cannot execute viewlet command ${id}.${key}: no active instance for ${id}`)
     return
   }
   id = instance.state.uid
@@ -545,7 +543,7 @@ const maybeRegisterEvents = (module) => {
         return
       }
       if (module.shouldApplyNewstate && !module.shouldApplyNewState(newState)) {
-        console.log('[viewlet manager] return', newState)
+        Logger.info('[viewlet manager] return', newState)
         return
       }
       const uid = instance.uid || instance.state.uid
@@ -571,7 +569,7 @@ const maybeRegisterEvents = (module) => {
         return
       }
       if (module.shouldApplyNewstate && !module.shouldApplyNewState(newState)) {
-        console.log('[viewlet manager] return', newState)
+        Logger.info('[viewlet manager] return', newState)
         return
       }
       const uid = instance.uid || instance.state.uid
@@ -600,7 +598,7 @@ const maybeRegisterEvents = (module) => {
             return
           }
           if (module.shouldApplyNewstate && !module.shouldApplyNewState(newState)) {
-            console.log('[viewlet manager] return', newState)
+            Logger.info('[viewlet manager] return', newState)
             return
           }
           const uid = instance.uid || instance.state.uid
@@ -734,7 +732,7 @@ const loadInternal = async (viewlet, focus, restore, restoreState) => {
     viewlet.setBounds = false
   }
   if (viewlet.type !== 0) {
-    console.log('viewlet must be empty')
+    Logger.info('viewlet must be empty')
     throw new Error('viewlet must be empty')
   }
   const shouldRender = viewlet.render ?? true
@@ -867,7 +865,7 @@ const loadInternal = async (viewlet, focus, restore, restoreState) => {
     }
     if (viewletState.version !== oldVersion) {
       newState = viewletState
-      console.log('version mismatch')
+      Logger.info('version mismatch')
       // TODO not sure if Object.assign is a good idea
       // Object.assign(viewletState, newState)
     }

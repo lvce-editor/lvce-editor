@@ -29,6 +29,14 @@
   },
   {
     "category": "applications",
+    "description": "Loads bundled desktop resources through Electron's native loader. Applies to packaged desktop builds after restarting the application.",
+    "heading": "Native Resource Loading",
+    "id": "application.useProtocolRegisterSource",
+    "type": "boolean",
+    "value": false
+  },
+  {
+    "category": "applications",
     "description": "Emulates the current application version for update checks. Use numeric major.minor.patch format, or leave empty to use the installed version.",
     "heading": "Emulate Current Version",
     "id": "update.emulateCurrentVersion",
@@ -50,6 +58,16 @@
     "id": "quickPick.cache",
     "type": "boolean",
     "value": true
+  },
+  {
+    "category": "workbench",
+    "description": "Controls how often the Process Explorer refreshes, in milliseconds",
+    "heading": "Process Explorer Update Interval",
+    "id": "processExplorer.updateInterval",
+    "maximum": 5000,
+    "minimum": 500,
+    "type": "number",
+    "value": 1000
   },
   {
     "category": "workbench",
@@ -97,6 +115,14 @@
     "description": "Caches editor state for faster restoration",
     "heading": "Editor Cache",
     "id": "editor.cache",
+    "type": "boolean",
+    "value": true
+  },
+  {
+    "category": "text-editor",
+    "description": "Caches eligible editor files for faster reopening",
+    "heading": "Editor File Cache",
+    "id": "editor.fileCache",
     "type": "boolean",
     "value": true
   },

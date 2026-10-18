@@ -10,7 +10,7 @@ import * as IpcParentWithModuleWorkerAndWorkaroundForChromeDevtoolsBug from '../
 
 export const launchSyntaxHighlightingWorker = async () => {
   const configuredWorkerUrl = GetConfiguredWorkerUrl.getConfiguredWorkerUrl(
-    'developer.syntaxHighlightingWorkerPath',
+    'develop.syntaxHighlightingWorkerPath',
     SyntaxHighlightingWorkerUrl.syntaxHighlightingWorkerUrl,
   )
   const name = 'Syntax Highlighting Worker'
@@ -18,6 +18,7 @@ export const launchSyntaxHighlightingWorker = async () => {
   let ipc = await IpcParent.create({
     method: IpcParentType.ModuleWorkerAndWorkaroundForChromeDevtoolsBug,
     name,
+    parentName: 'Editor Worker',
     url: configuredWorkerUrl,
     id,
   })

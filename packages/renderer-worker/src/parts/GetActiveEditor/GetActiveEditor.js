@@ -11,8 +11,8 @@ export const getActiveEditor = () => {
   return ViewletStates.getState(ViewletModuleId.EditorText)
 }
 
-export const getActiveEditorId = () => {
-  const instance = ViewletStates.getInstance(ViewletModuleId.EditorText)
+export const getActiveEditorId = (applicationId) => {
+  const instance = ViewletStates.getInstance(ViewletModuleId.EditorText, applicationId)
   if (!instance) {
     return -1
   }
@@ -64,8 +64,8 @@ export const getTextDocument = async (applicationId) => {
   return getTextDocumentWithInvoke(EditorWorker.invoke, applicationId)
 }
 
-export const getSelectionsWithInvoke = async (invoke) => {
-  const instance = ViewletStates.getInstance(ViewletModuleId.EditorText)
+export const getSelectionsWithInvoke = async (invoke, applicationId) => {
+  const instance = ViewletStates.getInstance(ViewletModuleId.EditorText, applicationId)
   if (!instance) {
     return []
   }
@@ -73,8 +73,8 @@ export const getSelectionsWithInvoke = async (invoke) => {
   return Array.from(selections)
 }
 
-export const getSelections = async () => {
-  return getSelectionsWithInvoke(EditorWorker.invoke)
+export const getSelections = async (applicationId) => {
+  return getSelectionsWithInvoke(EditorWorker.invoke, applicationId)
 }
 
 export const getSelectionTextWithInvoke = async (invoke) => {
@@ -115,6 +115,41 @@ export const getOpenEditorUris = () => {
   return getOpenEditorUrisWithInvoke(MainAreaWorker.invoke)
 }
 
+export const getVisibleEditorUrisWithInvoke = async (invoke, applicationId) => {
+  const instance = ViewletStates.getInstance(ViewletModuleId.Main, applicationId)
+  if (!instance) {
+    return []
+  }
+  const savedState = await invoke('MainArea.saveState', instance.state.uid)
+  return savedState.layout.groups.flatMap((group) => {
+    const activeTab = group.tabs.find((tab) => tab.id === group.activeTabId)
+    return typeof activeTab?.uri === 'string' ? [activeTab.uri] : []
+  })
+}
+
+export const getVisibleEditorUris = (applicationId) => {
+  return getVisibleEditorUrisWithInvoke(MainAreaWorker.invoke, applicationId)
+}
+
+export const getActiveUriWithInvoke = async (invoke, applicationId) => {
+  const instance = ViewletStates.getInstance(ViewletModuleId.Main, applicationId)
+  if (!instance) {
+    return ''
+  }
+  const savedState = await invoke('MainArea.saveState', instance.state.uid)
+  const { activeGroupId, groups } = savedState.layout
+  const group = groups.find((group) => group.id === activeGroupId)
+  if (!group) {
+    return ''
+  }
+  const activeTab = group.tabs.find((tab) => tab.id === group.activeTabId)
+  return typeof activeTab?.uri === 'string' ? activeTab.uri : ''
+}
+
+export const getActiveUri = (applicationId) => {
+  return getActiveUriWithInvoke(MainAreaWorker.invoke, applicationId)
+}
+
 export const updateDiagnosticsWithCommand = async (executeCommand) => {
   const instance = ViewletStates.getInstance(ViewletModuleId.EditorText)
   if (!instance) {
@@ -127,16 +162,16 @@ export const updateDiagnostics = async () => {
   await updateDiagnosticsWithCommand(Command.execute)
 }
 
-export const setSelectionsWithCommand = async (executeCommand, selections) => {
-  const instance = ViewletStates.getInstance(ViewletModuleId.EditorText)
+export const setSelectionsWithCommand = async (executeCommand, selections, applicationId) => {
+  const instance = ViewletStates.getInstance(ViewletModuleId.EditorText, applicationId)
   if (!instance) {
     return
   }
   await executeCommand('Viewlet.executeViewletCommand', instance.state.id, 'setSelections', new Uint32Array(selections))
 }
 
-export const setSelections = async (selections) => {
-  await setSelectionsWithCommand(Command.execute, selections)
+export const setSelections = async (selections, applicationId) => {
+  await setSelectionsWithCommand(Command.execute, selections, applicationId)
 }
 
 export const updateAllDiagnosticsWithCommand = async (invoke) => {

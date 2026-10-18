@@ -5,6 +5,7 @@ import * as BundleCss from '../BundleCss/BundleCss.ts'
 import * as BundleMainProcessCached from '../BundleMainProcessCached/BundleMainProcessCached.ts'
 import * as BundleOptions from '../BundleOptions/BundleOptions.ts'
 import * as BundleSharedProcessCached from '../BundleSharedProcessCached/BundleSharedProcessCached.ts'
+import * as BundleSharedProcessGraph from '../BundleSharedProcessGraph/BundleSharedProcessGraph.ts'
 import * as BundleWorkers from '../BundleWorkers/BundleWorkers.ts'
 import * as CommitHash from '../CommitHash/CommitHash.ts'
 import * as Copy from '../Copy/Copy.ts'
@@ -18,6 +19,7 @@ import * as GetIconThemeEtag from '../GetIconThemeEtag/GetIconThemeEtag.ts'
 import * as Hash from '../Hash/Hash.ts'
 import * as Rename from '../Rename/Rename.ts'
 import * as Logger from '../Logger/Logger.ts'
+import * as MinifyWorkerBundles from '../MinifyWorkerBundles/MinifyWorkerBundles.ts'
 import * as Path from '../Path/Path.ts'
 import * as Platform from '../Platform/Platform.ts'
 import * as PrepareElectronCss from '../PrepareElectronCss/PrepareElectronCss.ts'
@@ -27,6 +29,7 @@ import * as Remove from '../Remove/Remove.ts'
 import * as RemoveUnusedLocales from '../RemoveUnusedLocales/RemoveUnusedLocales.ts'
 import * as Replace from '../Replace/Replace.ts'
 import * as Root from '../Root/Root.ts'
+import * as RewriteCssAssetUrls from '../RewriteCssAssetUrls/RewriteCssAssetUrls.ts'
 import * as Template from '../Template/Template.ts'
 import * as WriteFile from '../WriteFile/WriteFile.ts'
 import { generateConfigJson } from '../GenerateConfigJson/GenerateConfigJson.ts'
@@ -37,6 +40,7 @@ const getDependencyCacheHash = async ({ electronVersion, arch, supportsAutoUpdat
     'packages/main-process/package-lock.json',
     'packages/shared-process/package-lock.json',
     'packages/build/src/parts/BundleElectronApp/BundleElectronApp.ts',
+    'packages/build/src/parts/MinifyWorkerBundles/MinifyWorkerBundles.ts',
     'packages/build/src/parts/BundleElectronAppDependencies/BundleElectronAppDependencies.ts',
     'packages/build/src/parts/BundleSharedProcessDependencies/BundleSharedProcessDependencies.ts',
     'packages/build/src/parts/FilterSharedProcessDependencies/FilterSharedProcessDependencies.ts',
@@ -162,10 +166,16 @@ const copyStaticFiles = async ({ resourcesPath, commitHash }) => {
   await Remove.remove(`${resourcesPath}/app/static/lib-css/modern-normalize.css`)
 }
 
-const copyCss = async ({ resourcesPath, commitHash }) => {
+const copyCss = async ({ resourcesPath, commitHash, applicationName }) => {
   await BundleCss.bundleCss({
     outDir: `${resourcesPath}/app/static/${commitHash}/css`,
     assetDir: `/${commitHash}`,
+  })
+  const appCssPath = `${resourcesPath}/app/static/${commitHash}/css/App.css`
+  const appCss = await ReadFile.readFile(appCssPath)
+  await WriteFile.writeFile({
+    to: appCssPath,
+    content: RewriteCssAssetUrls.rewriteElectronFontUrl(appCss, `/${commitHash}`, applicationName),
   })
 }
 
@@ -311,6 +321,8 @@ export const build = async ({
   })
   console.timeEnd('copySharedProcessFiles')
 
+  await BundleSharedProcessGraph.bundleSharedProcessGraph(Path.absolute(`${resourcesPath}/app/packages/shared-process`))
+
   console.time('copyExtensions')
   await copyExtensions({ resourcesPath, commitHash })
   console.timeEnd('copyExtensions')
@@ -324,7 +336,7 @@ export const build = async ({
   console.timeEnd('copyStaticFiles')
 
   console.time('copyCss')
-  await copyCss({ resourcesPath, commitHash })
+  await copyCss({ resourcesPath, commitHash, applicationName: product.applicationName })
   console.timeEnd('copyCss')
 
   const assetDir = `/${commitHash}`
@@ -341,6 +353,8 @@ export const build = async ({
     product,
     iconThemeEtag,
   })
+
+  await MinifyWorkerBundles.minifyWorkerBundles(toRoot)
 
   const etag = `W/"${commitHash}"`
 

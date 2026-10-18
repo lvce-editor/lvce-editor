@@ -1,4 +1,5 @@
 .Workbench {
+  position: relative;
   width: var(--AppWidth);
   height: var(--AppHeight);
   contain: strict;
@@ -8,9 +9,52 @@
   flex-direction: column;
 }
 
-/* Keep window controls in the space reserved above the primary sidebar. */
-.Workbench.TitleBarless > .TitleBar > :not(.TitleBarButtons) {
-  display: none;
+.WorkspaceProgressOverlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgb(0 0 0 / 35%);
+  color: var(--WorkbenchForeground);
+  font-size: 14px;
+}
+
+.WorkspaceProgressDialog {
+  box-sizing: border-box;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: min(420px, calc(100% - 48px));
+  min-width: 0;
+  padding: 32px;
+  border: 1px solid var(--WidgetBorder, #454545);
+  border-radius: 6px;
+  background: var(--WidgetBackground, var(--WorkbenchBackground));
+  color: var(--WidgetForeground, var(--WorkbenchForeground));
+  box-shadow: var(--WidgetShadow, 0 2px 8px #0004);
+  text-align: center;
+}
+
+.WorkspaceProgressClose {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+}
+
+.WorkspaceProgressTitle {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.WorkspaceProgressStage {
+  min-width: 0;
+  overflow: hidden;
+  opacity: 0.8;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .Workbench.TitleBarless > .TitleBar {
@@ -192,10 +236,6 @@
   z-index: 4;
 }
 
-.Workbench.BrowserFullWidthHideTitleBar > .TitleBar > :not(.TitleBarButtons) {
-  display: none;
-}
-
 .Workbench.BrowserFullWidthHideTitleBar > .TitleBar > .TitleBarButtons {
   flex-grow: 0;
   height: 35px;
@@ -229,6 +269,18 @@
   top: var(--BrowserDropTop);
   bottom: 0;
   width: var(--BrowserDropWidth);
+  z-index: 100;
+  background: var(--EditorDropBackground, #3879d94d);
+  outline: 2px solid var(--FocusBorder, #007fd4);
+  outline-offset: -2px;
+}
+
+.BrowserPreviewDropTarget {
+  position: absolute;
+  left: var(--BrowserDropWidth);
+  top: var(--BrowserReturnDropTop);
+  right: 0;
+  bottom: 0;
   z-index: 100;
   background: var(--EditorDropBackground, #3879d94d);
   outline: 2px solid var(--FocusBorder, #007fd4);

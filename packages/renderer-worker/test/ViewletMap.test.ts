@@ -71,3 +71,27 @@ test('simple browser history', async () => {
 test('inline diff uses the external diff editor', async () => {
   expect(await ViewletMap.getModuleId('inline-diff://data://before<->/test/file.ts')).toBe(ViewletModuleId.DiffEditor)
 })
+
+test('file preview routing uses only the owning application views', async () => {
+  const GetExtensionViews = await import('../src/parts/GetExtensionViews/GetExtensionViews.ts')
+  const view = { extensionId: 'sample', icon: '', id: 'sample.counter', title: 'Counter', type: 'preview', selector: ['.count'] }
+  const getViews = jest.mocked(GetExtensionViews.getExtensionViews)
+  const findView = jest.mocked(GetExtensionViews.findExtensionView)
+  getViews.mockImplementationOnce(async (applicationId) => (applicationId === 'preview' ? [view] : []))
+  findView.mockImplementationOnce((views) => views[0])
+
+  expect(await ViewletMap.getModuleId('/workspace/first.count', undefined, 'preview')).toBe(ViewletModuleId.ExtensionView)
+  expect(getViews).toHaveBeenLastCalledWith('preview')
+  expect(await ViewletMap.getModuleId('/workspace/first.count', undefined, 'source')).toBe(ViewletModuleId.EditorText)
+  expect(getViews).toHaveBeenLastCalledWith('source')
+})
+
+test('explicit preview opener is resolved in the owning application', async () => {
+  const GetExtensionViews = await import('../src/parts/GetExtensionViews/GetExtensionViews.ts')
+  const view = { extensionId: 'sample', icon: '', id: 'sample.counter', title: 'Counter' }
+  jest.mocked(GetExtensionViews.getExtensionViews).mockResolvedValueOnce([view])
+  jest.mocked(GetExtensionViews.findExtensionView).mockReturnValueOnce(view)
+
+  expect(await ViewletMap.getModuleId('/workspace/first.count', 'sample.counter', 'preview')).toBe(ViewletModuleId.ExtensionView)
+  expect(GetExtensionViews.getExtensionViews).toHaveBeenLastCalledWith('preview')
+})
