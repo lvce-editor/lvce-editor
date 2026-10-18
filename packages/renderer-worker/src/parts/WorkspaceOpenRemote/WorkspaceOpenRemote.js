@@ -34,7 +34,8 @@ const openRemoteInternal = async () => {
     return
   }
   await Command.execute('Layout.showPreview', 'simple-browser://')
-  await Command.execute('SimpleBrowser.openOrRevealTab', url)
+  const preview = ViewletStates.getInstance('Layout')?.state
+  await Viewlet.executeViewletCommand(preview?.previewId, 'openOrRevealTab', url)
 }
 
 export const openRemote = async () => {
