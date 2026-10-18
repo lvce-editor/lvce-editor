@@ -14,6 +14,10 @@ export const showWithOptions = async (type, text, options) => {
   return RendererProcess.invoke('Notification.showWithOptions', type, text, options)
 }
 
+export const update = async (id, text) => {
+  return RendererProcess.invoke('Notification.update', id, text)
+}
+
 export const handleClick = (index) => {
   console.log('handle click')
   const notification = state.notifications[0]
