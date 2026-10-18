@@ -16,6 +16,9 @@ test('accounts view worker is available in development and packaged builds', () 
     fileName: 'accountsWorkerMain.js',
     productionPath: '/packages/accounts-view/dist/accountsWorkerMain.js',
     settingName: 'develop.accountsViewWorkerPath',
+    viewlet: {
+      capabilities: { directRender: true },
+    },
   })
   expect(worker?.viewlet?.methods?.render).toEqual({
     name: 'Accounts.render2',
@@ -79,4 +82,10 @@ test('editor worker permits same-origin split modules while retaining its sandbo
   const worker = Workers.getWorkers().find(({ id }: Readonly<{ id: string }>) => id === 'editor')
 
   expect(worker?.contentSecurityPolicy).toEqual(["default-src 'none'", 'sandbox allow-same-origin', "script-src 'self'"])
+})
+
+test('all functional worker views provide direct event routing', () => {
+  const functionalWorkers = Workers.getWorkers().filter((worker) => worker.viewlet?.capabilities?.rootRender)
+  expect(functionalWorkers.length).toBeGreaterThan(30)
+  expect(functionalWorkers.filter((worker) => !worker.viewlet?.capabilities?.directRender).map((worker) => worker.id)).toEqual([])
 })

@@ -3,5 +3,5 @@ import * as GetRuntimeWorkerUrl from '../GetRuntimeWorkerUrl/GetRuntimeWorkerUrl
 
 export const notificationCenterViewWorkerUrl = GetRuntimeWorkerUrl.getRuntimeWorkerUrl(
   'develop.notificationCenterViewWorkerPath',
-  `${AssetDir.assetDir}/packages/renderer-worker/node_modules/@lvce-editor/about-view/dist/notificationCenterWorkerMain.js`,
+  `${AssetDir.assetDir}/packages/renderer-worker/node_modules/@lvce-editor/notification-center-view/dist/notificationCenterWorkerMain.js`,
 )

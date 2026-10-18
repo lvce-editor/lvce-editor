@@ -53,7 +53,7 @@
         },
         "renderEventListeners": { "name": "ComponentState.renderEventListeners", "parameters": [] }
       },
-      "capabilities": { "events": true, "render": true, "resize": true, "rootRender": true },
+      "capabilities": { "directRender": true, "events": true, "render": true, "resize": true, "rootRender": true },
       "renderComparison": "always",
       "title": "Component State"
     }
@@ -62,7 +62,7 @@
     "id": "notificationCenterView",
     "fileName": "notificationCenterWorkerMain.js",
     "contentSecurityPolicy": ["default-src 'none'", "sandbox allow-same-origin"],
-    "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/about-view/dist/notificationCenterWorkerMain.js",
+    "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/notification-center-view/dist/notificationCenterWorkerMain.js",
     "productionPath": "/packages/notification-center-view/dist/notificationCenterWorkerMain.js",
     "settingName": "develop.notificationCenterViewWorkerPath",
     "hotReloadCommand": "",
@@ -73,6 +73,7 @@
       "commandPrefix": "NotificationCenter",
       "commandReturnStateWhenCommandsEmpty": true,
       "methods": {
+        "dispose": { "name": "NotificationCenter.dispose", "parameters": [{ "source": "state", "name": "uid" }] },
         "create": { "name": "NotificationCenter.create", "parameters": [{ "source": "state", "name": "uid" }] },
         "loadContent": { "name": "NotificationCenter.loadContent", "parameters": [{ "source": "state", "name": "uid" }] },
         "diff": { "name": "NotificationCenter.diff2", "parameters": [{ "source": "state", "name": "uid" }] },
@@ -83,7 +84,7 @@
         "getCommandIds": { "name": "NotificationCenter.getCommandIds", "parameters": [] },
         "renderEventListeners": { "name": "NotificationCenter.renderEventListeners", "parameters": [] }
       },
-      "capabilities": { "events": true, "render": true, "rootRender": true },
+      "capabilities": { "directRender": true, "events": true, "render": true, "rootRender": true },
       "renderComparison": "always"
     }
   },
@@ -153,7 +154,7 @@
         "getKeyBindings": { "name": "Accounts.getKeyBindings", "parameters": [] },
         "renderEventListeners": { "name": "Accounts.renderEventListeners", "parameters": [] }
       },
-      "capabilities": { "events": true, "render": true, "rootRender": true },
+      "capabilities": { "directRender": true, "events": true, "render": true, "rootRender": true },
       "renderComparison": "always"
     }
   },
@@ -598,7 +599,7 @@
         "getKeyBindings": { "name": "Dialog.getKeyBindings", "parameters": [] },
         "renderEventListeners": { "name": "Dialog.renderEventListeners", "parameters": [] }
       },
-      "capabilities": { "events": true, "render": true, "rootRender": true },
+      "capabilities": { "directRender": true, "events": true, "render": true, "rootRender": true },
       "renderComparison": "always"
     }
   },
@@ -944,6 +945,7 @@
       "commandPrefix": "IframeInspector",
       "commandReturnStateWhenCommandsEmpty": true,
       "methods": {
+        "dispose": { "name": "IframeInspector.dispose", "parameters": [{ "source": "state", "name": "uid" }] },
         "create": {
           "name": "IframeInspector.create",
           "parameters": [
@@ -967,7 +969,7 @@
         "getKeyBindings": { "name": "IframeInspector.getKeyBindings", "parameters": [] },
         "renderEventListeners": { "name": "IframeInspector.renderEventListeners", "parameters": [] }
       },
-      "capabilities": { "events": true, "render": true, "rootRender": true },
+      "capabilities": { "directRender": true, "events": true, "render": true, "rootRender": true },
       "renderComparison": "always"
     }
   },
@@ -1388,7 +1390,7 @@
         "getCommandIds": { "name": "Preview.getCommandIds", "parameters": [] },
         "renderEventListeners": { "name": "Preview.renderEventListeners", "parameters": [] }
       },
-      "capabilities": { "events": true, "render": true, "resize": true, "rootRender": true }
+      "capabilities": { "directRender": true, "events": true, "render": true, "resize": true, "rootRender": true }
     }
   },
   {
@@ -1452,7 +1454,7 @@
         "setComponentState": { "name": "Ports.setComponentState", "parameters": [{ "source": "state", "name": "uid" }, { "source": "argument", "name": "componentState" }] }
       },
       "renderComparison": "emptyCommands",
-      "capabilities": { "events": true, "render": true, "resize": true, "rootRender": true }
+      "capabilities": { "directRender": true, "events": true, "render": true, "resize": true, "rootRender": true }
     }
   },
   {
