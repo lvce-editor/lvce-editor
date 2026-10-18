@@ -65,6 +65,24 @@ jest.unstable_mockModule('../src/parts/MenuWorker/MenuWorker.js', () => ({
   invokeAndTransfer: jest.fn(),
 }))
 
+jest.unstable_mockModule('../src/parts/AccountsViewWorker/AccountsViewWorker.ts', () => ({ invokeAndTransfer: jest.fn() }))
+jest.unstable_mockModule('../src/parts/ComponentStateWorker/ComponentStateWorker.js', () => ({ invokeAndTransfer: jest.fn() }))
+jest.unstable_mockModule('../src/parts/CookieImportViewWorker/CookieImportViewWorker.ts', () => ({ invokeAndTransfer: jest.fn() }))
+jest.unstable_mockModule('../src/parts/DialogWorker/DialogWorker.js', () => ({ invokeAndTransfer: jest.fn() }))
+jest.unstable_mockModule('../src/parts/IframeInspectorWorker/IframeInspectorWorker.js', () => ({ invokeAndTransfer: jest.fn() }))
+jest.unstable_mockModule('../src/parts/NotificationCenterViewWorker/NotificationCenterViewWorker.js', () => ({ invokeAndTransfer: jest.fn() }))
+jest.unstable_mockModule('../src/parts/PortsViewWorker/PortsViewWorker.ts', () => ({ invokeAndTransfer: jest.fn() }))
+jest.unstable_mockModule('../src/parts/PreviewWorker/PreviewWorker.js', () => ({ invokeAndTransfer: jest.fn() }))
+
+const AccountsViewWorker = await import('../src/parts/AccountsViewWorker/AccountsViewWorker.ts')
+const ComponentStateWorker = await import('../src/parts/ComponentStateWorker/ComponentStateWorker.js')
+const CookieImportViewWorker = await import('../src/parts/CookieImportViewWorker/CookieImportViewWorker.ts')
+const DialogWorker = await import('../src/parts/DialogWorker/DialogWorker.js')
+const IframeInspectorWorker = await import('../src/parts/IframeInspectorWorker/IframeInspectorWorker.js')
+const NotificationCenterViewWorker = await import('../src/parts/NotificationCenterViewWorker/NotificationCenterViewWorker.js')
+const PortsViewWorker = await import('../src/parts/PortsViewWorker/PortsViewWorker.ts')
+const PreviewWorker = await import('../src/parts/PreviewWorker/PreviewWorker.js')
+
 const Command = await import('../src/parts/Command/Command.js')
 const CacheWorker = await import('../src/parts/CacheWorker/CacheWorker.js')
 const { commandMap } = await import('../src/parts/CommandMap/CommandMap.js')
@@ -193,3 +211,21 @@ test('transfers a port to the menu worker through the registered IPC command', a
   await commandMap['SendMessagePortToExtensionHostWorker.sendMessagePortToMenuWorker'](port)
   expect(MenuWorker.invokeAndTransfer).toHaveBeenCalledWith('Menu.handleMessagePort', port)
 })
+
+test.each([
+  ['Accounts', AccountsViewWorker, 'Accounts.handleMessagePort'],
+  ['ComponentState', ComponentStateWorker, 'ComponentState.handleMessagePort'],
+  ['CookieImportView', CookieImportViewWorker, 'CookieImportView.handleMessagePort'],
+  ['Dialog', DialogWorker, 'Dialog.handleMessagePort'],
+  ['IframeInspector', IframeInspectorWorker, 'IframeInspector.handleMessagePort'],
+  ['NotificationCenter', NotificationCenterViewWorker, 'NotificationCenter.handleMessagePort'],
+  ['Ports', PortsViewWorker, 'Ports.handleMessagePort'],
+  ['Preview', PreviewWorker, 'Preview.handleMessagePort'],
+] as const)(
+  'connects a secondary direct port for %s without replacing its renderer connection',
+  async (rpcId, worker: Readonly<{ invokeAndTransfer: unknown }>, command) => {
+    const port = {}
+    await SendMessagePortToExtensionHostWorker.sendMessagePortToViewWorker(port, rpcId)
+    expect(worker.invokeAndTransfer).toHaveBeenCalledWith(command, port, false)
+  },
+)
