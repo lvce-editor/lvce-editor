@@ -84,7 +84,7 @@ test('editor worker permits same-origin split modules while retaining its sandbo
   expect(worker?.contentSecurityPolicy).toEqual(["default-src 'none'", 'sandbox allow-same-origin', "script-src 'self'"])
 })
 
-test('all functional worker views provide direct event routing', () => {
+test('Iframe Inspector and Notification Center use renderer-worker event routing', () => {
   type Worker = Readonly<{
     id: string
     viewlet?: Readonly<{ capabilities?: Readonly<{ directRender?: boolean; rootRender?: boolean }> }>
@@ -92,5 +92,5 @@ test('all functional worker views provide direct event routing', () => {
   const functionalWorkers = Workers.getWorkers().filter((worker: Worker) => worker.viewlet?.capabilities?.rootRender)
   expect(functionalWorkers.length).toBeGreaterThan(30)
   const legacyWorkers = functionalWorkers.filter((worker: Worker) => !worker.viewlet?.capabilities?.directRender).map((worker: Worker) => worker.id)
-  expect(legacyWorkers).toEqual(['iframeInspector'])
+  expect(legacyWorkers).toEqual(['notificationCenterView', 'iframeInspector'])
 })

@@ -36,7 +36,6 @@ import * as LanguageModelsViewWorker from '../LanguageModelsViewWorker/LanguageM
 import * as MainAreaWorker from '../MainAreaWorker/MainAreaWorker.js'
 import * as MarkdownWorker from '../MarkdownWorker/MarkdownWorker.js'
 import * as MenuWorker from '../MenuWorker/MenuWorker.js'
-import * as NotificationCenterViewWorker from '../NotificationCenterViewWorker/NotificationCenterViewWorker.js'
 import * as OpenerWorker from '../OpenerWorker/OpenerWorker.js'
 import * as OutputViewWorker from '../OutputViewWorker/OutputViewWorker.js'
 import * as PanelWorker from '../PanelWorker/PanelWorker.js'
@@ -77,7 +76,6 @@ const directViewWorkers = {
   KeyBindings: [KeyBindingsViewWorker, 'KeyBindings.handleMessagePort'],
   LanguageModels: [LanguageModelsViewWorker, 'LanguageModels.handleMessagePort'],
   MainArea: [MainAreaWorker, 'MainArea.handleMessagePort'],
-  NotificationCenter: [NotificationCenterViewWorker, 'NotificationCenter.handleMessagePort'],
   Output: [OutputViewWorker, 'Output.handleMessagePort'],
   Panel: [PanelWorker, 'Panel.handleMessagePort'],
   Ports: [PortsViewWorker, 'Ports.handleMessagePort'],

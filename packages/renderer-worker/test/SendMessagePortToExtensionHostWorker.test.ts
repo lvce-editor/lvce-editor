@@ -69,7 +69,6 @@ jest.unstable_mockModule('../src/parts/AccountsViewWorker/AccountsViewWorker.ts'
 jest.unstable_mockModule('../src/parts/ComponentStateWorker/ComponentStateWorker.js', () => ({ invokeAndTransfer: jest.fn() }))
 jest.unstable_mockModule('../src/parts/CookieImportViewWorker/CookieImportViewWorker.ts', () => ({ invokeAndTransfer: jest.fn() }))
 jest.unstable_mockModule('../src/parts/DialogWorker/DialogWorker.js', () => ({ invokeAndTransfer: jest.fn() }))
-jest.unstable_mockModule('../src/parts/NotificationCenterViewWorker/NotificationCenterViewWorker.js', () => ({ invokeAndTransfer: jest.fn() }))
 jest.unstable_mockModule('../src/parts/PortsViewWorker/PortsViewWorker.ts', () => ({ invokeAndTransfer: jest.fn() }))
 jest.unstable_mockModule('../src/parts/PreviewWorker/PreviewWorker.js', () => ({ invokeAndTransfer: jest.fn() }))
 
@@ -77,7 +76,6 @@ const AccountsViewWorker = await import('../src/parts/AccountsViewWorker/Account
 const ComponentStateWorker = await import('../src/parts/ComponentStateWorker/ComponentStateWorker.js')
 const CookieImportViewWorker = await import('../src/parts/CookieImportViewWorker/CookieImportViewWorker.ts')
 const DialogWorker = await import('../src/parts/DialogWorker/DialogWorker.js')
-const NotificationCenterViewWorker = await import('../src/parts/NotificationCenterViewWorker/NotificationCenterViewWorker.js')
 const PortsViewWorker = await import('../src/parts/PortsViewWorker/PortsViewWorker.ts')
 const PreviewWorker = await import('../src/parts/PreviewWorker/PreviewWorker.js')
 
@@ -215,7 +213,6 @@ test.each([
   ['ComponentState', ComponentStateWorker, 'ComponentState.handleMessagePort'],
   ['CookieImportView', CookieImportViewWorker, 'CookieImportView.handleMessagePort'],
   ['Dialog', DialogWorker, 'Dialog.handleMessagePort'],
-  ['NotificationCenter', NotificationCenterViewWorker, 'NotificationCenter.handleMessagePort'],
   ['Ports', PortsViewWorker, 'Ports.handleMessagePort'],
   ['Preview', PreviewWorker, 'Preview.handleMessagePort'],
 ] as const)(
