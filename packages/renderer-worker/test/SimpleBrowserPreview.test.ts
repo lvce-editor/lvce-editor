@@ -56,6 +56,7 @@ test('registers a preview child id on its parent before loading the child', asyn
   )
 
   expect(ViewletStates.getState(7).tabs[0].previewUid).toBe(result.previewUid)
+  expect(ViewletStates.getInstance(7).renderedState.tabs[0].previewUid).toBe(result.previewUid)
 })
 
 test('materializes and reloads a readable memfs preview URL', async () => {

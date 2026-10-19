@@ -22,7 +22,7 @@ export const materialize = async (state, tab) => {
   const parentInstance = tabIndex >= 0 ? ViewletStates.getInstance(state.uid) : undefined
   if (parentInstance && tabIndex >= 0) {
     const tabs = parentInstance.state.tabs.with(tabIndex, { ...parentInstance.state.tabs[tabIndex], previewUid: uid })
-    ViewletStates.setState(state.uid, { ...parentInstance.state, tabs })
+    ViewletStates.setRenderedState(state.uid, { ...parentInstance.renderedState, tabs })
   }
   const commands = await ViewletManager.load({
     type: 0,
