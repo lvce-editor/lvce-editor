@@ -35,7 +35,8 @@ export const materialize = async (state, tab) => {
     ...getBounds(state),
   })
   await RendererProcess.invoke('Viewlet.sendMultiple', commands)
-  return { ...tab, previewUid: uid }
+  const childState = ViewletStates.getInstance(uid)?.state
+  return { ...tab, previewUid: uid, title: childState?.title || tab.title }
 }
 
 export const dispose = (tab) => (tab.previewUid ? Viewlet.dispose(tab.previewUid) : undefined)

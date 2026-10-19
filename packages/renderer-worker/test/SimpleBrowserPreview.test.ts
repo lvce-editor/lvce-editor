@@ -16,13 +16,21 @@ beforeEach(() => {
 })
 
 test('creates a detached child preview with the exact decoded URI and content bounds', async () => {
-  jest.mocked(ViewletManager.load).mockResolvedValue([['create']])
+  jest.mocked(ViewletManager.load).mockImplementation(async ({ uid }) => {
+    ViewletStates.set(uid, {
+      factory: {},
+      renderedState: { title: 'my favorite file', uid },
+      state: { title: 'my favorite file', uid },
+    })
+    return [['create']]
+  })
   const tab = await Preview.materialize(
     { uid: 7, x: 10, y: 20, width: 300, height: 200, headerHeight: 65 },
     {
       iframeSrc: 'html-preview:///file%3A%2F%2F%2Fa%20%23%25.html',
     },
   )
+  expect(tab.title).toBe('my favorite file')
   expect(ViewletManager.load).toHaveBeenCalledWith(
     expect.objectContaining({
       type: 0,
