@@ -400,7 +400,25 @@ const getRenderCommands = (module, oldState, newState, uid = newState.uid || mod
     const title = module.renderTitle.apply(oldState, newState)
     if (parentId > 0) {
       const parentInstance = ViewletStates.getInstance(parentId)
-      if (parentInstance?.factory?.setTitle && parentInstance.state.childUid === uid) {
+      if (parentInstance?.factory?.setChildTitle) {
+        const oldParentState = parentInstance.state
+        const oldParentRenderedState = parentInstance.renderedState
+        const newParentState = parentInstance.factory.setChildTitle(oldParentState, uid, title)
+        if (newParentState !== oldParentState) {
+          const newParentRenderedState = parentInstance.factory.setChildTitle(oldParentRenderedState, uid, title)
+          parentInstance.state = newParentState
+          parentInstance.renderedState = newParentRenderedState
+          commands.push(
+            ...getRenderCommands(
+              parentInstance.factory,
+              oldParentRenderedState,
+              newParentRenderedState,
+              newParentRenderedState.uid,
+              newParentRenderedState.parentUid,
+            ),
+          )
+        }
+      } else if (parentInstance?.factory?.setTitle && parentInstance.state.childUid === uid) {
         const oldParentRenderedState = parentInstance.renderedState
         parentInstance.state = parentInstance.factory.setTitle(parentInstance.state, title)
         const newParentRenderedState = parentInstance.factory.setTitle(oldParentRenderedState, title)
