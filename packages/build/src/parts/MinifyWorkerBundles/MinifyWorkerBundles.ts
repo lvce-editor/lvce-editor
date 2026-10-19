@@ -8,8 +8,12 @@ export const minifyWorkerBundles = async (toRoot: string): Promise<void> => {
   if (entries.length === 0) {
     throw new Error(`No worker bundles found in ${root}`)
   }
+  const bundlesToMinify = entries.filter((entry) => !/(?:^|[\\/])editor-worker[\\/]/.test(entry))
+  if (bundlesToMinify.length === 0) {
+    return
+  }
   await build({
-    entryPoints: entries.sort(),
+    entryPoints: bundlesToMinify.sort(),
     outbase: root,
     outdir: root,
     allowOverwrite: true,
