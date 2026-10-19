@@ -1365,8 +1365,8 @@
         "defaults": { "count": 0, "disposed": false }
       },
       "commandPrefix": "Preview",
-      "commandReturnStateWhenCommandsEmpty": true,
-      "commandSkipRenderWhenDiffEmpty": true,
+      "commandReturnStateWhenCommandsEmpty": false,
+      "commandSkipRenderWhenDiffEmpty": false,
       "methods": {
         "create": { "name": "Preview.create", "parameters": [
           { "source": "state", "name": "uid" }, { "source": "state", "name": "uri" }, { "source": "state", "name": "x" },

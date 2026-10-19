@@ -418,6 +418,28 @@ test('returns preview runtime diagnostics without treating them as viewlet state
   expect(invoke).toHaveBeenCalledWith('Preview.getRuntimeDiagnostics', 12)
 })
 
+test('updates preview title when pending render has no DOM changes', async () => {
+  let title = 'Initial title'
+  const invoke = jest.fn(async (method: string, ..._args: readonly unknown[]) => {
+    if (method === 'Preview.diff2') return []
+    if (method === 'Preview.render2') return []
+    if (method === 'Preview.getTitle') return title
+    return undefined
+  })
+  const viewlet = createWorkerViewletWithDependencies({
+    adapter: getWorkerViewletAdapter('preview'),
+    config: getWorkerViewletConfig('preview'),
+    worker: { invoke, restart: jest.fn() },
+  })
+  const state = { ...viewlet.create(12, 'file:///workspace/index.html', 0, 0, 640, 480), title }
+
+  title = 'Updated title'
+  const result = await viewlet.Commands.__renderPending(state)
+
+  expect(result.title).toBe('Updated title')
+  expect(invoke).toHaveBeenCalledWith('Preview.getTitle', 12)
+})
+
 test('gets and sets authoritative worker component state', async () => {
   const config: any = createConfig()
   config.methods.getComponentState = { name: 'Example.getComponentState', parameters: [stateParameter('uid')] }
