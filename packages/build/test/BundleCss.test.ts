@@ -75,6 +75,23 @@ test('bundleCss scopes debug chat resizer styles', async () => {
   }
 }, 30_000)
 
+test('bundleCss keeps extension detail header buttons compact and scoped', async () => {
+  const dir = await mkdtemp(join(tmpdir(), 'lvce-bundle-css-'))
+
+  try {
+    await bundleCss({
+      outDir: dir,
+      assetDir: '',
+    })
+
+    const css = await readFile(join(dir, 'parts', 'ViewletExtensionDetailHeader.css'), 'utf8')
+
+    expect(css).toContain('.ExtensionDetailHeaderActions .Button {\n  padding: 3px 8px;\n}')
+  } finally {
+    await rm(dir, { recursive: true, force: true })
+  }
+}, 30_000)
+
 test('bundleCss styles settings checkboxes like compact editor controls', async () => {
   const dir = await mkdtemp(join(tmpdir(), 'lvce-bundle-css-'))
 
