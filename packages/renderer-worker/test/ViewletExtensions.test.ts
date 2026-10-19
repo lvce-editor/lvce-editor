@@ -10,9 +10,6 @@ jest.unstable_mockModule('../src/parts/ExtensionSearchViewWorker/ExtensionSearch
     if (command === 'SearchExtensions.render3') {
       return renderCommands
     }
-    if (command === 'SearchExtensions.renderEventListeners') {
-      return [{ name: 'worker-event', params: ['workerCommand'] }]
-    }
     if (command === 'SearchExtensions.getCommandIds') {
       return []
     }
@@ -99,12 +96,4 @@ test('getCommands includes the extension change handler', async () => {
   await ViewletExtensions.getCommands()
 
   expect(typeof ViewletExtensions.Commands['handleExtensionsChanged']).toBe('function')
-})
-
-test('adds the toolbar command and listener while preserving worker events', async () => {
-  const commands = await ViewletExtensions.getCommands()
-  expect(commands.showMoreActions).toBeInstanceOf(Function)
-  const listeners = await ViewletExtensions.renderEventListeners()
-  expect(listeners).toContainEqual({ name: 'worker-event', params: ['workerCommand'] })
-  expect(listeners).toContainEqual({ name: 'handleExtensionsMoreActions', params: ['showMoreActions'] })
 })
