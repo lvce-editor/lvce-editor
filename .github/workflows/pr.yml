@@ -15,6 +15,16 @@ jobs:
     timeout-minutes: 60
     steps:
       - uses: actions/checkout@v7
+        with:
+          ref: 233781cf2b58d8f4b17819789614cd6328e12e0e
+      - name: Stage passive capture on exact failing PR baseline
+        shell: bash
+        env:
+          DIAGNOSTIC_HEAD: ${{ github.event.pull_request.head.sha }}
+        run: |
+          test "$(git rev-parse HEAD)" = 233781cf2b58d8f4b17819789614cd6328e12e0e
+          git fetch --no-tags origin "$DIAGNOSTIC_HEAD"
+          git show "${DIAGNOSTIC_HEAD}:packages/extension-host-worker-tests/src/_all.js" > packages/extension-host-worker-tests/src/_all.js
       - run: |
           git fetch --no-tags --prune --depth=1 origin +refs/heads/main:refs/remotes/origin/main
       - uses: actions/setup-node@v6
