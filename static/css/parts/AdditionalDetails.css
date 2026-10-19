@@ -1,7 +1,7 @@
 .AdditionalDetails {
   --AdditionalDetailsBorder: var(--PanelBorderTopColor, color-mix(in srgb, var(--WorkbenchForeground) 22%, transparent));
   --MoreInfoOddBackground: var(--ListHoverBackground, color-mix(in srgb, var(--WorkbenchForeground) 7%, transparent));
-  --MoreInfoKeyForeground: var(--DescriptionForeground, color-mix(in srgb, var(--WorkbenchForeground) 72%, transparent));
+  --MoreInfoKeyForeground: var(--DescriptionForeground, color-mix(in srgb, var(--WorkbenchForeground) 85%, transparent));
   contain: strict;
   flex: 1;
   height: 100%;
