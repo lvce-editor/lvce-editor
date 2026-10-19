@@ -242,8 +242,8 @@
   {
     "name": "builtin.language-basics-go",
     "repository": "github.com/lvce-editor/language-basics-go",
-    "version": "0.15.0",
-    "sha256": "c7cf111a9ad5e636b75af8b7fd21d2df6d3b12529e29fbcb1ca8084b03dc6eee",
+    "version": "0.18.0",
+    "sha256": "350ee784e09ed959cdb8f474c5513d6b268c7cf52e78a0356603049e2dbfe5d9",
     "created": "2022-06-16"
   },
   {
