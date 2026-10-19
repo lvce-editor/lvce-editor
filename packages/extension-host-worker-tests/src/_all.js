@@ -182,7 +182,7 @@ const runTests = async () => {
       await context.addInitScript(() => {
         globalThis.splitSaveEvents = []
         for (const type of ['pointerdown', 'focusin', 'focusout', 'keydown', 'beforeinput', 'input']) {
-          document.addEventListener(
+          globalThis.document.addEventListener(
             type,
             (event) => {
               globalThis.splitSaveEvents.push({
@@ -216,9 +216,9 @@ const runTests = async () => {
         if (splitSaveDiagnostics) {
           const snapshot = await page.evaluate(() => ({
             events: globalThis.splitSaveEvents,
-            active: document.activeElement?.outerHTML,
-            overlay: document.querySelector('#TestOverlay')?.textContent,
-            editors: Array.from(document.querySelectorAll('.Editor'), (element) => ({
+            active: globalThis.document.activeElement?.outerHTML,
+            overlay: globalThis.document.querySelector('#TestOverlay')?.textContent,
+            editors: Array.from(globalThis.document.querySelectorAll('.Editor'), (element) => ({
               uid: element.dataset.uid,
               text: element.textContent,
               input: element.querySelector('textarea')?.outerHTML,
