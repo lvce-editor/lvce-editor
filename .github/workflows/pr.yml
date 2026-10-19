@@ -146,11 +146,14 @@ jobs:
           const source = '.tmp/cursor-split-tests/packages/e2e-integration/src/viewlet.main-save-active-split-editor.ts'
           const target = 'packages/extension-host-worker-tests/src/viewlet.main-save-active-split-editor.js'
           let test = await readFile(source, 'utf8')
-          const marker = "  await Editor.type('unsaved ')"
-          if (test.split(marker).length !== 2) throw new Error('Expected exactly one post-save typing probe')
-          test = test.replace(marker, `  console.log('SPLIT-SAVE before type', await Editor.getText())
+          const marker = "  await expect(rightEditorContent).toHaveText('unsaved changed right')"
+          if (test.split(marker).length !== 2) throw new Error('Expected exactly one post-save text assertion')
+          test = test.replace(marker, `  try {
           ${marker}
-            console.log('SPLIT-SAVE after type', await Editor.getText())`)
+            } catch (error) {
+              console.log('SPLIT-SAVE failed model text', await Editor.getText())
+              throw error
+            }`)
           await writeFile(target, stripTypeScriptTypes(test))
           JS
       - name: Test renderer layout blur dispatch
