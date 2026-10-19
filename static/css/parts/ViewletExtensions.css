@@ -94,7 +94,7 @@
   color: var(--ListActiveSelectionForeground, var(--WorkbenchForeground, white));
 }
 
-.ExtensionListWrapper:not(:has(.ListItems:focus-within)) .ExtensionActive {
+.Extensions:not(:has(.ListItems:focus-within)) .ExtensionActive {
   background: var(--ListInactiveSelectionBackground, var(--ListActiveSelectionBackground, color-mix(in srgb, var(--WorkbenchForeground) 12%, transparent)));
 }
 
