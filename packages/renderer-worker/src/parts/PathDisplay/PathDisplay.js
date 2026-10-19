@@ -89,6 +89,9 @@ export const getFileIcon = (uri) => {
   if (uri.startsWith('process-explorer://')) {
     return `MaskIcon${Icon.DebugAlt2}`
   }
+  if (uri.startsWith('workers:///')) {
+    return `MaskIcon${Icon.DebugAlt2}`
+  }
   if (uri.startsWith('file-watcher-explorer://')) {
     return `MaskIcon${Icon.DebugAlt2}`
   }
