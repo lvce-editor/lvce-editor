@@ -494,8 +494,8 @@
   {
     "name": "builtin.language-features-css",
     "repository": "github.com/lvce-editor/language-features-css",
-    "version": "1.14.0",
-    "sha256": "171c0bf68d9a8eb0280ee7f82a4acfc0fa531a4724b4eea73cc74e95ec8e7ff5",
+    "version": "1.22.1",
+    "sha256": "4f1b2dc1ff195906a954a46cace1ffb3cc51e8621a4719c218e142124dca644e",
     "created": "2022-06-16"
   },
   {
