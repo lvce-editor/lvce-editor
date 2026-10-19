@@ -6,11 +6,13 @@ import { pathToFileURL } from 'node:url'
 import { expect, test } from '@jest/globals'
 import { minifyWorkerBundles } from '../src/parts/MinifyWorkerBundles/MinifyWorkerBundles.ts'
 
-test('minified worker entries retain exports, names, lazy initialization, assets and split imports', async () => {
+test('editor worker stays readable while other worker entries are minified', async () => {
   const root = await mkdtemp(join(tmpdir(), 'minified-worker-'))
   try {
     const dist = join(root, 'packages', 'fixture-worker', 'dist')
+    const editorDist = join(root, 'packages', 'editor-worker', 'dist')
     await mkdir(dist, { recursive: true })
+    await mkdir(editorDist, { recursive: true })
     await writeFile(join(root, 'package.json'), '{"type":"module"}')
     const entry = join(dist, 'fixtureWorkerMain.js')
     const source = `/*! fixture worker license */
@@ -25,12 +27,16 @@ export class WorkerError extends Error {}
     await writeFile(entry, source)
     await writeFile(join(dist, 'chunk.js'), chunk)
     await writeFile(join(dist, 'settings.json'), settings)
+    const editorEntry = join(editorDist, 'editorWorkerMain.js')
+    const editorSource = `export function initializeEditorWorker(configuration) {\n  return configuration.editorDocument\n}\n`
+    await writeFile(editorEntry, editorSource)
     await minifyWorkerBundles(root)
     const minified = await readFile(entry, 'utf8')
     expect(minified.length).toBeLessThan(source.length)
     expect(minified).toContain('fixture worker license')
     expect(await readFile(join(dist, 'chunk.js'), 'utf8')).toBe(chunk)
     expect(await readFile(join(dist, 'settings.json'), 'utf8')).toBe(settings)
+    expect(await readFile(editorEntry, 'utf8')).toBe(editorSource)
     const output = execFileSync(
       process.execPath,
       [
@@ -49,6 +55,21 @@ export class WorkerError extends Error {}
       functionName: 'configure',
       className: 'WorkerError',
     })
+  } finally {
+    await rm(root, { recursive: true, force: true })
+  }
+})
+
+test('an editor-only worker tree does not invoke minification', async () => {
+  const root = await mkdtemp(join(tmpdir(), 'editor-only-worker-'))
+  try {
+    const dist = join(root, 'packages', 'editor-worker', 'dist')
+    await mkdir(dist, { recursive: true })
+    const entry = join(dist, 'editorWorkerMain.js')
+    const source = 'export function initializeEditorWorker(configuration) {\n  return configuration\n}\n'
+    await writeFile(entry, source)
+    await minifyWorkerBundles(root)
+    expect(await readFile(entry, 'utf8')).toBe(source)
   } finally {
     await rm(root, { recursive: true, force: true })
   }
