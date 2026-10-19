@@ -1,6 +1,8 @@
 import * as RuntimeConfig from '../RuntimeConfig/RuntimeConfig.ts'
 import { createWorkerViewlet } from '../CreateWorkerViewlet/CreateWorkerViewlet.js'
 import * as OutputViewWorker from '../OutputViewWorker/OutputViewWorker.js'
+import * as PreviewWorker from '../PreviewWorker/PreviewWorker.js'
+import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as PreviewSandBoxWorker from '../PreviewSandBoxWorker/PreviewSandBoxWorker.js'
 
 const workerViewlet = createWorkerViewlet({ workerId: 'preview' })
@@ -27,7 +29,6 @@ export const {
   Variables,
   create,
   decrement,
-  getCommands,
   getKeyBindings,
   getMenus,
   getQuickPickMenuEntries,
@@ -48,6 +49,22 @@ export const {
   resize,
   saveState,
 } = workerViewlet
+
+// Preview worker notifications do not identify one viewlet: editor changes may update
+// several previews, including tabs that are not selected.
+const rerenderAll = async () => {
+  for (const uid of instances) {
+    await PreviewWorker.invoke('Preview.rerender', uid)
+    await Viewlet.requestRender(uid)
+  }
+}
+rerenderAll.requiresInstance = false
+
+export const getCommands = async () => {
+  const commands = await workerViewlet.getCommands()
+  commands.rerender = rerenderAll
+  return commands
+}
 
 export const renderTitle = {
   isEqual(oldState, newState) {

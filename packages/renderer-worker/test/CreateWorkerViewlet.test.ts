@@ -431,12 +431,14 @@ test('updates preview title when pending render has no DOM changes', async () =>
     config: getWorkerViewletConfig('preview'),
     worker: { invoke, restart: jest.fn() },
   })
-  const state = { ...viewlet.create(12, 'file:///workspace/index.html', 0, 0, 640, 480), title }
+  const state = { ...viewlet.create(12, 'file:///workspace/index.html', 0, 0, 640, 480, undefined, 5), title }
+  expect(state.parentUid).toBe(5)
 
   title = 'Updated title'
   const result = await viewlet.Commands.__renderPending(state)
 
   expect(result.title).toBe('Updated title')
+  expect(result.parentUid).toBe(5)
   expect(invoke).toHaveBeenCalledWith('Preview.getTitle', 12)
 })
 
