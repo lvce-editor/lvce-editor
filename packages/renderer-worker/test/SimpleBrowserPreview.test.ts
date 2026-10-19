@@ -7,20 +7,30 @@ jest.unstable_mockModule('../src/parts/Viewlet/Viewlet.js', () => ({ resize: jes
 const ViewletManager = await import('../src/parts/ViewletManager/ViewletManager.js')
 const RendererProcess = await import('../src/parts/RendererProcess/RendererProcess.js')
 const Viewlet = await import('../src/parts/Viewlet/Viewlet.js')
+const ViewletStates = await import('../src/parts/ViewletStates/ViewletStates.js')
 const Preview = await import('../src/parts/SimpleBrowserPreview/SimpleBrowserPreview.js')
 
 beforeEach(() => {
   jest.resetAllMocks()
+  ViewletStates.reset()
 })
 
 test('creates a detached child preview with the exact decoded URI and content bounds', async () => {
-  jest.mocked(ViewletManager.load).mockResolvedValue([['create']])
+  jest.mocked(ViewletManager.load).mockImplementation(async ({ uid }) => {
+    ViewletStates.set(uid, {
+      factory: {},
+      renderedState: { title: 'my favorite file', uid },
+      state: { title: 'my favorite file', uid },
+    })
+    return [['create']]
+  })
   const tab = await Preview.materialize(
     { uid: 7, x: 10, y: 20, width: 300, height: 200, headerHeight: 65 },
     {
       iframeSrc: 'html-preview:///file%3A%2F%2F%2Fa%20%23%25.html',
     },
   )
+  expect(tab.title).toBe('my favorite file')
   expect(ViewletManager.load).toHaveBeenCalledWith(
     expect.objectContaining({
       type: 0,
@@ -38,6 +48,23 @@ test('creates a detached child preview with the exact decoded URI and content bo
   expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.sendMultiple', [['create']])
   expect(await Preview.materialize({}, tab)).toBe(tab)
   expect(ViewletManager.load).toHaveBeenCalledTimes(1)
+})
+
+test('registers a preview child id on its parent before loading the child', async () => {
+  jest.mocked(ViewletManager.load).mockResolvedValue([['create']])
+  const tab = { iframeSrc: 'html-preview:///file%3A%2F%2F%2Ffirst.html' }
+  const parentState = { selectedTabIndex: 0, tabs: [tab], uid: 7 }
+  const renderedState = { ...parentState }
+  const factory = { name: 'SimpleBrowser' }
+  ViewletStates.set(7, { factory, renderedState, state: parentState })
+
+  const result = await Preview.materialize(
+    { ...parentState, x: 0, y: 0, width: 300, height: 200, headerHeight: 65 },
+    tab,
+  )
+
+  expect(ViewletStates.getState(7).tabs[0].previewUid).toBe(result.previewUid)
+  expect(ViewletStates.getInstance(7).renderedState.tabs[0].previewUid).toBe(result.previewUid)
 })
 
 test('materializes and reloads a readable memfs preview URL', async () => {

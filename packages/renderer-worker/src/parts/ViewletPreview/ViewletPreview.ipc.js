@@ -45,10 +45,18 @@ export const {
   render,
   renderActions,
   renderEventListeners,
-  renderTitle,
   resize,
   saveState,
 } = workerViewlet
+
+export const renderTitle = {
+  isEqual(oldState, newState) {
+    return oldState.title === newState.title
+  },
+  apply(_oldState, newState) {
+    return newState.title
+  },
+}
 
 export const loadContent = async (state, ...args) => {
   const { uid } = state

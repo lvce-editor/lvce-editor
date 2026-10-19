@@ -49,6 +49,15 @@ import * as TabDrag from './ViewletSimpleBrowserTabDrag.js'
 // Overlay snapshots and native visibility must commit together before the next command.
 export const serializeCommands = true
 
+export const setChildTitle = (state, childUid, title) => {
+  const tabIndex = state.tabs.findIndex((tab) => tab.previewUid === childUid)
+  if (tabIndex === -1) return state
+  const tabTitle = title || 'HTML Preview'
+  const tabs = state.tabs.with(tabIndex, { ...state.tabs[tabIndex], title: tabTitle })
+  if (tabIndex !== state.selectedTabIndex) return { ...state, tabs }
+  return { ...state, tabs, title: tabTitle }
+}
+
 const navigationHeaderHeight = 30
 const tabsHeaderHeight = 35
 const closeTabKeyBinding = KeyModifier.CtrlCmd | KeyCode.KeyW

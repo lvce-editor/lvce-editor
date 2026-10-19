@@ -306,6 +306,18 @@ const createTwoTabState = () => {
   }
 }
 
+test('setChildTitle updates the matching preview tab without changing another tab', () => {
+  const firstTab = { previewUid: 11, title: 'HTML Preview' }
+  const secondTab = { previewUid: 12, title: 'HTML Preview' }
+  const state = { selectedTabIndex: 0, tabs: [firstTab, secondTab], title: 'HTML Preview' }
+
+  const nextState = ViewletSimpleBrowser.setChildTitle(state, 12, 'Second document')
+
+  expect(nextState.tabs).toEqual([firstTab, { ...secondTab, title: 'Second document' }])
+  expect(nextState.title).toBe('HTML Preview')
+  expect(ViewletSimpleBrowser.setChildTitle(state, 11, '')).toMatchObject({ title: 'HTML Preview' })
+})
+
 test('create', () => {
   const state = ViewletSimpleBrowser.create()
   expect(state).toBeDefined()

@@ -878,6 +878,40 @@ test('extension view render keeps the parent title state in sync', () => {
   })
 })
 
+test('preview title render updates the owning browser tab by child uid', () => {
+  const tab = { previewUid: 1, title: 'HTML Preview' }
+  const parentState = { selectedTabIndex: 0, tabs: [tab], title: 'HTML Preview', uid: 2 }
+  const factory = {
+    setChildTitle(state, childUid, title) {
+      const index = state.tabs.findIndex((candidate) => candidate.previewUid === childUid)
+      if (index === -1) return state
+      const tabs = state.tabs.with(index, { ...state.tabs[index], title: title || 'HTML Preview' })
+      return { ...state, tabs, title: index === state.selectedTabIndex ? tabs[index].title : state.title }
+    },
+  }
+  ViewletStates.set(2, { factory, renderedState: parentState, state: parentState })
+
+  ViewletManager.render(
+    {
+      renderTitle: {
+        isEqual(oldState, newState) {
+          return oldState.title === newState.title
+        },
+        apply(_oldState, newState) {
+          return newState.title
+        },
+      },
+    },
+    { title: 'HTML Preview' },
+    { title: 'First document' },
+    1,
+    2,
+  )
+
+  expect(ViewletStates.getState(2).tabs[0].title).toBe('First document')
+  expect(ViewletStates.getState(2).title).toBe('First document')
+})
+
 test('extension view render sends a title command while loading a new child', () => {
   const parentState = {
     childUid: 3,
