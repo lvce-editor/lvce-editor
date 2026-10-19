@@ -145,7 +145,13 @@ jobs:
           import { stripTypeScriptTypes } from 'node:module'
           const source = '.tmp/cursor-split-tests/packages/e2e-integration/src/viewlet.main-save-active-split-editor.ts'
           const target = 'packages/extension-host-worker-tests/src/viewlet.main-save-active-split-editor.js'
-          await writeFile(target, stripTypeScriptTypes(await readFile(source, 'utf8')))
+          let test = await readFile(source, 'utf8')
+          const marker = "  await Editor.type('unsaved ')"
+          if (test.split(marker).length !== 2) throw new Error('Expected exactly one post-save typing probe')
+          test = test.replace(marker, `  console.log('SPLIT-SAVE before type', await Editor.getText())
+          ${marker}
+            console.log('SPLIT-SAVE after type', await Editor.getText())`)
+          await writeFile(target, stripTypeScriptTypes(test))
           JS
       - name: Test renderer layout blur dispatch
         if: matrix.os == 'ubuntu-24.04'
@@ -171,9 +177,30 @@ jobs:
         run: node .tmp/accounts-view-tests/packages/e2e-integration/stage-accounts-view-test.mjs . --clean
       - name: Test saving the active split editor with the published worker
         working-directory: ./packages/extension-host-worker-tests
-        run: npm run e2e:headless -- --ci --test-name-prefix=viewlet.main-save-active-split-editor
+        shell: bash
+        run: |
+          failed=0
+          for attempt in {1..20}; do
+            export LVCE_SPLIT_SAVE_ATTEMPT="$attempt"
+            if npm run e2e:headless -- --ci --test-name-prefix=viewlet.main-save-active-split-editor --split-save-diagnostics; then
+              echo "SPLIT-SAVE attempt $attempt PASS"
+            else
+              echo "SPLIT-SAVE attempt $attempt FAIL"
+              failed=$((failed + 1))
+            fi
+          done
+          echo "SPLIT-SAVE completed=20 failed=$failed passed=$((20 - failed))"
+          test "$failed" -eq 0
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0
+      - name: Upload split save diagnostics
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: split-save-${{ matrix.os }}
+          include-hidden-files: true
+          path: packages/extension-host-worker-tests/.tmp/split-save-diagnostics
+          if-no-files-found: warn
       - name: Remove staged active split save regression
         if: always()
         run: |

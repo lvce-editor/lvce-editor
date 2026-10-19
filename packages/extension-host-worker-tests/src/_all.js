@@ -177,6 +177,28 @@ const runTests = async () => {
         if (location.protocol === 'http:' || location.protocol === 'https:') localStorage.setItem('settings', JSON.stringify(value))
       }, initialSettings)
     }
+    const splitSaveDiagnostics = argv.includes('--split-save-diagnostics')
+    if (splitSaveDiagnostics) {
+      await context.addInitScript(() => {
+        globalThis.splitSaveEvents = []
+        for (const type of ['pointerdown', 'focusin', 'focusout', 'keydown', 'beforeinput', 'input']) {
+          document.addEventListener(
+            type,
+            (event) => {
+              globalThis.splitSaveEvents.push({
+                time: performance.now(),
+                type,
+                key: event.key,
+                data: event.data,
+                target: event.target.outerHTML?.slice(0, 1000),
+                editorUid: event.target.closest?.('.Editor')?.dataset.uid,
+              })
+            },
+            true,
+          )
+        }
+      })
+    }
     const page = await context.newPage()
     const expectedConsole = argv.find((argument) => argument.startsWith('--expect-console='))?.slice('--expect-console='.length)
     let receivedExpectedConsole = false
@@ -188,7 +210,25 @@ const runTests = async () => {
     const browserTest = browserTestPath ? (await import(pathToFileURL(resolve(browserTestPath)).href)).test : undefined
     const testNames = await getPaths()
     for (const testName of testNames) {
-      await testFile(page, testName, timeout, browserTest)
+      try {
+        await testFile(page, testName, timeout, browserTest)
+      } finally {
+        if (splitSaveDiagnostics) {
+          const snapshot = await page.evaluate(() => ({
+            events: globalThis.splitSaveEvents,
+            active: document.activeElement?.outerHTML,
+            overlay: document.querySelector('#TestOverlay')?.textContent,
+            editors: Array.from(document.querySelectorAll('.Editor'), (element) => ({
+              uid: element.dataset.uid,
+              text: element.textContent,
+              input: element.querySelector('textarea')?.outerHTML,
+            })),
+          }))
+          const diagnosticsPath = join(__dirname, '..', '.tmp', 'split-save-diagnostics')
+          await mkdir(diagnosticsPath, { recursive: true })
+          await writeFile(join(diagnosticsPath, `${testName}-${process.env.LVCE_SPLIT_SAVE_ATTEMPT}.json`), JSON.stringify(snapshot, null, 2))
+        }
+      }
     }
     if (expectedConsole && !receivedExpectedConsole) throw new Error(`Missing test assertion: ${expectedConsole}`)
   } finally {
