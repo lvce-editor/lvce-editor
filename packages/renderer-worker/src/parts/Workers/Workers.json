@@ -1381,6 +1381,7 @@
         "hotReloadLoadContent": { "name": "Preview.loadContent", "parameters": [{ "source": "state", "name": "uid" }, { "source": "argument", "name": "savedState" }] },
         "diff": { "name": "Preview.diff2", "parameters": [{ "source": "state", "name": "uid" }] },
         "render": { "name": "Preview.render2", "parameters": [{ "source": "state", "name": "uid" }, { "source": "result", "name": "diff" }] },
+        "getTitle": { "name": "Preview.getTitle", "parameters": [{ "source": "state", "name": "uid" }] },
         "dispose": { "name": "Preview.dispose", "parameters": [{ "source": "state", "name": "uid" }] },
         "resize": { "name": "Preview.resize", "parameters": [{ "source": "state", "name": "uid" }, { "source": "argument", "name": "dimensions" }] },
         "saveState": { "name": "Preview.saveState", "parameters": [{ "source": "state", "name": "uid" }] },
@@ -1388,6 +1389,8 @@
         "getCommandIds": { "name": "Preview.getCommandIds", "parameters": [] },
         "renderEventListeners": { "name": "Preview.renderEventListeners", "parameters": [] }
       },
+      "outputs": [{ "stateField": "title", "method": { "name": "Preview.getTitle", "parameters": [{ "source": "state", "name": "uid" }] } }],
+      "title": "",
       "capabilities": { "directRender": true, "events": true, "render": true, "resize": true, "rootRender": true }
     }
   },
