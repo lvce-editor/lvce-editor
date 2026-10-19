@@ -91,7 +91,7 @@
     "@lvce-editor/panel-worker": "^2.14.3",
     "@lvce-editor/ports-view": "^0.13.2",
     "@lvce-editor/preview-sandbox-worker": "^4.17.3",
-    "@lvce-editor/preview-worker": "^6.19.1",
+    "@lvce-editor/preview-worker": "^6.19.3",
     "@lvce-editor/problems-view": "^1.41.2",
     "@lvce-editor/process-explorer-worker": "^3.34.0",
     "@lvce-editor/quick-pick-worker": "^4.28.1",
