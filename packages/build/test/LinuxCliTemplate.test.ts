@@ -338,7 +338,7 @@ setTimeout(() => {
       const cliPath = join(binPath, 'cli.js')
       await writeFile(cliPath, cli)
 
-      for (const flag of ['--cpu-profile', '--wait']) {
+      for (const flag of ['--cpu-profile', '--wait', '--wait-10-seconds']) {
         const success = await execFileAsync(process.execPath, [cliPath, flag])
         expect(success.stdout).toBe('profile written to /tmp/profile.cpuprofile\n')
         expect(success.stderr).toBe('profile complete\n')

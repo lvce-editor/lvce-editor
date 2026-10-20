@@ -1,3 +1,4 @@
+import * as ApplicationRegistry from '../ApplicationRegistry/ApplicationRegistry.ts'
 import * as Command from '../Command/Command.js'
 import * as EditorWorker from '../EditorWorker/EditorWorker.ts'
 import * as GetSelectionPairs from '../GetSelectionPairs/GetSelectionPairs.js'
@@ -180,4 +181,36 @@ export const updateAllDiagnosticsWithCommand = async (invoke) => {
 
 export const updateAllDiagnostics = async () => {
   await updateAllDiagnosticsWithCommand(EditorWorker.invoke)
+}
+
+// Return both fields from the same synchronous state snapshot.
+export const getActiveEditorInfo = (applicationId) => {
+  const instance = ViewletStates.getInstance(ViewletModuleId.EditorText, applicationId)
+  if (!instance) {
+    return undefined
+  }
+  const { id, uri } = instance.state
+  return { id, uri }
+}
+
+export const openColorPickerWithCommand = async (executeCommand, editorId, initialColor, applicationId) => {
+  if (!Number.isSafeInteger(editorId) || editorId < 0) {
+    throw new TypeError('editorId must be a non-negative integer')
+  }
+  if (initialColor !== undefined && typeof initialColor !== 'string') {
+    throw new TypeError('initialColor must be a string')
+  }
+  const instance = ViewletStates.getByUid(editorId)
+  if (
+    !instance ||
+    (instance.moduleId !== ViewletModuleId.EditorText && instance.moduleId !== 'EditorText') ||
+    ApplicationRegistry.getOwner(editorId) !== applicationId
+  ) {
+    throw new Error(`Editor not found: ${editorId}`)
+  }
+  await executeCommand('Viewlet.executeViewletCommand', editorId, 'Editor.openColorPicker', initialColor)
+}
+
+export const openColorPicker = async (editorId, initialColor, applicationId) => {
+  await openColorPickerWithCommand(Command.execute, editorId, initialColor, applicationId)
 }
