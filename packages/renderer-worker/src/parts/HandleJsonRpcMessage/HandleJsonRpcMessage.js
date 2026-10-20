@@ -1,4 +1,4 @@
-import { getErrorResponse } from '../../../../../static/js/lvce-editor-json-rpc.js'
+import * as JsonRpc from '../JsonRpc/JsonRpc.js'
 
 const send = (ipc, message) => {
   if ('send' in ipc) {
@@ -27,7 +27,7 @@ export const handleJsonRpcMessage = async (ipc, message, execute, resolve, sourc
         })
         return
       } catch (error) {
-        send(ipc, getErrorResponse(message, error, (value) => value, () => {}))
+        send(ipc, JsonRpc.getErrorResponse(message, error, (value) => value, () => {}))
         return
       }
     }
