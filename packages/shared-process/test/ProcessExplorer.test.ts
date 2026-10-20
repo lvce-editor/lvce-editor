@@ -2,6 +2,7 @@ import { beforeEach, expect, jest, test } from '@jest/globals'
 
 const ipc = {
   dispose: jest.fn(async () => {}),
+  on: jest.fn<(event: string, listener: () => void) => void>(),
 }
 const launchProcessExplorer = jest.fn(async () => ipc)
 
@@ -15,6 +16,7 @@ beforeEach(() => {
   ProcessExplorer.state.ipc = undefined
   ProcessExplorer.state.refCount = 0
   ipc.dispose.mockClear()
+  ipc.on.mockClear()
   launchProcessExplorer.mockClear()
   jest.useRealTimers()
 })
@@ -70,5 +72,42 @@ test('acquire - relaunches after ref count reaches zero', async () => {
 
   await ProcessExplorer.acquire()
 
+  expect(launchProcessExplorer).toHaveBeenCalledTimes(2)
+})
+
+test('acquire - relaunches after the process exits', async () => {
+  const replacementIpc = {
+    dispose: jest.fn(async () => {}),
+    on: jest.fn<(event: string, listener: () => void) => void>(),
+  }
+  launchProcessExplorer.mockResolvedValueOnce(ipc).mockResolvedValueOnce(replacementIpc)
+
+  await ProcessExplorer.acquire()
+  const closeListener = ipc.on.mock.calls[0][1]
+  closeListener()
+
+  const result = await ProcessExplorer.acquire()
+
+  expect(result).toBe(replacementIpc)
+  expect(launchProcessExplorer).toHaveBeenCalledTimes(2)
+  expect(ProcessExplorer.state.refCount).toBe(1)
+})
+
+test('acquire - ignores a close event from an exited process after replacement', async () => {
+  const replacementIpc = {
+    dispose: jest.fn(async () => {}),
+    on: jest.fn<(event: string, listener: () => void) => void>(),
+  }
+  launchProcessExplorer.mockResolvedValueOnce(ipc).mockResolvedValueOnce(replacementIpc)
+
+  await ProcessExplorer.acquire()
+  const oldCloseListener = ipc.on.mock.calls[0][1]
+  oldCloseListener()
+  await ProcessExplorer.acquire()
+  oldCloseListener()
+
+  expect(ProcessExplorer.state.ipc).toBeDefined()
+  expect(ProcessExplorer.state.refCount).toBe(1)
+  expect(await ProcessExplorer.acquire()).toBe(replacementIpc)
   expect(launchProcessExplorer).toHaveBeenCalledTimes(2)
 })
