@@ -621,6 +621,7 @@ test('an explicitly targeted color picker reaches the worker through the registe
   editorWorkerInvoke.mockImplementation(async (method) => {
     if (method === 'Editor.getCommandIds') return ['openColorPicker']
     if (method === 'Editor.renderDirect2') return []
+    return undefined
   })
   commandExecute.mockImplementation((command, ...args) => {
     if (command !== 'Viewlet.executeViewletCommand') throw new Error(`Unexpected command: ${command}`)
