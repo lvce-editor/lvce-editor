@@ -37,6 +37,13 @@ const ExtensionHostShared = await import('../src/parts/ExtensionHost/ExtensionHo
 
 FileSystemState.registerAll({ 'extension-host': () => ExtensionHostFileSystem })
 
+test('readFile forwards an explicit encoding to filesystem providers', async () => {
+  invoke.mockResolvedValue({ found: true, result: 'decoded content' })
+
+  await expect(ExtensionHostFileSystem.readFile('sample:///binary', 'binary')).resolves.toBe('decoded content')
+  expect(invoke).toHaveBeenCalledWith('Extensions.executeFileSystemProviderReadFile', 'sample', 'sample:///binary', 'binary')
+})
+
 test.each(['', '["é", "😀", "line\\nbreak"]'])('getFileSize measures virtual heap snapshot strings as UTF-8 bytes: %j', async (content) => {
   const uri = 'heapnapshot-strings:///file%3A%2F%2F%2Ftmp%2Ftest%20snapshot.heapsnapshot.json'
   invoke.mockResolvedValue({ found: true, result: content })
@@ -120,11 +127,7 @@ test('exists checks files through the provider stat method', async () => {
   invoke.mockResolvedValue({ found: true, result: 1 })
 
   await expect(ExtensionHostFileSystem.exists('remote-ssh:///workspace/Main.ts')).resolves.toBe(true)
-  expect(invoke).toHaveBeenCalledWith(
-    'Extensions.executeFileSystemProviderStat',
-    'remote-ssh',
-    'remote-ssh:///workspace/Main.ts',
-  )
+  expect(invoke).toHaveBeenCalledWith('Extensions.executeFileSystemProviderStat', 'remote-ssh', 'remote-ssh:///workspace/Main.ts')
   expect(ExtensionHostShared.executeProvider).not.toHaveBeenCalled()
 })
 
