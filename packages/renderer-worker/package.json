@@ -109,7 +109,7 @@
     "@lvce-editor/syntax-highlighting-worker": "^2.7.0",
     "@lvce-editor/task-worker": "^0.2.0",
     "@lvce-editor/terminal-worker": "^2.15.2",
-    "@lvce-editor/test-worker": "^17.28.0",
+    "@lvce-editor/test-worker": "^17.29.0",
     "@lvce-editor/text-measurement-worker": "^1.25.2",
     "@lvce-editor/text-search-view": "^1.30.5",
     "@lvce-editor/text-search-worker": "^7.22.1",
