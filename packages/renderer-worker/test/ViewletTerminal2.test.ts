@@ -322,3 +322,10 @@ test('an unavailable web terminal shows its explanation without creating a proce
   expect(terminalWorkerInvoke).not.toHaveBeenCalled()
   expect(rendererProcessInvoke).toHaveBeenCalledWith('Viewlet.send', 55, 'write', new TextEncoder().encode(`\r\n${spawnError}\r\n`))
 })
+
+test('successful file execution retains output and its terminal tab', async () => {
+  const state = { ...ViewletTerminal2.create(10), keepOpen: true }
+  await ViewletTerminal2.handleExit(state, { exitCode: 0 })
+  expect(commandExecute).not.toHaveBeenCalledWith('Terminals.handleTerminalExit', 10)
+  expect(rendererProcessInvoke).toHaveBeenCalledWith('Viewlet.send', 10, 'write', new TextEncoder().encode('\r\nProcess exited with code 0.\r\n'))
+})

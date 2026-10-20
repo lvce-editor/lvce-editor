@@ -43,6 +43,7 @@ export const loadContent = async (state, _savedState?: any, configuredSpawnOptio
     cwd = state.cwd,
     disposeCommand,
     env,
+    keepOpen = false,
     spawnError,
   } = configuredSpawnOptions || (await GetTerminalSpawnOptions.getTerminalSpawnOptions(state.cwd))
   return {
@@ -52,6 +53,7 @@ export const loadContent = async (state, _savedState?: any, configuredSpawnOptio
     cwd,
     disposeCommand,
     env,
+    keepOpen,
     spawnError,
     xtermMounted: true,
   }
@@ -114,6 +116,10 @@ export const handleExit = async (state, event?: { exitCode?: number; signal?: nu
       ? `The terminal process exited with signal ${event.signal}.`
       : `The terminal process exited with code ${event.exitCode}.`
     await showError(state, message)
+    return state
+  }
+  if (state.keepOpen) {
+    await handleData(state, new TextEncoder().encode('\r\nProcess exited with code 0.\r\n'))
     return state
   }
   if (!(await TerminalTransfer.handleExit(state.uid))) {
