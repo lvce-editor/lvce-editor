@@ -26,6 +26,8 @@ jest.unstable_mockModule('../src/parts/ViewletManager/ViewletManager.js', () => 
 }))
 
 jest.unstable_mockModule('../src/parts/GetActiveEditor/GetActiveEditor.js', () => ({
+  getActiveEditorInfo: jest.fn(async () => ({ id: 42, uri: 'memfs:///preview.css' })),
+  openColorPicker: jest.fn(async () => {}),
   getSelections: jest.fn(async () => [0, 1, 0, 4]),
   setSelections: jest.fn(async () => {}),
 }))
@@ -341,4 +343,12 @@ test('dispatches editor lifecycle commands only to components owned by the appli
     'Component not found in application source: 999',
   )
   expect(Viewlet.executeViewletCommand).not.toHaveBeenCalled()
+})
+
+test('editor snapshot and explicit color picker route retain their application scope', async () => {
+  await Application.create(options('preview'))
+  expect(await Application.execute('preview', 'GetActiveEditor.getActiveEditorInfo')).toEqual({ id: 42, uri: 'memfs:///preview.css' })
+  expect(GetActiveEditor.getActiveEditorInfo).toHaveBeenCalledWith('preview')
+  await Application.execute('preview', 'GetActiveEditor.openColorPicker', 42, '#ff8800')
+  expect(GetActiveEditor.openColorPicker).toHaveBeenCalledWith(42, '#ff8800', 'preview')
 })

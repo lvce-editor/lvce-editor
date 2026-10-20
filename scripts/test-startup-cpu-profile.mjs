@@ -58,9 +58,9 @@ assert.ok(electron, 'Set LVCE_ELECTRON_PATH to the Electron executable')
 const directory = await mkdtemp(join(tmpdir(), 'lvce-startup-acceptance-'))
 const packaged = process.env.LVCE_CPU_PROFILE_PACKAGED === '1'
 const outputs = []
-const waitForExit = async (configHome, timeout = 10_000) => {
+const waitForExit = async (configHome) => {
   const marker = Buffer.from(`XDG_CONFIG_HOME=${configHome}\0`)
-  const deadline = Date.now() + timeout
+  const deadline = Date.now() + 10_000
   while (true) {
     const pids = (await readdir('/proc')).filter((name) => /^\d+$/.test(name))
     const remaining = []
@@ -152,8 +152,7 @@ try {
   )
   assert.ifError(baseline.error)
   assert.equal(baseline.status, 0, baseline.stdout + baseline.stderr)
-  // Allow the full timed exit after startup, plus a margin for slow CI launchers.
-  await waitForExit(env.XDG_CONFIG_HOME, 20_000)
+  await waitForExit(env.XDG_CONFIG_HOME)
   const sessionDirectory = join(env.XDG_CACHE_HOME, 'lvce-oss/userdata/Partitions/lvce-oss')
   const savedSession = await snapshot(sessionDirectory)
   assert.ok(Object.keys(savedSession).length > 0, 'Normal startup did not create session storage')
