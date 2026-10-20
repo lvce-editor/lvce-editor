@@ -350,7 +350,8 @@ export const textSearch = {
 
 export const titleBar = {
   prepareLoadState(state) {
-    return { ...state, menuUid: state.menuUid || Id.create(), menuRevision: LayoutWidgets.getNextRevision(state.uid) }
+    const { menuUid, uid } = state
+    return { ...state, menuUid: menuUid || Id.create(), menuRevision: LayoutWidgets.getNextRevision(uid) }
   },
   async afterLoadContent({ state, worker }) {
     if (Preferences.get('window.titleBarless.enabled') === true) {

@@ -1,4 +1,5 @@
 import { beforeEach, expect, jest, test } from '@jest/globals'
+import * as ViewletStates from '../src/parts/ViewletStates/ViewletStates.js'
 
 jest.unstable_mockModule('../src/parts/Preferences/Preferences.js', () => ({ get: jest.fn() }))
 
@@ -7,6 +8,7 @@ const WorkerViewletAdapters = await import('../src/parts/WorkerViewletAdapters/W
 
 beforeEach(() => {
   jest.clearAllMocks()
+  ViewletStates.reset()
 })
 
 test('hides title bar content before its first render in titlebarless mode', async () => {
@@ -32,4 +34,12 @@ test('reserves a distinct menu widget UID for each title bar and retains it on r
   const second = WorkerViewletAdapters.titleBar.prepareLoadState({ uid: 8 })
   expect(first.menuUid).not.toBe(second.menuUid)
   expect(WorkerViewletAdapters.titleBar.prepareLoadState(first).menuUid).toBe(first.menuUid)
+})
+
+test('reloading starts menu declarations beyond the revision already applied by layout', () => {
+  const layoutState = { uid: 1, widgetRevisions: { 7: 42 } }
+  ViewletStates.set(1, { factory: {}, moduleId: 'Layout', renderedState: layoutState, state: layoutState })
+  const next = WorkerViewletAdapters.titleBar.prepareLoadState({ menuUid: 100, uid: 7 })
+  expect(next.menuUid).toBe(100)
+  expect(next.menuRevision).toBe(43)
 })
