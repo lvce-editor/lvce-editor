@@ -2,6 +2,7 @@ import * as ApplicationFileSystem from '../ApplicationFileSystem/ApplicationFile
 import * as ApplicationPreferences from '../ApplicationPreferences/ApplicationPreferences.ts'
 import * as ApplicationRegistry from '../ApplicationRegistry/ApplicationRegistry.ts'
 import * as Command from '../Command/Command.js'
+import * as EditorKeymap from '../EditorKeymap/EditorKeymap.ts'
 import * as ExtensionHostCommands from '../ExtensionHost/ExtensionHostCommands.js'
 import * as ExtensionHostQuickPick from '../ExtensionHost/ExtensionHostQuickPick.js'
 import * as ExtensionManagementWorker from '../ExtensionManagementWorker/ExtensionManagementWorker.js'
@@ -152,6 +153,10 @@ export const execute = (applicationId: string, command: string, ...args: readonl
     })
   }
   switch (command) {
+    case 'EditorKeymap.register':
+      return ApplicationRegistry.track(applicationId, () => EditorKeymap.register(args[0], applicationId))
+    case 'EditorKeymap.remove':
+      return ApplicationRegistry.track(applicationId, () => EditorKeymap.remove(args[0], applicationId))
     case 'Viewlet.executeViewletCommand':
       return ApplicationRegistry.track(applicationId, () => {
         const [uid, method, ...commandArgs] = args
@@ -189,6 +194,7 @@ export const execute = (applicationId: string, command: string, ...args: readonl
       )
     case 'Extensions.reload':
       return ApplicationRegistry.track(applicationId, async () => {
+        await EditorKeymap.dispose(applicationId)
         await ExtensionManagementWorker.invoke('Extensions.reloadApplicationExtension', applicationId, ...args)
         for (const uid of ApplicationRegistry.getUids(applicationId)) {
           const instance = ViewletStates.getByUid(uid)
@@ -299,7 +305,7 @@ const disposeApplication = async (applicationId: string): Promise<void> => {
       }
     }
   }
-  for (const cleanup of [ApplicationPreferences.dispose, ApplicationRegistry.remove, ApplicationFileSystem.dispose]) {
+  for (const cleanup of [EditorKeymap.dispose, ApplicationPreferences.dispose, ApplicationRegistry.remove, ApplicationFileSystem.dispose]) {
     try {
       await cleanup(applicationId)
     } catch (error) {
