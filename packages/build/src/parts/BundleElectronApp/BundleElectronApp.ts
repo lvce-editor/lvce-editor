@@ -208,7 +208,7 @@ export const build = async ({
     isAppImage,
     bundleMainProcess,
   })
-  const dependencyCachePath = Path.join(Path.absolute('packages/build/.tmp/cachedDependencies'), dependencyCacheHash)
+  const dependencyCachePath = Path.join(Path.absolute('packages/build/.tmp/deps'), dependencyCacheHash)
   const dependencyCachePathFinished = Path.join(dependencyCachePath, 'finished')
   const commitHash = await CommitHash.getCommitHash()
   const date = await GetCommitDate.getCommitDate(commitHash)
@@ -235,7 +235,7 @@ export const build = async ({
     Logger.info('[build step skipped] bundleElectronAppDependencies')
   } else {
     console.time('bundleElectronAppDependencies')
-    await Remove.remove(Path.absolute('packages/build/.tmp/cachedDependencies'))
+    await Remove.remove(Path.absolute('packages/build/.tmp/deps'))
     const BundleElectronAppDependencies = await import('../BundleElectronAppDependencies/BundleElectronAppDependencies.ts')
     await BundleElectronAppDependencies.bundleElectronAppDependencies({
       cachePath: dependencyCachePath,

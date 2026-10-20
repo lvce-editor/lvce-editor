@@ -61,7 +61,7 @@ jobs:
       - uses: actions/cache@v6
         id: build-cache
         with:
-          path: 'packages/build/.tmp/cachedDependencies'
+          path: 'packages/build/.tmp/deps'
           key: ${{ runner.os }}-${{ runner.arch }}-build-cache-${{ steps.nodeModulesCacheKey.outputs.value }}
       - name: npm ci
         run: node packages/build/src/parts/InstallDependencies/InstallDependencies.ts
