@@ -170,19 +170,19 @@ test('setEditorFileCache does not store a file changed after it was read', async
   expect(cacheWorkerInvoke).not.toHaveBeenCalled()
 })
 
-test('setEditorFileCache excludes secrets and entries larger than 500 kB', async () => {
-  const oversizedContent = 'x'.repeat(500_001)
+test('setEditorFileCache excludes secrets and entries larger than 10 MiB', async () => {
+  const oversizedContent = 'x'.repeat(10 * 1024 * 1024 + 1)
   await EditorFileCache.set('', 'file:///project/.env.local', '[7,5,123]', 'secret')
-  await EditorFileCache.set('', 'file:///project/file.txt', '[7,500001,123]', oversizedContent)
+  await EditorFileCache.set('', 'file:///project/file.txt', '[7,10485761,123]', oversizedContent)
 
   expect(cacheWorkerInvoke).not.toHaveBeenCalled()
 })
 
-test('setEditorFileCache accepts content at the 500 kB limit', async () => {
-  fileSystemStat.mockResolvedValue({ mtimeMs: 123, size: 500_000, type: 7 })
+test('setEditorFileCache accepts content at the 10 MiB limit', async () => {
+  fileSystemStat.mockResolvedValue({ mtimeMs: 123, size: 10 * 1024 * 1024, type: 7 })
   cacheWorkerInvoke.mockResolvedValue({ success: true })
 
-  await EditorFileCache.set('', 'file:///project/file.txt', '[7,500000,123]', 'x'.repeat(500_000))
+  await EditorFileCache.set('', 'file:///project/file.txt', '[7,10485760,123]', 'x'.repeat(10 * 1024 * 1024))
 
   expect(cacheWorkerInvoke).toHaveBeenCalledWith(
     'Cache.setCacheStorageItem',
@@ -191,4 +191,14 @@ test('setEditorFileCache accepts content at the 500 kB limit', async () => {
     'editor-file-cache',
     expect.objectContaining({ 'content-type': 'text/plain; charset=utf-8' }),
   )
+})
+
+test('setEditorFileCache checks the UTF-8 byte limit', async () => {
+  const content = 'é'.repeat(5 * 1024 * 1024)
+  fileSystemStat.mockResolvedValue({ mtimeMs: 123, size: 10 * 1024 * 1024, type: 7 })
+  cacheWorkerInvoke.mockResolvedValue({ success: true })
+
+  await EditorFileCache.set('', 'file:///project/file.txt', '[7,10485760,123]', content)
+
+  expect(cacheWorkerInvoke).toHaveBeenCalledWith('Cache.setCacheStorageItem', expect.any(String), content, 'editor-file-cache', expect.any(Object))
 })
