@@ -6,13 +6,15 @@ import { pathToFileURL } from 'node:url'
 import { expect, test } from '@jest/globals'
 import { minifyWorkerBundles } from '../src/parts/MinifyWorkerBundles/MinifyWorkerBundles.ts'
 
-test('editor worker stays readable while other worker entries are minified', async () => {
+test('editor and renderer workers stay readable while other worker entries are minified', async () => {
   const root = await mkdtemp(join(tmpdir(), 'minified-worker-'))
   try {
     const dist = join(root, 'packages', 'fixture-worker', 'dist')
     const editorDist = join(root, 'packages', 'editor-worker', 'dist')
+    const rendererDist = join(root, 'packages', 'renderer-worker', 'dist')
     await mkdir(dist, { recursive: true })
     await mkdir(editorDist, { recursive: true })
+    await mkdir(rendererDist, { recursive: true })
     await writeFile(join(root, 'package.json'), '{"type":"module"}')
     const entry = join(dist, 'fixtureWorkerMain.js')
     const source = `/*! fixture worker license */
@@ -30,6 +32,9 @@ export class WorkerError extends Error {}
     const editorEntry = join(editorDist, 'editorWorkerMain.js')
     const editorSource = `export function initializeEditorWorker(configuration) {\n  return configuration.editorDocument\n}\n`
     await writeFile(editorEntry, editorSource)
+    const rendererEntry = join(rendererDist, 'rendererWorkerMain.js')
+    const rendererSource = `export function initializeRendererWorker(rendererConfiguration) {\n  const renderScheduler = rendererConfiguration.scheduler\n  return renderScheduler.initialize(rendererConfiguration.document)\n}\n`
+    await writeFile(rendererEntry, rendererSource)
     await minifyWorkerBundles(root)
     const minified = await readFile(entry, 'utf8')
     expect(minified.length).toBeLessThan(source.length)
@@ -37,6 +42,7 @@ export class WorkerError extends Error {}
     expect(await readFile(join(dist, 'chunk.js'), 'utf8')).toBe(chunk)
     expect(await readFile(join(dist, 'settings.json'), 'utf8')).toBe(settings)
     expect(await readFile(editorEntry, 'utf8')).toBe(editorSource)
+    expect(await readFile(rendererEntry, 'utf8')).toBe(rendererSource)
     const output = execFileSync(
       process.execPath,
       [
