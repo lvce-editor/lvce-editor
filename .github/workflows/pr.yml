@@ -210,13 +210,13 @@ jobs:
         uses: actions/checkout@v7
         with:
           repository: lvce-editor/source-control-view
-          ref: 4fdf2a0ea433244cfe9bfe7d35442be3764e8eb8
+          ref: dfc20ada88dd41206bee5517deae1e4f66a6acc3
           path: .tmp/source-control-tests
       - name: Stage native source control regression
         run: node .tmp/source-control-tests/packages/e2e-integration/stage-native-source-control.mjs .
       - name: Test native source control with published packages
         working-directory: ./packages/extension-host-worker-tests
-        run: npm run e2e:headless -- --test-name-prefix=viewlet.source-control-native-interactions --browser-test=../../.tmp/source-control-tests/packages/e2e-integration/scripts/test-native-source-control.mjs
+        run: npm run e2e:headless -- --trace-renderer-worker --test-name-prefix=viewlet.source-control-native-interactions --browser-test=../../.tmp/source-control-tests/packages/e2e-integration/scripts/test-native-source-control.mjs
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0
           SOURCE_CONTROL_NATIVE_EVIDENCE_DIR: ${{ github.workspace }}/.tmp/source-control-native
@@ -225,7 +225,9 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: source-control-native-${{ matrix.os }}
-          path: .tmp/source-control-native
+          path: |
+            .tmp/source-control-native
+            packages/extension-host-worker-tests/renderer-worker-traces
           if-no-files-found: warn
       - name: Remove staged native source control regression
         if: always() && steps.sourceControlTests.outcome == 'success'
