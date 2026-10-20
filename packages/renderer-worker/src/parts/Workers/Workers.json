@@ -2055,7 +2055,7 @@
           { "source": "state", "name": "y" }, { "source": "state", "name": "width" }, { "source": "state", "name": "height" },
           { "source": "state", "name": "platform" }, { "source": "state", "name": "controlsOverlayEnabled" },
           { "source": "state", "name": "titleBarStyleCustom" }, { "source": "state", "name": "assetDir" },
-          { "source": "state", "name": "menuUid" }
+          { "source": "state", "name": "menuUid" }, { "source": "state", "name": "menuRevision" }
         ] },
         "loadContent": { "name": "TitleBar.loadContent2", "parameters": [{ "source": "state", "name": "uid" }] },
         "diff": { "name": "TitleBar.diff3", "parameters": [{ "source": "state", "name": "uid" }] },

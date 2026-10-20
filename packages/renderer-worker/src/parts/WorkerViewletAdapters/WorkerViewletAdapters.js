@@ -1,6 +1,7 @@
 import * as GetActiveEditor from '../GetActiveEditor/GetActiveEditor.js'
 import * as Id from '../Id/Id.js'
 import * as InputSource from '../InputSource/InputSource.js'
+import * as LayoutWidgets from '../LayoutWidgets/LayoutWidgets.ts'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as StorageKey from '../StorageKey/StorageKey.ts'
 import * as UpdateExtensionSearchRenderState from '../UpdateExtensionSearchRenderState/UpdateExtensionSearchRenderState.js'
@@ -349,7 +350,7 @@ export const textSearch = {
 
 export const titleBar = {
   prepareLoadState(state) {
-    return { ...state, menuUid: state.menuUid || Id.create() }
+    return { ...state, menuUid: state.menuUid || Id.create(), menuRevision: LayoutWidgets.getNextRevision(state.uid) }
   },
   async afterLoadContent({ state, worker }) {
     if (Preferences.get('window.titleBarless.enabled') === true) {
