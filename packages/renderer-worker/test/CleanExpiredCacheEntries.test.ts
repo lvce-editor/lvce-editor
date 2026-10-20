@@ -46,6 +46,14 @@ test('shouldRunCleanup returns false when the cache cleanup flag is set', () => 
   expect(CleanExpiredCacheEntries.shouldRunCleanup('lvce-oss://-/?noCacheCleanup=1', false)).toBe(false)
 })
 
+test('shouldRunCleanup returns false when cache cleanup is disabled in preferences', () => {
+  expect(CleanExpiredCacheEntries.shouldRunCleanup('lvce-oss://-/', false, false)).toBe(false)
+})
+
+test('shouldRunCleanup defaults cache cleanup to enabled', () => {
+  expect(CleanExpiredCacheEntries.shouldRunCleanup('lvce-oss://-/', false)).toBe(true)
+})
+
 test('shouldRunCleanup returns true for regular startup', () => {
   expect(CleanExpiredCacheEntries.shouldRunCleanup('lvce-oss://-/', false)).toBe(true)
 })

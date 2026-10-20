@@ -8,7 +8,7 @@ const lastCleanupKey = 'cacheStorage.lastCleanup'
 
 const isDisabled = (href) => new URL(href).searchParams.has('noCacheCleanup')
 
-export const shouldRunCleanup = (href, isTestRun) => !isTestRun && !isDisabled(href)
+export const shouldRunCleanup = (href, isTestRun, cleanupEnabled = true) => cleanupEnabled && !isTestRun && !isDisabled(href)
 
 export const shouldClean = (lastCleanup, now) => {
   if (!lastCleanup) {
