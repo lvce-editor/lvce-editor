@@ -33,7 +33,10 @@ export const {
 
 export * from './ViewletStatusBarMenuEntries.js'
 
-export const focus = (state) => ({
-  ...state,
-  commands: [['Viewlet.focusSelector', state.uid, '.StatusBar']],
-})
+export const focus = (state) => {
+  const { uid } = state
+  return {
+    ...state,
+    commands: [['Viewlet.focusSelector', uid, '.StatusBar']],
+  }
+}
