@@ -16,6 +16,7 @@ import * as CopyElectronLicense from '../CopyElectronLicense/CopyElectronLicense
 import * as GetCommitDate from '../GetCommitDate/GetCommitDate.ts'
 import * as GetElectronVersion from '../GetElectronVersion/GetElectronVersion.ts'
 import * as GetIconThemeEtag from '../GetIconThemeEtag/GetIconThemeEtag.ts'
+import * as GetNativeDependencyCachePath from '../GetNativeDependencyCachePath/GetNativeDependencyCachePath.ts'
 import * as Hash from '../Hash/Hash.ts'
 import * as Rename from '../Rename/Rename.ts'
 import * as Logger from '../Logger/Logger.ts'
@@ -51,6 +52,7 @@ const getDependencyCacheHash = async ({ electronVersion, arch, supportsAutoUpdat
     'packages/build/src/parts/NpmDependencies/NpmDependencies.ts',
     'packages/build/src/parts/WalkDependencies/WalkDependencies.ts',
     'packages/build/src/parts/Rebuild/Rebuild.ts',
+    'packages/build/src/parts/GetNativeDependencyCachePath/GetNativeDependencyCachePath.ts',
   ]
   const absolutePaths = files.map(Path.absolute)
   const contents = await Promise.all(absolutePaths.map(ReadFile.readFile))
@@ -208,7 +210,7 @@ export const build = async ({
     isAppImage,
     bundleMainProcess,
   })
-  const dependencyCachePath = Path.join(Path.absolute('packages/build/.tmp/deps'), dependencyCacheHash)
+  const dependencyCachePath = GetNativeDependencyCachePath.getNativeDependencyCachePath(Root.root, dependencyCacheHash)
   const dependencyCachePathFinished = Path.join(dependencyCachePath, 'finished')
   const commitHash = await CommitHash.getCommitHash()
   const date = await GetCommitDate.getCommitDate(commitHash)
@@ -235,7 +237,7 @@ export const build = async ({
     Logger.info('[build step skipped] bundleElectronAppDependencies')
   } else {
     console.time('bundleElectronAppDependencies')
-    await Remove.remove(Path.absolute('packages/build/.tmp/deps'))
+    await Remove.remove(Path.dirname(dependencyCachePath))
     const BundleElectronAppDependencies = await import('../BundleElectronAppDependencies/BundleElectronAppDependencies.ts')
     await BundleElectronAppDependencies.bundleElectronAppDependencies({
       cachePath: dependencyCachePath,

@@ -80,7 +80,7 @@ jobs:
       - uses: actions/cache@v6
         id: build-cache
         with:
-          path: 'packages/build/.tmp/deps'
+          path: '.tmp/native'
           key: ${{ runner.os }}-build-cache-${{ steps.nodeModulesCacheKey.outputs.value }}
       - name: npm ci
         run: node packages/build/src/parts/InstallDependencies/InstallDependencies.ts
