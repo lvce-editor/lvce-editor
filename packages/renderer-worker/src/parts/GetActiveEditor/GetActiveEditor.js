@@ -208,7 +208,7 @@ export const openColorPickerWithCommand = async (executeCommand, editorId, initi
   ) {
     throw new Error(`Editor not found: ${editorId}`)
   }
-  await executeCommand('Viewlet.executeViewletCommand', editorId, 'Editor.openColorPicker', initialColor)
+  await executeCommand('Viewlet.executeViewletCommand', editorId, 'openColorPicker', initialColor)
 }
 
 export const openColorPicker = async (editorId, initialColor, applicationId) => {

@@ -133,6 +133,7 @@ export const loadContent = async (state, savedState, context) => {
   const links = EditorPreferences.getLinks(editorPreferences)
   const lineNumbers = EditorPreferences.getLineNumbers(editorPreferences)
   const formatOnSave = EditorPreferences.getFormatOnSave(editorPreferences)
+  const formatActions = EditorPreferences.getFormatActions(editorPreferences)
   const isAutoClosingBracketsEnabled = EditorPreferences.isAutoClosingBracketsEnabled(editorPreferences)
   const isAutoClosingTagsEnabled = EditorPreferences.isAutoClosingTagsEnabled()
   const isAutoClosingQuotesEnabled = EditorPreferences.isAutoClosingQuotesEnabled(editorPreferences)
@@ -207,6 +208,7 @@ export const loadContent = async (state, savedState, context) => {
       fontSize,
       fontWeight,
       formatOnSave,
+      formatActions,
       height,
       hoverEnabled,
       hoverDelay,

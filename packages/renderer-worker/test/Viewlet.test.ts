@@ -718,6 +718,34 @@ test('closeWidget restores focus after closing Quick Pick', async () => {
   expect(focus).toHaveBeenCalledWith({ uid: 3 })
 })
 
+test.each([true, false])('closing a preview Quick Pick only restores its owning main area (main present: %s)', async (hasPreviewMain) => {
+  const ApplicationRegistry = await import('../src/parts/ApplicationRegistry/ApplicationRegistry.ts')
+  const sourceFocus = jest.fn((state: Readonly<{ readonly applicationId: string; readonly uid: number }>) => state)
+  const previewFocus = jest.fn((state: Readonly<{ readonly applicationId: string; readonly uid: number }>) => state)
+  for (const [applicationId, uid, focus] of [
+    ['close-source', 101, sourceFocus],
+    ['close-preview', 102, previewFocus],
+  ] as const) {
+    ApplicationRegistry.create({ id: applicationId, layoutUid: uid + 10, href: '', workspacePath: '', workspaceUri: '' })
+    if (applicationId === 'close-preview' && !hasPreviewMain) continue
+    const state = { applicationId, uid }
+    ViewletStates.set(uid, { state, renderedState: state, moduleId: 'Main', factory: { Commands: { focus } } })
+  }
+  ViewletStates.set('Main', ViewletStates.getByUid(101))
+  const state = { applicationId: 'close-preview', uid: 103 }
+  ViewletStates.set(103, { state, renderedState: state, moduleId: 'QuickPick', factory: {} })
+  jest.mocked(RendererProcess.invoke).mockResolvedValue(undefined as never)
+  try {
+    await Viewlet.closeWidget(103)
+    expect(sourceFocus).not.toHaveBeenCalled()
+    expect(previewFocus).toHaveBeenCalledTimes(hasPreviewMain ? 1 : 0)
+    if (hasPreviewMain) expect(previewFocus).toHaveBeenCalledWith({ applicationId: 'close-preview', uid: 102 })
+  } finally {
+    ApplicationRegistry.remove('close-source')
+    ApplicationRegistry.remove('close-preview')
+  }
+})
+
 test('openWidget - replaces an existing widget by its numeric uid', async () => {
   jest.mocked(Id.create).mockReturnValueOnce(2).mockReturnValueOnce(3)
   // @ts-ignore
