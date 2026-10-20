@@ -55,6 +55,7 @@ try {
   child = spawn(
     electron,
     [
+      '--wait',
       '--no-sandbox',
       '--disable-gpu',
       '--password-store=basic',
