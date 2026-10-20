@@ -720,8 +720,8 @@ test('closeWidget restores focus after closing Quick Pick', async () => {
 
 test.each([true, false])('closing a preview Quick Pick only restores its owning main area (main present: %s)', async (hasPreviewMain) => {
   const ApplicationRegistry = await import('../src/parts/ApplicationRegistry/ApplicationRegistry.ts')
-  const sourceFocus = jest.fn((state: Readonly<{ readonly uid: number }>) => state)
-  const previewFocus = jest.fn((state: Readonly<{ readonly uid: number }>) => state)
+  const sourceFocus = jest.fn((state: Readonly<{ readonly applicationId: string; readonly uid: number }>) => state)
+  const previewFocus = jest.fn((state: Readonly<{ readonly applicationId: string; readonly uid: number }>) => state)
   for (const [applicationId, uid, focus] of [
     ['close-source', 101, sourceFocus],
     ['close-preview', 102, previewFocus],
