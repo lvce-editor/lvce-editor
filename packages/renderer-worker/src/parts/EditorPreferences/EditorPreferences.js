@@ -12,6 +12,7 @@ const kLinks = 'editor.links'
 const kTabSize = 'editor.tabSize'
 const kLineNumbers = 'editor.lineNumbers'
 const kFormatOnSave = 'editor.formatOnSave'
+const kFormatActions = 'editor.formatActions'
 const kDiagnostics = 'editor.diagnostics'
 const kQuickSuggestions = 'editor.quickSuggestions'
 const kAutoClosingQuotes = 'editor.autoClosingQuotes'
@@ -122,6 +123,10 @@ export const getCompletionTriggerCharacters = () => {
 
 export const getFormatOnSave = (preferences) => {
   return getPreference(kFormatOnSave, preferences) ?? false
+}
+
+export const getFormatActions = (preferences) => {
+  return getPreference(kFormatActions, preferences) === 'pre-save' ? 'pre-save' : 'post-save'
 }
 
 export const diagnosticsEnabled = (preferences) => {
