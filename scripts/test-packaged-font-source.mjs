@@ -159,7 +159,8 @@ try {
   if (child?.pid) {
     const closed = child.exitCode === null ? new Promise((resolve) => child.once('close', resolve)) : Promise.resolve()
     try {
-      process.kill(-child.pid, 'SIGKILL')
+      // The foreground CLI forwards SIGTERM to its Electron child.
+      process.kill(-child.pid, 'SIGTERM')
     } catch (error) {
       if (error.code !== 'ESRCH') throw error
     }
