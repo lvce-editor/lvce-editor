@@ -98,6 +98,7 @@ test('loadContent - renders before diagnostics are requested by loadContentLater
     true,
     undefined,
     true,
+    false,
   )
   expect(editorWorkerInvoke).toHaveBeenCalledWith('Editor.loadContent', 1, undefined, false, true)
   expect(editorWorkerInvoke).toHaveBeenCalledWith('Editor.setSelections2', 1, selections)
@@ -114,7 +115,8 @@ test('loadContent - renders before diagnostics are requested by loadContentLater
     'Editor.render2',
   ])
   const createCall = editorWorkerInvoke.mock.calls.find(([method]) => method === 'Editor.create2')
-  expect(createCall?.at(-1)).toBe(true)
+  expect(createCall?.at(-2)).toBe(true)
+  expect(createCall?.at(-1)).toBe(false)
   expect(newState.commands).toEqual([...initialCommands, ...selectionCommands])
 })
 
@@ -298,6 +300,7 @@ test('loadContent - detects the language from the first line for an extensionles
     true,
     undefined,
     true,
+    false,
   )
 })
 

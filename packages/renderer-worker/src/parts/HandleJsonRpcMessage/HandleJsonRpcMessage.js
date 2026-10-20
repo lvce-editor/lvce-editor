@@ -1,3 +1,5 @@
+import * as JsonRpc from '../JsonRpc/JsonRpc.js'
+
 const send = (ipc, message) => {
   if ('send' in ipc) {
     ipc.send(message)
@@ -25,11 +27,7 @@ export const handleJsonRpcMessage = async (ipc, message, execute, resolve, sourc
         })
         return
       } catch (error) {
-        send(ipc, {
-          jsonrpc: '2.0',
-          id: message.id,
-          error,
-        })
+        send(ipc, JsonRpc.getErrorResponse(message, error, (value) => value, () => {}))
         return
       }
     }
