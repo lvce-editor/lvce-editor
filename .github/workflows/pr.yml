@@ -46,8 +46,8 @@ jobs:
       - uses: actions/cache@v6
         id: build-cache
         with:
-          path: '.tmp/native'
-          key: ${{ runner.os }}-${{ runner.arch }}-build-cache-${{ steps.nodeModulesCacheKey.outputs.value }}
+          path: '.n'
+          key: ${{ runner.os }}-${{ runner.arch }}-native-build-cache-v2-${{ steps.nodeModulesCacheKey.outputs.value }}
       - name: npm ci
         run: node packages/build/src/parts/InstallDependencies/InstallDependencies.ts
         if: steps.npm-cache.outputs.cache-hit != 'true'
@@ -307,8 +307,8 @@ jobs:
       - uses: actions/cache@v6
         id: build-cache
         with:
-          path: '.tmp/native'
-          key: ${{ runner.os }}-${{ runner.arch }}-build-cache-${{ steps.nodeModulesCacheKey.outputs.value }}
+          path: '.n'
+          key: ${{ runner.os }}-${{ runner.arch }}-native-build-cache-v2-${{ steps.nodeModulesCacheKey.outputs.value }}
       - name: npm ci
         run: node packages/build/src/parts/InstallDependencies/InstallDependencies.ts
         if: steps.npm-cache.outputs.cache-hit != 'true'

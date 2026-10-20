@@ -11,5 +11,7 @@ test('keeps the native addon MSBuild directory below the Windows directory limit
     'shared-process/node_modules/@vscode/windows-process-tree/build/node_modules/node-addon-api/Release/obj/node_addon_api_except/node_add.D2CBEAB7.tlog',
   )
   expect(directory.length).toBeLessThan(248)
+  const lastBuildState = win32.join(directory, 'node_addon_api_except.lastbuildstate')
+  expect(lastBuildState.length).toBeLessThan(260)
   expect(win32.basename(cachePath)).toBe(hash)
 })
