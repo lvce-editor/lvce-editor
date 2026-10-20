@@ -5,6 +5,8 @@
   "application.useProtocolRegisterSource": false,
   "application.useOnLoadJson": false,
 
+  "cache.cleanupEnabled": true,
+
   "breadcrumbs.enabled": false,
 
   "colorTheme.cache": "",

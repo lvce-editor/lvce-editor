@@ -4,7 +4,7 @@ import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as Mime from '../Mime/Mime.js'
 
 const cacheName = 'editor-file-cache'
-const maxBytes = 500_000
+const maxBytes = 10 * 1024 * 1024
 const expiresIn = 90 * 24 * 60 * 60 * 1000
 const uriSuffixRegex = /[?#]/
 const writeQueues = new Map()

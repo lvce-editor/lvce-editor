@@ -61,6 +61,14 @@
   },
   {
     "category": "workbench",
+    "description": "Controls whether expired cache entries are cleaned up occasionally after startup",
+    "heading": "Cache Cleanup",
+    "id": "cache.cleanupEnabled",
+    "type": "boolean",
+    "value": true
+  },
+  {
+    "category": "workbench",
     "description": "Caches file quick-pick results to reduce data transferred between workers",
     "heading": "Quick Pick Cache",
     "id": "quickPick.cache",
