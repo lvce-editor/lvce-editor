@@ -32,3 +32,8 @@ export const {
 } = createWorkerViewlet({ workerId: 'statusBar' })
 
 export * from './ViewletStatusBarMenuEntries.js'
+
+export const focus = (state) => ({
+  ...state,
+  commands: [['Viewlet.focusSelector', state.uid, '.StatusBar']],
+})
