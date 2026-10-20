@@ -3,6 +3,8 @@ import { mkdtemp, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 
+const configElementPattern = /<script id="Config" type="application\/json">([\s\S]*?)<\/script>/
+
 beforeEach(() => {
   jest.resetAllMocks()
 })
@@ -141,10 +143,10 @@ test.each(['/tests/_all.html', '/tests/status-bar.problems-diagnostic-counts.htm
     jest.spyOn(GetPathName, 'getPathName').mockReturnValue(url)
 
     const result = await GetTestRequestResponse.getTestRequestResponse({ url }, indexHtmlPath)
-    const configText = result.body.match(/<script id="Config" type="application\/json">([\s\S]*?)<\/script>/)?.[1]
+    const configText = result.body.match(configElementPattern)?.[1]
     expect(JSON.parse(configText)).toMatchObject({
-      platform: 'remote',
       assetDir: '',
+      platform: 'remote',
       workerUrls: { editor: '/editor.js' },
     })
   },
