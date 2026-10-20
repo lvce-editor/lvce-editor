@@ -3039,6 +3039,14 @@ export const setUpdateState = async (state, updateState) => {
   return callGlobalEvent(state, 'handleUpdateStateChange', updateState)
 }
 
+export const setUpdateProgress = async (state, progress) => {
+  await StatusBarWorker.invoke('StatusBar.handleUpdateProgress', progress)
+  return {
+    newState: state,
+    commands: [],
+  }
+}
+
 const handleExtensionFileChanges = async (refresh: WorkspaceRefresh, applicationId?: string): Promise<void> => {
   try {
     if (applicationId === undefined) {

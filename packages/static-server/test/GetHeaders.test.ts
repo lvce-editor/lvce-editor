@@ -11,6 +11,17 @@ test.each([
   expect(headers['Content-Type']).toBe('text/javascript')
 })
 
+test.each([
+  '/repo/packages/extension-host-worker-tests/fixtures/extensions/sample/main.js',
+  String.raw`D:\repo\packages\extension-host-worker-tests\fixtures\extensions\sample\main.js`,
+])('extension worker receives isolation headers for %s', (absolutePath) => {
+  const headers = getHeaders({ absolutePath, etag: 'test', isForElectronProduction: false, isImmutable: false })
+  expect(headers['Cross-Origin-Embedder-Policy']).toBe('require-corp')
+  expect(headers['Cross-Origin-Opener-Policy']).toBe('same-origin')
+  expect(headers['Cross-Origin-Resource-Policy']).toBe('same-origin')
+  expect(headers['Content-Type']).toBe('text/javascript')
+})
+
 test('unknown extensions use the binary MIME type', () => {
   const headers = getHeaders({
     absolutePath: '/repo/packages/e2e/fixture.unknown',
