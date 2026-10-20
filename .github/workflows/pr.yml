@@ -194,6 +194,31 @@ jobs:
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0
           LVCE_DIRECT_EVENTS_EVIDENCE_DIR: ${{ github.workspace }}/.tmp/direct-editor-events
+      - name: Checkout owned HTML comment regression
+        id: htmlCommentTests
+        uses: actions/checkout@v7
+        with:
+          repository: lvce-editor/editor-worker
+          ref: 34ea252922cc59e6856634d4c6fd9f8436feb745
+          path: .tmp/html-comment-tests
+      - name: Stage owned HTML comment regression
+        run: node .tmp/html-comment-tests/packages/e2e-integration/stage-html-comment-test.mjs .
+      - name: Test contextual HTML comments with published packages
+        working-directory: ./packages/extension-host-worker-tests
+        run: npm run e2e:headless -- --test-name-prefix=editor.toggle-comment-html --browser-test=../../.tmp/html-comment-tests/packages/e2e-integration/scripts/test-html-comments.mjs
+        env:
+          PLAYWRIGHT_BROWSERS_PATH: 0
+          HTML_COMMENT_EVIDENCE_DIR: ${{ github.workspace }}/.tmp/html-comments
+      - name: Upload contextual HTML comment assertions
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: html-comments-${{ matrix.os }}
+          path: .tmp/html-comments
+          if-no-files-found: warn
+      - name: Remove staged HTML comment regression
+        if: always() && steps.htmlCommentTests.outcome == 'success'
+        run: node .tmp/html-comment-tests/packages/e2e-integration/stage-html-comment-test.mjs . --clean
       - name: Upload direct editor event trace
         if: always()
         uses: actions/upload-artifact@v7
