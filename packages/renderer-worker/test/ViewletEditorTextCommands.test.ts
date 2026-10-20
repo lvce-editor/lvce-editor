@@ -612,3 +612,30 @@ test('a delayed standalone focus reply cannot refocus the previously active spli
     [12, undefined, 42, 'Editor'],
   ])
 })
+
+test('an explicitly targeted color picker reaches the worker through the registered viewlet command', async () => {
+  const GetActiveEditor = await import('../src/parts/GetActiveEditor/GetActiveEditor.js')
+  const Viewlet = await import('../src/parts/Viewlet/Viewlet.js')
+  const ViewletStates = await import('../src/parts/ViewletStates/ViewletStates.js')
+  const Applications = await import('../src/parts/ApplicationRegistry/ApplicationRegistry.ts')
+  editorWorkerInvoke.mockImplementation(async (method) => {
+    if (method === 'Editor.getCommandIds') return ['openColorPicker']
+    if (method === 'Editor.renderDirect2') return []
+  })
+  commandExecute.mockImplementation((command, ...args) => {
+    if (command !== 'Viewlet.executeViewletCommand') throw new Error(`Unexpected command: ${command}`)
+    return Viewlet.executeViewletCommand(args[0], args[1], ...args.slice(2))
+  })
+  Applications.create({ id: 'preview', layoutUid: 200, href: '', workspacePath: '', workspaceUri: 'memfs:///' })
+  try {
+    const state = { id: 42, uid: 42, uri: 'memfs:///target.css', applicationId: 'preview' }
+    const factory = { name: 'EditorText', Commands: await ViewletEditorTextCommands.getCommands() }
+    ViewletStates.set(42, { moduleId: 'EditorText', factory, state, renderedState: state })
+    await GetActiveEditor.openColorPicker(42, '#ff8800', 'preview')
+    expect(editorWorkerInvoke).toHaveBeenCalledWith('Editor.openColorPicker', 42, '#ff8800')
+    expect(editorWorkerInvoke).toHaveBeenCalledWith('Editor.renderDirect2', 42, false)
+  } finally {
+    ViewletStates.remove(42)
+    Applications.remove('preview')
+  }
+})
