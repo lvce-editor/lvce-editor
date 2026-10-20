@@ -214,6 +214,8 @@ jobs:
           path: .tmp/source-control-tests
       - name: Stage native source control regression
         run: node .tmp/source-control-tests/packages/e2e-integration/stage-native-source-control.mjs .
+      - name: Trace staged sample provider transitions
+        run: node packages/extension-host-worker-tests/scripts/trace-native-source-provider.mjs
       - name: Test native source control with published packages
         working-directory: ./packages/extension-host-worker-tests
         run: node ../../.tmp/source-control-tests/packages/e2e-integration/scripts/stress-native-source-control.mjs
