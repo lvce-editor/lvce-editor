@@ -552,10 +552,11 @@ export const closeWidget = async (id) => {
     }
     const child = childInstance.state
     const childUid = child.uid
+    const applicationId = ApplicationRegistry.getOwner(childUid)
     const commands = disposeFunctional(childUid)
     await RendererProcess.invoke(/* Viewlet.dispose */ 'Viewlet.sendMultiple', commands)
     if (childInstance.moduleId === ViewletModuleId.QuickPick) {
-      const mainInstance = ViewletStates.getInstance(ViewletModuleId.Main)
+      const mainInstance = ViewletStates.getInstance(ViewletModuleId.Main, applicationId)
       if (mainInstance) {
         await executeViewletCommand(mainInstance.state.uid, 'focus')
       }
