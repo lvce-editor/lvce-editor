@@ -115,6 +115,7 @@ export const CommandsWithSideEffects = {
   setAuthState: ViewletLayout.setAuthState,
   setExplicitBounds: ViewletLayout.setExplicitBounds,
   setUpdateState: ViewletLayout.setUpdateState,
+  setUpdateProgress: ViewletLayout.setUpdateProgress,
   signIn: ViewletLayout.signIn,
   signOut: ViewletLayout.signOut,
   useAccount: ViewletLayout.useAccount,
