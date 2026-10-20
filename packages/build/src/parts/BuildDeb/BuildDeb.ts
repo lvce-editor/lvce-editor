@@ -13,6 +13,7 @@ import * as Mkdir from '../Mkdir/Mkdir.ts'
 import * as Path from '../Path/Path.ts'
 import * as Process from '../Process/Process.ts'
 import * as Remove from '../Remove/Remove.ts'
+import * as RemoveRipgrepFiles from '../RemoveRipgrepFiles/RemoveRipGrepFiles.ts'
 import * as Rename from '../Rename/Rename.ts'
 import * as Replace from '../Replace/Replace.ts'
 import * as Stat from '../Stat/Stat.ts'
@@ -57,8 +58,8 @@ const copyElectronResult = async ({ product, version, arch, debArch, platform, t
     to: `packages/build/.tmp/linux/deb/${debArch}/app/usr/lib/${product.applicationName}/resources/app/packages/server/node_modules/@lvce-editor/jsonc-parser`,
     dereference: true,
   })
-  await Remove.remove(
-    `packages/build/.tmp/linux/deb/${debArch}/app/usr/lib/${product.applicationName}/resources/app/packages/shared-process/node_modules/@lvce-editor/ripgrep`,
+  await RemoveRipgrepFiles.removeRipGrepPackages(
+    `packages/build/.tmp/linux/deb/${debArch}/app/usr/lib/${product.applicationName}/resources/app/packages/shared-process`,
   )
   await Replace.replace({
     path: `packages/build/.tmp/linux/deb/${debArch}/app/usr/lib/${product.applicationName}/resources/app/packages/shared-process/node_modules/@lvce-editor/search-process/dist/index.js`,
