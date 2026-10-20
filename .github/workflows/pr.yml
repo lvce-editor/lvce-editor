@@ -198,13 +198,38 @@ jobs:
         uses: actions/checkout@v7
         with:
           repository: lvce-editor/renderer-process
-          ref: 4a43b43db2b4fc9264b7e2883caefb7a402ce28e
+          ref: 88db13a0e049c0e8184436dcdde180a896228fdc
           path: .tmp/editor-shortcut-tests
       - name: Test shortcut ordering with published renderer package
         working-directory: ./packages/extension-host-worker-tests
         run: npm run e2e:headless -- --test-name-prefix=viewlet.editor-direct-events --browser-test=../../.tmp/editor-shortcut-tests/packages/e2e-integration/test-editor-shortcuts.mjs
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0
+      - name: Checkout owned native source control regression
+        id: sourceControlTests
+        uses: actions/checkout@v7
+        with:
+          repository: lvce-editor/source-control-view
+          ref: 6fb0bcccd0cc29ec9ea7be771a65770717516e77
+          path: .tmp/source-control-tests
+      - name: Stage native source control regression
+        run: node .tmp/source-control-tests/packages/e2e-integration/stage-native-source-control.mjs .
+      - name: Test native source control with published packages
+        working-directory: ./packages/extension-host-worker-tests
+        run: npm run e2e:headless -- --test-name-prefix=viewlet.source-control-native-interactions --browser-test=../../.tmp/source-control-tests/packages/e2e-integration/scripts/test-native-source-control.mjs
+        env:
+          PLAYWRIGHT_BROWSERS_PATH: 0
+          SOURCE_CONTROL_NATIVE_EVIDENCE_DIR: ${{ github.workspace }}/.tmp/source-control-native
+      - name: Upload native source control evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: source-control-native-${{ matrix.os }}
+          path: .tmp/source-control-native
+          if-no-files-found: warn
+      - name: Remove staged native source control regression
+        if: always() && steps.sourceControlTests.outcome == 'success'
+        run: node .tmp/source-control-tests/packages/e2e-integration/stage-native-source-control.mjs . --clean
       - name: Checkout owned HTML comment regression
         id: htmlCommentTests
         uses: actions/checkout@v7

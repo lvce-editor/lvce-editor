@@ -298,3 +298,11 @@ test('keeps title actions pending when a source control badge changes in the sam
     delete ViewletStates.state.instances[42]
   }
 })
+
+test('saves the worker-owned draft instead of stale renderer input when hiding source control', async () => {
+  const draft = { inputValue: 'worker draft', history: ['previous commit'] }
+  sourceControlWorkerInvoke.mockReturnValue(draft)
+  const state = { uid: 42, inputValue: 'stale renderer draft' }
+  expect(await ViewletSourceControl.saveState(state)).toEqual(draft)
+  expect(sourceControlWorkerInvoke).toHaveBeenCalledWith('SourceControl.saveState', 42)
+})
