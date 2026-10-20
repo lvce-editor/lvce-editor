@@ -467,8 +467,8 @@ test('explicit color picker target survives focus changes within and across appl
     await GetActiveEditor.openColorPickerWithCommand(executeCommand, 41, '#ff8800', 'preview')
   }
   expect(executeCommand.mock.calls).toEqual([
-    ['Viewlet.executeViewletCommand', 41, 'Editor.openColorPicker', '#ff8800'],
-    ['Viewlet.executeViewletCommand', 41, 'Editor.openColorPicker', '#ff8800'],
+    ['Viewlet.executeViewletCommand', 41, 'openColorPicker', '#ff8800'],
+    ['Viewlet.executeViewletCommand', 41, 'openColorPicker', '#ff8800'],
   ])
 })
 
@@ -488,5 +488,5 @@ test('color picker rejects omitted, invalid, stale, foreign and non-editor targe
 test('color picker supports an explicitly targeted workbench editor', async () => {
   addApplicationEditor(42, undefined)
   await GetActiveEditor.openColorPickerWithCommand(executeCommand, 42, undefined)
-  expect(executeCommand).toHaveBeenCalledWith('Viewlet.executeViewletCommand', 42, 'Editor.openColorPicker', undefined)
+  expect(executeCommand).toHaveBeenCalledWith('Viewlet.executeViewletCommand', 42, 'openColorPicker', undefined)
 })
