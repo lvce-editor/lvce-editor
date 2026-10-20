@@ -761,3 +761,11 @@ export const save = async (uid, skipFormatting = false) => {
   }
   return { modified: instance.state.modified !== false }
 }
+
+// Workers may need to commit a widget change before awaiting a modal command.
+// Reconcile here instead of reentering the component's active command queue.
+export const applyCommands = async (commands) => {
+  const reconciled = LayoutWidgets.reconcile(commands)
+  UpdateDynamicFocusContext.updateDynamicFocusContext(reconciled)
+  await RendererProcess.invoke('Viewlet.sendMultiple', reconciled)
+}

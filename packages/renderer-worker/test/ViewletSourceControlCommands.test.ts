@@ -258,3 +258,12 @@ test.each([undefined, 'application-a'])('commits every workspace refresh render 
     expect(applicationExecute).not.toHaveBeenCalled()
   }
 })
+
+test('repeated focus requests target the worker-owned source control input', () => {
+  const state = { commands: [], inputValue: 'commit message', uid: 42 }
+  const first = ViewletSourceControl.focus(state)
+  const second = ViewletSourceControl.focus(first)
+  expect(first.commands).toEqual([['Viewlet.focusSelector', '[name="SourceControlInput"]']])
+  expect(second).toEqual(first)
+  expect(state.commands).toEqual([])
+})

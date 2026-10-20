@@ -261,7 +261,7 @@ export const startup = async (initData, platform, assetDir) => {
   await OnLoadCommands.run(assetDir, platform)
   await CleanUpWorkersAfterLoad.cleanUpWorkersAfterLoad()
 
-  if (!isTestRun) {
+  if (CleanExpiredCacheEntries.shouldRunCleanup(initData.Location.href, isTestRun)) {
     void CleanExpiredCacheEntries.cleanExpiredCacheEntries()
   }
 
