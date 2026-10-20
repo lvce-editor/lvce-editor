@@ -194,6 +194,17 @@ jobs:
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0
           LVCE_DIRECT_EVENTS_EVIDENCE_DIR: ${{ github.workspace }}/.tmp/direct-editor-events
+      - name: Checkout owned editor shortcut ordering regression
+        uses: actions/checkout@v7
+        with:
+          repository: lvce-editor/renderer-process
+          ref: 4a43b43db2b4fc9264b7e2883caefb7a402ce28e
+          path: .tmp/editor-shortcut-tests
+      - name: Test shortcut ordering with published renderer package
+        working-directory: ./packages/extension-host-worker-tests
+        run: npm run e2e:headless -- --test-name-prefix=viewlet.editor-direct-events --browser-test=../../.tmp/editor-shortcut-tests/packages/e2e-integration/test-editor-shortcuts.mjs
+        env:
+          PLAYWRIGHT_BROWSERS_PATH: 0
       - name: Checkout owned HTML comment regression
         id: htmlCommentTests
         uses: actions/checkout@v7

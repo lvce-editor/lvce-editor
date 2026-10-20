@@ -29,7 +29,6 @@ export const renderPendingSourceControl = async (state) => {
     }
 
     ViewletStates.setState(state.uid, newState)
-    ViewletStates.setRenderedState(state.uid, newState)
     await Command.execute('Layout.setBadgeCount', ViewletModuleId.SourceControl, badgeCount)
   }
   return {
