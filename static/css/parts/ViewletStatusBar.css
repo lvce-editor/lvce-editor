@@ -77,6 +77,25 @@
   height: 100%;
 }
 
+.StatusBarItemProgress {
+  appearance: none;
+  border: 0;
+  color: currentColor;
+  display: inline-block;
+  height: 3px;
+  margin-left: 5px;
+  vertical-align: middle;
+  width: 64px;
+}
+
+.StatusBarItemProgress::-webkit-progress-bar {
+  background: color-mix(in srgb, currentColor 22%, transparent);
+}
+
+.StatusBarItemProgress::-webkit-progress-value {
+  background: color-mix(in srgb, currentColor 68%, transparent);
+}
+
 .StatusBarIcon {
   width: 16px;
   height: 16px;

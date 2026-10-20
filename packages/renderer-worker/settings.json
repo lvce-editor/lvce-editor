@@ -45,6 +45,14 @@
   },
   {
     "category": "applications",
+    "description": "Show update download progress in the status bar",
+    "heading": "Update Status Bar Progress",
+    "id": "update.showProgress",
+    "type": "boolean",
+    "value": true
+  },
+  {
+    "category": "applications",
     "description": "Loads and executes commands from config/onLoadCommands.json on web startup",
     "heading": "Use On Load JSON",
     "id": "application.useOnLoadJson",

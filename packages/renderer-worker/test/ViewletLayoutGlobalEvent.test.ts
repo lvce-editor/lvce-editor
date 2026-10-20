@@ -215,6 +215,15 @@ test('handleActiveEditorChange ignores viewlets that are not loaded', async () =
   })
 })
 
+test('setUpdateProgress forwards progress to the status bar worker', async () => {
+  const state = ViewletLayout.create(1)
+
+  const result = await ViewletLayout.setUpdateProgress(state, 0.9)
+
+  expect(statusBarInvoke).toHaveBeenCalledWith('StatusBar.handleUpdateProgress', 0.9)
+  expect(result).toEqual({ commands: [], newState: state })
+})
+
 test('handleActiveEditorChange refreshes the problems summary for loaded viewlets', async () => {
   const summary = {
     errorCount: 2,
