@@ -435,3 +435,58 @@ test('active editor and visible URIs stay within their application while another
   await expect(GetActiveEditor.getActiveUriWithInvoke(invoke, 'source')).resolves.toBe('memfs:///141.txt')
   await expect(GetActiveEditor.getVisibleEditorUrisWithInvoke(invoke, 'missing')).resolves.toEqual([])
 })
+
+const addApplicationEditor = (id, applicationId, uri = `memfs:///${id}.css`) => {
+  const state = { id, uid: id, applicationId, uri }
+  ViewletStates.set(id, { moduleId: 'EditorText', factory: {}, state, renderedState: state })
+}
+
+test('active editor info is a coherent application-scoped snapshot', () => {
+  expect(GetActiveEditor.getActiveEditorInfo()).toBeUndefined()
+  for (const applicationId of ['source', 'preview']) {
+    ApplicationRegistry.create({ id: applicationId, layoutUid: applicationId === 'source' ? 100 : 200 })
+  }
+  addApplicationEditor(41, 'source')
+  addApplicationEditor(42, 'preview')
+  ViewletStates.setFocusedInstanceByType(42, 'EditorText')
+  expect(GetActiveEditor.getActiveEditorInfo('source')).toEqual({ id: 41, uri: 'memfs:///41.css' })
+  expect(GetActiveEditor.getActiveEditorInfo('preview')).toEqual({ id: 42, uri: 'memfs:///42.css' })
+  expect(GetActiveEditor.getActiveEditorInfo('missing')).toBeUndefined()
+  ViewletStates.remove(41)
+  expect(GetActiveEditor.getActiveEditorInfo('source')).toBeUndefined()
+})
+
+test('explicit color picker target survives focus changes within and across applications', async () => {
+  ApplicationRegistry.create({ id: 'preview', layoutUid: 200 })
+  ApplicationRegistry.create({ id: 'source', layoutUid: 100 })
+  addApplicationEditor(41, 'preview')
+  addApplicationEditor(42, 'preview')
+  addApplicationEditor(43, 'source')
+  for (const focused of [42, 43]) {
+    ViewletStates.setFocusedInstanceByType(focused, 'EditorText')
+    await GetActiveEditor.openColorPickerWithCommand(executeCommand, 41, '#ff8800', 'preview')
+  }
+  expect(executeCommand.mock.calls).toEqual([
+    ['Viewlet.executeViewletCommand', 41, 'Editor.openColorPicker', '#ff8800'],
+    ['Viewlet.executeViewletCommand', 41, 'Editor.openColorPicker', '#ff8800'],
+  ])
+})
+
+test('color picker rejects omitted, invalid, stale, foreign and non-editor targets without dispatch', async () => {
+  ApplicationRegistry.create({ id: 'preview', layoutUid: 200 })
+  addApplicationEditor(42, 'preview')
+  for (const id of [undefined, null, '42', -1, NaN, Infinity, 1.5, 41, 200]) {
+    await expect(GetActiveEditor.openColorPickerWithCommand(executeCommand, id, undefined, 'preview')).rejects.toThrow()
+  }
+  await expect(GetActiveEditor.openColorPickerWithCommand(executeCommand, 42, undefined, 'source')).rejects.toThrow('Editor not found')
+  await expect(GetActiveEditor.openColorPickerWithCommand(executeCommand, 42, undefined)).rejects.toThrow('Editor not found')
+  ViewletStates.remove(42)
+  await expect(GetActiveEditor.openColorPickerWithCommand(executeCommand, 42, undefined, 'preview')).rejects.toThrow('Editor not found')
+  expect(executeCommand).not.toHaveBeenCalled()
+})
+
+test('color picker supports an explicitly targeted workbench editor', async () => {
+  addApplicationEditor(42, undefined)
+  await GetActiveEditor.openColorPickerWithCommand(executeCommand, 42, undefined)
+  expect(executeCommand).toHaveBeenCalledWith('Viewlet.executeViewletCommand', 42, 'Editor.openColorPicker', undefined)
+})

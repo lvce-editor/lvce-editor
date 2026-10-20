@@ -198,6 +198,10 @@ export const execute = (applicationId: string, command: string, ...args: readonl
         }
         await ViewletManager.executeForApplication(applicationId, 'Layout.handleWorkspaceRefresh')
       })
+    case 'GetActiveEditor.getActiveEditorInfo':
+      return ApplicationRegistry.track(applicationId, async () => GetActiveEditor.getActiveEditorInfo(applicationId))
+    case 'GetActiveEditor.openColorPicker':
+      return ApplicationRegistry.track(applicationId, () => GetActiveEditor.openColorPicker(args[0], args[1], applicationId))
     case 'GetActiveEditor.getActiveEditorId':
       return ApplicationRegistry.track(applicationId, async () => GetActiveEditor.getActiveEditorId(applicationId))
     case 'GetActiveEditor.getVisibleEditorUris':

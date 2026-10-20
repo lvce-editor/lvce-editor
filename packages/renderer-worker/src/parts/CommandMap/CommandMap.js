@@ -266,6 +266,8 @@ export const commandMap = {
   'Focus.removeAdditionalFocus': lazy('Focus.removeAdditionalFocus'),
   'Focus.setAdditionalFocus': lazy('Focus.setAdditionalFocus'),
   'Focus.setFocus': lazy('Focus.setFocus'),
+  'GetActiveEditor.getActiveEditorInfo': lazy('GetActiveEditor.getActiveEditorInfo'),
+  'GetActiveEditor.openColorPicker': lazy('GetActiveEditor.openColorPicker'),
   'GetActiveEditor.getActiveEditorId': lazy('GetActiveEditor.getActiveEditorId'),
   'GetActiveEditor.getDiagnostics': lazy('GetActiveEditor.getDiagnostics'),
   'GetActiveEditor.getOpenEditorUris': lazy('GetActiveEditor.getOpenEditorUris'),
