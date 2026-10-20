@@ -91,6 +91,29 @@ describe('linux cli templates', () => {
     expect(cli).toContain("stdio: foreground ? ['inherit', 'inherit', 'pipe'] : 'ignore'")
   })
 
+  testPosix('waits for timed Electron launches and returns their exit status', async () => {
+    const root = await mkdtemp(join(tmpdir(), 'lvce-linux-cli-timed-'))
+    try {
+      const binPath = join(root, 'bin')
+      const fakeElectronPath = join(root, 'fake-electron')
+      await mkdir(binPath)
+      await writeFile(fakeElectronPath, '#!/usr/bin/env node\nprocess.exit(7)\n')
+      await chmod(fakeElectronPath, 0o755)
+      const cli = (await readTemplate('linux_cli_js'))
+        .replaceAll('@@APPLICATION_NAME@@', 'lvce')
+        .replace('spawn(executablePath, launchArgs, {', `spawn(${JSON.stringify(fakeElectronPath)}, launchArgs, {`)
+      const cliPath = join(binPath, 'cli.js')
+      await writeFile(cliPath, cli)
+      await expect(
+        execFileAsync(process.execPath, [cliPath, '--wait-10-seconds'], {
+          env: { ...process.env, XDG_CONFIG_HOME: join(root, 'config') },
+        }),
+      ).rejects.toMatchObject({ code: 7 })
+    } finally {
+      await rm(root, { recursive: true, force: true })
+    }
+  })
+
   testPosix('launches transient sessions with isolated application state', async () => {
     const root = await mkdtemp(join(tmpdir(), 'lvce-linux-cli-transient-'))
     const binPath = join(root, 'bin')
