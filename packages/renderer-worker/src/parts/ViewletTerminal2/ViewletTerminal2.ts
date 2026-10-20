@@ -72,7 +72,7 @@ export const loadContentLater = async (state) => {
     })
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error)
-    await showError(state, `Failed to start terminal: ${message}`)
+    await showError(state, `Failed to start terminal${state.keepOpen ? ` (${command})` : ''}: ${message}`)
   }
 }
 
