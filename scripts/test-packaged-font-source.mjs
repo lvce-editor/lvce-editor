@@ -152,6 +152,10 @@ try {
   )
   assert.equal(await evaluate('crossOriginIsolated'), true)
   console.log('Packaged editor startup, native CSS font loading, MIME, isolation, and missing-resource acceptance passed.')
+} catch (error) {
+  // Preserve startup/CDP failures even if teardown reports a separate failure.
+  console.error('Packaged font acceptance failed:', error, output)
+  throw error
 } finally {
   socket?.close()
   for (const { reject } of pending.values()) reject(new Error('Packaged font test ended'))

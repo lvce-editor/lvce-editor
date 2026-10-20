@@ -239,14 +239,14 @@ jobs:
           deb_path=$(find packages/build/.tmp/releases -name '*.deb' -print -quit)
           test -n "$deb_path"
           dpkg-deb -x "$deb_path" packages/build/.tmp/cpu-profile-deb
-          app_path=$(find "$PWD/packages/build/.tmp/cpu-profile-deb" -type f -name lvce-oss -executable -print -quit)
+          app_path=$(find "$PWD/packages/build/.tmp/cpu-profile-deb" -type f -name lvce-oss -not -path '*/resources/*' -executable -print -quit)
           test -n "$app_path"
           LVCE_ELECTRON_PATH="$app_path" LVCE_CPU_PROFILE_PACKAGED=1 xvfb-run -a node scripts/test-startup-cpu-profile.mjs
       - name: Test packaged native font loading
         if: matrix.os == 'ubuntu-24.04'
         shell: bash
         run: |
-          app_path=$(find "$PWD/packages/build/.tmp/cpu-profile-deb" -type f -name lvce-oss -executable -print -quit)
+          app_path=$(find "$PWD/packages/build/.tmp/cpu-profile-deb" -type f -name lvce-oss -not -path '*/resources/*' -executable -print -quit)
           test -n "$app_path"
           LVCE_ELECTRON_PATH="$app_path" xvfb-run -a node scripts/test-packaged-font-source.mjs
           LVCE_ELECTRON_PATH="$app_path" LVCE_USE_PROTOCOL_REGISTER_SOURCE=true xvfb-run -a node scripts/test-packaged-font-source.mjs
@@ -256,7 +256,7 @@ jobs:
         run: |
           node packages/build/bin/build.ts --target=electron-builder-deb --asar
           dpkg-deb -x packages/build/.tmp/releases/lvce-oss-amd64.deb packages/build/.tmp/asar-deb
-          app_path=$(find "$PWD/packages/build/.tmp/asar-deb" -type f -name lvce-oss -executable -print -quit)
+          app_path=$(find "$PWD/packages/build/.tmp/asar-deb" -type f -name lvce-oss -not -path '*/resources/*' -executable -print -quit)
           test -n "$app_path"
           resources_path="$(dirname "$app_path")/resources"
           test -f "$resources_path/app.asar"
