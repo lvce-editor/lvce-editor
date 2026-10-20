@@ -1123,3 +1123,13 @@ test('coalesced foreground input keeps focus permission when a background notifi
   expect(renderPending).toHaveBeenCalledTimes(1)
   expect(renderPending).toHaveBeenCalledWith(state, false)
 })
+
+test('worker commands reconcile widget removal before the caller continues', async () => {
+  const ViewletLayout = await import('../src/parts/ViewletLayout/ViewletLayout.ts')
+  const layoutState = { ...ViewletLayout.create(1), widgetReferences: [{ parentUid: 10, uid: 20 }], widgetRevisions: { 10: 1 } }
+  ViewletStates.set(1, { factory: {}, moduleId: 'Layout', renderedState: layoutState, state: layoutState })
+  jest.mocked(RendererProcess.invoke).mockResolvedValue(undefined as never)
+  await Viewlet.applyCommands([['Viewlet.setWidgets', 10, 2, []]])
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.sendMultiple', expect.arrayContaining([['Viewlet.dispose', 20]]))
+  expect(ViewletStates.getInstance(1).state.widgetReferences).toEqual([])
+})
