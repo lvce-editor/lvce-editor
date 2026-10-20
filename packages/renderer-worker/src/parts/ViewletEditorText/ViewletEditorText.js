@@ -143,8 +143,8 @@ export const loadContent = async (state, savedState, context) => {
     useFunctionalRendering && context?.largeFile === true
       ? ''
       : state.applicationId === undefined
-        ? await GetTextEditorContent.getTextEditorContent(uri)
-        : await ApplicationFileSystem.execute(state.applicationId, 'readFile', uri)
+        ? await GetTextEditorContent.getTextEditorContent(uri, context?.forceText === true ? 'binary' : undefined)
+        : await ApplicationFileSystem.execute(state.applicationId, 'readFile', uri, context?.forceText === true ? 'binary' : undefined)
   const languageId = context?.languageId || getLanguageId(state, content, savedState)
   const tokenizer = Tokenizer.getTokenizer(languageId)
   const tokenizerId = Id.create()
@@ -183,6 +183,7 @@ export const loadContent = async (state, savedState, context) => {
       useCache,
       state.applicationId,
       useFileCache,
+      context?.forceText === true,
     )
     await EditorWorker.invoke('Editor.loadContent', id, savedState?.editorState, context?.largeFile === true, context?.focus ?? true)
     if (Array.isArray(savedState?.editorState?.widgets)) {
