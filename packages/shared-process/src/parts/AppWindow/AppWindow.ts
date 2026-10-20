@@ -40,6 +40,9 @@ const getAbsolutePath = (parsedArgs: any, workingDirectory: any): string => {
 const getAppWindowUrl = async (url: unknown, parsedArgs: any, workingDirectory: any): Promise<string> => {
   const parsedUrl = new URL(getValidatedAppUrl(url))
   const absolutePath = getAbsolutePath(parsedArgs, workingDirectory)
+  if (parsedArgs?.['no-cache-cleanup']) {
+    parsedUrl.searchParams.set('noCacheCleanup', '1')
+  }
   if (parsedArgs?.['cpu-profile']) {
     if (typeof parsedArgs.open !== 'string' || !parsedArgs.open) throw new Error('--cpu-profile requires --open <file>')
     const workspace = absolutePath || workingDirectory

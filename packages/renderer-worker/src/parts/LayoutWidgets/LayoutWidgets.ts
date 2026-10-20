@@ -313,3 +313,7 @@ export const declareWidget = (parentUid: number, uid: number, commands: readonly
   const revision = (layout.state.widgetRevisions?.[parentUid] ?? -1) + 1
   return reconcile([...commands, [setWidgetsCommand, parentUid, revision, [uid]]])
 }
+
+export const getNextRevision = (parentUid: number): number => {
+  return (getLayoutForUid(parentUid)?.state.widgetRevisions?.[parentUid] ?? -1) + 1
+}
