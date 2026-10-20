@@ -702,6 +702,7 @@ export const commandMap = {
   'Layout.openSecondarySideBarViewlet': lazy('Layout.openSecondarySideBarViewlet'),
   'Layout.setBadgeCount': lazy('Layout.setBadgeCount'),
   'Layout.setUpdateState': lazy('Layout.setUpdateState'),
+  'Layout.setUpdateProgress': lazy('Layout.setUpdateProgress'),
   'Layout.signIn': lazy('Layout.signIn'),
   'Layout.signOut': lazy('Layout.signOut'),
   'Layout.showActivityBar': lazy('Layout.showActivityBar'),
