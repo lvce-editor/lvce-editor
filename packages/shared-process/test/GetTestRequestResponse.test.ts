@@ -127,3 +127,25 @@ test('getTestRequestResponse - error in createTestOverview', async () => {
     },
   })
 })
+
+test.each(['/tests/_all.html', '/tests/status-bar.problems-diagnostic-counts.html'])(
+  'getTestRequestResponse - %s uses the development server runtime',
+  async (url) => {
+    const tmpDir = await mkdtemp(join(tmpdir(), 'lvce-test-runtime-'))
+    temporaryDirectories.push(tmpDir)
+    const indexHtmlPath = join(tmpDir, 'index.html')
+    await writeFile(
+      indexHtmlPath,
+      '<!doctype html><title>Tests</title><script id="Config" type="application/json">{"platform":"web","assetDir":"","workerUrls":{"editor":"/editor.js"}}</script>',
+    )
+    jest.spyOn(GetPathName, 'getPathName').mockReturnValue(url)
+
+    const result = await GetTestRequestResponse.getTestRequestResponse({ url }, indexHtmlPath)
+    const configText = result.body.match(/<script id="Config" type="application\/json">([\s\S]*?)<\/script>/)?.[1]
+    expect(JSON.parse(configText)).toMatchObject({
+      platform: 'remote',
+      assetDir: '',
+      workerUrls: { editor: '/editor.js' },
+    })
+  },
+)
