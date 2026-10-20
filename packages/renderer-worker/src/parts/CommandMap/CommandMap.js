@@ -9,6 +9,9 @@ const lazy =
   }
 
 export const commandMap = {
+  'EditorKeymap.register': async (keymap) => (await import('../EditorKeymap/EditorKeymap.ts')).register(keymap),
+  'EditorKeymap.remove': async (id) => (await import('../EditorKeymap/EditorKeymap.ts')).remove(id),
+  'EditorKeymap.execute': async (id, command, ...args) => (await import('../EditorKeymap/EditorKeymap.ts')).execute(id, command, ...args),
   'TerminalTransfer.beginPanelTransfer': lazy('TerminalTransfer.beginPanelTransfer'),
   'TerminalTransfer.cancelPanelTransfer': lazy('TerminalTransfer.cancelPanelTransfer'),
 

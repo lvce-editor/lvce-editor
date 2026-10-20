@@ -64,6 +64,9 @@ export const getDynamicCss = (preferences) => {
   if (tabSize) {
     styles.push(CssVariable.create('EditorTabSize', tabSize))
   }
+  const blockCursor = preferences['editor.cursorStyle'] === 'block'
+  styles.push(CssVariable.create('EditorCursorWidth', blockCursor ? '1ch' : '2px'))
+  styles.push(CssVariable.create('EditorCursorOpacity', blockCursor ? '0.5' : '1'))
   const css = `:root {
 ${JoinLines.joinLines(styles)}
 }`
