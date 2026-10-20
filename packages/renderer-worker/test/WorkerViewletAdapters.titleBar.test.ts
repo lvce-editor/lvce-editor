@@ -26,3 +26,10 @@ test('leaves initial title bar content visible when not titlebarless', async () 
 
   expect(invoke).not.toHaveBeenCalled()
 })
+
+test('reserves a distinct menu widget UID for each title bar and retains it on reload', () => {
+  const first = WorkerViewletAdapters.titleBar.prepareLoadState({ uid: 7 })
+  const second = WorkerViewletAdapters.titleBar.prepareLoadState({ uid: 8 })
+  expect(first.menuUid).not.toBe(second.menuUid)
+  expect(WorkerViewletAdapters.titleBar.prepareLoadState(first).menuUid).toBe(first.menuUid)
+})

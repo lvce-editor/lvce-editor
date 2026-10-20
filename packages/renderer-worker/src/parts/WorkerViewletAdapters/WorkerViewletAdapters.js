@@ -1,4 +1,5 @@
 import * as GetActiveEditor from '../GetActiveEditor/GetActiveEditor.js'
+import * as Id from '../Id/Id.js'
 import * as InputSource from '../InputSource/InputSource.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as StorageKey from '../StorageKey/StorageKey.ts'
@@ -347,6 +348,9 @@ export const textSearch = {
 }
 
 export const titleBar = {
+  prepareLoadState(state) {
+    return { ...state, menuUid: state.menuUid || Id.create() }
+  },
   async afterLoadContent({ state, worker }) {
     if (Preferences.get('window.titleBarless.enabled') === true) {
       await worker.invoke('TitleBar.setShowSideBarThings', state.uid, false)
