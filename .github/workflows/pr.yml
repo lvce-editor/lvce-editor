@@ -410,15 +410,75 @@ jobs:
         shell: bash
 
   direct-events-reproduction:
-    name: Direct editor events attempt ${{ matrix.attempt }}
+    name: Direct editor events ${{ matrix.runtime }} attempt ${{ matrix.attempt }}
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     strategy:
       fail-fast: false
       matrix:
-        attempt: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+        runtime: [current, reported]
+        attempt:
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
+          - 6
+          - 7
+          - 8
+          - 9
+          - 10
+          - 11
+          - 12
+          - 13
+          - 14
+          - 15
+          - 16
+          - 17
+          - 18
+          - 19
+          - 20
+          - 21
+          - 22
+          - 23
+          - 24
+          - 25
+          - 26
+          - 27
+          - 28
+          - 29
+          - 30
+          - 31
+          - 32
+          - 33
+          - 34
+          - 35
+          - 36
+          - 37
+          - 38
+          - 39
+          - 40
+          - 41
+          - 42
+          - 43
+          - 44
+          - 45
+          - 46
+          - 47
+          - 48
+          - 49
+          - 50
     steps:
       - uses: actions/checkout@v7
+        with:
+          ref: ${{ matrix.runtime == 'reported' && 'bbb7e94852ff27df27a4456d449c26d053b4c4d6' || github.event.pull_request.head.sha }}
+      - name: Checkout diagnostic capture
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          sparse-checkout: scripts/capture-flaky-direct-events.mjs
+          sparse-checkout-cone-mode: false
+          path: .tmp/flaky-tools
       - run: |
           git fetch --no-tags --prune --depth=1 origin +refs/heads/main:refs/remotes/origin/main
       - uses: actions/setup-node@v6
@@ -491,15 +551,16 @@ jobs:
         run: node .tmp/direct-editor-tests/packages/e2e-integration/stage-direct-editor-test.mjs .
       - name: Test native direct events with published editor and renderer packages
         working-directory: ./packages/extension-host-worker-tests
-        run: npm run e2e:headless -- --test-name-prefix=viewlet.editor-direct-events --browser-test=../../.tmp/direct-editor-tests/packages/e2e-integration/scripts/test-direct-editor-events.mjs
+        run: npm run e2e:headless -- --test-name-prefix=viewlet.editor-direct-events --browser-test=../../.tmp/flaky-tools/scripts/capture-flaky-direct-events.mjs
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0
+          LVCE_ATTEMPT: ${{ matrix.attempt }}
           LVCE_DIRECT_EVENTS_EVIDENCE_DIR: ${{ github.workspace }}/.tmp/direct-editor-events
       - name: Upload direct editor event trace
         if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: direct-editor-events-attempt-${{ matrix.attempt }}
+          name: direct-editor-events-${{ matrix.runtime }}-attempt-${{ matrix.attempt }}
           path: .tmp/direct-editor-events
           if-no-files-found: warn
       - name: Remove staged direct editor event regression
