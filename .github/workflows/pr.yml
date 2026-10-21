@@ -184,6 +184,31 @@ jobs:
           repository: lvce-editor/editor-worker
           ref: 7c250c9a7f24f0f83b012294738d886f977e94dc
           path: .tmp/direct-editor-tests
+      - name: Checkout owned editor scroll persistence regression
+        uses: actions/checkout@v7
+        with:
+          repository: lvce-editor/editor-worker
+          ref: b232040e8cd380d32a9c6b76d4d9445ad6ef1bdc
+          path: .tmp/editor-scroll-tests
+      - name: Stage editor scroll persistence regression
+        shell: bash
+        run: |
+          node --input-type=module - <<'JS'
+          import { readFile, writeFile } from 'node:fs/promises'
+          import { stripTypeScriptTypes } from 'node:module'
+          const source = '.tmp/editor-scroll-tests/packages/e2e-integration/src/viewlet.editor-scroll-position-persistence.ts'
+          const target = 'packages/extension-host-worker-tests/src/viewlet.editor-scroll-position-persistence.js'
+          await writeFile(target, stripTypeScriptTypes(await readFile(source, 'utf8')))
+          JS
+      - name: Test editor scroll persistence with the published worker
+        working-directory: ./packages/extension-host-worker-tests
+        run: npm run e2e:headless -- --ci --test-name-prefix=viewlet.editor-scroll-position-persistence
+        env:
+          PLAYWRIGHT_BROWSERS_PATH: 0
+      - name: Remove staged editor scroll persistence regression
+        if: always()
+        run: |
+          node --input-type=module -e "import { rm } from 'node:fs/promises'; await rm('packages/extension-host-worker-tests/src/viewlet.editor-scroll-position-persistence.js', { force: true })"
       - name: Prepare source runtime settings
         run: node .tmp/direct-editor-tests/packages/e2e-integration/copy-builtin-settings.mjs .
       - name: Stage direct editor event regression
