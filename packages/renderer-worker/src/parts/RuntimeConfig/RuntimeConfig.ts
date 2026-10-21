@@ -9,6 +9,7 @@ export type RuntimeConfig = {
   assetDir?: string
   platform?: number | 'electron' | 'remote' | 'web'
   workerUrls?: Readonly<Record<string, string>>
+  preloadWorkers?: readonly string[]
 }
 
 export const runtimeConfig: RuntimeConfig = {}
