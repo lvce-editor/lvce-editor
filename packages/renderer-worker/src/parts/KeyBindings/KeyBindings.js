@@ -29,7 +29,13 @@ export const handleKeyBinding = async (identifier, editorUid) => {
   if (editorUid !== undefined && keyBinding.command.startsWith('Editor.')) {
     const instance = ViewletStates.getByUid(editorUid)
     if (instance?.moduleId !== ViewletModuleId.EditorText) return
-    await Viewlet.executeViewletCommand(editorUid, keyBinding.command, ...(keyBinding.args || []))
+    // Worker command IDs are local names; renderer-specific commands such as
+    // Editor.save retain their qualified registration.
+    const qualified = ['Commands', 'CommandsWithSideEffects', 'LazyCommands', 'CommandsWithSideEffectsLazy'].some(
+      (group) => instance.factory[group]?.[keyBinding.command],
+    )
+    const command = qualified ? keyBinding.command : keyBinding.command.slice('Editor.'.length)
+    await Viewlet.executeViewletCommand(editorUid, command, ...(keyBinding.args || []))
     return
   }
   await Command.execute(

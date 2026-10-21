@@ -13,14 +13,19 @@ beforeEach(() => {
   Command.register('Editor.cursorDocumentStart', globalCommand)
 })
 
-test('dispatches to the captured editor after focus moves to a different editor', async () => {
+test.each([
+  ['Editor.cursorDocumentStart', 'cursorDocumentStart'],
+  ['Editor.deleteLeft', 'deleteLeft'],
+  ['Editor.save', 'Editor.save'],
+])('dispatches %s to the captured editor after focus changes', async (command, method) => {
+  KeyBindingsState.state.matchingKeyBindings = [{ command, key: 1 }]
   const cursorDocumentStart = jest.fn((state: Readonly<{ uid: number }>) => state)
   const source = { uid: 42 }
   const preview = { uid: 43 }
   for (const state of [source, preview]) {
     const { uid } = state
     ViewletStates.set(uid, {
-      factory: { Commands: { 'Editor.cursorDocumentStart': cursorDocumentStart } },
+      factory: { Commands: { [method]: cursorDocumentStart } },
       moduleId: 'Editor',
       renderedState: state,
       state,
