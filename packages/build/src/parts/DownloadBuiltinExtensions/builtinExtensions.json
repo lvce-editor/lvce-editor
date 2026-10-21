@@ -108,8 +108,8 @@
   {
     "name": "builtin.eslint",
     "repository": "github.com/lvce-editor/eslint",
-    "version": "1.25.3",
-    "sha256": "40e4292e8ee63c7e73e04c06b3c9311c577983ccba702ec7ae884265678bf3d5",
+    "version": "1.26.1",
+    "sha256": "ef536cac2337a56640a65a6c87c81fe81a1807533a478ae086ea7aea91b3f930",
     "created": "2026-08-01"
   },
   {
