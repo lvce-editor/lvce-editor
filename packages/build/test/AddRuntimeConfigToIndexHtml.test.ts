@@ -32,7 +32,7 @@ test('embeds runtime configuration while preserving existing config values', asy
       assetDir: '/prefix/test-commit',
       html: '</script><script>alert(1)</script>',
       platform: 'electron',
-      preloadWorkers: ['rendererWorker', 'editorWorker', 'syntaxHighlightingWorker', 'extensionManagementWorker', 'fileSystemWorker'],
+      preloadWorkers: ['editorWorker', 'extensionManagementWorker', 'fileSystemWorker', 'rendererWorker', 'syntaxHighlightingWorker'],
       rendererWorkerUrl: '/prefix/test-commit/packages/renderer-worker/dist/rendererWorkerMain.js',
       workerUrls: {
         custom: '/custom.js',
