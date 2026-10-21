@@ -1,11 +1,13 @@
 import { beforeEach, expect, jest, test } from '@jest/globals'
 import * as ApplicationRegistry from '../src/parts/ApplicationRegistry/ApplicationRegistry.ts'
 import { CancelationError } from '../src/parts/Errors/CancelationError.js'
+import * as PreferencesState from '../src/parts/PreferencesState/PreferencesState.js'
 import * as VirtualDomElements from '../src/parts/VirtualDomElements/VirtualDomElements.js'
 import * as ViewletStates from '../src/parts/ViewletStates/ViewletStates.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
+  PreferencesState.setAll({})
   ViewletStates.reset()
   ViewletManager.state.pendingModules = Object.create(null)
 })
@@ -345,7 +347,8 @@ test('load does not invoke the renderer for empty event listeners on a new root'
   expect(RendererProcess.invoke).not.toHaveBeenCalledWith('Viewlet.registerEventListeners', 10, [])
 })
 
-test('load retains non-empty event listener registration for a new root', async () => {
+test.each([1, 1.5, 3])('load registers the current scroll speed %s for a new root', async (scrollSpeed) => {
+  PreferencesState.set('application.scrollspeed', scrollSpeed)
   // @ts-ignore
   RendererProcess.invoke.mockResolvedValue(undefined)
   const eventListeners = [{ name: 'click', params: ['handleClick'] }]
@@ -372,7 +375,7 @@ test('load retains non-empty event listener registration for a new root', async 
   const commands = await ViewletManager.load(viewlet)
 
   expect(commands).toEqual([
-    ['Viewlet.registerEventListeners', 11, eventListeners],
+    ['Viewlet.registerEventListeners', 11, eventListeners, scrollSpeed],
     ['Viewlet.createFunctionalRoot', 'NonEmptyListenerTest', 11, true],
   ])
 })
