@@ -205,6 +205,11 @@ jobs:
         run: npm run e2e:headless -- --test-name-prefix=viewlet.editor-direct-events --browser-test=../../.tmp/editor-shortcut-tests/packages/e2e-integration/test-editor-shortcuts.mjs
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0
+      - name: Test application scroll speed with published view workers
+        working-directory: ./packages/extension-host-worker-tests
+        run: npm run e2e:headless -- --test-name-prefix=viewlet.editor-direct-events --browser-test=../../scripts/test-application-scrollspeed.mjs
+        env:
+          PLAYWRIGHT_BROWSERS_PATH: 0
       - name: Checkout owned native source control regression
         id: sourceControlTests
         uses: actions/checkout@v7
