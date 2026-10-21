@@ -291,8 +291,8 @@
   {
     "name": "builtin.language-basics-javascript",
     "repository": "github.com/lvce-editor/language-basics-javascript",
-    "version": "1.17.2",
-    "sha256": "f0bf9653f30a4122cf302718da0aef04c46ccd7ed621a082d53ad8cd7d5e2466",
+    "version": "1.17.3",
+    "sha256": "6c3396116f786f432ae15e8d4c97898e7ced8f9a87a52a2cdcb74625b0a28cc1",
     "created": "2022-06-16"
   },
   {
