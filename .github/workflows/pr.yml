@@ -96,6 +96,22 @@ jobs:
         run: node node_modules/playwright-core/cli.js install --with-deps chromium
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0
+      - name: Checkout owned HTML filesystem regressions
+        uses: actions/checkout@v7
+        with:
+          repository: lvce-editor/file-system-worker
+          ref: 9ce4bad7564c0252c60a3e9fd53cc81b4938edcf
+          path: .tmp/html-filesystem-tests
+      - name: Stage owned HTML filesystem regression
+        run: node .tmp/html-filesystem-tests/packages/e2e-integration/stage-html-tests.mjs .
+      - name: Test HTML workspace through the published filesystem worker
+        working-directory: ./packages/extension-host-worker-tests
+        run: npm run e2e:headless -- --test-name-prefix=workspace.html-filesystem
+        env:
+          PLAYWRIGHT_BROWSERS_PATH: 0
+      - name: Remove staged HTML filesystem regression
+        if: always()
+        run: node .tmp/html-filesystem-tests/packages/e2e-integration/stage-html-tests.mjs . --clean
       - name: Checkout owned Electron tab move regressions
         uses: actions/checkout@v7
         with:

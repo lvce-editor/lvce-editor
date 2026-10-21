@@ -2,10 +2,8 @@ import * as AssetDir from '../AssetDir/AssetDir.js'
 import * as DirentType from '../DirentType/DirentType.js'
 import * as ExtensionMeta from '../ExtensionMeta/ExtensionMeta.js'
 import * as ExtensionManagementWorker from '../ExtensionManagementWorker/ExtensionManagementWorker.js'
-import * as FileSystemHtml from '../FileSystem/FileSystemHtml.js'
+import * as FileSystemWorker from '../FileSystemWorker/FileSystemWorker.js'
 import * as FileSystemMemory from '../FileSystem/FileSystemMemory.js'
-import * as GitIgnoreMatcher from '../GitIgnoreMatcher/GitIgnoreMatcher.js'
-import { FileNotFoundError } from '../FileNotFoundError/FileNotFoundError.js'
 
 const getCommandsFromExtension = (extension) => {
   if (!extension || extension.disabled || !extension.commands) {
@@ -41,42 +39,7 @@ export const searchFileWithFetch = async (path) => {
   return fileList.map((item) => item.replace(/^\//, '').slice(prefixLength))
 }
 
-const getGitignore = async (uri) => {
-  try {
-    const contents = await FileSystemHtml.readFile(`${uri}/.gitignore`)
-    return {
-      matcher: GitIgnoreMatcher.create(contents),
-    }
-  } catch (error) {
-    if (error instanceof FileNotFoundError) {
-      return {
-        matcher: GitIgnoreMatcher.create(),
-      }
-    }
-    throw error
-  }
-}
-
-const searchDirectory = async (uri, prefix = '', gitignore) => {
-  const entries = await FileSystemHtml.readDirWithFileTypes(uri)
-  const results = []
-  for (const entry of entries) {
-    const relativePath = prefix ? `${prefix}/${entry.name}` : entry.name
-    if (entry.type === DirentType.Directory) {
-      if (gitignore.matcher.hasNegation || !gitignore.matcher.isIgnored(relativePath, true)) {
-        results.push(...(await searchDirectory(`${uri}/${entry.name}`, relativePath, gitignore)))
-      }
-    } else if (!gitignore.matcher.isIgnored(relativePath)) {
-      results.push(relativePath)
-    }
-  }
-  return results
-}
-
-export const searchFileWithHtml = async (uri) => {
-  const gitignore = await getGitignore(uri)
-  return searchDirectory(uri, '', gitignore)
-}
+export const searchFileWithHtml = (uri) => FileSystemWorker.invoke('FileSystemHtml.fileSearch', uri)
 
 export const searchFileWithMemory = async () => {
   return Object.entries(await FileSystemMemory.getFiles())
