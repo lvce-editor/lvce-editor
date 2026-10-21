@@ -28,7 +28,7 @@
     },
     "packages/renderer-worker": {
       "entry": ["src/rendererWorkerMain.ts", "test/**/*.test.ts"],
-      "project": ["src/**/*.ts", "test/**/*.ts"],
+      "project": ["src/**/*.ts", "src/parts/ExtensionHost/ExtensionHostCommands.js", "test/**/*.ts"],
       "ignoreBinaries": ["microbundle"],
       "ignoreDependencies": ["@lvce-editor/*", "@vscode/codicons"]
     },
