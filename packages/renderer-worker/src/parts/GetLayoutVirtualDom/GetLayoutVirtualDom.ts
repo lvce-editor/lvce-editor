@@ -569,8 +569,7 @@ export const getLayoutVirtualDom = (state: LayoutState) => {
 
   if (state.browserTabDragSource !== undefined) {
     workbenchChildCount++
-    const returningToPreview =
-      state.browserTabDragSource === state.secondaryPreviewId && state.secondaryPreviewPlacement === 'bottomLeft'
+    const returningToPreview = state.browserTabDragSource === state.secondaryPreviewId && state.secondaryPreviewPlacement === 'bottomLeft'
     dom.push({
       type: VirtualDomElements.Div,
       className: returningToPreview ? 'BrowserPreviewDropTarget' : 'BrowserBottomLeftDropTarget',
