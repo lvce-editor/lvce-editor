@@ -54,3 +54,23 @@ test('queries and executes contributions in the application that opened the menu
   ])
   expect(invokeExtensions).toHaveBeenCalledWith('Extensions.invokeForApplication', 'preview', 'Extensions.getExplorerContextMenuEntries', context)
 })
+
+test.each([
+  [true, 'file:///workspace/folder', 'file:///workspace/folder'],
+  [false, 'file:///workspace/folder/file.js', 'file:///workspace/folder'],
+])('terminal menu captures cwd without entering the Explorer command queue (%s)', async (isDirectory, uri, cwd) => {
+  invoke.mockResolvedValue({
+    context: { isDirectory, uri },
+    entries: [{ command: 'Explorer.openInIntegratedTerminal', label: 'Open in integrated Terminal' }],
+  })
+  expect(await getMenuEntries(42)).toEqual([{ command: 'Layout.openIntegratedTerminal', args: [cwd], label: 'Open in integrated Terminal' }])
+})
+
+test('terminal menu retains the owning application', async () => {
+  invoke.mockResolvedValue({
+    applicationId: 'preview',
+    context: { isDirectory: true, uri: 'file:///folder' },
+    entries: [{ command: 'Explorer.openInIntegratedTerminal' }],
+  })
+  expect(await getMenuEntries(42)).toEqual([{ command: 'Application.execute', args: ['preview', 'Layout.openIntegratedTerminal', 'file:///folder'] }])
+})
