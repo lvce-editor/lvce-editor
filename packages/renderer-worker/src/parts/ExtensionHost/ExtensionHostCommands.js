@@ -4,7 +4,7 @@ import * as ExtensionMeta from '../ExtensionMeta/ExtensionMeta.js'
 import * as ExtensionManagementWorker from '../ExtensionManagementWorker/ExtensionManagementWorker.js'
 import * as FileSystemHtml from '../FileSystem/FileSystemHtml.js'
 import * as FileSystemMemory from '../FileSystem/FileSystemMemory.js'
-import ignore from 'ignore'
+import * as GitIgnoreMatcher from '../GitIgnoreMatcher/GitIgnoreMatcher.js'
 import { FileNotFoundError } from '../FileNotFoundError/FileNotFoundError.js'
 
 const getCommandsFromExtension = (extension) => {
@@ -45,14 +45,12 @@ const getGitignore = async (uri) => {
   try {
     const contents = await FileSystemHtml.readFile(`${uri}/.gitignore`)
     return {
-      hasNegation: contents.split(/\r?\n/).some((line) => /^\s*!/.test(line)),
-      matcher: ignore().add(contents),
+      matcher: GitIgnoreMatcher.create(contents),
     }
   } catch (error) {
     if (error instanceof FileNotFoundError) {
       return {
-        hasNegation: false,
-        matcher: ignore(),
+        matcher: GitIgnoreMatcher.create(),
       }
     }
     throw error
@@ -65,10 +63,10 @@ const searchDirectory = async (uri, prefix = '', gitignore) => {
   for (const entry of entries) {
     const relativePath = prefix ? `${prefix}/${entry.name}` : entry.name
     if (entry.type === DirentType.Directory) {
-      if (gitignore.hasNegation || !gitignore.matcher.ignores(`${relativePath}/`)) {
+      if (gitignore.matcher.hasNegation || !gitignore.matcher.isIgnored(relativePath, true)) {
         results.push(...(await searchDirectory(`${uri}/${entry.name}`, relativePath, gitignore)))
       }
-    } else if (!gitignore.matcher.ignores(relativePath)) {
+    } else if (!gitignore.matcher.isIgnored(relativePath)) {
       results.push(relativePath)
     }
   }

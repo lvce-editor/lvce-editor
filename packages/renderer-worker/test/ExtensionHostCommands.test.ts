@@ -1,6 +1,7 @@
 import { beforeEach, expect, jest, test } from '@jest/globals'
 import * as DirentType from '../src/parts/DirentType/DirentType.js'
 import { FileNotFoundError } from '../src/parts/FileNotFoundError/FileNotFoundError.js'
+import * as GitIgnoreMatcher from '../src/parts/GitIgnoreMatcher/GitIgnoreMatcher.js'
 
 const getExtensions = jest.fn(async () => [
   {
@@ -47,7 +48,7 @@ test('queries only the requested application for extension commands', async () =
 })
 
 test('file quickpick prunes directories ignored by the workspace root gitignore', async () => {
-  readFile.mockResolvedValue('custom-cache/\n')
+  readFile.mockResolvedValue('# generated cache\n\n/custom-cache/\n')
   readDirWithFileTypes.mockImplementation(async (uri) => {
     if (uri === 'html:///workspace') {
       return [
@@ -56,13 +57,19 @@ test('file quickpick prunes directories ignored by the workspace root gitignore'
       ]
     }
     if (uri === 'html:///workspace/src') {
-      return [{ name: 'main.ts', type: DirentType.File }]
+      return [
+        { name: 'custom-cache', type: DirentType.Directory },
+        { name: 'main.ts', type: DirentType.File },
+      ]
+    }
+    if (uri === 'html:///workspace/src/custom-cache') {
+      return [{ name: 'nested.ts', type: DirentType.File }]
     }
     throw new Error(`unexpected directory enumeration: ${uri}`)
   })
 
-  await expect(ExtensionHostCommands.searchFileWithHtml('html:///workspace')).resolves.toEqual(['src/main.ts'])
-  expect(readDirWithFileTypes).toHaveBeenCalledTimes(2)
+  await expect(ExtensionHostCommands.searchFileWithHtml('html:///workspace')).resolves.toEqual(['src/custom-cache/nested.ts', 'src/main.ts'])
+  expect(readDirWithFileTypes).toHaveBeenCalledTimes(3)
   expect(readDirWithFileTypes).not.toHaveBeenCalledWith('html:///workspace/custom-cache')
 })
 
@@ -88,4 +95,10 @@ test('file quickpick honors gitignore negations', async () => {
 
   await expect(ExtensionHostCommands.searchFileWithHtml('html:///workspace')).resolves.toEqual(['generated/keep.ts'])
   expect(readDirWithFileTypes).toHaveBeenCalledWith('html:///workspace/generated')
+})
+
+test('gitignore matcher ignores blank lines and comments', () => {
+  const matcher = GitIgnoreMatcher.create('# comment\n\nignored.txt\n')
+  expect(matcher.isIgnored('ignored.txt')).toBe(true)
+  expect(matcher.isIgnored('visible.txt')).toBe(false)
 })
