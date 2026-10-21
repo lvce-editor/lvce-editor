@@ -1,3 +1,5 @@
+import { pathToFileURL } from 'node:url'
+
 export const hasPriorReleaseRun = (runs, currentRunId, headSha, headBranch) => runs.some((run) =>
   run.id < currentRunId &&
   run.event === 'push' &&
@@ -21,4 +23,4 @@ const main = async () => {
   }
 }
 
-if (process.env.GITHUB_ACTIONS === 'true') await main()
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) await main()
