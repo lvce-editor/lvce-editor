@@ -304,10 +304,6 @@ export const textSearch = {
         return { ...state }
       },
       focus(state) {
-        const { isSearchEditor } = state
-        if (!isSearchEditor) {
-          return state
-        }
         return {
           ...state,
           commands: [['Viewlet.focusSelector', '[name="SearchValue"]']],
