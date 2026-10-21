@@ -194,6 +194,19 @@ test('reloadUserKeyBindings replaces user keybindings', async () => {
   expect(ExtensionKeyBindings.getKeyBindings).not.toHaveBeenCalled()
 })
 
+test('reloadUserKeyBindings clears user keybindings and preserves extension keybindings', async () => {
+  const extensionKeyBindings = [{ command: 'extension.command', key: 30 }]
+  KeyBindingsState.setKeyBindings('extensions', extensionKeyBindings)
+  KeyBindingsState.setKeyBindings('user', [{ command: 'user.command', key: 29, source: 'User' }])
+  jest.mocked(UserKeyBindings.getKeyBindings).mockResolvedValue([])
+
+  await KeyBindings.reloadUserKeyBindings()
+
+  expect(KeyBindingsState.state.keyBindingSets.user).toEqual([])
+  expect(KeyBindingsState.state.keyBindingSets.extensions).toBe(extensionKeyBindings)
+  expect(KeyBindingsState.getKeyBindings()).toEqual(extensionKeyBindings)
+})
+
 test('user keybindings take precedence when a component loads afterwards', () => {
   const userKeyBinding = { command: 'test.user', key: 29, source: 'User' }
   const componentKeyBinding = { command: 'test.component', key: 29 }

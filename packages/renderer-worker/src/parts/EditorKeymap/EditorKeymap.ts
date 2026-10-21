@@ -2,7 +2,6 @@ import * as ApplicationRegistry from '../ApplicationRegistry/ApplicationRegistry
 import * as Command from '../Command/Command.js'
 import * as Id from '../Id/Id.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
-import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
 interface Registration {
@@ -43,7 +42,7 @@ export const execute = async (id: number, command: string, ...args: readonly unk
     await Command.execute(command, ...args)
   } else if (ApplicationRegistry.isOpen(registration.applicationId)) {
     await ApplicationRegistry.track(registration.applicationId, () =>
-      ViewletManager.executeForApplication(registration.applicationId, command, ...args),
+      Command.execute('Application.execute', registration.applicationId, command, ...args),
     )
   }
 }
