@@ -256,8 +256,8 @@
   {
     "name": "builtin.language-basics-html",
     "repository": "github.com/lvce-editor/language-basics-html",
-    "version": "1.8.1",
-    "sha256": "89dd641d81cfb319205bb3ea69f8dc29078acc122696e63d915fb80ae4834bc2",
+    "version": "1.12.1",
+    "sha256": "f9a3d834b9da908a636c548e28b5772f923a0240ea0dc0569d76cedfb8fe234d",
     "created": "2022-06-16"
   },
   {
