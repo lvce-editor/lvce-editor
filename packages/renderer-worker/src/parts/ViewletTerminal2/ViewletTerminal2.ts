@@ -112,9 +112,8 @@ export const handleData = async (state, data) => {
 
 export const handleExit = async (state, event?: { exitCode?: number; signal?: number }) => {
   if (event?.exitCode || event?.signal) {
-    const message = event.signal
-      ? `The terminal process exited with signal ${event.signal}.`
-      : `The terminal process exited with code ${event.exitCode}.`
+    const processName = state.keepOpen ? `The terminal process (${state.command})` : 'The terminal process'
+    const message = event.signal ? `${processName} exited with signal ${event.signal}.` : `${processName} exited with code ${event.exitCode}.`
     await showError(state, message)
     return state
   }

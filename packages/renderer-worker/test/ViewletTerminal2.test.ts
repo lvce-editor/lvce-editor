@@ -338,3 +338,12 @@ test('file execution names the runtime when the backend only reports a generic s
   const output = new TextDecoder().decode(bytes)
   expect(output).toContain('Failed to start terminal (missing-runtime): posix_spawnp failed')
 })
+
+test.each([{ exitCode: 1 }, { exitCode: 127 }, { signal: 9 }])('file process exit names the runtime: %j', async (event) => {
+  const state = { ...ViewletTerminal2.create(10), command: 'missing-runtime', keepOpen: true }
+  await ViewletTerminal2.handleExit(state, event)
+  const bytes = rendererProcessInvoke.mock.calls[0][3] as Uint8Array
+  const output = new TextDecoder().decode(bytes)
+  expect(output).toContain('The terminal process (missing-runtime) exited with')
+  expect(commandExecute).not.toHaveBeenCalledWith('Terminals.handleTerminalExit', 10)
+})
