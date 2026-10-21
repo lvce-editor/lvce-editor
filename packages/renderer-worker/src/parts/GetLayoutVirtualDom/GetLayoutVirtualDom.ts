@@ -552,7 +552,10 @@ export const getLayoutVirtualDom = (state: LayoutState) => {
   }
 
   const mountedSources = Object.values(mountedViewletsBySource)
-  const mountedViewlets = new Set(mountedSources.flat())
+  const mountedViewlets = new Set([
+    ...mountedSources.flat(),
+    ...dom.filter((node) => node.type === VirtualDomElements.Reference).map((node) => node.uid),
+  ])
   const showAllWidgets = mountedSources.length === 0
   for (const widget of widgetReferences) {
     if (showAllWidgets || mountedViewlets.has(widget.parentUid)) {
