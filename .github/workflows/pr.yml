@@ -100,7 +100,7 @@ jobs:
         uses: actions/checkout@v7
         with:
           repository: lvce-editor/file-system-worker
-          ref: b1df964c576b1767b67e160fbcf3a7a89d18eacf
+          ref: 9ce4bad7564c0252c60a3e9fd53cc81b4938edcf
           path: .tmp/html-filesystem-tests
       - name: Stage owned HTML filesystem regression
         run: node .tmp/html-filesystem-tests/packages/e2e-integration/stage-html-tests.mjs .
