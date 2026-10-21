@@ -34,6 +34,7 @@ jest.unstable_mockModule('../src/parts/GetActiveEditor/GetActiveEditor.js', () =
 
 const GetActiveEditor = await import('../src/parts/GetActiveEditor/GetActiveEditor.js')
 const Application = await import('../src/parts/Application/Application.ts')
+const LayoutIpc = await import('../src/parts/Layout/Layout.ipc.js')
 const RendererProcess = await import('../src/parts/RendererProcess/RendererProcess.js')
 const FileSystemWorker = await import('../src/parts/FileSystemWorker/FileSystemWorker.js')
 const ViewletManager = await import('../src/parts/ViewletManager/ViewletManager.js')
@@ -223,6 +224,19 @@ test('extension reload refreshes existing application views without disposing th
   expect(ApplicationRegistry.getOwner(source)).toBe('source')
   expect(ApplicationRegistry.getOwner(preview)).toBe('preview')
   expect(ApplicationRegistry.getOwner(100)).toBe('preview')
+})
+
+test('global workspace refresh dispatches to each open application on the first command invocation', async () => {
+  await Application.create(options('source'))
+  await Application.create(options('preview'))
+  jest.mocked(ViewletManager.executeForApplication).mockClear()
+  await LayoutIpc.Commands.handleWorkspaceRefresh({ changed: ['memfs:///sample/src/main.ts'] })
+  expect(ViewletManager.executeForApplication).toHaveBeenNthCalledWith(1, 'source', 'Layout.handleWorkspaceRefresh', {
+    changed: ['memfs:///sample/src/main.ts'],
+  })
+  expect(ViewletManager.executeForApplication).toHaveBeenNthCalledWith(2, 'preview', 'Layout.handleWorkspaceRefresh', {
+    changed: ['memfs:///sample/src/main.ts'],
+  })
 })
 
 test('a failed extension replacement leaves application views mounted and does not refresh them', async () => {
