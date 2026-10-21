@@ -101,7 +101,7 @@ test('loadContent - renders before diagnostics are requested by loadContentLater
     false,
   )
   expect(editorWorkerInvoke).toHaveBeenCalledWith('Editor.loadContent', 1, undefined, false, true)
-  expect(editorWorkerInvoke).toHaveBeenCalledWith('Editor.setSelections2', 1, selections)
+  expect(editorWorkerInvoke).toHaveBeenCalledWith('Editor.setSelections2', 1, selections, true)
   const editorMethods = editorWorkerInvoke.mock.calls
     .map(([method]) => method)
     .filter((method): method is string => typeof method === 'string' && method.startsWith('Editor.'))
@@ -132,6 +132,7 @@ test('loadContent - restores the editor worker state', async () => {
   })
   const state = ViewletEditorText.create(1, '/test/file.txt', 0, 0, 800, 600)
   const editorState = {
+    deltaY: 12000,
     lines: ['saved content'],
     redoStack: [['redo']],
     undoStack: [['undo']],
@@ -140,6 +141,7 @@ test('loadContent - restores the editor worker state', async () => {
   await ViewletEditorText.loadContent(state, { editorState }, {})
 
   expect(editorWorkerInvoke).toHaveBeenCalledWith('Editor.loadContent', 1, editorState, false, true)
+  expect(editorWorkerInvoke).toHaveBeenCalledWith('Editor.setSelections2', 1, new Uint32Array([0, 0, 0, 0]), false)
 })
 
 test('loadContent restores saved persistent editor widgets', async () => {
@@ -225,7 +227,7 @@ test('loadContent - restores the definition range supplied by the opener', async
     },
   )
 
-  expect(editorWorkerInvoke).toHaveBeenCalledWith('Editor.setSelections2', 1, new Uint32Array([592, 4, 592, 9]))
+  expect(editorWorkerInvoke).toHaveBeenCalledWith('Editor.setSelections2', 1, new Uint32Array([592, 4, 592, 9]), true)
 })
 
 test('loadContent - disables the editor file cache through preferences', async () => {
