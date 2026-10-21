@@ -4,22 +4,31 @@ import * as ExtensionManagementRpcId from '../ExtensionManagementRpcId/Extension
 import * as EditorWorker from '../EditorWorker/EditorWorker.ts'
 import * as GetPortTuple from '../GetPortTuple/GetPortTuple.js'
 import * as HandleIpc from '../HandleIpc/HandleIpc.js'
+import * as Id from '../Id/Id.js'
 import * as IpcParent from '../IpcParent/IpcParent.js'
 import * as IpcParentType from '../IpcParentType/IpcParentType.js'
+import * as IpcParentWithModuleWorkerAndWorkaroundForChromeDevtoolsBug from '../IpcParentWithModuleWorkerAndWorkaroundForChromeDevtoolsBug/IpcParentWithModuleWorkerAndWorkaroundForChromeDevtoolsBug.js'
 import * as JsonRpc from '../JsonRpc/JsonRpc.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
+import * as ShouldUsePreloadedWorker from '../ShouldUsePreloadedWorker/ShouldUsePreloadedWorker.ts'
 import * as StatusBarWorkerUrl from '../StatusBarWorkerUrl/StatusBarWorkerUrl.js'
+import * as Transferrable from '../Transferrable/Transferrable.js'
 
 const editorSelectionListenerType = 2
 const statusBarEditorRpcId = 2001
 
 export const launchStatusBarWorker = async () => {
   const name = 'Status Bar Worker'
-  const ipc = await IpcParent.create({
+  const id = Id.create()
+  let ipc = await IpcParent.create({
+    id,
     method: IpcParentType.ModuleWorkerAndWorkaroundForChromeDevtoolsBug,
     name,
     url: GetConfiguredWorkerUrl.getConfiguredWorkerUrl('develop.statusBarWorkerPath', StatusBarWorkerUrl.statusBarWorkerUrl),
   })
+  if (ShouldUsePreloadedWorker.shouldUsePreloadedWorker('statusBarWorker')) {
+    ipc = IpcParentWithModuleWorkerAndWorkaroundForChromeDevtoolsBug.wrap(Transferrable.acquire(id))
+  }
   HandleIpc.handleIpc(ipc)
   const { port1, port2 } = new MessageChannel()
   await Promise.all([
