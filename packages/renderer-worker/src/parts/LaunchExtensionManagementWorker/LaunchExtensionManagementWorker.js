@@ -1,3 +1,7 @@
+import * as Id from '../Id/Id.js'
+import * as IpcParentWithModuleWorkerAndWorkaroundForChromeDevtoolsBug from '../IpcParentWithModuleWorkerAndWorkaroundForChromeDevtoolsBug/IpcParentWithModuleWorkerAndWorkaroundForChromeDevtoolsBug.js'
+import * as ShouldUsePreloadedWorker from '../ShouldUsePreloadedWorker/ShouldUsePreloadedWorker.ts'
+import * as Transferrable from '../Transferrable/Transferrable.js'
 import * as ExtensionManagementWorkerUrl from '../ExtensionManagementWorkerUrl/ExtensionManagementWorkerUrl.js'
 import * as GetConfiguredWorkerUrl from '../GetConfiguredWorkerUrl/GetConfiguredWorkerUrl.ts'
 import * as HandleIpc from '../HandleIpc/HandleIpc.js'
@@ -19,7 +23,9 @@ export const launchExtensionManagementWorker = async () => {
   const name = 'Extension Management Worker'
   const platform = Platform.getPlatform()
   const developmentConfig = await getExtensionDevelopmentConfig(platform)
-  const ipc = await IpcParent.create({
+  const id = Id.create()
+  let ipc = await IpcParent.create({
+    id,
     method: IpcParentType.ModuleWorkerAndWorkaroundForChromeDevtoolsBug,
     name,
     parentName: 'Renderer Worker',
@@ -28,6 +34,9 @@ export const launchExtensionManagementWorker = async () => {
       ExtensionManagementWorkerUrl.extensionManagementWorkerUrl,
     ),
   })
+  if (ShouldUsePreloadedWorker.shouldUsePreloadedWorker('extensionManagementWorker')) {
+    ipc = IpcParentWithModuleWorkerAndWorkaroundForChromeDevtoolsBug.wrap(Transferrable.acquire(id))
+  }
   HandleIpc.handleIpc(ipc)
   await JsonRpc.invoke(ipc, 'Extensions.initialize', platform, developmentConfig)
   return ipc
