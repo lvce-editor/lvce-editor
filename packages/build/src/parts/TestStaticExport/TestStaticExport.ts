@@ -86,6 +86,7 @@ const main = async () => {
   assert.ok(configElement[1].includes('\n        "workerUrls": {\n'), 'static export runtime configuration should be formatted across multiple lines')
   const runtimeConfig = JSON.parse(configElement[1])
   assert.equal(runtimeConfig.platform, 'web')
+  assert.deepEqual(runtimeConfig.preloadWorkers, ['rendererWorker', 'editorWorker', 'syntaxHighlightingWorker', 'extensionManagementWorker', 'fileSystemWorker'])
   assert.equal(runtimeConfig.assetDir, `/test/${commitHash}`)
   assert.equal(runtimeConfig.rendererWorkerUrl, `/test/${commitHash}/packages/renderer-worker/dist/rendererWorkerMain.js`)
   assert.ok(Object.values(runtimeConfig.workerUrls as Record<string, string>).every((url) => url.startsWith(`/test/${commitHash}/`)))
@@ -156,6 +157,7 @@ const main = async () => {
   assert.ok(pagesConfigElement[1].includes('\n        "workerUrls": {\n'), 'Pages export runtime configuration should be formatted across multiple lines')
   const pagesRuntimeConfig = JSON.parse(pagesConfigElement[1])
   assert.equal(pagesRuntimeConfig.platform, 'web')
+  assert.deepEqual(pagesRuntimeConfig.preloadWorkers, ['rendererWorker', 'editorWorker', 'syntaxHighlightingWorker', 'extensionManagementWorker', 'fileSystemWorker'])
   assert.equal(pagesRuntimeConfig.assetDir, `/lvce-editor/${pagesResult.commitHash}`)
   assert.equal(pagesRuntimeConfig.rendererWorkerUrl, `/lvce-editor/${pagesResult.commitHash}/packages/renderer-worker/dist/rendererWorkerMain.js`)
   assert.ok(
