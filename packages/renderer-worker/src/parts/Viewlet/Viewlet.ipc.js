@@ -1,3 +1,4 @@
+import * as GetMainAreaUid from '../GetMainAreaUid/GetMainAreaUid.ts'
 import * as Viewlet from './Viewlet.js'
 
 export const name = 'Viewlet'
@@ -9,6 +10,7 @@ export const Commands = {
   executeViewletCommand: Viewlet.executeViewletCommand,
   focus: Viewlet.focus,
   focusSelector: Viewlet.focusSelector,
+  getMainAreaUid: GetMainAreaUid.getMainAreaUid,
   getAllStates: Viewlet.getAllStates,
   getDragData: Viewlet.getDragData,
   getTitle: Viewlet.getTitle,
