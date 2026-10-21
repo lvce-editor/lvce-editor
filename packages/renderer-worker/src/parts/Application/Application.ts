@@ -275,6 +275,22 @@ export const executeForView = (uid: number, command: string, ...args: readonly a
   return execute(applicationId, command, ...args)
 }
 
+export const handleWorkspaceRefresh = async (changes: unknown = {}): Promise<void> => {
+  await Promise.allSettled(
+    ApplicationRegistry.getOpenIds().map((applicationId) =>
+      ViewletManager.executeForApplication(applicationId, 'Layout.handleWorkspaceRefresh', changes),
+    ),
+  )
+}
+
+export const refreshSourceControlBadgeCount = async (): Promise<void> => {
+  await Promise.allSettled(
+    ApplicationRegistry.getOpenIds().map((applicationId) =>
+      ViewletManager.executeForApplication(applicationId, 'Layout.refreshSourceControlBadgeCount'),
+    ),
+  )
+}
+
 export const resize = (applicationId: string, width: number, height: number): Promise<void> => {
   if (!Number.isFinite(width) || !Number.isFinite(height) || width <= 0 || height <= 0) {
     throw new Error('Invalid application dimensions')
