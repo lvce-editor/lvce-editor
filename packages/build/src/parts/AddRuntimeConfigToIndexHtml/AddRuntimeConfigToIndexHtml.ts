@@ -21,6 +21,7 @@ const getRuntimeConfig = async ({ platform, assetDir }) => {
     platform,
     rendererWorkerUrl: `${assetDir}/packages/renderer-worker/dist/rendererWorkerMain.js`,
     workerUrls,
+    preloadWorkers: ['rendererWorker', 'editorWorker', 'syntaxHighlightingWorker', 'extensionManagementWorker', 'fileSystemWorker'],
   }
 }
 
@@ -44,6 +45,7 @@ export const addRuntimeConfigToIndexHtml = async ({ path, platform, assetDir }) 
   const config = {
     ...existingConfig,
     ...runtimeConfig,
+    preloadWorkers: existingConfig.preloadWorkers ?? runtimeConfig.preloadWorkers,
     workerUrls: {
       ...runtimeConfig.workerUrls,
       ...existingConfig.workerUrls,

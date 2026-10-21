@@ -32,6 +32,7 @@ test('embeds runtime configuration while preserving existing config values', asy
       assetDir: '/prefix/test-commit',
       html: '</script><script>alert(1)</script>',
       platform: 'electron',
+      preloadWorkers: ['rendererWorker', 'editorWorker', 'syntaxHighlightingWorker', 'extensionManagementWorker', 'fileSystemWorker'],
       rendererWorkerUrl: '/prefix/test-commit/packages/renderer-worker/dist/rendererWorkerMain.js',
       workerUrls: {
         custom: '/custom.js',
@@ -42,6 +43,21 @@ test('embeds runtime configuration while preserving existing config values', asy
     })
     expect(html).not.toContain('</script><script>alert(1)</script>')
     expect(html).not.toContain('renderer-worker/node_modules')
+  } finally {
+    await rm(dir, { force: true, recursive: true })
+  }
+})
+
+test.each([[[]], [['fileSystemWorker']]])('preserves an explicit preload configuration %j', async (...args) => {
+  const preloadWorkers = args[0]
+  const dir = await mkdtemp(join(tmpdir(), 'lvce-preload-config-'))
+  const path = join(dir, 'index.html')
+  try {
+    await writeFile(path, `<html><head><script id="Config" type="application/json">${JSON.stringify({ preloadWorkers })}</script></head></html>`)
+    await AddRuntimeConfigToIndexHtml.addRuntimeConfigToIndexHtml({ path, platform: 'web', assetDir: '' })
+    const html = await readFile(path, 'utf8')
+    const config = JSON.parse(html.match(/<script id="Config" type="application\/json">([\s\S]*?)<\/script>/)![1])
+    expect(config.preloadWorkers).toEqual(preloadWorkers)
   } finally {
     await rm(dir, { force: true, recursive: true })
   }
