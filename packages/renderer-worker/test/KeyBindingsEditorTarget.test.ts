@@ -1,50 +1,58 @@
 import { beforeEach, expect, jest, test } from '@jest/globals'
+import * as Command from '../src/parts/Command/Command.js'
+import * as KeyBindings from '../src/parts/KeyBindings/KeyBindings.js'
+import * as KeyBindingsState from '../src/parts/KeyBindingsState/KeyBindingsState.js'
+import * as ViewletStates from '../src/parts/ViewletStates/ViewletStates.js'
 
-const executeCommand = jest.fn<(...args: readonly unknown[]) => Promise<void>>()
-const executeViewletCommand = jest.fn<(...args: readonly unknown[]) => Promise<void>>()
-jest.unstable_mockModule('../src/parts/Command/Command.js', () => ({ execute: executeCommand }))
-jest.unstable_mockModule('../src/parts/Viewlet/Viewlet.js', () => ({ executeViewletCommand }))
-
-const KeyBindings = await import('../src/parts/KeyBindings/KeyBindings.js')
-const KeyBindingsState = await import('../src/parts/KeyBindingsState/KeyBindingsState.js')
-const ViewletStates = await import('../src/parts/ViewletStates/ViewletStates.js')
+const globalCommand = jest.fn<(...args: readonly unknown[]) => Promise<void>>()
 
 beforeEach(() => {
   jest.clearAllMocks()
   ViewletStates.reset()
-  KeyBindingsState.state.matchingKeyBindings = [{ key: 1, command: 'Editor.cursorDocumentStart' }]
+  KeyBindingsState.state.matchingKeyBindings = [{ command: 'Editor.cursorDocumentStart', key: 1 }]
+  Command.register('Editor.cursorDocumentStart', globalCommand)
 })
 
 test('dispatches to the captured editor after focus moves to a different editor', async () => {
-  for (const uid of [42, 43]) {
-    ViewletStates.set(uid, { factory: {}, moduleId: 'Editor', renderedState: { uid }, state: { uid } })
+  const cursorDocumentStart = jest.fn((state: Readonly<{ uid: number }>) => state)
+  const source = { uid: 42 }
+  const preview = { uid: 43 }
+  for (const state of [source, preview]) {
+    const { uid } = state
+    ViewletStates.set(uid, {
+      factory: { Commands: { 'Editor.cursorDocumentStart': cursorDocumentStart } },
+      moduleId: 'Editor',
+      renderedState: state,
+      state,
+    })
   }
   ViewletStates.setFocusedInstanceByType(43, 'Editor')
 
   await KeyBindings.handleKeyBinding(1, 42)
 
-  expect(executeViewletCommand).toHaveBeenCalledWith(42, 'Editor.cursorDocumentStart')
-  expect(executeCommand).not.toHaveBeenCalled()
+  expect(cursorDocumentStart).toHaveBeenCalledTimes(1)
+  expect(cursorDocumentStart).toHaveBeenCalledWith(source)
+  expect(ViewletStates.getFocusedInstanceByType('Editor')).toBe(43)
+  expect(globalCommand).not.toHaveBeenCalled()
 })
 
 test('drops a shortcut whose original editor was closed', async () => {
   await KeyBindings.handleKeyBinding(1, 42)
 
-  expect(executeViewletCommand).not.toHaveBeenCalled()
-  expect(executeCommand).not.toHaveBeenCalled()
+  expect(globalCommand).not.toHaveBeenCalled()
 })
 
 test('preserves ordinary dispatch when no editor target was supplied', async () => {
   await KeyBindings.handleKeyBinding(1)
 
-  expect(executeCommand).toHaveBeenCalledWith('Editor.cursorDocumentStart')
-  expect(executeViewletCommand).not.toHaveBeenCalled()
+  expect(globalCommand).toHaveBeenCalledWith()
 })
 
 test('preserves non-editor commands and their arguments', async () => {
-  KeyBindingsState.state.matchingKeyBindings = [{ key: 1, command: 'ExtensionHost.executeCommand', args: ['sample.command'] }]
+  KeyBindingsState.state.matchingKeyBindings = [{ args: ['sample.command'], command: 'ExtensionHost.executeCommand', key: 1 }]
+  Command.register('ExtensionHost.executeCommand', globalCommand)
+
   await KeyBindings.handleKeyBinding(1, 42)
 
-  expect(executeCommand).toHaveBeenCalledWith('ExtensionHost.executeCommand', 'sample.command')
-  expect(executeViewletCommand).not.toHaveBeenCalled()
+  expect(globalCommand).toHaveBeenCalledWith('sample.command')
 })
