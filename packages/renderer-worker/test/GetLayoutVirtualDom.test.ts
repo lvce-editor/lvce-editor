@@ -438,6 +438,46 @@ test('getLayoutVirtualDom renders visible widgets as the final Workbench childre
   expect(dom[0].childCount).toBe(2)
 })
 
+test('getLayoutVirtualDom keeps title bar widgets mounted after editor mount references are published', () => {
+  const state = {
+    activityBarVisible: false,
+    mainVisible: true,
+    mainId: 1,
+    mountedViewletsBySource: { 50: [10] },
+    panelSashVisible: false,
+    panelVisible: false,
+    panelId: -1,
+    previewSashVisible: false,
+    previewVisible: false,
+    previewId: -1,
+    secondarySideBarVisible: false,
+    secondarySideBarId: -1,
+    sideBarLocation: SideBarLocationType.Left,
+    sideBarSashVisible: false,
+    sideBarVisible: false,
+    sideBarId: -1,
+    statusBarVisible: false,
+    statusBarId: -1,
+    titleBarVisible: true,
+    titleBarId: 6,
+    widgetReferences: [
+      { parentUid: 6, uid: 20 },
+      { parentUid: 11, uid: 21 },
+    ],
+  }
+
+  // @ts-ignore
+  const dom = getLayoutVirtualDom(state)
+
+  expect(dom.at(-1)).toEqual({ type: 100, uid: 20 })
+  expect(dom.some((node) => node.uid === 21)).toBe(false)
+  expect(dom[0].childCount).toBe(3)
+
+  // @ts-ignore
+  const hiddenDom = getLayoutVirtualDom({ ...state, titleBarVisible: false })
+  expect(hiddenDom.some((node) => node.uid === 20)).toBe(false)
+})
+
 test('getLayoutVirtualDom keeps widgets visible before mounted viewlets are first published', () => {
   const state = {
     activityBarVisible: false,

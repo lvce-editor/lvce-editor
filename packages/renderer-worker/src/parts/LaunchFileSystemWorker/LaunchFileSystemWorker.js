@@ -1,3 +1,7 @@
+import * as Id from '../Id/Id.js'
+import * as IpcParentWithModuleWorkerAndWorkaroundForChromeDevtoolsBug from '../IpcParentWithModuleWorkerAndWorkaroundForChromeDevtoolsBug/IpcParentWithModuleWorkerAndWorkaroundForChromeDevtoolsBug.js'
+import * as ShouldUsePreloadedWorker from '../ShouldUsePreloadedWorker/ShouldUsePreloadedWorker.ts'
+import * as Transferrable from '../Transferrable/Transferrable.js'
 import * as FileSystemWorkerUrl from '../FileSystemWorkerUrl/FileSystemWorkerUrl.js'
 import * as HandleIpc from '../HandleIpc/HandleIpc.js'
 import * as IpcParent from '../IpcParent/IpcParent.js'
@@ -10,11 +14,16 @@ export const getFileSystemPlatform = (platform = Platform.getPlatform()) => plat
 
 export const launchFileSystemWorker = async () => {
   const name = 'File System Worker'
-  const ipc = await IpcParent.create({
+  const id = Id.create()
+  let ipc = await IpcParent.create({
+    id,
     method: IpcParentType.ModuleWorkerAndWorkaroundForChromeDevtoolsBug,
     name,
     url: GetConfiguredWorkerUrl.getConfiguredWorkerUrl('develop.fileSystemWorkerPath', FileSystemWorkerUrl.fileSystemWorkerUrl),
   })
+  if (ShouldUsePreloadedWorker.shouldUsePreloadedWorker('fileSystemWorker')) {
+    ipc = IpcParentWithModuleWorkerAndWorkaroundForChromeDevtoolsBug.wrap(Transferrable.acquire(id))
+  }
   HandleIpc.handleIpc(ipc)
   await JsonRpc.invoke(ipc, 'Initialize.initialize', getFileSystemPlatform())
   return ipc

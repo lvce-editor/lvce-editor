@@ -1,7 +1,7 @@
 import * as HandleIpc from '../HandleIpc/HandleIpc.js'
 import * as IpcParent from '../IpcParent/IpcParent.js'
 import * as IpcParentType from '../IpcParentType/IpcParentType.js'
-import * as IpcState from '../IpcState/IpcState.js'
+import * as ShouldUsePreloadedWorker from '../ShouldUsePreloadedWorker/ShouldUsePreloadedWorker.ts'
 import * as SyntaxHighlightingWorkerUrl from '../SyntaxHighlightingWorkerUrl/SyntaxHighlightingWorkerUrl.js'
 import * as Transferrable from '../Transferrable/Transferrable.js'
 import * as Id from '../Id/Id.js'
@@ -22,7 +22,7 @@ export const launchSyntaxHighlightingWorker = async () => {
     url: configuredWorkerUrl,
     id,
   })
-  if (IpcState.getConfig()) {
+  if (ShouldUsePreloadedWorker.shouldUsePreloadedWorker('syntaxHighlightingWorker')) {
     // TODO should renderer process send port to renderer worker or vice versa?
     const port = Transferrable.acquire(id)
     ipc = IpcParentWithModuleWorkerAndWorkaroundForChromeDevtoolsBug.wrap(port)

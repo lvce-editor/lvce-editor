@@ -1,9 +1,18 @@
 import * as GetOrCreateWorker from '../GetOrCreateWorker/GetOrCreateWorker.js'
 import * as LaunchAboutViewWorker from '../LaunchAboutViewWorker/LaunchAboutViewWorker.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
 const worker = GetOrCreateWorker.getOrCreateWorker(LaunchAboutViewWorker.launchAboutViewWorker)
 let activeInvocations = 0
 let disposeRequested = false
+
+const disposeIfUnused = async () => {
+  // A replacement dialog can now own the worker that the old dialog released.
+  if (!ViewletStates.getInstance(ViewletModuleId.About)) {
+    await worker.dispose()
+  }
+}
 
 const run = async (fn, method, params) => {
   activeInvocations++
@@ -13,7 +22,7 @@ const run = async (fn, method, params) => {
     activeInvocations--
     if (activeInvocations === 0 && disposeRequested) {
       disposeRequested = false
-      await worker.dispose()
+      await disposeIfUnused()
     }
   }
 }
@@ -29,5 +38,5 @@ export const dispose = async () => {
     disposeRequested = true
     return
   }
-  await worker.dispose()
+  await disposeIfUnused()
 }

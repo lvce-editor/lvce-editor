@@ -267,3 +267,42 @@ test('repeated focus requests target the worker-owned source control input', () 
   expect(second).toEqual(first)
   expect(state.commands).toEqual([])
 })
+
+test('keeps title actions pending when a source control badge changes in the same render', async () => {
+  const ViewletStates = await import('../src/parts/ViewletStates/ViewletStates.js')
+  const { renderActions } = await import('../src/parts/ViewletSourceControl/ViewletSourceControlRenderActions.js')
+  const state = { actionsDom: ['view-as-tree'], badgeCount: 0, commands: [], uid: 42 }
+  ViewletStates.state.instances[42] = { renderedState: state, state }
+  sourceControlWorkerInvoke.mockImplementation((method) => {
+    switch (method) {
+      case 'SourceControl.diff2':
+        return [1]
+      case 'SourceControl.render2':
+        return [['Viewlet.commitPending', 42, 9]]
+      case 'SourceControl.renderActions':
+        return ['view-as-list']
+      case 'SourceControl.getBadgeCount':
+        return 1
+      default:
+        throw new Error(`unexpected method ${method}`)
+    }
+  })
+  try {
+    const result = await ViewletSourceControlCommands.Commands.__renderPending(state)
+    const instance = ViewletStates.getInstance(42)
+    expect(renderActions.isEqual(instance.renderedState, result)).toBe(false)
+    expect(renderActions.apply(instance.renderedState, result)).toEqual(['view-as-list'])
+    expect(result.badgeCount).toBe(1)
+    expect(execute).toHaveBeenCalledWith('Layout.setBadgeCount', 'Source Control', 1)
+  } finally {
+    delete ViewletStates.state.instances[42]
+  }
+})
+
+test('saves the worker-owned draft instead of stale renderer input when hiding source control', async () => {
+  const draft = { inputValue: 'worker draft', history: ['previous commit'] }
+  sourceControlWorkerInvoke.mockReturnValue(draft)
+  const state = { uid: 42, inputValue: 'stale renderer draft' }
+  expect(await ViewletSourceControl.saveState(state)).toEqual(draft)
+  expect(sourceControlWorkerInvoke).toHaveBeenCalledWith('SourceControl.saveState', 42)
+})

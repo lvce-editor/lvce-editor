@@ -9,6 +9,9 @@ const lazy =
   }
 
 export const commandMap = {
+  'EditorKeymap.register': async (keymap) => (await import('../EditorKeymap/EditorKeymap.ts')).register(keymap),
+  'EditorKeymap.remove': async (id) => (await import('../EditorKeymap/EditorKeymap.ts')).remove(id),
+  'EditorKeymap.execute': async (id, command, ...args) => (await import('../EditorKeymap/EditorKeymap.ts')).execute(id, command, ...args),
   'TerminalTransfer.beginPanelTransfer': lazy('TerminalTransfer.beginPanelTransfer'),
   'TerminalTransfer.cancelPanelTransfer': lazy('TerminalTransfer.cancelPanelTransfer'),
 
@@ -692,6 +695,7 @@ export const commandMap = {
   'Layout.openCommandPalette': lazy('Layout.openCommandPalette'),
   'Layout.openDebugConsole': lazy('Layout.openDebugConsole'),
   'Layout.openIntegratedTerminal': lazy('Layout.openIntegratedTerminal'),
+  'Layout.runInTerminal': lazy('Layout.runInTerminal'),
   'Layout.openOutput': lazy('Layout.openOutput'),
   'Layout.openProblems': lazy('Layout.openProblems'),
   'Layout.openSideBarViewlet': lazy('Layout.openSideBarViewlet'),
@@ -699,6 +703,7 @@ export const commandMap = {
   'Layout.openSecondarySideBarViewlet': lazy('Layout.openSecondarySideBarViewlet'),
   'Layout.setBadgeCount': lazy('Layout.setBadgeCount'),
   'Layout.setUpdateState': lazy('Layout.setUpdateState'),
+  'Layout.setUpdateProgress': lazy('Layout.setUpdateProgress'),
   'Layout.signIn': lazy('Layout.signIn'),
   'Layout.signOut': lazy('Layout.signOut'),
   'Layout.showActivityBar': lazy('Layout.showActivityBar'),

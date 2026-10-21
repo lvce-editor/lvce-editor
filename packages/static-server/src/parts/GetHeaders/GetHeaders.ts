@@ -65,7 +65,7 @@ export const getHeaders = ({
       [HttpHeader.CrossOriginEmbedderPolicy]: CrossOriginEmbedderPolicy.value,
     }
   }
-  if (absolutePath.includes('/extensions/') && (absolutePath.endsWith('.js') || absolutePath.endsWith('.ts'))) {
+  if (normalizedPath.includes('/extensions/') && (normalizedPath.endsWith('.js') || normalizedPath.endsWith('.ts'))) {
     return GetHeadersExtensionWorker.getHeadersExtensionWorker(mime, etag, defaultCachingHeader)
   }
   return GetHeadersDefault.getHeadersDefault(mime, etag, defaultCachingHeader)

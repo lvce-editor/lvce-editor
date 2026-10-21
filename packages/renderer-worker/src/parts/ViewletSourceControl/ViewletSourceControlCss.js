@@ -10,5 +10,6 @@ export const Css = [
   '/css/parts/SourceControlListItem.css',
   '/css/parts/SplitButton.css',
   '/css/parts/TreeItem.css',
+  '/css/parts/ViewletList.css',
   '/css/parts/ViewletSourceControl.css',
 ]
