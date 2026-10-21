@@ -161,9 +161,7 @@ test('dragging the terminal tabs sash respects minimum widths in narrow panels',
   const newState = await ViewletTerminals.handleTerminalTabsSashPointerMove(state, -100)
 
   expect(newState.tabsWidth).toBe(60)
-  expect(rendererProcessInvoke).toHaveBeenCalledWith('Viewlet.sendMultiple', [
-    ['Viewlet.setBounds', 41, { height: 400, width: 60, x: 10, y: 20 }],
-  ])
+  expect(rendererProcessInvoke).toHaveBeenCalledWith('Viewlet.sendMultiple', [['Viewlet.setBounds', 41, { height: 400, width: 60, x: 10, y: 20 }]])
 })
 
 test('terminal tab rendering updates when its width or panel bounds change', () => {
@@ -890,4 +888,14 @@ test('terminal drag data contains no file or plain text fallback', async () => {
   ])
   await ViewletTerminals.handleDragEnd(state)
   expect(rendererProcessInvoke).toHaveBeenLastCalledWith('Viewlet.sendMultiple', [['Viewlet.setDragData', 1, { items: [], label: '' }]])
+})
+
+test('file execution uses its explicit process without starting a shell command string', async () => {
+  const execution = { command: 'node', args: ['--', '/workspace/a ; $(touch nope).js'], cwd: '/workspace', keepOpen: true }
+  const state = createLoadedState()
+  const result = await ViewletTerminals.addTerminal(state, execution.cwd, execution)
+  expect(commandExecute).toHaveBeenCalledWith('Layout.createViewlet', ViewletModuleId.Terminal2, 42, 0, expect.any(Object), execution.cwd, [
+    execution,
+  ])
+  expect(result.tabs.at(-1).label).toBe('node')
 })

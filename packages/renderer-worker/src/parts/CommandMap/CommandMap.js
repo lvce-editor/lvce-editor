@@ -695,6 +695,7 @@ export const commandMap = {
   'Layout.openCommandPalette': lazy('Layout.openCommandPalette'),
   'Layout.openDebugConsole': lazy('Layout.openDebugConsole'),
   'Layout.openIntegratedTerminal': lazy('Layout.openIntegratedTerminal'),
+  'Layout.runInTerminal': lazy('Layout.runInTerminal'),
   'Layout.openOutput': lazy('Layout.openOutput'),
   'Layout.openProblems': lazy('Layout.openProblems'),
   'Layout.openSideBarViewlet': lazy('Layout.openSideBarViewlet'),
