@@ -1,5 +1,6 @@
 import * as ApplicationRegistry from '../ApplicationRegistry/ApplicationRegistry.ts'
 import * as Css from '../Css/Css.js'
+import * as GetScrollSpeed from '../GetScrollSpeed/GetScrollSpeed.ts'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as NormalizeRendererCommands from '../NormalizeRendererCommands/NormalizeRendererCommands.js'
 import * as Preferences from '../Preferences/Preferences.js'
@@ -28,7 +29,9 @@ export const update = (applicationId: string, settings: Readonly<Record<string, 
     overrides.set(application, { ...overrides.get(application), ...settings })
     const css = ViewletEditorTextCss.getDynamicCss(getAll(applicationId)).replace(':root', () => `#Workbench-${application.layoutUid}`)
     await Css.addCssStyleSheet(`ApplicationPreferences-${application.layoutUid}`, css)
+    const scrollSpeed = GetScrollSpeed.getScrollSpeed(getAll(applicationId))
     for (const uid of ApplicationRegistry.getUids(applicationId)) {
+      await RendererProcess.invoke('Viewlet.setScrollSpeed', uid, scrollSpeed)
       if (ViewletStates.getByUid(uid)?.moduleId === ViewletModuleId.EditorText) {
         await Viewlet.executeViewletCommand(uid, 'handleSettingsChanged')
       }
@@ -45,6 +48,13 @@ export const dispose = async (applicationId: string): Promise<void> => {
 }
 
 GlobalEventBus.addListener('preferences.changed', async () => {
+  const scrollSpeed = GetScrollSpeed.getScrollSpeed(Preferences.getAll())
+  for (const instance of new Set(ViewletStates.getValues())) {
+    const uid = instance.state.uid
+    if (ApplicationRegistry.getOwner(uid) === undefined) {
+      await RendererProcess.invoke('Viewlet.setScrollSpeed', uid, scrollSpeed)
+    }
+  }
   for (const applicationId of ApplicationRegistry.getOpenIds()) {
     try {
       await update(applicationId, {})
