@@ -2,6 +2,9 @@ import * as Command from '../Command/Command.js'
 import * as Assert from '../Assert/Assert.ts'
 import * as ExtensionKeyBindings from '../ExtensionKeyBindings/ExtensionKeyBindings.js'
 import * as KeyBindingsState from '../KeyBindingsState/KeyBindingsState.js'
+import * as Viewlet from '../Viewlet/Viewlet.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as UserKeyBindings from '../UserKeyBindings/UserKeyBindings.js'
 
 // TODO where to store keybindings? need them here and in renderer process
@@ -15,11 +18,19 @@ export const lookupKeyBinding = (commandId) => {
   }
 }
 
-export const handleKeyBinding = async (identifier) => {
+export const handleKeyBinding = async (identifier, editorUid) => {
   Assert.number(identifier)
   const keyBinding = KeyBindingsState.getKeyBinding(identifier)
   if (!keyBinding) {
     throw new Error(`keybinding not found for identifier ${identifier}`)
+  }
+  // Native input can delay a shortcut until focus has moved to another editor.
+  // Retain the originating editor instead of resolving the current focus again.
+  if (editorUid !== undefined && keyBinding.command.startsWith('Editor.')) {
+    const instance = ViewletStates.getByUid(editorUid)
+    if (instance?.moduleId !== ViewletModuleId.EditorText) return
+    await Viewlet.executeViewletCommand(editorUid, keyBinding.command, ...(keyBinding.args || []))
+    return
   }
   await Command.execute(
     /* command */ keyBinding.command,
@@ -38,10 +49,7 @@ export const handleKeyBinding = async (identifier) => {
 }
 
 export const hydrate = async () => {
-  const [extensionKeyBindings, userKeyBindings] = await Promise.all([
-    ExtensionKeyBindings.getKeyBindings(),
-    UserKeyBindings.getKeyBindings(),
-  ])
+  const [extensionKeyBindings, userKeyBindings] = await Promise.all([ExtensionKeyBindings.getKeyBindings(), UserKeyBindings.getKeyBindings()])
   KeyBindingsState.setKeyBindings('extensions', extensionKeyBindings)
   KeyBindingsState.setKeyBindings('user', userKeyBindings)
 }
