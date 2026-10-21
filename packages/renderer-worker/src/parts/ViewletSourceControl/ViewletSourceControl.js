@@ -39,6 +39,8 @@ export const create = (id, uri, x, y, width, height, args, parentUid) => {
   }
 }
 
+export const saveState = ({ uid }) => SourceControlWorker.invoke('SourceControl.saveState', uid)
+
 export const loadContent = async (state, savedState) => {
   const { platform, assetDir } = state
   await SourceControlWorker.invoke(
