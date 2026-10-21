@@ -17,6 +17,9 @@ export const getKeyBindings = async () => {
     if (typeof content !== 'string') {
       return []
     }
+    if (content.length === 0) {
+      return []
+    }
     const parsed = JSON.parse(content)
     if (!Array.isArray(parsed)) {
       return []
