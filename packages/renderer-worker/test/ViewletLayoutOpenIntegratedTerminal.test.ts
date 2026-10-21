@@ -163,3 +163,23 @@ test('selects the output channel in the application that opened the panel', asyn
   expect(executeForApplication).toHaveBeenCalledWith('preview', 'Output.selectChannel', 'sample-build')
   expect(commandExecute).not.toHaveBeenCalled()
 })
+
+test('terminal execution waits for the panel and preserves process arguments', async () => {
+  const panelRendered = Promise.withResolvers<void>()
+  executeViewletCommand.mockImplementation(() => panelRendered.promise)
+  const state = ViewletLayout.create(1)
+  const execution = { command: 'node', args: ['/workspace/a ; $(touch nope).js'], cwd: '/workspace' }
+  const pending = ViewletLayout.runInTerminal(state, execution)
+  expect(commandExecute).not.toHaveBeenCalled()
+  panelRendered.resolve()
+  await pending
+  expect(commandExecute).toHaveBeenCalledWith('Terminals.addTerminal', execution.cwd, { ...execution, keepOpen: true })
+})
+
+test('terminal execution targets its owning application', async () => {
+  const state = { ...ViewletLayout.create(1), applicationId: 'preview' }
+  const execution = { command: 'bash', args: ['/workspace/test.sh'], cwd: '/workspace' }
+  await ViewletLayout.runInTerminal(state, execution)
+  expect(executeForApplication).toHaveBeenCalledWith('preview', 'Terminals.addTerminal', execution.cwd, { ...execution, keepOpen: true })
+  expect(commandExecute).not.toHaveBeenCalled()
+})

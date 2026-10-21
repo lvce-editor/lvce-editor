@@ -1245,6 +1245,25 @@ export const openIntegratedTerminal = async (state: LayoutState, cwd: string): P
   return showPanel(state, ViewletModuleId.Terminals, cwd)
 }
 
+export const runInTerminal = async (
+  state: LayoutState,
+  execution: { readonly command: string; readonly args: readonly string[]; readonly cwd: string },
+): Promise<LayoutStateResult> => {
+  Assert.object(execution)
+  Assert.string(execution.command)
+  Assert.string(execution.cwd)
+  Assert.array(execution.args)
+  const options = { command: execution.command, args: [...execution.args], cwd: execution.cwd, keepOpen: true }
+  // Await the panel DOM before creating and focusing the process terminal.
+  await Viewlet.executeViewletCommand(state.uid, 'showPanel', ViewletModuleId.Terminals)
+  if (state.applicationId === undefined) {
+    await Command.execute('Terminals.addTerminal', execution.cwd, options)
+  } else {
+    await ViewletManager.executeForApplication(state.applicationId, 'Terminals.addTerminal', execution.cwd, options)
+  }
+  return { newState: state, commands: [] }
+}
+
 export const openProblems = async (state: LayoutState, filterValue?: string): Promise<LayoutStateResult> => {
   const result = await showPanel(state, ViewletModuleId.Problems)
   if (filterValue !== undefined) {

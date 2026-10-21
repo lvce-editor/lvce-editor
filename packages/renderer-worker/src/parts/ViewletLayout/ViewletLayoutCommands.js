@@ -103,6 +103,7 @@ export const CommandsWithSideEffects = {
   openCommandPalette: ViewletLayout.openCommandPalette,
   openDebugConsole: ViewletLayout.openDebugConsole,
   openIntegratedTerminal: ViewletLayout.openIntegratedTerminal,
+  runInTerminal: ViewletLayout.runInTerminal,
   openOutput: ViewletLayout.openOutput,
   openProblems: ViewletLayout.openProblems,
   openSideBarViewlet: ViewletLayout.openSideBarView,

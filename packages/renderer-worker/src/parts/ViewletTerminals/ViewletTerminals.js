@@ -153,9 +153,10 @@ export const loadContent = async (state) => {
   return newState
 }
 
-export const addTerminal = async (state, cwd = '') => {
+/** @param {{ command: string, args: readonly string[], cwd?: string, keepOpen?: boolean }} [configuredSpawnOptions] */
+export const addTerminal = async (state, cwd = '', configuredSpawnOptions = /** @type {any} */ (undefined)) => {
   const { activeTerminalUids, focusVersion, tabs: oldTabs } = state
-  const spawnOptions = await GetTerminalSpawnOptions.getTerminalSpawnOptions(cwd)
+  const spawnOptions = configuredSpawnOptions || (await GetTerminalSpawnOptions.getTerminalSpawnOptions(cwd))
   const childUid = Id.create()
   const newTab = createTab(childUid, spawnOptions.command)
   const tabs = [...oldTabs, newTab]
@@ -374,9 +375,7 @@ export const cancelRenameTerminal = (state, tabUid) => {
 }
 
 export const handleRenameTerminalFocus = async (state, value) => {
-  await RendererProcess.invoke('Viewlet.sendMultiple', [
-    ['Viewlet.setSelectionByName', state.uid, 'terminal-rename', 0, value.length, value],
-  ])
+  await RendererProcess.invoke('Viewlet.sendMultiple', [['Viewlet.setSelectionByName', state.uid, 'terminal-rename', 0, value.length, value]])
   return state
 }
 
