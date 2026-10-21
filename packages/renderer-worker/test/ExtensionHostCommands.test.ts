@@ -24,8 +24,8 @@ const invoke = jest
   .mockResolvedValue([{ commands: [{ id: 'source.command', label: 'Source Command' }] }])
 jest.unstable_mockModule('../src/parts/ExtensionManagementWorker/ExtensionManagementWorker.js', () => ({ invoke }))
 
-const readDirWithFileTypes = jest.fn()
-const readFile = jest.fn()
+const readDirWithFileTypes = jest.fn<(...args: readonly any[]) => Promise<readonly any[]>>()
+const readFile = jest.fn<(...args: readonly any[]) => Promise<string>>()
 jest.unstable_mockModule('../src/parts/FileSystem/FileSystemHtml.js', () => ({
   readDirWithFileTypes,
   readFile,
