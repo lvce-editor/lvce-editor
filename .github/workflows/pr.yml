@@ -416,7 +416,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        runtime: [current, reported]
+        runtime: [fixed]
         attempt:
           - 1
           - 2
@@ -468,15 +468,67 @@ jobs:
           - 48
           - 49
           - 50
+          - 51
+          - 52
+          - 53
+          - 54
+          - 55
+          - 56
+          - 57
+          - 58
+          - 59
+          - 60
+          - 61
+          - 62
+          - 63
+          - 64
+          - 65
+          - 66
+          - 67
+          - 68
+          - 69
+          - 70
+          - 71
+          - 72
+          - 73
+          - 74
+          - 75
+          - 76
+          - 77
+          - 78
+          - 79
+          - 80
+          - 81
+          - 82
+          - 83
+          - 84
+          - 85
+          - 86
+          - 87
+          - 88
+          - 89
+          - 90
+          - 91
+          - 92
+          - 93
+          - 94
+          - 95
+          - 96
+          - 97
+          - 98
+          - 99
+          - 100
     steps:
       - uses: actions/checkout@v7
         with:
-          ref: ${{ matrix.runtime == 'reported' && 'bbb7e94852ff27df27a4456d449c26d053b4c4d6' || github.event.pull_request.head.sha }}
+          ref: ${{ matrix.runtime != 'current' && 'bbb7e94852ff27df27a4456d449c26d053b4c4d6' || github.event.pull_request.head.sha }}
       - name: Checkout diagnostic capture
         uses: actions/checkout@v7
         with:
           ref: ${{ github.event.pull_request.head.sha }}
-          sparse-checkout: scripts/capture-flaky-direct-events.mjs
+          sparse-checkout: |
+            scripts/capture-flaky-direct-events.mjs
+            scripts/set-flaky-renderer-version.mjs
           sparse-checkout-cone-mode: false
           path: .tmp/flaky-tools
       - run: |
@@ -484,6 +536,9 @@ jobs:
       - uses: actions/setup-node@v6
         with:
           node-version-file: '.nvmrc'
+      - name: Isolate the published renderer fix
+        if: matrix.runtime == 'fixed'
+        run: node .tmp/flaky-tools/scripts/set-flaky-renderer-version.mjs
       - name: Setup Python 3
         uses: actions/setup-python@v6
         with:
