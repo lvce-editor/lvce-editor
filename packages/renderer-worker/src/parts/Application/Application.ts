@@ -238,6 +238,8 @@ export const execute = (applicationId: string, command: string, ...args: readonl
     case 'Workspace.getUri':
     case 'Workspace.getWorkspaceUri':
       return Promise.resolve(application.workspaceUri)
+    case 'Workspace.getHomeDir':
+      return Promise.resolve(Workspace.getHomeDir())
     case 'Workspace.getPath':
     case 'Workspace.getWorkspacePath':
       return Promise.resolve(application.workspacePath)
