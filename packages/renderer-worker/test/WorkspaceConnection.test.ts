@@ -7,7 +7,7 @@ interface MockWebSocket {
 }
 
 const create = jest.fn<(options: { readonly getUrl: () => Promise<string>; readonly type: string }) => Promise<MockWebSocket>>()
-const executeCommand = jest.fn<(command: string, type: string) => Promise<unknown>>()
+const executeCommand = jest.fn<(command: string, type: string, params?: Record<string, string>) => Promise<unknown>>()
 const workspaceState = { workspaceUri: '' }
 
 jest.unstable_mockModule('../src/parts/WorkspaceState/WorkspaceState.js', () => ({ state: workspaceState }))

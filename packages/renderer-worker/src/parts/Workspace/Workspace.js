@@ -155,7 +155,8 @@ const canChangeWorkspace = async () => {
 export const setPath = async (path) => {
   Assert.string(path)
   if (GetProtocol.getProtocol(path) === 'remote-ssh') {
-    return setUri(path)
+    await setUri(path)
+    return
   }
   const changeId = ++workspaceChangeId
   await validateLocalPath(path)

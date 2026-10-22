@@ -449,8 +449,9 @@ const copyBuiltinWebExtensions = async ({ commitHash, pathPrefix, root }: any): 
     }
     const extensionJson = await readExtensionManifest(manifestPath)
     const isLanguageBasicsExtension = isLanguageBasics(extensionDirent)
-    const nodeProcesses = (extensionJson.rpc || []).filter((rpc) => rpc.type === 'node-process')
-    const canRunOnRemote = extensionJson.browser && nodeProcesses.length > 0 && nodeProcesses.every((rpc) => rpc.onRemote === 'runOnRemote')
+    const nodeProcesses = (extensionJson.rpc || []).filter((rpc: { type?: string }) => rpc.type === 'node-process')
+    const canRunOnRemote =
+      extensionJson.browser && nodeProcesses.length > 0 && nodeProcesses.every((rpc: { onRemote?: string }) => rpc.onRemote === 'runOnRemote')
     if ((extensionJson.compatibility?.web === false && !canRunOnRemote) || (!extensionJson.browser && !isLanguageBasicsExtension)) {
       continue
     }
