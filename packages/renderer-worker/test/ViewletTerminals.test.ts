@@ -136,6 +136,83 @@ test('loadContent creates the xterm terminal view with the requested cwd', async
   })
 })
 
+test('workspace change disposes existing terminal splits and opens a terminal in the new workspace when selected', async () => {
+  const state = {
+    ...createLoadedState(),
+    applicationId: 1,
+    tabs: [
+      { icon: 'terminal-bash', label: 'bash', terminalUids: [41, 43], uid: 41 },
+      { icon: 'terminal-bash', label: 'bash', terminalUids: [44], uid: 44 },
+    ],
+  }
+  viewletStatesGetInstance.mockImplementation((moduleId) => {
+    if (moduleId === ViewletModuleId.Layout) {
+      return { state: { panelVisible: true, panelView: ViewletModuleId.Terminals } }
+    }
+    return undefined
+  })
+
+  const newState = await ViewletTerminals.handleWorkspaceChange(state, 'file:///workspace/b')
+
+  expect(viewletDisposeFunctional.mock.calls).toEqual([[41], [43], [44]])
+  expect(commandExecute).toHaveBeenCalledWith(
+    'Layout.createViewlet',
+    ViewletModuleId.Terminal2,
+    42,
+    0,
+    { height: 400, width: 800, x: 10, y: 20 },
+    'file:///workspace/b',
+    [terminalSpawnOptions],
+  )
+  expect(newState).toMatchObject({
+    activeTerminalUids: [42],
+    childUid: 42,
+    childUids: [42],
+    cwd: 'file:///workspace/b',
+    selectedIndex: 0,
+    tabs: [{ terminalUids: [42], uid: 42 }],
+  })
+})
+
+test.each([
+  ['hidden panel', { panelVisible: false, panelView: ViewletModuleId.Terminals }],
+  ['another panel selected', { panelVisible: true, panelView: 'Output' }],
+])('workspace change keeps the panel state for %s', async (_label, layoutState) => {
+  const state = { ...createLoadedState(), applicationId: 1 }
+  viewletStatesGetInstance.mockImplementation((moduleId) => (moduleId === ViewletModuleId.Layout ? { state: layoutState } : undefined))
+
+  const newState = await ViewletTerminals.handleWorkspaceChange(state, 'file:///workspace/b')
+
+  expect(viewletDisposeFunctional).toHaveBeenCalledWith(41)
+  expect(commandExecute).not.toHaveBeenCalled()
+  expect(newState).toMatchObject({ activeTerminalUids: [], childUid: -1, childUids: [], cwd: 'file:///workspace/b', selectedIndex: -1, tabs: [] })
+})
+
+test('same workspace notification does not replace its terminal', async () => {
+  const state = { ...createLoadedState(), cwd: 'file:///workspace/a' }
+
+  await expect(ViewletTerminals.handleWorkspaceChange(state, 'file:///workspace/a')).resolves.toBe(state)
+
+  expect(viewletDisposeFunctional).not.toHaveBeenCalled()
+  expect(commandExecute).not.toHaveBeenCalled()
+})
+
+test('late exit from a previous workspace does not remove its replacement terminal', async () => {
+  const state = {
+    ...createLoadedState(),
+    applicationId: 1,
+    cwd: 'file:///workspace/b',
+    tabs: [{ icon: 'terminal-bash', label: 'bash', terminalUids: [42], uid: 42 }],
+    activeTerminalUids: [42],
+    childUid: 42,
+    childUids: [42],
+  }
+
+  const newState = await ViewletTerminals.handleTerminalExit(state, 41)
+
+  expect(newState).toBe(state)
+})
+
 test('adding a second terminal narrows both terminals for the tab sidebar', async () => {
   const state = createLoadedState()
 
