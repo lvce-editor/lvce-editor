@@ -1876,6 +1876,7 @@ export const createViewlet = async (
       // @ts-ignore
       uri: uri,
       uid: editorUid,
+      deferLoadContentLater: args[0]?.deferLoadContentLater === true,
       show: false,
       focus: false,
       setBounds: false,

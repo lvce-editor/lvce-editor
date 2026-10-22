@@ -119,7 +119,7 @@ test('loadContent creates the xterm terminal view with the requested cwd', async
     0,
     {
       height: 400,
-      width: 710,
+      width: 800,
       x: 10,
       y: 20,
     },
@@ -134,6 +134,39 @@ test('loadContent creates the xterm terminal view with the requested cwd', async
     tabs: [{ icon: 'terminal-bash', label: 'bash', terminalUids: [42], uid: 42 }],
     terminalTabsEnabled: true,
   })
+})
+
+test('adding a second terminal narrows both terminals for the tab sidebar', async () => {
+  const state = createLoadedState()
+
+  const newState = await ViewletTerminals.addTerminal(state)
+
+  expect(newState.tabs).toHaveLength(2)
+  expect(rendererProcessInvoke).toHaveBeenCalledWith('Viewlet.sendMultiple', [
+    ['Viewlet.setBounds', 41, { height: 400, width: 710, x: 10, y: 20 }],
+    ['Viewlet.setBounds', 42, { height: 400, width: 710, x: 10, y: 20 }],
+  ])
+})
+
+test('removing the second terminal expands the remaining terminal to full width', async () => {
+  const state = {
+    ...createLoadedState(),
+    activeTerminalUids: [41, 42],
+    childUids: [42],
+    selectedIndex: 1,
+    tabs: [
+      { icon: 'terminal-bash', label: 'bash', terminalUids: [41], uid: 41 },
+      { icon: 'terminal-bash', label: 'bash', terminalUids: [42], uid: 42 },
+    ],
+  }
+
+  const newState = await ViewletTerminals.killTerminal(state)
+
+  expect(newState.tabs).toHaveLength(1)
+  expect(rendererProcessInvoke).toHaveBeenCalledWith('Viewlet.sendMultiple', [
+    ['Viewlet.dispose', 41],
+    ['Viewlet.setBounds', 42, { height: 400, width: 800, x: 10, y: 20 }],
+  ])
 })
 
 test('dragging the terminal tabs sash resizes the tab list and all split terminals', async () => {
@@ -155,13 +188,21 @@ test('dragging the terminal tabs sash resizes the tab list and all split termina
 test('dragging the terminal tabs sash respects minimum widths in narrow panels', async () => {
   const state = {
     ...createLoadedState(),
+    activeTerminalUids: [41, 42],
+    childUid: 42,
+    childUids: [42],
+    selectedIndex: 1,
+    tabs: [
+      { icon: 'terminal-bash', label: 'bash', terminalUids: [41], uid: 41 },
+      { icon: 'terminal-bash', label: 'bash', terminalUids: [42], uid: 42 },
+    ],
     width: 120,
   }
 
   const newState = await ViewletTerminals.handleTerminalTabsSashPointerMove(state, -100)
 
   expect(newState.tabsWidth).toBe(60)
-  expect(rendererProcessInvoke).toHaveBeenCalledWith('Viewlet.sendMultiple', [['Viewlet.setBounds', 41, { height: 400, width: 60, x: 10, y: 20 }]])
+  expect(rendererProcessInvoke).toHaveBeenCalledWith('Viewlet.sendMultiple', [['Viewlet.setBounds', 42, { height: 400, width: 60, x: 10, y: 20 }]])
 })
 
 test('terminal tab rendering updates when its width or panel bounds change', () => {
@@ -218,11 +259,11 @@ test('loadContent reuses running terminals when the panel is reopened', async ()
   expect(commandExecute).not.toHaveBeenCalled()
   expect(viewletResize).toHaveBeenCalledWith(41, {
     height: 400,
-    width: 710,
+    width: 800,
     x: 10,
     y: 20,
   })
-  expect(rendererProcessInvoke).toHaveBeenCalledWith('Viewlet.sendMultiple', [['Viewlet.setBounds', 41, { height: 400, width: 710, x: 10, y: 20 }]])
+  expect(rendererProcessInvoke).toHaveBeenCalledWith('Viewlet.sendMultiple', [['Viewlet.setBounds', 41, { height: 400, width: 800, x: 10, y: 20 }]])
   expect(viewletStatesRemove).toHaveBeenCalledWith(7)
   expect(newState).toMatchObject({
     childUid: 41,
@@ -471,7 +512,7 @@ test('killTerminal disposes the active split and expands the remaining split', a
   expect(viewletDisposeFunctional).toHaveBeenCalledWith(42)
   expect(viewletResize).toHaveBeenCalledWith(41, {
     height: 400,
-    width: 710,
+    width: 800,
     x: 10,
     y: 20,
   })
@@ -498,7 +539,7 @@ test('handleTerminalExit disposes an exited split and keeps the active split foc
   expect(viewletDisposeFunctional).toHaveBeenCalledWith(41)
   expect(viewletResize).toHaveBeenCalledWith(42, {
     height: 400,
-    width: 710,
+    width: 800,
     x: 10,
     y: 20,
   })
@@ -791,7 +832,7 @@ test('killTerminalTab expands the remaining terminal when the sidebar becomes hi
   expect(viewletDisposeFunctional).toHaveBeenCalledWith(42)
   expect(viewletResize).toHaveBeenCalledWith(41, {
     height: 400,
-    width: 710,
+    width: 800,
     x: 10,
     y: 20,
   })

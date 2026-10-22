@@ -22,7 +22,9 @@ export const handleKeyBinding = async (identifier, editorUid) => {
   Assert.number(identifier)
   const keyBinding = KeyBindingsState.getKeyBinding(identifier)
   if (!keyBinding) {
-    throw new Error(`keybinding not found for identifier ${identifier}`)
+    // The renderer can deliver a keydown after the matching bindings have
+    // changed but before its identifier update has reached it.
+    return
   }
   // Native input can delay a shortcut until focus has moved to another editor.
   // Retain the originating editor instead of resolving the current focus again.

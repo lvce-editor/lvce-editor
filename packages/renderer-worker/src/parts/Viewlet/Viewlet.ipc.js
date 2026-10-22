@@ -17,6 +17,7 @@ export const Commands = {
   requestRender: Viewlet.requestRender,
   openWidget: Viewlet.openWidget,
   reload: Viewlet.reload,
+  runLoadContentLater: Viewlet.runLoadContentLater,
   send: Viewlet.send,
   save: Viewlet.save,
   dispose: Viewlet.dispose,
