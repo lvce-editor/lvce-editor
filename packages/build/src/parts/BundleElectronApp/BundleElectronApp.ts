@@ -36,7 +36,16 @@ import * as WriteFile from '../WriteFile/WriteFile.ts'
 import { generateConfigJson } from '../GenerateConfigJson/GenerateConfigJson.ts'
 import * as AddRuntimeConfigToIndexHtml from '../AddRuntimeConfigToIndexHtml/AddRuntimeConfigToIndexHtml.ts'
 
-const getDependencyCacheHash = async ({ electronVersion, arch, supportsAutoUpdate, isMacos, isArchLinux, isAppImage, bundleMainProcess }) => {
+const getDependencyCacheHash = async ({
+  electronVersion,
+  platform,
+  arch,
+  supportsAutoUpdate,
+  isMacos,
+  isArchLinux,
+  isAppImage,
+  bundleMainProcess,
+}) => {
   const files = [
     'packages/main-process/package-lock.json',
     'packages/shared-process/package-lock.json',
@@ -44,6 +53,7 @@ const getDependencyCacheHash = async ({ electronVersion, arch, supportsAutoUpdat
     'packages/build/src/parts/MinifyWorkerBundles/MinifyWorkerBundles.ts',
     'packages/build/src/parts/BundleElectronAppDependencies/BundleElectronAppDependencies.ts',
     'packages/build/src/parts/BundleSharedProcessDependencies/BundleSharedProcessDependencies.ts',
+    'packages/build/src/parts/BundleTypeScriptLanguageServer/BundleTypeScriptLanguageServer.ts',
     'packages/build/src/parts/FilterSharedProcessDependencies/FilterSharedProcessDependencies.ts',
     'packages/build/src/parts/CopyDependencies/CopyDependencies.ts',
     'packages/build/src/parts/BundleMainProcessDependencies/BundleMainProcessDependencies.ts',
@@ -59,6 +69,7 @@ const getDependencyCacheHash = async ({ electronVersion, arch, supportsAutoUpdat
   const hash = Hash.computeHash(
     contents +
       electronVersion +
+      platform +
       arch +
       String(supportsAutoUpdate) +
       String(isMacos) +
@@ -203,6 +214,7 @@ export const build = async ({
   const bundleMainProcess = BundleOptions.bundleMainProcess
   const dependencyCacheHash = await getDependencyCacheHash({
     electronVersion,
+    platform,
     arch,
     supportsAutoUpdate,
     isMacos,

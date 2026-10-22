@@ -1,3 +1,4 @@
+import { bundleTypeScriptLanguageServer } from '../BundleTypeScriptLanguageServer/BundleTypeScriptLanguageServer.ts'
 import * as BuildStaticServer from '../BuildStaticServer/BuildStaticServer.ts'
 import * as BundleOptions from '../BundleOptions/BundleOptions.ts'
 import * as BundleSharedProcessCached from '../BundleSharedProcessCached/BundleSharedProcessCached.ts'
@@ -19,7 +20,9 @@ const getObjectDependencies = (obj) => {
   return [obj, ...Object.values(obj.dependencies).flatMap(getObjectDependencies)]
 }
 
-export const getServerIsStaticReplacement = (commitHash: string): string => `const hasLinkedExtensions = argvSliced.some((arg) => arg === '--link' || arg.startsWith('--link='))
+export const getServerIsStaticReplacement = (
+  commitHash: string,
+): string => `const hasLinkedExtensions = argvSliced.some((arg) => arg === '--link' || arg.startsWith('--link='))
 
 const isStatic = (url) => {
   if (url === '/' || url.startsWith('/?')) {
@@ -228,6 +231,11 @@ export const build = async ({ product }) => {
   await Copy.copy({
     from: sharedProcessCachePath,
     to: 'packages/build/.tmp/server/shared-process',
+  })
+  await bundleTypeScriptLanguageServer({
+    to: 'packages/build/.tmp/server/shared-process/language-servers/typescript',
+    platform: process.platform,
+    arch: process.arch,
   })
   console.timeEnd('copySharedProcessFiles')
 

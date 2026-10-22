@@ -167,6 +167,12 @@ export const getExtraHeaders = ({ pathName, fileExtension }) => {
   }
   if (target === 'server') {
     await Replace.replace({
+      path: `${cachePath}/src/parts/TypeScriptLanguageServerPath/TypeScriptLanguageServerPath.js`,
+      occurrence: `  'packages',\n  'shared-process',\n`,
+      replacement: '',
+    })
+
+    await Replace.replace({
       path: `${cachePath}/src/parts/BuiltinExtensionsPath/BuiltinExtensionsPath.js`,
       occurrence: `import * as PlatformPaths from '../PlatformPaths/PlatformPaths.js'
 

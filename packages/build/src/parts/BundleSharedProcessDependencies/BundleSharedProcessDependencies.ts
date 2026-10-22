@@ -1,3 +1,4 @@
+import { bundleTypeScriptLanguageServer } from '../BundleTypeScriptLanguageServer/BundleTypeScriptLanguageServer.ts'
 import * as BundleFileSystemProcess from '../BundleFileSystemProcess/BundleFileSystemProcess.ts'
 import * as CopyDependencies from '../CopyDependencies/CopyDependencies.ts'
 import * as FilterSharedProcessDependencies from '../FilterSharedProcessDependencies/FilterSharedProcessDependencies.ts'
@@ -84,4 +85,5 @@ export const bundleSharedProcessDependencies = async ({ to, arch, electronVersio
   await RemoveBarePrebuilds.removeBarePrebuilds(to, platform, arch)
   await RemoveRipgrepFiles.removeRipGrepFiles(to, platform, arch)
   await BundleFileSystemProcess.bundleFileSystemProcess({ to })
+  await bundleTypeScriptLanguageServer({ to: `${to}/language-servers/typescript`, platform, arch })
 }
