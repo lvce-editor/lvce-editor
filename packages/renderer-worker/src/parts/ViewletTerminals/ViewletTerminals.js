@@ -165,6 +165,46 @@ export const loadContent = async (state) => {
   return newState
 }
 
+export const handleWorkspaceChange = async (state, workspacePath) => {
+  if (state.cwd === workspacePath) {
+    return state
+  }
+  const terminalUids = state.tabs.flatMap(getTerminalUids)
+  const commands = terminalUids.flatMap((uid) => Viewlet.disposeFunctional(uid))
+  await sendCommands(commands)
+
+  const layout = ViewletStates.getInstance(ViewletModuleId.Layout, state.applicationId)?.state
+  const shouldCreateTerminal = layout?.panelVisible && layout.panelView === ViewletModuleId.Terminals
+  if (!shouldCreateTerminal) {
+    return {
+      ...state,
+      activeTerminalUids: [],
+      childUid: -1,
+      childUids: [],
+      cwd: workspacePath,
+      focusVersion: state.focusVersion + 1,
+      selectedIndex: -1,
+      renamingTabUid: -1,
+      tabs: [],
+    }
+  }
+  const spawnOptions = await GetTerminalSpawnOptions.getTerminalSpawnOptions(workspacePath)
+  const childUid = Id.create()
+  const newState = {
+    ...state,
+    activeTerminalUids: [childUid],
+    childUid,
+    childUids: [childUid],
+    cwd: workspacePath,
+    focusVersion: state.focusVersion + 1,
+    selectedIndex: 0,
+    renamingTabUid: -1,
+    tabs: [createTab(childUid, spawnOptions.command)],
+  }
+  await createViewlet(newState, childUid, spawnOptions, workspacePath)
+  return newState
+}
+
 /** @param {{ command: string, args: readonly string[], cwd?: string, keepOpen?: boolean }} [configuredSpawnOptions] */
 export const addTerminal = async (state, cwd = '', configuredSpawnOptions = /** @type {any} */ (undefined)) => {
   const { activeTerminalUids, focusVersion, tabs: oldTabs } = state

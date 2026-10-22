@@ -14,6 +14,9 @@ jest.unstable_mockModule('../src/parts/GetPortTuple/GetPortTuple.js', () => ({
 jest.unstable_mockModule('../src/parts/HandleIpc/HandleIpc.js', () => ({
   handleIpc: jest.fn(),
 }))
+jest.unstable_mockModule('../src/parts/ShouldUsePreloadedWorker/ShouldUsePreloadedWorker.ts', () => ({
+  shouldUsePreloadedWorker: jest.fn(() => false),
+}))
 jest.unstable_mockModule('../src/parts/IpcParent/IpcParent.js', () => ({
   create: jest.fn(async () => ipc),
 }))
@@ -121,6 +124,7 @@ test('main area worker connects directly to the renderer process', async () => {
   await LaunchMainAreaWorker.launchMainAreaWorker()
 
   expect(IpcParent.create).toHaveBeenCalledWith({
+    id: expect.any(Number),
     method: IpcParentType.ModuleWorkerAndWorkaroundForChromeDevtoolsBug,
     name: 'Main Area Worker',
     url: 'file:///worker.js',

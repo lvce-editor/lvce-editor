@@ -10,7 +10,16 @@ afterEach(() => {
 
 test('missing configuration uses the default precreated worker ports', () => {
   IpcState.setConfig(true)
-  for (const id of ['editorWorker', 'syntaxHighlightingWorker', 'extensionManagementWorker', 'fileSystemWorker']) {
+  for (const id of [
+    'editorWorker',
+    'syntaxHighlightingWorker',
+    'extensionManagementWorker',
+    'fileSystemWorker',
+    'activityBarWorker',
+    'mainAreaWorker',
+    'statusBarWorker',
+    'iconThemeWorker',
+  ]) {
     expect(ShouldUsePreloadedWorker.shouldUsePreloadedWorker(id)).toBe(true)
   }
 })
@@ -18,7 +27,16 @@ test('missing configuration uses the default precreated worker ports', () => {
 test('an empty list keeps each optional worker on its normal lazy creation path', () => {
   IpcState.setConfig(true)
   RuntimeConfig.initialize({ preloadWorkers: [] })
-  for (const id of ['editorWorker', 'syntaxHighlightingWorker', 'extensionManagementWorker', 'fileSystemWorker']) {
+  for (const id of [
+    'editorWorker',
+    'syntaxHighlightingWorker',
+    'extensionManagementWorker',
+    'fileSystemWorker',
+    'activityBarWorker',
+    'mainAreaWorker',
+    'statusBarWorker',
+    'iconThemeWorker',
+  ]) {
     expect(ShouldUsePreloadedWorker.shouldUsePreloadedWorker(id)).toBe(false)
   }
 })

@@ -2,7 +2,6 @@
 
 VS Code inspired text editor that mostly runs in a webworker.
 
-
 ## Contributing
 
 ```sh
@@ -18,3 +17,7 @@ Package repository hosting is graciously provided by [Cloudsmith](https://clouds
 Cloudsmith is the only fully hosted, cloud-native, universal package management solution, that
 enables your organization to create, store and share packages in any format, to any place, with total
 confidence.
+
+### Developing with the native TypeScript server
+
+For `typescript.useTs7`, prepare the development checkout with `node packages/build/scripts/prepare-typescript-language-server.ts`. Packaged desktop applications include the pinned server for their target OS and architecture. Generic npm server packages remain platform-neutral; native mode requires a prepared native host. The TypeScript extension archive contains no native executable.

@@ -25,6 +25,12 @@ import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as ViewletRenderScheduler from '../ViewletRenderScheduler/ViewletRenderScheduler.js'
 import * as ViewletElectron from './ViewletElectron.js'
 
+export const runLoadContentLater = (uid) => {
+  // The opener signals this only after attaching and focusing the editor.
+  // Provider work must never become part of the opening RPC's response.
+  ViewletManager.runLoadContentLater(uid)
+}
+
 const getKeyBindingSetId = (instance, fallback) => {
   return instance.moduleId || fallback
 }

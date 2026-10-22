@@ -72,7 +72,10 @@ export const waitForLoadContentLater = async (uid) => {
 
 export const runLoadContentLaterForCreatedViewlets = (commands) => {
   for (const command of commands) {
-    if (command[0] === 'Viewlet.create' || command[0] === 'Viewlet.createFunctionalRoot') {
+    if (
+      (command[0] === 'Viewlet.create' || command[0] === 'Viewlet.createFunctionalRoot') &&
+      !ViewletStates.getInstance(command[2])?.deferLoadContentLater
+    ) {
       runLoadContentLater(command[2])
     }
   }
@@ -914,6 +917,7 @@ const loadInternal = async (viewlet, focus, restore, restoreState) => {
 
     const instance = {
       actionsUid: viewlet.actionsUid,
+      deferLoadContentLater: viewlet.deferLoadContentLater === true,
       cssLoaded: true,
       state: newState,
       renderedState: viewletState,
