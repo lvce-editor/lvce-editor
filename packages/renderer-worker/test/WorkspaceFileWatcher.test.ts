@@ -128,3 +128,31 @@ test('watches connected remote server workspaces without enabling local filesyst
   await WorkspaceFileWatcher.hydrate()
   expect(FileWatcher.watch).toHaveBeenCalledWith({ exclude: ['.git', 'node_modules'], roots: ['remote-server://host/home/project'] })
 })
+
+test('a late remote watcher is disposed after switching workspace', async () => {
+  const { promise, resolve } = Promise.withResolvers<any>()
+  const oldWatcher = { addEventListener: jest.fn(), removeEventListener: jest.fn() }
+  jest.mocked(FileWatcher.watch).mockImplementationOnce(() => promise)
+  const first = WorkspaceFileWatcher.watchWorkspace('remote-server://old/home/project')
+  await Promise.resolve()
+  await WorkspaceFileWatcher.watchWorkspace('remote-server://new/home/project')
+  resolve(oldWatcher)
+  await first
+  expect(FileWatcher.dispose).toHaveBeenCalledWith(oldWatcher)
+  expect(oldWatcher.addEventListener).not.toHaveBeenCalled()
+  await WorkspaceFileWatcher.dispose()
+  expect(FileWatcher.dispose).toHaveBeenLastCalledWith(watcher)
+})
+
+test('disposing while a watcher is registering closes the late watcher', async () => {
+  const { promise, resolve } = Promise.withResolvers<any>()
+  const lateWatcher = { addEventListener: jest.fn(), removeEventListener: jest.fn() }
+  jest.mocked(FileWatcher.watch).mockImplementationOnce(() => promise)
+  const pending = WorkspaceFileWatcher.watchWorkspace('remote-server://old/home/project')
+  await Promise.resolve()
+  await WorkspaceFileWatcher.dispose()
+  resolve(lateWatcher)
+  await pending
+  expect(FileWatcher.dispose).toHaveBeenCalledWith(lateWatcher)
+  expect(lateWatcher.addEventListener).not.toHaveBeenCalled()
+})
