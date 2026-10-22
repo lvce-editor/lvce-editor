@@ -7,6 +7,7 @@ import * as Console from '../Console/Console.ts'
 import * as Copy from '../Copy/Copy.ts'
 import * as GetCommitDate from '../GetCommitDate/GetCommitDate.ts'
 import * as JsonFile from '../JsonFile/JsonFile.ts'
+import * as Path from '../Path/Path.ts'
 import * as Remove from '../Remove/Remove.ts'
 import * as Replace from '../Replace/Replace.ts'
 import { getThirdPartyNoticesContent } from '../ThirdPartyNoticesContent/ThirdPartyNoticesContent.ts'
@@ -233,7 +234,7 @@ export const build = async ({ product }) => {
     to: 'packages/build/.tmp/server/shared-process',
   })
   await bundleTypeScriptLanguageServer({
-    to: 'packages/build/.tmp/server/shared-process/language-servers/typescript',
+    to: Path.absolute('packages/build/.tmp/server/shared-process/language-servers/typescript'),
     platform: process.platform,
     arch: process.arch,
   })

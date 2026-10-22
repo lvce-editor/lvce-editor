@@ -62,7 +62,10 @@ try {
     'native document symbols',
   )
   const refs = await references({ ...options, offset: text.indexOf('greet') + 1 })
-  assert(refs.length >= 2, 'project references include another document')
+  assert(
+    refs.some((item) => item.uri === pathToFileURL(join(temporary, 'other.ts')).href),
+    'project references include another document',
+  )
   const prepared = await feature({ ...options, method: 'prepareRename', offset: text.indexOf('greet') + 1 })
   assert(prepared, 'native prepare rename')
   const renamed = await feature({ ...options, method: 'rename', newName: 'hello', offset: text.indexOf('greet') + 1 })
