@@ -8,6 +8,7 @@ import * as WorkspaceState from '../WorkspaceState/WorkspaceState.js'
 
 const state = {
   command: '',
+  disposeCommand: '',
   remoteCliUrl: '',
   webSocketUrl: '',
   workspaceUri: '',
@@ -27,7 +28,7 @@ const validateWebSocketUrl = (value, name) => {
 }
 
 /** @param {TerminalSpawnOptions} [terminalSpawnOptions] */
-export const set = (workspaceUri, command, remoteCliUrl = '', webSocketUrl = '', terminalSpawnOptions = undefined) => {
+export const set = (workspaceUri, command, remoteCliUrl = '', webSocketUrl = '', terminalSpawnOptions = undefined, disposeCommand = '') => {
   if (typeof workspaceUri !== 'string' || typeof command !== 'string' || !command) {
     throw new TypeError('Invalid workspace connection')
   }
@@ -43,6 +44,7 @@ export const set = (workspaceUri, command, remoteCliUrl = '', webSocketUrl = '',
   ) {
     throw new TypeError('Invalid remote terminal spawn options')
   }
+  state.disposeCommand = disposeCommand
   state.workspaceUri = workspaceUri
   state.command = command
   state.remoteCliUrl = remoteCliUrl
@@ -51,11 +53,18 @@ export const set = (workspaceUri, command, remoteCliUrl = '', webSocketUrl = '',
 }
 
 export const reset = () => {
+  state.disposeCommand = ''
   state.workspaceUri = ''
   state.command = ''
   state.remoteCliUrl = ''
   state.webSocketUrl = ''
   state.terminalSpawnOptions = undefined
+}
+
+export const dispose = async () => {
+  const { disposeCommand, workspaceUri } = state
+  reset()
+  if (disposeCommand) await ExtensionHostCommands.executeCommand(disposeCommand, workspaceUri)
 }
 
 export const isActive = () => Boolean(state.command && WorkspaceState.state.workspaceUri === state.workspaceUri)
@@ -107,7 +116,7 @@ export const getWebSocketUrl = async (type, searchParams = {}) => {
     url.pathname = `/websocket/${encodeURIComponent(type)}`
     return addSearchParams(url.href, searchParams)
   }
-  const value = await ExtensionHostCommands.executeCommand(command, type)
+  const value = await ExtensionHostCommands.executeCommand(command, type, ...(Object.keys(searchParams).length ? [searchParams] : []))
   if (typeof value !== 'string') {
     throw new TypeError('Workspace connection command returned an invalid WebSocket URL')
   }

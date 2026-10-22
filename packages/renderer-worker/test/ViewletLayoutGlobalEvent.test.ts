@@ -1,5 +1,8 @@
 import { beforeEach, expect, jest, test } from '@jest/globals'
 
+const executeViewletCommand = jest.fn(async (..._args: readonly unknown[]) => {})
+jest.unstable_mockModule('../src/parts/Viewlet/Viewlet.js', () => ({ executeViewletCommand }))
+
 const hydratePreferences = jest.fn()
 const extensionManagementInvoke = jest.fn<(method: string, ...params: readonly unknown[]) => Promise<unknown>>(async () => undefined)
 const problemsInvoke = jest.fn<(method: string, ...params: readonly unknown[]) => Promise<unknown>>(async () => ({
@@ -424,9 +427,20 @@ test('hidden activity bar does not query source control badges', async () => {
   expect(sourceControlInvoke).not.toHaveBeenCalled()
 })
 
-
 test('refreshProblemsSummary queries the owning embedded application', async () => {
   const state = { ...ViewletLayout.create(1), applicationId: 'preview', statusBarVisible: true }
   await ViewletLayout.refreshProblemsSummary(state, 'memfs:///preview/example.txt')
   expect(problemsInvoke).toHaveBeenCalledWith('Problems.getProblemsSummary', 'memfs:///preview/example.txt', 'preview')
+})
+
+test('routes Explorer workspace refresh through its view command pipeline so worker renders are committed once', async () => {
+  const handler = jest.fn(async (state: { uid: number }) => ({ ...state, refreshed: true }))
+  const explorer = { ...createInstance(42, 'handleWorkspaceRefresh', handler), moduleId: 'Explorer' }
+  ViewletStates.set('Explorer', explorer)
+  const changes = { changed: ['remote-server://host/work/new.ts'] }
+  const result = await ViewletLayout.handleWorkspaceRefresh(ViewletLayout.create(1), changes)
+  expect(executeViewletCommand).toHaveBeenCalledWith(42, 'handleWorkspaceRefresh', changes)
+  expect(handler).not.toHaveBeenCalled()
+  expect(ViewletManager.render).not.toHaveBeenCalled()
+  expect(result.commands).toEqual([])
 })

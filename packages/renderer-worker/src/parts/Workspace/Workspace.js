@@ -155,7 +155,8 @@ const canChangeWorkspace = async () => {
 export const setPath = async (path) => {
   Assert.string(path)
   if (GetProtocol.getProtocol(path) === 'remote-ssh') {
-    return setUri(path)
+    await setUri(path)
+    return
   }
   const changeId = ++workspaceChangeId
   await validateLocalPath(path)
@@ -174,7 +175,7 @@ export const setPath = async (path) => {
   state.workspaceUri = toWorkspaceUri(path)
   state.pathSeparator = pathSeparator
   if (workspaceChanged) {
-    WorkspaceConnection.reset()
+    await WorkspaceConnection.dispose()
     RemoteCli.stop()
     await TerminalWorker.resetWorkspaceConnection()
   }
@@ -187,29 +188,38 @@ export const setUri = async (uri, connectionOrPathSeparator, legacyConnection, o
   const protocol = GetProtocol.getProtocol(uri)
   if (protocol === 'remote-ssh' && !connection) {
     const prepared = await ExtensionHostCommands.executeCommand('remote-ssh.prepareWorkspace', uri)
-    if (prepared !== true || changeId !== workspaceChangeId) return
+    if (prepared !== true || changeId !== workspaceChangeId) return false
   }
   const path = connection?.workspacePath || (protocol === 'file' ? fileUriToPath(uri) : uri)
   if (protocol === 'file' && !connection) {
     await validateLocalPath(path)
   }
-  if (changeId !== workspaceChangeId) return
-  if (path !== state.workspacePath && !(await canChangeWorkspace())) return
-  if (changeId !== workspaceChangeId) return
+  if (changeId !== workspaceChangeId) return false
+  if (path !== state.workspacePath && !(await canChangeWorkspace())) return false
+  if (changeId !== workspaceChangeId) return false
   await updateWindowTitle(path, pathSeparator)
-  if (changeId !== workspaceChangeId) return
+  if (changeId !== workspaceChangeId) return false
   if (Platform.getPlatform() === PlatformType.Electron) {
     await Location.setWorkspaceUri(uri)
   }
   if (path !== state.workspacePath) {
     await GlobalEventBus.emitEvent('workspace.beforeChange', state.workspacePath, path)
   }
-  if (changeId !== workspaceChangeId) return
+  if (changeId !== workspaceChangeId) return false
+  if (state.workspaceUri !== uri) await WorkspaceConnection.dispose()
+  if (changeId !== workspaceChangeId) return false
   state.workspacePath = path
   state.workspaceUri = uri
   state.pathSeparator = pathSeparator
   if (connection) {
-    WorkspaceConnection.set(uri, connection.command, connection.remoteCliUrl, connection.webSocketUrl, connection.terminalSpawnOptions)
+    WorkspaceConnection.set(
+      uri,
+      connection.command,
+      connection.remoteCliUrl,
+      connection.webSocketUrl,
+      connection.terminalSpawnOptions,
+      connection.disposeCommand,
+    )
     if (connection.remoteCliUrl) {
       void RemoteCli.start(connection.remoteCliUrl, connection.remoteCliUrl, handleRemoteCliOpenRequest).catch(() => {})
     } else {
@@ -224,6 +234,7 @@ export const setUri = async (uri, connectionOrPathSeparator, legacyConnection, o
   if (openUri) {
     await Command.execute('Main.openUri', openUri)
   }
+  return true
 }
 
 const handleRemoteCliOpenRequest = async (request) => {

@@ -7,6 +7,7 @@ import * as Workspace from '../Workspace/Workspace.js'
 const RefreshDelay = 100
 
 let watcher
+let watchGeneration = 0
 let refreshTimeout
 const changedUris = new Set()
 const deletedUris = new Set()
@@ -46,13 +47,19 @@ const scheduleRefresh = (event) => {
 }
 
 const disposeWatcher = async () => {
+  const generation = ++watchGeneration
+  if (refreshTimeout !== undefined) clearTimeout(refreshTimeout)
+  refreshTimeout = undefined
+  changedUris.clear()
+  deletedUris.clear()
   if (!watcher) {
-    return
+    return generation
   }
   const oldWatcher = watcher
   watcher = undefined
   oldWatcher.removeEventListener('watcher-event', handleEvent)
   await FileWatcher.dispose(oldWatcher)
+  return generation
 }
 
 const handleEvent = (event) => {
@@ -60,28 +67,34 @@ const handleEvent = (event) => {
 }
 
 export const watchWorkspace = async (workspaceUri) => {
-  await disposeWatcher()
-  if (!workspaceUri || !workspaceUri.startsWith('file://')) {
+  const generation = await disposeWatcher()
+  if (generation !== watchGeneration) return
+  if (!workspaceUri || (!workspaceUri.startsWith('file://') && !workspaceUri.startsWith('remote-server://'))) {
     return
   }
-  watcher = await FileWatcher.watch({
+  const nextWatcher = await FileWatcher.watch({
     exclude: ['.git', 'node_modules'],
     roots: [workspaceUri],
   })
+  if (generation !== watchGeneration) {
+    await FileWatcher.dispose(nextWatcher)
+    return
+  }
+  watcher = nextWatcher
   watcher.addEventListener('watcher-event', handleEvent)
 }
 
 const handleWorkspaceChange = async () => {
-  await watchWorkspace(Workspace.getWorkspaceUri())
+  const uri = Workspace.getWorkspaceUri()
+  if (uri?.startsWith('remote-server://') || Preferences.get('files.workspaceWatcher.enabled') === true) await watchWorkspace(uri)
+  else await disposeWatcher()
   await Command.execute('Layout.refreshSourceControlBadgeCount')
 }
 
 export const hydrate = async () => {
-  if (Preferences.get('files.workspaceWatcher.enabled') !== true) {
-    return
-  }
   GlobalEventBus.addListener('workspace.change', handleWorkspaceChange)
-  await watchWorkspace(Workspace.getWorkspaceUri())
+  const uri = Workspace.getWorkspaceUri()
+  if (uri?.startsWith('remote-server://') || Preferences.get('files.workspaceWatcher.enabled') === true) await watchWorkspace(uri)
 }
 
 export const dispose = async () => {

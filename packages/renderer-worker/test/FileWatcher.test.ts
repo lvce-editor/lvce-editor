@@ -10,6 +10,9 @@ jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => ({
 
 jest.unstable_mockModule('../src/parts/ExtensionManagementWorker/ExtensionManagementWorker.js', () => ({ invoke: jest.fn(async () => {}) }))
 
+const remoteWatch = jest.fn<(options: unknown, onEvent: unknown) => Promise<() => void>>()
+jest.unstable_mockModule('../src/parts/FileWatcher/RemoteFileWatcher.js', () => ({ watch: remoteWatch }))
+
 const ExtensionManagementWorker = await import('../src/parts/ExtensionManagementWorker/ExtensionManagementWorker.js')
 const FileWatcher = await import('../src/parts/FileWatcher/FileWatcher.js')
 const SharedProcess = await import('../src/parts/SharedProcess/SharedProcess.js')
@@ -82,4 +85,17 @@ test('shared process disconnect invalidates extension watchers', async () => {
     expect.objectContaining({ eventName: 'error' }),
   )
   await FileWatcher.disposeExtension('lost-process')
+})
+
+test('disposes a remote watcher while authorization is pending without contacting a local shared process', async () => {
+  const { promise, resolve } = Promise.withResolvers<() => void>()
+  remoteWatch.mockReturnValueOnce(promise)
+  const pending = FileWatcher.watchExtension('pending-remote', { roots: ['remote-server://host/workspace'] })
+  const rejected = pending.catch((error: unknown) => error)
+  await FileWatcher.disposeExtension('pending-remote')
+  const close = jest.fn()
+  resolve(close)
+  expect(await rejected).toBeInstanceOf(Error)
+  expect(close).toHaveBeenCalledTimes(1)
+  expect(SharedProcess.invoke).not.toHaveBeenCalled()
 })
