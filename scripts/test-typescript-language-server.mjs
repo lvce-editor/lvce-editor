@@ -2,7 +2,7 @@ import assert from 'node:assert/strict'
 import { mkdtemp, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join, resolve } from 'node:path'
-import { pathToFileURL } from 'node:url'
+import { fileURLToPath, pathToFileURL } from 'node:url'
 import {
   codeAction,
   complete,
@@ -62,9 +62,13 @@ try {
     'native document symbols',
   )
   const refs = await references({ ...options, offset: text.indexOf('greet') + 1 })
+  const referencePaths = refs.map((item) => fileURLToPath(item.uri))
+  const expectedReferencePath = join(temporary, 'other.ts')
+  // Windows file URIs may differ in drive-letter casing or URI escaping.
+  const comparablePath = (path) => (process.platform === 'win32' ? path.toLowerCase() : path)
   assert(
-    refs.some((item) => item.uri === pathToFileURL(join(temporary, 'other.ts')).href),
-    'project references include another document',
+    referencePaths.some((path) => comparablePath(path) === comparablePath(expectedReferencePath)),
+    `project references include ${expectedReferencePath}; received ${JSON.stringify(refs)}`,
   )
   const prepared = await feature({ ...options, method: 'prepareRename', offset: text.indexOf('greet') + 1 })
   assert(prepared, 'native prepare rename')
