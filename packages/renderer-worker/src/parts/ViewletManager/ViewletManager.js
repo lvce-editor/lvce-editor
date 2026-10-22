@@ -1,6 +1,9 @@
 // @ts-nocheck
 import * as InvokeViewletEvent from '../InvokeViewletEvent/InvokeViewletEvent.js'
 import * as Assert from '../Assert/Assert.ts'
+import * as ApplicationPreferences from '../ApplicationPreferences/ApplicationPreferences.ts'
+import * as GetScrollSpeed from '../GetScrollSpeed/GetScrollSpeed.ts'
+import * as Preferences from '../Preferences/Preferences.js'
 import * as ApplicationRegistry from '../ApplicationRegistry/ApplicationRegistry.ts'
 import * as FilterFocusCommands from '../FilterFocusCommands/FilterFocusCommands.js'
 import * as Command from '../Command/Command.js'
@@ -69,7 +72,10 @@ export const waitForLoadContentLater = async (uid) => {
 
 export const runLoadContentLaterForCreatedViewlets = (commands) => {
   for (const command of commands) {
-    if (command[0] === 'Viewlet.create' || command[0] === 'Viewlet.createFunctionalRoot') {
+    if (
+      (command[0] === 'Viewlet.create' || command[0] === 'Viewlet.createFunctionalRoot') &&
+      !ViewletStates.getInstance(command[2])?.deferLoadContentLater
+    ) {
       runLoadContentLater(command[2])
     }
   }
@@ -820,10 +826,12 @@ const loadInternal = async (viewlet, focus, restore, restoreState) => {
       // TODO reuse event listeners between components
       eventListeners = await module.renderEventListeners(newState)
       if (eventListeners.length > 0) {
+        const preferences = applicationId === undefined ? Preferences.getAll() : ApplicationPreferences.getAll(applicationId)
+        const scrollSpeed = GetScrollSpeed.getScrollSpeed(preferences)
         if (shouldRenderEvents === false) {
-          commands.push(['Viewlet.registerEventListeners', viewletUid, eventListeners])
+          commands.push(['Viewlet.registerEventListeners', viewletUid, eventListeners, scrollSpeed])
         } else {
-          await RendererProcess.invoke('Viewlet.registerEventListeners', viewletUid, eventListeners)
+          await RendererProcess.invoke('Viewlet.registerEventListeners', viewletUid, eventListeners, scrollSpeed)
         }
       }
     }
@@ -909,6 +917,7 @@ const loadInternal = async (viewlet, focus, restore, restoreState) => {
 
     const instance = {
       actionsUid: viewlet.actionsUid,
+      deferLoadContentLater: viewlet.deferLoadContentLater === true,
       cssLoaded: true,
       state: newState,
       renderedState: viewletState,

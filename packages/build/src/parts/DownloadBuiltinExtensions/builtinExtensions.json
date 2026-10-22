@@ -108,8 +108,8 @@
   {
     "name": "builtin.eslint",
     "repository": "github.com/lvce-editor/eslint",
-    "version": "1.25.3",
-    "sha256": "40e4292e8ee63c7e73e04c06b3c9311c577983ccba702ec7ae884265678bf3d5",
+    "version": "1.26.1",
+    "sha256": "ef536cac2337a56640a65a6c87c81fe81a1807533a478ae086ea7aea91b3f930",
     "created": "2026-08-01"
   },
   {
@@ -256,8 +256,8 @@
   {
     "name": "builtin.language-basics-html",
     "repository": "github.com/lvce-editor/language-basics-html",
-    "version": "1.8.1",
-    "sha256": "89dd641d81cfb319205bb3ea69f8dc29078acc122696e63d915fb80ae4834bc2",
+    "version": "1.12.1",
+    "sha256": "f9a3d834b9da908a636c548e28b5772f923a0240ea0dc0569d76cedfb8fe234d",
     "created": "2022-06-16"
   },
   {
@@ -291,8 +291,8 @@
   {
     "name": "builtin.language-basics-javascript",
     "repository": "github.com/lvce-editor/language-basics-javascript",
-    "version": "1.15.0",
-    "sha256": "fe64d55a7881143392b8f34dd8f9cc0f090787c7d4967d3853769044dae018d1",
+    "version": "1.17.3",
+    "sha256": "6c3396116f786f432ae15e8d4c97898e7ced8f9a87a52a2cdcb74625b0a28cc1",
     "created": "2022-06-16"
   },
   {
@@ -522,8 +522,8 @@
   {
     "name": "builtin.language-features-typescript",
     "repository": "github.com/lvce-editor/language-features-typescript",
-    "version": "5.36.0",
-    "sha256": "d346b898aec9202d4e285de3b1f26c00f8c3e15356186fe78083bb995943fdec",
+    "version": "5.37.0",
+    "sha256": "a4865e51e0ada097b7362fd5de81946984a9dffa2311227eee71dc89714b6df9",
     "created": "2022-06-16"
   },
   {

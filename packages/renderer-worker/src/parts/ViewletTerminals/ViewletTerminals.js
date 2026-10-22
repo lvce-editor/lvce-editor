@@ -101,6 +101,18 @@ const resizeTerminals = async (state, terminalUids) => {
   return (await Promise.all(terminalUids.map((uid, index) => Viewlet.resize(uid, getChildBounds(state, index, terminalUids.length))))).flat()
 }
 
+const resizeAllTerminals = async (state) => {
+  const { tabs } = state
+  return (
+    await Promise.all(
+      tabs.flatMap((tab) => {
+        const terminalUids = getTerminalUids(tab)
+        return terminalUids.map((uid, index) => Viewlet.resize(uid, getChildBounds(state, index, terminalUids.length)))
+      }),
+    )
+  ).flat()
+}
+
 const sendCommands = async (commands) => {
   if (commands.length > 0) {
     await RendererProcess.invoke('Viewlet.sendMultiple', commands)
@@ -171,6 +183,7 @@ export const addTerminal = async (state, cwd = '', configuredSpawnOptions = /** 
     tabs,
   }
   await createViewlet(newState, childUid, spawnOptions, cwd)
+  await sendCommands(await resizeAllTerminals(newState))
   return newState
 }
 
@@ -546,7 +559,7 @@ export const attachTerminal = async (state, tab, sourceIndex = state.tabs.length
     childUids: getTerminalUids(tabs[selectedIndex]),
     focusVersion: state.focusVersion + 1,
   }
-  await sendCommands(await resizeTerminals(next, next.childUids))
+  await sendCommands(await resizeAllTerminals(next))
   return next
 }
 

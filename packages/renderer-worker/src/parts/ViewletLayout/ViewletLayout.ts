@@ -809,7 +809,13 @@ const renderActivityBarAuthCommands = async (state: LayoutState) => {
   if (activityBarId === -1) {
     return []
   }
-  await ActivityBarWorker.invoke('ActivityBar.setUserLoginState', activityBarId, toActivityBarUserLoginState(userState), toFilteredUserInfo(state))
+  await ActivityBarWorker.invoke(
+    'ActivityBar.setUserLoginState',
+    activityBarId,
+    toActivityBarUserLoginState(userState),
+    toFilteredUserInfo(state),
+    Product.getProductNameLong(),
+  )
   const diffResult = await ActivityBarWorker.invoke('ActivityBar.diff2', activityBarId)
   return ActivityBarWorker.invoke('ActivityBar.render2', activityBarId, diffResult)
 }
@@ -1870,6 +1876,7 @@ export const createViewlet = async (
       // @ts-ignore
       uri: uri,
       uid: editorUid,
+      deferLoadContentLater: args[0]?.deferLoadContentLater === true,
       show: false,
       focus: false,
       setBounds: false,

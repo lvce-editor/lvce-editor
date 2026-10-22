@@ -1,225 +1,24 @@
-import * as BrowserErrorTypes from '../BrowserErrorTypes/BrowserErrorTypes.js'
-import * as FileHandleEditMode from '../FileHandleEditMode/FileHandleEditMode.js'
-import * as FileHandlePermissionType from '../FileHandlePermissionType/FileHandlePermissionType.js'
-import * as FileHandleTypeMap from '../FileHandleTypeMap/FileHandleTypeMap.js'
-import { FileNotFoundError } from '../FileNotFoundError/FileNotFoundError.js'
-import * as FileSystemDirectoryHandle from '../FileSystemDirectoryHandle/FileSystemDirectoryHandle.js'
-import * as FileSystemFileHandle from '../FileSystemFileHandle/FileSystemFileHandle.js'
-import * as FileSytemHandlePermission from '../FileSystemHandlePermission/FileSystemHandlePermission.js'
-import * as GetDirectoryHandle from '../GetDirectoryHandle/GetDirectoryHandle.js'
-import * as GetFileHandle from '../GetFileHandle/GetFileHandle.js'
-import * as Path from '../Path/Path.js'
-import * as PersistentFileHandle from '../PersistentFileHandle/PersistentFileHandle.js'
-import { VError } from '../VError/VError.js'
+import * as FileSystemWorker from '../FileSystemWorker/FileSystemWorker.js'
 
-const pathSeparator = '/'
+export const exists = (uri) => FileSystemWorker.invoke('FileSystem.exists', uri)
 
-export const exists = async (uri) => {
-  const handle = await PersistentFileHandle.getHandle(uri)
-  return Boolean(handle)
-}
+export const readDirWithFileTypes = (uri) => FileSystemWorker.invoke('FileSystem.readDirWithFileTypes', uri)
 
-const getDirent = (handle) => {
-  const { name, kind } = handle
-  const type = FileHandleTypeMap.getDirentType(kind)
-  return {
-    name,
-    type,
-  }
-}
+export const readFile = (uri) => FileSystemWorker.invoke('FileSystem.readFile', uri)
 
-export const getDirents = (handles) => {
-  const dirents = handles.map(getDirent)
-  return dirents
-}
+export const writeFile = (uri, content) => FileSystemWorker.invoke('FileSystem.writeFile', uri, content)
 
-const getChildHandlesFallbackPrompt = async (handle) => {
-  // TODO cannot prompt without user activation, else error occurs
-  // maybe need to show
-  const permissionTypeNow = await FileSytemHandlePermission.requestPermission(handle, {
-    mode: FileHandleEditMode.ReadWrite,
-  })
-  switch (permissionTypeNow) {
-    case FileHandlePermissionType.Granted:
-      return FileSystemDirectoryHandle.getChildHandles(handle)
-    case FileHandlePermissionType.Prompt:
-    case FileHandlePermissionType.Denied:
-      // TODO maybe throw error in this case
-      return []
-    default:
-      return []
-  }
-}
+export const writeBlob = (uri, blob) => FileSystemWorker.invoke('FileSystem.writeBlob', uri, blob)
 
-const getChildHandlesFallback = async (handle) => {
-  const permissionType = await FileSytemHandlePermission.queryPermission(handle, {
-    mode: FileHandleEditMode.ReadWrite,
-  })
-  switch (permissionType) {
-    case FileHandlePermissionType.Granted:
-      throw new VError('invalid state')
-    case FileHandlePermissionType.Prompt:
-      return await getChildHandlesFallbackPrompt(handle)
-    case FileHandlePermissionType.Denied:
-      return []
-    default:
-      return []
-  }
-}
+export const remove = (uri) => FileSystemWorker.invoke('FileSystem.remove', uri)
 
-export const getChildHandles = async (handle) => {
-  try {
-    return await FileSystemDirectoryHandle.getChildHandles(handle)
-  } catch (error) {
-    if (BrowserErrorTypes.isNotAllowedError(error)) {
-      return getChildHandlesFallback(handle)
-    }
-    throw new VError(error, 'failed to get child handles')
-  }
-}
+export const mkdir = (uri) => FileSystemWorker.invoke('FileSystem.mkdir', uri)
 
-export const readDirWithFileTypes = async (uri) => {
-  try {
-    // TODO convert uri to file handle path, get file handle from indexeddb
-    // if file handle does not exist, throw error
-    const handle = await PersistentFileHandle.getHandle(uri)
-    if (!handle) {
-      throw new Error(`File system handle not found for ${uri}`)
-    }
-    const childHandles = await getChildHandles(handle)
-    await PersistentFileHandle.addHandles(uri, childHandles)
-    const dirents = getDirents(childHandles)
-    return dirents
-  } catch (error) {
-    throw new VError(error, 'failed to read directory')
-  }
-}
+export const isReadonly = (uri) => FileSystemWorker.invoke('FileSystem.isReadonly', uri)
 
-export const readFile = async (uri) => {
-  try {
-    const handle = await GetFileHandle.getFileHandle(uri)
-    if (!handle) {
-      throw new VError(`File not found ${uri}`)
-    }
-    const file = await FileSystemFileHandle.getFile(handle)
-    const text = await file.text()
-    return text
-  } catch (error) {
-    if (BrowserErrorTypes.isNotFoundError(error)) {
-      throw new FileNotFoundError(uri)
-    }
-    throw new VError(error, 'Failed to read file')
-  }
-}
+export const getBlob = (uri) => FileSystemWorker.invoke('FileSystem.readFileAsBlob', uri)
 
-export const writeFile = async (uri, content) => {
-  try {
-    const handle = await GetFileHandle.getFileHandle(uri, {
-      create: true,
-    })
-    if (!handle) {
-      throw new VError(`File not found ${uri}`)
-    }
-    await FileSystemFileHandle.write(handle, content)
-  } catch (error) {
-    throw new VError(error, 'Failed to save file')
-  }
-}
-
-export const writeBlob = async (uri, blob) => {
-  try {
-    const handle = await GetFileHandle.getFileHandle(uri, {
-      create: true,
-    })
-    if (!handle) {
-      throw new VError(`File not found ${uri}`)
-    }
-    await FileSystemFileHandle.write(handle, blob)
-  } catch (error) {
-    throw new VError(error, 'Failed to save file')
-  }
-}
-
-export const remove = async (uri) => {
-  try {
-    const dirname = Path.dirname(pathSeparator, uri)
-    const parentHandle = await GetDirectoryHandle.getDirectoryHandle(dirname)
-    if (!parentHandle) {
-      throw new FileNotFoundError(uri)
-    }
-    const existingHandle = await PersistentFileHandle.getHandle(uri)
-    const baseName = Path.getBaseName(pathSeparator, uri)
-    if (existingHandle?.kind === 'directory') {
-      await parentHandle.removeEntry(baseName, {
-        recursive: true,
-      })
-    } else {
-      await parentHandle.removeEntry(baseName)
-    }
-    PersistentFileHandle.removeHandle(uri)
-  } catch (error) {
-    if (error instanceof FileNotFoundError || BrowserErrorTypes.isNotFoundError(error)) {
-      throw new FileNotFoundError(uri)
-    }
-    throw new VError(error, 'Failed to remove')
-  }
-}
-
-const ensureDirectoryHandle = async (uri) => {
-  const existingHandle = await PersistentFileHandle.getHandle(uri)
-  if (existingHandle) {
-    if (existingHandle.kind !== 'directory') {
-      throw new VError(`Expected directory at ${uri}`)
-    }
-    return existingHandle
-  }
-  const dirname = Path.dirname(pathSeparator, uri)
-  if (uri === dirname) {
-    throw new VError(`Directory handle not found for ${uri}`)
-  }
-  let parentHandle = await GetDirectoryHandle.getDirectoryHandle(dirname)
-  if (!parentHandle) {
-    parentHandle = await ensureDirectoryHandle(dirname)
-  }
-  const baseName = Path.getBaseName(pathSeparator, uri)
-  const directoryHandle = await parentHandle.getDirectoryHandle(baseName, {
-    create: true,
-  })
-  await PersistentFileHandle.addHandle(uri, directoryHandle)
-  return directoryHandle
-}
-
-export const mkdir = async (uri) => {
-  try {
-    await ensureDirectoryHandle(uri)
-  } catch (error) {
-    throw new VError(error, 'Failed to create directory')
-  }
-}
-
-export const isReadonly = async (uri) => {
-  const handle = await PersistentFileHandle.getHandle(uri)
-  return Boolean(handle?.readonly)
-}
-
-export const getBlobSrc = async (uri) => {
-  const handle = await GetFileHandle.getFileHandle(uri)
-  if (!handle) {
-    throw new Error(`file not found`)
-  }
-  const file = await FileSystemFileHandle.getFile(handle)
-  const blobUrl = URL.createObjectURL(file)
-  return blobUrl
-}
-
-export const getBlob = async (uri, type) => {
-  const handle = await GetFileHandle.getFileHandle(uri)
-  if (!handle) {
-    throw new Error(`file not found`)
-  }
-  const file = await FileSystemFileHandle.getFile(handle)
-  // TODO convert handle to blob mime type?
-  return file
-}
+// Keep URL lifetime with the renderer's existing blob URL consumers.
+export const getBlobSrc = async (uri) => URL.createObjectURL(await getBlob(uri))
 
 export const canBeRestored = true

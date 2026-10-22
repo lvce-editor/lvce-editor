@@ -191,7 +191,8 @@ export const loadContent = async (state, savedState, context) => {
       await EditorWorker.invoke('Editor.restorePersistentWidgets', id, savedState.editorState.widgets)
     }
     const initialRender = await rerender(newState2)
-    await EditorWorker.invoke('Editor.setSelections2', id, savedSelections)
+    const revealSelection = !!context?.selections || typeof context?.startRowIndex === 'number'
+    await EditorWorker.invoke('Editor.setSelections2', id, savedSelections, revealSelection)
     const selectionRender = await rerender(newState2)
     return {
       ...selectionRender,

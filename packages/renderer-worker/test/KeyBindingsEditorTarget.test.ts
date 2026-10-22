@@ -47,6 +47,14 @@ test('drops a shortcut whose original editor was closed', async () => {
   expect(globalCommand).not.toHaveBeenCalled()
 })
 
+test('drops a delayed shortcut after its keybinding has been removed', async () => {
+  KeyBindingsState.state.matchingKeyBindings = []
+
+  await KeyBindings.handleKeyBinding(1)
+
+  expect(globalCommand).not.toHaveBeenCalled()
+})
+
 test('preserves ordinary dispatch when no editor target was supplied', async () => {
   await KeyBindings.handleKeyBinding(1)
 

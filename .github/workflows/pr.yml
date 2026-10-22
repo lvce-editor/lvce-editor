@@ -20,6 +20,8 @@ jobs:
       - uses: actions/setup-node@v6
         with:
           node-version-file: '.nvmrc'
+      - name: Test duplicate release run guard
+        run: node --test scripts/test/check-duplicate-release-run.test.mjs
       - name: Setup Python 3
         uses: actions/setup-python@v6
         with:
@@ -94,6 +96,22 @@ jobs:
         run: node node_modules/playwright-core/cli.js install --with-deps chromium
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0
+      - name: Checkout owned HTML filesystem regressions
+        uses: actions/checkout@v7
+        with:
+          repository: lvce-editor/file-system-worker
+          ref: 9ce4bad7564c0252c60a3e9fd53cc81b4938edcf
+          path: .tmp/html-filesystem-tests
+      - name: Stage owned HTML filesystem regression
+        run: node .tmp/html-filesystem-tests/packages/e2e-integration/stage-html-tests.mjs .
+      - name: Test HTML workspace through the published filesystem worker
+        working-directory: ./packages/extension-host-worker-tests
+        run: npm run e2e:headless -- --test-name-prefix=workspace.html-filesystem
+        env:
+          PLAYWRIGHT_BROWSERS_PATH: 0
+      - name: Remove staged HTML filesystem regression
+        if: always()
+        run: node .tmp/html-filesystem-tests/packages/e2e-integration/stage-html-tests.mjs . --clean
       - name: Checkout owned Electron tab move regressions
         uses: actions/checkout@v7
         with:
@@ -150,6 +168,22 @@ jobs:
       - name: Test renderer layout blur dispatch
         if: matrix.os == 'ubuntu-24.04'
         run: node --experimental-vm-modules node_modules/jest/bin/jest.js --config packages/renderer-worker/package.json --runInBand --coverage=false --testPathPatterns=ViewletLayoutBlur.test
+      - name: Checkout owned editor scroll persistence regression
+        uses: actions/checkout@v7
+        with:
+          repository: lvce-editor/editor-worker
+          ref: b232040e8cd380d32a9c6b76d4d9445ad6ef1bdc
+          path: .tmp/editor-scroll-tests
+      - name: Stage editor scroll persistence regression
+        shell: bash
+        run: |
+          node --input-type=module - <<'JS'
+          import { readFile, writeFile } from 'node:fs/promises'
+          import { stripTypeScriptTypes } from 'node:module'
+          const source = '.tmp/editor-scroll-tests/packages/e2e-integration/src/viewlet.editor-scroll-position-persistence.ts'
+          const target = 'packages/extension-host-worker-tests/src/viewlet.editor-scroll-position-persistence.js'
+          await writeFile(target, stripTypeScriptTypes(await readFile(source, 'utf8')))
+          JS
       - name: Build static site
         run: npm run build:static:ignore-icon-theme
         env:
@@ -184,6 +218,15 @@ jobs:
           repository: lvce-editor/editor-worker
           ref: 7c250c9a7f24f0f83b012294738d886f977e94dc
           path: .tmp/direct-editor-tests
+      - name: Test editor scroll persistence with the published worker
+        working-directory: ./packages/extension-host-worker-tests
+        run: npm run e2e:headless -- --ci --test-name-prefix=viewlet.editor-scroll-position-persistence
+        env:
+          PLAYWRIGHT_BROWSERS_PATH: 0
+      - name: Remove staged editor scroll persistence regression
+        if: always()
+        run: |
+          node --input-type=module -e "import { rm } from 'node:fs/promises'; await rm('packages/extension-host-worker-tests/src/viewlet.editor-scroll-position-persistence.js', { force: true })"
       - name: Prepare source runtime settings
         run: node .tmp/direct-editor-tests/packages/e2e-integration/copy-builtin-settings.mjs .
       - name: Stage direct editor event regression
@@ -203,6 +246,11 @@ jobs:
       - name: Test shortcut ordering with published renderer package
         working-directory: ./packages/extension-host-worker-tests
         run: npm run e2e:headless -- --test-name-prefix=viewlet.editor-direct-events --browser-test=../../.tmp/editor-shortcut-tests/packages/e2e-integration/test-editor-shortcuts.mjs
+        env:
+          PLAYWRIGHT_BROWSERS_PATH: 0
+      - name: Test application scroll speed with published view workers
+        working-directory: ./packages/extension-host-worker-tests
+        run: npm run e2e:headless -- --test-name-prefix=viewlet.editor-direct-events --browser-test=../../scripts/test-application-scrollspeed.mjs
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0
       - name: Checkout owned native source control regression
@@ -267,9 +315,28 @@ jobs:
       - name: Remove staged direct editor event regression
         if: always()
         run: node .tmp/direct-editor-tests/packages/e2e-integration/stage-direct-editor-test.mjs . --clean
+      - name: Prepare native TypeScript language server
+        run: node packages/build/scripts/prepare-typescript-language-server.ts
+      - name: Test native TypeScript language features
+        run: node scripts/test-typescript-language-server.mjs
+      - name: Verify cross-target TypeScript archives
+        if: matrix.os == 'ubuntu-24.04'
+        run: node packages/build/scripts/test-typescript-language-server-targets.ts
       - name: Build Electron App (deb)
         if: matrix.os == 'ubuntu-24.04'
         run: npm run build:electron:deb
+      - name: Test bundled TypeScript server in Debian package
+        if: matrix.os == 'ubuntu-24.04'
+        shell: bash
+        run: |
+          deb_path=$(find packages/build/.tmp/releases -name '*.deb' -print -quit)
+          test -n "$deb_path"
+          dpkg-deb -x "$deb_path" packages/build/.tmp/ts7-deb
+          server_path=$(find "$PWD/packages/build/.tmp/ts7-deb" -type f -path '*/resources/app/packages/shared-process/language-servers/typescript/lib/tsc' -executable -print -quit)
+          test -n "$server_path"
+          test -f "$(dirname "$server_path")/lib.d.ts"
+          test "$(find packages/build/.tmp/ts7-deb -type f -path '*/language-servers/typescript/lib/tsc' | wc -l)" -eq 1
+          LVCE_TYPESCRIPT_SERVER_PATH="$server_path" node scripts/test-typescript-language-server.mjs
       - name: Test packaged startup CPU profiling
         if: matrix.os == 'ubuntu-24.04'
         shell: bash
