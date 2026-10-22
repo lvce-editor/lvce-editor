@@ -42,3 +42,37 @@ test('returns undefined when the owning application has no MainArea', () => {
   addMainArea(24, 'preview')
   expect(getMainAreaUid(8)).toBeUndefined()
 })
+
+const addLegacyComponent = (uid: number, moduleId: string): void => {
+  ViewletStates.set(uid, { factory: {}, moduleId, renderedState: { uid }, state: { uid } })
+}
+
+test('resolves a legacy unowned workbench without selecting an owned application', () => {
+  addLegacyComponent(38, 'TitleBar')
+  addLegacyComponent(34, 'Main')
+  addMainArea(4, 'source')
+  expect(getMainAreaUid(38)).toBe(34)
+})
+
+test('does not route an unknown uid into a legacy workbench', () => {
+  addLegacyComponent(34, 'Main')
+  expect(getMainAreaUid(99)).toBeUndefined()
+})
+
+test('does not route a legacy component into an owned application', () => {
+  addLegacyComponent(38, 'TitleBar')
+  addMainArea(4, 'source')
+  expect(getMainAreaUid(38)).toBeUndefined()
+})
+
+test('rejects ambiguous legacy workbenches', () => {
+  addLegacyComponent(38, 'TitleBar')
+  addLegacyComponent(34, 'Main')
+  addLegacyComponent(44, 'Main')
+  expect(getMainAreaUid(38)).toBeUndefined()
+})
+
+test('does not route an owned component into a legacy workbench', () => {
+  addLegacyComponent(34, 'Main')
+  expect(getMainAreaUid(8)).toBeUndefined()
+})
