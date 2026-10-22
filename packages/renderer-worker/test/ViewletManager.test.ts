@@ -1780,3 +1780,24 @@ test('Main retains file-opening commands received before shell registration', as
   await opening
   expect(openUri).toHaveBeenCalledWith(expect.objectContaining({ uid: 42 }), 'file:///new.txt')
 })
+
+test('detached editors wait for the opener before starting optional providers', async () => {
+  const provider = Promise.withResolvers<void>()
+  const loadContentLater = jest.fn(() => provider.promise)
+  const viewletState = { uid: 42 }
+  ViewletStates.set(42, {
+    deferLoadContentLater: true,
+    factory: { Commands: { loadContentLater } },
+    renderedState: viewletState,
+    state: viewletState,
+  })
+  ViewletManager.runLoadContentLaterForCreatedViewlets([['Viewlet.createFunctionalRoot', 'EditorText', 42, true]])
+  expect(loadContentLater).not.toHaveBeenCalled()
+  const Viewlet = await import('../src/parts/Viewlet/Viewlet.js')
+  expect(Viewlet.runLoadContentLater(42)).toBeUndefined()
+  expect(loadContentLater).toHaveBeenCalledTimes(1)
+  Viewlet.runLoadContentLater(42)
+  expect(loadContentLater).toHaveBeenCalledTimes(1)
+  provider.resolve()
+  await ViewletManager.waitForLoadContentLater(42)
+})
