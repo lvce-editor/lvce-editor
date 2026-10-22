@@ -1,3 +1,4 @@
+import * as RemoteFileWatcher from './RemoteFileWatcher.js'
 import * as ExtensionManagementWorker from '../ExtensionManagementWorker/ExtensionManagementWorker.js'
 import * as Id from '../Id/Id.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
@@ -6,6 +7,7 @@ import * as JsonRpc from '../JsonRpc/JsonRpc.js'
 
 const map = Object.create(null)
 const ids = new WeakMap()
+const remoteWatchers = new WeakMap()
 
 export const handleEvent = async (id, event) => {
   const eventTarget = map[id]
@@ -39,6 +41,15 @@ const createTarget = () => {
 
 const startWatch = async (target, options, requireReady = false) => {
   try {
+    if (options.roots?.[0]?.startsWith('remote-server://')) {
+      const close = await RemoteFileWatcher.watch(options, (event) => void handleEvent(ids.get(target), event))
+      if (!ids.has(target)) {
+        close()
+        throw new Error('File watcher was disposed during registration')
+      }
+      remoteWatchers.set(target, close)
+      return target
+    }
     const result = await SharedProcess.invoke('FileWatcher.watch', ids.get(target), options)
     if (result?.ok === false || (requireReady && result?.ok !== true)) {
       throw new Error(result?.error?.message || 'File watcher did not become ready')
@@ -84,7 +95,11 @@ export const dispose = async (target) => {
     return
   }
   delete map[id]
-  await SharedProcess.invoke('FileWatcher.dispose', id)
+  const closeRemote = remoteWatchers.get(target)
+  if (closeRemote) {
+    closeRemote()
+    remoteWatchers.delete(target)
+  } else await SharedProcess.invoke('FileWatcher.dispose', id)
   ids.delete(target)
 }
 

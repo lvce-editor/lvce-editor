@@ -61,7 +61,7 @@ const handleEvent = (event) => {
 
 export const watchWorkspace = async (workspaceUri) => {
   await disposeWatcher()
-  if (!workspaceUri || !workspaceUri.startsWith('file://')) {
+  if (!workspaceUri || (!workspaceUri.startsWith('file://') && !workspaceUri.startsWith('remote-server://'))) {
     return
   }
   watcher = await FileWatcher.watch({
@@ -72,16 +72,16 @@ export const watchWorkspace = async (workspaceUri) => {
 }
 
 const handleWorkspaceChange = async () => {
-  await watchWorkspace(Workspace.getWorkspaceUri())
+  const uri = Workspace.getWorkspaceUri()
+  if (uri?.startsWith('remote-server://') || Preferences.get('files.workspaceWatcher.enabled') === true) await watchWorkspace(uri)
+  else await disposeWatcher()
   await Command.execute('Layout.refreshSourceControlBadgeCount')
 }
 
 export const hydrate = async () => {
-  if (Preferences.get('files.workspaceWatcher.enabled') !== true) {
-    return
-  }
   GlobalEventBus.addListener('workspace.change', handleWorkspaceChange)
-  await watchWorkspace(Workspace.getWorkspaceUri())
+  const uri = Workspace.getWorkspaceUri()
+  if (uri?.startsWith('remote-server://') || Preferences.get('files.workspaceWatcher.enabled') === true) await watchWorkspace(uri)
 }
 
 export const dispose = async () => {

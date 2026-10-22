@@ -30,7 +30,7 @@ const downloadExtension = async (extension) => {
     const baseName = Path.baseName(extension.repository)
     const assetName = extension.assetName || `${baseName}-v${extension.version}.tar.br`
     Assert.string(assetName)
-    const cacheName = baseName + '-' + extension.version + '.tar.br'
+    const cacheName = extension.name + '-' + extension.version + '-' + assetName
     const cachedPath = Path.absolute(Path.join('packages', 'build', '.tmp', `cachedExtensions`, cacheName))
     const outPath = Path.absolute(Path.join(`extensions`, extension.name))
     if (existsSync(cachedPath) && (await computeFileSha256(cachedPath)) !== extension.sha256) {

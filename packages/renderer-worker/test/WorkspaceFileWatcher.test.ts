@@ -48,7 +48,7 @@ test('hydrate - does not watch the current file workspace by default', async () 
   await WorkspaceFileWatcher.hydrate()
 
   expect(FileWatcher.watch).not.toHaveBeenCalled()
-  expect(GlobalEventBus.state.listenerMap['workspace.change']).toBeUndefined()
+  expect(GlobalEventBus.state.listenerMap['workspace.change']).toBeDefined()
 })
 
 test('hydrate - watches the current file workspace when enabled', async () => {
@@ -121,4 +121,10 @@ test('watchWorkspace - skips non-file workspaces', async () => {
   await WorkspaceFileWatcher.watchWorkspace('github://owner/repository')
 
   expect(FileWatcher.watch).not.toHaveBeenCalled()
+})
+
+test('watches connected remote server workspaces without enabling local filesystem watching', async () => {
+  getWorkspaceUri.mockReturnValue('remote-server://host/home/project')
+  await WorkspaceFileWatcher.hydrate()
+  expect(FileWatcher.watch).toHaveBeenCalledWith({ exclude: ['.git', 'node_modules'], roots: ['remote-server://host/home/project'] })
 })
