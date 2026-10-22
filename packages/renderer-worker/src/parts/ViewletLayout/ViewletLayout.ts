@@ -2871,6 +2871,10 @@ const callGlobalEvent = async (state: LayoutState, eventName, ...args): Promise<
   })
   const results = await Promise.all(
     instances.map(async ([, value]) => {
+      if (value.moduleId === ViewletModuleId.Explorer) {
+        await Viewlet.executeViewletCommand(value.state.uid, eventName, ...args)
+        return { oldState: value.state, newState: value.state, value }
+      }
       // @ts-ignore
       const oldState = value.state
       // @ts-ignore
