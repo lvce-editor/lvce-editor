@@ -1,4 +1,3 @@
-import { bundleTypeScriptLanguageServer } from '../BundleTypeScriptLanguageServer/BundleTypeScriptLanguageServer.ts'
 import * as BuildStaticServer from '../BuildStaticServer/BuildStaticServer.ts'
 import * as BundleOptions from '../BundleOptions/BundleOptions.ts'
 import * as BundleSharedProcessCached from '../BundleSharedProcessCached/BundleSharedProcessCached.ts'
@@ -7,7 +6,6 @@ import * as Console from '../Console/Console.ts'
 import * as Copy from '../Copy/Copy.ts'
 import * as GetCommitDate from '../GetCommitDate/GetCommitDate.ts'
 import * as JsonFile from '../JsonFile/JsonFile.ts'
-import * as Path from '../Path/Path.ts'
 import * as Remove from '../Remove/Remove.ts'
 import * as Replace from '../Replace/Replace.ts'
 import { getThirdPartyNoticesContent } from '../ThirdPartyNoticesContent/ThirdPartyNoticesContent.ts'
@@ -21,9 +19,7 @@ const getObjectDependencies = (obj) => {
   return [obj, ...Object.values(obj.dependencies).flatMap(getObjectDependencies)]
 }
 
-export const getServerIsStaticReplacement = (
-  commitHash: string,
-): string => `const hasLinkedExtensions = argvSliced.some((arg) => arg === '--link' || arg.startsWith('--link='))
+export const getServerIsStaticReplacement = (commitHash: string): string => `const hasLinkedExtensions = argvSliced.some((arg) => arg === '--link' || arg.startsWith('--link='))
 
 const isStatic = (url) => {
   if (url === '/' || url.startsWith('/?')) {
@@ -232,11 +228,6 @@ export const build = async ({ product }) => {
   await Copy.copy({
     from: sharedProcessCachePath,
     to: 'packages/build/.tmp/server/shared-process',
-  })
-  await bundleTypeScriptLanguageServer({
-    to: Path.absolute('packages/build/.tmp/server/shared-process/language-servers/typescript'),
-    platform: process.platform,
-    arch: process.arch,
   })
   console.timeEnd('copySharedProcessFiles')
 

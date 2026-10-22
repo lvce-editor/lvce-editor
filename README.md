@@ -20,4 +20,4 @@ confidence.
 
 ### Developing with the native TypeScript server
 
-For `typescript.useTs7`, prepare the development checkout with `node packages/build/scripts/prepare-typescript-language-server.ts`. Packaged desktop applications include the pinned server for their target OS and architecture; the server package includes the build host's server. The TypeScript extension archive contains no native executable.
+For `typescript.useTs7`, prepare the development checkout with `node packages/build/scripts/prepare-typescript-language-server.ts`. Packaged desktop applications include the pinned server for their target OS and architecture. Generic npm server packages remain platform-neutral; native mode requires a prepared native host. The TypeScript extension archive contains no native executable.
