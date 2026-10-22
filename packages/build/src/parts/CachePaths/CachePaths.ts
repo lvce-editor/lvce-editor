@@ -236,6 +236,7 @@ const getSharedProcessCacheHash = async (extraContents) => {
       'packages/build/src/parts/BundleSharedProcess/BundleSharedProcess.ts',
       'packages/build/src/parts/BundleSharedProcessCached/BundleSharedProcessCached.ts',
       'packages/build/src/parts/BundleSharedProcessDependencies/BundleSharedProcessDependencies.ts',
+      'packages/build/src/parts/BundleTypeScriptLanguageServer/BundleTypeScriptLanguageServer.ts',
       'packages/build/src/parts/BundleOptions/BundleOptions.ts',
     ],
     extraContents,

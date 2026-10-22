@@ -10,6 +10,7 @@ export const Commands = {
   dispose: LanguageServer.dispose,
   disposeAll: LanguageServer.disposeAll,
   documentSymbols: LanguageServer.documentSymbols,
+  feature: LanguageServer.feature,
   format: LanguageServer.format,
   references: LanguageServer.references,
 }

@@ -315,9 +315,28 @@ jobs:
       - name: Remove staged direct editor event regression
         if: always()
         run: node .tmp/direct-editor-tests/packages/e2e-integration/stage-direct-editor-test.mjs . --clean
+      - name: Prepare native TypeScript language server
+        run: node packages/build/scripts/prepare-typescript-language-server.ts
+      - name: Test native TypeScript language features
+        run: node scripts/test-typescript-language-server.mjs
+      - name: Verify cross-target TypeScript archives
+        if: matrix.os == 'ubuntu-24.04'
+        run: node packages/build/scripts/test-typescript-language-server-targets.ts
       - name: Build Electron App (deb)
         if: matrix.os == 'ubuntu-24.04'
         run: npm run build:electron:deb
+      - name: Test bundled TypeScript server in Debian package
+        if: matrix.os == 'ubuntu-24.04'
+        shell: bash
+        run: |
+          deb_path=$(find packages/build/.tmp/releases -name '*.deb' -print -quit)
+          test -n "$deb_path"
+          dpkg-deb -x "$deb_path" packages/build/.tmp/ts7-deb
+          server_path=$(find "$PWD/packages/build/.tmp/ts7-deb" -type f -path '*/resources/app/packages/shared-process/language-servers/typescript/lib/tsc' -executable -print -quit)
+          test -n "$server_path"
+          test -f "$(dirname "$server_path")/lib.d.ts"
+          test "$(find packages/build/.tmp/ts7-deb -type f -path '*/language-servers/typescript/lib/tsc' | wc -l)" -eq 1
+          LVCE_TYPESCRIPT_SERVER_PATH="$server_path" node scripts/test-typescript-language-server.mjs
       - name: Test packaged startup CPU profiling
         if: matrix.os == 'ubuntu-24.04'
         shell: bash
