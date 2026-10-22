@@ -332,8 +332,10 @@ jobs:
           deb_path=$(find packages/build/.tmp/releases -name '*.deb' -print -quit)
           test -n "$deb_path"
           dpkg-deb -x "$deb_path" packages/build/.tmp/ts7-deb
-          server_path=$(find "$PWD/packages/build/.tmp/ts7-deb" -type f -path '*/language-servers/typescript/lib/tsc' -executable -print -quit)
+          server_path=$(find "$PWD/packages/build/.tmp/ts7-deb" -type f -path '*/resources/app/packages/shared-process/language-servers/typescript/lib/tsc' -executable -print -quit)
           test -n "$server_path"
+          test -f "$(dirname "$server_path")/lib.d.ts"
+          test "$(find packages/build/.tmp/ts7-deb -type f -path '*/language-servers/typescript/lib/tsc' | wc -l)" -eq 1
           LVCE_TYPESCRIPT_SERVER_PATH="$server_path" node scripts/test-typescript-language-server.mjs
       - name: Test packaged startup CPU profiling
         if: matrix.os == 'ubuntu-24.04'
