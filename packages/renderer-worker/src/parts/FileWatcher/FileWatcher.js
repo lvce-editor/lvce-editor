@@ -42,6 +42,7 @@ const createTarget = () => {
 const startWatch = async (target, options, requireReady = false) => {
   try {
     if (options.roots?.[0]?.startsWith('remote-server://')) {
+      remoteWatchers.set(target, () => {})
       const close = await RemoteFileWatcher.watch(options, (event) => void handleEvent(ids.get(target), event))
       if (!ids.has(target)) {
         close()
