@@ -475,3 +475,216 @@ jobs:
       - name: Clean up
         run: rm -rf packages/build/.tmp
         shell: bash
+
+  direct-events-reproduction:
+    name: Direct editor events ${{ matrix.runtime }} attempt ${{ matrix.attempt }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        runtime: [fixed]
+        attempt:
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
+          - 6
+          - 7
+          - 8
+          - 9
+          - 10
+          - 11
+          - 12
+          - 13
+          - 14
+          - 15
+          - 16
+          - 17
+          - 18
+          - 19
+          - 20
+          - 21
+          - 22
+          - 23
+          - 24
+          - 25
+          - 26
+          - 27
+          - 28
+          - 29
+          - 30
+          - 31
+          - 32
+          - 33
+          - 34
+          - 35
+          - 36
+          - 37
+          - 38
+          - 39
+          - 40
+          - 41
+          - 42
+          - 43
+          - 44
+          - 45
+          - 46
+          - 47
+          - 48
+          - 49
+          - 50
+          - 51
+          - 52
+          - 53
+          - 54
+          - 55
+          - 56
+          - 57
+          - 58
+          - 59
+          - 60
+          - 61
+          - 62
+          - 63
+          - 64
+          - 65
+          - 66
+          - 67
+          - 68
+          - 69
+          - 70
+          - 71
+          - 72
+          - 73
+          - 74
+          - 75
+          - 76
+          - 77
+          - 78
+          - 79
+          - 80
+          - 81
+          - 82
+          - 83
+          - 84
+          - 85
+          - 86
+          - 87
+          - 88
+          - 89
+          - 90
+          - 91
+          - 92
+          - 93
+          - 94
+          - 95
+          - 96
+          - 97
+          - 98
+          - 99
+          - 100
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ matrix.runtime != 'current' && 'bbb7e94852ff27df27a4456d449c26d053b4c4d6' || github.event.pull_request.head.sha }}
+      - name: Checkout diagnostic capture
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          sparse-checkout: |
+            scripts/capture-flaky-direct-events.mjs
+            scripts/set-flaky-renderer-version.mjs
+          sparse-checkout-cone-mode: false
+          path: .tmp/flaky-tools
+      - run: |
+          git fetch --no-tags --prune --depth=1 origin +refs/heads/main:refs/remotes/origin/main
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: '.nvmrc'
+      - name: Isolate the published renderer fix
+        if: matrix.runtime == 'fixed'
+        run: node .tmp/flaky-tools/scripts/set-flaky-renderer-version.mjs
+      - name: Setup Python 3
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+      - name: Compute node modules cache key
+        id: nodeModulesCacheKey
+        run: echo "value=$(node packages/build/src/parts/ComputeNodeModulesCacheKey/ComputeNodeModulesCacheKey.ts)" >> $GITHUB_OUTPUT
+        shell: bash
+      - uses: actions/cache@v6
+        id: npm-cache
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-${{ runner.arch }}-cacheNodeModules-${{ steps.nodeModulesCacheKey.outputs.value }}
+      - uses: actions/cache@v6
+        id: electron-rebuild-cache
+        with:
+          path: '~/.electron-gyp'
+          key: ${{ runner.os }}-${{ runner.arch }}-cacheElectronRebuild-${{ steps.nodeModulesCacheKey.outputs.value }}
+      - uses: actions/cache@v6
+        id: electron-builder-cache
+        with:
+          path: '~/.cache/electron-builder'
+          key: ${{ runner.os }}-${{ runner.arch }}-cacheElectronBuilder-${{ steps.nodeModulesCacheKey.outputs.value }}
+      - uses: actions/cache@v6
+        id: build-cache
+        with:
+          path: '.tmp/native'
+          key: ${{ runner.os }}-${{ runner.arch }}-build-cache-${{ steps.nodeModulesCacheKey.outputs.value }}
+      - name: npm ci
+        run: node packages/build/src/parts/InstallDependencies/InstallDependencies.ts
+        if: steps.npm-cache.outputs.cache-hit != 'true'
+        env:
+          DOWNLOAD_BUILTIN_EXTENSIONS: 0
+      - name: Compute builtin extensions cache key
+        id: builtinExtensionsCacheKey
+        run: echo "value=$(node packages/build/src/parts/ComputeBuiltinExtensionsCacheKey/ComputeBuiltinExtensionsCacheKey.ts)" >> $GITHUB_OUTPUT
+        shell: bash
+      - uses: actions/cache@v6
+        id: builtin-extensions-cache
+        with:
+          path: extensions
+          key: builtinExtensions-${{ steps.builtinExtensionsCacheKey.outputs.value }}
+      - name: Download Builtin Extensions
+        run: node packages/build/src/parts/DownloadBuiltinExtensions/DownloadBuiltinExtensions.ts
+        if: steps.builtin-extensions-cache.outputs.cache-hit != 'true'
+      - name: Install Chromium for split editor regressions
+        run: node node_modules/playwright-core/cli.js install --with-deps chromium
+        env:
+          PLAYWRIGHT_BROWSERS_PATH: 0
+      - name: Build static site
+        run: npm run build:static:ignore-icon-theme
+        env:
+          PATH_PREFIX: /lvce-editor
+      - name: Build server
+        run: npm run build:server
+      - name: Checkout direct editor event regressions
+        uses: actions/checkout@v7
+        with:
+          repository: lvce-editor/editor-worker
+          ref: 7c250c9a7f24f0f83b012294738d886f977e94dc
+          path: .tmp/direct-editor-tests
+      - name: Prepare source runtime settings
+        run: node .tmp/direct-editor-tests/packages/e2e-integration/copy-builtin-settings.mjs .
+      - name: Stage direct editor event regression
+        run: node .tmp/direct-editor-tests/packages/e2e-integration/stage-direct-editor-test.mjs .
+      - name: Test native direct events with published editor and renderer packages
+        working-directory: ./packages/extension-host-worker-tests
+        run: npm run e2e:headless -- --test-name-prefix=viewlet.editor-direct-events --browser-test=../../.tmp/flaky-tools/scripts/capture-flaky-direct-events.mjs
+        env:
+          PLAYWRIGHT_BROWSERS_PATH: 0
+          LVCE_ATTEMPT: ${{ matrix.attempt }}
+          LVCE_DIRECT_EVENTS_EVIDENCE_DIR: ${{ github.workspace }}/.tmp/direct-editor-events
+      - name: Upload direct editor event trace
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: direct-editor-events-${{ matrix.runtime }}-attempt-${{ matrix.attempt }}
+          path: .tmp/direct-editor-events
+          if-no-files-found: warn
+      - name: Remove staged direct editor event regression
+        if: always()
+        run: node .tmp/direct-editor-tests/packages/e2e-integration/stage-direct-editor-test.mjs . --clean
