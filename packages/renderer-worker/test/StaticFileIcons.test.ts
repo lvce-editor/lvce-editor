@@ -6,15 +6,25 @@ afterEach(() => RuntimeConfig.initialize())
 
 test('static icons preserve the icon RPC shape without loading a theme', () => {
   expect(isEnabled()).toBe(false)
-  RuntimeConfig.initialize({ staticFileIcons: { 'main.ts': '/icons/typescript.svg' } })
+  RuntimeConfig.initialize({
+    staticFileIcons: {
+      'main.ts': '/icons/typescript.svg',
+      'folder:src': '/icons/folder-src.svg',
+      defaultFileIcon: '/icons/file-default.svg',
+      defaultFolderIcon: '/icons/folder-default.svg',
+    },
+  })
   expect(isEnabled()).toBe(true)
   expect(commandMap['IconTheme.getFileIcon']('memfs:///demo/main.ts')).toBe('/icons/typescript.svg')
-  expect(commandMap['IconTheme.getFileIcons'](['main.ts', 'other.ts'])).toEqual(['/icons/typescript.svg', ''])
+  expect(commandMap['IconTheme.getFileIcons'](['main.ts', 'other.ts'])).toEqual(['/icons/typescript.svg', '/icons/file-default.svg'])
+  expect(commandMap['IconTheme.getFolderIcon']('memfs:///demo/src')).toBe('/icons/folder-src.svg')
+  expect(commandMap['IconTheme.getFolderIcon']('memfs:///demo/node_modules')).toBe('/icons/folder-default.svg')
   expect(
     commandMap['IconTheme.getIcons']([
       { name: 'main.ts', type: 1 },
-      { name: 'main.ts', type: 2 },
+      { name: 'src', type: 2 },
+      { name: 'other.ts', type: 1 },
     ]),
-  ).toEqual(['/icons/typescript.svg', ''])
-  expect(commandMap['IconTheme.getFolderIcon']()).toBe('')
+  ).toEqual(['/icons/typescript.svg', '/icons/folder-src.svg', '/icons/file-default.svg'])
+  expect(commandMap['IconTheme.getFolderIcon']()).toBe('/icons/folder-default.svg')
 })
