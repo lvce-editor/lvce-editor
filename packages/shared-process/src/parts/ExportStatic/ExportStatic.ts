@@ -759,10 +759,10 @@ const getExtensionPaths = (extensionPath: any, extensionPaths: any): any => {
  * @param {{root:string, pathPrefix:string , extensionPath:string, extensionPaths?:string[], onLoadCommands?:readonly unknown[], cspOptions?: {allowExternalConnections?: boolean}, testPath:string, useSimpleWebExtensionFile?:boolean, serverStaticPath?:string }} param0
  */
 export const exportStatic = async ({
+  cspOptions = {},
   extensionPath,
   extensionPaths,
   onLoadCommands = [],
-  cspOptions = {},
   pathPrefix,
   root,
   serverStaticPath,

@@ -10,10 +10,12 @@ import {
   validateRendererProcessArtifacts,
 } from '../src/parts/ExportStatic/ExportStatic.js'
 
+const broadConnectionSourceRegex = /connect-src[^;]*(?:https:|wss:|localhost|127\.0\.0\.1)/
+
 test('getStaticContentSecurityPolicy restricts connections to same origin by default', () => {
   const policy = getStaticContentSecurityPolicy()
   expect(policy).toContain(`connect-src 'self'`)
-  expect(policy).not.toMatch(/connect-src[^;]*(?:https:|wss:|localhost|127\.0\.0\.1)/)
+  expect(policy).not.toMatch(broadConnectionSourceRegex)
 })
 
 test('getStaticContentSecurityPolicy allows external connections when requested', () => {
