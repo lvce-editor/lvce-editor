@@ -54,3 +54,13 @@ test('exportStatic forwards on-load commands', async () => {
   const [options] = ExportStatic.exportStatic.mock.calls[0]
   expect(options.onLoadCommands).toBe(onLoadCommands)
 })
+
+test('exportStatic forwards CSP options', async () => {
+  const cspOptions = { allowExternalConnections: true }
+
+  await SharedProcess.exportStatic({ cspOptions, root: '/test/root' })
+
+  // @ts-ignore
+  const [options] = ExportStatic.exportStatic.mock.calls[0]
+  expect(options.cspOptions).toBe(cspOptions)
+})

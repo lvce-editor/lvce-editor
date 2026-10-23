@@ -2,7 +2,25 @@ import { expect, test } from '@jest/globals'
 import { mkdir, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
-import { mergeExtensionManifests, mergeWebExtensionManifests, transpileFile, validateRendererProcessArtifacts } from '../src/parts/ExportStatic/ExportStatic.js'
+import {
+  getStaticContentSecurityPolicy,
+  mergeExtensionManifests,
+  mergeWebExtensionManifests,
+  transpileFile,
+  validateRendererProcessArtifacts,
+} from '../src/parts/ExportStatic/ExportStatic.js'
+
+test('getStaticContentSecurityPolicy restricts connections to same origin by default', () => {
+  const policy = getStaticContentSecurityPolicy()
+  expect(policy).toContain(`connect-src 'self'`)
+  expect(policy).not.toMatch(/connect-src[^;]*(?:https:|wss:|localhost|127\.0\.0\.1)/)
+})
+
+test('getStaticContentSecurityPolicy allows external connections when requested', () => {
+  const policy = getStaticContentSecurityPolicy({ allowExternalConnections: true })
+  expect(policy).toContain(`connect-src 'self' https: wss:`)
+  expect(getStaticContentSecurityPolicy()).toContain(`connect-src 'self'`)
+})
 
 test('transpileFile removes typescript annotations', () => {
   const content = `const value: number = 1
@@ -84,15 +102,11 @@ test('mergeWebExtensionManifests preserves other builtins and replaces matching 
 
 test('mergeWebExtensionManifests supports simple extension path entries', () => {
   expect(
-    mergeWebExtensionManifests(['/static/hash/extensions/builtin.chat-view-2', '/static/hash/extensions/builtin.git'], [
-      '/chat/hash/extensions/builtin.chat-view-2',
-      '/chat/hash/extensions/test.local-extension',
-    ]),
-  ).toEqual([
-    '/chat/hash/extensions/builtin.chat-view-2',
-    '/static/hash/extensions/builtin.git',
-    '/chat/hash/extensions/test.local-extension',
-  ])
+    mergeWebExtensionManifests(
+      ['/static/hash/extensions/builtin.chat-view-2', '/static/hash/extensions/builtin.git'],
+      ['/chat/hash/extensions/builtin.chat-view-2', '/chat/hash/extensions/test.local-extension'],
+    ),
+  ).toEqual(['/chat/hash/extensions/builtin.chat-view-2', '/static/hash/extensions/builtin.git', '/chat/hash/extensions/test.local-extension'])
 })
 
 test('validateRendererProcessArtifacts accepts copied renderer process chunks', async () => {
