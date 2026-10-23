@@ -48,3 +48,24 @@ test('generated factories reject failed asynchronous startup', async () => {
     await rm(directory, { force: true, recursive: true })
   }
 })
+
+test('generated factories await top-level awaited startup', async () => {
+  const directory = await mkdtemp(join(tmpdir(), 'bundle-worker-'))
+  try {
+    const input = join(directory, 'worker.js')
+    await writeFile(input, `const main = async () => { await Promise.resolve(); globalThis.postMessage('ready'); };\nawait main();\n`)
+    const factory = await createWorkerFactory(input, '/prefix/worker.js')
+    const factories = runInNewContext(`({${factory}})`, { location: { origin: 'https://example.test' }, URL })
+    const messages: string[] = []
+    const scope: any = {
+      postMessage: (value: string): void => {
+        messages.push(value)
+      },
+    }
+    scope.globalThis = scope
+    await factories['https://example.test/prefix/worker.js'](scope)
+    expect(messages).toEqual(['ready'])
+  } finally {
+    await rm(directory, { force: true, recursive: true })
+  }
+})

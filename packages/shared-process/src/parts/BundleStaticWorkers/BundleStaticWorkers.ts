@@ -3,7 +3,7 @@ import { join } from 'node:path'
 import { rollup } from 'rollup'
 import { createBundledWorkerConstructor } from '../BundledWorkerRuntime/BundledWorkerRuntime.ts'
 
-const mainCall = /^main\(\);?$/m
+const mainCall = /^(?:await\s+)?main\(\);?$/m
 const awaitedListen = /^await listen\(\);?$/m
 
 const workerIds = ['editor', 'extensionManagementWorker', 'iconThemeWorker', 'cacheWorker', 'explorer']
