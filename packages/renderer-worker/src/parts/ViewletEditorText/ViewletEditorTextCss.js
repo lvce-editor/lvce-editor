@@ -2,7 +2,6 @@ import * as CssPxVariable from '../CssPxVariable/CssPxVariable.js'
 import * as CssVariable from '../CssVariable/CssVariable.js'
 import * as EditorPreferences from '../EditorPreferences/EditorPreferences.js'
 import * as JoinLines from '../JoinLines/JoinLines.js'
-import * as SupportsLetterSpacing from '../SupportsLetterSpacing/SupportsLetterSpacing.js'
 
 export const Css = [
   '/css/parts/CompletionItem.css',
@@ -34,36 +33,22 @@ export const Css = [
 
 export const getDynamicCss = (preferences) => {
   const styles = []
-  const fontSize = preferences['editor.fontSize']
-  if (fontSize) {
-    styles.push(CssPxVariable.create('EditorFontSize', fontSize))
-  }
-  const fontWeight = preferences['editor.fontWeight'] ?? 400
-  if (fontWeight) {
-    styles.push(CssVariable.create('EditorFontWeight', fontWeight))
-  }
-  const fontFamily = preferences['editor.fontFamily']
-  if (fontFamily) {
-    styles.push(CssVariable.create('EditorFontFamily', fontFamily))
-  }
+  const fontSize = EditorPreferences.getFontSize(preferences)
+  styles.push(CssPxVariable.create('EditorFontSize', fontSize))
+  const fontWeight = EditorPreferences.getFontWeight(preferences)
+  styles.push(CssVariable.create('EditorFontWeight', fontWeight))
+  const fontFamily = EditorPreferences.getFontFamily(preferences)
+  styles.push(CssVariable.create('EditorFontFamily', fontFamily))
   const lineHeight = EditorPreferences.getRowHeight(preferences)
   styles.push(CssPxVariable.create('EditorLineHeight', lineHeight))
-  const letterSpacing = preferences['editor.letterSpacing']
-  if (typeof letterSpacing === 'number') {
-    if (SupportsLetterSpacing.supportsLetterSpacing()) {
-      styles.push(CssPxVariable.create('EditorLetterSpacing', letterSpacing))
-    } else {
-      styles.push(CssPxVariable.create('EditorLetterSpacing', 0))
-    }
-  }
+  const letterSpacing = EditorPreferences.getLetterSpacing(preferences)
+  styles.push(CssPxVariable.create('EditorLetterSpacing', letterSpacing))
   const fontLigatures = preferences['editor.fontLigatures']
   if (fontLigatures) {
     styles.push(CssVariable.create('EditorFontFeatureSettings', '"liga" 1, "calt" 1'))
   }
-  const tabSize = preferences['editor.tabSize']
-  if (tabSize) {
-    styles.push(CssVariable.create('EditorTabSize', tabSize))
-  }
+  const tabSize = EditorPreferences.getTabSize(preferences)
+  styles.push(CssVariable.create('EditorTabSize', tabSize))
   const blockCursor = preferences['editor.cursorStyle'] === 'block'
   styles.push(CssVariable.create('EditorCursorWidth', blockCursor ? '1ch' : '2px'))
   styles.push(CssVariable.create('EditorCursorOpacity', blockCursor ? '0.5' : '1'))
