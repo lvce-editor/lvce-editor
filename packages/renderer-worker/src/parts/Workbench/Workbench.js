@@ -2,6 +2,7 @@ import * as Bounds from '../Bounds/Bounds.js'
 import * as Application from '../Application/Application.ts'
 import * as ColorTheme from '../ColorTheme/ColorTheme.js'
 import * as Command from '../Command/Command.js'
+import * as ConfigState from '../ConfigState/ConfigState.js'
 import * as CleanAuthCallbackUrl from '../CleanAuthCallbackUrl/CleanAuthCallbackUrl.js'
 import * as CleanExpiredCacheEntries from '../CleanExpiredCacheEntries/CleanExpiredCacheEntries.js'
 import * as CleanUpWorkersAfterLoad from '../CleanUpWorkersAfterLoad/CleanUpWorkersAfterLoad.js'
@@ -137,6 +138,7 @@ export const startup = async (initData, platform, assetDir) => {
 
   LifeCycle.mark(LifeCyclePhase.One)
 
+  ConfigState.set(initData.Config)
   IpcState.setConfig(initData.Config?.shouldLaunchMultipleWorkers)
   RuntimeWorkerPaths.initialize(initData.Config?.workerUrls)
   ExtensionManagementWorker.hydrate()
