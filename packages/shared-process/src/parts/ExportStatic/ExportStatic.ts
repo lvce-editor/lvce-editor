@@ -16,17 +16,20 @@ const dynamicImportTsRegex = /(import\(\s*['"][^'"]+)\.ts(['"]\s*\))/g
 const runtimeConfigScriptRegex = /<script id="Config" type="application\/json">([\s\S]*?)<\/script>/
 const whitespaceOnlyRegex = /^\s*$/
 
-const staticContentSecurityPolicy = GetContentSecurityPolicy.getContentSecurityPolicy([
-  `default-src 'none'`,
-  `connect-src 'self' https: wss: http://127.0.0.1:* http://localhost:* ws://127.0.0.1:* ws://localhost:*`,
-  `font-src 'self'`,
-  `img-src 'self' https: data: blob:`, // TODO maybe disallow https and data images
-  `manifest-src 'self'`,
-  `media-src 'self' blob:`,
-  `script-src 'self'`,
-  `style-src 'self' 'unsafe-inline'`,
-  `frame-src 'self' blob:`,
-])
+export const getStaticContentSecurityPolicy = ({ allowExternalConnections = false } = {}): string =>
+  GetContentSecurityPolicy.getContentSecurityPolicy([
+    `default-src 'none'`,
+    allowExternalConnections
+      ? `connect-src 'self' https: wss: http://127.0.0.1:* http://localhost:* ws://127.0.0.1:* ws://localhost:*`
+      : `connect-src 'self'`,
+    `font-src 'self'`,
+    `img-src 'self' https: data: blob:`, // TODO maybe disallow https and data images
+    `manifest-src 'self'`,
+    `media-src 'self' blob:`,
+    `script-src 'self'`,
+    `style-src 'self' 'unsafe-inline'`,
+    `frame-src 'self' blob:`,
+  ])
 
 const readExtensionManifest = async (path: any): Promise<any> => {
   const json = await JsonFile.readJson(path)
@@ -175,7 +178,7 @@ const applyRuntimeConfigOverrides = async ({ root }: any): Promise<void> => {
   await writeFile(indexHtmlPath, newContent)
 }
 
-const applyOverrides = async ({ commitHash, pathPrefix, root, serverStaticPath }: any): Promise<any> => {
+const applyOverrides = async ({ commitHash, cspOptions, pathPrefix, root, serverStaticPath }: any): Promise<any> => {
   await applyRuntimeConfigOverrides({ root })
   const extensionDirents = await FileSystem.readDir(Path.join(serverStaticPath, commitHash, 'extensions'))
 
@@ -253,7 +256,7 @@ const applyOverrides = async ({ commitHash, pathPrefix, root, serverStaticPath }
     indexHtmlPath,
     '#282e2f" />',
     `#282e2f" />
-    <meta http-equiv="Content-Security-Policy" content="${staticContentSecurityPolicy}">`,
+    <meta http-equiv="Content-Security-Policy" content="${getStaticContentSecurityPolicy(cspOptions)}">`,
   )
 
   if (pathPrefix) {
@@ -753,9 +756,10 @@ const getExtensionPaths = (extensionPath: any, extensionPaths: any): any => {
 
 /**
  *
- * @param {{root:string, pathPrefix:string , extensionPath:string, extensionPaths?:string[], onLoadCommands?:readonly unknown[], testPath:string, useSimpleWebExtensionFile?:boolean, serverStaticPath?:string }} param0
+ * @param {{root:string, pathPrefix:string , extensionPath:string, extensionPaths?:string[], onLoadCommands?:readonly unknown[], cspOptions?: {allowExternalConnections?: boolean}, testPath:string, useSimpleWebExtensionFile?:boolean, serverStaticPath?:string }} param0
  */
 export const exportStatic = async ({
+  cspOptions = {},
   extensionPath,
   extensionPaths,
   onLoadCommands = [],
@@ -802,6 +806,7 @@ export const exportStatic = async ({
   console.time('applyOverrides')
   await applyOverrides({
     commitHash,
+    cspOptions,
     pathPrefix,
     root,
     serverStaticPath,
