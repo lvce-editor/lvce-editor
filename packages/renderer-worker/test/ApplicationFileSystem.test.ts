@@ -66,6 +66,51 @@ test('custom schemes use only the owning application runtime', async () => {
   await expect(FileSystem.execute('source', 'readFile', 'sample:///README.md')).rejects.toThrow('No sample filesystem provider in application source')
 })
 
+test('statWithMetadata routes to the owning application filesystem provider', async () => {
+  const stat = { mtime: 123, size: 42, type: 7 }
+  jest.mocked(Extensions.invoke).mockResolvedValueOnce({ found: true, result: stat })
+
+  await expect(FileSystem.execute('preview', 'statWithMetadata', 'remote-ssh:///workspace/file.txt')).resolves.toEqual(stat)
+  expect(Extensions.invoke).toHaveBeenCalledWith(
+    'Extensions.invokeForApplication',
+    'preview',
+    'Extensions.executeFileSystemProviderStat',
+    'remote-ssh',
+    'remote-ssh:///workspace/file.txt',
+  )
+})
+
+test('getFileSize reports provider content byte size for strings and blobs', async () => {
+  for (const content of ['', 'héllo 🌍', new Blob(['🌍']), new Blob([new Uint8Array([0, 255, 128])])]) {
+    jest.mocked(Extensions.invoke).mockResolvedValueOnce({ found: true, result: content })
+    const expectedSize = content instanceof Blob ? content.size : new Blob([content]).size
+    await expect(FileSystem.execute('preview', 'getFileSize', 'sample:///README.md')).resolves.toBe(expectedSize)
+  }
+  expect(Extensions.invoke).toHaveBeenLastCalledWith(
+    'Extensions.invokeForApplication',
+    'preview',
+    'Extensions.executeFileSystemProviderReadFile',
+    'sample',
+    'sample:///README.md',
+  )
+})
+
+test('getFileSize preserves provider failures and application ownership', async () => {
+  jest.mocked(Extensions.invoke).mockResolvedValueOnce({ found: false })
+  await expect(FileSystem.execute('source', 'getFileSize', 'sample:///README.md')).rejects.toThrow(
+    'No sample filesystem provider in application source',
+  )
+  jest.mocked(Extensions.invoke).mockRejectedValueOnce(new Error('provider failed'))
+  await expect(FileSystem.execute('preview', 'getFileSize', 'sample:///README.md')).rejects.toThrow('provider failed')
+  expect(Extensions.invoke).toHaveBeenLastCalledWith(
+    'Extensions.invokeForApplication',
+    'preview',
+    'Extensions.executeFileSystemProviderReadFile',
+    'sample',
+    'sample:///README.md',
+  )
+})
+
 const hash = (content: string): string => createHash('sha256').update(content).digest('hex')
 
 test('batch hashes preserve URI order, content changes, missing files, and application isolation', async () => {

@@ -105,6 +105,10 @@
   pointer-events: none;
 }
 
+.TabIcon .MaskIconDebugAlt2 {
+  mask-size: 13px;
+}
+
 .TabDragHighlight {
   width: 2px;
   position: absolute;

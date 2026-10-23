@@ -13,6 +13,7 @@ import * as Mkdir from '../Mkdir/Mkdir.ts'
 import * as Path from '../Path/Path.ts'
 import * as Process from '../Process/Process.ts'
 import * as Remove from '../Remove/Remove.ts'
+import * as RemoveRipgrepFiles from '../RemoveRipgrepFiles/RemoveRipGrepFiles.ts'
 import * as Rename from '../Rename/Rename.ts'
 import * as Replace from '../Replace/Replace.ts'
 import * as Stat from '../Stat/Stat.ts'
@@ -47,8 +48,18 @@ const copyElectronResult = async ({ product, version, arch, debArch, platform, t
   await Template.write('linux_cli_js', `packages/build/.tmp/linux/deb/${debArch}/app/usr/lib/${product.applicationName}/resources/app/bin/cli.js`, {
     '@@APPLICATION_NAME@@': product.applicationName,
   })
-  await Remove.remove(
-    `packages/build/.tmp/linux/deb/${debArch}/app/usr/lib/${product.applicationName}/resources/app/packages/shared-process/node_modules/@lvce-editor/ripgrep`,
+  await Mkdir.mkdir(`packages/build/.tmp/linux/deb/${debArch}/app/usr/lib/${product.applicationName}/resources/app/packages/server/src`)
+  await Copy.copyFile({
+    from: 'packages/server/src/argvConfig.js',
+    to: `packages/build/.tmp/linux/deb/${debArch}/app/usr/lib/${product.applicationName}/resources/app/packages/server/src/argvConfig.js`,
+  })
+  await Copy.copy({
+    from: 'packages/shared-process/node_modules/@lvce-editor/jsonc-parser',
+    to: `packages/build/.tmp/linux/deb/${debArch}/app/usr/lib/${product.applicationName}/resources/app/packages/server/node_modules/@lvce-editor/jsonc-parser`,
+    dereference: true,
+  })
+  await RemoveRipgrepFiles.removeRipGrepPackages(
+    `packages/build/.tmp/linux/deb/${debArch}/app/usr/lib/${product.applicationName}/resources/app/packages/shared-process`,
   )
   await Replace.replace({
     path: `packages/build/.tmp/linux/deb/${debArch}/app/usr/lib/${product.applicationName}/resources/app/packages/shared-process/node_modules/@lvce-editor/search-process/dist/index.js`,
@@ -67,7 +78,7 @@ const copyMetaFiles = async ({ product, version, debArch }) => {
     '@@NAME_LONG@@': product.nameLong,
     '@@NAME_SHORT@@': product.nameShort,
     '@@NAME@@': product.applicationName,
-    '@@EXEC@@': `/usr/lib/${product.applicationName}/${product.applicationName} %U`,
+    '@@EXEC@@': `/usr/bin/${product.applicationName} %U`,
     '@@ICON@@': product.applicationName,
     '@@URL_PROTOCOL@@': product.applicationName,
     '@@SUMMARY@@': product.linuxSummary,

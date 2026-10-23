@@ -1,18 +1,22 @@
 import * as AboutViewWorker from '../AboutViewWorker/AboutViewWorker.js'
+import * as AccountsViewWorker from '../AccountsViewWorker/AccountsViewWorker.ts'
 import * as ActivityBarWorker from '../ActivityBarWorker/ActivityBarWorker.js'
 import * as Assert from '../Assert/Assert.ts'
 import * as AuthWorker from '../AuthWorker/AuthWorker.js'
+import * as CacheWorker from '../CacheWorker/CacheWorker.js'
 import * as ChatCoordinatorWorker from '../ChatCoordinatorWorker/ChatCoordinatorWorker.js'
 import * as ChatDebugViewWorker from '../ChatDebugViewWorker/ChatDebugViewWorker.js'
 import * as ChatMathWorker from '../ChatMathWorker/ChatMathWorker.js'
 import * as ChatMessageParsingWorker from '../ChatMessageParsingWorker/ChatMessageParsingWorker.js'
 import * as ChatNetworkWorker from '../ChatNetworkWorker/ChatNetworkWorker.js'
 import * as ChatStorageWorker from '../ChatStorageWorker/ChatStorageWorker.js'
-import * as CacheWorker from '../CacheWorker/CacheWorker.js'
 import * as ChatToolWorker from '../ChatToolWorker/ChatToolWorker.js'
 import * as ChatViewModelWorker from '../ChatViewModelWorker/ChatViewModelWorker.js'
 import * as ChatViewWorker from '../ChatViewWorker/ChatViewWorker.js'
 import * as ClipBoardWorker from '../ClipBoardWorker/ClipBoardWorker.js'
+import * as ComponentStateWorker from '../ComponentStateWorker/ComponentStateWorker.js'
+import * as CookieImportViewWorker from '../CookieImportViewWorker/CookieImportViewWorker.ts'
+import * as DialogWorker from '../DialogWorker/DialogWorker.js'
 import * as DiffViewWorker from '../DiffViewWorker/DiffViewWorker.js'
 import * as DiffWorker from '../DiffWorker/DiffWorker.js'
 import * as EditorWorker from '../EditorWorker/EditorWorker.ts'
@@ -23,6 +27,7 @@ import * as ExtensionManagementWorker from '../ExtensionManagementWorker/Extensi
 import * as ExtensionSearchViewWorker from '../ExtensionSearchViewWorker/ExtensionSearchViewWorker.js'
 import * as FileSearchWorker from '../FileSearchWorker/FileSearchWorker.js'
 import * as FileSystemWorker from '../FileSystemWorker/FileSystemWorker.js'
+import * as FileWatcherViewWorker from '../FileWatcherViewWorker/FileWatcherViewWorker.js'
 import * as HandleDialogWorkerMessagePort from '../HandleDialogWorkerMessagePort/HandleDialogWorkerMessagePort.ts'
 import * as IconThemeWorker from '../IconThemeWorker/IconThemeWorker.js'
 import * as IframeWorker from '../IframeWorker/IframeWorker.js'
@@ -34,16 +39,17 @@ import * as MenuWorker from '../MenuWorker/MenuWorker.js'
 import * as OpenerWorker from '../OpenerWorker/OpenerWorker.js'
 import * as OutputViewWorker from '../OutputViewWorker/OutputViewWorker.js'
 import * as PanelWorker from '../PanelWorker/PanelWorker.js'
+import * as PortsViewWorker from '../PortsViewWorker/PortsViewWorker.ts'
 import * as PreviewSandBoxWorker from '../PreviewSandBoxWorker/PreviewSandBoxWorker.js'
+import * as PreviewWorker from '../PreviewWorker/PreviewWorker.js'
 import * as ProblemsWorker from '../ProblemsWorker/ProblemsWorker.ts'
 import * as ProcessExplorerWorker from '../ProcessExplorerWorker/ProcessExplorerWorker.js'
-import * as FileWatcherViewWorker from '../FileWatcherViewWorker/FileWatcherViewWorker.js'
 import * as QuickPickWorker from '../QuickPickWorker/QuickPickWorker.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as RunningExtensionsViewWorker from '../RunningExtensionsViewWorker/RunningExtensionsViewWorker.ts'
 import * as SecretsViewWorker from '../SecretsViewWorker/SecretsViewWorker.ts'
-import * as SettingsWorker from '../SettingsWorker/SettingsWorker.js'
 import * as SettingsViewWorker from '../SettingsViewWorker/SettingsViewWorker.js'
+import * as SettingsWorker from '../SettingsWorker/SettingsWorker.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as SourceControlWorker from '../SourceControlWorker/SourceControlWorker.js'
 import * as StatusBarWorker from '../StatusBarWorker/StatusBarWorker.js'
@@ -56,20 +62,26 @@ import * as WorkspaceConnection from '../WorkspaceConnection/WorkspaceConnection
 
 const directViewWorkers = {
   About: [AboutViewWorker, 'About.handleMessagePort'],
+  Accounts: [AccountsViewWorker, 'Accounts.handleMessagePort'],
   ActivityBar: [ActivityBarWorker, 'ActivityBar.handleMessagePort'],
   Chat: [ChatViewWorker, 'Chat.handleMessagePort'],
   ChatDebug: [ChatDebugViewWorker, 'ChatDebug.handleMessagePort'],
+  ComponentState: [ComponentStateWorker, 'ComponentState.handleMessagePort'],
+  CookieImportView: [CookieImportViewWorker, 'CookieImportView.handleMessagePort'],
+  Dialog: [DialogWorker, 'Dialog.handleMessagePort'],
   DiffView: [DiffViewWorker, 'DiffView.handleMessagePort'],
   Explorer: [ExplorerViewWorker, 'Explorer.handleMessagePort'],
   ExtensionDetail: [ExtensionDetailViewWorker, 'ExtensionDetail.handleMessagePort'],
+  FileWatcherExplorer: [FileWatcherViewWorker, 'FileWatcherExplorer.handleMessagePort'],
   KeyBindings: [KeyBindingsViewWorker, 'KeyBindings.handleMessagePort'],
   LanguageModels: [LanguageModelsViewWorker, 'LanguageModels.handleMessagePort'],
   MainArea: [MainAreaWorker, 'MainArea.handleMessagePort'],
   Output: [OutputViewWorker, 'Output.handleMessagePort'],
   Panel: [PanelWorker, 'Panel.handleMessagePort'],
+  Ports: [PortsViewWorker, 'Ports.handleMessagePort'],
+  Preview: [PreviewWorker, 'Preview.handleMessagePort'],
   Problems: [ProblemsWorker, 'Problems.handleMessagePort'],
   ProcessExplorer: [ProcessExplorerWorker, 'ProcessExplorer.handleMessagePort'],
-  FileWatcherExplorer: [FileWatcherViewWorker, 'FileWatcherExplorer.handleMessagePort'],
   QuickPick: [QuickPickWorker, 'QuickPick.handleRendererProcessMessagePort'],
   RunningExtensions: [RunningExtensionsViewWorker, 'RunningExtensions.handleMessagePort'],
   SearchExtensions: [ExtensionSearchViewWorker, 'SearchExtensions.handleMessagePort'],

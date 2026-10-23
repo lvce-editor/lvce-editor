@@ -24,6 +24,18 @@
   overflow: auto;
 }
 
+.WorkersViewTableContainer::-webkit-scrollbar {
+  width: 14px;
+}
+
+.WorkersViewTableContainer::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.WorkersViewTableContainer::-webkit-scrollbar-thumb {
+  background: var(--EditorScrollBarBackground);
+}
+
 .WorkersViewTable {
   width: 100%;
   border-collapse: collapse;

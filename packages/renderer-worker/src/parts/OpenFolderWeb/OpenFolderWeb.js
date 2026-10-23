@@ -1,3 +1,4 @@
+import * as Browser from '../Browser/Browser.js'
 import * as Command from '../Command/Command.js'
 import * as IsAbortError from '../IsAbortError/IsAbortError.js'
 import { VError } from '../VError/VError.js'
@@ -20,8 +21,12 @@ export const openFolder = async () => {
       return
     }
     if (isDirectoryPickerNotSupportedError(error)) {
+      const browserName = Browser.getBrowserName()
+      const message = browserName
+        ? `${browserName} doesn't support opening local folders.`
+        : "Your browser doesn't support opening local folders."
       await Command.execute('Dialog.showWarning', {
-        message: "Your browser doesn't support opening local folders.",
+        message,
         title: 'Opening Local Folders is Unsupported',
       })
       return

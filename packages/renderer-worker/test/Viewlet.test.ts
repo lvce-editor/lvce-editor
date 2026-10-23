@@ -1,7 +1,9 @@
 import { beforeEach, expect, jest, test } from '@jest/globals'
 import * as ViewletStates from '../src/parts/ViewletStates/ViewletStates.js'
+import * as IsTest from '../src/parts/IsTest/IsTest.js'
 
 beforeEach(() => {
+  IsTest.state.isTest = true
   jest.resetAllMocks()
   jest.mocked(Id.create).mockReturnValue(2)
   ViewletStates.reset()
@@ -716,6 +718,34 @@ test('closeWidget restores focus after closing Quick Pick', async () => {
   expect(focus).toHaveBeenCalledWith({ uid: 3 })
 })
 
+test.each([true, false])('closing a preview Quick Pick only restores its owning main area (main present: %s)', async (hasPreviewMain) => {
+  const ApplicationRegistry = await import('../src/parts/ApplicationRegistry/ApplicationRegistry.ts')
+  const sourceFocus = jest.fn((state: Readonly<{ readonly applicationId: string; readonly uid: number }>) => state)
+  const previewFocus = jest.fn((state: Readonly<{ readonly applicationId: string; readonly uid: number }>) => state)
+  for (const [applicationId, uid, focus] of [
+    ['close-source', 101, sourceFocus],
+    ['close-preview', 102, previewFocus],
+  ] as const) {
+    ApplicationRegistry.create({ id: applicationId, layoutUid: uid + 10, href: '', workspacePath: '', workspaceUri: '' })
+    if (applicationId === 'close-preview' && !hasPreviewMain) continue
+    const state = { applicationId, uid }
+    ViewletStates.set(uid, { state, renderedState: state, moduleId: 'Main', factory: { Commands: { focus } } })
+  }
+  ViewletStates.set('Main', ViewletStates.getByUid(101))
+  const state = { applicationId: 'close-preview', uid: 103 }
+  ViewletStates.set(103, { state, renderedState: state, moduleId: 'QuickPick', factory: {} })
+  jest.mocked(RendererProcess.invoke).mockResolvedValue(undefined as never)
+  try {
+    await Viewlet.closeWidget(103)
+    expect(sourceFocus).not.toHaveBeenCalled()
+    expect(previewFocus).toHaveBeenCalledTimes(hasPreviewMain ? 1 : 0)
+    if (hasPreviewMain) expect(previewFocus).toHaveBeenCalledWith({ applicationId: 'close-preview', uid: 102 })
+  } finally {
+    ApplicationRegistry.remove('close-source')
+    ApplicationRegistry.remove('close-preview')
+  }
+})
+
 test('openWidget - replaces an existing widget by its numeric uid', async () => {
   jest.mocked(Id.create).mockReturnValueOnce(2).mockReturnValueOnce(3)
   // @ts-ignore
@@ -1007,4 +1037,127 @@ test('save retains the text editor route and skip-formatting option', async () =
   ViewletStates.set(21, { state, renderedState: state, moduleId: 'Editor', factory: {} })
   await expect(Viewlet.save(21, true)).resolves.toEqual({ modified: false })
   expect(save).toHaveBeenCalledWith(21, true)
+})
+
+test('layout preparation and view patches commit in one batch with resized geometry', async () => {
+  const oldState = { content: 'old', uid: 2, width: 240 }
+  const nextState = { ...oldState, content: 'new' }
+  const prepareRender = jest.fn(async () => {
+    ViewletStates.setState(2, { ...oldState, width: 1000 })
+    return [['Viewlet.setDom2', 1, ['layout']]]
+  })
+  ViewletStates.set(2, {
+    factory: {
+      Commands: { update: async () => nextState },
+      name: 'Test',
+      prepareRender,
+    },
+    moduleId: 'Test',
+    renderedState: oldState,
+    state: oldState,
+  })
+  jest.mocked(ViewletManager.render).mockReturnValue([['Viewlet.setPatches', 2, ['chat']]])
+  jest.mocked(RendererProcess.invoke).mockResolvedValue(undefined)
+
+  await Viewlet.executeViewletCommand(2, 'update')
+
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.sendMultiple', [
+    ['Viewlet.setDom2', 1, ['layout']],
+    ['Viewlet.setPatches', 2, ['chat']],
+  ])
+  expect(ViewletStates.getInstance(2).state).toEqual({ content: 'new', uid: 2, width: 1000 })
+})
+
+test('resize applies bounds when a viewlet has no custom resize handler', async () => {
+  const dimensions = { height: 200, width: 300, x: 10, y: 20 }
+  const warn = jest.spyOn(console, 'warn').mockImplementation(() => {})
+  ViewletStates.set(11, {
+    factory: {},
+    moduleId: 'Test',
+    renderedState: { uid: 11 },
+    state: { uid: 11 },
+  })
+
+  await expect(Viewlet.resize(11, dimensions)).resolves.toEqual([['Viewlet.setBounds', 11, 10, 20, 300, 200]])
+  expect(ViewletStates.getState(11)).toEqual({ uid: 11, ...dimensions })
+  expect(warn).not.toHaveBeenCalled()
+})
+
+test('resize warns when a functional resize handler is missing', async () => {
+  const dimensions = { height: 200, width: 300, x: 10, y: 20 }
+  const warn = jest.spyOn(console, 'warn').mockImplementation(() => {})
+  ViewletStates.set(11, {
+    factory: { hasFunctionalResize: true },
+    moduleId: 'Test',
+    renderedState: { uid: 11 },
+    state: { uid: 11 },
+  })
+
+  await expect(Viewlet.resize(11, dimensions)).resolves.toEqual([['Viewlet.setBounds', 11, 10, 20, 300, 200]])
+  expect(warn).toHaveBeenCalledWith('cannot resize', 11)
+})
+
+test('requestRender does not deliver an old notification to a recreated uid', async () => {
+  const { promise: gate, resolve } = Promise.withResolvers<void>()
+  const { promise: started, resolve: start } = Promise.withResolvers<void>()
+  const state = { uid: 20 }
+  const oldRender = jest.fn(async () => state)
+  ViewletStates.set(20, {
+    state,
+    renderedState: state,
+    moduleId: 'Test',
+    factory: {
+      serializeCommands: true,
+      Commands: {
+        __renderPending: oldRender,
+        update: async () => {
+          start()
+          await gate
+          return state
+        },
+      },
+    },
+  })
+  const update = Viewlet.executeViewletCommand(20, 'update')
+  await started
+  const render = Viewlet.requestRender(20)
+  const newRender = jest.fn(async () => state)
+  ViewletStates.set(20, {
+    state,
+    renderedState: state,
+    moduleId: 'Test',
+    factory: { Commands: { __renderPending: newRender } },
+  })
+  resolve()
+  await Promise.all([update, render])
+  expect(oldRender).not.toHaveBeenCalled()
+  expect(newRender).not.toHaveBeenCalled()
+})
+
+test('coalesced foreground input keeps focus permission when a background notification follows', async () => {
+  const state = { uid: 21 }
+  const renderPending = jest.fn(async (_state: typeof state, _preserveFocus: boolean) => state)
+  ViewletStates.set(21, {
+    state,
+    renderedState: state,
+    moduleId: 'Editor',
+    factory: { Commands: { __renderPending: renderPending } },
+  })
+  const background = Viewlet.requestRender(21)
+  const input = Viewlet.requestRender(21, false)
+  const diagnostic = Viewlet.requestRender(21)
+  await Promise.all([background, input, diagnostic])
+  expect(renderPending).toHaveBeenCalledTimes(1)
+  expect(renderPending).toHaveBeenCalledWith(state, false)
+})
+
+test('worker commands reconcile widget removal before the caller continues', async () => {
+  const ViewletLayout = await import('../src/parts/ViewletLayout/ViewletLayout.ts')
+  const layoutState = { ...ViewletLayout.create(1), widgetReferences: [{ parentUid: 10, uid: 20 }], widgetRevisions: { 10: 1 } }
+  ViewletStates.set(1, { factory: {}, moduleId: 'Layout', renderedState: layoutState, state: layoutState })
+  jest.mocked(RendererProcess.invoke).mockResolvedValue(undefined as never)
+  await Viewlet.applyCommands([['Viewlet.setWidgets', 10, 2, []]])
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.sendMultiple', expect.arrayContaining([['Viewlet.dispose', 20]]))
+  expect(ViewletStates.getInstance(1).state.widgetReferences).toEqual([])
 })

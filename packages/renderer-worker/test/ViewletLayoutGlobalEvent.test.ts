@@ -1,5 +1,8 @@
 import { beforeEach, expect, jest, test } from '@jest/globals'
 
+const executeViewletCommand = jest.fn(async (..._args: readonly unknown[]) => {})
+jest.unstable_mockModule('../src/parts/Viewlet/Viewlet.js', () => ({ executeViewletCommand }))
+
 const hydratePreferences = jest.fn()
 const extensionManagementInvoke = jest.fn<(method: string, ...params: readonly unknown[]) => Promise<unknown>>(async () => undefined)
 const problemsInvoke = jest.fn<(method: string, ...params: readonly unknown[]) => Promise<unknown>>(async () => ({
@@ -179,7 +182,7 @@ test('handleActiveEditorChange forwards the active uri to loaded viewlets', asyn
   })
   ViewletStates.set('problems', createInstance(1, 'handleActiveEditorChange', handler))
 
-  const state = ViewletLayout.create(1)
+  const state = { ...ViewletLayout.create(1), statusBarVisible: true }
   const result = await ViewletLayout.handleActiveEditorChange(state, 'file:///test.ts')
 
   expect(handler).toHaveBeenCalledWith({ uid: 1 }, 'file:///test.ts')
@@ -194,7 +197,7 @@ test('handleActiveEditorChange forwards the active uri to loaded viewlets', asyn
 })
 
 test('handleActiveEditorChange hides editor status for non-text editors', async () => {
-  const state = ViewletLayout.create(1)
+  const state = { ...ViewletLayout.create(1), statusBarVisible: true }
 
   await ViewletLayout.handleActiveEditorChange(state, 'file:///test.png', false)
 
@@ -213,6 +216,15 @@ test('handleActiveEditorChange ignores viewlets that are not loaded', async () =
       ...state,
     },
   })
+})
+
+test('setUpdateProgress forwards progress to the status bar worker', async () => {
+  const state = ViewletLayout.create(1)
+
+  const result = await ViewletLayout.setUpdateProgress(state, 0.9)
+
+  expect(statusBarInvoke).toHaveBeenCalledWith('StatusBar.handleUpdateProgress', 0.9)
+  expect(result).toEqual({ commands: [], newState: state })
 })
 
 test('handleActiveEditorChange refreshes the problems summary for loaded viewlets', async () => {
@@ -234,10 +246,10 @@ test('handleActiveEditorChange refreshes the problems summary for loaded viewlet
   ViewletStates.set('panel', createInstance(1, 'handleProblemsSummaryChange', panelHandler))
   ViewletStates.set('status-bar', createInstance(2, 'handleProblemsSummaryChange', statusBarHandler))
 
-  const state = ViewletLayout.create(1)
+  const state = { ...ViewletLayout.create(1), statusBarVisible: true }
   const result = await ViewletLayout.handleActiveEditorChange(state, 'file:///test.ts')
 
-  expect(problemsInvoke).toHaveBeenCalledWith('Problems.getProblemsSummary')
+  expect(problemsInvoke).toHaveBeenCalledWith('Problems.getProblemsSummary', 'file:///test.ts', undefined)
   expect(panelHandler).toHaveBeenCalledWith({ uid: 1 }, summary)
   expect(statusBarHandler).toHaveBeenCalledWith({ uid: 2 }, summary)
   expect(result).toEqual({
@@ -369,7 +381,7 @@ test('extension refresh commits ready view updates before waiting for a provider
   const handler = jest.fn((state: { uid: number }) => ({ ...state, commands: commits }))
   ViewletStates.set('status-bar', createInstance(5, 'handleExtensionsChanged', handler))
   jest.mocked(ViewletManager.render).mockReturnValueOnce(commits)
-  const state = ViewletLayout.create(1)
+  const state = { ...ViewletLayout.create(1), activityBarVisible: true }
   const refresh = ViewletLayout.handleExtensionsChanged(state)
   try {
     await badgeStarted.promise
@@ -382,4 +394,53 @@ test('extension refresh commits ready view updates before waiting for a provider
   expect(rendererInvoke).toHaveBeenCalledTimes(1)
   const result = await refresh
   expect(result.commands).not.toContainEqual(commits[0])
+})
+
+test('extension refresh passes the disabled contribution identity to global viewlets', async () => {
+  const handler = jest.fn((state: { uid: number }, extensionId?: string, disabled?: boolean) => ({ ...state, disabled, extensionId }))
+  ViewletStates.set('extension-view', createInstance(5, 'handleExtensionsChanged', handler))
+
+  await ViewletLayout.handleExtensionsChanged(ViewletLayout.create(1), 'sample.extension', true)
+
+  expect(handler).toHaveBeenCalledWith({ uid: 5 }, 'sample.extension', true)
+})
+
+test('workspace refresh does not wait for an extension file-change handler', async () => {
+  extensionManagementInvoke.mockImplementationOnce(() => new Promise(() => {}))
+  const state = ViewletLayout.create(1)
+  const changes = { changed: ['memfs:///threejs/dist/main.js'] }
+  const result = await ViewletLayout.handleWorkspaceRefresh(state, changes)
+  expect(extensionManagementInvoke).toHaveBeenCalledWith('Extensions.handleFileChanges', changes)
+  expect(result.newState).toBeDefined()
+})
+
+test('hidden status and panel views do not start workers on editor or diagnostic changes', async () => {
+  const state = ViewletLayout.create(1)
+  await ViewletLayout.handleActiveEditorChange(state, 'memfs:///demo/main.ts')
+  await ViewletLayout.handleDiagnosticsChange(state, 'memfs:///demo/main.ts')
+  expect(statusBarInvoke).not.toHaveBeenCalled()
+  expect(problemsInvoke).not.toHaveBeenCalled()
+})
+
+test('hidden activity bar does not query source control badges', async () => {
+  await ViewletLayout.refreshSourceControlBadgeCount(ViewletLayout.create(1))
+  expect(sourceControlInvoke).not.toHaveBeenCalled()
+})
+
+test('refreshProblemsSummary queries the owning embedded application', async () => {
+  const state = { ...ViewletLayout.create(1), applicationId: 'preview', statusBarVisible: true }
+  await ViewletLayout.refreshProblemsSummary(state, 'memfs:///preview/example.txt')
+  expect(problemsInvoke).toHaveBeenCalledWith('Problems.getProblemsSummary', 'memfs:///preview/example.txt', 'preview')
+})
+
+test('routes Explorer workspace refresh through its view command pipeline so worker renders are committed once', async () => {
+  const handler = jest.fn(async (state: { uid: number }) => ({ ...state, refreshed: true }))
+  const explorer = { ...createInstance(42, 'handleWorkspaceRefresh', handler), moduleId: 'Explorer' }
+  ViewletStates.set('Explorer', explorer)
+  const changes = { changed: ['remote-server://host/work/new.ts'] }
+  const result = await ViewletLayout.handleWorkspaceRefresh(ViewletLayout.create(1), changes)
+  expect(executeViewletCommand).toHaveBeenCalledWith(42, 'handleWorkspaceRefresh', changes)
+  expect(handler).not.toHaveBeenCalled()
+  expect(ViewletManager.render).not.toHaveBeenCalled()
+  expect(result.commands).toEqual([])
 })

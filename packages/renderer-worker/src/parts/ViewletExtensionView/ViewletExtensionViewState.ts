@@ -6,8 +6,10 @@ export interface ViewletExtensionViewState {
   readonly cssId: string
   readonly csp: string
   readonly credentialless: boolean
+  readonly disabled?: boolean
   readonly dom: readonly unknown[]
   readonly eventListeners: readonly unknown[]
+  readonly extensionId?: string
   readonly focusSelector: string
   readonly height: number
   readonly iframeSandbox: readonly string[]
@@ -21,6 +23,7 @@ export interface ViewletExtensionViewState {
   readonly uid: number
   readonly uri: string
   readonly viewId: string
+  readonly workbenchLayout?: 'ide' | 'ai-native'
   readonly width: number
   readonly x: number
   readonly y: number

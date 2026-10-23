@@ -94,6 +94,10 @@
   color: var(--ListActiveSelectionForeground, var(--WorkbenchForeground, white));
 }
 
+.Extensions:not(:has(.ListItems:focus-within)) .ExtensionActive {
+  background: var(--ListInactiveSelectionBackground, var(--ListActiveSelectionBackground, color-mix(in srgb, var(--WorkbenchForeground) 12%, transparent)));
+}
+
 .ExtensionListItem[data-state='disabled'] {
   color: var(--DisabledForeground, color-mix(in srgb, var(--WorkbenchForeground) 48%, transparent));
 }
@@ -215,6 +219,16 @@
   contain: strict;
   background: #c5c5c5;
   mask: url(/icons/settings-gear.svg) 50% 50% / 16px no-repeat;
+  cursor: pointer;
+}
+
+.ExtensionListItemActionManage:focus-visible {
+  outline: 1px solid var(--FocusBorder, #007fd4);
+  outline-offset: 2px;
+}
+
+.Extensions .SearchField {
+  border-radius: 6px;
 }
 
 .Extensions.Small .ExtensionListItemIcon {

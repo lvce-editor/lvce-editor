@@ -48,13 +48,12 @@ test('resolveRoot - resolves dot from development electron arguments', async () 
   })
 })
 
-test('resolveRoot - resolves the workspace for a second window', async () => {
+test('resolveRoot - resolves the Config workspace for a second window', async () => {
   const workspacePath = resolve('test', 'second-workspace')
   const workspaceUri = pathToFileURL(workspacePath).toString()
   const url = new URL('lvce-oss://-/')
-  url.searchParams.set('workspace', workspaceUri)
 
-  const resolvedRoot = await ResolveRoot.resolveRoot(url.toString())
+  const resolvedRoot = await ResolveRoot.resolveRoot(url.toString(), workspaceUri)
 
   expect(resolvedRoot).toMatchObject({
     path: workspacePath,
@@ -65,12 +64,11 @@ test('resolveRoot - resolves the workspace for a second window', async () => {
   expect(MainProcess.invoke).not.toHaveBeenCalled()
 })
 
-test('resolveRoot - preserves a remote workspace uri for a second window', async () => {
+test('resolveRoot - preserves a remote Config workspace uri for a second window', async () => {
   const workspaceUri = 'remote-ssh://user@example.com:2222/home'
   const url = new URL('lvce-oss://-/')
-  url.searchParams.set('workspace', workspaceUri)
 
-  const resolvedRoot = await ResolveRoot.resolveRoot(url.toString())
+  const resolvedRoot = await ResolveRoot.resolveRoot(url.toString(), workspaceUri)
 
   expect(resolvedRoot).toMatchObject({
     path: workspaceUri,

@@ -54,10 +54,11 @@ const isEditorDisposed = async (uid) => {
   }
 }
 
-const renderEditor = async (uid, sourceUid) => {
+const renderEditor = async (uid, sourceUid, preserveFocus) => {
   try {
-    const diffResult = await EditorWorker.invoke('Editor.diff2', uid)
-    const commands = await EditorWorker.invoke('Editor.render2', uid, diffResult)
+    const keepFocus = preserveFocus || uid !== sourceUid
+    const result = await EditorWorker.invoke('Editor.renderDirect2', uid, keepFocus)
+    const commands = keepFocus ? FilterFocusCommands.filterFocusCommands(result) : result
     return uid === sourceUid ? commands : adjustCommands(commands, uid)
   } catch (error) {
     if (await isEditorDisposed(uid)) {
@@ -71,7 +72,7 @@ export const renderPendingEditors = async (editor, preserveFocusOverride) => {
   const queueKey = getQueueKey(editor)
   const preserveFocus = preserveFocusOverride ?? focusPolicies.get(queueKey) !== false
   const editorUids = await getExistingEditorUids(editor)
-  const commandLists = await Promise.all(editorUids.map((uid) => renderEditor(uid, editor.uid)))
+  const commandLists = await Promise.all(editorUids.map((uid) => renderEditor(uid, editor.uid, preserveFocus)))
   const commands = commandLists.flat()
   return {
     ...editor,
@@ -80,6 +81,10 @@ export const renderPendingEditors = async (editor, preserveFocusOverride) => {
 }
 
 const runEditorCommand = async (editor, fullId, restArgs, preserveFocus = false) => {
+  // Only Alt release clears a definition link in Editor.handleKeyUp.
+  if (fullId === 'Editor.handleKeyUp' && restArgs[0] !== 'Alt') {
+    return { ...editor, commands: [] }
+  }
   await EditorWorker.invoke(fullId, editor.uid, ...restArgs)
   return renderPendingEditors(editor, preserveFocus)
 }

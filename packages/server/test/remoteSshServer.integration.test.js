@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict'
-import { spawn } from 'node:child_process'
+import { execFileSync, spawn } from 'node:child_process'
 import { mkdtemp, readFile, rm } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
@@ -130,6 +130,16 @@ test('remote mode authenticates and exposes existing workspace processes', { ski
     assert.equal(Number.isSafeInteger(rootPid), true)
     const processes = await invokeProcessExplorer('ListProcessesWithMemoryUsage.listProcessesWithMemoryUsage', rootPid, false)
     assert.equal(Array.isArray(processes), true)
-    assert.equal(processes.length > 0, true)
+    assert.equal(
+      processes.length > 0,
+      true,
+      processes.length
+        ? undefined
+        : JSON.stringify({
+            rootPid,
+            serverPid: child.pid,
+            ps: execFileSync('ps', ['-ax', '-o', 'pid=,ppid=,pcpu=,rss=,command='], { encoding: 'utf8' }),
+          }),
+    )
   }
 })

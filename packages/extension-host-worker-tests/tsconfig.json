@@ -16,5 +16,5 @@
     "noImplicitAny": false,
     "composite": true
   },
-  "include": ["src", "test", "typings", "scripts/wait-for-server-ready.mjs"]
+  "include": ["src", "test", "typings", "scripts/wait-for-server-ready.mjs", "fixtures/editor-cursor-split.js"]
 }

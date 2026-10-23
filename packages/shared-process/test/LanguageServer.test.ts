@@ -16,6 +16,7 @@ import {
 import { getSpawnOptions } from '../src/parts/LanguageServerConnection/LanguageServerConnection.ts'
 import { normalizeLanguageServerDocumentUri } from '../src/parts/NormalizeLanguageServerDocumentUri/NormalizeLanguageServerDocumentUri.ts'
 
+const typeScriptExecutableRegex = /\/packages\/shared-process\/language-servers\/typescript\/lib\/tsc(?:\.exe)?$/
 const serverScript = fileURLToPath(new URL('./fixtures/languageServer.js', import.meta.url))
 const completionOnlyServerScript = fileURLToPath(new URL('./fixtures/languageServerCompletionOnly.js', import.meta.url))
 const pushDiagnosticsServerScript = fileURLToPath(new URL('./fixtures/languageServerPushDiagnostics.js', import.meta.url))
@@ -436,4 +437,95 @@ test('dispose stops every language server owned by an extension', async () => {
   await expect(getProcessId(firstExtensionOptions)).resolves.not.toBe(firstProcessId)
   await expect(getProcessId(firstExtensionSecondServerOptions)).resolves.not.toBe(firstExtensionSecondProcessId)
   await expect(getProcessId(secondExtensionOptions)).resolves.toBe(secondProcessId)
+})
+
+test('concurrent diagnostic requests wait for the changed document', async () => {
+  const options = {
+    argv: [pushDiagnosticsServerScript],
+    extensionId: 'sample.extension',
+    id: 'sample.concurrent-push-diagnostics-fixture',
+    rootUri: 'file:///tmp/sample-workspace',
+    textDocument: {
+      languageId: 'elm',
+      text: 'invalid',
+      uri: '/tmp/sample-workspace/src/Main.elm',
+    },
+    uri: pathToFileURL(process.execPath).href,
+  }
+  const initial = await diagnostic(options)
+  expect(initial).toHaveLength(1)
+  const changed = {
+    ...options,
+    textDocument: { ...options.textDocument, text: 'valid' },
+  }
+
+  await expect(Promise.all([diagnostic(changed), diagnostic(changed)])).resolves.toEqual([[], []])
+})
+
+test('diagnostics collect intermediate publications after changing a document', async () => {
+  const options = {
+    argv: [pushDiagnosticsServerScript, '--staged-diagnostics'],
+    extensionId: 'sample.extension',
+    id: 'sample.staged-push-diagnostics-fixture',
+    rootUri: 'file:///tmp/sample-workspace',
+    textDocument: {
+      languageId: 'elm',
+      text: 'invalid',
+      uri: '/tmp/sample-workspace/src/Main.elm',
+    },
+    uri: pathToFileURL(process.execPath).href,
+  }
+  await expect(diagnostic(options)).resolves.toHaveLength(1)
+  const changed = { ...options, textDocument: { ...options.textDocument, text: 'valid' } }
+  const first = diagnostic(changed)
+  // A concurrent reader must join the pending pass rather than use its
+  // intermediate cached publication.
+  await new Promise((resolve) => setTimeout(resolve, 25))
+  await expect(Promise.all([first, diagnostic(changed)])).resolves.toEqual([[], []])
+})
+
+test('application-owned TypeScript executable is resolved outside the extension', () => {
+  const options = getSpawnOptions('lvce-language-server:typescript', ['--lsp', '--stdio'])
+  expect(options.args).toEqual(['--lsp', '--stdio'])
+  expect(options.command.replaceAll('\\', '/')).toMatch(typeScriptExecutableRegex)
+})
+
+test.each(['hover', 'implementation', 'prepareRename', 'rename', 'signatureHelp', 'typeDefinition'])(
+  'feature %s uses capabilities and synchronized documents',
+  async (method) => {
+    const script = fileURLToPath(new URL('./fixtures/languageServerFeatures.js', import.meta.url))
+    const options = {
+      argv: [script],
+      extensionId: 'features',
+      id: 'features',
+      method,
+      newName: 'next',
+      offset: 5,
+      textDocument: { languageId: 'typescript', text: 'line\nvalue', uri: 'file:///tmp/features.ts' },
+      uri: pathToFileURL(process.execPath).href,
+    }
+    await expect(LanguageServerIpc.Commands.feature(options)).resolves.toMatchObject({
+      method: `textDocument/${method}`,
+      params: { position: { character: 0, line: 1 } },
+      text: 'line\nvalue',
+    })
+    await expect(
+      LanguageServerIpc.Commands.feature({ ...options, textDocument: { ...options.textDocument, text: 'line\nnext' } }),
+    ).resolves.toMatchObject({ text: 'line\nnext' })
+  },
+)
+
+test('unsupported optional features return no result and unknown requests are rejected', async () => {
+  const options = {
+    argv: [completionOnlyServerScript],
+    extensionId: 'completion-only',
+    id: 'completion-only',
+    offset: 0,
+    textDocument: { languageId: 'typescript', text: 'value', uri: 'file:///tmp/features.ts' },
+    uri: pathToFileURL(process.execPath).href,
+  }
+  await expect(LanguageServerIpc.Commands.feature({ ...options, method: 'hover' })).resolves.toBeUndefined()
+  await expect(LanguageServerIpc.Commands.feature({ ...options, method: 'unexpected' })).rejects.toThrow(
+    'Unsupported language server feature: unexpected',
+  )
 })

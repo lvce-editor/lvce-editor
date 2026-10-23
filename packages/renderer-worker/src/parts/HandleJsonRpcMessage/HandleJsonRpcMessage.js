@@ -1,3 +1,5 @@
+import * as JsonRpc from '../JsonRpc/JsonRpc.js'
+
 const send = (ipc, message) => {
   if ('send' in ipc) {
     ipc.send(message)
@@ -7,6 +9,9 @@ const send = (ipc, message) => {
 }
 
 export const handleJsonRpcMessage = async (ipc, message, execute, resolve, source) => {
+  if (message === 'ready') {
+    return
+  }
   if (!message || typeof message === 'string') {
     console.warn(`unexpected message from ${source}: ${message}`)
     return
@@ -22,11 +27,7 @@ export const handleJsonRpcMessage = async (ipc, message, execute, resolve, sourc
         })
         return
       } catch (error) {
-        send(ipc, {
-          jsonrpc: '2.0',
-          id: message.id,
-          error,
-        })
+        send(ipc, JsonRpc.getErrorResponse(message, error, (value) => value, () => {}))
         return
       }
     }

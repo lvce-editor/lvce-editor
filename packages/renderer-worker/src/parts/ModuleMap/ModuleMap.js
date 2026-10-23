@@ -167,6 +167,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.Reload
     case 'SaveFileAs':
       return ModuleId.SaveFileAs
+    case 'SideBar':
+      return ModuleId.SideBar
     case 'SaveState':
       return ModuleId.SaveState
     case 'SessionReplay':

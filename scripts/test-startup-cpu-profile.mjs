@@ -72,7 +72,21 @@ const waitForExit = async (configHome) => {
       }
     }
     if (!remaining.length) return
-    assert.ok(Date.now() < deadline, `Application processes remain: ${remaining.join(', ')}`)
+    if (Date.now() >= deadline) {
+      const details = await Promise.all(
+        remaining.map(async (pid) => {
+          const [command, status] = await Promise.all(
+            ['cmdline', 'status'].map((name) => readFile(`/proc/${pid}/${name}`, 'utf8').catch((error) => `<${error.code}>`)),
+          )
+          const identity = status
+            .split('\n')
+            .filter((line) => /^(Name|State|PPid):/.test(line))
+            .join('; ')
+          return `${pid}: ${command.replaceAll('\0', ' ')} (${identity})`
+        }),
+      )
+      assert.fail(`Application processes remain: ${details.join('\n')}`)
+    }
     await delay(100)
   }
 }
@@ -128,6 +142,7 @@ try {
     [
       ...(packaged ? [] : [join(root, 'packages/main-process')]),
       '--no-sandbox',
+      '--enable-logging=stderr',
       '--password-store=basic',
       `--user-data-dir=${join(directory, 'chromium')}`,
       previous,
@@ -155,6 +170,7 @@ try {
     const args = [
       ...(packaged ? [] : [join(root, 'packages/main-process')]),
       '--no-sandbox',
+      '--enable-logging=stderr',
       '--password-store=basic',
       `--user-data-dir=${join(directory, 'chromium')}`,
       project,

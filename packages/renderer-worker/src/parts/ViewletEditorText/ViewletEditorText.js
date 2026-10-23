@@ -1,3 +1,4 @@
+import * as ApplicationPreferences from '../ApplicationPreferences/ApplicationPreferences.ts'
 import * as AssetDir from '../AssetDir/AssetDir.js'
 import * as ApplicationFileSystem from '../ApplicationFileSystem/ApplicationFileSystem.ts'
 import * as Command from '../Command/Command.js'
@@ -10,6 +11,7 @@ import * as GetFontUrl from '../GetFontUrl/GetFontUrl.js'
 import * as GetTextEditorContent from '../GetTextEditorContent/GetTextEditorContent.js'
 import * as GetTokenizePath from '../GetTokenizePath/GetTokenizePath.js'
 import * as Id from '../Id/Id.js'
+import * as IsTest from '../IsTest/IsTest.js'
 import * as Languages from '../Languages/Languages.js'
 import * as LanguagesState from '../LanguagesState/LanguagesState.js'
 import * as LayoutWidgets from '../LayoutWidgets/LayoutWidgets.ts'
@@ -119,29 +121,31 @@ const getLanguageId = (state, content, savedState) => {
 }
 
 export const loadContent = async (state, savedState, context) => {
-  const { uri, id, x, y, width, height, platform, assetDir, useFunctionalRendering } = state
-  const rowHeight = EditorPreferences.getRowHeight()
-  const fontSize = EditorPreferences.getFontSize()
-  const hoverEnabled = EditorPreferences.getHoverEnabled()
-  const hoverDelay = EditorPreferences.getHoverDelay()
-  const fontFamily = EditorPreferences.getFontFamily()
-  const letterSpacing = EditorPreferences.getLetterSpacing()
-  const tabSize = EditorPreferences.getTabSize()
-  const links = EditorPreferences.getLinks()
-  const lineNumbers = EditorPreferences.getLineNumbers()
-  const formatOnSave = EditorPreferences.getFormatOnSave()
-  const isAutoClosingBracketsEnabled = EditorPreferences.isAutoClosingBracketsEnabled()
+  const { applicationId, uri, id, x, y, width, height, platform, assetDir, useFunctionalRendering } = state
+  const editorPreferences = applicationId === undefined ? undefined : ApplicationPreferences.getAll(applicationId)
+  const rowHeight = EditorPreferences.getRowHeight(editorPreferences)
+  const fontSize = EditorPreferences.getFontSize(editorPreferences)
+  const hoverEnabled = EditorPreferences.getHoverEnabled(editorPreferences)
+  const hoverDelay = EditorPreferences.getHoverDelay(editorPreferences)
+  const fontFamily = EditorPreferences.getFontFamily(editorPreferences)
+  const letterSpacing = EditorPreferences.getLetterSpacing(editorPreferences)
+  const tabSize = EditorPreferences.getTabSize(editorPreferences)
+  const links = EditorPreferences.getLinks(editorPreferences)
+  const lineNumbers = EditorPreferences.getLineNumbers(editorPreferences)
+  const formatOnSave = EditorPreferences.getFormatOnSave(editorPreferences)
+  const formatActions = EditorPreferences.getFormatActions(editorPreferences)
+  const isAutoClosingBracketsEnabled = EditorPreferences.isAutoClosingBracketsEnabled(editorPreferences)
   const isAutoClosingTagsEnabled = EditorPreferences.isAutoClosingTagsEnabled()
-  const isAutoClosingQuotesEnabled = EditorPreferences.isAutoClosingQuotesEnabled()
-  const isQuickSuggestionsEnabled = EditorPreferences.isQuickSuggestionsEnabled()
+  const isAutoClosingQuotesEnabled = EditorPreferences.isAutoClosingQuotesEnabled(editorPreferences)
+  const isQuickSuggestionsEnabled = EditorPreferences.isQuickSuggestionsEnabled(editorPreferences)
   const completionTriggerCharacters = EditorPreferences.getCompletionTriggerCharacters()
-  const diagnosticsEnabled = EditorPreferences.diagnosticsEnabled()
+  const diagnosticsEnabled = EditorPreferences.diagnosticsEnabled(editorPreferences)
   const content =
     useFunctionalRendering && context?.largeFile === true
       ? ''
       : state.applicationId === undefined
-        ? await GetTextEditorContent.getTextEditorContent(uri)
-        : await ApplicationFileSystem.execute(state.applicationId, 'readFile', uri)
+        ? await GetTextEditorContent.getTextEditorContent(uri, context?.forceText === true ? 'binary' : undefined)
+        : await ApplicationFileSystem.execute(state.applicationId, 'readFile', uri, context?.forceText === true ? 'binary' : undefined)
   const languageId = context?.languageId || getLanguageId(state, content, savedState)
   const tokenizer = Tokenizer.getTokenizer(languageId)
   const tokenizerId = Id.create()
@@ -157,13 +161,14 @@ export const loadContent = async (state, savedState, context) => {
     await EditorWorker.invoke('Font.ensure', fontName, fontUrl)
   }
   const isMonospaceFont = isFiraCode // TODO an actual check for monospace font
-  const fontWeight = EditorPreferences.getFontWeight()
+  const fontWeight = EditorPreferences.getFontWeight(editorPreferences)
   const lineToReveal = context?.rowIndex || 0
   const columnToReveal = context?.columnIndex || 0
 
   if (useFunctionalRendering) {
     const tokenizePath = GetTokenizePath.getTokenizePath(languageId)
     const useCache = Preferences.get('editor.cache') ?? true
+    const useFileCache = Preferences.get('editor.fileCache') ?? !IsTest.isTest()
     await EditorWorker.invoke(
       'Editor.create2',
       id,
@@ -177,11 +182,17 @@ export const loadContent = async (state, savedState, context) => {
       languageId,
       tokenizePath,
       useCache,
-      ...(state.applicationId === undefined ? [] : [state.applicationId]),
+      state.applicationId,
+      useFileCache,
+      context?.forceText === true,
     )
     await EditorWorker.invoke('Editor.loadContent', id, savedState?.editorState, context?.largeFile === true, context?.focus ?? true)
+    if (Array.isArray(savedState?.editorState?.widgets)) {
+      await EditorWorker.invoke('Editor.restorePersistentWidgets', id, savedState.editorState.widgets)
+    }
     const initialRender = await rerender(newState2)
-    await EditorWorker.invoke('Editor.setSelections2', id, savedSelections)
+    const revealSelection = !!context?.selections || typeof context?.startRowIndex === 'number'
+    await EditorWorker.invoke('Editor.setSelections2', id, savedSelections, revealSelection)
     const selectionRender = await rerender(newState2)
     return {
       ...selectionRender,
@@ -198,6 +209,7 @@ export const loadContent = async (state, savedState, context) => {
       fontSize,
       fontWeight,
       formatOnSave,
+      formatActions,
       height,
       hoverEnabled,
       hoverDelay,

@@ -43,7 +43,7 @@ const renderFocus = {
     return newState.kind !== 'virtualDom' || !newState.focusSelector || oldState.focusSelector === newState.focusSelector
   },
   apply(oldState: ViewletExtensionViewState, newState: ViewletExtensionViewState): readonly unknown[] {
-    return [['Viewlet.focusSelector', newState.uid, newState.focusSelector]]
+    return [['Viewlet.focusSelectorAfterRender', newState.uid, newState.focusSelector]]
   },
   multiple: true,
 }

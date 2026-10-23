@@ -20,6 +20,8 @@ jobs:
       - uses: actions/setup-node@v6
         with:
           node-version-file: '.nvmrc'
+      - name: Test duplicate release run guard
+        run: node --test scripts/test/check-duplicate-release-run.test.mjs
       - name: Setup Python 3
         uses: actions/setup-python@v6
         with:
@@ -46,7 +48,7 @@ jobs:
       - uses: actions/cache@v6
         id: build-cache
         with:
-          path: 'packages/build/.tmp/cachedDependencies'
+          path: '.tmp/native'
           key: ${{ runner.os }}-${{ runner.arch }}-build-cache-${{ steps.nodeModulesCacheKey.outputs.value }}
       - name: npm ci
         run: node packages/build/src/parts/InstallDependencies/InstallDependencies.ts
@@ -65,8 +67,8 @@ jobs:
       - name: Download Builtin Extensions
         run: node packages/build/src/parts/DownloadBuiltinExtensions/DownloadBuiltinExtensions.ts
         if: steps.builtin-extensions-cache.outputs.cache-hit != 'true'
-      - name: Test e2e server readiness
-        run: node --test packages/extension-host-worker-tests/test/wait-for-server-ready.test.mjs
+      - name: Test e2e runner lifecycle
+        run: node --test packages/extension-host-worker-tests/test/wait-for-server-ready.test.mjs packages/extension-host-worker-tests/test/browser-launch-cleanup.test.mjs
       - name: Check feature e2e ownership
         run: node scripts/check-e2e-ownership.mjs
       - run: npm run lint
@@ -82,9 +84,106 @@ jobs:
           node --experimental-vm-modules node_modules/jest/bin/jest.js --config packages/renderer-worker/package.json --runInBand --coverage=false --testPathPatterns='(IpcParentWithNodeAlternate|LaunchFileSystemWorker|WebSocketCapability|ExtensionNodeRpc|WorkspaceConnection|WorkspaceSetUri|LoadProcessExplorerViewletModule|GetTerminalSpawnOptions).test'
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0
+      - name: Checkout owned split editor regressions
+        uses: actions/checkout@v7
+        with:
+          repository: lvce-editor/main-area-worker
+          ref: 02a51e61aa8e4ac06353080e719d7c9573e0596c
+          path: .tmp/cursor-split-tests
+      - name: Stage owned split editor regressions
+        run: node .tmp/cursor-split-tests/packages/e2e-integration/stage-cursor-tests.mjs .
+      - name: Install Chromium for split editor regressions
+        run: node node_modules/playwright-core/cli.js install --with-deps chromium
+        env:
+          PLAYWRIGHT_BROWSERS_PATH: 0
+      - name: Checkout owned HTML filesystem regressions
+        uses: actions/checkout@v7
+        with:
+          repository: lvce-editor/file-system-worker
+          ref: 9ce4bad7564c0252c60a3e9fd53cc81b4938edcf
+          path: .tmp/html-filesystem-tests
+      - name: Stage owned HTML filesystem regression
+        run: node .tmp/html-filesystem-tests/packages/e2e-integration/stage-html-tests.mjs .
+      - name: Test HTML workspace through the published filesystem worker
+        working-directory: ./packages/extension-host-worker-tests
+        run: npm run e2e:headless -- --test-name-prefix=workspace.html-filesystem
+        env:
+          PLAYWRIGHT_BROWSERS_PATH: 0
+      - name: Remove staged HTML filesystem regression
+        if: always()
+        run: node .tmp/html-filesystem-tests/packages/e2e-integration/stage-html-tests.mjs . --clean
+      - name: Checkout owned Electron tab move regressions
+        uses: actions/checkout@v7
+        with:
+          repository: lvce-editor/main-area-worker
+          ref: 58e6c499dbd55f289a429ef287ef7e9842de31fa
+          path: .tmp/electron-tab-move-tests
+      - name: Install Electron for tab move regressions
+        run: node node_modules/electron/install.js
+      - name: Test moving tabs with the published worker (Linux)
+        if: runner.os == 'Linux'
+        run: xvfb-run -a node .tmp/electron-tab-move-tests/packages/e2e-integration/scripts/test-move-to-new-window.mjs .
+        env:
+          LVCE_MOVE_USE_PUBLISHED_WORKER: '1'
+          LVCE_MOVE_EVIDENCE_DIR: .tmp/electron-tab-move-evidence
+      - name: Test moving tabs with the published worker
+        if: runner.os != 'Linux'
+        run: node .tmp/electron-tab-move-tests/packages/e2e-integration/scripts/test-move-to-new-window.mjs .
+        env:
+          LVCE_MOVE_USE_PUBLISHED_WORKER: '1'
+          LVCE_MOVE_EVIDENCE_DIR: .tmp/electron-tab-move-evidence
+      - name: Upload Electron tab move evidence
+        uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: electron-tab-move-${{ matrix.os }}
+          path: .tmp/electron-tab-move-evidence
+          if-no-files-found: warn
+      - name: Test editor cursor positioning in split groups
+        working-directory: ./packages/extension-host-worker-tests
+        run: npm run e2e:headless -- --test-name-prefix=viewlet.main-editor-cursor-after-split --browser-test=scripts/test-editor-cursor-splits.mjs
+        env:
+          PLAYWRIGHT_BROWSERS_PATH: 0
+      - name: Remove staged split editor regressions
+        if: always()
+        run: node .tmp/cursor-split-tests/packages/e2e-integration/stage-cursor-tests.mjs . --clean
+      - name: Checkout Accounts view regressions
+        uses: actions/checkout@v7
+        with:
+          repository: lvce-editor/accounts-view
+          ref: 0f37b6ee0b4b5d95b47ea1e11b441da8e58989dc
+          path: .tmp/accounts-view-tests
+      - name: Stage Accounts view regression
+        run: node .tmp/accounts-view-tests/packages/e2e-integration/stage-accounts-view-test.mjs .
+      - name: Stage owned active split save regression
+        shell: bash
+        run: |
+          node --input-type=module - <<'JS'
+          import { readFile, writeFile } from 'node:fs/promises'
+          import { stripTypeScriptTypes } from 'node:module'
+          const source = '.tmp/cursor-split-tests/packages/e2e-integration/src/viewlet.main-save-active-split-editor.ts'
+          const target = 'packages/extension-host-worker-tests/src/viewlet.main-save-active-split-editor.js'
+          await writeFile(target, stripTypeScriptTypes(await readFile(source, 'utf8')))
+          JS
       - name: Test renderer layout blur dispatch
         if: matrix.os == 'ubuntu-24.04'
         run: node --experimental-vm-modules node_modules/jest/bin/jest.js --config packages/renderer-worker/package.json --runInBand --coverage=false --testPathPatterns=ViewletLayoutBlur.test
+      - name: Checkout owned editor scroll persistence regression
+        uses: actions/checkout@v7
+        with:
+          repository: lvce-editor/editor-worker
+          ref: b232040e8cd380d32a9c6b76d4d9445ad6ef1bdc
+          path: .tmp/editor-scroll-tests
+      - name: Stage editor scroll persistence regression
+        shell: bash
+        run: |
+          node --input-type=module - <<'JS'
+          import { readFile, writeFile } from 'node:fs/promises'
+          import { stripTypeScriptTypes } from 'node:module'
+          const source = '.tmp/editor-scroll-tests/packages/e2e-integration/src/viewlet.editor-scroll-position-persistence.ts'
+          const target = 'packages/extension-host-worker-tests/src/viewlet.editor-scroll-position-persistence.js'
+          await writeFile(target, stripTypeScriptTypes(await readFile(source, 'utf8')))
+          JS
       - name: Build static site
         run: npm run build:static:ignore-icon-theme
         env:
@@ -100,9 +199,148 @@ jobs:
         run: npx playwright install --with-deps chromium
       - name: Test static export bundle mode
         run: node packages/extension-host-worker-tests/test/static-bundle.mjs
+      - name: Test Accounts view application rendering
+        working-directory: ./packages/extension-host-worker-tests
+        run: npm run e2e:headless -- --ci --test-name-prefix=viewlet.accounts-view-open --browser-test=../../scripts/test-accounts-view-layout.mjs
+        env:
+          PLAYWRIGHT_BROWSERS_PATH: 0
+      - name: Remove staged Accounts view regression
+        if: always()
+        run: node .tmp/accounts-view-tests/packages/e2e-integration/stage-accounts-view-test.mjs . --clean
+      - name: Test saving the active split editor with the published worker
+        working-directory: ./packages/extension-host-worker-tests
+        run: npm run e2e:headless -- --ci --test-name-prefix=viewlet.main-save-active-split-editor
+        env:
+          PLAYWRIGHT_BROWSERS_PATH: 0
+      - name: Remove staged active split save regression
+        if: always()
+        run: |
+          node --input-type=module -e "import { rm } from 'node:fs/promises'; await rm('packages/extension-host-worker-tests/src/viewlet.main-save-active-split-editor.js', { force: true })"
+      - name: Checkout direct editor event regressions
+        uses: actions/checkout@v7
+        with:
+          repository: lvce-editor/editor-worker
+          ref: 7c250c9a7f24f0f83b012294738d886f977e94dc
+          path: .tmp/direct-editor-tests
+      - name: Test editor scroll persistence with the published worker
+        working-directory: ./packages/extension-host-worker-tests
+        run: npm run e2e:headless -- --ci --test-name-prefix=viewlet.editor-scroll-position-persistence
+        env:
+          PLAYWRIGHT_BROWSERS_PATH: 0
+      - name: Remove staged editor scroll persistence regression
+        if: always()
+        run: |
+          node --input-type=module -e "import { rm } from 'node:fs/promises'; await rm('packages/extension-host-worker-tests/src/viewlet.editor-scroll-position-persistence.js', { force: true })"
+      - name: Prepare source runtime settings
+        run: node .tmp/direct-editor-tests/packages/e2e-integration/copy-builtin-settings.mjs .
+      - name: Stage direct editor event regression
+        run: node .tmp/direct-editor-tests/packages/e2e-integration/stage-direct-editor-test.mjs .
+      - name: Test native direct events with published editor and renderer packages
+        working-directory: ./packages/extension-host-worker-tests
+        run: npm run e2e:headless -- --test-name-prefix=viewlet.editor-direct-events --browser-test=../../scripts/capture-direct-editor-events.mjs
+        env:
+          PLAYWRIGHT_BROWSERS_PATH: 0
+          LVCE_DIRECT_EVENTS_EVIDENCE_DIR: ${{ github.workspace }}/.tmp/direct-editor-events
+      - name: Checkout owned editor shortcut ordering regression
+        uses: actions/checkout@v7
+        with:
+          repository: lvce-editor/renderer-process
+          ref: 88db13a0e049c0e8184436dcdde180a896228fdc
+          path: .tmp/editor-shortcut-tests
+      - name: Test shortcut ordering with published renderer package
+        working-directory: ./packages/extension-host-worker-tests
+        run: npm run e2e:headless -- --test-name-prefix=viewlet.editor-direct-events --browser-test=../../.tmp/editor-shortcut-tests/packages/e2e-integration/test-editor-shortcuts.mjs
+        env:
+          PLAYWRIGHT_BROWSERS_PATH: 0
+      - name: Test application scroll speed with published view workers
+        working-directory: ./packages/extension-host-worker-tests
+        run: npm run e2e:headless -- --test-name-prefix=viewlet.editor-direct-events --browser-test=../../scripts/test-application-scrollspeed.mjs
+        env:
+          PLAYWRIGHT_BROWSERS_PATH: 0
+      - name: Checkout owned native source control regression
+        id: sourceControlTests
+        uses: actions/checkout@v7
+        with:
+          repository: lvce-editor/source-control-view
+          ref: 48bbc01d33639ef53041a8f5e4cd776deaf1db52
+          path: .tmp/source-control-tests
+      - name: Stage native source control regression
+        run: node .tmp/source-control-tests/packages/e2e-integration/stage-native-source-control.mjs .
+      - name: Trace staged sample provider transitions
+        run: node packages/extension-host-worker-tests/scripts/trace-native-source-provider.mjs
+      - name: Test native source control with published packages
+        working-directory: ./packages/extension-host-worker-tests
+        run: node ../../.tmp/source-control-tests/packages/e2e-integration/scripts/stress-native-source-control.mjs
+        env:
+          PLAYWRIGHT_BROWSERS_PATH: 0
+          SOURCE_CONTROL_NATIVE_EVIDENCE_DIR: ${{ github.workspace }}/.tmp/source-control-native
+      - name: Upload native source control evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: source-control-native-${{ matrix.os }}
+          path: .tmp/source-control-native
+          if-no-files-found: warn
+      - name: Remove staged native source control regression
+        if: always() && steps.sourceControlTests.outcome == 'success'
+        run: node .tmp/source-control-tests/packages/e2e-integration/stage-native-source-control.mjs . --clean
+      - name: Checkout owned HTML comment regression
+        id: htmlCommentTests
+        uses: actions/checkout@v7
+        with:
+          repository: lvce-editor/editor-worker
+          ref: 34ea252922cc59e6856634d4c6fd9f8436feb745
+          path: .tmp/html-comment-tests
+      - name: Stage owned HTML comment regression
+        run: node .tmp/html-comment-tests/packages/e2e-integration/stage-html-comment-test.mjs .
+      - name: Test contextual HTML comments with published packages
+        working-directory: ./packages/extension-host-worker-tests
+        run: npm run e2e:headless -- --test-name-prefix=editor.toggle-comment-html --browser-test=../../.tmp/html-comment-tests/packages/e2e-integration/scripts/test-html-comments.mjs
+        env:
+          PLAYWRIGHT_BROWSERS_PATH: 0
+          HTML_COMMENT_EVIDENCE_DIR: ${{ github.workspace }}/.tmp/html-comments
+      - name: Upload contextual HTML comment assertions
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: html-comments-${{ matrix.os }}
+          path: .tmp/html-comments
+          if-no-files-found: warn
+      - name: Remove staged HTML comment regression
+        if: always() && steps.htmlCommentTests.outcome == 'success'
+        run: node .tmp/html-comment-tests/packages/e2e-integration/stage-html-comment-test.mjs . --clean
+      - name: Upload direct editor event trace
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: direct-editor-events-${{ matrix.os }}
+          path: .tmp/direct-editor-events
+          if-no-files-found: warn
+      - name: Remove staged direct editor event regression
+        if: always()
+        run: node .tmp/direct-editor-tests/packages/e2e-integration/stage-direct-editor-test.mjs . --clean
+      - name: Prepare native TypeScript language server
+        run: node packages/build/scripts/prepare-typescript-language-server.ts
+      - name: Test native TypeScript language features
+        run: node scripts/test-typescript-language-server.mjs
+      - name: Verify cross-target TypeScript archives
+        if: matrix.os == 'ubuntu-24.04'
+        run: node packages/build/scripts/test-typescript-language-server-targets.ts
       - name: Build Electron App (deb)
         if: matrix.os == 'ubuntu-24.04'
         run: npm run build:electron:deb
+      - name: Test bundled TypeScript server in Debian package
+        if: matrix.os == 'ubuntu-24.04'
+        shell: bash
+        run: |
+          deb_path=$(find packages/build/.tmp/releases -name '*.deb' -print -quit)
+          test -n "$deb_path"
+          dpkg-deb -x "$deb_path" packages/build/.tmp/ts7-deb
+          server_path=$(find "$PWD/packages/build/.tmp/ts7-deb" -type f -path '*/resources/app/packages/shared-process/language-servers/typescript/lib/tsc' -executable -print -quit)
+          test -n "$server_path"
+          test -f "$(dirname "$server_path")/lib.d.ts"
+          test "$(find packages/build/.tmp/ts7-deb -type f -path '*/language-servers/typescript/lib/tsc' | wc -l)" -eq 1
+          LVCE_TYPESCRIPT_SERVER_PATH="$server_path" node scripts/test-typescript-language-server.mjs
       - name: Test packaged startup CPU profiling
         if: matrix.os == 'ubuntu-24.04'
         shell: bash
@@ -110,9 +348,33 @@ jobs:
           deb_path=$(find packages/build/.tmp/releases -name '*.deb' -print -quit)
           test -n "$deb_path"
           dpkg-deb -x "$deb_path" packages/build/.tmp/cpu-profile-deb
-          app_path=$(find "$PWD/packages/build/.tmp/cpu-profile-deb" -type f -name lvce-oss -executable -print -quit)
+          app_path=$(find "$PWD/packages/build/.tmp/cpu-profile-deb" -type f -name lvce-oss -executable ! -path '*/resources/*' -print -quit)
           test -n "$app_path"
           LVCE_ELECTRON_PATH="$app_path" LVCE_CPU_PROFILE_PACKAGED=1 xvfb-run -a node scripts/test-startup-cpu-profile.mjs
+      - name: Test packaged native font loading
+        if: matrix.os == 'ubuntu-24.04'
+        shell: bash
+        run: |
+          app_path=$(find "$PWD/packages/build/.tmp/cpu-profile-deb" -type f -name lvce-oss -executable ! -path '*/resources/*' -print -quit)
+          test -n "$app_path"
+          LVCE_ELECTRON_PATH="$app_path" xvfb-run -a node scripts/test-packaged-font-source.mjs
+          LVCE_ELECTRON_PATH="$app_path" LVCE_USE_PROTOCOL_REGISTER_SOURCE=true xvfb-run -a node scripts/test-packaged-font-source.mjs
+      - name: Build and test ASAR packaged application
+        if: matrix.os == 'ubuntu-24.04'
+        shell: bash
+        run: |
+          node packages/build/bin/build.ts --target=electron-builder-deb --asar
+          dpkg-deb -x packages/build/.tmp/releases/lvce-oss-amd64.deb packages/build/.tmp/asar-deb
+          app_path=$(find "$PWD/packages/build/.tmp/asar-deb" -type f -name lvce-oss -executable ! -path '*/resources/*' -print -quit)
+          test -n "$app_path"
+          resources_path="$(dirname "$app_path")/resources"
+          test -f "$resources_path/app.asar"
+          test ! -d "$resources_path/app"
+          test -f "$resources_path/app.asar.unpacked/config.json"
+          test -n "$(find "$resources_path/app.asar.unpacked" -name pty.node -print -quit)"
+          LVCE_ELECTRON_PATH="$app_path" LVCE_CPU_PROFILE_PACKAGED=1 xvfb-run -a node scripts/test-startup-cpu-profile.mjs
+          LVCE_ELECTRON_PATH="$app_path" xvfb-run -a node scripts/test-packaged-font-source.mjs
+          LVCE_ELECTRON_PATH="$app_path" LVCE_USE_PROTOCOL_REGISTER_SOURCE=true xvfb-run -a node scripts/test-packaged-font-source.mjs
       - name: Build Electron App (Macos dmg, arm64)
         if: matrix.os == 'macos-26'
         run: npm run build:electron:mac:arm64
@@ -179,7 +441,7 @@ jobs:
       - uses: actions/cache@v6
         id: build-cache
         with:
-          path: 'packages/build/.tmp/cachedDependencies'
+          path: '.tmp/native'
           key: ${{ runner.os }}-${{ runner.arch }}-build-cache-${{ steps.nodeModulesCacheKey.outputs.value }}
       - name: npm ci
         run: node packages/build/src/parts/InstallDependencies/InstallDependencies.ts

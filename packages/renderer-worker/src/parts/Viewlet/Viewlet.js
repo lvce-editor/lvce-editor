@@ -22,7 +22,14 @@ import * as ViewletManagerVisitor from '../ViewletManagerVisitor/ViewletManagerV
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
+import * as ViewletRenderScheduler from '../ViewletRenderScheduler/ViewletRenderScheduler.js'
 import * as ViewletElectron from './ViewletElectron.js'
+
+export const runLoadContentLater = (uid) => {
+  // The opener signals this only after attaching and focusing the editor.
+  // Provider work must never become part of the opening RPC's response.
+  ViewletManager.runLoadContentLater(uid)
+}
 
 const getKeyBindingSetId = (instance, fallback) => {
   return instance.moduleId || fallback
@@ -167,7 +174,7 @@ export const send = (id, method, ...args) => {
   // console.trace(`viewlet.send is deprecated`)
   const instance = ViewletStates.getInstance(id)
   if (!instance) {
-    console.info('instance disposed', { id, method, args })
+    Logger.info('instance disposed', { id, method, args })
     return
   }
   const fn = instance.factory[method]
@@ -180,12 +187,12 @@ export const send = (id, method, ...args) => {
  */
 export const dispose = async (id, deferDom = false) => {
   if (!id) {
-    console.warn('no instance to dispose')
+    Logger.warn('no instance to dispose')
     return
   }
   const instance = ViewletStates.getInstance(id)
   if (!instance) {
-    console.info('instance may already be disposed')
+    Logger.info('instance may already be disposed')
     return
   }
   const instanceUid = instance.state.uid
@@ -239,7 +246,7 @@ export const hide = async (id) => {
 export const disposeFunctional = (id) => {
   try {
     if (!id) {
-      console.warn('no instance to dispose')
+      Logger.warn('no instance to dispose')
       return []
     }
     const instance = ViewletStates.getInstance(id)
@@ -317,7 +324,7 @@ export const showFunctional = async (id) => {
 export const hideFunctional = (id) => {
   try {
     if (!id) {
-      console.warn('no instance to dispose')
+      Logger.warn('no instance to dispose')
       return []
     }
     const instance = ViewletStates.getInstance(id)
@@ -383,19 +390,21 @@ export const resize = async (id, dimensions) => {
   Assert.number(id)
   Assert.object(dimensions)
   const instance = ViewletStates.getInstance(id)
-  if (!instance || !instance.factory || (!instance.factory.resize && !instance.factory?.Commands?.resize)) {
-    if (!instance) {
-      ViewletStates.setPendingResize(id, dimensions)
-      return []
-    }
-    console.warn('cannot resize', id)
+  if (!instance || !instance.factory) {
+    ViewletStates.setPendingResize(id, dimensions)
     return []
   }
   const resizeFn = instance.factory?.Commands?.resize || instance.factory.resize
   const oldState = instance.state
   let newState = oldState
   let commands = []
-  if (instance.factory.hasFunctionalResize) {
+  if (!resizeFn) {
+    if (instance.factory.hasFunctionalResize) {
+      Logger.warn('cannot resize', id)
+    }
+    newState = { ...oldState, ...dimensions }
+    commands = [['Viewlet.setBounds', id, dimensions.x, dimensions.y, dimensions.width, dimensions.height]]
+  } else if (instance.factory.hasFunctionalResize) {
     newState = await resizeFn(oldState, dimensions)
     if ('newState' in newState) {
       throw new Error(`functional resize not supported in ${instance.factory.name}`)
@@ -549,10 +558,11 @@ export const closeWidget = async (id) => {
     }
     const child = childInstance.state
     const childUid = child.uid
+    const applicationId = ApplicationRegistry.getOwner(childUid)
     const commands = disposeFunctional(childUid)
     await RendererProcess.invoke(/* Viewlet.dispose */ 'Viewlet.sendMultiple', commands)
     if (childInstance.moduleId === ViewletModuleId.QuickPick) {
-      const mainInstance = ViewletStates.getInstance(ViewletModuleId.Main)
+      const mainInstance = ViewletStates.getInstance(ViewletModuleId.Main, applicationId)
       if (mainInstance) {
         await executeViewletCommand(mainInstance.state.uid, 'focus')
       }
@@ -616,8 +626,9 @@ export const getFocusCommands = async (id) => {
   return commands
 }
 
-const executeViewletCommandInternal = async (uid, fnName, ...args) => {
+const executeViewletCommandInternal = async (uid, fnName, args, expectedInstance) => {
   const instance = ViewletStates.getInstance(uid)
+  if (expectedInstance && instance !== expectedInstance) return
   if (!instance) {
     // Worker render notifications can arrive or leave the command queue after disposal.
     if (fnName !== DomEventListenerFunctions.HandleBlur && fnName !== '__renderPending' && fnName !== 'updateGitIgnoredUris') {
@@ -629,14 +640,17 @@ const executeViewletCommandInternal = async (uid, fnName, ...args) => {
   const oldState = instance.state
   const newState = await fn(oldState, ...args)
   if (newState === oldState) return
-  const actualNewState = RebaseState.rebaseState(oldState, instance.state, 'newState' in newState ? newState.newState : newState)
+  if (ViewletStates.getInstance(uid) !== instance) return
+  const nextState = 'newState' in newState ? newState.newState : newState
+  const preparationCommands = instance.factory.prepareRender ? await instance.factory.prepareRender(nextState) : []
+  const actualNewState = RebaseState.rebaseState(oldState, instance.state, nextState)
   if (oldState === actualNewState) {
     return
   }
-  if (!ViewletStates.getByUid(uid) && !ViewletStates.hasInstance(uid)) {
+  if (ViewletStates.getInstance(uid) !== instance) {
     return
   }
-  const commands = 'newState' in newState ? [...newState.commands] : []
+  const commands = [...preparationCommands, ...('newState' in newState ? newState.commands : [])]
   const renderedState = instance.renderedState
   commands.push(...ViewletManager.render(instance.factory, renderedState, actualNewState))
   UpdateDynamicFocusContext.updateDynamicFocusContext(commands)
@@ -652,20 +666,32 @@ const executeViewletCommandInternal = async (uid, fnName, ...args) => {
 export const executeViewletCommand = (uid, fnName, ...args) => {
   const instance = ViewletStates.getInstance(uid)
   if (instance?.factory.serializeCommands && !instance.factory.concurrentCommands?.includes(fnName)) {
-    return ViewletCommandQueue.enqueue(uid, () => executeViewletCommandInternal(uid, fnName, ...args))
+    return ViewletCommandQueue.enqueue(uid, () => executeViewletCommandInternal(uid, fnName, args))
   }
-  return executeViewletCommandInternal(uid, fnName, ...args)
+  return executeViewletCommandInternal(uid, fnName, args)
 }
 
-export const requestRender = (uid) => {
-  return executeViewletCommand(uid, '__renderPending')
+const pendingRenderFocus = new WeakMap()
+
+export const requestRender = (uid, preserveFocus = true) => {
+  const instance = ViewletStates.getInstance(uid)
+  if (!instance) return Promise.resolve()
+  const pendingFocus = pendingRenderFocus.get(instance)
+  pendingRenderFocus.set(instance, pendingFocus === undefined ? preserveFocus : pendingFocus && preserveFocus)
+  return ViewletRenderScheduler.schedule(instance, () => {
+    const keepFocus = pendingRenderFocus.get(instance)
+    pendingRenderFocus.delete(instance)
+    const args = keepFocus === false ? [false] : []
+    const render = () => executeViewletCommandInternal(uid, '__renderPending', args, instance)
+    return instance.factory.serializeCommands ? ViewletCommandQueue.enqueue(uid, render) : render()
+  })
 }
 
 // @ts-ignore
 export const disposeWidgetWithValue = async (id, value) => {
   try {
     if (!id) {
-      console.warn('no instance to dispose')
+      Logger.warn('no instance to dispose')
       return []
     }
     const instance = ViewletStates.getInstance(id)
@@ -741,4 +767,12 @@ export const save = async (uid, skipFormatting = false) => {
     throw error
   }
   return { modified: instance.state.modified !== false }
+}
+
+// Workers may need to commit a widget change before awaiting a modal command.
+// Reconcile here instead of reentering the component's active command queue.
+export const applyCommands = async (commands) => {
+  const reconciled = LayoutWidgets.reconcile(commands)
+  UpdateDynamicFocusContext.updateDynamicFocusContext(reconciled)
+  await RendererProcess.invoke('Viewlet.sendMultiple', reconciled)
 }

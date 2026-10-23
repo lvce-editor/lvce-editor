@@ -80,6 +80,10 @@
   padding-top: 10px;
 }
 
+.ExtensionDetailHeaderActions .Button {
+  padding: 3px 8px;
+}
+
 .ExtensionDetailHeaderActions [name='Disable'],
 .ExtensionDetailHeaderActions [name='Enable'] {
   user-select: none;

@@ -1,7 +1,16 @@
-import { expect, test } from '@jest/globals'
+import { beforeEach, expect, jest, test } from '@jest/globals'
 import * as LayoutPoints from '../src/parts/ViewletLayout/LayoutPoints.ts'
 import * as SideBarLocationType from '../src/parts/SideBarLocationType/SideBarLocationType.js'
-import * as ViewletLayout from '../src/parts/ViewletLayout/ViewletLayout.ts'
+
+const getPreference = jest.fn()
+const updatePreferences = jest.fn(async (_settings: Record<string, string>) => undefined)
+
+jest.unstable_mockModule('../src/parts/Preferences/Preferences.js', () => ({
+  get: getPreference,
+  update: updatePreferences,
+}))
+
+const ViewletLayout = await import('../src/parts/ViewletLayout/ViewletLayout.ts')
 
 const createState = (sideBarLocation: number, panelAlignment: 'center' | 'justify' | 'left' | 'right', sideBarsVisible = true, windowWidth = 1200) => {
   return LayoutPoints.getPoints({
@@ -30,6 +39,11 @@ const createState = (sideBarLocation: number, panelAlignment: 'center' | 'justif
     windowWidth,
   })
 }
+
+beforeEach(() => {
+  getPreference.mockReturnValue(undefined)
+  updatePreferences.mockClear()
+})
 
 for (const [locationName, location] of [
   ['left', SideBarLocationType.Left],
@@ -105,6 +119,30 @@ test('panel alignment is saved and restored', () => {
   expect(restored.panelLeft).toBe(0)
 })
 
+test.each(['center', 'justify', 'left', 'right'] as const)('panel alignment preference %s overrides restored layout state', (alignment) => {
+  getPreference.mockReturnValue(alignment)
+  const original = createState(SideBarLocationType.Right, 'justify')
+  const saved = ViewletLayout.saveState(original)
+  const restored = ViewletLayout.loadContent(original, {
+    ...saved,
+    Layout: { bounds: { windowWidth: 1200, windowHeight: 800 } },
+  })
+
+  expect(restored.panelAlignment).toBe(alignment)
+})
+
+test('invalid panel alignment preference falls back to justify', () => {
+  getPreference.mockReturnValue('invalid')
+  const original = createState(SideBarLocationType.Right, 'left')
+  const saved = ViewletLayout.saveState(original)
+  const restored = ViewletLayout.loadContent(original, {
+    ...saved,
+    Layout: { bounds: { windowWidth: 1200, windowHeight: 800 } },
+  })
+
+  expect(restored.panelAlignment).toBe('justify')
+})
+
 test('setPanelAlignment recalculates panel bounds immediately', async () => {
   const state = createState(SideBarLocationType.Right, 'justify')
   const result = await ViewletLayout.setPanelAlignment(state, 'center')
@@ -112,4 +150,5 @@ test('setPanelAlignment recalculates panel bounds immediately', async () => {
   expect(result.newState.panelAlignment).toBe('center')
   expect(result.newState.panelLeft).toBe(state.mainLeft)
   expect(result.newState.panelWidth).toBe(state.mainWidth)
+  expect(updatePreferences).toHaveBeenCalledWith({ 'workbench.panel.alignment': 'center' })
 })

@@ -6,6 +6,7 @@ import * as ResetLayout from '../ResetLayout/ResetLayout.ts'
 // prettier-ignore
 export const Commands = {
   handleActivityBarWheel: AiNativeLayout.handleActivityBarWheel,
+  handleWorkspaceProgress: ViewletLayout.handleWorkspaceProgress,
   beginBrowserTabDrag: ViewletLayout.beginBrowserTabDrag,
   endBrowserTabDrag: ViewletLayout.endBrowserTabDrag,
   handleBrowserTabDragOver: ViewletLayout.handleBrowserTabDragOver,
@@ -30,11 +31,16 @@ export const Commands = {
   getBackendUrl: ViewletLayout.getBackendUrl,
   getBadgeCounts: ViewletLayout.getBadgeCounts,
   getHref: ViewletLayout.getHref,
+  setHash: ViewletLayout.setHash,
+  setPathName: ViewletLayout.setPathName,
   getModuleId: ViewletLayout.getModuleId,
   getUserInfo: ViewletLayout.getUserInfo,
+  getAccounts: ViewletLayout.getAccounts,
+  disconnectConnectedAccount: ViewletLayout.disconnectConnectedAccount,
 }
 
 export const CommandsWithSideEffects = {
+  handleCancelWorkspaceProgress: ViewletLayout.handleCancelWorkspaceProgress,
   enterAiNativeLayout: AiNativeLayout.enter,
   toggleSimpleBrowserFullWidthInternal: BrowserFullWidth.toggleInternal,
   leaveSimpleBrowserFullWidth: BrowserFullWidth.leave,
@@ -97,6 +103,7 @@ export const CommandsWithSideEffects = {
   openCommandPalette: ViewletLayout.openCommandPalette,
   openDebugConsole: ViewletLayout.openDebugConsole,
   openIntegratedTerminal: ViewletLayout.openIntegratedTerminal,
+  runInTerminal: ViewletLayout.runInTerminal,
   openOutput: ViewletLayout.openOutput,
   openProblems: ViewletLayout.openProblems,
   openSideBarViewlet: ViewletLayout.openSideBarView,
@@ -108,8 +115,11 @@ export const CommandsWithSideEffects = {
   setAuthState: ViewletLayout.setAuthState,
   setExplicitBounds: ViewletLayout.setExplicitBounds,
   setUpdateState: ViewletLayout.setUpdateState,
+  setUpdateProgress: ViewletLayout.setUpdateProgress,
   signIn: ViewletLayout.signIn,
   signOut: ViewletLayout.signOut,
+  useAccount: ViewletLayout.useAccount,
+  removeAccount: ViewletLayout.removeAccount,
   showActivityBar: ViewletLayout.showActivityBar,
   showE2eTests: ViewletLayout.showE2eTests,
   showMain: ViewletLayout.showMain,

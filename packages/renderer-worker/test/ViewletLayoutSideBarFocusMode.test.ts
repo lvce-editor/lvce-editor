@@ -3,7 +3,19 @@ import * as SideBarLocationType from '../src/parts/SideBarLocationType/SideBarLo
 import { getLayoutVirtualDom } from '../src/parts/GetLayoutVirtualDom/GetLayoutVirtualDom.ts'
 
 const activityBarInvoke = jest.fn<(...args: unknown[]) => Promise<unknown[]>>(async () => [])
+const commandExecute = jest.fn(async (..._args: readonly unknown[]) => undefined)
 jest.unstable_mockModule('../src/parts/ActivityBarWorker/ActivityBarWorker.js', () => ({ invoke: activityBarInvoke }))
+jest.unstable_mockModule('../src/parts/Command/Command.js', () => ({ execute: commandExecute }))
+jest.unstable_mockModule('../src/parts/Viewlet/Viewlet.js', () => ({
+  disposeFunctional: () => [],
+  resize: async () => [],
+}))
+jest.unstable_mockModule('../src/parts/ViewletStates/ViewletStates.js', () => ({ getInstance: () => undefined }))
+jest.unstable_mockModule('../src/parts/SaveState/SaveState.js', () => ({
+  saveViewletState: async () => undefined,
+  saveViewletStateWithStorageId: async () => undefined,
+}))
+jest.unstable_mockModule('../src/parts/ViewletManager/ViewletManager.js', () => ({ load: async () => [] }))
 const LayoutPoints = await import('../src/parts/ViewletLayout/LayoutPoints.ts')
 const ViewletLayout = await import('../src/parts/ViewletLayout/ViewletLayout.ts')
 
@@ -105,6 +117,16 @@ test('leaveSideBarFocusMode restores the previous layout', async () => {
   )
 })
 
+test('toggleSideBar toggles Chat 2 sessions in AI-native layout', async () => {
+  const state = createState()
+  const aiNativeState = { ...state, aiNativeLayout: true, sideBarFocusMode: true }
+
+  const result = await ViewletLayout.toggleSideBar(aiNativeState)
+
+  expect(commandExecute).toHaveBeenCalledWith('ExtensionHost.executeCommand', 'chat2.toggleSessionsList')
+  expect(result).toEqual({ newState: aiNativeState, commands: [] })
+})
+
 test('leaveSideBarFocusMode restores the secondary side bar width', async () => {
   const state = createState()
   const focused = await ViewletLayout.enterSideBarFocusMode(state, 'secondary')
@@ -168,6 +190,97 @@ test('saveState preserves the normal secondary side bar width while focused', as
   )
 })
 
+test('AI-native layout is restored while keeping the IDE layout available to return to', async () => {
+  const state = createState()
+  const focused = await ViewletLayout.enterSideBarFocusMode(state, 'primary', true)
+  const saved = ViewletLayout.saveState(focused.newState)
+  const restored = ViewletLayout.loadContent(ViewletLayout.create(2), {
+    ...saved,
+    Layout: { bounds: { windowWidth: state.windowWidth, windowHeight: state.windowHeight } },
+  })
+
+  expect(saved.aiNativeLayout).toBe(true)
+  expect(restored).toEqual(
+    expect.objectContaining({
+      aiNativeLayout: true,
+      sideBarFocusMode: true,
+      sideBarFocusModeTarget: 'primary',
+      sideBarFocusModeLayout: expect.objectContaining({
+        activityBarVisible: true,
+        mainVisible: true,
+        panelVisible: true,
+        sideBarVisible: true,
+        sideBarWidth: state.sideBarWidth,
+      }),
+      sideBarWidth: state.windowWidth - 48,
+      titleBarVisible: false,
+      statusBarVisible: false,
+    }),
+  )
+
+  const returnedToIde = await ViewletLayout.leaveSideBarFocusMode(restored)
+  expect(returnedToIde.newState).toEqual(
+    expect.objectContaining({
+      aiNativeLayout: false,
+      sideBarFocusMode: false,
+      sideBarWidth: state.sideBarWidth,
+      mainVisible: true,
+      panelVisible: true,
+      sideBarVisible: true,
+    }),
+  )
+})
+
+test('a mobile standalone launch opens Chat 2 in the AI-native layout', () => {
+  const restored = ViewletLayout.loadContent(ViewletLayout.create(2), {
+    Layout: { bounds: { isStandalone: true, windowWidth: 390, windowHeight: 844 } },
+  })
+
+  expect(restored).toEqual(
+    expect.objectContaining({
+      aiNativeLayout: true,
+      sideBarFocusMode: true,
+      sideBarView: 'chat2.views.chat',
+      sideBarVisible: true,
+      sideBarFocusModeLayout: expect.objectContaining({
+        mainVisible: true,
+        sideBarVisible: true,
+        sideBarWidth: expect.any(Number),
+      }),
+    }),
+  )
+})
+
+test('standalone launches on desktop retain the IDE layout', () => {
+  const restored = ViewletLayout.loadContent(ViewletLayout.create(2), {
+    Layout: { bounds: { isStandalone: true, windowWidth: 1200, windowHeight: 800 } },
+  })
+
+  expect(restored.aiNativeLayout).toBeFalsy()
+  expect(restored.sideBarView).toBe('Explorer')
+})
+
+test.each([
+  ['older saved state', {}],
+  ['restore false', { aiNativeLayout: true, restore: false }],
+])('%s does not restore AI-native layout', (_name, savedState) => {
+  const state = createState()
+  const restored = ViewletLayout.loadContent(ViewletLayout.create(2), {
+    ...savedState,
+    Layout: { bounds: { windowWidth: state.windowWidth, windowHeight: state.windowHeight } },
+  })
+
+  expect(restored.aiNativeLayout).toBeFalsy()
+  expect(restored).toEqual(
+    expect.objectContaining({
+      sideBarFocusMode: false,
+      mainVisible: true,
+      titleBarVisible: true,
+      statusBarVisible: true,
+    }),
+  )
+})
+
 test('hidden layout visibility commands are no-ops while focus mode is active', async () => {
   const focused = await ViewletLayout.enterSideBarFocusMode(createState())
 
@@ -176,6 +289,10 @@ test('hidden layout visibility commands are no-ops while focus mode is active', 
     commands: [],
   })
   expect(await ViewletLayout.showActivityBar(focused.newState)).toEqual({
+    newState: focused.newState,
+    commands: [],
+  })
+  expect(await ViewletLayout.hideActivityBar(focused.newState)).toEqual({
     newState: focused.newState,
     commands: [],
   })
@@ -256,4 +373,70 @@ test('AI-native layout restricts the existing activity bar and restores it on ex
   activityBarInvoke.mockClear()
   await ViewletLayout.leaveSideBarFocusMode(focused.newState)
   expect(activityBarInvoke).toHaveBeenCalledWith('ActivityBar.setAiNativeLayout', 42, false)
+})
+
+test.each([SideBarLocationType.Left, SideBarLocationType.Right])(
+  'AI-native activity bar can be hidden, stays hidden after resize, and can be shown on sidebar location %s',
+  async (sideBarLocation) => {
+    const state = LayoutPoints.getPoints({ ...createState(), sideBarLocation })
+    const focused = await ViewletLayout.enterSideBarFocusMode(state, 'primary', true)
+    const hidden = await ViewletLayout.hideActivityBar(focused.newState)
+
+    expect(hidden.newState).toEqual(
+      expect.objectContaining({
+        activityBarVisible: false,
+        activityBarWidth: 0,
+        sideBarLeft: 0,
+        sideBarWidth: 1200,
+      }),
+    )
+    const resized = await ViewletLayout.handleResize(hidden.newState, 900, 600)
+    expect(resized.newState).toEqual(
+      expect.objectContaining({
+        activityBarVisible: false,
+        activityBarWidth: 0,
+        sideBarWidth: 900,
+      }),
+    )
+
+    const shown = await ViewletLayout.showActivityBar(resized.newState)
+    expect(shown.newState).toEqual(
+      expect.objectContaining({
+        activityBarVisible: true,
+        activityBarWidth: 48,
+        sideBarWidth: 852,
+      }),
+    )
+  },
+)
+
+test('AI-native activity bar visibility survives reload and exiting AI-native restores the IDE layout', async () => {
+  const state = createState()
+  const focused = await ViewletLayout.enterSideBarFocusMode(state, 'primary', true)
+  const hidden = await ViewletLayout.hideActivityBar(focused.newState)
+  const saved = ViewletLayout.saveState(hidden.newState)
+  const restored = ViewletLayout.loadContent(ViewletLayout.create(2), {
+    ...saved,
+    Layout: { bounds: { windowWidth: state.windowWidth, windowHeight: state.windowHeight } },
+  })
+
+  expect(restored).toEqual(
+    expect.objectContaining({
+      aiNativeLayout: true,
+      aiNativeActivityBarVisible: false,
+      activityBarVisible: false,
+      activityBarWidth: 0,
+      sideBarWidth: state.windowWidth,
+    }),
+  )
+
+  const returnedToIde = await ViewletLayout.leaveSideBarFocusMode(restored)
+  expect(returnedToIde.newState).toEqual(
+    expect.objectContaining({
+      aiNativeLayout: false,
+      aiNativeActivityBarVisible: false,
+      activityBarVisible: true,
+      activityBarWidth: 48,
+    }),
+  )
 })

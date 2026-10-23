@@ -3,12 +3,14 @@ import * as AutoUpdater from '../src/parts/AutoUpdater/AutoUpdater.js'
 
 const dependencies = {
   getLatestVersion: jest.fn<() => Promise<{ readonly version: string } | undefined>>(),
-  notify: jest.fn<(type: string, message: string) => Promise<void>>(),
+  notify: jest.fn<(type: string, message: string) => Promise<string>>(),
   startUpdate: jest.fn<(updateSetting: string | undefined, repository: string) => Promise<void>>(),
+  updateNotification: jest.fn<(id: string, message: string) => Promise<boolean>>(),
 }
 
 beforeEach(() => {
   jest.resetAllMocks()
+  dependencies.notify.mockResolvedValue('Notification-42')
 })
 
 test('reports when no update is available', async () => {
@@ -17,7 +19,8 @@ test('reports when no update is available', async () => {
   await AutoUpdater.checkForUpdatesWithDependencies(undefined, false, dependencies)
 
   expect(dependencies.notify).toHaveBeenNthCalledWith(1, 'info', 'Checking for updates...')
-  expect(dependencies.notify).toHaveBeenNthCalledWith(2, 'info', 'No Update available')
+  expect(dependencies.updateNotification).toHaveBeenCalledWith('Notification-42', 'No Update available')
+  expect(dependencies.notify).toHaveBeenCalledTimes(1)
   expect(dependencies.startUpdate).not.toHaveBeenCalled()
 })
 
@@ -29,7 +32,8 @@ test('reports an available update and starts the updater', async () => {
   await AutoUpdater.checkForUpdatesWithDependencies(undefined, false, dependencies)
 
   expect(dependencies.notify).toHaveBeenNthCalledWith(1, 'info', 'Checking for updates...')
-  expect(dependencies.notify).toHaveBeenNthCalledWith(2, 'info', 'Update 1.2.3 is available.')
+  expect(dependencies.updateNotification).toHaveBeenCalledWith('Notification-42', 'Update 1.2.3 is available.')
+  expect(dependencies.notify).toHaveBeenCalledTimes(1)
   expect(dependencies.startUpdate).toHaveBeenCalledWith(undefined, 'lvce-editor/lvce-editor')
 })
 
@@ -39,7 +43,8 @@ test('reports update check errors', async () => {
   await AutoUpdater.checkForUpdatesWithDependencies(undefined, false, dependencies)
 
   expect(dependencies.notify).toHaveBeenNthCalledWith(1, 'info', 'Checking for updates...')
-  expect(dependencies.notify).toHaveBeenNthCalledWith(2, 'error', 'Failed to check for updates: network unavailable')
+  expect(dependencies.updateNotification).toHaveBeenCalledWith('Notification-42', 'Failed to check for updates: network unavailable')
+  expect(dependencies.notify).toHaveBeenCalledTimes(1)
   expect(dependencies.startUpdate).not.toHaveBeenCalled()
 })
 
@@ -48,5 +53,6 @@ test('keeps automatic update checks silent', async () => {
 
   expect(dependencies.getLatestVersion).not.toHaveBeenCalled()
   expect(dependencies.notify).not.toHaveBeenCalled()
+  expect(dependencies.updateNotification).not.toHaveBeenCalled()
   expect(dependencies.startUpdate).toHaveBeenCalledWith('start', 'lvce-editor/lvce-editor')
 })

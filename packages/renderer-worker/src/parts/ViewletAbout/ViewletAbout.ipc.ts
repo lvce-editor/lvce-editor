@@ -1,4 +1,7 @@
+import * as AboutViewWorker from '../AboutViewWorker/AboutViewWorker.js'
 import { createWorkerViewlet } from '../CreateWorkerViewlet/CreateWorkerViewlet.js'
+
+const viewlet = createWorkerViewlet({ workerId: 'aboutWorker' })
 
 export const {
   Commands,
@@ -6,7 +9,6 @@ export const {
   Events,
   Variables,
   create,
-  dispose,
   getCommands,
   getKeyBindings,
   hasDirectRender,
@@ -23,4 +25,9 @@ export const {
   renderEventListeners,
   resize,
   saveState,
-} = createWorkerViewlet({ workerId: 'aboutWorker' })
+} = viewlet
+
+export const dispose = async (...args: Parameters<typeof viewlet.dispose>) => {
+  await viewlet.dispose?.(...args)
+  await AboutViewWorker.dispose()
+}

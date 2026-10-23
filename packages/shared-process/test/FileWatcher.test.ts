@@ -49,7 +49,7 @@ test.each([
 
   await expect(FileWatcher.watch(ipc, 1, options)).resolves.toBe(result)
 
-  expect(FileWatcherProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(FileWatcherProcess.invoke).toHaveBeenCalledTimes(result.ok ? 1 : 2)
   expect(FileWatcherProcess.invoke).toHaveBeenCalledWith('FileWatcher.watchFolders', {
     exclude: options.exclude,
     id: 123,
@@ -116,4 +116,55 @@ test('handleChange - ignores events after disposal', async () => {
   })
 
   expect(JsonRpc.send).not.toHaveBeenCalled()
+})
+
+test('watch - closes pending registration when the owning connection closes', async () => {
+  const { promise, resolve } = Promise.withResolvers<any>()
+  // @ts-ignore
+  FileWatcherProcess.invoke.mockImplementation(async (method: string) => (method === 'FileWatcher.watchFolders' ? promise : undefined))
+  const ipc = createIpc()
+  const pending = FileWatcher.watch(ipc, 1, { exclude: [], roots: ['file:///workspace'] })
+  const rejected = pending.catch((error: unknown) => error)
+  await ipc.addEventListener.mock.calls[0][1]()
+  resolve({ ok: true })
+  await rejected
+  FileWatcher.handleChange({ eventName: 'change', id: 123, uri: 'file:///workspace/stale.ts' })
+  expect(JsonRpc.send).not.toHaveBeenCalled()
+})
+
+test('watch - forwards shallow root depth to the watcher process', async () => {
+  // @ts-ignore
+  FileWatcherProcess.invoke.mockResolvedValue({ ok: true })
+  const ipc = createIpc()
+  await FileWatcher.watch(ipc, 1, { depth: 0, exclude: [], roots: ['file:///workspace'] })
+  expect(FileWatcherProcess.invoke).toHaveBeenCalledWith('FileWatcher.watchFolders', { depth: 0, exclude: [], id: 123, roots: ['file:///workspace'] })
+  await FileWatcher.dispose(ipc, 1)
+})
+
+test('watcher process disconnect invalidates all active registrations', async () => {
+  // @ts-ignore
+  FileWatcherProcess.invoke.mockResolvedValue({ ok: true })
+  const ipc = createIpc()
+  await FileWatcher.watch(ipc, 1, { exclude: [], roots: ['file:///workspace'] })
+  FileWatcher.handleProcessClose()
+  expect(JsonRpc.send).toHaveBeenCalledWith(ipc, 'FileWatcher.handleEvent', 1, expect.objectContaining({ eventName: 'error' }))
+  expect(ipc.removeEventListener).toHaveBeenCalledWith('close', expect.any(Function))
+  jest.clearAllMocks()
+  FileWatcher.handleChange({ eventName: 'change', id: 123, uri: 'file:///workspace/stale.ts' })
+  expect(JsonRpc.send).not.toHaveBeenCalled()
+})
+
+test('targeted child scope reaches the watcher process unchanged', async () => {
+  // @ts-ignore
+  FileWatcherProcess.invoke.mockResolvedValue({ ok: true })
+  const ipc = createIpc()
+  await FileWatcher.watch(ipc, 1, { childNames: ['tsconfig.json'], depth: 0, exclude: [], roots: ['file:///workspace'] })
+  expect(FileWatcherProcess.invoke).toHaveBeenCalledWith('FileWatcher.watchFolders', {
+    childNames: ['tsconfig.json'],
+    depth: 0,
+    exclude: [],
+    id: 123,
+    roots: ['file:///workspace'],
+  })
+  await FileWatcher.dispose(ipc, 1)
 })

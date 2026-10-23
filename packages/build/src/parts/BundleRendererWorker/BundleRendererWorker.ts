@@ -1,6 +1,6 @@
 import { VError } from '@lvce-editor/verror'
 import { readFile, writeFile } from 'node:fs/promises'
-import * as BundleJs from '../BundleJsRollup/BundleJsRollup.ts'
+import * as BundleJs from '../BundleJs/BundleJs.ts'
 import * as Copy from '../Copy/Copy.ts'
 import * as FilterWorkerViewletCss from '../FilterWorkerViewletCss/FilterWorkerViewletCss.ts'
 import * as GetCssDeclarationFiles from '../GetCssDeclarationFiles/GetCssDeclarationFiles.ts'
@@ -83,7 +83,7 @@ export const bundleRendererWorker = async ({ cachePath, platform, commitHash, ve
       from: 'static/js',
       to: Path.join(cachePath, 'static', 'js'),
     })
-    for (const file of ['PrettyBytes', 'JsonRpc', 'RendererProcess']) {
+    for (const file of ['PrettyBytes', 'JsonRpc', 'RendererProcess', 'IconThemeWorker']) {
       await Replace.replace({
         path: `${cachePath}/src/parts/${file}/${file}.js`,
         occurrence: `../../../../../static/`,
@@ -165,12 +165,13 @@ export const bundleRendererWorker = async ({ cachePath, platform, commitHash, ve
     }
     await BundleJs.bundleJs({
       cwd: cachePath,
+      codeSplitting: false,
       from: `./src/rendererWorkerMain.ts`,
+      exclude: ['node:*', 'electron'],
       modulePaths: [Path.absolute('packages/renderer-worker/node_modules')],
       platform: 'webworker',
       sourceMap: false,
-      codeSplitting: true,
-      entryFileName: 'rendererWorkerMain.js',
+      minifyWhitespace: false,
     })
     await Remove.remove(`${cachePath}/src`)
   } catch (error) {

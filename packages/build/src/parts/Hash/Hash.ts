@@ -16,29 +16,29 @@ export const computeHash = (contents) => {
   return hash.digest('hex')
 }
 
-const walkFiles = async (folder, fn) => {
+const walkFiles = async (folder, files) => {
   const dirents = await readdir(folder, { withFileTypes: true })
-  const promises: any[] = []
+  dirents.sort((a, b) => a.name.localeCompare(b.name))
   for (const dirent of dirents) {
     const absolutePath = join(folder, dirent.name)
     if (dirent.isFile()) {
-      promises.push(fn(absolutePath))
+      files.push(absolutePath)
     } else if (dirent.isDirectory()) {
-      promises.push(walkFiles(absolutePath, fn))
+      await walkFiles(absolutePath, files)
     }
   }
-  await Promise.all(promises)
 }
 
 export const computeFolderHash = async (folder, extraFiles = [] as any[], extraContents = [] as any[]) => {
   try {
     const absolutePath = Path.absolute(folder)
     const hash = createHash('sha1')
-    const handleFilePath = async (filePath) => {
+    const files: string[] = []
+    await walkFiles(absolutePath, files)
+    for (const filePath of files) {
       const content = await ReadFile.readFile(filePath)
       hash.update(content)
     }
-    await walkFiles(absolutePath, handleFilePath)
     for (const extraFile of extraFiles) {
       const content = await ReadFile.readFile(extraFile)
       hash.update(content)

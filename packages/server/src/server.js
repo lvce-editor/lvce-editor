@@ -13,8 +13,10 @@ const __dirname = dirname(fileURLToPath(import.meta.url))
 const ROOT = resolve(__dirname, '../../../')
 
 const { argv, env } = process
-const configArguments = await ArgvConfig.load(ArgvConfig.getArgvConfigPath())
-ArgvConfig.prepend(argv, configArguments)
+if (env.LVCE_ARGV_CONFIG_LOADED !== '1') {
+  const configArguments = await ArgvConfig.load(ArgvConfig.getArgvConfigPath())
+  ArgvConfig.prepend(argv, configArguments)
+}
 
 // TODO pass argv to shared process instead of using environment variables / global variables
 const argvSliced = argv.slice(2)

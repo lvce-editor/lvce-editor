@@ -1,3 +1,4 @@
+import * as ApplicationRegistry from '../ApplicationRegistry/ApplicationRegistry.ts'
 import * as Command from '../Command/Command.js'
 import * as EditorWorker from '../EditorWorker/EditorWorker.ts'
 import * as GetSelectionPairs from '../GetSelectionPairs/GetSelectionPairs.js'
@@ -11,8 +12,8 @@ export const getActiveEditor = () => {
   return ViewletStates.getState(ViewletModuleId.EditorText)
 }
 
-export const getActiveEditorId = () => {
-  const instance = ViewletStates.getInstance(ViewletModuleId.EditorText)
+export const getActiveEditorId = (applicationId) => {
+  const instance = ViewletStates.getInstance(ViewletModuleId.EditorText, applicationId)
   if (!instance) {
     return -1
   }
@@ -64,8 +65,8 @@ export const getTextDocument = async (applicationId) => {
   return getTextDocumentWithInvoke(EditorWorker.invoke, applicationId)
 }
 
-export const getSelectionsWithInvoke = async (invoke) => {
-  const instance = ViewletStates.getInstance(ViewletModuleId.EditorText)
+export const getSelectionsWithInvoke = async (invoke, applicationId) => {
+  const instance = ViewletStates.getInstance(ViewletModuleId.EditorText, applicationId)
   if (!instance) {
     return []
   }
@@ -73,8 +74,8 @@ export const getSelectionsWithInvoke = async (invoke) => {
   return Array.from(selections)
 }
 
-export const getSelections = async () => {
-  return getSelectionsWithInvoke(EditorWorker.invoke)
+export const getSelections = async (applicationId) => {
+  return getSelectionsWithInvoke(EditorWorker.invoke, applicationId)
 }
 
 export const getSelectionTextWithInvoke = async (invoke) => {
@@ -115,6 +116,41 @@ export const getOpenEditorUris = () => {
   return getOpenEditorUrisWithInvoke(MainAreaWorker.invoke)
 }
 
+export const getVisibleEditorUrisWithInvoke = async (invoke, applicationId) => {
+  const instance = ViewletStates.getInstance(ViewletModuleId.Main, applicationId)
+  if (!instance) {
+    return []
+  }
+  const savedState = await invoke('MainArea.saveState', instance.state.uid)
+  return savedState.layout.groups.flatMap((group) => {
+    const activeTab = group.tabs.find((tab) => tab.id === group.activeTabId)
+    return typeof activeTab?.uri === 'string' ? [activeTab.uri] : []
+  })
+}
+
+export const getVisibleEditorUris = (applicationId) => {
+  return getVisibleEditorUrisWithInvoke(MainAreaWorker.invoke, applicationId)
+}
+
+export const getActiveUriWithInvoke = async (invoke, applicationId) => {
+  const instance = ViewletStates.getInstance(ViewletModuleId.Main, applicationId)
+  if (!instance) {
+    return ''
+  }
+  const savedState = await invoke('MainArea.saveState', instance.state.uid)
+  const { activeGroupId, groups } = savedState.layout
+  const group = groups.find((group) => group.id === activeGroupId)
+  if (!group) {
+    return ''
+  }
+  const activeTab = group.tabs.find((tab) => tab.id === group.activeTabId)
+  return typeof activeTab?.uri === 'string' ? activeTab.uri : ''
+}
+
+export const getActiveUri = (applicationId) => {
+  return getActiveUriWithInvoke(MainAreaWorker.invoke, applicationId)
+}
+
 export const updateDiagnosticsWithCommand = async (executeCommand) => {
   const instance = ViewletStates.getInstance(ViewletModuleId.EditorText)
   if (!instance) {
@@ -127,16 +163,16 @@ export const updateDiagnostics = async () => {
   await updateDiagnosticsWithCommand(Command.execute)
 }
 
-export const setSelectionsWithCommand = async (executeCommand, selections) => {
-  const instance = ViewletStates.getInstance(ViewletModuleId.EditorText)
+export const setSelectionsWithCommand = async (executeCommand, selections, applicationId) => {
+  const instance = ViewletStates.getInstance(ViewletModuleId.EditorText, applicationId)
   if (!instance) {
     return
   }
   await executeCommand('Viewlet.executeViewletCommand', instance.state.id, 'setSelections', new Uint32Array(selections))
 }
 
-export const setSelections = async (selections) => {
-  await setSelectionsWithCommand(Command.execute, selections)
+export const setSelections = async (selections, applicationId) => {
+  await setSelectionsWithCommand(Command.execute, selections, applicationId)
 }
 
 export const updateAllDiagnosticsWithCommand = async (invoke) => {
@@ -145,4 +181,36 @@ export const updateAllDiagnosticsWithCommand = async (invoke) => {
 
 export const updateAllDiagnostics = async () => {
   await updateAllDiagnosticsWithCommand(EditorWorker.invoke)
+}
+
+// Return both fields from the same synchronous state snapshot.
+export const getActiveEditorInfo = (applicationId) => {
+  const instance = ViewletStates.getInstance(ViewletModuleId.EditorText, applicationId)
+  if (!instance) {
+    return undefined
+  }
+  const { id, uri } = instance.state
+  return { id, uri }
+}
+
+export const openColorPickerWithCommand = async (executeCommand, editorId, initialColor, applicationId) => {
+  if (!Number.isSafeInteger(editorId) || editorId < 0) {
+    throw new TypeError('editorId must be a non-negative integer')
+  }
+  if (initialColor !== undefined && typeof initialColor !== 'string') {
+    throw new TypeError('initialColor must be a string')
+  }
+  const instance = ViewletStates.getByUid(editorId)
+  if (
+    !instance ||
+    (instance.moduleId !== ViewletModuleId.EditorText && instance.moduleId !== 'EditorText') ||
+    ApplicationRegistry.getOwner(editorId) !== applicationId
+  ) {
+    throw new Error(`Editor not found: ${editorId}`)
+  }
+  await executeCommand('Viewlet.executeViewletCommand', editorId, 'openColorPicker', initialColor)
+}
+
+export const openColorPicker = async (editorId, initialColor, applicationId) => {
+  await openColorPickerWithCommand(Command.execute, editorId, initialColor, applicationId)
 }

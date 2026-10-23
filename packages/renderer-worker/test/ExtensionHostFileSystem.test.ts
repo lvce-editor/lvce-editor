@@ -1,5 +1,7 @@
 import { beforeEach, expect, jest, test } from '@jest/globals'
 import * as DirentType from '../src/parts/DirentType/DirentType.js'
+import * as FileSystem from '../src/parts/FileSystem/FileSystem.js'
+import * as FileSystemState from '../src/parts/FileSystemState/FileSystemState.js'
 
 const invoke = jest.fn<(...args: readonly any[]) => Promise<any>>()
 const execute = jest.fn<(...args: readonly any[]) => Promise<any>>()
@@ -32,6 +34,49 @@ jest.unstable_mockModule('../src/parts/ExtensionHost/ExtensionHostShared.js', ()
 
 const ExtensionHostFileSystem = await import('../src/parts/ExtensionHost/ExtensionHostFileSystem.js')
 const ExtensionHostShared = await import('../src/parts/ExtensionHost/ExtensionHostShared.js')
+
+FileSystemState.registerAll({ 'extension-host': () => ExtensionHostFileSystem })
+
+test('readFile forwards an explicit encoding to filesystem providers', async () => {
+  invoke.mockResolvedValue({ found: true, result: 'decoded content' })
+
+  await expect(ExtensionHostFileSystem.readFile('sample:///binary', 'binary')).resolves.toBe('decoded content')
+  expect(invoke).toHaveBeenCalledWith('Extensions.executeFileSystemProviderReadFile', 'sample', 'sample:///binary', 'binary')
+})
+
+test.each(['', '["é", "😀", "line\\nbreak"]'])('getFileSize measures virtual heap snapshot strings as UTF-8 bytes: %j', async (content) => {
+  const uri = 'heapnapshot-strings:///file%3A%2F%2F%2Ftmp%2Ftest%20snapshot.heapsnapshot.json'
+  invoke.mockResolvedValue({ found: true, result: content })
+
+  await expect(FileSystem.getFileSize(uri)).resolves.toBe(Buffer.byteLength(content))
+  expect(invoke).toHaveBeenCalledWith('Extensions.executeFileSystemProviderReadFile', 'heapnapshot-strings', uri)
+  expect(ExtensionHostShared.executeProvider).not.toHaveBeenCalled()
+})
+
+test('getFileSize preserves the size of binary provider content', async () => {
+  invoke.mockResolvedValue({ found: true, result: new Blob([new Uint8Array([0xff, 0, 0xfe])]) })
+
+  await expect(FileSystem.getFileSize('audio:///recording.webm')).resolves.toBe(3)
+})
+
+test('getFileSize supports wrapped legacy provider uris', async () => {
+  // @ts-ignore
+  ExtensionHostShared.executeProvider.mockResolvedValue('é')
+
+  await expect(FileSystem.getFileSize('extension-host://legacy:///test.txt')).resolves.toBe(2)
+  expect(ExtensionHostShared.executeProvider).toHaveBeenCalledWith({
+    event: 'onFileSystem:legacy',
+    method: 'ExtensionHostFileSystem.readFile',
+    noProviderFoundMessage: 'no file system provider found',
+    params: ['legacy', '/test.txt'],
+  })
+})
+
+test('getFileSize propagates provider read failures', async () => {
+  invoke.mockRejectedValue(new Error('The heap snapshot is invalid'))
+
+  await expect(FileSystem.getFileSize('heapnapshot-strings:///invalid.json')).rejects.toThrow('The heap snapshot is invalid')
+})
 
 test('readFile', async () => {
   // @ts-ignore
@@ -82,11 +127,7 @@ test('exists checks files through the provider stat method', async () => {
   invoke.mockResolvedValue({ found: true, result: 1 })
 
   await expect(ExtensionHostFileSystem.exists('remote-ssh:///workspace/Main.ts')).resolves.toBe(true)
-  expect(invoke).toHaveBeenCalledWith(
-    'Extensions.executeFileSystemProviderStat',
-    'remote-ssh',
-    'remote-ssh:///workspace/Main.ts',
-  )
+  expect(invoke).toHaveBeenCalledWith('Extensions.executeFileSystemProviderStat', 'remote-ssh', 'remote-ssh:///workspace/Main.ts')
   expect(ExtensionHostShared.executeProvider).not.toHaveBeenCalled()
 })
 

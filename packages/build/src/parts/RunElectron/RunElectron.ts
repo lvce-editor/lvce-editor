@@ -2,6 +2,7 @@ import { join } from 'path'
 import { root } from '../Root/Root.ts'
 import { spawn } from 'child_process'
 import { resolveElectronLaunch } from '../ResolveElectronPath/ResolveElectronPath.ts'
+import { addDefaultMemoryReclaimerFeature } from '../../../../server/src/argvConfig.js'
 
 const electronLaunch = resolveElectronLaunch({
   root,
@@ -19,7 +20,8 @@ const env = {
 
 const main = () => {
   const cliArgs = process.argv.slice(2)
-  const child = spawn(electronLaunch.command, [...electronLaunch.argsPrefix, '--no-sandbox', '.', ...cliArgs], {
+  const electronArgs = [...electronLaunch.argsPrefix, ...addDefaultMemoryReclaimerFeature(['--no-sandbox', '.', ...cliArgs])]
+  const child = spawn(electronLaunch.command, electronArgs, {
     cwd: mainProcessPath,
     env,
   })

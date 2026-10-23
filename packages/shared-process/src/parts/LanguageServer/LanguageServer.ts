@@ -19,7 +19,7 @@ export interface CompleteOptions {
   readonly uri: string
 }
 
-export type CodeActionOptions = CompleteOptions
+export type CodeActionOptions = CompleteOptions & { readonly only?: string }
 
 export interface DiagnosticOptions {
   readonly argv: readonly string[]
@@ -94,14 +94,23 @@ export const complete = async ({ argv, extensionId, id, offset, rootUri, textDoc
   return connection.complete(normalizedDocument, offset)
 }
 
-export const codeAction = async ({ argv, extensionId, id, offset, rootUri, textDocument, uri }: CodeActionOptions): Promise<readonly unknown[]> => {
+export const codeAction = async ({
+  argv,
+  extensionId,
+  id,
+  offset,
+  only,
+  rootUri,
+  textDocument,
+  uri,
+}: CodeActionOptions): Promise<readonly unknown[]> => {
   const normalizedDocument = {
     ...textDocument,
     uri: normalizeLanguageServerDocumentUri(textDocument.uri),
   }
   const normalizedRootUri = rootUri ? normalizeLanguageServerDocumentUri(rootUri) : getRootUri(normalizedDocument.uri)
   const connection = getConnection(`${id}:${normalizedRootUri}`, extensionId, uri, argv, normalizedRootUri)
-  return connection.codeAction(normalizedDocument, offset)
+  return connection.codeAction(normalizedDocument, offset, only)
 }
 
 export const diagnostic = async ({ argv, extensionId, id, rootUri, textDocument, uri }: DiagnosticOptions): Promise<readonly unknown[]> => {
@@ -152,6 +161,26 @@ export const references = async ({ argv, extensionId, id, offset, rootUri, textD
   const normalizedRootUri = rootUri ? normalizeLanguageServerDocumentUri(rootUri) : getRootUri(normalizedDocument.uri)
   const connection = getConnection(`${id}:${normalizedRootUri}`, extensionId, uri, argv, normalizedRootUri)
   return connection.references(normalizedDocument, offset)
+}
+
+export const feature = async ({
+  argv,
+  extensionId,
+  id,
+  method,
+  newName,
+  offset,
+  rootUri,
+  textDocument,
+  uri,
+}: CompleteOptions & {
+  readonly method: string
+  readonly newName?: string
+}): Promise<unknown> => {
+  const normalizedDocument = { ...textDocument, uri: normalizeLanguageServerDocumentUri(textDocument.uri) }
+  const normalizedRootUri = rootUri ? normalizeLanguageServerDocumentUri(rootUri) : getRootUri(normalizedDocument.uri)
+  const connection = getConnection(`${id}:${normalizedRootUri}`, extensionId, uri, argv, normalizedRootUri)
+  return connection.feature(normalizedDocument, method, offset, newName)
 }
 
 export const dispose = (extensionId: string): void => {

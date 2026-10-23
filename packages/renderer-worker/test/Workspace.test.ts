@@ -3,9 +3,11 @@ import { beforeAll, beforeEach, expect, jest, test } from '@jest/globals'
 import { setTimeout } from 'node:timers/promises'
 import * as GlobalEventBus from '../src/parts/GlobalEventBus/GlobalEventBus.js'
 import * as ModuleId from '../src/parts/ModuleId/ModuleId.js'
+import * as ViewletStates from '../src/parts/ViewletStates/ViewletStates.js'
 
 beforeEach(() => {
   jest.clearAllMocks()
+  ViewletStates.state.instances = Object.create(null)
   Workspace.state.isTest = false
   Workspace.state.workspacePath = ''
   Workspace.state.workspaceUri = ''
@@ -63,8 +65,8 @@ test('hydrate', async () => {
     switch (method) {
       case 'Workspace.resolveRoot':
         return {
-          path: '/tmp/some-folder',
           homeDir: '~',
+          path: '/tmp/some-folder',
           pathSeparator: '\\',
           source: 'shared-process',
           uri: 'file:///tmp/some-folder',
@@ -76,9 +78,9 @@ test('hydrate', async () => {
   })
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
-  await Workspace.hydrate({ href: 'http://localhost:3000' })
+  await Workspace.hydrate({ href: 'http://localhost:3000', workspaceUri: 'remote-ssh://user@example.com/home' })
   expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(SharedProcess.invoke).toHaveBeenCalledWith('Workspace.resolveRoot', 'http://localhost:3000')
+  expect(SharedProcess.invoke).toHaveBeenCalledWith('Workspace.resolveRoot', 'http://localhost:3000', 'remote-ssh://user@example.com/home')
   expect(Workspace.state.pathSeparator).toBe('/')
   const windowTitleCalls = jest.mocked(RendererProcess.invoke).mock.calls.filter(([method]) => method === 'WindowTitle.set')
   expect(windowTitleCalls).toEqual([['WindowTitle.set', 'some-folder']])
@@ -95,8 +97,8 @@ test('hydrate - path changed in the meantime', async () => {
           _resolve = resolve
         })
         return {
-          path: '/tmp/some-folder',
           homeDir: '~',
+          path: '/tmp/some-folder',
           pathSeparator: '/',
           source: 'shared-process',
           uri: 'file:///tmp/some-folder',
@@ -115,7 +117,7 @@ test('hydrate - path changed in the meantime', async () => {
   await promise1
   expect(Workspace.state.workspacePath).toBe('/test')
   expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(SharedProcess.invoke).toHaveBeenCalledWith('Workspace.resolveRoot', 'http://localhost:3000')
+  expect(SharedProcess.invoke).toHaveBeenCalledWith('Workspace.resolveRoot', 'http://localhost:3000', '')
   const windowTitleCalls = jest.mocked(RendererProcess.invoke).mock.calls.filter(([method]) => method === 'WindowTitle.set')
   expect(windowTitleCalls).toEqual([['WindowTitle.set', 'test']])
 })
@@ -142,10 +144,10 @@ test.skip('setPath', async () => {
   RendererProcess.state.send = jest.fn((message) => {
     // @ts-ignore
     switch (message[0]) {
-      case 909090:
+      case 909_090:
         // @ts-ignore
         const callbackId = message[1]
-        RendererProcess.state.handleMessage([/* Callback.resolve */ 67330, /* callbackId */ callbackId, /* result */ undefined])
+        RendererProcess.state.handleMessage([/* Callback.resolve */ 67_330, /* callbackId */ callbackId, /* result */ undefined])
         break
       default:
         throw new Error('unexpected message')
@@ -154,10 +156,10 @@ test.skip('setPath', async () => {
   GlobalEventBus.addListener('workspace.change', listener)
   await Workspace.setPath('/test')
   // @ts-ignore
-  expect(listener).toBeCalledTimes(1)
+  expect(listener).toHaveBeenCalledTimes(1)
   expect(listener).toHaveBeenCalledWith('/test')
   expect(RendererProcess.state.send).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.state.send).toHaveBeenCalledWith([909090, expect.any(Number), 'WindowTitle.set', '/test'])
+  expect(RendererProcess.state.send).toHaveBeenCalledWith([909_090, expect.any(Number), 'WindowTitle.set', '/test'])
 })
 
 test.skip('pathBaseName - linux', () => {
@@ -204,3 +206,53 @@ test('close keeps the workspace open when closing a dirty editor is canceled', a
   expect(StatusBarWorker.invoke).not.toHaveBeenCalled()
   expect(RendererProcess.invoke).not.toHaveBeenCalled()
 })
+
+for (const method of ['setPath', 'setUri'] as const) {
+  test(`${method} keeps the workspace and runtime when unsaved changes are canceled`, async () => {
+    ViewletStates.set('Main', { factory: {}, renderedState: { uid: 2 }, state: { uid: 2 } })
+    Workspace.state.workspacePath = '/old'
+    Workspace.state.workspaceUri = 'file:///old'
+    const closeAllEditors = jest.fn(async () => undefined)
+    Command.register('Main.closeAllEditorsAndSave', closeAllEditors)
+    Command.register(
+      'Main.hasDirtyTabs',
+      jest.fn(async () => true),
+    )
+    const beforeChange = jest.fn(async () => {})
+    GlobalEventBus.addListener('workspace.beforeChange', beforeChange)
+    try {
+      await Workspace[method](method === 'setUri' ? 'file:///new' : '/new')
+      expect(closeAllEditors).toHaveBeenCalledTimes(1)
+      expect(beforeChange).not.toHaveBeenCalled()
+      expect(RendererProcess.invoke).not.toHaveBeenCalled()
+      expect(Workspace.state.workspacePath).toBe('/old')
+      expect(Workspace.state.workspaceUri).toBe('file:///old')
+    } finally {
+      GlobalEventBus.removeListener('workspace.beforeChange', beforeChange)
+    }
+  })
+
+  test(`${method} resolves unsaved changes before disposing the workspace runtime`, async () => {
+    ViewletStates.set('Main', { factory: {}, renderedState: { uid: 2 }, state: { uid: 2 } })
+    Workspace.state.workspacePath = '/old'
+    Workspace.state.workspaceUri = 'file:///old'
+    jest.mocked(RendererProcess.invoke).mockResolvedValue(undefined)
+    const hasDirtyTabs = jest.fn(async () => false).mockResolvedValueOnce(true)
+    const closeAllEditors = jest.fn(async () => undefined)
+    Command.register('Main.closeAllEditorsAndSave', closeAllEditors)
+    Command.register('Main.hasDirtyTabs', hasDirtyTabs)
+    const beforeChange = jest.fn(async () => {
+      expect(closeAllEditors).toHaveBeenCalledTimes(1)
+      expect(hasDirtyTabs).toHaveBeenCalledTimes(2)
+    })
+    GlobalEventBus.addListener('workspace.beforeChange', beforeChange)
+    try {
+      await Workspace[method](method === 'setUri' ? 'file:///new' : '/new')
+      expect(beforeChange).toHaveBeenCalledTimes(1)
+      expect(Workspace.state.workspacePath).toBe('/new')
+      expect(Workspace.state.workspaceUri).toBe('file:///new')
+    } finally {
+      GlobalEventBus.removeListener('workspace.beforeChange', beforeChange)
+    }
+  })
+}

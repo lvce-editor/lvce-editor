@@ -150,7 +150,7 @@ test('renders an inline rename input once for a shared split tab', () => {
   )
 })
 
-test('shows terminal tabs for a single split group', () => {
+test('shows terminal tabs for multiple terminals in a split group', () => {
   const dom = GetTerminalsDom.getTerminalsDom({
     activeTerminalUids: [42],
     childUids: [41, 42],
@@ -168,7 +168,7 @@ test('shows terminal tabs for a single split group', () => {
   expect(dom).toContainEqual(expect.objectContaining({ className: 'TerminalTab TerminalTabSelected TerminalTabSplit TerminalTabSplitLast' }))
 })
 
-test('shows a draggable terminal tab for a single terminal', () => {
+test('does not render terminal tabs or sash for a single terminal', () => {
   const dom = GetTerminalsDom.getTerminalsDom({
     childUids: [41],
     height: 400,
@@ -180,15 +180,9 @@ test('shows a draggable terminal tab for a single terminal', () => {
     y: 20,
   })
 
-  expect(dom[0]).toMatchObject({ childCount: 3, onDrop: 'handleDrop', onDragOver: 'handleDragOver' })
-  expect(dom).toContainEqual(
-    expect.objectContaining({
-      className: 'Sash SashVertical TerminalTabsSash',
-      left: 708,
-      onPointerDown: 'handleTerminalTabsSashPointerDown',
-    }),
-  )
-  expect(dom).toContainEqual(expect.objectContaining({ className: 'TerminalTab TerminalTabSelected', draggable: true }))
+  expect(dom[0]).toMatchObject({ childCount: 1, onDrop: 'handleDrop', onDragOver: 'handleDragOver' })
+  expect(dom).not.toEqual(expect.arrayContaining([expect.objectContaining({ className: 'TerminalTabs' })]))
+  expect(dom).not.toEqual(expect.arrayContaining([expect.objectContaining({ className: 'Sash SashVertical TerminalTabsSash' })]))
   expect(dom).toContainEqual({ type: VirtualDomElements.Reference, uid: 41 })
 })
 

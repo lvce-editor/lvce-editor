@@ -60,9 +60,10 @@ test('getResolvedRoot - prefers explicit cli workspace over session storage', as
   SharedProcess.invoke.mockImplementation(() => {
     return cliWorkspace
   })
-  const resolvedRoot = await GetResolvedRoot.getResolvedRoot('http://localhost:3000')
+  const workspaceUri = 'file:///test/cli-workspace'
+  const resolvedRoot = await GetResolvedRoot.getResolvedRoot('http://localhost:3000', workspaceUri)
   expect(resolvedRoot).toEqual(cliWorkspace)
-  expect(SharedProcess.invoke).toHaveBeenCalledWith('Workspace.resolveRoot', 'http://localhost:3000')
+  expect(SharedProcess.invoke).toHaveBeenCalledWith('Workspace.resolveRoot', 'http://localhost:3000', workspaceUri)
 })
 
 test('getResolvedRoot - keeps session workspace when no cli workspace was provided', async () => {
@@ -90,5 +91,5 @@ test('getResolvedRoot - keeps session workspace when no cli workspace was provid
   })
   const resolvedRoot = await GetResolvedRoot.getResolvedRoot('http://localhost:3000')
   expect(resolvedRoot).toEqual(sessionWorkspace)
-  expect(SharedProcess.invoke).toHaveBeenCalledWith('Workspace.resolveRoot', 'http://localhost:3000')
+  expect(SharedProcess.invoke).toHaveBeenCalledWith('Workspace.resolveRoot', 'http://localhost:3000', '')
 })

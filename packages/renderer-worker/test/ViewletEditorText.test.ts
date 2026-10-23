@@ -1,4 +1,5 @@
 import { beforeEach, expect, jest, test } from '@jest/globals'
+import { WidgetId } from '@lvce-editor/constants'
 
 const editorWorkerInvoke = jest.fn()
 const getTextEditorContent = jest.fn<() => string>()
@@ -55,9 +56,12 @@ const ViewletEditorTextIpc = await import('../src/parts/ViewletEditorText/Viewle
 const ViewletEditorTextSaveState = await import('../src/parts/ViewletEditorText/ViewletEditorTextSaveState.js')
 const Languages = await import('../src/parts/Languages/Languages.js')
 const Preferences = await import('../src/parts/Preferences/Preferences.js')
+const IsTest = await import('../src/parts/IsTest/IsTest.js')
 
 beforeEach(() => {
   delete Preferences.state['editor.cache']
+  delete Preferences.state['editor.fileCache']
+  IsTest.state.isTest = false
 })
 
 test('loadContent - renders before diagnostics are requested by loadContentLater', async () => {
@@ -92,9 +96,12 @@ test('loadContent - renders before diagnostics are requested by loadContentLater
     'typescript',
     '/tokenize-typescript.js',
     true,
+    undefined,
+    true,
+    false,
   )
   expect(editorWorkerInvoke).toHaveBeenCalledWith('Editor.loadContent', 1, undefined, false, true)
-  expect(editorWorkerInvoke).toHaveBeenCalledWith('Editor.setSelections2', 1, selections)
+  expect(editorWorkerInvoke).toHaveBeenCalledWith('Editor.setSelections2', 1, selections, true)
   const editorMethods = editorWorkerInvoke.mock.calls
     .map(([method]) => method)
     .filter((method): method is string => typeof method === 'string' && method.startsWith('Editor.'))
@@ -108,7 +115,8 @@ test('loadContent - renders before diagnostics are requested by loadContentLater
     'Editor.render2',
   ])
   const createCall = editorWorkerInvoke.mock.calls.find(([method]) => method === 'Editor.create2')
-  expect(createCall?.at(-1)).toBe(true)
+  expect(createCall?.at(-2)).toBe(true)
+  expect(createCall?.at(-1)).toBe(false)
   expect(newState.commands).toEqual([...initialCommands, ...selectionCommands])
 })
 
@@ -124,6 +132,7 @@ test('loadContent - restores the editor worker state', async () => {
   })
   const state = ViewletEditorText.create(1, '/test/file.txt', 0, 0, 800, 600)
   const editorState = {
+    deltaY: 12000,
     lines: ['saved content'],
     redoStack: [['redo']],
     undoStack: [['undo']],
@@ -132,6 +141,25 @@ test('loadContent - restores the editor worker state', async () => {
   await ViewletEditorText.loadContent(state, { editorState }, {})
 
   expect(editorWorkerInvoke).toHaveBeenCalledWith('Editor.loadContent', 1, editorState, false, true)
+  expect(editorWorkerInvoke).toHaveBeenCalledWith('Editor.setSelections2', 1, new Uint32Array([0, 0, 0, 0]), false)
+})
+
+test('loadContent restores saved persistent editor widgets', async () => {
+  editorWorkerInvoke.mockImplementation((method) => {
+    switch (method) {
+      case 'Editor.diff2':
+      case 'Editor.render2':
+        return []
+      default:
+        return undefined
+    }
+  })
+  const state = ViewletEditorText.create(1, '/test/file.txt', 0, 0, 800, 600)
+  const widgets = [{ id: WidgetId.Find, state: { value: 'search' } }]
+
+  await ViewletEditorText.loadContent(state, { editorState: { widgets } }, {})
+
+  expect(editorWorkerInvoke).toHaveBeenCalledWith('Editor.restorePersistentWidgets', 1, widgets)
 })
 
 test('loadContent passes false focus to the editor worker', async () => {
@@ -199,11 +227,30 @@ test('loadContent - restores the definition range supplied by the opener', async
     },
   )
 
-  expect(editorWorkerInvoke).toHaveBeenCalledWith('Editor.setSelections2', 1, new Uint32Array([592, 4, 592, 9]))
+  expect(editorWorkerInvoke).toHaveBeenCalledWith('Editor.setSelections2', 1, new Uint32Array([592, 4, 592, 9]), true)
 })
 
 test('loadContent - disables the editor file cache through preferences', async () => {
   Preferences.state['editor.cache'] = false
+  editorWorkerInvoke.mockImplementation((method) => {
+    switch (method) {
+      case 'Editor.diff2':
+      case 'Editor.render2':
+        return []
+      default:
+        return undefined
+    }
+  })
+  const state = ViewletEditorText.create(1, '/test/file.txt', 0, 0, 800, 600)
+
+  await ViewletEditorText.loadContent(state, {}, {})
+
+  const createCall = editorWorkerInvoke.mock.calls.find(([method]) => method === 'Editor.create2')
+  expect(createCall?.[11]).toBe(false)
+})
+
+test('loadContent - disables the editor file cache by default in e2e tests', async () => {
+  IsTest.state.isTest = true
   editorWorkerInvoke.mockImplementation((method) => {
     switch (method) {
       case 'Editor.diff2':
@@ -253,6 +300,9 @@ test('loadContent - detects the language from the first line for an extensionles
     'javascript',
     '/tokenize-javascript.js',
     true,
+    undefined,
+    true,
+    false,
   )
 })
 
@@ -479,4 +529,33 @@ test('confirmed large files are read only by editor worker in reduced mode', asy
   await ViewletEditorText.loadContent(state, undefined, { largeFile: true })
   expect(getTextEditorContent).not.toHaveBeenCalled()
   expect(editorWorkerInvoke).toHaveBeenCalledWith('Editor.loadContent', 1, undefined, true, true)
+})
+
+test('loadContent retains the initial DOM if selection restoration consumes a later diff', async () => {
+  const { promise, resolve } = Promise.withResolvers<void>()
+  const { promise: started, resolve: start } = Promise.withResolvers<void>()
+  const initialCommands = [['Viewlet.setDom2']]
+  let rendered = false
+  editorWorkerInvoke.mockImplementation(async (method) => {
+    if (method === 'Editor.setSelections2') {
+      start()
+      await promise
+      // A background render can commit the worker's render baseline during this await.
+      rendered = true
+      return undefined
+    }
+    if (method === 'Editor.render2' && !rendered) {
+      rendered = true
+      return initialCommands
+    }
+    return []
+  })
+  const state = ViewletEditorText.create(1, '/test/file.txt', 0, 0, 800, 600)
+  const pending = ViewletEditorText.loadContent(state, { selections: [1, 0, 1, 6] }, {})
+  await started
+  expect(editorWorkerInvoke.mock.calls.filter(([method]) => method === 'Editor.render2')).toHaveLength(1)
+  resolve()
+  const restored = await pending
+  expect(restored.commands).toEqual(initialCommands)
+  expect(editorWorkerInvoke.mock.calls.filter(([method]) => method === 'Editor.render2')).toHaveLength(2)
 })

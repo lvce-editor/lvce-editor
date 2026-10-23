@@ -311,3 +311,39 @@ test('preserves the container interpreter environment through terminal creation'
   await ViewletTerminal2.loadContentLater(loaded)
   expect(terminalWorkerInvoke).toHaveBeenCalledWith('Terminal.create', 3912, '/host', options.command, options.args, { backend: 'mock', env })
 })
+
+test('an unavailable web terminal shows its explanation without creating a process', async () => {
+  const spawnError = 'Terminals are unavailable in this web workspace. Connect to a remote workspace to run a shell.'
+  const state = await ViewletTerminal2.loadContent(ViewletTerminal2.create(55), undefined, { args: [], command: '', spawnError })
+  await ViewletTerminal2.loadContentLater(state)
+  await ViewletTerminal2.handleInput(state, 'input')
+  await ViewletTerminal2.resize(state, { width: 800, height: 600 })
+  await ViewletTerminal2.dispose(state)
+  expect(terminalWorkerInvoke).not.toHaveBeenCalled()
+  expect(rendererProcessInvoke).toHaveBeenCalledWith('Viewlet.send', 55, 'write', new TextEncoder().encode(`\r\n${spawnError}\r\n`))
+})
+
+test('successful file execution retains output and its terminal tab', async () => {
+  const state = { ...ViewletTerminal2.create(10), keepOpen: true }
+  await ViewletTerminal2.handleExit(state, { exitCode: 0 })
+  expect(commandExecute).not.toHaveBeenCalledWith('Terminals.handleTerminalExit', 10)
+  expect(rendererProcessInvoke).toHaveBeenCalledWith('Viewlet.send', 10, 'write', new TextEncoder().encode('\r\nProcess exited with code 0.\r\n'))
+})
+
+test('file execution names the runtime when the backend only reports a generic spawn failure', async () => {
+  const state = { ...ViewletTerminal2.create(10), args: [], command: 'missing-runtime', cwd: '/workspace', keepOpen: true }
+  terminalWorkerInvoke.mockRejectedValueOnce(new Error('posix_spawnp failed'))
+  await ViewletTerminal2.loadContentLater(state)
+  const bytes = rendererProcessInvoke.mock.calls[0][3] as Uint8Array
+  const output = new TextDecoder().decode(bytes)
+  expect(output).toContain('Failed to start terminal (missing-runtime): posix_spawnp failed')
+})
+
+test.each([{ exitCode: 1 }, { exitCode: 127 }, { signal: 9 }])('file process exit names the runtime: %j', async (event) => {
+  const state = { ...ViewletTerminal2.create(10), command: 'missing-runtime', keepOpen: true }
+  await ViewletTerminal2.handleExit(state, event)
+  const bytes = rendererProcessInvoke.mock.calls[0][3] as Uint8Array
+  const output = new TextDecoder().decode(bytes)
+  expect(output).toContain('The terminal process (missing-runtime) exited with')
+  expect(commandExecute).not.toHaveBeenCalledWith('Terminals.handleTerminalExit', 10)
+})

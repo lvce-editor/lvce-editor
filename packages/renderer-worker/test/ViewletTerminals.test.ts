@@ -119,7 +119,7 @@ test('loadContent creates the xterm terminal view with the requested cwd', async
     0,
     {
       height: 400,
-      width: 710,
+      width: 800,
       x: 10,
       y: 20,
     },
@@ -134,6 +134,116 @@ test('loadContent creates the xterm terminal view with the requested cwd', async
     tabs: [{ icon: 'terminal-bash', label: 'bash', terminalUids: [42], uid: 42 }],
     terminalTabsEnabled: true,
   })
+})
+
+test('workspace change disposes existing terminal splits and opens a terminal in the new workspace when selected', async () => {
+  const state = {
+    ...createLoadedState(),
+    applicationId: 1,
+    tabs: [
+      { icon: 'terminal-bash', label: 'bash', terminalUids: [41, 43], uid: 41 },
+      { icon: 'terminal-bash', label: 'bash', terminalUids: [44], uid: 44 },
+    ],
+  }
+  viewletStatesGetInstance.mockImplementation((moduleId) => {
+    if (moduleId === ViewletModuleId.Layout) {
+      return { state: { panelVisible: true, panelView: ViewletModuleId.Terminals } }
+    }
+    return undefined
+  })
+
+  const newState = await ViewletTerminals.handleWorkspaceChange(state, 'file:///workspace/b')
+
+  expect(viewletDisposeFunctional.mock.calls).toEqual([[41], [43], [44]])
+  expect(commandExecute).toHaveBeenCalledWith(
+    'Layout.createViewlet',
+    ViewletModuleId.Terminal2,
+    42,
+    0,
+    { height: 400, width: 800, x: 10, y: 20 },
+    'file:///workspace/b',
+    [terminalSpawnOptions],
+  )
+  expect(newState).toMatchObject({
+    activeTerminalUids: [42],
+    childUid: 42,
+    childUids: [42],
+    cwd: 'file:///workspace/b',
+    selectedIndex: 0,
+    tabs: [{ terminalUids: [42], uid: 42 }],
+  })
+})
+
+test.each([
+  ['hidden panel', { panelVisible: false, panelView: ViewletModuleId.Terminals }],
+  ['another panel selected', { panelVisible: true, panelView: 'Output' }],
+])('workspace change keeps the panel state for %s', async (_label, layoutState) => {
+  const state = { ...createLoadedState(), applicationId: 1 }
+  viewletStatesGetInstance.mockImplementation((moduleId) => (moduleId === ViewletModuleId.Layout ? { state: layoutState } : undefined))
+
+  const newState = await ViewletTerminals.handleWorkspaceChange(state, 'file:///workspace/b')
+
+  expect(viewletDisposeFunctional).toHaveBeenCalledWith(41)
+  expect(commandExecute).not.toHaveBeenCalled()
+  expect(newState).toMatchObject({ activeTerminalUids: [], childUid: -1, childUids: [], cwd: 'file:///workspace/b', selectedIndex: -1, tabs: [] })
+})
+
+test('same workspace notification does not replace its terminal', async () => {
+  const state = { ...createLoadedState(), cwd: 'file:///workspace/a' }
+
+  await expect(ViewletTerminals.handleWorkspaceChange(state, 'file:///workspace/a')).resolves.toBe(state)
+
+  expect(viewletDisposeFunctional).not.toHaveBeenCalled()
+  expect(commandExecute).not.toHaveBeenCalled()
+})
+
+test('late exit from a previous workspace does not remove its replacement terminal', async () => {
+  const state = {
+    ...createLoadedState(),
+    applicationId: 1,
+    cwd: 'file:///workspace/b',
+    tabs: [{ icon: 'terminal-bash', label: 'bash', terminalUids: [42], uid: 42 }],
+    activeTerminalUids: [42],
+    childUid: 42,
+    childUids: [42],
+  }
+
+  const newState = await ViewletTerminals.handleTerminalExit(state, 41)
+
+  expect(newState).toBe(state)
+})
+
+test('adding a second terminal narrows both terminals for the tab sidebar', async () => {
+  const state = createLoadedState()
+
+  const newState = await ViewletTerminals.addTerminal(state)
+
+  expect(newState.tabs).toHaveLength(2)
+  expect(rendererProcessInvoke).toHaveBeenCalledWith('Viewlet.sendMultiple', [
+    ['Viewlet.setBounds', 41, { height: 400, width: 710, x: 10, y: 20 }],
+    ['Viewlet.setBounds', 42, { height: 400, width: 710, x: 10, y: 20 }],
+  ])
+})
+
+test('removing the second terminal expands the remaining terminal to full width', async () => {
+  const state = {
+    ...createLoadedState(),
+    activeTerminalUids: [41, 42],
+    childUids: [42],
+    selectedIndex: 1,
+    tabs: [
+      { icon: 'terminal-bash', label: 'bash', terminalUids: [41], uid: 41 },
+      { icon: 'terminal-bash', label: 'bash', terminalUids: [42], uid: 42 },
+    ],
+  }
+
+  const newState = await ViewletTerminals.killTerminal(state)
+
+  expect(newState.tabs).toHaveLength(1)
+  expect(rendererProcessInvoke).toHaveBeenCalledWith('Viewlet.sendMultiple', [
+    ['Viewlet.dispose', 41],
+    ['Viewlet.setBounds', 42, { height: 400, width: 800, x: 10, y: 20 }],
+  ])
 })
 
 test('dragging the terminal tabs sash resizes the tab list and all split terminals', async () => {
@@ -155,15 +265,21 @@ test('dragging the terminal tabs sash resizes the tab list and all split termina
 test('dragging the terminal tabs sash respects minimum widths in narrow panels', async () => {
   const state = {
     ...createLoadedState(),
+    activeTerminalUids: [41, 42],
+    childUid: 42,
+    childUids: [42],
+    selectedIndex: 1,
+    tabs: [
+      { icon: 'terminal-bash', label: 'bash', terminalUids: [41], uid: 41 },
+      { icon: 'terminal-bash', label: 'bash', terminalUids: [42], uid: 42 },
+    ],
     width: 120,
   }
 
   const newState = await ViewletTerminals.handleTerminalTabsSashPointerMove(state, -100)
 
   expect(newState.tabsWidth).toBe(60)
-  expect(rendererProcessInvoke).toHaveBeenCalledWith('Viewlet.sendMultiple', [
-    ['Viewlet.setBounds', 41, { height: 400, width: 60, x: 10, y: 20 }],
-  ])
+  expect(rendererProcessInvoke).toHaveBeenCalledWith('Viewlet.sendMultiple', [['Viewlet.setBounds', 42, { height: 400, width: 60, x: 10, y: 20 }]])
 })
 
 test('terminal tab rendering updates when its width or panel bounds change', () => {
@@ -220,11 +336,11 @@ test('loadContent reuses running terminals when the panel is reopened', async ()
   expect(commandExecute).not.toHaveBeenCalled()
   expect(viewletResize).toHaveBeenCalledWith(41, {
     height: 400,
-    width: 710,
+    width: 800,
     x: 10,
     y: 20,
   })
-  expect(rendererProcessInvoke).toHaveBeenCalledWith('Viewlet.sendMultiple', [['Viewlet.setBounds', 41, { height: 400, width: 710, x: 10, y: 20 }]])
+  expect(rendererProcessInvoke).toHaveBeenCalledWith('Viewlet.sendMultiple', [['Viewlet.setBounds', 41, { height: 400, width: 800, x: 10, y: 20 }]])
   expect(viewletStatesRemove).toHaveBeenCalledWith(7)
   expect(newState).toMatchObject({
     childUid: 41,
@@ -473,7 +589,7 @@ test('killTerminal disposes the active split and expands the remaining split', a
   expect(viewletDisposeFunctional).toHaveBeenCalledWith(42)
   expect(viewletResize).toHaveBeenCalledWith(41, {
     height: 400,
-    width: 710,
+    width: 800,
     x: 10,
     y: 20,
   })
@@ -500,7 +616,7 @@ test('handleTerminalExit disposes an exited split and keeps the active split foc
   expect(viewletDisposeFunctional).toHaveBeenCalledWith(41)
   expect(viewletResize).toHaveBeenCalledWith(42, {
     height: 400,
-    width: 710,
+    width: 800,
     x: 10,
     y: 20,
   })
@@ -793,7 +909,7 @@ test('killTerminalTab expands the remaining terminal when the sidebar becomes hi
   expect(viewletDisposeFunctional).toHaveBeenCalledWith(42)
   expect(viewletResize).toHaveBeenCalledWith(41, {
     height: 400,
-    width: 710,
+    width: 800,
     x: 10,
     y: 20,
   })
@@ -890,4 +1006,14 @@ test('terminal drag data contains no file or plain text fallback', async () => {
   ])
   await ViewletTerminals.handleDragEnd(state)
   expect(rendererProcessInvoke).toHaveBeenLastCalledWith('Viewlet.sendMultiple', [['Viewlet.setDragData', 1, { items: [], label: '' }]])
+})
+
+test('file execution uses its explicit process without starting a shell command string', async () => {
+  const execution = { command: 'node', args: ['--', '/workspace/a ; $(touch nope).js'], cwd: '/workspace', keepOpen: true }
+  const state = createLoadedState()
+  const result = await ViewletTerminals.addTerminal(state, execution.cwd, execution)
+  expect(commandExecute).toHaveBeenCalledWith('Layout.createViewlet', ViewletModuleId.Terminal2, 42, 0, expect.any(Object), execution.cwd, [
+    execution,
+  ])
+  expect(result.tabs.at(-1).label).toBe('node')
 })

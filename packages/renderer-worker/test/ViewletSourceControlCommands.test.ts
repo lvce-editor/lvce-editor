@@ -28,6 +28,45 @@ test('disposes only the owned source control worker state', async () => {
   expect(state.disposed).toBe(false)
 })
 
+test('refreshes source control icons through its worker after an icon theme change', async () => {
+  const state = {
+    ...ViewletSourceControl.create(42, '', 0, 0, 200, 300, undefined, 7),
+    badgeCount: 3,
+    inputValue: 'commit message',
+  }
+  sourceControlWorkerInvoke.mockImplementation((method) => {
+    switch (method) {
+      case 'SourceControl.updateIcons':
+        return undefined
+      case 'SourceControl.diff2':
+        return [1]
+      case 'SourceControl.render2':
+        return [['Viewlet.commitPending', 42, 9]]
+      case 'SourceControl.renderActions':
+        return ['actions']
+      case 'SourceControl.getBadgeCount':
+        return 3
+      default:
+        throw new Error(`unexpected method ${method}`)
+    }
+  })
+
+  const firstResult = await ViewletSourceControl.handleIconThemeChange(state)
+  const result = await ViewletSourceControl.handleIconThemeChange(firstResult)
+
+  expect(state).not.toHaveProperty('items')
+  expect(sourceControlWorkerInvoke.mock.calls.filter(([method]) => method === 'SourceControl.updateIcons')).toEqual([
+    ['SourceControl.updateIcons', 42],
+    ['SourceControl.updateIcons', 42],
+  ])
+  expect(sourceControlWorkerInvoke.mock.calls).toContainEqual(['SourceControl.render2', 42, [1]])
+  expect(result).toEqual({
+    ...state,
+    actionsDom: ['actions'],
+    commands: [['Viewlet.commitPending', 42, 9]],
+  })
+})
+
 test('renders pending source control worker state without replaying a command', async () => {
   const state = {
     badgeCount: 2,
@@ -218,4 +257,52 @@ test.each([undefined, 'application-a'])('commits every workspace refresh render 
     expect(execute).toHaveBeenCalledWith('Layout.setBadgeCount', 'Source Control', 0)
     expect(applicationExecute).not.toHaveBeenCalled()
   }
+})
+
+test('repeated focus requests target the worker-owned source control input', () => {
+  const state = { commands: [], inputValue: 'commit message', uid: 42 }
+  const first = ViewletSourceControl.focus(state)
+  const second = ViewletSourceControl.focus(first)
+  expect(first.commands).toEqual([['Viewlet.focusSelector', '[name="SourceControlInput"]']])
+  expect(second).toEqual(first)
+  expect(state.commands).toEqual([])
+})
+
+test('keeps title actions pending when a source control badge changes in the same render', async () => {
+  const ViewletStates = await import('../src/parts/ViewletStates/ViewletStates.js')
+  const { renderActions } = await import('../src/parts/ViewletSourceControl/ViewletSourceControlRenderActions.js')
+  const state = { actionsDom: ['view-as-tree'], badgeCount: 0, commands: [], uid: 42 }
+  ViewletStates.state.instances[42] = { renderedState: state, state }
+  sourceControlWorkerInvoke.mockImplementation((method) => {
+    switch (method) {
+      case 'SourceControl.diff2':
+        return [1]
+      case 'SourceControl.render2':
+        return [['Viewlet.commitPending', 42, 9]]
+      case 'SourceControl.renderActions':
+        return ['view-as-list']
+      case 'SourceControl.getBadgeCount':
+        return 1
+      default:
+        throw new Error(`unexpected method ${method}`)
+    }
+  })
+  try {
+    const result = await ViewletSourceControlCommands.Commands.__renderPending(state)
+    const instance = ViewletStates.getInstance(42)
+    expect(renderActions.isEqual(instance.renderedState, result)).toBe(false)
+    expect(renderActions.apply(instance.renderedState, result)).toEqual(['view-as-list'])
+    expect(result.badgeCount).toBe(1)
+    expect(execute).toHaveBeenCalledWith('Layout.setBadgeCount', 'Source Control', 1)
+  } finally {
+    delete ViewletStates.state.instances[42]
+  }
+})
+
+test('saves the worker-owned draft instead of stale renderer input when hiding source control', async () => {
+  const draft = { inputValue: 'worker draft', history: ['previous commit'] }
+  sourceControlWorkerInvoke.mockReturnValue(draft)
+  const state = { uid: 42, inputValue: 'stale renderer draft' }
+  expect(await ViewletSourceControl.saveState(state)).toEqual(draft)
+  expect(sourceControlWorkerInvoke).toHaveBeenCalledWith('SourceControl.saveState', 42)
 })

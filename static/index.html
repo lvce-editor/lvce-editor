@@ -10,9 +10,14 @@
     <link rel="manifest" href="/manifest.json" crossorigin="use-credentials" />
     <link rel="apple-touch-icon" href="/icons/pwa-icon-192.png" />
     <script id="Config" type="application/json">
-      { "assetDir": "", "platform": "web", "workerUrls": {} }
+      {
+        "assetDir": "",
+        "platform": "web",
+        "workerUrls": {},
+        "preloadWorkers": ["rendererWorker", "editorWorker", "syntaxHighlightingWorker", "extensionManagementWorker", "fileSystemWorker", "activityBarWorker", "mainAreaWorker", "statusBarWorker", "iconThemeWorker"]
+      }
     </script>
-    <script type="module" src="/packages/renderer-worker/node_modules/@lvce-editor/renderer-process/dist/rendererProcessMain.js"></script>
+    <script type="module" blocking="render" src="/packages/renderer-worker/node_modules/@lvce-editor/renderer-process/dist/rendererProcessMain.js"></script>
   </head>
   <body class="App"></body>
 </html>

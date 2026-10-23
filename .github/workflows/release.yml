@@ -8,7 +8,12 @@ on:
 
 permissions:
   id-token: write # Required for OIDC
+  actions: read
   contents: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
 
 jobs:
   create-release:
@@ -19,6 +24,11 @@ jobs:
       upload_url: ${{ steps.release.outputs.upload_url }}
       rg_version: ${{ env.RG_VERSION }}
     steps:
+      - uses: actions/checkout@v7
+      - name: Reject duplicate release run
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node scripts/check-duplicate-release-run.mjs
       - name: Get the release version from the tag
         shell: bash
         if: env.RG_VERSION == ''
@@ -80,7 +90,7 @@ jobs:
       - uses: actions/cache@v6
         id: build-cache
         with:
-          path: 'packages/build/.tmp/cachedDependencies'
+          path: '.tmp/native'
           key: ${{ runner.os }}-build-cache-${{ steps.nodeModulesCacheKey.outputs.value }}
       - name: npm ci
         run: node packages/build/src/parts/InstallDependencies/InstallDependencies.ts

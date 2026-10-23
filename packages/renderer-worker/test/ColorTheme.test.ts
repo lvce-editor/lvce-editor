@@ -49,7 +49,7 @@ test('reload applies slime when no color theme is selected', async () => {
   await ColorTheme.reload()
 
   expect(GetColorThemeNames.getColorThemeNames).not.toHaveBeenCalled()
-  expect(GetColorThemeCss.getColorThemeCss).toHaveBeenCalledWith('slime')
+  expect(GetColorThemeCss.getColorThemeCss).toHaveBeenCalledWith('slime', true)
   expect(Css.addCssStyleSheet).toHaveBeenCalledWith('ContributedColorTheme', ':root { --theme-id: "slime"; }')
   expect(ColorTheme.getColorThemeCss()).toBe(':root { --theme-id: "slime"; }')
 })
@@ -60,7 +60,7 @@ test('reload switches to slime when the selected color theme is no longer contri
   await ColorTheme.reload()
 
   expect(GetColorThemeCss.getColorThemeCss).not.toHaveBeenCalledWith('disabled-theme')
-  expect(GetColorThemeCss.getColorThemeCss).toHaveBeenCalledWith('slime')
+  expect(GetColorThemeCss.getColorThemeCss).toHaveBeenCalledWith('slime', false)
   expect(Preferences.state['workbench.colorTheme']).toBe('slime')
   expect(Command.execute).toHaveBeenCalledWith('Layout.handleColorThemeChanged', 'slime')
 })
@@ -70,8 +70,8 @@ test('hydrate falls back to slime when the selected color theme cannot be loaded
 
   await ColorTheme.hydrate()
 
-  expect(GetColorThemeCss.getColorThemeCss).toHaveBeenNthCalledWith(1, 'missing-theme')
-  expect(GetColorThemeCss.getColorThemeCss).toHaveBeenNthCalledWith(2, 'slime')
+  expect(GetColorThemeCss.getColorThemeCss).toHaveBeenNthCalledWith(1, 'missing-theme', false)
+  expect(GetColorThemeCss.getColorThemeCss).toHaveBeenNthCalledWith(2, 'slime', false)
   expect(ErrorHandling.handleError).toHaveBeenCalledTimes(1)
   expect(Css.addCssStyleSheet).toHaveBeenCalledWith('ContributedColorTheme', ':root { --theme-id: "slime"; }')
 })

@@ -17,10 +17,10 @@ const defaultReplacements: Record<string, string> = {
   '@@WINDOWS_EXECUTABLE_NAME@@': 'Lvce Editor',
 }
 
-const renderTemplate = async (name: string) => {
+const renderTemplate = async (name: string, replacements = defaultReplacements) => {
   const url = new URL(`../src/parts/Template/template_${name}.txt`, import.meta.url)
   let template = await readFile(url, 'utf8')
-  for (const [key, value] of Object.entries(defaultReplacements)) {
+  for (const [key, value] of Object.entries(replacements)) {
     template = template.replaceAll(key, value)
   }
   return JSON.parse(template)
@@ -40,6 +40,17 @@ describe('electron-builder metadata', () => {
     const json = await renderTemplate(templateName)
 
     expect(json.build).not.toHaveProperty('includeSubNodeModules')
+  })
+
+  test.each(electronBuilderTemplates)('%s respects the asar option', async (templateName) => {
+    const unpacked = await renderTemplate(templateName)
+    const packed = await renderTemplate(templateName, {
+      ...defaultReplacements,
+      '@@ASAR@@': 'true',
+    })
+
+    expect(unpacked.build.asar).toBe(false)
+    expect(packed.build.asar).toBe(true)
   })
 })
 

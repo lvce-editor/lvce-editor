@@ -19,7 +19,7 @@ export const getTestRequestResponse = async (request: any, indexHtmlPath: any): 
     const pathName = GetPathName.getPathName(request)
     if (pathName === '/tests/_all.html') {
       const body = await readFile(indexHtmlPath, 'utf8')
-      const content = await AddCustomPathsToIndexHtml.addCustomPathsToIndexHtml(body)
+      const content = await AddCustomPathsToIndexHtml.addCustomPathsToIndexHtml(body, { platform: 'remote' })
       const headers = {
         [HttpHeader.ContentSecurityPolicy]: ContentSecurityPolicyDocument.value,
         [HttpHeader.ContentType]: 'text/html',
@@ -31,7 +31,7 @@ export const getTestRequestResponse = async (request: any, indexHtmlPath: any): 
     }
     if (pathName.endsWith('.html')) {
       const body = await readFile(indexHtmlPath, 'utf8')
-      const content = await AddCustomPathsToIndexHtml.addCustomPathsToIndexHtml(body)
+      const content = await AddCustomPathsToIndexHtml.addCustomPathsToIndexHtml(body, { platform: 'remote' })
       const headers = {
         [HttpHeader.ContentSecurityPolicy]: ContentSecurityPolicyDocument.value,
         [HttpHeader.ContentType]: 'text/html',

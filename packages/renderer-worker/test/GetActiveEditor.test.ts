@@ -254,6 +254,82 @@ test('getOpenEditorUris returns an empty array without a main area', async () =>
   expect(invoke).not.toHaveBeenCalled()
 })
 
+test('getVisibleEditorUris returns the selected tab from every editor group', async () => {
+  ViewletStates.set('Main', {
+    factory: {},
+    moduleId: 'Main',
+    renderedState: { uid: 1 },
+    state: { uid: 1 },
+  })
+  const invoke = jest.fn(async () => ({
+    layout: {
+      groups: [
+        {
+          activeTabId: 2,
+          tabs: [
+            { id: 1, uri: 'file:///workspace/hidden.ts' },
+            { id: 2, uri: 'file:///workspace/visible.ts' },
+          ],
+        },
+        {
+          activeTabId: 3,
+          tabs: [
+            { id: 3, uri: 'file:///workspace/other-group.ts' },
+            { id: 4, uri: 'search-editor://1/Search' },
+          ],
+        },
+        { activeTabId: 5, tabs: [{ id: 5, label: 'untitled' }] },
+      ],
+    },
+  }))
+
+  await expect(GetActiveEditor.getVisibleEditorUrisWithInvoke(invoke)).resolves.toEqual([
+    'file:///workspace/visible.ts',
+    'file:///workspace/other-group.ts',
+  ])
+  expect(invoke).toHaveBeenCalledWith('MainArea.saveState', 1)
+})
+
+test('getVisibleEditorUris returns an empty array without a main area', async () => {
+  const invoke = jest.fn()
+  await expect(GetActiveEditor.getVisibleEditorUrisWithInvoke(invoke)).resolves.toEqual([])
+  expect(invoke).not.toHaveBeenCalled()
+})
+
+test('getActiveUri returns the selected tab in the active group', async () => {
+  ViewletStates.set('Main', {
+    factory: {},
+    moduleId: 'Main',
+    renderedState: { uid: 1 },
+    state: { uid: 1 },
+  })
+  const invoke = jest.fn(async () => ({
+    layout: {
+      activeGroupId: 2,
+      groups: [
+        { activeTabId: 3, id: 1, tabs: [{ id: 3, uri: 'file:///workspace/src/app.ts' }] },
+        {
+          activeTabId: 4,
+          id: 2,
+          tabs: [
+            { id: 4, uri: 'process-explorer://' },
+            { id: 5, uri: 'file:///workspace/src/other.ts' },
+          ],
+        },
+      ],
+    },
+  }))
+
+  await expect(GetActiveEditor.getActiveUriWithInvoke(invoke)).resolves.toBe('process-explorer://')
+  expect(invoke).toHaveBeenCalledWith('MainArea.saveState', 1)
+})
+
+test('getActiveUri returns an empty string without a main area', async () => {
+  const invoke = jest.fn()
+  await expect(GetActiveEditor.getActiveUriWithInvoke(invoke)).resolves.toBe('')
+  expect(invoke).not.toHaveBeenCalled()
+})
+
 test('getTextDocument reads only the requested application even when another editor is focused', async () => {
   for (const [id, applicationId] of [
     [41, 'source'],
@@ -272,4 +348,145 @@ test('getTextDocument reads only the requested application even when another edi
   await expect(GetActiveEditor.getTextDocumentWithInvoke(invoke, 'source')).resolves.toEqual({ text: 'debugger', uri: 'memfs:///source.js' })
   expect(invoke).toHaveBeenCalledWith('Editor.getText', 41)
   await expect(GetActiveEditor.getTextDocumentWithInvoke(invoke, 'missing')).resolves.toBeUndefined()
+})
+
+test('selection reads and writes stay in the requested application', async () => {
+  for (const [id, applicationId] of [
+    [41, 'source'],
+    [42, 'preview'],
+  ]) {
+    ApplicationRegistry.create({ id: applicationId, layoutUid: id + 100, workspaceUri: 'memfs:///', workspacePath: '/', href: '/samples' })
+    ViewletStates.set(id, { factory: {}, moduleId: 'EditorText', renderedState: { uid: id }, state: { id, uid: id, applicationId } })
+  }
+  ViewletStates.setFocusedInstanceByType(41, 'EditorText')
+  const invoke = jest.fn(async () => new Uint32Array([0, 1, 0, 4]))
+  await expect(GetActiveEditor.getSelectionsWithInvoke(invoke, 'preview')).resolves.toEqual([0, 1, 0, 4])
+  expect(invoke).toHaveBeenCalledWith('Editor.getSelections2', 42)
+  await GetActiveEditor.setSelectionsWithCommand(executeCommand, [0, 4, 0, 4], 'preview')
+  expect(executeCommand).toHaveBeenCalledWith('Viewlet.executeViewletCommand', 42, 'setSelections', new Uint32Array([0, 4, 0, 4]))
+  invoke.mockClear()
+  executeCommand.mockClear()
+  await expect(GetActiveEditor.getSelectionsWithInvoke(invoke, 'missing')).resolves.toEqual([])
+  await GetActiveEditor.setSelectionsWithCommand(executeCommand, [0, 0, 0, 0], 'missing')
+  expect(invoke).not.toHaveBeenCalled()
+  expect(executeCommand).not.toHaveBeenCalled()
+})
+
+test('getActiveUri reads the main area owned by the requested application', async () => {
+  for (const [uid, applicationId] of [
+    [41, 'source'],
+    [42, 'preview'],
+  ]) {
+    ApplicationRegistry.create({ id: applicationId, layoutUid: uid + 100, workspaceUri: 'memfs:///', workspacePath: '/', href: '/samples' })
+    ViewletStates.set(uid, {
+      factory: {},
+      moduleId: 'Main',
+      renderedState: { uid },
+      state: { uid, applicationId },
+    })
+  }
+  ViewletStates.setFocusedInstanceByType(41, 'Main')
+  const invoke = jest.fn(async (_command, uid) => ({
+    layout: { activeGroupId: 1, groups: [{ id: 1, activeTabId: 1, tabs: [{ id: 1, uri: `memfs:///${uid}.txt` }] }] },
+  }))
+  await expect(GetActiveEditor.getActiveUriWithInvoke(invoke, 'preview')).resolves.toBe('memfs:///42.txt')
+  expect(invoke).toHaveBeenCalledWith('MainArea.saveState', 42)
+})
+
+test('active editor and visible URIs stay within their application while another application is focused', async () => {
+  for (const [id, applicationId] of [
+    [41, 'source'],
+    [42, 'preview'],
+  ]) {
+    ApplicationRegistry.create({ id: applicationId, layoutUid: id + 100, workspaceUri: 'memfs:///', workspacePath: '/', href: '/samples' })
+    ViewletStates.set(id, {
+      factory: {},
+      moduleId: 'EditorText',
+      renderedState: { uid: id },
+      state: { id, uid: id, applicationId },
+    })
+    ViewletStates.set(id + 100, {
+      factory: {},
+      moduleId: 'Main',
+      renderedState: { uid: id + 100 },
+      state: { uid: id + 100, applicationId },
+    })
+  }
+  ViewletStates.setFocusedInstanceByType(42, 'EditorText')
+  ViewletStates.setFocusedInstanceByType(142, 'Main')
+  const invoke = jest.fn(async (_command, uid) => ({
+    layout: {
+      activeGroupId: 1,
+      groups: [
+        {
+          id: 1,
+          activeTabId: 2,
+          tabs: [
+            { id: 2, uri: `memfs:///${uid}.txt` },
+            { id: 3, uri: 'memfs:///hidden.txt' },
+          ],
+        },
+      ],
+    },
+  }))
+  expect(GetActiveEditor.getActiveEditorId('source')).toBe(41)
+  expect(GetActiveEditor.getActiveEditorId('missing')).toBe(-1)
+  await expect(GetActiveEditor.getVisibleEditorUrisWithInvoke(invoke, 'source')).resolves.toEqual(['memfs:///141.txt'])
+  await expect(GetActiveEditor.getActiveUriWithInvoke(invoke, 'source')).resolves.toBe('memfs:///141.txt')
+  await expect(GetActiveEditor.getVisibleEditorUrisWithInvoke(invoke, 'missing')).resolves.toEqual([])
+})
+
+const addApplicationEditor = (id, applicationId, uri = `memfs:///${id}.css`) => {
+  const state = { id, uid: id, applicationId, uri }
+  ViewletStates.set(id, { moduleId: 'EditorText', factory: {}, state, renderedState: state })
+}
+
+test('active editor info is a coherent application-scoped snapshot', () => {
+  expect(GetActiveEditor.getActiveEditorInfo()).toBeUndefined()
+  for (const applicationId of ['source', 'preview']) {
+    ApplicationRegistry.create({ id: applicationId, layoutUid: applicationId === 'source' ? 100 : 200 })
+  }
+  addApplicationEditor(41, 'source')
+  addApplicationEditor(42, 'preview')
+  ViewletStates.setFocusedInstanceByType(42, 'EditorText')
+  expect(GetActiveEditor.getActiveEditorInfo('source')).toEqual({ id: 41, uri: 'memfs:///41.css' })
+  expect(GetActiveEditor.getActiveEditorInfo('preview')).toEqual({ id: 42, uri: 'memfs:///42.css' })
+  expect(GetActiveEditor.getActiveEditorInfo('missing')).toBeUndefined()
+  ViewletStates.remove(41)
+  expect(GetActiveEditor.getActiveEditorInfo('source')).toBeUndefined()
+})
+
+test('explicit color picker target survives focus changes within and across applications', async () => {
+  ApplicationRegistry.create({ id: 'preview', layoutUid: 200 })
+  ApplicationRegistry.create({ id: 'source', layoutUid: 100 })
+  addApplicationEditor(41, 'preview')
+  addApplicationEditor(42, 'preview')
+  addApplicationEditor(43, 'source')
+  for (const focused of [42, 43]) {
+    ViewletStates.setFocusedInstanceByType(focused, 'EditorText')
+    await GetActiveEditor.openColorPickerWithCommand(executeCommand, 41, '#ff8800', 'preview')
+  }
+  expect(executeCommand.mock.calls).toEqual([
+    ['Viewlet.executeViewletCommand', 41, 'openColorPicker', '#ff8800'],
+    ['Viewlet.executeViewletCommand', 41, 'openColorPicker', '#ff8800'],
+  ])
+})
+
+test('color picker rejects omitted, invalid, stale, foreign and non-editor targets without dispatch', async () => {
+  ApplicationRegistry.create({ id: 'preview', layoutUid: 200 })
+  addApplicationEditor(42, 'preview')
+  for (const id of [undefined, null, '42', -1, NaN, Infinity, 1.5, 41, 200]) {
+    await expect(GetActiveEditor.openColorPickerWithCommand(executeCommand, id, undefined, 'preview')).rejects.toThrow()
+  }
+  await expect(GetActiveEditor.openColorPickerWithCommand(executeCommand, 42, undefined, 'source')).rejects.toThrow('Editor not found')
+  await expect(GetActiveEditor.openColorPickerWithCommand(executeCommand, 42, undefined)).rejects.toThrow('Editor not found')
+  ViewletStates.remove(42)
+  await expect(GetActiveEditor.openColorPickerWithCommand(executeCommand, 42, undefined, 'preview')).rejects.toThrow('Editor not found')
+  expect(executeCommand).not.toHaveBeenCalled()
+})
+
+test('color picker supports an explicitly targeted workbench editor', async () => {
+  addApplicationEditor(42, undefined)
+  await GetActiveEditor.openColorPickerWithCommand(executeCommand, 42, undefined)
+  expect(executeCommand).toHaveBeenCalledWith('Viewlet.executeViewletCommand', 42, 'openColorPicker', undefined)
 })

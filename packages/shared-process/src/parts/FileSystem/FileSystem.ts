@@ -275,6 +275,12 @@ export const stat = async (path: any): Promise<any> => {
   return type
 }
 
+export const statWithMetadata = async (uri: any): Promise<any> => {
+  const path = fileURLToPath(uri)
+  const stats = await fs.stat(path)
+  return { mtimeMs: stats.mtimeMs, size: stats.size, type: GetDirentType.getDirentType(stats) }
+}
+
 export const chmod = async (path: any, permissions: any): Promise<any> => {
   await fs.chmod(path, permissions)
 }

@@ -43,6 +43,8 @@ export const loadContent = async (state, _savedState?: any, configuredSpawnOptio
     cwd = state.cwd,
     disposeCommand,
     env,
+    keepOpen = false,
+    spawnError,
   } = configuredSpawnOptions || (await GetTerminalSpawnOptions.getTerminalSpawnOptions(state.cwd))
   return {
     ...state,
@@ -51,12 +53,18 @@ export const loadContent = async (state, _savedState?: any, configuredSpawnOptio
     cwd,
     disposeCommand,
     env,
+    keepOpen,
+    spawnError,
     xtermMounted: true,
   }
 }
 
 export const loadContentLater = async (state) => {
-  const { args, command, cwd, env, uid } = state
+  const { args, command, cwd, env, spawnError, uid } = state
+  if (spawnError) {
+    await handleData(state, new TextEncoder().encode(`\r\n${spawnError}\r\n`))
+    return
+  }
   try {
     await TerminalWorker.invoke('Terminal.create', uid, cwd || Workspace.state.workspacePath, command, args, {
       backend: getBackend(),
@@ -64,7 +72,7 @@ export const loadContentLater = async (state) => {
     })
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error)
-    await showError(state, `Failed to start terminal: ${message}`)
+    await showError(state, `Failed to start terminal${state.keepOpen ? ` (${command})` : ''}: ${message}`)
   }
 }
 
@@ -79,6 +87,9 @@ const showError = async (state, message) => {
 }
 
 export const handleInput = async (state, data) => {
+  if (state.spawnError) {
+    return state
+  }
   await TerminalWorker.invoke('Terminal.write', state.uid, data)
   return state
 }
@@ -101,10 +112,13 @@ export const handleData = async (state, data) => {
 
 export const handleExit = async (state, event?: { exitCode?: number; signal?: number }) => {
   if (event?.exitCode || event?.signal) {
-    const message = event.signal
-      ? `The terminal process exited with signal ${event.signal}.`
-      : `The terminal process exited with code ${event.exitCode}.`
+    const processName = state.keepOpen ? `The terminal process (${state.command})` : 'The terminal process'
+    const message = event.signal ? `${processName} exited with signal ${event.signal}.` : `${processName} exited with code ${event.exitCode}.`
     await showError(state, message)
+    return state
+  }
+  if (state.keepOpen) {
+    await handleData(state, new TextEncoder().encode('\r\nProcess exited with code 0.\r\n'))
     return state
   }
   if (!(await TerminalTransfer.handleExit(state.uid))) {
@@ -126,7 +140,9 @@ export const dispose = async (state) => {
   } catch (error) {
     console.warn('Failed to clean up the remote terminal', error)
   } finally {
-    await TerminalWorker.invoke('Terminal.dispose', state.uid)
+    if (!state.spawnError) {
+      await TerminalWorker.invoke('Terminal.dispose', state.uid)
+    }
   }
   return {
     ...state,
@@ -152,7 +168,9 @@ export const resize = async (state, dimensions) => {
   }
   const columns = resized.columns || Math.max(2, Math.floor(resized.width / 9))
   const rows = resized.rows || Math.max(2, Math.floor(resized.height / 17))
-  await TerminalWorker.invoke('Terminal.resize', state.uid, columns, rows)
+  if (!state.spawnError) {
+    await TerminalWorker.invoke('Terminal.resize', state.uid, columns, rows)
+  }
   return resized
 }
 

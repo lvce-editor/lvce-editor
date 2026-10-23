@@ -9,7 +9,7 @@ const getOrCreate = (fn) => {
   return workers.get(fn)
 }
 
-export const getOrCreateWorker = (fn) => {
+export const getOrCreateWorker = (fn, terminateCommand = '') => {
   return {
     isCreated() {
       return workers.has(fn)
@@ -29,6 +29,9 @@ export const getOrCreateWorker = (fn) => {
         return
       }
       const ipc = await promise
+      if (terminateCommand) {
+        ipc.send({ jsonrpc: '2.0', method: terminateCommand, params: [] })
+      }
       ipc.dispose()
     },
     async restart(terminateCommand) {

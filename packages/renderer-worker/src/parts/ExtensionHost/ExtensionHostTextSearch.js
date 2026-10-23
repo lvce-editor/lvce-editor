@@ -1,7 +1,7 @@
 import * as ExtensionManagementWorker from '../ExtensionManagementWorker/ExtensionManagementWorker.js'
 import * as Workspace from '../Workspace/Workspace.js'
 import * as DirentType from '../DirentType/DirentType.js'
-import * as FileSystemHtml from '../FileSystem/FileSystemHtml.js'
+import * as FileSystemWorker from '../FileSystemWorker/FileSystemWorker.js'
 import * as FileSystemMemory from '../FileSystem/FileSystemMemory.js'
 
 const FILE_RESULT = 1
@@ -64,24 +64,8 @@ export const textSearchFetch = async (scheme, root, query, options, assetDir) =>
   return results
 }
 
-const searchHtmlDirectory = async (uri, relativePath, query, flags, results) => {
-  const entries = await FileSystemHtml.readDirWithFileTypes(uri)
-  for (const entry of entries) {
-    const childUri = `${uri}/${entry.name}`
-    const childRelativePath = relativePath ? `${relativePath}/${entry.name}` : entry.name
-    if (entry.type === DirentType.Directory) {
-      await searchHtmlDirectory(childUri, childRelativePath, query, flags, results)
-    } else {
-      const content = await FileSystemHtml.readFile(childUri)
-      results.push(...searchText(childRelativePath, content, query, flags))
-    }
-  }
-}
-
-export const textSearchHtml = async (scheme, root, query, options = {}) => {
-  const results = []
-  await searchHtmlDirectory(root, '', query, options.flags || 0, results)
-  return results
+export const textSearchHtml = (scheme, root, query, options = {}) => {
+  return FileSystemWorker.invoke('FileSystemHtml.textSearch', root, query, options)
 }
 
 export const textSearchMemory2 = async (scheme, root, query, options = {}) => {

@@ -5,6 +5,10 @@ export const rewriteCssAssetUrls = (content: string, assetDir: string): string =
   return content.replaceAll(/url\((['"]?)\/icons\//g, `url($1${assetDir}/icons/`).replaceAll(/url\((['"]?)\/fonts\//g, `url($1${assetDir}/fonts/`)
 }
 
+export const rewriteElectronFontUrl = (content: string, assetDir: string, applicationName: string): string => {
+  return content.replaceAll(`${assetDir}/fonts/FiraCode-VariableFont.ttf`, `${applicationName}-font://-/fonts/FiraCode-VariableFont.ttf`)
+}
+
 export const rewriteCssAssetUrlsInFile = async (path: string, assetDir: string): Promise<void> => {
   const content = await readFile(path, 'utf8')
   const newContent = rewriteCssAssetUrls(content, assetDir)

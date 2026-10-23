@@ -22,10 +22,10 @@ const toAbsoluteExtensionPath = (root: any, extensionPath: any): any => {
 }
 
 /**
- * @param {{bundleMode?: boolean, extensionPath?: string, extensionPaths?: string[] | string, onLoadCommands?: readonly unknown[], testPath?: string, root?: string}} [options]
+ * @param {{bundleMode?: boolean, extensionPath?: string, extensionPaths?: string[] | string, onLoadCommands?: readonly unknown[], cspOptions?: {allowExternalConnections?: boolean}, testPath?: string, root?: string}} [options]
  */
 export const exportStatic = async (options: any = {}): Promise<any> => {
-  const { bundleMode = false, extensionPath, extensionPaths = [], onLoadCommands = [], root = '', testPath = '' } = options
+  const { bundleMode = false, cspOptions, extensionPath, extensionPaths = [], onLoadCommands = [], root = '', testPath = '' } = options
   if (!root) {
     throw new Error(`root argument is required`)
   }
@@ -37,6 +37,7 @@ export const exportStatic = async (options: any = {}): Promise<any> => {
   const pathPrefix = process.env.PATH_PREFIX || ''
   return fn.exportStatic({
     bundleMode,
+    cspOptions,
     extensionPath: absoluteExtensionPath,
     extensionPaths: absoluteExtensionPaths,
     onLoadCommands,

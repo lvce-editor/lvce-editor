@@ -53,7 +53,7 @@
         },
         "renderEventListeners": { "name": "ComponentState.renderEventListeners", "parameters": [] }
       },
-      "capabilities": { "events": true, "render": true, "resize": true, "rootRender": true },
+      "capabilities": { "directRender": true, "events": true, "render": true, "resize": true, "rootRender": true },
       "renderComparison": "always",
       "title": "Component State"
     }
@@ -123,6 +123,37 @@
         "renderEventListeners": { "name": "CookieImportView.renderEventListeners", "parameters": [] }
       },
       "capabilities": { "directRender": true, "events": true, "render": true, "resize": true, "rootRender": true },
+      "renderComparison": "always"
+    }
+  },
+  {
+    "id": "accountsView",
+    "fileName": "accountsWorkerMain.js",
+    "contentSecurityPolicy": ["default-src 'none'", "connect-src https://avatars.githubusercontent.com"],
+    "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/accounts-view/dist/accountsWorkerMain.js",
+    "productionPath": "/packages/accounts-view/dist/accountsWorkerMain.js",
+    "settingName": "develop.accountsViewWorkerPath",
+    "hotReloadCommand": "",
+    "viewlet": {
+      "name": "Accounts",
+      "title": "Accounts",
+      "css": ["/css/parts/ViewletAccounts.css", "/css/parts/Button.css"],
+      "state": { "idKey": "uid", "fields": ["uri", "x", "y", "width", "height"] },
+      "commandPrefix": "Accounts",
+      "methods": {
+        "create": { "name": "Accounts.create", "parameters": [{ "source": "state", "name": "uid" }] },
+        "loadContent": { "name": "Accounts.loadContent", "parameters": [{ "source": "state", "name": "uid" }] },
+        "dispose": { "name": "Accounts.dispose", "parameters": [{ "source": "state", "name": "uid" }] },
+        "diff": { "name": "Accounts.diff2", "parameters": [{ "source": "state", "name": "uid" }] },
+        "render": {
+          "name": "Accounts.render2",
+          "parameters": [{ "source": "state", "name": "uid" }, { "source": "result", "name": "diff" }]
+        },
+        "getCommandIds": { "name": "Accounts.getCommandIds", "parameters": [] },
+        "getKeyBindings": { "name": "Accounts.getKeyBindings", "parameters": [] },
+        "renderEventListeners": { "name": "Accounts.renderEventListeners", "parameters": [] }
+      },
+      "capabilities": { "directRender": true, "events": true, "render": true, "rootRender": true },
       "renderComparison": "always"
     }
   },
@@ -567,7 +598,7 @@
         "getKeyBindings": { "name": "Dialog.getKeyBindings", "parameters": [] },
         "renderEventListeners": { "name": "Dialog.renderEventListeners", "parameters": [] }
       },
-      "capabilities": { "events": true, "render": true, "rootRender": true },
+      "capabilities": { "directRender": true, "events": true, "render": true, "rootRender": true },
       "renderComparison": "always"
     }
   },
@@ -629,7 +660,7 @@
     "productionPath": "/packages/editor-worker/dist/editorWorkerMain.js",
     "settingName": "develop.editorWorkerPath",
     "hotReloadCommand": "Editor.hotReload",
-    "contentSecurityPolicy": ["default-src 'none'", "sandbox allow-same-origin"]
+    "contentSecurityPolicy": ["default-src 'none'", "sandbox allow-same-origin", "script-src 'self'"]
   },
   {
     "id": "embedsWorker",
@@ -689,8 +720,6 @@
         "getComponentDom": { "name": "Explorer.getComponentDom", "parameters": [{ "source": "state", "name": "uid" }] },
         "getComponentState": { "name": "Explorer.getComponentState", "parameters": [{ "source": "state", "name": "uid" }] },
         "getKeyBindings": { "name": "Explorer.getKeyBindings", "parameters": [] },
-        "getMenuEntryIds": { "name": "Explorer.getMenuIds", "parameters": [] },
-        "getMenuEntries": { "name": "Explorer.getMenuEntries", "parameters": [{ "source": "argument", "name": "args", "spread": true }] },
         "getTitle": { "name": "Explorer.getTitle", "parameters": [{ "source": "state", "name": "uid" }], "fallback": "Explorer" },
         "renderEventListeners": { "name": "Explorer.renderEventListeners", "parameters": [] },
         "setComponentState": {
@@ -1128,7 +1157,7 @@
           ]
         },
         "loadContent": {
-          "name": "MainArea.loadContent",
+          "name": "MainArea.loadContentShell",
           "parameters": [{ "source": "state", "name": "uid" }, { "source": "argument", "name": "savedState" }]
         },
         "diff": { "name": "MainArea.diff2", "parameters": [{ "source": "state", "name": "uid" }] },
@@ -1205,7 +1234,8 @@
           "parameters": [
             { "source": "state", "name": "id" }, { "source": "state", "name": "uri" }, { "source": "state", "name": "x" },
             { "source": "state", "name": "y" }, { "source": "state", "name": "width" }, { "source": "state", "name": "height" },
-            { "source": "state", "name": "platform" }, { "source": "state", "name": "parentUid" }
+            { "source": "state", "name": "platform" }, { "source": "state", "name": "parentUid" },
+            { "source": "context", "name": "applicationId" }
           ]
         },
         "hotReloadCreate": {
@@ -1213,7 +1243,8 @@
           "parameters": [
             { "source": "state", "name": "uid" }, { "source": "state", "name": "uri" }, { "source": "state", "name": "x" },
             { "source": "state", "name": "y" }, { "source": "state", "name": "width" }, { "source": "state", "name": "height" },
-            { "source": "state", "name": "parentUid" }, { "source": "state", "name": "platform" }
+            { "source": "state", "name": "platform" }, { "source": "state", "name": "parentUid" },
+            { "source": "context", "name": "applicationId" }
           ]
         },
         "loadContent": {
@@ -1273,7 +1304,9 @@
             { "source": "state", "name": "y" },
             { "source": "state", "name": "width" },
             { "source": "state", "name": "height" },
-            { "source": "literal", "value": null }
+            { "source": "context", "name": "platform" },
+            { "source": "context", "name": "assetDir" },
+            { "source": "context", "name": "applicationId" }
           ]
         },
         "loadContent": {
@@ -1328,12 +1361,12 @@
       "name": "Preview",
       "css": ["/css/parts/Preview.css"],
       "state": {
-        "idKey": "uid", "fields": ["uri", "x", "y", "width", "height"],
+        "idKey": "uid", "fields": ["uri", "x", "y", "width", "height", "parentUid"],
         "defaults": { "count": 0, "disposed": false }
       },
       "commandPrefix": "Preview",
-      "commandReturnStateWhenCommandsEmpty": true,
-      "commandSkipRenderWhenDiffEmpty": true,
+      "commandReturnStateWhenCommandsEmpty": false,
+      "commandSkipRenderWhenDiffEmpty": false,
       "methods": {
         "create": { "name": "Preview.create", "parameters": [
           { "source": "state", "name": "uid" }, { "source": "state", "name": "uri" }, { "source": "state", "name": "x" },
@@ -1348,6 +1381,7 @@
         "hotReloadLoadContent": { "name": "Preview.loadContent", "parameters": [{ "source": "state", "name": "uid" }, { "source": "argument", "name": "savedState" }] },
         "diff": { "name": "Preview.diff2", "parameters": [{ "source": "state", "name": "uid" }] },
         "render": { "name": "Preview.render2", "parameters": [{ "source": "state", "name": "uid" }, { "source": "result", "name": "diff" }] },
+        "getTitle": { "name": "Preview.getTitle", "parameters": [{ "source": "state", "name": "uid" }] },
         "dispose": { "name": "Preview.dispose", "parameters": [{ "source": "state", "name": "uid" }] },
         "resize": { "name": "Preview.resize", "parameters": [{ "source": "state", "name": "uid" }, { "source": "argument", "name": "dimensions" }] },
         "saveState": { "name": "Preview.saveState", "parameters": [{ "source": "state", "name": "uid" }] },
@@ -1355,7 +1389,9 @@
         "getCommandIds": { "name": "Preview.getCommandIds", "parameters": [] },
         "renderEventListeners": { "name": "Preview.renderEventListeners", "parameters": [] }
       },
-      "capabilities": { "events": true, "render": true, "resize": true, "rootRender": true }
+      "outputs": [{ "stateField": "title", "method": { "name": "Preview.getTitle", "parameters": [{ "source": "state", "name": "uid" }] } }],
+      "title": "",
+      "capabilities": { "directRender": true, "events": true, "render": true, "resize": true, "rootRender": true }
     }
   },
   {
@@ -1419,7 +1455,7 @@
         "setComponentState": { "name": "Ports.setComponentState", "parameters": [{ "source": "state", "name": "uid" }, { "source": "argument", "name": "componentState" }] }
       },
       "renderComparison": "emptyCommands",
-      "capabilities": { "events": true, "render": true, "resize": true, "rootRender": true }
+      "capabilities": { "directRender": true, "events": true, "render": true, "resize": true, "rootRender": true }
     }
   },
   {
@@ -1443,7 +1479,7 @@
         "create": { "name": "Problems.create", "parameters": [
           { "source": "state", "name": "uid" }, { "source": "state", "name": "uri" }, { "source": "state", "name": "x" },
           { "source": "state", "name": "y" }, { "source": "state", "name": "width" }, { "source": "state", "name": "height" },
-          { "source": "context", "name": "workspaceUri" }
+          { "source": "context", "name": "workspaceUri" }, { "source": "context", "name": "applicationId" }
         ] },
         "loadContent": { "name": "Problems.loadContent", "parameters": [{ "source": "state", "name": "uid" }, { "source": "argument", "name": "savedState" }] },
         "diff": { "name": "Problems.diff2", "parameters": [{ "source": "state", "name": "uid" }] },
@@ -1510,13 +1546,13 @@
     "viewlet": {
       "name": "ProcessExplorer",
       "css": ["/css/parts/MaskIcon.css", "/css/parts/ViewletProcessExplorer.css"],
-      "state": { "idKey": "uid", "fields": ["parentUid", "uri", "x", "y", "width", "height"], "contextFields": ["platform", "assetDir"] },
+      "state": { "idKey": "uid", "fields": ["parentUid", "uri", "x", "y", "width", "height"], "contextFields": ["platform", "assetDir", "processExplorerUpdateInterval"] },
       "commandPrefix": "ProcessExplorer",
       "methods": {
         "create": { "name": "ProcessExplorer.create", "parameters": [
           { "source": "state", "name": "uid" }, { "source": "state", "name": "uri" }, { "source": "state", "name": "x" },
           { "source": "state", "name": "y" }, { "source": "state", "name": "width" }, { "source": "state", "name": "height" },
-          { "source": "literal", "value": null }, { "source": "state", "name": "parentUid" }, { "source": "state", "name": "platform" },
+          { "source": "context", "name": "processExplorerArgs" }, { "source": "state", "name": "parentUid" }, { "source": "state", "name": "platform" },
           { "source": "state", "name": "assetDir" }
         ] },
         "loadContent": { "name": "ProcessExplorer.loadContent", "parameters": [{ "source": "state", "name": "uid" }, { "source": "argument", "name": "savedState" }] },
@@ -1883,7 +1919,8 @@
             { "source": "state", "name": "width" },
             { "source": "state", "name": "height" },
             { "source": "state", "name": "platform" },
-            { "source": "state", "name": "assetDir" }
+            { "source": "state", "name": "assetDir" },
+            { "source": "context", "name": "applicationId" }
           ]
         },
         "loadContent": {
@@ -1899,7 +1936,9 @@
             { "source": "state", "name": "y" },
             { "source": "state", "name": "width" },
             { "source": "state", "name": "height" },
-            { "source": "literal", "value": null }
+            { "source": "state", "name": "platform" },
+            { "source": "state", "name": "assetDir" },
+            { "source": "context", "name": "applicationId" }
           ]
         },
         "hotReloadLoadContent": {
@@ -1935,7 +1974,7 @@
     "contentSecurityPolicy": ["default-src 'none'", "script-src 'self'", "sandbox allow-same-origin"],
     "defaultPath": "/packages/renderer-worker/node_modules/@lvce-editor/syntax-highlighting-worker/dist/syntaxHighlightingWorkerMain.js",
     "productionPath": "/packages/syntax-highlighting-worker/dist/syntaxHighlightingWorkerMain.js",
-    "settingName": "developer.syntaxHighlightingWorkerPath",
+    "settingName": "develop.syntaxHighlightingWorkerPath",
     "hotReloadCommand": ""
   },
   {
@@ -2004,7 +2043,8 @@
         "idKey": "uid", "fields": ["uri", "x", "y", "width", "height"], "contextFields": ["platform", "assetDir"],
         "defaults": {
           "disposed": false, "titleBarIconWidth": 30, "isFocused": false, "titleBarIconEnabled": true,
-          "titleBarMenuBarEnabled": true, "titleBarButtonsEnabled": true, "titleBarButtonsWidth": 138, "titleBarTitleEnabled": true
+          "titleBarMenuBarEnabled": true, "titleBarButtonsEnabled": true, "titleBarButtonsWidth": 138, "titleBarTitleEnabled": true,
+          "showSideBarThings": true
         }
       },
       "commandPrefix": "TitleBar",
@@ -2014,7 +2054,8 @@
           { "source": "state", "name": "uid" }, { "source": "state", "name": "uri" }, { "source": "state", "name": "x" },
           { "source": "state", "name": "y" }, { "source": "state", "name": "width" }, { "source": "state", "name": "height" },
           { "source": "state", "name": "platform" }, { "source": "state", "name": "controlsOverlayEnabled" },
-          { "source": "state", "name": "titleBarStyleCustom" }, { "source": "state", "name": "assetDir" }
+          { "source": "state", "name": "titleBarStyleCustom" }, { "source": "state", "name": "assetDir" },
+          { "source": "state", "name": "menuUid" }, { "source": "state", "name": "menuRevision" }
         ] },
         "loadContent": { "name": "TitleBar.loadContent2", "parameters": [{ "source": "state", "name": "uid" }] },
         "diff": { "name": "TitleBar.diff3", "parameters": [{ "source": "state", "name": "uid" }] },

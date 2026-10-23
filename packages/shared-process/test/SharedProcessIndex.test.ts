@@ -61,3 +61,13 @@ test('exportStatic forwards bundleMode', async () => {
   // @ts-ignore
   expect(ExportStatic.exportStatic.mock.calls[0][0].bundleMode).toBe(true)
 })
+
+test('exportStatic forwards CSP options', async () => {
+  const cspOptions = { allowExternalConnections: true }
+
+  await SharedProcess.exportStatic({ cspOptions, root: '/test/root' })
+
+  // @ts-ignore
+  const [options] = ExportStatic.exportStatic.mock.calls[0]
+  expect(options.cspOptions).toBe(cspOptions)
+})

@@ -1,5 +1,15 @@
 [
   {
+    "category": "applications",
+    "description": "Multiplies wheel scrolling speed in custom views. Accepts values from 1 to 3, including fractions. Invalid values use the default speed of 1.",
+    "heading": "Scroll Speed",
+    "id": "application.scrollspeed",
+    "maximum": 3,
+    "minimum": 1,
+    "type": "number",
+    "value": 1
+  },
+  {
     "category": "window",
     "description": "Places Linux window controls above the primary sidebar so the main and secondary sidebar extend to the top. With the primary sidebar hidden, reserves a full-width control strip. Restart the app to apply changes.",
     "heading": "Titlebarless Layout",
@@ -29,11 +39,27 @@
   },
   {
     "category": "applications",
+    "description": "Loads bundled desktop resources through Electron's native loader. Applies to packaged desktop builds after restarting the application.",
+    "heading": "Native Resource Loading",
+    "id": "application.useProtocolRegisterSource",
+    "type": "boolean",
+    "value": false
+  },
+  {
+    "category": "applications",
     "description": "Emulates the current application version for update checks. Use numeric major.minor.patch format, or leave empty to use the installed version.",
     "heading": "Emulate Current Version",
     "id": "update.emulateCurrentVersion",
     "type": "string",
     "value": ""
+  },
+  {
+    "category": "applications",
+    "description": "Show update download progress in the status bar",
+    "heading": "Update Status Bar Progress",
+    "id": "update.showProgress",
+    "type": "boolean",
+    "value": true
   },
   {
     "category": "applications",
@@ -45,11 +71,29 @@
   },
   {
     "category": "workbench",
+    "description": "Controls whether expired cache entries are cleaned up occasionally after startup",
+    "heading": "Cache Cleanup",
+    "id": "cache.cleanupEnabled",
+    "type": "boolean",
+    "value": true
+  },
+  {
+    "category": "workbench",
     "description": "Caches file quick-pick results to reduce data transferred between workers",
     "heading": "Quick Pick Cache",
     "id": "quickPick.cache",
     "type": "boolean",
     "value": true
+  },
+  {
+    "category": "workbench",
+    "description": "Controls how often the Process Explorer refreshes, in milliseconds",
+    "heading": "Process Explorer Update Interval",
+    "id": "processExplorer.updateInterval",
+    "maximum": 5000,
+    "minimum": 500,
+    "type": "number",
+    "value": 1000
   },
   {
     "category": "workbench",
@@ -97,6 +141,14 @@
     "description": "Caches editor state for faster restoration",
     "heading": "Editor Cache",
     "id": "editor.cache",
+    "type": "boolean",
+    "value": true
+  },
+  {
+    "category": "text-editor",
+    "description": "Caches eligible editor files for faster reopening",
+    "heading": "Editor File Cache",
+    "id": "editor.fileCache",
     "type": "boolean",
     "value": true
   },
@@ -302,6 +354,20 @@
     ],
     "type": "enum",
     "value": "right"
+  },
+  {
+    "category": "workbench",
+    "description": "Controls how the panel is aligned with the side bars",
+    "heading": "Panel Alignment",
+    "id": "workbench.panel.alignment",
+    "options": [
+      { "id": "center", "label": "Center" },
+      { "id": "justify", "label": "Justify" },
+      { "id": "left", "label": "Left" },
+      { "id": "right", "label": "Right" }
+    ],
+    "type": "enum",
+    "value": "justify"
   },
   {
     "category": "workbench",

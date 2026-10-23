@@ -43,7 +43,7 @@ test('getQuickPickMenuEntries includes the accounts view command', async () => {
     label: 'Accounts: Show Accounts',
     aliases: ['Account', 'Accounts'],
   })
-  expect(new URL(entry?.args?.[0] || '').pathname).toMatch(/\/packages\/renderer-worker\/node_modules\/@lvce-editor\/accounts-view\/index\.html$/)
+  expect(entry?.args).toEqual(['accounts:///1'])
   expect(entries.some((item) => item.label === 'Account: Sign In')).toBe(true)
   expect(entries.some((item) => item.label === 'Account: Sign Out')).toBe(true)
 })

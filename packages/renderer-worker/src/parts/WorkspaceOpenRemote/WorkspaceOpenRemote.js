@@ -19,9 +19,11 @@ const openRemoteInternal = async () => {
     await Notification.create('info', 'Open a workspace folder to view its Git remote.')
     return
   }
-  const remote = cwd.startsWith('remote-ssh://')
-    ? await ExtensionManagementWorker.invoke('Extensions.executeWorkspaceRequest', cwd, 'git-remote')
-    : await SharedProcess.invoke('Workspace.getGitRemote', cwd)
+  const workspaceUri = Workspace.getUri?.() || cwd
+  const remote =
+    workspaceUri.startsWith('remote-ssh://') || workspaceUri.startsWith('remote-server://')
+      ? await ExtensionManagementWorker.invoke('Extensions.executeWorkspaceRequest', workspaceUri, 'git-remote')
+      : await SharedProcess.invoke('Workspace.getGitRemote', cwd)
   if (Workspace.getPath() !== cwd) return
   const url = GetRemoteHomepage.getRemoteHomepage(remote, Preferences.get('git.remoteHosts'))
   if (!url) {
@@ -34,7 +36,8 @@ const openRemoteInternal = async () => {
     return
   }
   await Command.execute('Layout.showPreview', 'simple-browser://')
-  await Command.execute('SimpleBrowser.openOrRevealTab', url)
+  const preview = ViewletStates.getInstance('Layout')?.state
+  await Viewlet.executeViewletCommand(preview?.previewId, 'openOrRevealTab', url)
 }
 
 export const openRemote = async () => {

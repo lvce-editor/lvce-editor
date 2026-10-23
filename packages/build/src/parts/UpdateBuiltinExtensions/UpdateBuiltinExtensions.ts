@@ -5,6 +5,7 @@ import { join } from 'node:path'
 import { performance } from 'node:perf_hooks'
 import builtinExtensions from '../DownloadBuiltinExtensions/builtinExtensions.json' with { type: 'json' }
 import * as ExitCode from '../ExitCode/ExitCode.ts'
+import { getBuiltinExtensionAssetName } from '../GetBuiltinExtensionAssetName/GetBuiltinExtensionAssetName.ts'
 import { getBuiltinExtensionRepository } from '../GetBuiltinExtensionRepository/GetBuiltinExtensionRepository.ts'
 import * as Logger from '../Logger/Logger.ts'
 import * as Process from '../Process/Process.ts'
@@ -87,8 +88,7 @@ const getNewBuiltinExtensions = async (builtinExtensions, versions) => {
         return extension
       }
       const repositoryName = getBuiltinExtensionRepository(extension)
-      const baseName = repositoryName.slice(repositoryName.lastIndexOf('/') + 1)
-      const assetName = extension.version === version && extension.assetName ? extension.assetName : `${baseName}-v${version}.tar.br`
+      const assetName = getBuiltinExtensionAssetName(extension, version)
       const url = `https://github.com/${repositoryName}/releases/download/v${version}/${assetName}`
       const sha256 = await computeUrlSha256(url, got.stream)
       const updatedExtension = {
@@ -96,8 +96,8 @@ const getNewBuiltinExtensions = async (builtinExtensions, versions) => {
         version,
         sha256,
       }
-      if (extension.version !== version) {
-        delete updatedExtension.assetName
+      if (extension.assetName) {
+        updatedExtension.assetName = assetName
       }
       return updatedExtension
     }),

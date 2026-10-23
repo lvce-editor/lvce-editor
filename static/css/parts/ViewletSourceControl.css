@@ -45,3 +45,9 @@
 .SourceControl .InputBox {
   height: var(--SourceControlInputHeight);
 }
+
+.SourceControl .InputBox::placeholder {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

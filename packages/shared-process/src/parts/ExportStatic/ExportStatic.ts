@@ -14,18 +14,22 @@ const importFromTsRegex = /(from\s+['"][^'"]+)\.ts(['"])/g
 const sideEffectImportTsRegex = /(import\s+['"][^'"]+)\.ts(['"])/g
 const dynamicImportTsRegex = /(import\(\s*['"][^'"]+)\.ts(['"]\s*\))/g
 const runtimeConfigScriptRegex = /<script id="Config" type="application\/json">([\s\S]*?)<\/script>/
+const whitespaceOnlyRegex = /^\s*$/
 
-const staticContentSecurityPolicy = GetContentSecurityPolicy.getContentSecurityPolicy([
-  `default-src 'none'`,
-  `connect-src 'self' https: wss: http://127.0.0.1:* http://localhost:* ws://127.0.0.1:* ws://localhost:*`,
-  `font-src 'self'`,
-  `img-src 'self' https: data: blob:`, // TODO maybe disallow https and data images
-  `manifest-src 'self'`,
-  `media-src 'self' blob:`,
-  `script-src 'self'`,
-  `style-src 'self' 'unsafe-inline'`,
-  `frame-src 'self' blob:`,
-])
+export const getStaticContentSecurityPolicy = ({ allowExternalConnections = false } = {}): string =>
+  GetContentSecurityPolicy.getContentSecurityPolicy([
+    `default-src 'none'`,
+    allowExternalConnections
+      ? `connect-src 'self' https: wss: http://127.0.0.1:* http://localhost:* ws://127.0.0.1:* ws://localhost:*`
+      : `connect-src 'self'`,
+    `font-src 'self'`,
+    `img-src 'self' https: data: blob:`, // TODO maybe disallow https and data images
+    `manifest-src 'self'`,
+    `media-src 'self' blob:`,
+    `script-src 'self'`,
+    `style-src 'self' 'unsafe-inline'`,
+    `frame-src 'self' blob:`,
+  ])
 
 const readExtensionManifest = async (path: any): Promise<any> => {
   const json = await JsonFile.readJson(path)
@@ -44,6 +48,13 @@ const replace = async (path: any, occurrence: any, replacement: any): Promise<an
   // @ts-ignore
   const newContent = oldContent.replaceAll(occurrence, replacement)
   await FileSystem.writeFile(path, newContent)
+}
+
+const replaceIfPresent = async (path: any, occurrence: any, replacement: any): Promise<void> => {
+  const content = await FileSystem.readFile(path)
+  if (content.includes(occurrence)) {
+    await FileSystem.writeFile(path, content.replaceAll(occurrence, replacement))
+  }
 }
 
 const getWorkerById = (id: any): any => {
@@ -153,12 +164,21 @@ const applyRuntimeConfigOverrides = async ({ root }: any): Promise<void> => {
   }
   const config = JSON.parse(configElement[1])
   config.platform = 'web'
-  const serializedConfig = JSON.stringify(config).replaceAll('<', '\\u003c').replaceAll('>', '\\u003e').replaceAll('&', '\\u0026')
-  const newContent = content.replace(configElement[0], `<script id="Config" type="application/json">${serializedConfig}</script>`)
+  const configIndex = content.indexOf(configElement[0])
+  const lineStart = content.lastIndexOf('\n', configIndex - 1) + 1
+  const lineIndentation = content.slice(lineStart, configIndex)
+  const indentation = whitespaceOnlyRegex.test(lineIndentation) ? lineIndentation : ''
+  const contentIndentation = `${indentation}  `
+  const serializedConfig = `${contentIndentation}${JSON.stringify(config, null, 2)
+    .replaceAll('<', '\\u003c')
+    .replaceAll('>', '\\u003e')
+    .replaceAll('&', '\\u0026')
+    .replaceAll('\n', `\n${contentIndentation}`)}`
+  const newContent = content.replace(configElement[0], `<script id="Config" type="application/json">\n${serializedConfig}\n${indentation}</script>`)
   await writeFile(indexHtmlPath, newContent)
 }
 
-const applyOverrides = async ({ commitHash, pathPrefix, root, serverStaticPath }: any): Promise<any> => {
+const applyOverrides = async ({ commitHash, cspOptions, pathPrefix, root, serverStaticPath }: any): Promise<any> => {
   await applyRuntimeConfigOverrides({ root })
   const extensionDirents = await FileSystem.readDir(Path.join(serverStaticPath, commitHash, 'extensions'))
 
@@ -236,7 +256,7 @@ const applyOverrides = async ({ commitHash, pathPrefix, root, serverStaticPath }
     indexHtmlPath,
     '#282e2f" />',
     `#282e2f" />
-    <meta http-equiv="Content-Security-Policy" content="${staticContentSecurityPolicy}">`,
+    <meta http-equiv="Content-Security-Policy" content="${getStaticContentSecurityPolicy(cspOptions)}">`,
   )
 
   if (pathPrefix) {
@@ -256,17 +276,18 @@ const applyOverrides = async ({ commitHash, pathPrefix, root, serverStaticPath }
   }
   if (pathPrefix) {
     await replace(Path.join(root, 'dist', commitHash, 'manifest.json'), `/${commitHash}`, `${pathPrefix}/${commitHash}`)
-    await replace(Path.join(root, 'dist', commitHash, 'manifest.json'), `"start_url": "/"`, `"start_url": "${pathPrefix}"`)
+    await replace(Path.join(root, 'dist', commitHash, 'manifest.json'), `"start_url": "/"`, `"start_url": "${pathPrefix}/"`)
+    await replace(Path.join(root, 'dist', commitHash, 'manifest.json'), `"scope": "/"`, `"scope": "${pathPrefix}/"`)
     await replace(Path.join(root, 'dist', commitHash, 'css', 'App.css'), `/${commitHash}`, `${pathPrefix}/${commitHash}`)
   }
 }
 
 const addExtensionSeo = async ({ commitHash, description, name, root }: any): Promise<any> => {
-  await replace(Path.join(root, 'dist', 'index.html'), '<title>Lvce Editor</title>', `<title>${name}</title>`)
-  await replace(Path.join(root, 'dist', commitHash, 'manifest.json'), `"name": "Code Editor Web - OSS"`, `"name": "${name}"`)
-  await replace(Path.join(root, 'dist', commitHash, 'manifest.json'), `"short_name": "Web - OSS"`, `"short_name": "${name}"`)
-  await replace(Path.join(root, 'dist', commitHash, 'manifest.json'), `"description": "Web Code Editor."`, `"description": "${description}"`)
-  await replace(
+  await replaceIfPresent(Path.join(root, 'dist', 'index.html'), '<title>Lvce Editor</title>', `<title>${name}</title>`)
+  await replaceIfPresent(Path.join(root, 'dist', commitHash, 'manifest.json'), `"name": "Code Editor Web - OSS"`, `"name": "${name}"`)
+  await replaceIfPresent(Path.join(root, 'dist', commitHash, 'manifest.json'), `"short_name": "Web - OSS"`, `"short_name": "${name}"`)
+  await replaceIfPresent(Path.join(root, 'dist', commitHash, 'manifest.json'), `"description": "Web Code Editor."`, `"description": "${description}"`)
+  await replaceIfPresent(
     Path.join(root, 'dist', 'index.html'),
     '<meta name="description" content="VS Code inspired text editor that mostly runs in a webworker." />',
     `<meta name="description" content="${description}" />`,
@@ -393,6 +414,63 @@ export const mergeExtensionManifests = (manifests: any, extraExtensions: any): a
   return merged
 }
 
+const getWebExtensionId = (webExtension: any): string => {
+  if (typeof webExtension === 'string') {
+    return webExtension.split('/').filter(Boolean).at(-1) || ''
+  }
+  return webExtension.id
+}
+
+export const mergeWebExtensionManifests = (webExtensions: any, extraExtensions: any): any => {
+  const merged: any[] = []
+  const indexes = new Map<string, number>()
+  for (const webExtension of [...webExtensions, ...extraExtensions]) {
+    const id = getWebExtensionId(webExtension)
+    const existingIndex = indexes.get(id)
+    if (existingIndex === undefined) {
+      indexes.set(id, merged.length)
+      merged.push(webExtension)
+    } else {
+      merged[existingIndex] = webExtension
+    }
+  }
+  return merged
+}
+
+const copyBuiltinWebExtensions = async ({ commitHash, pathPrefix, root }: any): Promise<void> => {
+  const extensionsPath = join(process.cwd(), 'extensions')
+  if (!existsSync(extensionsPath)) {
+    return
+  }
+  const extensionDirents = await FileSystem.readDir(extensionsPath)
+  const builtinWebExtensions = []
+  for (const extensionDirent of extensionDirents) {
+    const extensionPath = Path.join(extensionsPath, extensionDirent)
+    const manifestPath = Path.join(extensionPath, 'extension.json')
+    if (!existsSync(manifestPath)) {
+      continue
+    }
+    const extensionJson = await readExtensionManifest(manifestPath)
+    const isLanguageBasicsExtension = isLanguageBasics(extensionDirent)
+    const nodeProcesses = (extensionJson.rpc || []).filter((rpc: { type?: string }) => rpc.type === 'node-process')
+    const canRunOnRemote =
+      extensionJson.browser && nodeProcesses.length > 0 && nodeProcesses.every((rpc: { onRemote?: string }) => rpc.onRemote === 'runOnRemote')
+    if ((extensionJson.compatibility?.web === false && !canRunOnRemote) || (!extensionJson.browser && !isLanguageBasicsExtension)) {
+      continue
+    }
+    await FileSystem.copy(extensionPath, Path.join(root, 'dist', commitHash, 'extensions', extensionDirent))
+    builtinWebExtensions.push({
+      ...extensionJson,
+      isWeb: true,
+      path: `${pathPrefix}/${commitHash}/extensions/${extensionDirent}`,
+    })
+  }
+  const webExtensionsPath = Path.join(root, 'dist', commitHash, 'config', 'webExtensions.json')
+  const existingWebExtensions = await JsonFile.readJson(webExtensionsPath)
+  const webExtensions = mergeWebExtensionManifests(existingWebExtensions, builtinWebExtensions)
+  await JsonFile.writeJson(webExtensionsPath, webExtensions)
+}
+
 const updateExtensionsJson = async ({ commitHash, extraExtensions, pathPrefix, root }: any): Promise<any> => {
   const dirents = await FileSystem.readDir(Path.join(root, 'dist', commitHash, 'extensions'))
   const manifests = await Promise.all(
@@ -429,23 +507,25 @@ const addExtensionWebExtension = async ({
     return
   }
   const webExtensionPath = `${pathPrefix}/${commitHash}/extensions/${extensionJson.id}`
+  const webExtensionsPath = Path.join(root, 'dist', commitHash, 'config', 'webExtensions.json')
+  const existingWebExtensions = await JsonFile.readJson(webExtensionsPath)
   if (useSimpleWebExtensionFile) {
-    const webExtensions = [webExtensionPath]
+    const webExtensions = mergeWebExtensionManifests(
+      existingWebExtensions.map((webExtension: any) => (typeof webExtension === 'string' ? webExtension : webExtension.path)),
+      [webExtensionPath],
+    )
     await JsonFile.writeJson(Path.join(root, 'dist', commitHash, 'config', 'webExtensions.json'), webExtensions)
-    return
-  }
-  const webExtensions = [
-    {
+  } else {
+    const webExtension = {
       ...extensionJson,
       isWeb: true,
       path: webExtensionPath,
-    },
-  ]
-  await JsonFile.writeJson(Path.join(root, 'dist', commitHash, 'config', 'webExtensions.json'), webExtensions)
-  await FileSystem.forceRemove(Path.join(root, 'dist', commitHash, 'extensions', extensionJson.id))
-  for (const dirent of ['src', 'extension.json']) {
-    await FileSystem.copy(Path.join(extensionPath, dirent), Path.join(root, 'dist', commitHash, 'extensions', extensionJson.id, dirent))
+    }
+    const webExtensions = mergeWebExtensionManifests(existingWebExtensions, [webExtension])
+    await JsonFile.writeJson(Path.join(root, 'dist', commitHash, 'config', 'webExtensions.json'), webExtensions)
   }
+  await FileSystem.forceRemove(Path.join(root, 'dist', commitHash, 'extensions', extensionJson.id))
+  await FileSystem.copy(extensionPath, Path.join(root, 'dist', commitHash, 'extensions', extensionJson.id))
 }
 
 const addExtension = async ({ commitHash, extensionPath, pathPrefix, root, useSimpleWebExtensionFile }: any): Promise<any> => {
@@ -676,10 +756,11 @@ const getExtensionPaths = (extensionPath: any, extensionPaths: any): any => {
 
 /**
  *
- * @param {{root:string, pathPrefix:string , extensionPath:string, extensionPaths?:string[], onLoadCommands?:readonly unknown[], testPath:string, useSimpleWebExtensionFile?:boolean, serverStaticPath?:string, bundleMode?:boolean }} param0
+ * @param {{root:string, pathPrefix:string , extensionPath:string, extensionPaths?:string[], onLoadCommands?:readonly unknown[], cspOptions?: {allowExternalConnections?: boolean}, testPath:string, useSimpleWebExtensionFile?:boolean, serverStaticPath?:string, bundleMode?:boolean }} param0
  */
 export const exportStatic = async ({
   bundleMode = false,
+  cspOptions = {},
   extensionPath,
   extensionPaths,
   onLoadCommands = [],
@@ -726,17 +807,19 @@ export const exportStatic = async ({
   console.time('applyOverrides')
   await applyOverrides({
     commitHash,
+    cspOptions,
     pathPrefix,
     root,
     serverStaticPath,
   })
   console.timeEnd('applyOverrides')
 
+  await copyBuiltinWebExtensions({ commitHash, pathPrefix, root })
+
   if (bundleMode) {
     const BundleStaticWorkers = await import('../BundleStaticWorkers/BundleStaticWorkers.ts')
     await BundleStaticWorkers.bundleStaticWorkers({ commitHash, pathPrefix, root, workers })
   }
-
   await updateExtensionsJson({ commitHash, extraExtensions: [], pathPrefix, root })
   await JsonFile.writeJson(Path.join(root, 'dist', commitHash, 'config', 'onLoadCommands.json'), onLoadCommands)
 
@@ -762,6 +845,9 @@ export const exportStatic = async ({
     })
     console.timeEnd('addTestFiles')
   }
+  const chatPath = Path.join(root, 'dist', 'chat')
+  await FileSystem.mkdir(chatPath)
+  await FileSystem.copyFile(Path.join(root, 'dist', 'index.html'), Path.join(chatPath, 'index.html'))
   return {
     commitHash,
   }

@@ -97,6 +97,9 @@ const renderDom = {
       oldState.browserFullWidth === newState.browserFullWidth &&
       oldState.browserTabDragSource === newState.browserTabDragSource &&
       oldState.secondaryPreviewPlacement === newState.secondaryPreviewPlacement &&
+      oldState.workspaceProgressId === newState.workspaceProgressId &&
+      oldState.workspaceProgressMessage === newState.workspaceProgressMessage &&
+      oldState.workspaceProgressKind === newState.workspaceProgressKind &&
       oldState.mainVisible === newState.mainVisible &&
       oldState.mainId === newState.mainId &&
       oldState.titleBarVisible === newState.titleBarVisible &&
@@ -196,6 +199,7 @@ const getCss = (newState: LayoutState) => {
   return `#${rootId} {
   --BrowserDropWidth: ${getPixelValue(newState.previewLeft)};
   --BrowserDropTop: ${getPixelValue((newState.windowHeight + (newState.titleBarVisible ? newState.titleBarHeight : 0)) / 2)};
+  --BrowserReturnDropTop: ${getPixelValue(newState.titleBarVisible ? newState.titleBarHeight : 0)};
   --AppWidth: ${appWidth};
   --AppHeight: ${appHeight};
   --ActivityBarWidth: ${getPixelValue(activityBarWidth)};
@@ -236,6 +240,10 @@ const renderCss = {
 
 export const renderEventListeners = () => {
   return [
+    {
+      name: DomEventListenersFunctions.HandleClickCancelWorkspaceProgress,
+      params: ['handleCancelWorkspaceProgress'],
+    },
     { name: 'handleActivityBarWheel', params: ['handleActivityBarWheel', 'event.deltaY'] },
     { name: 'handleBrowserTabDragOver', params: ['handleBrowserTabDragOver'], preventDefault: true, stopPropagation: true },
     { name: 'handleBrowserTabDrop', params: ['handleBrowserTabDrop', 'event.clientX', 'event.clientY'], preventDefault: true, stopPropagation: true },

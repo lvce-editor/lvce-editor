@@ -1,3 +1,4 @@
+import * as RuntimeConfig from '../RuntimeConfig/RuntimeConfig.ts'
 import * as HtmlPreviewUrl from '../HtmlPreviewUrl/HtmlPreviewUrl.js'
 import * as BrowserFullWidth from '../BrowserFullWidth/BrowserFullWidth.js'
 import * as ActivityBarWorker from '../ActivityBarWorker/ActivityBarWorker.js'
@@ -33,6 +34,7 @@ import * as RenderMainAreaPending from '../RenderMainAreaPending/RenderMainAreaP
 import { reorderCommands } from '../ReorderCommands/ReorderCommands.js'
 import * as SashType from '../SashType/SashType.js'
 import * as SaveState from '../SaveState/SaveState.js'
+import * as Workspace from '../Workspace/Workspace.js'
 import * as SideBarLocationType from '../SideBarLocationType/SideBarLocationType.js'
 import * as SourceControlWorker from '../SourceControlWorker/SourceControlWorker.js'
 import * as StatusBarWorker from '../StatusBarWorker/StatusBarWorker.js'
@@ -47,7 +49,6 @@ import * as UpdateDynamicFocusContext from '../UpdateDynamicFocusContext/UpdateD
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
-import * as Workspace from '../Workspace/Workspace.js'
 import type { WorkspaceRefresh } from '../WorkspaceChanges/WorkspaceChanges.ts'
 import { getPoints } from './LayoutPoints.ts'
 import type { LayoutState, LayoutStateResult, SideBarFocusModeLayoutStateSnapshot } from './LayoutState.ts'
@@ -96,9 +97,12 @@ const toUserInfo = (state) => {
   }
 }
 
-const toFilteredUserInfo = (state: LayoutState, options: { readonly includeTokenUsage?: boolean } = {}) => {
+const toFilteredUserInfo = (state: LayoutState, options: { readonly includeAccessToken?: boolean; readonly includeTokenUsage?: boolean } = {}) => {
   const { includeTokenUsage = true } = options
-  const info = toUserInfo(state)
+  const info = {
+    ...toUserInfo(state),
+    ...(options.includeAccessToken && { authAccessToken: AuthAccessToken.get(state.uid) }),
+  }
   if (!includeTokenUsage) {
     delete info.userUsedTokens
   }
@@ -251,6 +255,32 @@ export const create = (id: number): LayoutState => {
   }
 }
 
+export const handleWorkspaceProgress = (state: LayoutState, progress: { readonly id: number; readonly message: string }): LayoutState => {
+  if (state.workspaceProgressId === progress.id && state.workspaceProgressMessage === progress.message) {
+    return state
+  }
+  const isNewProgress = state.workspaceProgressId !== progress.id
+  return {
+    ...state,
+    workspaceProgressId: progress.message ? progress.id : undefined,
+    workspaceProgressMessage: progress.message,
+    workspaceProgressKind: progress.message
+      ? isNewProgress
+        ? progress.message.startsWith('Starting Dev Containers for ')
+          ? 'container'
+          : undefined
+        : state.workspaceProgressKind
+      : undefined,
+  }
+}
+
+export const handleCancelWorkspaceProgress = (state: LayoutState): LayoutState => {
+  if (typeof state.workspaceProgressId === 'number') {
+    Workspace.cancelProgress(state.workspaceProgressId)
+  }
+  return state
+}
+
 export const setMountedViewlets = (state: LayoutState, sourceUid: number, viewletUids: readonly number[]): LayoutStateResult => {
   Assert.number(sourceUid)
   Assert.array(viewletUids)
@@ -295,6 +325,8 @@ export const saveState = (state: LayoutState) => {
     panelAlignment,
   } = stateToSave
   return {
+    aiNativeLayout: state.aiNativeLayout === true,
+    aiNativeActivityBarVisible: state.aiNativeActivityBarVisible ?? true,
     activityBarVisible,
     panelHeight,
     panelVisible,
@@ -331,6 +363,18 @@ const getSideBarLocationType = () => {
   }
 }
 
+const isPanelAlignment = (value: unknown): value is LayoutState['panelAlignment'] => {
+  return value === 'center' || value === 'justify' || value === 'left' || value === 'right'
+}
+
+const getConfiguredPanelAlignment = (savedPanelAlignment: LayoutState['panelAlignment']) => {
+  const preference = Preferences.get('workbench.panel.alignment')
+  if (preference === undefined) {
+    return savedPanelAlignment
+  }
+  return isPanelAlignment(preference) ? preference : 'justify'
+}
+
 const getSavedPoints = (savedState) => {
   if (!savedState) {
     return {
@@ -346,7 +390,7 @@ const getSavedPoints = (savedState) => {
       secondaryPreviewVisible: false,
       panelVisible: false,
       panelHeight: 0,
-      panelAlignment: 'justify' as const,
+      panelAlignment: getConfiguredPanelAlignment('justify'),
     }
   }
   const {
@@ -362,7 +406,7 @@ const getSavedPoints = (savedState) => {
     secondaryPreviewVisible,
     panelVisible,
     panelHeight,
-    panelAlignment,
+    panelAlignment: savedPanelAlignment,
   } = savedState
 
   return {
@@ -378,7 +422,7 @@ const getSavedPoints = (savedState) => {
     secondaryPreviewVisible: secondaryPreviewVisible ?? false,
     panelVisible: panelVisible ?? false,
     panelHeight: panelHeight ?? 160,
-    panelAlignment: panelAlignment === 'center' || panelAlignment === 'left' || panelAlignment === 'right' ? panelAlignment : 'justify',
+    panelAlignment: getConfiguredPanelAlignment(isPanelAlignment(savedPanelAlignment) ? savedPanelAlignment : 'justify'),
   }
 }
 
@@ -464,6 +508,8 @@ export const loadContent = (state: LayoutState, savedState: any): LayoutState =>
   const { windowWidth, windowHeight } = bounds
   const sideBarLocation = getSideBarLocationType()
   const restore = savedState?.restore !== false
+  const isStandalone = bounds.isStandalone === true
+  const standaloneMobile = restore && isStandalone && windowWidth <= 600
   const stateToRestore = restore ? savedState : undefined
   const {
     panelHeight,
@@ -482,8 +528,9 @@ export const loadContent = (state: LayoutState, savedState: any): LayoutState =>
   } = getSavedPoints(stateToRestore)
   const savedSecondaryView = getSavedSecondarySideBarView(stateToRestore)
   const savedPrimaryView = getSavedSideBarView(stateToRestore)
-  const savedView =
-    savedPrimaryView === defaultSecondarySideBarViewletId && savedSecondaryView === defaultSecondarySideBarViewletId
+  const savedView = standaloneMobile
+    ? defaultSecondarySideBarViewletId
+    : savedPrimaryView === defaultSecondarySideBarViewletId && savedSecondaryView === defaultSecondarySideBarViewletId
       ? ViewletModuleId.Explorer
       : savedPrimaryView
   const savedSecondaryViewlets = getSavedSecondarySideBarViewlets(stateToRestore)
@@ -494,6 +541,7 @@ export const loadContent = (state: LayoutState, savedState: any): LayoutState =>
   const titleBarless = state.platform === PlatformType.Electron && Preferences.get('window.titleBarless.enabled') === true
   const intermediateState: LayoutState = {
     ...state,
+    isStandalone,
     activityBarVisible: true,
     activityBarWidth: 48,
     mainVisible: true,
@@ -507,7 +555,7 @@ export const loadContent = (state: LayoutState, savedState: any): LayoutState =>
 
     sideBarMinWidth: 170,
     secondarySideBarMinWidth: 220,
-    sideBarVisible,
+    sideBarVisible: standaloneMobile || sideBarVisible,
     sideBarWidth,
     secondarySideBarVisible,
     secondarySideBarWidth,
@@ -555,10 +603,49 @@ export const loadContent = (state: LayoutState, savedState: any): LayoutState =>
     secondarySideBarViewlets: savedSecondaryViewlets,
     workbenchVisible: true,
     initial: false,
+    ...RuntimeConfig.runtimeConfig.initialLayout,
   }
   // TODO get side bar min width from preferences
+  if (savedState.detachedEditor === true) {
+    return getPoints(
+      {
+        ...intermediateState,
+        activityBarVisible: false,
+        activityBarSashVisible: false,
+        sideBarVisible: false,
+        sideBarSashVisible: false,
+        secondarySideBarVisible: false,
+        panelVisible: false,
+        panelSashVisible: false,
+        previewVisible: false,
+        previewSashVisible: false,
+        secondaryPreviewVisible: false,
+        secondaryPreviewSashVisible: false,
+        statusBarVisible: false,
+        restore: false,
+      },
+      sideBarLocation,
+    )
+  }
   const newState = getPoints(intermediateState, sideBarLocation)
-  return newState
+  if (!restore || (savedState?.aiNativeLayout !== true && !standaloneMobile)) {
+    return newState
+  }
+  return getPoints(
+    {
+      ...newState,
+      aiNativeActivityBarVisible: stateToRestore?.aiNativeActivityBarVisible ?? true,
+      aiNativeLayout: true,
+      aiNativeLayoutExited: false,
+      activityBarVisible: stateToRestore?.aiNativeActivityBarVisible ?? true,
+      titleBarVisible: false,
+      statusBarVisible: false,
+      sideBarFocusMode: true,
+      sideBarFocusModeLayout: getSideBarFocusModeLayoutSnapshot(newState),
+      sideBarFocusModeTarget: 'primary',
+    },
+    sideBarLocation,
+  )
 }
 
 const show = async (state: LayoutState, module, currentViewletId, restore?: boolean) => {
@@ -567,7 +654,13 @@ const show = async (state: LayoutState, module, currentViewletId, restore?: bool
     const result = await show(restored.newState, module, currentViewletId, restore)
     return { newState: result.newState, commands: [...restored.commands, ...result.commands] }
   }
-  if (state.sideBarFocusMode && module !== LayoutModules.SideBar && module !== LayoutModules.StatusBar && module !== LayoutModules.TitleBar) {
+  if (
+    state.sideBarFocusMode &&
+    module !== LayoutModules.SideBar &&
+    module !== LayoutModules.StatusBar &&
+    module !== LayoutModules.TitleBar &&
+    !(state.aiNativeLayout && module === LayoutModules.ActivityBar)
+  ) {
     return {
       newState: state,
       commands: [],
@@ -585,6 +678,7 @@ const show = async (state: LayoutState, module, currentViewletId, restore?: bool
   const intermediateState: LayoutState = getPoints({
     ...state,
     [kVisible]: true,
+    ...(state.aiNativeLayout && module === LayoutModules.ActivityBar ? { aiNativeActivityBarVisible: true } : {}),
     ...(module === LayoutModules.Preview ? { previewSashVisible: true } : {}),
     ...(module === LayoutModules.SecondaryPreview ? { secondaryPreviewSashVisible: true } : {}),
     ...(module === LayoutModules.SideBar ? { sideBarSashVisible: true } : {}),
@@ -671,6 +765,9 @@ const setActivityBarAiNativeLayout = async (activityBarId: number, enabled: bool
 }
 
 const renderSideBarActivityBarCommands = async (activityBarId: number, sideBarView: string, sideBarVisible: boolean) => {
+  if (activityBarId === -1) {
+    return []
+  }
   await ActivityBarWorker.invoke('ActivityBar.handleSideBarStateChange', activityBarId, sideBarView, sideBarVisible)
   return renderActivityBarCommands(activityBarId)
 }
@@ -712,7 +809,13 @@ const renderActivityBarAuthCommands = async (state: LayoutState) => {
   if (activityBarId === -1) {
     return []
   }
-  await ActivityBarWorker.invoke('ActivityBar.setUserLoginState', activityBarId, toActivityBarUserLoginState(userState), toFilteredUserInfo(state))
+  await ActivityBarWorker.invoke(
+    'ActivityBar.setUserLoginState',
+    activityBarId,
+    toActivityBarUserLoginState(userState),
+    toFilteredUserInfo(state),
+    Product.getProductNameLong(),
+  )
   const diffResult = await ActivityBarWorker.invoke('ActivityBar.diff2', activityBarId)
   return ActivityBarWorker.invoke('ActivityBar.render2', activityBarId, diffResult)
 }
@@ -788,6 +891,12 @@ export const enterSideBarFocusMode = async (
   const newState = getPoints({
     ...state,
     aiNativeLayout,
+    ...(aiNativeLayout
+      ? {
+          aiNativeActivityBarVisible: state.aiNativeActivityBarVisible ?? true,
+          activityBarVisible: state.aiNativeActivityBarVisible ?? true,
+        }
+      : {}),
     aiNativeLayoutExited: false,
     ...(aiNativeLayout ? { titleBarVisible: false, statusBarVisible: false } : {}),
     sideBarFocusMode: true,
@@ -858,7 +967,13 @@ export const showSideBar = async (state: LayoutState, moduleId?: string, restore
 }
 
 const hide = async (state: LayoutState, module): Promise<{ newState: LayoutState; commands: any }> => {
-  if (state.sideBarFocusMode && module !== LayoutModules.SideBar && module !== LayoutModules.StatusBar && module !== LayoutModules.TitleBar) {
+  if (
+    state.sideBarFocusMode &&
+    module !== LayoutModules.SideBar &&
+    module !== LayoutModules.StatusBar &&
+    module !== LayoutModules.TitleBar &&
+    !(state.aiNativeLayout && module === LayoutModules.ActivityBar)
+  ) {
     return {
       newState: state,
       commands: [],
@@ -871,6 +986,7 @@ const hide = async (state: LayoutState, module): Promise<{ newState: LayoutState
   const newState = getPoints({
     ...state,
     [kVisible]: false,
+    ...(state.aiNativeLayout && module === LayoutModules.ActivityBar ? { aiNativeActivityBarVisible: false } : {}),
     ...(module === LayoutModules.Preview
       ? {
           previewActionsEventListeners: [],
@@ -929,6 +1045,12 @@ export const hideSideBar = async (state: LayoutState) => {
 }
 
 export const toggleSideBar = (state: LayoutState) => {
+  if (state.aiNativeLayout) {
+    return Command.execute('ExtensionHost.executeCommand', 'chat2.toggleSessionsList').then(() => ({
+      newState: state,
+      commands: [],
+    }))
+  }
   if (state.sideBarFocusMode) {
     return hideSideBar(state)
   }
@@ -1129,6 +1251,25 @@ export const openIntegratedTerminal = async (state: LayoutState, cwd: string): P
   return showPanel(state, ViewletModuleId.Terminals, cwd)
 }
 
+export const runInTerminal = async (
+  state: LayoutState,
+  execution: { readonly command: string; readonly args: readonly string[]; readonly cwd: string },
+): Promise<LayoutStateResult> => {
+  Assert.object(execution)
+  Assert.string(execution.command)
+  Assert.string(execution.cwd)
+  Assert.array(execution.args)
+  const options = { command: execution.command, args: [...execution.args], cwd: execution.cwd, keepOpen: true }
+  // Await the panel DOM before creating and focusing the process terminal.
+  await Viewlet.executeViewletCommand(state.uid, 'showPanel', ViewletModuleId.Terminals)
+  if (state.applicationId === undefined) {
+    await Command.execute('Terminals.addTerminal', execution.cwd, options)
+  } else {
+    await ViewletManager.executeForApplication(state.applicationId, 'Terminals.addTerminal', execution.cwd, options)
+  }
+  return { newState: state, commands: [] }
+}
+
 export const openProblems = async (state: LayoutState, filterValue?: string): Promise<LayoutStateResult> => {
   const result = await showPanel(state, ViewletModuleId.Problems)
   if (filterValue !== undefined) {
@@ -1143,7 +1284,11 @@ export const openOutput = async (state: LayoutState, channelId?: string): Promis
   }
   // Commit the panel's DOM before updating the channel value in its toolbar.
   await Viewlet.executeViewletCommand(state.uid, 'showPanel', ViewletModuleId.Output, channelId)
-  await Command.execute('Output.selectChannel', channelId)
+  if (state.applicationId === undefined) {
+    await Command.execute('Output.selectChannel', channelId)
+  } else {
+    await ViewletManager.executeForApplication(state.applicationId, 'Output.selectChannel', channelId)
+  }
   return {
     newState: state,
     commands: [],
@@ -1731,6 +1876,7 @@ export const createViewlet = async (
       // @ts-ignore
       uri: uri,
       uid: editorUid,
+      deferLoadContentLater: args[0]?.deferLoadContentLater === true,
       show: false,
       focus: false,
       setBounds: false,
@@ -1943,6 +2089,13 @@ export const loadPanelIfVisible = (state: LayoutState) => {
 
 export const loadActivityBarIfVisible = async (state: LayoutState) => {
   const updated = await loadIfVisible(state, LayoutModules.ActivityBar)
+  if (state.aiNativeLayout && updated.newState.activityBarId !== -1) {
+    const commands = await setActivityBarAiNativeLayout(updated.newState.activityBarId, true)
+    return {
+      ...updated,
+      commands: [...updated.commands, ...commands],
+    }
+  }
   return {
     ...updated,
   }
@@ -2655,9 +2808,10 @@ export const getPanelAlignment = (state: LayoutState): LayoutState['panelAlignme
 }
 
 export const setPanelAlignment = async (state: LayoutState, panelAlignment: LayoutState['panelAlignment']) => {
-  if (!['center', 'justify', 'left', 'right'].includes(panelAlignment)) {
+  if (!isPanelAlignment(panelAlignment)) {
     return { newState: state, commands: [] }
   }
+  await Preferences.update({ 'workbench.panel.alignment': panelAlignment })
   const newState = getPoints({ ...state, panelAlignment })
   const commands = await getResizeCommands(state, newState)
   return { newState, commands }
@@ -2718,6 +2872,10 @@ const callGlobalEvent = async (state: LayoutState, eventName, ...args): Promise<
   })
   const results = await Promise.all(
     instances.map(async ([, value]) => {
+      if (value.moduleId === ViewletModuleId.Explorer) {
+        await Viewlet.executeViewletCommand(value.state.uid, eventName, ...args)
+        return { oldState: value.state, newState: value.state, value }
+      }
       // @ts-ignore
       const oldState = value.state
       // @ts-ignore
@@ -2774,6 +2932,31 @@ export const getUserInfo = (state: LayoutState, options: { readonly includeAcces
   return toFilteredUserInfo(state, options)
 }
 
+export const getAccounts = async () => {
+  const [accounts, connections] = await Promise.all([AuthWorker.getAccounts(), AuthWorker.getConnectedAccounts()])
+  const activeAccount = accounts.find((account) => account.active)
+  return [
+    ...accounts,
+    ...connections.map((connection) => ({
+      color: 'purple',
+      connectionId: connection.id,
+      displayName: connection.name,
+      email: 'Connected integration',
+      id: `connection:${connection.id}`,
+      kind: 'integration',
+      ...(activeAccount && { parentAccountId: activeAccount.id }),
+      provider: connection.provider,
+      signedIn: true,
+    })),
+  ]
+}
+getAccounts.returnValue = true
+
+export const disconnectConnectedAccount = async (provider: string): Promise<void> => {
+  await AuthWorker.disconnectConnectedAccount(provider)
+}
+disconnectConnectedAccount.returnValue = true
+
 const mergeAuthState = (state: LayoutState, authState) => {
   const authAccessToken = typeof authState?.authAccessToken === 'string' ? authState.authAccessToken : authState?.accessToken
   if (typeof authAccessToken === 'string') {
@@ -2829,7 +3012,7 @@ export const signIn = async (state: LayoutState): Promise<LayoutStateResult> => 
   }
   let authState
   try {
-    authState = await AuthWorker.signIn(backendUrl, platform)
+    authState = await AuthWorker.signIn(backendUrl, platform, state.isStandalone === true)
   } finally {
     if (notificationId !== undefined) {
       try {
@@ -2858,6 +3041,24 @@ export const signOut = async (state: LayoutState): Promise<LayoutStateResult> =>
   }
 }
 
+export const useAccount = async (state: LayoutState, id: string): Promise<LayoutStateResult> => {
+  const authState = await AuthWorker.useAccount(id)
+  const newState = mergeAuthState(state, authState)
+  return {
+    newState,
+    commands: await getAuthFanoutCommands(newState),
+  }
+}
+
+export const removeAccount = async (state: LayoutState, id: string): Promise<LayoutStateResult> => {
+  const authState = await AuthWorker.removeAccount(id)
+  const newState = mergeAuthState(state, authState)
+  return {
+    newState,
+    commands: await getAuthFanoutCommands(newState),
+  }
+}
+
 export const setUpdateState = async (state, updateState) => {
   if (state.updateState === updateState.state && state.updateProgress === updateState.progress) {
     return {
@@ -2866,6 +3067,14 @@ export const setUpdateState = async (state, updateState) => {
     }
   }
   return callGlobalEvent(state, 'handleUpdateStateChange', updateState)
+}
+
+export const setUpdateProgress = async (state, progress) => {
+  await StatusBarWorker.invoke('StatusBar.handleUpdateProgress', progress)
+  return {
+    newState: state,
+    commands: [],
+  }
 }
 
 const handleExtensionFileChanges = async (refresh: WorkspaceRefresh, applicationId?: string): Promise<void> => {
@@ -2881,20 +3090,22 @@ const handleExtensionFileChanges = async (refresh: WorkspaceRefresh, application
 }
 
 export const handleWorkspaceRefresh = async (state: LayoutState, refresh: WorkspaceRefresh = {}) => {
-  const [result] = await Promise.all([
-    callGlobalEvent(state, 'handleWorkspaceRefresh', refresh),
-    handleExtensionFileChanges(refresh, state.applicationId),
-  ])
-  return result
+  // Extension handlers can write generated files and re-enter this refresh.
+  // Notify them without holding the originating file operation open.
+  void handleExtensionFileChanges(refresh, state.applicationId)
+  return callGlobalEvent(state, 'handleWorkspaceRefresh', refresh)
 }
 
 export const handleSourceControlProgressChange = async (state: LayoutState): Promise<LayoutStateResult> => {
   return callGlobalEvent(state, 'handleSourceControlProgressChange')
 }
 
-export const refreshProblemsSummary = async (state: LayoutState): Promise<LayoutStateResult> => {
+export const refreshProblemsSummary = async (state: LayoutState, activeUri = ''): Promise<LayoutStateResult> => {
+  if (!state.statusBarVisible && !state.panelVisible) {
+    return { newState: state, commands: [] }
+  }
   try {
-    const summary = await ProblemsWorker.invoke('Problems.getProblemsSummary')
+    const summary = await ProblemsWorker.invoke('Problems.getProblemsSummary', activeUri, state.applicationId)
     return callGlobalEvent(state, 'handleProblemsSummaryChange', summary)
   } catch {
     return {
@@ -2926,11 +3137,13 @@ export const handleActiveEditorChange = async (state: LayoutState, activeUri: st
   const restored = state.browserFullWidth ? await BrowserFullWidth.leave(state) : { newState: state, commands: [] }
   const eventResult = await callGlobalEvent(restored.newState, 'handleActiveEditorChange', activeUri)
   try {
-    await StatusBarWorker.invoke('StatusBar.handleEditorStatusVisibilityChanged', activeIsTextEditor)
+    if (state.statusBarVisible) {
+      await StatusBarWorker.invoke('StatusBar.handleEditorStatusVisibilityChanged', activeIsTextEditor)
+    }
   } catch {
     // Older status bar workers do not support active editor visibility updates.
   }
-  const summaryResult = activeUri ? await refreshProblemsSummary(eventResult.newState) : await clearProblemsSummary(eventResult.newState)
+  const summaryResult = activeUri ? await refreshProblemsSummary(eventResult.newState, activeUri) : await clearProblemsSummary(eventResult.newState)
   return {
     newState: summaryResult.newState,
     commands: [...restored.commands, ...eventResult.commands, ...summaryResult.commands],
@@ -2945,10 +3158,21 @@ export const handleSettingsChanged = async (state: LayoutState) => {
   await Preferences.hydrate()
   await ViewletManagerVisitor.reloadDynamicCss()
   await BrowserFullWidth.configureGesture()
-  return callGlobalEvent(state, 'handleSettingsChanged')
+  const preference = Preferences.get('workbench.panel.alignment')
+  const configuredAlignment = preference === undefined ? state.panelAlignment : isPanelAlignment(preference) ? preference : 'justify'
+  const alignedState = configuredAlignment === state.panelAlignment ? state : getPoints({ ...state, panelAlignment: configuredAlignment })
+  const eventResult = await callGlobalEvent(alignedState, 'handleSettingsChanged')
+  const resizeCommands = alignedState === state ? [] : await getResizeCommands(state, alignedState)
+  return {
+    newState: eventResult.newState,
+    commands: [...resizeCommands, ...eventResult.commands],
+  }
 }
 
 export const refreshSourceControlBadgeCount = async (state: LayoutState): Promise<LayoutStateResult> => {
+  if (!state.activityBarVisible) {
+    return { newState: state, commands: [] }
+  }
   try {
     const badgeCount = await SourceControlWorker.invoke(
       'SourceControl.getWorkspaceBadgeCount',
@@ -3006,7 +3230,7 @@ const getActiveSideBarExtensionId = (state: LayoutState): string => {
 }
 
 export const handleExtensionsChanged = async (state: LayoutState, extensionId?: string, disabled?: boolean): Promise<LayoutStateResult> => {
-  const globalEventResult = await callGlobalEvent(state, 'handleExtensionsChanged')
+  const globalEventResult = await callGlobalEvent(state, 'handleExtensionsChanged', extensionId, disabled)
   // Workers have already queued these transactions. Commit them before an extension
   // provider query can delay every subsequent direct render of the same views.
   UpdateDynamicFocusContext.updateDynamicFocusContext(globalEventResult.commands)
@@ -3123,15 +3347,34 @@ export const getBadgeCounts = (state: LayoutState) => {
 }
 
 export const getModuleId = (state: LayoutState, uri: string, opener?: string) => {
-  return ViewletMap.getModuleId(uri, opener)
+  return ViewletMap.getModuleId(uri, opener, state.applicationId)
 }
 
 export const getHref = (state: LayoutState) => {
   return Location.getHref()
 }
 
+export const setHash = (state: LayoutState, hash: string) => {
+  return Location.setHash(hash)
+}
+
+export const setPathName = (state: LayoutState, pathName: string) => {
+  return Location.setPathName(pathName)
+}
+
 export const afterRender = async (oldState: LayoutState, newState: LayoutState) => {
   await BrowserFullWidth.afterRender(oldState, newState)
+  const oldShowSideBarThings = !oldState.titleBarless && oldState.browserFullWidth?.hideTitleBar !== true
+  const showSideBarThings = !newState.titleBarless && newState.browserFullWidth?.hideTitleBar !== true
+  if (oldShowSideBarThings !== showSideBarThings) {
+    const titleBar = ViewletStates.getInstance(LayoutModules.TitleBar.moduleId, newState.applicationId)
+    if (titleBar) {
+      const titleBarState = await TitleBarWorker.invoke('TitleBar.getComponentState', titleBar.state.uid)
+      if (titleBarState.showSideBarThings !== showSideBarThings) {
+        await Viewlet.executeViewletCommand(titleBar.state.uid, 'setShowSideBarThings', showSideBarThings)
+      }
+    }
+  }
   if (newState.secondaryPreviewPlacement !== 'bottomLeft' || !newState.secondaryPreviewVisible) return
   // Root reconciliation preserves named inputs. Both browser panes use the same
   // address name, so restore each retained view's own value after reconciliation.
@@ -3144,22 +3387,33 @@ export const afterRender = async (oldState: LayoutState, newState: LayoutState) 
   if (commands.length) await RendererProcess.invoke('Viewlet.sendMultiple', commands)
 }
 
-export const beginBrowserTabDrag = (state: LayoutState, sourceUid: number): LayoutStateResult => {
+export const beginBrowserTabDrag = async (state: LayoutState, sourceUid: number): Promise<LayoutStateResult> => {
   const source = ViewletStates.getInstance(sourceUid)?.state
+  const movingToBottomLeft = sourceUid === state.previewId && !state.secondaryPreviewVisible
+  const movingToPreview =
+    sourceUid === state.secondaryPreviewId &&
+    state.secondaryPreviewPlacement === 'bottomLeft' &&
+    state.secondaryPreviewVisible &&
+    state.previewVisible &&
+    state.previewViewletId === ViewletModuleId.SimpleBrowser
   const supported =
-    sourceUid === state.previewId &&
-    !state.secondaryPreviewVisible &&
+    (movingToBottomLeft || movingToPreview) &&
     !state.browserFullWidth &&
     !state.sideBarFocusMode &&
+    source?.isDraggingTab &&
     source?.draggedTab?.browserViewId &&
     !source?.loginChallenges?.length
+  if (supported && movingToPreview) await Viewlet.executeViewletCommand(state.previewId, 'hideForTabDrag')
   return { newState: supported ? { ...state, browserTabDragSource: sourceUid } : state, commands: [] }
 }
 
-export const endBrowserTabDrag = (state: LayoutState, sourceUid: number): LayoutStateResult => ({
-  newState: state.browserTabDragSource === sourceUid ? { ...state, browserTabDragSource: undefined } : state,
-  commands: [],
-})
+export const endBrowserTabDrag = async (state: LayoutState, sourceUid: number): Promise<LayoutStateResult> => {
+  if (state.browserTabDragSource !== sourceUid) return { newState: state, commands: [] }
+  if (sourceUid === state.secondaryPreviewId && state.secondaryPreviewPlacement === 'bottomLeft') {
+    await Viewlet.executeViewletCommand(state.previewId, 'showAfterTabDrag')
+  }
+  return { newState: { ...state, browserTabDragSource: undefined }, commands: [] }
+}
 
 export const handleBrowserTabDragOver = (state: LayoutState): LayoutStateResult => ({ newState: state, commands: [] })
 
@@ -3169,6 +3423,29 @@ export const handleBrowserTabDrop = async (state: LayoutState, x: number, y: num
   const browserViewId = source?.draggedTab?.browserViewId
   const top = (state.windowHeight + (state.titleBarVisible ? state.titleBarHeight : 0)) / 2
   const cleanState = { ...state, browserTabDragSource: undefined }
+  if (sourceUid === state.secondaryPreviewId && state.secondaryPreviewPlacement === 'bottomLeft') {
+    if (
+      !browserViewId ||
+      !source?.isDraggingTab ||
+      !state.secondaryPreviewVisible ||
+      !state.previewVisible ||
+      state.previewViewletId !== ViewletModuleId.SimpleBrowser ||
+      x < state.previewLeft ||
+      x >= state.windowWidth ||
+      y < (state.titleBarVisible ? state.titleBarHeight : 0) ||
+      y >= state.windowHeight
+    ) {
+      await Viewlet.executeViewletCommand(state.previewId, 'showAfterTabDrag')
+      return { newState: cleanState, commands: [] }
+    }
+    try {
+      await Viewlet.executeViewletCommand(sourceUid, 'moveTabToBrowser', browserViewId, state.previewId)
+    } catch (error) {
+      await Viewlet.executeViewletCommand(state.previewId, 'showAfterTabDrag')
+      throw error
+    }
+    return { newState: cleanState, commands: [] }
+  }
   if (
     !browserViewId ||
     !source?.isDraggingTab ||

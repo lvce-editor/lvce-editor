@@ -5,7 +5,16 @@ import * as Path from '../Path/Path.ts'
 import * as Remove from '../Remove/Remove.ts'
 
 export const bundleSharedProcessCached = async ({ commitHash, product, version, bundleSharedProcess, date, target, isArchLinux, isAppImage }) => {
-  const cachePath = await CachePaths.getSharedProcessCachePath([product, version, date, commitHash])
+  const cachePath = await CachePaths.getSharedProcessCachePath([
+    product,
+    version,
+    date,
+    commitHash,
+    target,
+    bundleSharedProcess,
+    isArchLinux,
+    isAppImage,
+  ])
   if (existsSync(cachePath)) {
     Logger.info('[build step skipped] bundleSharedprocess')
   } else {
