@@ -12,6 +12,7 @@ import * as Path from '../Path/Path.ts'
 import * as Process from '../Process/Process.ts'
 import { computeFileSha256, isSha256 } from '../Sha256/Sha256.ts'
 import { downloadUrl } from '../DownloadUrl/DownloadUrl.ts'
+import { getBuiltinExtensionAssetName } from '../GetBuiltinExtensionAssetName/GetBuiltinExtensionAssetName.ts'
 import extensions from './builtinExtensions.json' with { type: 'json' }
 
 const downloadExtension = async (extension) => {
@@ -27,8 +28,7 @@ const downloadExtension = async (extension) => {
     if (!extension.repository.startsWith('github.com/')) {
       throw new VError('currenly only extensions from github releases are supported')
     }
-    const baseName = Path.baseName(extension.repository)
-    const assetName = extension.assetName || `${baseName}-v${extension.version}.tar.br`
+    const assetName = getBuiltinExtensionAssetName(extension)
     Assert.string(assetName)
     const cacheName = extension.name + '-' + extension.version + '-' + assetName
     const cachedPath = Path.absolute(Path.join('packages', 'build', '.tmp', `cachedExtensions`, cacheName))
