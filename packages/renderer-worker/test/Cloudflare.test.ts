@@ -8,7 +8,7 @@ afterEach(() => {
   RendererFrameScheduler.reset(undefined)
 })
 test('opens Cloudflare account settings on the configured backend', async () => {
-  const invoke = jest.fn(async () => undefined)
+  const invoke = jest.fn<(...args: unknown[]) => Promise<void>>(async () => undefined)
   RendererFrameScheduler.reset({ invoke })
   PreferencesState.set('layout.backendUrl', 'https://custom.example')
   await openConnections()
