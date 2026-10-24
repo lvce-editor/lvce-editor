@@ -21,9 +21,9 @@ await writeFile(join(fixture, 'src/main.js'), await readFile('extensions/builtin
 const mimeTypes = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.json': 'application/json', '.svg': 'image/svg+xml' }
 const server = createServer(async (request, response) => {
   try {
-    const requestUrl = request.url || '/'
-    assert.ok(URL.canParse(requestUrl, 'http://localhost'))
-    const pathname = new URL(requestUrl, 'http://localhost').pathname
+    const requestUrl = URL.parse(request.url || '/', 'http://localhost')
+    assert.ok(requestUrl)
+    const { pathname } = requestUrl
     const path = join(root, pathname.endsWith('/') ? pathname + 'index.html' : pathname)
     const content = await readFile(path)
     response.setHeader('Content-Type', mimeTypes[extname(path)] || 'application/octet-stream')
@@ -121,9 +121,10 @@ try {
     const moduleUrl = `${prefix}/${commitHash}/packages/renderer-process/dist/${entry}`
     const tunnelAccessUrl = await page.evaluate(async (url) => {
       const { executeCommand } = await import(url)
-      const originalOpen = window.open
-      let openedUrl
-      window.open = (target) => {
+      const browserWindow = /** @type {{ open: (url?: string | URL) => unknown }} */ (/** @type {unknown} */ (globalThis))
+      const originalOpen = browserWindow.open
+      let openedUrl = ''
+      browserWindow.open = (target) => {
         openedUrl = String(target)
         return null
       }
@@ -131,7 +132,7 @@ try {
         await executeCommand('Cloudflare.openConnections')
         return openedUrl
       } finally {
-        window.open = originalOpen
+        browserWindow.open = originalOpen
       }
     }, moduleUrl)
     assert.ok(URL.canParse(tunnelAccessUrl))
