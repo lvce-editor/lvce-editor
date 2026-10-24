@@ -756,9 +756,10 @@ const getExtensionPaths = (extensionPath: any, extensionPaths: any): any => {
 
 /**
  *
- * @param {{root:string, pathPrefix:string , extensionPath:string, extensionPaths?:string[], onLoadCommands?:readonly unknown[], cspOptions?: {allowExternalConnections?: boolean}, testPath:string, useSimpleWebExtensionFile?:boolean, serverStaticPath?:string }} param0
+ * @param {{root:string, pathPrefix:string , extensionPath:string, extensionPaths?:string[], onLoadCommands?:readonly unknown[], cspOptions?: {allowExternalConnections?: boolean}, testPath:string, useSimpleWebExtensionFile?:boolean, serverStaticPath?:string, bundleMode?:boolean }} param0
  */
 export const exportStatic = async ({
+  bundleMode = false,
   cspOptions = {},
   extensionPath,
   extensionPaths,
@@ -814,6 +815,11 @@ export const exportStatic = async ({
   console.timeEnd('applyOverrides')
 
   await copyBuiltinWebExtensions({ commitHash, pathPrefix, root })
+
+  if (bundleMode) {
+    const BundleStaticWorkers = await import('../BundleStaticWorkers/BundleStaticWorkers.ts')
+    await BundleStaticWorkers.bundleStaticWorkers({ commitHash, pathPrefix, root, workers })
+  }
   await updateExtensionsJson({ commitHash, extraExtensions: [], pathPrefix, root })
   await JsonFile.writeJson(Path.join(root, 'dist', commitHash, 'config', 'onLoadCommands.json'), onLoadCommands)
 

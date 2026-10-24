@@ -1,4 +1,6 @@
 import { existsSync } from 'node:fs'
+import { readdir } from 'node:fs/promises'
+import { dirname } from 'node:path'
 import * as BundleBuiltinSettings from '../BundleBuiltinSettings/BundleBuiltinSettings.ts'
 import * as BundleRendererProcessCached from '../BundleRendererProcessCached/BundleRendererProcessCached.ts'
 import * as BundleRendererWorkerCached from '../BundleRendererWorkerCached/BundleRendererWorkerCached.ts'
@@ -51,6 +53,15 @@ const copyWorkers = async ({ product, toRoot, platform, workers }) => {
       to: Path.join(toRoot, stripLeadingSlash(productionPath)),
       entryOnly: shouldCopyWorkerEntryOnly({ platform, workerId: worker.id }),
     })
+    if (worker.id === 'editor') {
+      // The editor entry dynamically imports chunks which import its exports.
+      // Keep these modules available when static export combines the entry.
+      for (const file of await readdir(Path.absolute(dirname(from)))) {
+        if (file.endsWith('.js') && file !== worker.fileName) {
+          await Copy.copyFile({ from: Path.join(dirname(from), file), to: Path.join(toRoot, dirname(stripLeadingSlash(productionPath)), file) })
+        }
+      }
+    }
     if (worker.id === 'dialogWorker') {
       await PatchDialogWorkerProductName.patchDialogWorkerProductName({ product, toRoot })
     }
