@@ -9,6 +9,7 @@ const lazy =
   }
 
 export const commandMap = {
+  'Cloudflare.openConnections': lazy('Cloudflare.openConnections'),
   'EditorKeymap.register': async (keymap) => (await import('../EditorKeymap/EditorKeymap.ts')).register(keymap),
   'EditorKeymap.remove': async (id) => (await import('../EditorKeymap/EditorKeymap.ts')).remove(id),
   'EditorKeymap.execute': async (id, command, ...args) => (await import('../EditorKeymap/EditorKeymap.ts')).execute(id, command, ...args),
