@@ -32,6 +32,8 @@ export const load = (moduleId) => {
       return import('../CacheStorage/CacheStorage.ipc.js')
     case ModuleId.Callback:
       return import('../Callback/Callback.ipc.js')
+    case ModuleId.Cloudflare:
+      return import('../Cloudflare/Cloudflare.ipc.js')
     case ModuleId.Chrome:
       return import('../Chrome/Chrome.ipc.js')
     case ModuleId.ClipBoard:

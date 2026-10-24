@@ -127,3 +127,5 @@ export const TerminalTransfer = 159
 export const Tasks = 160
 
 export const SideBar = 161
+
+export const Cloudflare = 162

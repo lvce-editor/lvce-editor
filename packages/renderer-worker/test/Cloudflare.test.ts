@@ -8,7 +8,7 @@ afterEach(() => {
   RendererFrameScheduler.reset(undefined)
 })
 test('opens Cloudflare account settings on the configured backend', async () => {
-  const invoke = jest.fn<(...args: unknown[]) => Promise<void>>(async () => undefined)
+  const invoke = jest.fn<(...args: readonly unknown[]) => Promise<void>>(async () => undefined)
   RendererFrameScheduler.reset({ invoke })
   PreferencesState.set('layout.backendUrl', 'https://custom.example')
   await openConnections()
@@ -24,4 +24,21 @@ test('rejects insecure public backend and embedded credentials', async () => {
   await expect(openConnections()).rejects.toThrow('HTTPS')
   PreferencesState.set('layout.backendUrl', 'https://user:secret@custom.example')
   await expect(openConnections()).rejects.toThrow('credentials')
+})
+
+test('the registered tunnel access command loads through the real dispatcher', async () => {
+  const Command = await import('../src/parts/Command/Command.js')
+  const Module = await import('../src/parts/Module/Module.js')
+  const { commandMap } = await import('../src/parts/CommandMap/CommandMap.js')
+  const invoke = jest.fn<(...args: readonly unknown[]) => Promise<void>>(async () => undefined)
+  RendererFrameScheduler.reset({ invoke })
+  PreferencesState.set('layout.backendUrl', 'https://custom.example')
+  const previous = { ...Command.state }
+  Object.assign(Command.state, { commands: Object.create(null), load: Module.load, pendingModules: Object.create(null) })
+  try {
+    await commandMap['Cloudflare.openConnections']()
+    expect(invoke).toHaveBeenLastCalledWith('Open.openUrl', 'https://custom.example/cloudflare', false)
+  } finally {
+    Object.assign(Command.state, previous)
+  }
 })

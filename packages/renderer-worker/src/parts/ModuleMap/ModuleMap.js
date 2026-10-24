@@ -50,6 +50,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.CacheStorage
     case 'Callback':
       return ModuleId.Callback
+    case 'Cloudflare':
+      return ModuleId.Cloudflare
     case 'Chrome':
       return ModuleId.Chrome
     case 'ClipBoard':
