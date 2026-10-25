@@ -15,6 +15,8 @@ jobs:
     timeout-minutes: 60
     steps:
       - uses: actions/checkout@v7
+        with:
+          ref: 233781cf2b58d8f4b17819789614cd6328e12e0e
       - run: |
           git fetch --no-tags --prune --depth=1 origin +refs/heads/main:refs/remotes/origin/main
       - uses: actions/setup-node@v6
@@ -209,7 +211,20 @@ jobs:
         run: node .tmp/accounts-view-tests/packages/e2e-integration/stage-accounts-view-test.mjs . --clean
       - name: Test saving the active split editor with the published worker
         working-directory: ./packages/extension-host-worker-tests
-        run: npm run e2e:headless -- --ci --test-name-prefix=viewlet.main-save-active-split-editor
+        shell: bash
+        run: |
+          failed=0
+          for attempt in {1..20}; do
+            export LVCE_SPLIT_SAVE_ATTEMPT="$attempt"
+            if npm run e2e:headless -- --ci --test-name-prefix=viewlet.main-save-active-split-editor; then
+              echo "SPLIT-SAVE attempt $attempt PASS"
+            else
+              echo "SPLIT-SAVE attempt $attempt FAIL"
+              failed=$((failed + 1))
+            fi
+          done
+          echo "SPLIT-SAVE completed=20 failed=$failed passed=$((20 - failed))"
+          test "$failed" -eq 0
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0
       - name: Remove staged active split save regression
