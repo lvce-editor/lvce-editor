@@ -39,6 +39,10 @@ jest.unstable_mockModule('../src/parts/StatusBarWorker/StatusBarWorker.js', () =
   invoke: jest.fn(),
 }))
 
+jest.unstable_mockModule('../src/parts/ExtensionHost/ExtensionHostCommands.js', () => ({ executeCommand: jest.fn() }))
+const ExtensionHostCommands = await import('../src/parts/ExtensionHost/ExtensionHostCommands.js')
+const WorkspaceConnection = await import('../src/parts/WorkspaceConnection/WorkspaceConnection.js')
+
 const RendererProcess = await import('../src/parts/RendererProcess/RendererProcess.js')
 const SharedProcess = await import('../src/parts/SharedProcess/SharedProcess.js')
 const StatusBarWorker = await import('../src/parts/StatusBarWorker/StatusBarWorker.js')
@@ -256,3 +260,28 @@ for (const method of ['setPath', 'setUri'] as const) {
     }
   })
 }
+
+test('opening a recent remote-server folder prepares its transport before changing the workspace', async () => {
+  jest.mocked(RendererProcess.invoke).mockResolvedValue(undefined)
+  WorkspaceConnection.reset()
+  const uri = 'remote-server://remote.example/home/test/project'
+  jest.mocked(ExtensionHostCommands.executeCommand).mockResolvedValue({
+    command: 'remote-server.getWebSocketUrl',
+    disposeCommand: 'remote-server.releaseWorkspace',
+    workspacePath: '/home/test/project',
+  })
+  expect(await Workspace.setUri(uri)).toBe(true)
+  expect(ExtensionHostCommands.executeCommand).toHaveBeenCalledWith('remote-server.prepareWorkspace', uri)
+  expect(Workspace.getWorkspaceUri()).toBe(uri)
+  expect(Workspace.getPath()).toBe('/home/test/project')
+  expect(WorkspaceConnection.getCommand()).toBe('remote-server.getWebSocketUrl')
+  WorkspaceConnection.reset()
+})
+
+test('canceling remote preparation keeps the existing folder', async () => {
+  Workspace.state.workspacePath = '/old'
+  Workspace.state.workspaceUri = 'file:///old'
+  jest.mocked(ExtensionHostCommands.executeCommand).mockResolvedValue(undefined)
+  expect(await Workspace.setUri('remote-server://remote.example/home/test/project')).toBe(false)
+  expect(Workspace.getWorkspaceUri()).toBe('file:///old')
+})

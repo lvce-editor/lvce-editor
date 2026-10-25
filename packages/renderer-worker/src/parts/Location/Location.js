@@ -79,3 +79,16 @@ export const getHost = () => {
 export const getProtocol = () => {
   return location.protocol
 }
+
+export const setRemoteWorkspaceUri = async (uri) => {
+  if (typeof uri === 'string' && uri.startsWith('remote-server://')) {
+    const workspace = new URL(uri)
+    if (!workspace.host || workspace.username || workspace.password || workspace.search || workspace.hash)
+      throw new Error('Invalid remote workspace URI')
+    await setHash(`workspace=${encodeURIComponent(workspace.href)}`)
+    return
+  }
+  const { href: currentHref } = state
+  const href = currentHref || (await getHref())
+  if (new URL(href).hash.startsWith('#workspace=')) await setHash('')
+}

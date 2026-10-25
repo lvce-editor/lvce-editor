@@ -183,9 +183,13 @@ export const setPath = async (path) => {
 }
 
 export const setUri = async (uri, connectionOrPathSeparator, legacyConnection, openUri = '') => {
-  const connection = legacyConnection || (typeof connectionOrPathSeparator === 'object' ? connectionOrPathSeparator : undefined)
+  let connection = legacyConnection || (typeof connectionOrPathSeparator === 'object' ? connectionOrPathSeparator : undefined)
   const changeId = ++workspaceChangeId
   const protocol = GetProtocol.getProtocol(uri)
+  if (protocol === 'remote-server' && !connection) {
+    connection = await ExtensionHostCommands.executeCommand('remote-server.prepareWorkspace', uri)
+    if (!connection || changeId !== workspaceChangeId) return false
+  }
   if (protocol === 'remote-ssh' && !connection) {
     const prepared = await ExtensionHostCommands.executeCommand('remote-ssh.prepareWorkspace', uri)
     if (prepared !== true || changeId !== workspaceChangeId) return false
@@ -305,11 +309,13 @@ const getPathName = (workspacePath) => {
 }
 
 const onWorkspaceChange = async () => {
+  const { workspacePath, workspaceUri } = state
   if (Platform.getPlatform() === PlatformType.Web || Platform.getPlatform() === PlatformType.Remote) {
-    const pathName = getPathName(state.workspacePath)
+    const pathName = getPathName(workspacePath)
     await Location.setPathName(pathName)
+    if (Platform.getPlatform() === PlatformType.Web) await Location.setRemoteWorkspaceUri(workspaceUri)
   }
-  await GlobalEventBus.emitEvent('workspace.change', state.workspacePath)
+  await GlobalEventBus.emitEvent('workspace.change', workspacePath)
 }
 
 export const hydrate = async ({ href, workspaceUri = '' }) => {
