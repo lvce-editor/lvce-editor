@@ -483,6 +483,8 @@ test('signOut merges logged out auth state into layout state', async () => {
 
   const result = await ViewletLayout.signOut(state)
 
+  expect(Command.execute).toHaveBeenCalledWith('Cloudflare.releaseAccountSession')
+  expect(jest.mocked(Command.execute).mock.invocationCallOrder[0]).toBeLessThan(jest.mocked(AuthWorker.signOut).mock.invocationCallOrder[0])
   expect(AuthWorker.signOut).toHaveBeenCalledTimes(1)
   expect(AuthWorker.signOut).toHaveBeenCalledWith('https://example.com/')
   expect(result).toEqual({

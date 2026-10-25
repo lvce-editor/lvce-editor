@@ -3033,6 +3033,7 @@ export const signIn = async (state: LayoutState): Promise<LayoutStateResult> => 
 }
 
 export const signOut = async (state: LayoutState): Promise<LayoutStateResult> => {
+  await Command.execute('Cloudflare.releaseAccountSession')
   const authState = await AuthWorker.signOut(state.backendUrl)
   const newState = mergeAuthState(state, authState)
   return {
@@ -3042,6 +3043,7 @@ export const signOut = async (state: LayoutState): Promise<LayoutStateResult> =>
 }
 
 export const useAccount = async (state: LayoutState, id: string): Promise<LayoutStateResult> => {
+  await Command.execute('Cloudflare.releaseAccountSession')
   const authState = await AuthWorker.useAccount(id)
   const newState = mergeAuthState(state, authState)
   return {
@@ -3051,6 +3053,7 @@ export const useAccount = async (state: LayoutState, id: string): Promise<Layout
 }
 
 export const removeAccount = async (state: LayoutState, id: string): Promise<LayoutStateResult> => {
+  await Command.execute('Cloudflare.releaseAccountSession')
   const authState = await AuthWorker.removeAccount(id)
   const newState = mergeAuthState(state, authState)
   return {
