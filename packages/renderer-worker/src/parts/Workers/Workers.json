@@ -1219,6 +1219,8 @@
     "contentSecurityPolicy": ["default-src 'none'"],
     "viewlet": {
       "name": "Output",
+      "extraCommands": [{ "name": "handleWorkspaceChange", "method": "refreshOptions" }],
+      "workspaceChangeEvent": "workspace.change",
       "css": ["/css/parts/ViewletOutput.css", "/css/parts/Select.css"],
       "state": {
         "idKey": "id",
@@ -1246,6 +1248,10 @@
             { "source": "state", "name": "platform" }, { "source": "state", "name": "parentUid" },
             { "source": "context", "name": "applicationId" }
           ]
+        },
+        "refreshOptions": {
+          "name": "Output.refreshOptions",
+          "parameters": [{ "source": "state", "name": "id" }]
         },
         "loadContent": {
           "name": "Output.loadContent2",
