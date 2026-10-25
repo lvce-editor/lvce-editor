@@ -122,16 +122,16 @@
   {
     "name": "builtin.remote-server",
     "repository": "github.com/lvce-editor/remote-ssh",
-    "version": "0.22.0",
-    "assetName": "remote-server-v0.22.0.tar.br",
-    "sha256": "6cb94f8d574896ef603f1589002408c6dec42b13a8fd181c24a73408eafbd2ef",
+    "version": "0.23.0",
+    "assetName": "remote-server-v0.23.0.tar.br",
+    "sha256": "5daa2bf1cdb360c52df44d8173ed022f72ed6b78bccf6627223b29d764b188a8",
     "created": "2026-10-24"
   },
   {
     "name": "builtin.remote-ssh",
     "repository": "github.com/lvce-editor/remote-ssh",
-    "version": "0.22.0",
-    "sha256": "ea64aed77019c4938af45f9558fe0015e4513b860cd5d0939a8c9da8eadd6b8a",
+    "version": "0.23.1",
+    "sha256": "7375498a81c04c759a2d68fd363bfc5c6c97eec7985faae902eaea97440946e3",
     "created": "2026-10-24"
   },
   {
@@ -495,8 +495,8 @@
   {
     "name": "builtin.language-basics-yaml",
     "repository": "github.com/lvce-editor/language-basics-yaml",
-    "version": "1.12.2",
-    "sha256": "7aa0b1b00f82a0c7b27f58bf255e21b1409402fee917ad4ee6384c760d5d0813",
+    "version": "1.13.0",
+    "sha256": "8d7960996ad71ed9630f9b705657fab6335f868d5b3ea4b381b61e68a2e89f36",
     "created": "2022-06-16"
   },
   {

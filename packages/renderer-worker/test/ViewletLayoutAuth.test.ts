@@ -483,6 +483,8 @@ test('signOut merges logged out auth state into layout state', async () => {
 
   const result = await ViewletLayout.signOut(state)
 
+  expect(Command.execute).toHaveBeenCalledWith('Cloudflare.releaseAccountSession')
+  expect(jest.mocked(Command.execute).mock.invocationCallOrder[0]).toBeLessThan(jest.mocked(AuthWorker.signOut).mock.invocationCallOrder[0])
   expect(AuthWorker.signOut).toHaveBeenCalledTimes(1)
   expect(AuthWorker.signOut).toHaveBeenCalledWith('https://example.com/')
   expect(result).toEqual({
@@ -556,4 +558,19 @@ test('signIn continues when the browser notification cannot be created', async (
 
   expect(result.newState.userState).toBe('loggedIn')
   expect(Command.execute).toHaveBeenCalledTimes(1)
+})
+
+test.each(['signOut', 'useAccount', 'removeAccount'] as const)('%s resumes connection authorization if the auth operation fails', async (method) => {
+  jest.mocked(AuthWorker[method]).mockRejectedValue(new Error('auth unavailable') as never)
+  const state = ViewletLayout.create(1)
+  await expect(ViewletLayout[method](state, 'other')).rejects.toThrow('auth unavailable')
+  expect(jest.mocked(Command.execute).mock.calls).toEqual([['Cloudflare.releaseAccountSession'], ['Cloudflare.resumeAccountConnections']])
+})
+
+test('signing into another account suspends and disconnects the existing account connection', async () => {
+  jest.mocked(AuthWorker.signIn).mockResolvedValue({ userState: 'loggedIn', userName: 'Other User' } as never)
+  const state = { ...ViewletLayout.create(1), userState: 'loggedIn', platform: PlatformType.Web }
+  await ViewletLayout.signIn(state)
+  expect(jest.mocked(Command.execute).mock.calls).toEqual([['Cloudflare.releaseAccountSession'], ['Cloudflare.resumeAccountConnections']])
+  expect(jest.mocked(Command.execute).mock.invocationCallOrder[0]).toBeLessThan(jest.mocked(AuthWorker.signIn).mock.invocationCallOrder[0])
 })
