@@ -561,7 +561,7 @@ test('loadContent retains the initial DOM if selection restoration consumes a la
 })
 
 test('functional editor with a known language does not read content twice or probe unsupported remote cache metadata', async () => {
-  editorWorkerInvoke.mockResolvedValue([])
+  editorWorkerInvoke.mockImplementation(() => [])
   const state = ViewletEditorText.create(1, 'remote-server://example.com/workspace/file.css', 0, 0, 800, 600)
   await ViewletEditorText.loadContent(state, undefined, { languageId: 'css' })
   expect(getTextEditorContent).not.toHaveBeenCalled()
