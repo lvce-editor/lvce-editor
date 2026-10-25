@@ -564,13 +564,35 @@ test.each(['signOut', 'useAccount', 'removeAccount'] as const)('%s resumes conne
   jest.mocked(AuthWorker[method]).mockRejectedValue(new Error('auth unavailable') as never)
   const state = ViewletLayout.create(1)
   await expect(ViewletLayout[method](state, 'other')).rejects.toThrow('auth unavailable')
-  expect(jest.mocked(Command.execute).mock.calls).toEqual([['Cloudflare.releaseAccountSession'], ['Cloudflare.resumeAccountConnections']])
+  expect(jest.mocked(Command.execute).mock.calls).toEqual([
+    ['Authentication.beginAccountChange'],
+    ['Cloudflare.releaseAccountSession'],
+    ['Cloudflare.resumeAccountConnections'],
+    ['Authentication.endAccountChange', undefined],
+  ])
 })
 
 test('signing into another account suspends and disconnects the existing account connection', async () => {
   jest.mocked(AuthWorker.signIn).mockResolvedValue({ userState: 'loggedIn', userName: 'Other User' } as never)
   const state = { ...ViewletLayout.create(1), userState: 'loggedIn', platform: PlatformType.Web }
   await ViewletLayout.signIn(state)
-  expect(jest.mocked(Command.execute).mock.calls).toEqual([['Cloudflare.releaseAccountSession'], ['Cloudflare.resumeAccountConnections']])
+  expect(jest.mocked(Command.execute).mock.calls).toEqual([
+    ['Authentication.beginAccountChange'],
+    ['Cloudflare.releaseAccountSession'],
+    ['Cloudflare.resumeAccountConnections'],
+    ['Authentication.endAccountChange', undefined],
+  ])
   expect(jest.mocked(Command.execute).mock.invocationCallOrder[0]).toBeLessThan(jest.mocked(AuthWorker.signIn).mock.invocationCallOrder[0])
+})
+
+test('signOut waits for generic account cleanup and pairs its operation ID on failure', async () => {
+  const cleanup = Promise.withResolvers<number>()
+  jest.mocked(Command.execute).mockImplementation(async (command) => (command === 'Authentication.beginAccountChange' ? cleanup.promise : undefined))
+  jest.mocked(AuthWorker.signOut).mockRejectedValue(new Error('auth failed') as never)
+  const pending = ViewletLayout.signOut(ViewletLayout.create(1))
+  await Promise.resolve()
+  expect(AuthWorker.signOut).not.toHaveBeenCalled()
+  cleanup.resolve(41)
+  await expect(pending).rejects.toThrow('auth failed')
+  expect(Command.execute).toHaveBeenLastCalledWith('Authentication.endAccountChange', 41)
 })

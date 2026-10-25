@@ -3011,12 +3011,16 @@ export const signIn = async (state: LayoutState): Promise<LayoutStateResult> => 
     )
   }
   const switchingAccount = state.userState === 'loggedIn'
+  const accountChange = switchingAccount ? await Command.execute('Authentication.beginAccountChange') : undefined
   if (switchingAccount) await Command.execute('Cloudflare.releaseAccountSession')
   let authState
   try {
     authState = await AuthWorker.signIn(backendUrl, platform, state.isStandalone === true)
   } finally {
-    if (switchingAccount) await Command.execute('Cloudflare.resumeAccountConnections')
+    if (switchingAccount) {
+      await Command.execute('Cloudflare.resumeAccountConnections')
+      await Command.execute('Authentication.endAccountChange', accountChange)
+    }
     if (notificationId !== undefined) {
       try {
         await Command.execute('Notification.dispose', notificationId)
@@ -3036,12 +3040,14 @@ export const signIn = async (state: LayoutState): Promise<LayoutStateResult> => 
 }
 
 export const signOut = async (state: LayoutState): Promise<LayoutStateResult> => {
+  const accountChange = await Command.execute('Authentication.beginAccountChange')
   await Command.execute('Cloudflare.releaseAccountSession')
   let authState
   try {
     authState = await AuthWorker.signOut(state.backendUrl)
   } finally {
     await Command.execute('Cloudflare.resumeAccountConnections')
+    await Command.execute('Authentication.endAccountChange', accountChange)
   }
   const newState = mergeAuthState(state, authState)
   return {
@@ -3051,12 +3057,14 @@ export const signOut = async (state: LayoutState): Promise<LayoutStateResult> =>
 }
 
 export const useAccount = async (state: LayoutState, id: string): Promise<LayoutStateResult> => {
+  const accountChange = await Command.execute('Authentication.beginAccountChange')
   await Command.execute('Cloudflare.releaseAccountSession')
   let authState
   try {
     authState = await AuthWorker.useAccount(id)
   } finally {
     await Command.execute('Cloudflare.resumeAccountConnections')
+    await Command.execute('Authentication.endAccountChange', accountChange)
   }
   const newState = mergeAuthState(state, authState)
   return {
@@ -3066,12 +3074,14 @@ export const useAccount = async (state: LayoutState, id: string): Promise<Layout
 }
 
 export const removeAccount = async (state: LayoutState, id: string): Promise<LayoutStateResult> => {
+  const accountChange = await Command.execute('Authentication.beginAccountChange')
   await Command.execute('Cloudflare.releaseAccountSession')
   let authState
   try {
     authState = await AuthWorker.removeAccount(id)
   } finally {
     await Command.execute('Cloudflare.resumeAccountConnections')
+    await Command.execute('Authentication.endAccountChange', accountChange)
   }
   const newState = mergeAuthState(state, authState)
   return {
