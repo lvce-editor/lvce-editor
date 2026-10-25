@@ -285,3 +285,41 @@ test('canceling remote preparation keeps the existing folder', async () => {
   expect(await Workspace.setUri('remote-server://remote.example/home/test/project')).toBe(false)
   expect(Workspace.getWorkspaceUri()).toBe('file:///old')
 })
+
+test('hydrating a remote workspace restores connection metadata without prompting for pairing', async () => {
+  const uri = 'remote-server://remote.example/home/test/project'
+  jest.mocked(RendererProcess.invoke).mockResolvedValue(undefined)
+  WorkspaceConnection.reset()
+  jest.mocked(SharedProcess.invoke).mockResolvedValue({ homeDir: '', path: uri, uri, pathSeparator: '/', source: 'shared-process-cli-arg' })
+  jest.mocked(ExtensionHostCommands.executeCommand).mockResolvedValue({
+    command: 'remote-server.getWebSocketUrl',
+    disposeCommand: 'remote-server.releaseWorkspace',
+    workspacePath: '/home/test/project',
+  })
+  await Workspace.hydrate({ href: 'https://example.com/lvce-editor/', workspaceUri: uri })
+  expect(ExtensionHostCommands.executeCommand).toHaveBeenCalledWith('remote-server.prepareWorkspace', uri, false)
+  expect(Workspace.getPath()).toBe('/home/test/project')
+  expect(WorkspaceConnection.getCommand()).toBe('remote-server.getWebSocketUrl')
+  WorkspaceConnection.reset()
+})
+
+test('a late remote-session restore cannot replace a newer workspace', async () => {
+  const uri = 'remote-server://remote.example/home/test/project'
+  const { promise, resolve } = Promise.withResolvers<unknown>()
+  const { promise: started, resolve: markStarted } = Promise.withResolvers<void>()
+  WorkspaceConnection.reset()
+  jest.mocked(RendererProcess.invoke).mockResolvedValue(undefined)
+  jest.mocked(SharedProcess.invoke).mockResolvedValue({ homeDir: '', path: uri, uri, pathSeparator: '/', source: 'shared-process-cli-arg' })
+  jest.mocked(ExtensionHostCommands.executeCommand).mockImplementation(async () => {
+    markStarted()
+    return promise
+  })
+  const restoring = Workspace.hydrate({ href: 'https://example.com/lvce-editor/', workspaceUri: uri })
+  await started
+  await Workspace.setUri('file:///newer')
+  resolve({ command: 'remote-server.getWebSocketUrl', disposeCommand: 'remote-server.releaseWorkspace', workspacePath: '/home/test/project' })
+  await restoring
+  expect(Workspace.getWorkspaceUri()).toBe('file:///newer')
+  expect(Workspace.getPath()).toBe('/newer')
+  expect(WorkspaceConnection.getCommand()).toBe('')
+})

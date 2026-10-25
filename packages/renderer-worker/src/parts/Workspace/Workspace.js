@@ -348,6 +348,28 @@ export const hydrate = async ({ href, workspaceUri = '' }) => {
   if (state.workspaceUri && state.workspaceUri.startsWith('/')) {
     state.workspaceUri = `file://${state.workspaceUri}`
   }
+  const hydrationChangeId = workspaceChangeId
+  const hydrationUri = state.workspaceUri
+  if (hydrationUri?.startsWith('remote-server://')) {
+    try {
+      const connection = await ExtensionHostCommands.executeCommand('remote-server.prepareWorkspace', hydrationUri, false)
+      if (hydrationChangeId !== workspaceChangeId || state.workspaceUri !== hydrationUri) return
+      if (connection) {
+        state.workspacePath = connection.workspacePath
+        WorkspaceConnection.set(
+          state.workspaceUri,
+          connection.command,
+          connection.remoteCliUrl,
+          connection.webSocketUrl,
+          connection.terminalSpawnOptions,
+          connection.disposeCommand,
+        )
+      }
+    } catch {
+      if (hydrationChangeId !== workspaceChangeId || state.workspaceUri !== hydrationUri) return
+      await Notification.create('warning', 'The remote session could not be restored. Connect with a fresh pairing URL.')
+    }
+  }
   await updateWindowTitle(state.workspacePath, state.pathSeparator)
   await onWorkspaceChange()
 }
