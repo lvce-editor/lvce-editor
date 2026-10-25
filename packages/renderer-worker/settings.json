@@ -218,6 +218,14 @@
   },
   {
     "category": "features",
+    "description": "Controls whether the terminal cursor blinks",
+    "heading": "Terminal Cursor Blinking",
+    "id": "terminal.cursorBlink",
+    "type": "boolean",
+    "value": false
+  },
+  {
+    "category": "features",
     "description": "Uses a separate connection for terminal communication",
     "heading": "Separate Terminal Connection",
     "id": "terminal.separateConnection",
