@@ -167,6 +167,8 @@ const GetExtensionViews = await import('../src/parts/GetExtensionViews/GetExtens
 const Viewlet = await import('../src/parts/Viewlet/Viewlet.js')
 const BrowserSuggestionRequests = await import('../src/parts/BrowserSuggestionRequests/BrowserSuggestionRequests.js')
 const ViewletSimpleBrowser = await import('../src/parts/ViewletSimpleBrowser/ViewletSimpleBrowser.js')
+const loadContentFully = async (...args: Parameters<typeof ViewletSimpleBrowser.loadContent>) =>
+  ViewletSimpleBrowser.finishLoadContent(await ViewletSimpleBrowser.loadContent(...args))
 const ViewletSimpleBrowserOpenBackgroundTab = await import('../src/parts/ViewletSimpleBrowser/ViewletSimpleBrowserOpenBackgroundTab.js')
 const ViewletSimpleBrowserResize = await import('../src/parts/ViewletSimpleBrowser/ViewletSimpleBrowserResize.js')
 const BrowserHistory = await import('../src/parts/BrowserHistory/BrowserHistory.js')
@@ -441,7 +443,7 @@ test('loadContent', async () => {
   // @ts-ignore
   ElectronWebContentsViewFunctions.setIframeSrc.mockImplementation(() => {})
   const state = ViewletSimpleBrowser.create(0, 'simple-browser://', 0, 0, 0, 0)
-  expect(await ViewletSimpleBrowser.loadContent(state)).toMatchObject({
+  expect(await loadContentFully(state)).toMatchObject({
     audioIndicatorEnabled: true,
     headerHeight: 65,
     iframeSrc: 'https://example.com/',
@@ -453,10 +455,56 @@ test('loadContent', async () => {
   })
 })
 
+test('renders the restored browser shell before creating native content', async () => {
+  jest.mocked(ElectronWebContentsView.createWebContentsView).mockResolvedValue(1 as never)
+  jest.mocked(ElectronWebContentsViewFunctions.setFallthroughKeyBindings).mockResolvedValue(undefined as never)
+  jest.mocked(ElectronWebContentsViewFunctions.resizeWebContentsView).mockResolvedValue(undefined as never)
+  jest.mocked(ElectronWebContentsViewFunctions.setIframeSrc).mockResolvedValue(undefined as never)
+  jest.mocked(ElectronWebContentsViewFunctions.getStats).mockResolvedValue({
+    canGoBack: false,
+    canGoForward: false,
+    title: 'Selected',
+    url: 'https://selected.example/',
+  } as never)
+  const state = ViewletSimpleBrowser.create(7, 'simple-browser://12', 10, 20, 300, 200)
+  const savedState = {
+    iframeSrc: 'https://selected.example/',
+    selectedTabIndex: 1,
+    tabs: [
+      { iframeSrc: 'https://background.example/', title: 'Background' },
+      { iframeSrc: 'https://selected.example/', inputValue: 'selected.example', title: 'Selected' },
+    ],
+  }
+
+  const initial = await ViewletSimpleBrowser.loadContent(state, savedState)
+
+  expect(initial).toMatchObject({
+    browserViewId: 0,
+    headerHeight: 65,
+    iframeSrc: 'https://selected.example/',
+    inputValue: 'selected.example',
+    isLoading: true,
+    selectedTabIndex: 1,
+    tabs: [{ title: 'Background' }, { title: 'Selected' }],
+  })
+  expect(ElectronWebContentsView.createWebContentsView).not.toHaveBeenCalled()
+
+  const hydrated = await ViewletSimpleBrowser.finishLoadContent(initial)
+
+  expect(hydrated).toMatchObject({
+    browserViewId: 1,
+    iframeSrc: 'https://selected.example/',
+    isLoading: false,
+    selectedTabIndex: 1,
+    tabs: [{ browserViewId: 0, title: 'Background' }, { browserViewId: 1, title: 'Selected' }],
+  })
+  expect(ElectronWebContentsView.createWebContentsView).toHaveBeenCalledTimes(1)
+})
+
 test('loadContent renders a history URI without creating a native browser view', async () => {
   const state = ViewletSimpleBrowser.create(0, 'simple-browser-history://', 0, 0, 300, 200)
 
-  const newState = await ViewletSimpleBrowser.loadContent(state)
+  const newState = await loadContentFully(state)
 
   expect(newState).toMatchObject({
     browserViewId: 0,
@@ -488,7 +536,7 @@ test('loadContent uses registered keybindings without loading every viewlet', as
   ElectronWebContentsViewFunctions.setFallthroughKeyBindings.mockResolvedValue(undefined)
   const state = ViewletSimpleBrowser.create(0, 'simple-browser://1', 0, 0, 300, 200)
 
-  await ViewletSimpleBrowser.loadContent(state)
+  await loadContentFully(state)
 
   expect(KeyBindingsInitial.getKeyBindings).not.toHaveBeenCalled()
   expect(ElectronWebContentsViewFunctions.setFallthroughKeyBindings).toHaveBeenCalledWith(1, [registeredKeyBinding.key, ...browserTabKeyBindings])
@@ -517,7 +565,7 @@ test('loadContent enables tab hovers through simpleBrowser.tabHover.enabled', as
   ElectronWebContentsViewFunctions.setIframeSrc.mockResolvedValue(undefined)
   const state = ViewletSimpleBrowser.create(0, 'simple-browser://', 0, 0, 300, 200)
 
-  const newState = await ViewletSimpleBrowser.loadContent(state)
+  const newState = await loadContentFully(state)
 
   expect(newState).toMatchObject({ tabHoverEnabled: true })
   delete Preferences.state['simpleBrowser.tabHover.enabled']
@@ -531,7 +579,7 @@ test('loadContent disables the audio indicator through simpleBrowser.audioIndica
   ElectronWebContentsViewFunctions.setIframeSrc.mockResolvedValue(undefined)
   const state = ViewletSimpleBrowser.create(0, 'simple-browser://', 0, 0, 300, 200)
 
-  const newState = await ViewletSimpleBrowser.loadContent(state)
+  const newState = await loadContentFully(state)
 
   expect(newState).toMatchObject({ audioIndicatorEnabled: false })
   delete Preferences.state['simpleBrowser.audioIndicator.enabled']
@@ -545,7 +593,7 @@ test('loadContent disables the tab strip through simpleBrowser.tabs.enabled', as
   ElectronWebContentsViewFunctions.setIframeSrc.mockResolvedValue(undefined)
   const state = ViewletSimpleBrowser.create(0, 'simple-browser://', 0, 0, 300, 200)
 
-  const newState = await ViewletSimpleBrowser.loadContent(state)
+  const newState = await loadContentFully(state)
 
   expect(newState).toMatchObject({ headerHeight: 30, tabsEnabled: false })
   expect(newState.tabs).toHaveLength(1)
@@ -560,7 +608,7 @@ test('loadContent enables inactive tab unloading through simpleBrowser.unloadTab
   ElectronWebContentsViewFunctions.setIframeSrc.mockResolvedValue(undefined)
   const state = ViewletSimpleBrowser.create(0, 'simple-browser://', 0, 0, 300, 200)
 
-  const newState = await ViewletSimpleBrowser.loadContent(state)
+  const newState = await loadContentFully(state)
 
   expect(newState).toMatchObject({ unloadTabs: true })
   delete Preferences.state['simpleBrowser.unloadTabs']
@@ -580,7 +628,7 @@ test('loadContent - restore id - same browser view', async () => {
   // @ts-ignore
   ElectronWebContentsViewFunctions.setIframeSrc.mockImplementation(() => {})
   const state = ViewletSimpleBrowser.create(0, 'simple-browser://1', 0, 0, 0, 0)
-  expect(await ViewletSimpleBrowser.loadContent(state)).toMatchObject({
+  expect(await loadContentFully(state)).toMatchObject({
     iframeSrc: 'https://example.com/',
   })
   expect(ElectronWebContentsView.createWebContentsView).toHaveBeenCalledTimes(1)
@@ -609,7 +657,7 @@ test('loadContent navigates a restored tab when a new native view reuses its sav
     ],
   }
 
-  const restored = await ViewletSimpleBrowser.loadContent(state, savedState)
+  const restored = await loadContentFully(state, savedState)
 
   expect(ElectronWebContentsViewFunctions.setIframeSrc).toHaveBeenCalledWith(2, 'https://selected.example/')
   expect(restored.tabs).toMatchObject([
@@ -627,7 +675,7 @@ test('loadContent - restore id - browser view does not exist yet', async () => {
   // @ts-ignore
   ElectronWebContentsViewFunctions.setIframeSrc.mockImplementation(() => {})
   const state = ViewletSimpleBrowser.create(0, 'simple-browser://1', 0, 0, 0, 0)
-  expect(await ViewletSimpleBrowser.loadContent(state)).toMatchObject({
+  expect(await loadContentFully(state)).toMatchObject({
     iframeSrc: 'https://example.com/',
   })
   expect(ElectronWebContentsView.createWebContentsView).toHaveBeenCalledTimes(1)
@@ -656,7 +704,7 @@ test('loadContent restores every tab but creates a web contents view only for th
     ],
   }
 
-  const newState = await ViewletSimpleBrowser.loadContent(state, savedState)
+  const newState = await loadContentFully(state, savedState)
 
   expect(newState).toMatchObject({
     browserViewId: 17,
@@ -2886,7 +2934,7 @@ test('preview tabs use independent child viewlets and never allocate native view
   let uid = 100
   jest.mocked(SimpleBrowserPreview.materialize).mockImplementation(async (_state, tab) => (tab.previewUid ? tab : { ...tab, previewUid: ++uid }))
   const url = 'html-preview:///file/hello%20%23%25.html'
-  const initial = await ViewletSimpleBrowser.loadContent(ViewletSimpleBrowser.create(7, url, 0, 0, 300, 200))
+  const initial = await loadContentFully(ViewletSimpleBrowser.create(7, url, 0, 0, 300, 200))
   expect(initial.tabs[0].previewUid).toBe(101)
   const second = await ViewletSimpleBrowser.openTab(initial, url, 'foreground-tab')
   expect(second.tabs[1].previewUid).toBe(102)
@@ -2901,7 +2949,7 @@ test('preview tabs use independent child viewlets and never allocate native view
   expect(ElectronWebContentsViewFunctions.setIframeSrc).not.toHaveBeenCalled()
   const saved = ViewletSimpleBrowser.saveState(closed)
   expect(saved.tabs[0]).not.toHaveProperty('previewUid')
-  const restored = await ViewletSimpleBrowser.loadContent(ViewletSimpleBrowser.create(8, 'simple-browser://', 0, 0, 300, 200), saved)
+  const restored = await loadContentFully(ViewletSimpleBrowser.create(8, 'simple-browser://', 0, 0, 300, 200), saved)
   expect(restored.tabs[0].iframeSrc).toBe(url)
   expect(restored.tabs[0].previewUid).toBe(103)
 })
