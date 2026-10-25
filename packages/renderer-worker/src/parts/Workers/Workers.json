@@ -1219,6 +1219,8 @@
     "contentSecurityPolicy": ["default-src 'none'"],
     "viewlet": {
       "name": "Output",
+      "extraCommands": [{ "name": "handleWorkspaceChange", "method": "refreshOptions" }],
+      "workspaceChangeEvent": "workspace.change",
       "css": ["/css/parts/ViewletOutput.css", "/css/parts/Select.css"],
       "state": {
         "idKey": "id",
