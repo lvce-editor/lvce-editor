@@ -1249,6 +1249,10 @@
             { "source": "context", "name": "applicationId" }
           ]
         },
+        "refreshOptions": {
+          "name": "Output.refreshOptions",
+          "parameters": [{ "source": "state", "name": "id" }]
+        },
         "loadContent": {
           "name": "Output.loadContent2",
           "parameters": [{ "source": "state", "name": "id" }, { "source": "argument", "name": "savedState" }]
