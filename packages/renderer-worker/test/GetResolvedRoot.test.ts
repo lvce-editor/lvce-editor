@@ -33,6 +33,7 @@ jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
   }
 })
 
+const Platform = await import('../src/parts/Platform/Platform.js')
 const Command = await import('../src/parts/Command/Command.js')
 const SharedProcess = await import('../src/parts/SharedProcess/SharedProcess.js')
 const GetResolvedRoot = await import('../src/parts/GetResolvedRoot/GetResolvedRoot.js')
@@ -92,4 +93,12 @@ test('getResolvedRoot - keeps session workspace when no cli workspace was provid
   const resolvedRoot = await GetResolvedRoot.getResolvedRoot('http://localhost:3000')
   expect(resolvedRoot).toEqual(sessionWorkspace)
   expect(SharedProcess.invoke).toHaveBeenCalledWith('Workspace.resolveRoot', 'http://localhost:3000', '')
+})
+
+test('web workspace restores the credential-free remote URI from the Pages hash', async () => {
+  // @ts-ignore
+  Platform.getPlatform.mockReturnValue(PlatformType.Web)
+  const uri = 'remote-server://remote.example/home/test/project'
+  const resolved = await GetResolvedRoot.getResolvedRoot(`https://example.com/lvce-editor/#workspace=${encodeURIComponent(uri)}`)
+  expect(resolved).toMatchObject({ path: uri, pathSeparator: '/', uri })
 })

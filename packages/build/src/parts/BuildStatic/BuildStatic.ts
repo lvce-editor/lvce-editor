@@ -63,6 +63,10 @@ const copyStaticFiles = async ({ pathPrefix, ignoreIconTheme, commitHash }) => {
     dereference: true,
   })
   await Copy.copy({
+    from: 'static/lib-css',
+    to: `packages/build/.tmp/dist/${commitHash}/lib-css`,
+  })
+  await Copy.copy({
     from: 'static/config',
     to: `packages/build/.tmp/dist/${commitHash}/config`,
   })

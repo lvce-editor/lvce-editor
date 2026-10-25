@@ -183,14 +183,28 @@ export const setPath = async (path) => {
 }
 
 export const setUri = async (uri, connectionOrPathSeparator, legacyConnection, openUri = '') => {
-  const connection = legacyConnection || (typeof connectionOrPathSeparator === 'object' ? connectionOrPathSeparator : undefined)
+  let connection = legacyConnection || (typeof connectionOrPathSeparator === 'object' ? connectionOrPathSeparator : undefined)
   const changeId = ++workspaceChangeId
   const protocol = GetProtocol.getProtocol(uri)
+  const prepareRemoteConnection = protocol === 'remote-server' && !connection
+  if (prepareRemoteConnection) {
+    connection = await ExtensionHostCommands.executeCommand('remote-server.prepareWorkspace', uri)
+    if (!connection || changeId !== workspaceChangeId) return false
+  }
   if (protocol === 'remote-ssh' && !connection) {
     const prepared = await ExtensionHostCommands.executeCommand('remote-ssh.prepareWorkspace', uri)
     if (prepared !== true || changeId !== workspaceChangeId) return false
   }
   const path = connection?.workspacePath || (protocol === 'file' ? fileUriToPath(uri) : uri)
+  if (
+    prepareRemoteConnection &&
+    uri === state.workspaceUri &&
+    path === state.workspacePath &&
+    WorkspaceConnection.getCommand() === connection.command
+  ) {
+    if (openUri) await Command.execute('Main.openUri', openUri)
+    return true
+  }
   if (protocol === 'file' && !connection) {
     await validateLocalPath(path)
   }
@@ -305,11 +319,13 @@ const getPathName = (workspacePath) => {
 }
 
 const onWorkspaceChange = async () => {
+  const { workspacePath, workspaceUri } = state
   if (Platform.getPlatform() === PlatformType.Web || Platform.getPlatform() === PlatformType.Remote) {
-    const pathName = getPathName(state.workspacePath)
+    const pathName = getPathName(workspacePath)
     await Location.setPathName(pathName)
+    if (Platform.getPlatform() === PlatformType.Web) await Location.setRemoteWorkspaceUri(workspaceUri)
   }
-  await GlobalEventBus.emitEvent('workspace.change', state.workspacePath)
+  await GlobalEventBus.emitEvent('workspace.change', workspacePath)
 }
 
 export const hydrate = async ({ href, workspaceUri = '' }) => {
@@ -341,6 +357,28 @@ export const hydrate = async ({ href, workspaceUri = '' }) => {
 
   if (state.workspaceUri && state.workspaceUri.startsWith('/')) {
     state.workspaceUri = `file://${state.workspaceUri}`
+  }
+  const hydrationChangeId = workspaceChangeId
+  const hydrationUri = state.workspaceUri
+  if (hydrationUri?.startsWith('remote-server://')) {
+    try {
+      const connection = await ExtensionHostCommands.executeCommand('remote-server.prepareWorkspace', hydrationUri, false)
+      if (hydrationChangeId !== workspaceChangeId || state.workspaceUri !== hydrationUri) return
+      if (connection) {
+        state.workspacePath = connection.workspacePath
+        WorkspaceConnection.set(
+          state.workspaceUri,
+          connection.command,
+          connection.remoteCliUrl,
+          connection.webSocketUrl,
+          connection.terminalSpawnOptions,
+          connection.disposeCommand,
+        )
+      }
+    } catch {
+      if (hydrationChangeId !== workspaceChangeId || state.workspaceUri !== hydrationUri) return
+      await Notification.create('warning', 'The remote session could not be restored. Connect with a fresh pairing URL.')
+    }
   }
   await updateWindowTitle(state.workspacePath, state.pathSeparator)
   await onWorkspaceChange()

@@ -55,6 +55,20 @@ const getResolvedRootFromRendererProcess = async (href, resolvedRootFromSharedPr
   }
 
   if (Platform.getPlatform() === PlatformType.Web) {
+    const candidate = new URLSearchParams(url.hash.slice(1)).get('workspace')
+    if (candidate && URL.canParse(candidate)) {
+      const workspace = new URL(candidate)
+      if (
+        workspace.protocol === 'remote-server:' &&
+        workspace.host &&
+        !workspace.username &&
+        !workspace.password &&
+        !workspace.search &&
+        !workspace.hash
+      ) {
+        return { path: workspace.href, uri: workspace.href, homeDir: '', pathSeparator: PathSeparatorType.Slash, source: 'renderer-process' }
+      }
+    }
     const defaultWorkspace = Preferences.get('workspace.defaultWorkspace')
     const resolvedRoot = {
       path: defaultWorkspace,

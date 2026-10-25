@@ -116,3 +116,16 @@ test('setHash preserves path and query and skips repeated updates', async () => 
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
   expect(RendererProcess.invoke).toHaveBeenCalledWith('Location.setHash', '#chat-task-1')
 })
+
+test('remote workspace hash survives reload without changing the Pages prefix or query', async () => {
+  // @ts-ignore
+  RendererProcess.invoke.mockResolvedValue(undefined)
+  Location.initialize('https://example.com/lvce-editor/?test=1')
+  await Location.setRemoteWorkspaceUri('remote-server://remote.example/home/test/project')
+  expect(RendererProcess.invoke).toHaveBeenLastCalledWith(
+    'Location.setHash',
+    `workspace=${encodeURIComponent('remote-server://remote.example/home/test/project')}`,
+  )
+  await Location.setRemoteWorkspaceUri('memfs:///local')
+  expect(RendererProcess.invoke).toHaveBeenLastCalledWith('Location.setHash', '')
+})
