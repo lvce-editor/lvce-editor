@@ -113,6 +113,9 @@ const getLanguageId = (state, content, savedState) => {
     if (state.languageId && state.languageId !== 'unknown') {
       return state.languageId
     }
+    if (content === undefined) {
+      return 'unknown'
+    }
     const firstLine = getFirstLine(content)
     const languageIdFromContent = Languages.getLanguageIdByFirstLine(firstLine)
     return languageIdFromContent
@@ -140,7 +143,7 @@ export const loadContent = async (state, savedState, context) => {
   const isQuickSuggestionsEnabled = EditorPreferences.isQuickSuggestionsEnabled(editorPreferences)
   const completionTriggerCharacters = EditorPreferences.getCompletionTriggerCharacters()
   const diagnosticsEnabled = EditorPreferences.diagnosticsEnabled(editorPreferences)
-  const knownLanguageId = context?.languageId || getLanguageId(state, '', savedState)
+  const knownLanguageId = context?.languageId || getLanguageId(state, undefined, savedState)
   const content =
     useFunctionalRendering && (context?.largeFile === true || knownLanguageId !== 'unknown')
       ? ''

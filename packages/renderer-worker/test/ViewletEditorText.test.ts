@@ -569,3 +569,17 @@ test('functional editor with a known language does not read content twice or pro
   expect(createCall?.at(-2)).toBe(false)
   expect(editorWorkerInvoke).toHaveBeenCalledWith('Editor.loadContent', 1, undefined, false, true)
 })
+
+test('language sniffing does not treat unread content as an empty file', async () => {
+  Languages.addLanguage({ id: 'empty-file', firstLine: '^$' })
+  Languages.addLanguage({ id: 'fixture-script', firstLine: '^#!fixture$' })
+  getTextEditorContent.mockReturnValue('#!fixture\ncontent')
+  editorWorkerInvoke.mockImplementation(() => [])
+  const uri = 'remote-server://example.com/workspace/script-without-extension'
+  const state = ViewletEditorText.create(1, uri, 0, 0, 800, 600)
+
+  await ViewletEditorText.loadContent(state, undefined, {})
+
+  expect(getTextEditorContent).toHaveBeenCalledWith(uri, undefined)
+  expect(state.languageId).toBe('fixture-script')
+})
