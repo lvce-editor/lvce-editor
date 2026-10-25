@@ -140,8 +140,9 @@ export const loadContent = async (state, savedState, context) => {
   const isQuickSuggestionsEnabled = EditorPreferences.isQuickSuggestionsEnabled(editorPreferences)
   const completionTriggerCharacters = EditorPreferences.getCompletionTriggerCharacters()
   const diagnosticsEnabled = EditorPreferences.diagnosticsEnabled(editorPreferences)
+  const knownLanguageId = context?.languageId || getLanguageId(state, '', savedState)
   const content =
-    useFunctionalRendering && context?.largeFile === true
+    useFunctionalRendering && (context?.largeFile === true || knownLanguageId !== 'unknown')
       ? ''
       : state.applicationId === undefined
         ? await GetTextEditorContent.getTextEditorContent(uri, context?.forceText === true ? 'binary' : undefined)
@@ -168,7 +169,10 @@ export const loadContent = async (state, savedState, context) => {
   if (useFunctionalRendering) {
     const tokenizePath = GetTokenizePath.getTokenizePath(languageId)
     const useCache = Preferences.get('editor.cache') ?? true
-    const useFileCache = Preferences.get('editor.fileCache') ?? !IsTest.isTest()
+    // These providers expose file type only, so cache fingerprinting adds a round trip
+    // without ever producing a cache hit.
+    const hasCacheMetadata = !uri.startsWith('remote-server:') && !uri.startsWith('remote-ssh:')
+    const useFileCache = hasCacheMetadata && (Preferences.get('editor.fileCache') ?? !IsTest.isTest())
     await EditorWorker.invoke(
       'Editor.create2',
       id,
