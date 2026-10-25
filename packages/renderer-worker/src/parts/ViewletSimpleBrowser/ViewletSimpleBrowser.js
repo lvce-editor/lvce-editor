@@ -347,7 +347,7 @@ const getId = (idPart) => {
   return Number.parseInt(idPart)
 }
 
-export const loadContent = async (state, savedState) => {
+const loadContentFully = async (state, savedState) => {
   const { x, y, width, height, uri } = state
   const idPart = uri.slice('simple-browser://'.length)
   const id = getId(idPart)
@@ -482,6 +482,61 @@ export const loadContent = async (state, savedState) => {
     unloadTabs,
     visitedSites,
   }
+}
+
+export const loadContent = async (state, savedState) => {
+  if (state.uri === 'simple-browser://transfer') {
+    return loadContentFully(state, savedState)
+  }
+  const savedTabs = getTabsFromSavedState(savedState)
+  const selectedTabIndex = getSavedSelectedTabIndex(savedState, savedTabs)
+  const restoredTab = savedTabs[selectedTabIndex]
+  const requestedSpecialTab = isHistoryUrl(state.uri) || HtmlPreviewUrl.isHtmlPreviewUrl(state.uri) || ExtensionViewUrl.isExtensionViewUrl(state.uri)
+  const iframeSrc = restoredTab?.iframeSrc || (requestedSpecialTab ? state.uri : getUrlFromSavedState(savedState))
+  const tabsEnabled = Preferences.get('simpleBrowser.tabs.enabled') !== false
+  const tabs =
+    savedTabs.length > 0
+      ? savedTabs
+      : [
+          createTab({
+            iframeSrc,
+            inputValue: iframeSrc,
+            title: isHistoryUrl(iframeSrc) ? 'History' : HtmlPreviewUrl.isHtmlPreviewUrl(iframeSrc) ? 'HTML Preview' : undefined,
+          }),
+        ]
+  const visibleTabs = tabsEnabled ? tabs : [tabs[selectedTabIndex]]
+  const visibleSelectedTabIndex = tabsEnabled ? selectedTabIndex : 0
+  const selectedTab = visibleTabs[visibleSelectedTabIndex]
+  return {
+    ...state,
+    audioIndicatorEnabled: Preferences.get('simpleBrowser.audioIndicator.enabled') !== false,
+    browserViewId: 0,
+    canGoBack: false,
+    canGoForward: false,
+    headerHeight: getHeaderHeight(tabsEnabled),
+    iframeSrc: selectedTab.iframeSrc,
+    inputValue: selectedTab.inputValue,
+    isLoading: true,
+    muted: false,
+    pendingSavedState: savedState,
+    selectedTabIndex: visibleSelectedTabIndex,
+    tabs: visibleTabs,
+    tabsEnabled,
+    tabHoverEnabled: Preferences.get('simpleBrowser.tabHover.enabled') === true,
+    title: selectedTab.title,
+    unloadTabs: Preferences.get('simpleBrowser.unloadTabs') === true,
+  }
+}
+
+export const finishLoadContent = async (state) => {
+  const { pendingSavedState, ...initialState } = state
+  const newState = await loadContentFully({ ...initialState, isLoading: false }, pendingSavedState)
+  if (isVisible(state)) await show(newState)
+  return newState
+}
+
+export const loadContentLater = async (state) => {
+  await Viewlet.executeViewletCommand(state.uid, 'finishLoadContent')
 }
 
 export const isVisible = (state) => visibleBrowserUids.has(state.uid)
