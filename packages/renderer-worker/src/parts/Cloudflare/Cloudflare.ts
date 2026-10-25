@@ -18,14 +18,17 @@ export const openConnections = async (): Promise<void> => {
 }
 
 const client = createAccountClient({
-  backendUrl: () => Preferences.get('layout.backendUrl') || Product.getBackendUrl(),
+  backendUrl: () => AuthWorker.invoke('Auth.getCloudflareConnectionsUrl'),
   fetch,
   getAccounts: AuthWorker.getAccounts,
   getToken: (refresh) => AuthWorker.invoke('Auth.getAccessToken', refresh ? { refresh: 'if-needed' } : {}),
 })
 export const { authorizeBrowser, getAccountId, getMachines } = client
 
+export const resumeAccountConnections = (): void => client.resume()
+
 export const releaseAccountSession = async (): Promise<void> => {
+  client.suspend()
   if (Platform.getPlatform() === PlatformType.Web) {
     try {
       await ExtensionHostCommands.executeCommand('remote-server.disconnectAccount')

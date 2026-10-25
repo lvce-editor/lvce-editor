@@ -4,7 +4,7 @@ interface AccountSummary {
   readonly signedIn: boolean
 }
 interface AccountClientOptions {
-  readonly backendUrl: () => string
+  readonly backendUrl: () => string | Promise<string>
   readonly fetch: typeof fetch
   readonly getAccounts: () => Promise<readonly AccountSummary[]>
   readonly getToken: (refresh?: boolean) => Promise<string>
@@ -13,6 +13,8 @@ interface AccountClient {
   readonly authorizeBrowser: (hostname: string) => Promise<unknown>
   readonly getAccountId: () => Promise<string>
   readonly getMachines: () => Promise<unknown>
+  readonly resume: () => void
+  readonly suspend: () => void
 }
 const hostnamePattern = /^[a-z0-9.-]+$/
 const getAccountError = async (response: { readonly status: number; readonly json: () => Promise<unknown> }): Promise<Error> => {
@@ -32,13 +34,22 @@ const getAccountError = async (response: { readonly status: number; readonly jso
   return new Error(`Could not authorize the remote connection (HTTP ${response.status}). Retry when the backend is available.`)
 }
 export const createAccountClient = (options: AccountClientOptions): AccountClient => {
+  const access = { changes: 0, generation: 0 }
+  const assertAvailable = (generation: number): void => {
+    if (access.changes > 0 || generation !== access.generation)
+      throw new Error('Your LVCE account is changing. Retry connecting after sign-in or account selection finishes.')
+  }
   const accountRequest = async (path: string, body?: unknown): Promise<unknown> => {
-    const backendUrl = options.backendUrl()
+    const { generation } = access
+    assertAvailable(generation)
+    const backendUrl = await options.backendUrl()
     const endpoint = new URL(path, backendUrl)
     if (endpoint.protocol !== 'https:' && !(endpoint.protocol === 'http:' && ['localhost', '127.0.0.1', '[::1]'].includes(endpoint.hostname)))
       throw new Error('Remote account connections require an HTTPS backend')
     if (endpoint.username || endpoint.password) throw new Error('Invalid authentication backend URL')
     const token = await options.getToken(true)
+    assertAvailable(generation)
+    if (backendUrl !== (await options.backendUrl())) throw new Error('Account backend changed. Retry connecting.')
     if (!token) throw new Error('Sign in to your LVCE account in this browser, then run Remote Server: Connect from LVCE Account.')
     let response: Response
     try {
@@ -52,18 +63,24 @@ export const createAccountClient = (options: AccountClientOptions): AccountClien
     } catch {
       throw new Error('Could not reach the LVCE account backend. Check your network and retry connecting.')
     }
+    assertAvailable(generation)
     if (!response.ok) throw await getAccountError(response)
     // Account switches during a request must not install the previous identity's session.
     if ((await options.getToken()) !== token) throw new Error('Active LVCE account changed. Connect again.')
-    return response.json()
+    const result = await response.json()
+    assertAvailable(generation)
+    return result
   }
 
   const getMachines = async (): Promise<unknown> => accountRequest('/cloudflare/status')
   const authorizeBrowser = async (hostname: string): Promise<unknown> => {
+    const { generation } = access
+    assertAvailable(generation)
     if (typeof hostname !== 'string' || hostname.length > 253 || !hostnamePattern.test(hostname)) throw new Error('Invalid remote hostname')
     const accountId = await getAccountId()
     const grant = (await accountRequest('/cloudflare/browser-session', { hostname })) as object
     if (!accountId || (await getAccountId()) !== accountId) throw new Error('Active LVCE account changed. Connect again.')
+    assertAvailable(generation)
     return { ...grant, accountId }
   }
   const getAccountId = async (): Promise<string> => {
@@ -72,5 +89,16 @@ export const createAccountClient = (options: AccountClientOptions): AccountClien
     return accounts.find((account) => account.active && account.signedIn)?.id || ''
   }
 
-  return { authorizeBrowser, getAccountId, getMachines }
+  return {
+    authorizeBrowser,
+    getAccountId,
+    getMachines,
+    resume: (): void => {
+      access.changes = Math.max(0, access.changes - 1)
+    },
+    suspend: (): void => {
+      access.changes++
+      access.generation++
+    },
+  }
 }

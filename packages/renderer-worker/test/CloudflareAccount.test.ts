@@ -6,6 +6,7 @@ const fetchRequest = jest.fn<typeof fetch>()
 const Cloudflare = createAccountClient({ backendUrl: () => settings.backendUrl, fetch: fetchRequest, getAccounts, getToken: invoke })
 const settings = { backendUrl: 'https://backend.test' }
 afterEach(() => {
+  Cloudflare.resume()
   jest.restoreAllMocks()
   jest.resetAllMocks()
   settings.backendUrl = 'https://backend.test'
@@ -67,4 +68,62 @@ test('network failures cross the worker boundary as a plain actionable error', a
   signedIn()
   fetchRequest.mockRejectedValue(new DOMException('failed', 'NetworkError'))
   await expect(Cloudflare.getMachines()).rejects.toThrow('Could not reach the LVCE account backend')
+})
+
+test('account changes block authorization but still allow identifying a saved session for revocation', async () => {
+  signedIn()
+  Cloudflare.suspend()
+  await expect(Cloudflare.getMachines()).rejects.toThrow('account is changing')
+  await expect(Cloudflare.authorizeBrowser('remote.test')).rejects.toThrow('account is changing')
+  await expect(Cloudflare.getAccountId()).resolves.toBe('owner')
+  expect(fetchRequest).not.toHaveBeenCalled()
+  Cloudflare.resume()
+  fetchRequest.mockResolvedValue(Response.json({ machines: [] }))
+  await expect(Cloudflare.getMachines()).resolves.toEqual({ machines: [] })
+})
+
+test('an authorization cannot outlive an account change even when the same account is selected again', async () => {
+  signedIn()
+  const entered = Promise.withResolvers<void>()
+  const response = Promise.withResolvers<Response>()
+  fetchRequest.mockImplementation(() => {
+    entered.resolve()
+    return response.promise
+  })
+  const pending = Cloudflare.authorizeBrowser('remote.test')
+  await entered.promise
+  Cloudflare.suspend()
+  Cloudflare.resume()
+  response.resolve(Response.json({ authorization: 'old-grant', publicUrl: 'https://remote.test' }))
+  await expect(pending).rejects.toThrow('account is changing')
+})
+
+test('overlapping account operations keep authorization suspended until both finish', async () => {
+  signedIn()
+  Cloudflare.suspend()
+  Cloudflare.suspend()
+  try {
+    Cloudflare.resume()
+    await expect(Cloudflare.getMachines()).rejects.toThrow('account is changing')
+  } finally {
+    Cloudflare.resume()
+  }
+  fetchRequest.mockResolvedValue(Response.json({ machines: [] }))
+  await expect(Cloudflare.getMachines()).resolves.toEqual({ machines: [] })
+})
+
+test('never sends an account token when its authentication backend changes while obtaining the token', async () => {
+  signedIn()
+  const entered = Promise.withResolvers<void>()
+  const token = Promise.withResolvers<string>()
+  invoke.mockImplementation(() => {
+    entered.resolve()
+    return token.promise
+  })
+  const pending = Cloudflare.getMachines()
+  await entered.promise
+  settings.backendUrl = 'https://different.test'
+  token.resolve('original-backend-token')
+  await expect(pending).rejects.toThrow('backend changed')
+  expect(fetchRequest).not.toHaveBeenCalled()
 })

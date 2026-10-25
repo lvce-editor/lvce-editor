@@ -7,5 +7,6 @@ export const Commands = {
   getAccountId: Cloudflare.getAccountId,
   getMachines: Cloudflare.getMachines,
   releaseAccountSession: Cloudflare.releaseAccountSession,
+  resumeAccountConnections: Cloudflare.resumeAccountConnections,
   openConnections: Cloudflare.openConnections,
 }
