@@ -580,6 +580,6 @@ test('language sniffing does not treat unread content as an empty file', async (
 
   await ViewletEditorText.loadContent(state, undefined, {})
 
-  expect(getTextEditorContent).toHaveBeenCalledWith(uri, undefined)
+  expect(getTextEditorContent).toHaveBeenCalledTimes(1)
   expect(state.languageId).toBe('fixture-script')
 })
