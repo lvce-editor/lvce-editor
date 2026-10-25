@@ -3010,10 +3010,13 @@ export const signIn = async (state: LayoutState): Promise<LayoutStateResult> => 
       'Continue signing in in your browser. If it did not open, check your system default browser settings.',
     )
   }
+  const switchingAccount = state.userState === 'loggedIn'
+  if (switchingAccount) await Command.execute('Cloudflare.releaseAccountSession')
   let authState
   try {
     authState = await AuthWorker.signIn(backendUrl, platform, state.isStandalone === true)
   } finally {
+    if (switchingAccount) await Command.execute('Cloudflare.resumeAccountConnections')
     if (notificationId !== undefined) {
       try {
         await Command.execute('Notification.dispose', notificationId)
@@ -3033,7 +3036,13 @@ export const signIn = async (state: LayoutState): Promise<LayoutStateResult> => 
 }
 
 export const signOut = async (state: LayoutState): Promise<LayoutStateResult> => {
-  const authState = await AuthWorker.signOut(state.backendUrl)
+  await Command.execute('Cloudflare.releaseAccountSession')
+  let authState
+  try {
+    authState = await AuthWorker.signOut(state.backendUrl)
+  } finally {
+    await Command.execute('Cloudflare.resumeAccountConnections')
+  }
   const newState = mergeAuthState(state, authState)
   return {
     newState,
@@ -3042,7 +3051,13 @@ export const signOut = async (state: LayoutState): Promise<LayoutStateResult> =>
 }
 
 export const useAccount = async (state: LayoutState, id: string): Promise<LayoutStateResult> => {
-  const authState = await AuthWorker.useAccount(id)
+  await Command.execute('Cloudflare.releaseAccountSession')
+  let authState
+  try {
+    authState = await AuthWorker.useAccount(id)
+  } finally {
+    await Command.execute('Cloudflare.resumeAccountConnections')
+  }
   const newState = mergeAuthState(state, authState)
   return {
     newState,
@@ -3051,7 +3066,13 @@ export const useAccount = async (state: LayoutState, id: string): Promise<Layout
 }
 
 export const removeAccount = async (state: LayoutState, id: string): Promise<LayoutStateResult> => {
-  const authState = await AuthWorker.removeAccount(id)
+  await Command.execute('Cloudflare.releaseAccountSession')
+  let authState
+  try {
+    authState = await AuthWorker.removeAccount(id)
+  } finally {
+    await Command.execute('Cloudflare.resumeAccountConnections')
+  }
   const newState = mergeAuthState(state, authState)
   return {
     newState,
