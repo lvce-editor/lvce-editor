@@ -323,3 +323,27 @@ test('a late remote-session restore cannot replace a newer workspace', async () 
   expect(Workspace.getPath()).toBe('/newer')
   expect(WorkspaceConnection.getCommand()).toBe('')
 })
+
+test('Open Recent keeps views and terminals when the remote folder is already active', async () => {
+  const uri = 'remote-server://remote.example/home/test/project'
+  const connection = {
+    command: 'remote-server.getWebSocketUrl',
+    disposeCommand: 'remote-server.releaseWorkspace',
+    workspacePath: '/home/test/project',
+  }
+  jest.mocked(RendererProcess.invoke).mockResolvedValue(undefined)
+  WorkspaceConnection.reset()
+  await Workspace.setUri(uri, '/', connection)
+  jest.mocked(RendererProcess.invoke).mockClear()
+  jest.mocked(ExtensionHostCommands.executeCommand).mockResolvedValue(connection)
+  const changed = jest.fn(async () => {})
+  GlobalEventBus.addListener('workspace.change', changed)
+  try {
+    expect(await Workspace.setUri(uri)).toBe(true)
+    expect(changed).not.toHaveBeenCalled()
+    expect(RendererProcess.invoke).not.toHaveBeenCalled()
+  } finally {
+    GlobalEventBus.removeListener('workspace.change', changed)
+    WorkspaceConnection.reset()
+  }
+})

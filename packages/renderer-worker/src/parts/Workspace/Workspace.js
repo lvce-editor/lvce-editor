@@ -186,7 +186,8 @@ export const setUri = async (uri, connectionOrPathSeparator, legacyConnection, o
   let connection = legacyConnection || (typeof connectionOrPathSeparator === 'object' ? connectionOrPathSeparator : undefined)
   const changeId = ++workspaceChangeId
   const protocol = GetProtocol.getProtocol(uri)
-  if (protocol === 'remote-server' && !connection) {
+  const prepareRemoteConnection = protocol === 'remote-server' && !connection
+  if (prepareRemoteConnection) {
     connection = await ExtensionHostCommands.executeCommand('remote-server.prepareWorkspace', uri)
     if (!connection || changeId !== workspaceChangeId) return false
   }
@@ -195,6 +196,15 @@ export const setUri = async (uri, connectionOrPathSeparator, legacyConnection, o
     if (prepared !== true || changeId !== workspaceChangeId) return false
   }
   const path = connection?.workspacePath || (protocol === 'file' ? fileUriToPath(uri) : uri)
+  if (
+    prepareRemoteConnection &&
+    uri === state.workspaceUri &&
+    path === state.workspacePath &&
+    WorkspaceConnection.getCommand() === connection.command
+  ) {
+    if (openUri) await Command.execute('Main.openUri', openUri)
+    return true
+  }
   if (protocol === 'file' && !connection) {
     await validateLocalPath(path)
   }
