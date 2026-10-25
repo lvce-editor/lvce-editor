@@ -19,7 +19,7 @@ export const openConnections = async (): Promise<void> => {
 
 const client = createAccountClient({
   backendUrl: () => AuthWorker.invoke('Auth.getCloudflareConnectionsUrl'),
-  fetch,
+  fetch: globalThis.fetch.bind(globalThis),
   getAccounts: AuthWorker.getAccounts,
   getToken: (refresh) => AuthWorker.invoke('Auth.getAccessToken', refresh ? { refresh: 'if-needed' } : {}),
 })
