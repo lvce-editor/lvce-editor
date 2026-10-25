@@ -559,3 +559,27 @@ test('loadContent retains the initial DOM if selection restoration consumes a la
   expect(restored.commands).toEqual(initialCommands)
   expect(editorWorkerInvoke.mock.calls.filter(([method]) => method === 'Editor.render2')).toHaveLength(2)
 })
+
+test('functional editor with a known language does not read content twice or probe unsupported remote cache metadata', async () => {
+  editorWorkerInvoke.mockImplementation(() => [])
+  const state = ViewletEditorText.create(1, 'remote-server://example.com/workspace/file.css', 0, 0, 800, 600)
+  await ViewletEditorText.loadContent(state, undefined, { languageId: 'css' })
+  expect(getTextEditorContent).not.toHaveBeenCalled()
+  const createCall = editorWorkerInvoke.mock.calls.find(([method]) => method === 'Editor.create2')
+  expect(createCall?.at(-2)).toBe(false)
+  expect(editorWorkerInvoke).toHaveBeenCalledWith('Editor.loadContent', 1, undefined, false, true)
+})
+
+test('language sniffing does not treat unread content as an empty file', async () => {
+  Languages.addLanguage({ id: 'empty-file', firstLine: '^$' })
+  Languages.addLanguage({ id: 'fixture-script', firstLine: '^#!fixture$' })
+  getTextEditorContent.mockReturnValue('#!fixture\ncontent')
+  editorWorkerInvoke.mockImplementation(() => [])
+  const uri = 'remote-server://example.com/workspace/script-without-extension'
+  const state = ViewletEditorText.create(1, uri, 0, 0, 800, 600)
+
+  await ViewletEditorText.loadContent(state, undefined, {})
+
+  expect(getTextEditorContent).toHaveBeenCalledTimes(1)
+  expect(state.languageId).toBe('fixture-script')
+})
