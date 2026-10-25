@@ -72,7 +72,7 @@
     "@lvce-editor/extension-detail-view": "^7.57.0",
     "@lvce-editor/extension-host-sub-worker": "^3.14.0",
     "@lvce-editor/extension-management-worker": "^4.96.1",
-    "@lvce-editor/extension-search-view": "^7.33.1",
+    "@lvce-editor/extension-search-view": "^7.33.2",
     "@lvce-editor/file-search-worker": "^8.14.1",
     "@lvce-editor/file-system-worker": "^5.21.1",
     "@lvce-editor/file-watcher-view": "^0.1.1",
