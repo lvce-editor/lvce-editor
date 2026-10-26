@@ -1,7 +1,9 @@
 import * as ConfirmPromptStrings from '../ConfirmPromptStrings/ConfirmPromptStrings.js'
 import * as DialogWorker from '../DialogWorker/DialogWorker.js'
+import * as ElectronDialog from '../ElectronDialog/ElectronDialog.js'
 import * as JsonRpc from '../JsonRpc/JsonRpc.js'
 import * as Platform from '../Platform/Platform.js'
+import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as TestWorker from '../TestWorker/TestWorker.js'
 
 let _mockId = 0
@@ -34,6 +36,18 @@ export const prompt3 = async (message, options = {}) => {
     }
     const shouldDiscard = await showMockConfirmPrompt(options.discardPrompt ?? 'Discard changes?', options)
     return shouldDiscard ? 'discard' : 'cancel'
+  }
+  if ((options.platform ?? Platform.getPlatform()) === PlatformType.Electron) {
+    // A package update can remove the old dialog worker before the running
+    // application's close confirmation. Native dialogs need no new worker.
+    const result = await ElectronDialog.showMessageBox({
+      buttons: [options.confirmMessage ?? 'Save', options.cancelMessage ?? ConfirmPromptStrings.cancel(), options.discardMessage ?? "Don't Save"],
+      defaultId: 0,
+      message,
+      title: options.title ?? '',
+      type: 'question',
+    })
+    return result === 0 ? 'save' : result === 2 ? 'discard' : 'cancel'
   }
   return DialogWorker.invoke('ConfirmPrompt.prompt3', message, options)
 }

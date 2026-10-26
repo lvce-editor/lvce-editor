@@ -1,3 +1,4 @@
+import * as ElectronDialog from '../ElectronDialog/ElectronDialog.ipc.ts'
 import * as ModuleId from '../ModuleId/ModuleId.ts'
 
 export const load = (moduleId: any): any => {
@@ -37,7 +38,8 @@ export const load = (moduleId: any): any => {
     case ModuleId.ElectronDeveloper:
       return import('../ElectronDeveloper/ElectronDeveloper.ipc.ts')
     case ModuleId.ElectronDialog:
-      return import('../ElectronDialog/ElectronDialog.ipc.ts')
+      // Close confirmation and saving must survive removal of an old build's chunks.
+      return ElectronDialog
     case ModuleId.ElectronInitialize:
       return import('../ElectronInitialize/ElectronInitialize.ipc.ts')
     case ModuleId.ElectronNet:

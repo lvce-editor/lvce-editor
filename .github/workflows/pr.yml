@@ -77,6 +77,8 @@ jobs:
         working-directory: ./packages/build
         run: npm test -- --runTestsByPath test/BundleBuiltinSettings.test.ts
       - run: npm test
+      - name: Test native dialog routes after package replacement
+        run: node scripts/test-update-dialog-routing.mjs
       - name: Test main-process unit test shutdown
         run: node --test scripts/test/main-process-shutdown.test.mjs
       - name: Test local services in remote workspaces
@@ -425,6 +427,8 @@ jobs:
         with:
           path: '~\AppData\Local\electron-builder'
           key: ${{ runner.os }}-${{ runner.arch }}-electron-builder-${{ hashFiles('package-lock.json') }}
+      - name: Test native dialog routes after package replacement
+        run: node scripts/test-update-dialog-routing.mjs
       - name: Build Electron App (exe, arm64)
         run: npm run build:electron:windows:exe:arm64
       - name: Test staged Windows ARM64 installer
