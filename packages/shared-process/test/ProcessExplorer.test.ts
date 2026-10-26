@@ -1,8 +1,8 @@
 import { beforeEach, expect, jest, test } from '@jest/globals'
 
 const ipc = {
-  dispose: jest.fn(async () => {}),
   addEventListener: jest.fn<(event: string, listener: () => void) => void>(),
+  dispose: jest.fn(async () => {}),
 }
 const launchProcessExplorer = jest.fn(async () => ipc)
 
@@ -78,8 +78,8 @@ test('acquire - relaunches after ref count reaches zero', async () => {
 
 test('acquire - relaunches after the process exits', async () => {
   const replacementIpc = {
-    dispose: jest.fn(async () => {}),
     addEventListener: jest.fn<(event: string, listener: () => void) => void>(),
+    dispose: jest.fn(async () => {}),
   }
   launchProcessExplorer.mockResolvedValueOnce(ipc).mockResolvedValueOnce(replacementIpc)
 
@@ -96,8 +96,8 @@ test('acquire - relaunches after the process exits', async () => {
 
 test('acquire - ignores a close event from an exited process after replacement', async () => {
   const replacementIpc = {
-    dispose: jest.fn(async () => {}),
     addEventListener: jest.fn<(event: string, listener: () => void) => void>(),
+    dispose: jest.fn(async () => {}),
   }
   launchProcessExplorer.mockResolvedValueOnce(ipc).mockResolvedValueOnce(replacementIpc)
 
