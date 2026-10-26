@@ -19,7 +19,7 @@ for (const entry of await readdir(target, { withFileTypes: true })) {
   }
 }
 assert.equal(roots.length, 1, 'Expected one built frontend')
-const { directory, config, entries } = roots[0]
+const { directory, entries } = roots[0]
 for (const id of ['builtin.git', 'builtin.vscode-icons']) {
   await cp(resolve('extensions', id), join(directory, 'extensions', id), { recursive: true })
 }
@@ -28,14 +28,18 @@ assert.equal(manifest.id, 'builtin.git')
 assert.ok(manifest.browser, 'Git must support the browser remote transport')
 const remote = entries.find((entry) => entry.id === 'builtin.remote-server')
 assert.ok(remote?.path, 'Released remote connector must be bundled')
-await writeFile(
-  config,
-  JSON.stringify(
-    [
-      ...entries.filter((entry) => entry.id !== manifest.id),
-      { ...manifest, isWeb: true, path: remote.path.replace(/builtin\.remote-server$/, manifest.id) },
-    ],
-    null,
-    2,
-  ) + '\n',
-)
+for (const file of ['extensions.json', 'webExtensions.json']) {
+  const configFile = join(directory, 'config', file)
+  const contributions = JSON.parse(await readFile(configFile, 'utf8'))
+  await writeFile(
+    configFile,
+    JSON.stringify(
+      [
+        ...contributions.filter((entry) => entry.id !== manifest.id),
+        { ...manifest, ...(file === 'webExtensions.json' ? { isWeb: true } : {}), path: remote.path.replace(/builtin\.remote-server$/, manifest.id) },
+      ],
+      null,
+      2,
+    ) + '\n',
+  )
+}
