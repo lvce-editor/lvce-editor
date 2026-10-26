@@ -156,6 +156,29 @@ jobs:
           const target = 'packages/extension-host-worker-tests/src/viewlet.editor-scroll-position-persistence.js'
           await writeFile(target, stripTypeScriptTypes(await readFile(source, 'utf8')))
           JS
+      - name: Checkout owned main-area render regressions
+        uses: actions/checkout@v7
+        with:
+          repository: lvce-editor/main-area-worker
+          ref: 7aab370e33858576d0fcb6d5b357f940fbc68254
+          path: .tmp/main-area-render-tests
+      - name: Stage main-area render regressions
+        shell: bash
+        run: |
+          node --input-type=module - <<'JS'
+          import { readFile, writeFile } from 'node:fs/promises'
+          import { stripTypeScriptTypes } from 'node:module'
+          const tests = ['focused-preview-open', 'open-uri-cursor-options', 'open-same-file-ten-times-concurrently', 'preview-tab-replaced', 'preview-tab-open-non-preview-pins']
+          const paths = []
+          for (const test of tests) {
+            const name = `viewlet.main-area-${test}`
+            const source = `.tmp/main-area-render-tests/packages/e2e/src/${name}.ts`
+            const target = `packages/extension-host-worker-tests/src/${name}.js`
+            await writeFile(target, stripTypeScriptTypes(await readFile(source, 'utf8')))
+            paths.push(target)
+          }
+          await writeFile('.tmp/main-area-render-tests/staged-paths.json', JSON.stringify(paths))
+          JS
       - name: Build static site
         run: npm run build:static:ignore-icon-theme
         env:
@@ -207,28 +230,16 @@ jobs:
           PLAYWRIGHT_BROWSERS_PATH: 0
           LVCE_REMOTE_WEB_FRONTEND_DIR: ${{ github.workspace }}/.tmp/remote-account-frontend
           LVCE_REMOTE_WEB_PATH_PREFIX: /lvce-editor
-      - name: Checkout owned main-area render regressions
-        uses: actions/checkout@v7
-        with:
-          repository: lvce-editor/main-area-worker
-          ref: 7aab370e33858576d0fcb6d5b357f940fbc68254
-          path: .tmp/main-area-render-tests
-      - name: Stage main-area render regressions
+      - name: Verify exported main-area regression pages
         shell: bash
         run: |
           node --input-type=module - <<'JS'
-          import { readFile, writeFile } from 'node:fs/promises'
-          import { stripTypeScriptTypes } from 'node:module'
-          const tests = ['focused-preview-open', 'open-uri-cursor-options', 'open-same-file-ten-times-concurrently', 'preview-tab-replaced', 'preview-tab-open-non-preview-pins']
-          const paths = []
-          for (const test of tests) {
-            const name = `viewlet.main-area-${test}`
-            const source = `.tmp/main-area-render-tests/packages/e2e/src/${name}.ts`
-            const target = `packages/extension-host-worker-tests/src/${name}.js`
-            await writeFile(target, stripTypeScriptTypes(await readFile(source, 'utf8')))
-            paths.push(target)
+          import { access, readFile } from 'node:fs/promises'
+          import { basename } from 'node:path'
+          const paths = JSON.parse(await readFile('.tmp/main-area-render-tests/staged-paths.json', 'utf8'))
+          for (const path of paths) {
+            await access(`packages/build/.tmp/export-test/dist/tests/${basename(path, '.js')}.html`)
           }
-          await writeFile('.tmp/main-area-render-tests/staged-paths.json', JSON.stringify(paths))
           JS
       - name: Test main-area render barriers with published workers
         working-directory: ./packages/extension-host-worker-tests
