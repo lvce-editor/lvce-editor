@@ -34,8 +34,6 @@ export const load = (moduleId) => {
       return import('../Callback/Callback.ipc.js')
     case ModuleId.Authentication:
       return import('../Authentication/Authentication.ipc.js')
-    case ModuleId.Cloudflare:
-      return import('../Cloudflare/Cloudflare.ipc.js')
     case ModuleId.Chrome:
       return import('../Chrome/Chrome.ipc.js')
     case ModuleId.ClipBoard:

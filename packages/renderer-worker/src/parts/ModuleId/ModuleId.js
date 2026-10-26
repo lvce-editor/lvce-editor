@@ -128,6 +128,5 @@ export const Tasks = 160
 
 export const SideBar = 161
 
-export const Cloudflare = 162
 
 export const Authentication = 163
