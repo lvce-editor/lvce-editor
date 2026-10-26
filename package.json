@@ -13,7 +13,7 @@
     "dev": "nodemon",
     "diagnose:gpu": "node scripts/diagnose-gpu-process.mjs",
     "e2e": "npm run e2e --workspaces --if-present",
-    "lint": "eslint \"packages/shared-process/**/*.{ts,js}\" && knip --no-config-hints",
+    "lint": "eslint \"packages/shared-process/**/*.{ts,js}\" && eslint static/css/parts/ViewletQuickPick.css && knip --no-config-hints",
     "electron": "node packages/build/src/parts/RunElectron/RunElectron.ts",
     "type-check": "npm run type-check --workspaces --if-present",
     "build:static": "node packages/build/bin/build.ts --target=static",
@@ -46,7 +46,7 @@
     "node": ">=24"
   },
   "devDependencies": {
-    "@lvce-editor/eslint-config": "^18.14.2",
+    "@lvce-editor/eslint-config": "^18.15.1",
     "@lvce-editor/rpc": "^6.22.0",
     "@types/jest": "^30.0.0",
     "@types/node": "^25.0.1",
