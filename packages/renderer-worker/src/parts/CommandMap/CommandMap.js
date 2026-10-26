@@ -271,6 +271,7 @@ export const commandMap = {
   'FileWatcher.watchExtension': lazy('FileWatcher.watchExtension'),
   'FileWatcher.disposeExtension': lazy('FileWatcher.disposeExtension'),
   'FileWatcher.handleEvent': lazy('FileWatcher.handleEvent'),
+  'GitIgnoreWatcher.watch': lazy('GitIgnoreWatcher.watch'),
   'FileWatcher.watchFile': lazy('FileWatcher.watchFile'),
   'Focus.removeAdditionalFocus': lazy('Focus.removeAdditionalFocus'),
   'Focus.setAdditionalFocus': lazy('Focus.setAdditionalFocus'),

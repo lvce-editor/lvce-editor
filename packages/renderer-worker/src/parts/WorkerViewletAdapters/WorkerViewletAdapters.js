@@ -106,7 +106,10 @@ export const explorer = {
       return { ...state, ...dimensions, commands }
     }
     return {
-      dispose() {},
+      async dispose(state) {
+        const GitIgnoreWatcher = await import('../GitIgnoreWatcher/GitIgnoreWatcher.js')
+        await GitIgnoreWatcher.dispose(state.uid)
+      },
       getDisplayName: getExplorerDisplayName,
       async getMouseActions() {
         try {
