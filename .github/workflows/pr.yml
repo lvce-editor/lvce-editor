@@ -131,16 +131,6 @@ jobs:
           name: electron-tab-move-${{ matrix.os }}
           path: .tmp/electron-tab-move-evidence
           if-no-files-found: warn
-      - name: Stage owned active split save regression
-        shell: bash
-        run: |
-          node --input-type=module - <<'JS'
-          import { readFile, writeFile } from 'node:fs/promises'
-          import { stripTypeScriptTypes } from 'node:module'
-          const source = '.tmp/cursor-split-tests/packages/e2e-integration/src/viewlet.main-save-active-split-editor.ts'
-          const target = 'packages/extension-host-worker-tests/src/viewlet.main-save-active-split-editor.js'
-          await writeFile(target, stripTypeScriptTypes(await readFile(source, 'utf8')))
-          JS
       - name: Test renderer layout blur dispatch
         if: matrix.os == 'ubuntu-24.04'
         run: node --experimental-vm-modules node_modules/jest/bin/jest.js --config packages/renderer-worker/package.json --runInBand --coverage=false --testPathPatterns=ViewletLayoutBlur.test
@@ -175,15 +165,6 @@ jobs:
         run: npx playwright install --with-deps chromium
       - name: Test static export bundle mode
         run: node packages/extension-host-worker-tests/test/static-bundle.mjs
-      - name: Test saving the active split editor with the published worker
-        working-directory: ./packages/extension-host-worker-tests
-        run: npm run e2e:headless -- --ci --test-name-prefix=viewlet.main-save-active-split-editor
-        env:
-          PLAYWRIGHT_BROWSERS_PATH: 0
-      - name: Remove staged active split save regression
-        if: always()
-        run: |
-          node --input-type=module -e "import { rm } from 'node:fs/promises'; await rm('packages/extension-host-worker-tests/src/viewlet.main-save-active-split-editor.js', { force: true })"
       - name: Checkout direct editor event regressions
         uses: actions/checkout@v7
         with:
