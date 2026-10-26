@@ -190,13 +190,16 @@ jobs:
           npx playwright install chromium
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0
+      - name: Stage full remote browser fixture prerequisites
+        if: matrix.os == 'ubuntu-24.04'
+        run: node scripts/test/prepare-remote-account-frontend.mjs
       - name: Test bundled remote account connections with the built frontend
         if: matrix.os == 'ubuntu-24.04'
         working-directory: .tmp/remote-account-tests
         run: npm run e2e:web
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0
-          LVCE_REMOTE_WEB_FRONTEND_DIR: ${{ github.workspace }}/packages/build/.tmp/dist
+          LVCE_REMOTE_WEB_FRONTEND_DIR: ${{ github.workspace }}/.tmp/remote-account-frontend
           LVCE_REMOTE_WEB_PATH_PREFIX: /lvce-editor
       - name: Test static export bundle mode
         run: node packages/extension-host-worker-tests/test/static-bundle.mjs
