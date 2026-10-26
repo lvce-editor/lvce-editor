@@ -87,8 +87,8 @@
   {
     "name": "builtin.language-basics-c",
     "repository": "github.com/lvce-editor/language-basics-c",
-    "version": "0.15.3",
-    "sha256": "c525157ea2caf0cc3d26aa2d5f89107f9b55ea82b7d2cdbfd192df4c578073cd",
+    "version": "0.15.4",
+    "sha256": "8e2b1c02159f0e7cd2691e087b6949248bba542440311acfd7bd0f953257048d",
     "created": "2022-06-16"
   },
   {
