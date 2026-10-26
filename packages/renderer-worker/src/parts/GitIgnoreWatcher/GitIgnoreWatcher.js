@@ -34,17 +34,17 @@ export const watch = async (uid, root, directories) => {
   const key = JSON.stringify([root, roots])
   if (watchers.get(uid)?.key === key) return
   const previous = watchers.get(uid)
-  const entry = { key, root, watcher: undefined, timer: undefined, handleEvent: undefined }
+  const handleEvent = (event) => {
+    if (watchers.get(uid) !== entry || !['add', 'change', 'unlink'].includes(event.detail.eventName)) return
+    scheduleRefresh(uid, entry)
+  }
+  const entry = { key, root, watcher: undefined, timer: undefined, handleEvent }
   watchers.set(uid, entry)
   await disposeEntry(previous)
   if (watchers.get(uid) !== entry) return
   if (!roots.length || (!root.startsWith('file://') && !root.startsWith('remote-server://'))) {
     watchers.delete(uid)
     return
-  }
-  entry.handleEvent = (event) => {
-    if (watchers.get(uid) !== entry || !['add', 'change', 'unlink'].includes(event.detail.eventName)) return
-    scheduleRefresh(uid, entry)
   }
   try {
     const watcher = await FileWatcher.watch({ childNames: ['.gitignore'], depth: 0, exclude: [], roots, useGitIgnore: false })

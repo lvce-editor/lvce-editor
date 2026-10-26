@@ -45,7 +45,7 @@ test('coalesces creation, saved edits and deletion, ignores backend readiness ev
   await GitIgnoreWatcher.watch(1, 'file:///workspace', ['file:///workspace'])
   await jest.runAllTimersAsync()
   jest.mocked(Command.execute).mockClear()
-  const watcher = await jest.mocked(FileWatcher.watch).mock.results[0].value
+  const watcher = (await jest.mocked(FileWatcher.watch).mock.results[0].value) as EventTarget
   emit(watcher, 'ready')
   await jest.runAllTimersAsync()
   expect(Command.execute).not.toHaveBeenCalled()
@@ -56,7 +56,7 @@ test('coalesces creation, saved edits and deletion, ignores backend readiness ev
 
 test('switching roots cancels pending refresh and detaches the old subscription', async () => {
   await GitIgnoreWatcher.watch(1, 'file:///workspace', ['file:///workspace'])
-  const watcher = await jest.mocked(FileWatcher.watch).mock.results[0].value
+  const watcher = (await jest.mocked(FileWatcher.watch).mock.results[0].value) as EventTarget
   emit(watcher, 'change')
   await GitIgnoreWatcher.watch(1, 'file:///other', ['file:///other'])
   expect(FileWatcher.dispose).toHaveBeenCalledWith(watcher)
