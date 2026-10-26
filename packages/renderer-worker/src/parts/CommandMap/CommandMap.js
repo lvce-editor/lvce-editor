@@ -9,6 +9,12 @@ const lazy =
   }
 
 export const commandMap = {
+  'Authentication.beginAccountChange': lazy('Authentication.beginAccountChange'),
+  'Authentication.endAccountChange': lazy('Authentication.endAccountChange'),
+  'Authentication.getAccountChangeState': lazy('Authentication.getAccountChangeState'),
+  'Authentication.getAccounts': lazy('Authentication.getAccounts'),
+  'Authentication.getAccessToken': lazy('Authentication.getAccessToken'),
+  'Authentication.getBackendUrl': lazy('Authentication.getBackendUrl'),
   'Cloudflare.authorizeBrowser': lazy('Cloudflare.authorizeBrowser'),
   'Cloudflare.getAccountId': lazy('Cloudflare.getAccountId'),
   'Cloudflare.getMachines': lazy('Cloudflare.getMachines'),
