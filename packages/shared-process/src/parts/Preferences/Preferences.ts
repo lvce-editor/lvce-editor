@@ -45,12 +45,16 @@ export const getDefaultPreferences = async (): Promise<any> => {
 // TODO efficiently load preferences -> first load cached preferences
 //                                   -> on idle check preferences
 
-const getOverrides = (): any => {
+export const getOverrides = (): any => {
   const argvSliced = Process.argv.slice(2)
   const overrides: Record<string, any> = {}
   for (const argv of argvSliced) {
     if (argv.startsWith('--theme=')) {
       overrides['workbench.colorTheme'] = argv.slice('--theme='.length)
+    } else if (argv.startsWith('--process-explorer=')) {
+      overrides['develop.processExplorerPath'] = argv.slice('--process-explorer='.length)
+    } else if (argv.startsWith('--process-explorer-worker=')) {
+      overrides['develop.processExplorerWorkerPath'] = argv.slice('--process-explorer-worker='.length)
     }
   }
   return overrides

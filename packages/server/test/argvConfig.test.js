@@ -61,3 +61,11 @@ test('finds the workspace while ignoring repeated link arguments', () => {
 test('uses the application config directory for argv.json', () => {
   assert.equal(ArgvConfig.getArgvConfigPath({ XDG_CONFIG_HOME: '/test/config' }, '/test/home'), join('/test/config', 'lvce-oss', 'argv.json'))
 })
+
+test('worker path options do not become workspace arguments', () => {
+  assert.equal(
+    ArgvConfig.getWorkspaceArgument(['--process-explorer-worker=relative worker.js', '--process-explorer=/native/process.ts', '/workspace']),
+    '/workspace',
+  )
+  assert.equal(ArgvConfig.getWorkspaceArgument(['--process-explorer-worker=/worker.js']), '')
+})
