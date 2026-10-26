@@ -165,6 +165,7 @@ const handleMessageFromParent = (message) => {
 }
 
 const handleExit = (code) => {
+  console.info('[DEBUG-actions-lock] child exit', code)
   process.exit(code)
 }
 
