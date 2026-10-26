@@ -57,8 +57,8 @@ test('getOverrides - last CLI path wins and native process is configurable', () 
   ]
   try {
     expect(Preferences.getOverrides()).toEqual({
-      'develop.processExplorerWorkerPath': 'relative worker.js',
       'develop.processExplorerPath': '/test/processExplorerMain.ts',
+      'develop.processExplorerWorkerPath': 'relative worker.js',
     })
   } finally {
     process.argv = originalArgv
