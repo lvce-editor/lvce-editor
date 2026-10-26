@@ -98,9 +98,6 @@ test('remote mode authenticates and exposes existing workspace processes', { ski
   child.stderr.on('data', (chunk) => {
     serverOutput += chunk.toString('utf8')
   })
-  child.on('exit', (code, signal) => {
-    console.info('[DEBUG-actions-lock] server exit', { code, signal, serverOutput })
-  })
   context.after(async () => {
     stopProcessGroup(child)
     await rm(directory, { force: true, recursive: true })
@@ -154,5 +151,8 @@ test('remote mode authenticates and exposes existing workspace processes', { ski
             ps: execFileSync('ps', ['-ax', '-o', 'pid=,ppid=,pcpu=,rss=,command='], { encoding: 'utf8' }),
           }),
     )
+    const response = await fetch(`http://127.0.0.1:${port}/`)
+    assert.equal(response.status, 404)
+    assert.equal(child.exitCode, null, serverOutput)
   }
 })
