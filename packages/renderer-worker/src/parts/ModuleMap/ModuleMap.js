@@ -52,8 +52,6 @@ export const getModuleId = (commandId) => {
       return ModuleId.Callback
     case 'Authentication':
       return ModuleId.Authentication
-    case 'Cloudflare':
-      return ModuleId.Cloudflare
     case 'Chrome':
       return ModuleId.Chrome
     case 'ClipBoard':

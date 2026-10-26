@@ -129,7 +129,7 @@ try {
         return null
       }
       try {
-        await executeCommand('Cloudflare.openConnections')
+        await executeCommand('ExtensionHost.executeCommand', 'remote-server.cloudflare')
         return openedUrl
       } finally {
         browserWindow.open = originalOpen

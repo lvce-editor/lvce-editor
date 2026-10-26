@@ -483,7 +483,7 @@ test('signOut merges logged out auth state into layout state', async () => {
 
   const result = await ViewletLayout.signOut(state)
 
-  expect(Command.execute).toHaveBeenCalledWith('Cloudflare.releaseAccountSession')
+  expect(Command.execute).toHaveBeenCalledWith('Authentication.beginAccountChange')
   expect(jest.mocked(Command.execute).mock.invocationCallOrder[0]).toBeLessThan(jest.mocked(AuthWorker.signOut).mock.invocationCallOrder[0])
   expect(AuthWorker.signOut).toHaveBeenCalledTimes(1)
   expect(AuthWorker.signOut).toHaveBeenCalledWith('https://example.com/')
@@ -564,24 +564,14 @@ test.each(['signOut', 'useAccount', 'removeAccount'] as const)('%s resumes conne
   jest.mocked(AuthWorker[method]).mockRejectedValue(new Error('auth unavailable') as never)
   const state = ViewletLayout.create(1)
   await expect(ViewletLayout[method](state, 'other')).rejects.toThrow('auth unavailable')
-  expect(jest.mocked(Command.execute).mock.calls).toEqual([
-    ['Authentication.beginAccountChange'],
-    ['Cloudflare.releaseAccountSession'],
-    ['Cloudflare.resumeAccountConnections'],
-    ['Authentication.endAccountChange', undefined],
-  ])
+  expect(jest.mocked(Command.execute).mock.calls).toEqual([['Authentication.beginAccountChange'], ['Authentication.endAccountChange', undefined]])
 })
 
 test('signing into another account suspends and disconnects the existing account connection', async () => {
   jest.mocked(AuthWorker.signIn).mockResolvedValue({ userState: 'loggedIn', userName: 'Other User' } as never)
   const state = { ...ViewletLayout.create(1), userState: 'loggedIn', platform: PlatformType.Web }
   await ViewletLayout.signIn(state)
-  expect(jest.mocked(Command.execute).mock.calls).toEqual([
-    ['Authentication.beginAccountChange'],
-    ['Cloudflare.releaseAccountSession'],
-    ['Cloudflare.resumeAccountConnections'],
-    ['Authentication.endAccountChange', undefined],
-  ])
+  expect(jest.mocked(Command.execute).mock.calls).toEqual([['Authentication.beginAccountChange'], ['Authentication.endAccountChange', undefined]])
   expect(jest.mocked(Command.execute).mock.invocationCallOrder[0]).toBeLessThan(jest.mocked(AuthWorker.signIn).mock.invocationCallOrder[0])
 })
 

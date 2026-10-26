@@ -29,4 +29,4 @@ The editor awaits `willChange` before switching/removing an account, signing out
 
 The editor calls the same participants' `didChange` commands in `finally`, including when authentication fails. Operations can overlap: pair each suspend with one resume, and keep authorization suspended until every operation completes. The changing state and generation are maintained independently in the editor so missed notifications cannot make an old backend grant current. Disabled or incompatible extensions do not participate. Failed notifications or offline discovery do not prevent sign-out.
 
-The legacy renderer Cloudflare bridge remains temporarily while the bundled remote-ssh extension migrates to these generic commands. Remove it after integrating the new extension release.
+The built-in remote-ssh extension owns remote-machine account connections and uses this generic boundary.
