@@ -1,5 +1,4 @@
 import { afterAll, beforeAll, expect, test } from '@jest/globals'
-import electronPath from 'electron'
 import { spawn, spawnSync } from 'node:child_process'
 import { mkdtemp, rm } from 'node:fs/promises'
 import { createServer } from 'node:http'
@@ -9,8 +8,8 @@ import { fileURLToPath } from 'node:url'
 import { WebSocketServer } from 'ws'
 
 const expectedOutput = 'Mock response'
+const lineBreakRegex = /\r?\n/
 const electronPromptTimeout = 120_000
-const electronExecutable = String(electronPath)
 const macOsTaskPolicyError =
   /^\[\d+:\d+\/\d+\.\d+:ERROR:base\/process\/process_mac\.cc:(?:53|98)\] task_policy_set TASK_(?:CATEGORY|SUPPRESSION)_POLICY: (?:\(os\/kern\) invalid argument \(4\)|\(ipc\/send\) invalid destination port \(0x[\da-f]+\))$/
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '../../..')
@@ -34,7 +33,7 @@ const startDbus = () => {
   if (result.status !== 0) {
     throw new Error(`Failed to start D-Bus: ${result.stderr}`)
   }
-  const [address, pid] = result.stdout.trim().split(/\r?\n/)
+  const [address, pid] = result.stdout.trim().split(lineBreakRegex)
   dbusAddress = address
   dbusPid = Number(pid)
   if (!dbusAddress || !Number.isInteger(dbusPid)) {
@@ -44,7 +43,7 @@ const startDbus = () => {
 
 const getApplicationStderr = (stderr) => {
   return stderr
-    .split(/\r?\n/)
+    .split(lineBreakRegex)
     .filter((line) => !macOsTaskPolicyError.test(line))
     .join('\n')
 }
@@ -118,7 +117,9 @@ afterAll(async () => {
 })
 
 /** @returns {Promise<{code: number | null, signal: NodeJS.Signals | null, stderr: string, stdout: string}>} */
-const runElectron = () => {
+const runElectron = async () => {
+  const { default: electronPath } = await import('electron')
+  const electronExecutable = String(electronPath)
   /** @type {NodeJS.ProcessEnv} */
   const env = {
     ...process.env,
