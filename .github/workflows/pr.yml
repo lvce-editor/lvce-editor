@@ -197,6 +197,41 @@ jobs:
         run: npm run test-static-export
       - name: Install Chromium for static export acceptance
         run: npx playwright install --with-deps chromium
+      - name: Resolve bundled remote account regression source
+        id: remoteAccountSource
+        if: matrix.os == 'ubuntu-24.04'
+        run: |
+          node --input-type=module - <<'JS'
+          import { readFile, appendFile } from 'node:fs/promises'
+          const entries = JSON.parse(await readFile('packages/build/src/parts/DownloadBuiltinExtensions/builtinExtensions.json', 'utf8'))
+          const entry = entries.find((item) => item.name === 'builtin.remote-server')
+          if (!entry || !/^v?\d+\.\d+\.\d+$/.test(entry.version)) throw new Error('Missing remote account extension version')
+          await appendFile(process.env.GITHUB_OUTPUT, `tag=v${entry.version.replace(/^v/, '')}\n`)
+          JS
+      - name: Checkout bundled remote account regressions
+        if: matrix.os == 'ubuntu-24.04'
+        uses: actions/checkout@v7
+        with:
+          repository: lvce-editor/remote-ssh
+          ref: ${{ steps.remoteAccountSource.outputs.tag }}
+          path: .tmp/remote-account-tests
+      - name: Prepare bundled remote account regression
+        if: matrix.os == 'ubuntu-24.04'
+        working-directory: .tmp/remote-account-tests
+        run: |
+          nice npm ci
+          npm run build:extension
+          npx playwright install chromium
+        env:
+          PLAYWRIGHT_BROWSERS_PATH: 0
+      - name: Test bundled remote account connections with the built frontend
+        if: matrix.os == 'ubuntu-24.04'
+        working-directory: .tmp/remote-account-tests
+        run: npm run e2e:web
+        env:
+          PLAYWRIGHT_BROWSERS_PATH: 0
+          LVCE_REMOTE_WEB_FRONTEND_DIR: ${{ github.workspace }}/packages/build/.tmp/dist
+          LVCE_REMOTE_WEB_PATH_PREFIX: /lvce-editor
       - name: Test static export bundle mode
         run: node packages/extension-host-worker-tests/test/static-bundle.mjs
       - name: Test Accounts view application rendering
