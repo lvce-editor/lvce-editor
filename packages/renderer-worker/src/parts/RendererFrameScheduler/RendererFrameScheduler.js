@@ -14,7 +14,7 @@ const maximumFrameWait = 100
 export const state = {
   frameCount: 0,
   lastFrameTime: Number.NEGATIVE_INFINITY,
-  /** @type {{commands: any[], promise: Promise<any>} | undefined} */
+  /** @type {{commands: any[], promise: Promise<any>, immediate: boolean, flush?: () => void} | undefined} */
   pendingFrame: undefined,
   /** @type {any} */
   rpc: undefined,
@@ -28,8 +28,8 @@ const enqueue = (operation) => {
   return promise
 }
 
-const waitForEligibleFrame = () => {
-  if (IsTest.isTest()) {
+const waitForEligibleFrame = (frame) => {
+  if (frame.immediate || IsTest.isTest()) {
     return Promise.resolve(Timestamp.now())
   }
   return new Promise((resolve) => {
@@ -38,6 +38,7 @@ const waitForEligibleFrame = () => {
     const finish = (timestamp) => {
       if (settled) return
       settled = true
+      frame.flush = undefined
       clearTimeout(timer)
       RequestAnimationFrame.cancelAnimationFrame(frameId)
       resolve(timestamp)
@@ -54,6 +55,7 @@ const waitForEligibleFrame = () => {
     // Keep the ordered RPC queue live even when no paint callback arrives.
     const timer = setTimeout(() => finish(Timestamp.now()), maximumFrameWait)
     frameId = RequestAnimationFrame.requestAnimationFrame(handleFrame)
+    frame.flush = () => finish(Timestamp.now())
   })
 }
 
@@ -67,7 +69,7 @@ const invokeWithCacheRecovery = async (method, ...params) => {
 }
 
 const runFrame = async (frame) => {
-  const timestamp = await waitForEligibleFrame()
+  const timestamp = await waitForEligibleFrame(frame)
   if (state.pendingFrame === frame) {
     state.pendingFrame = undefined
   }
@@ -113,20 +115,30 @@ export const reset = (rpc) => {
   state.tail = Promise.resolve()
 }
 
-export const sendMultiple = (commands) => {
-  if (state.pendingFrame) {
-    state.pendingFrame.commands.push(...commands)
-    return state.pendingFrame.promise
+export const sendMultiple = (commands, immediate = false) => {
+  const { pendingFrame } = state
+  if (pendingFrame) {
+    pendingFrame.commands.push(...commands)
+    if (immediate) {
+      pendingFrame.immediate = true
+      pendingFrame.flush?.()
+    }
+    return pendingFrame.promise
   }
-  /** @type {{commands: any[], promise: Promise<any>}} */
+  /** @type {{commands: any[], promise: Promise<any>, immediate: boolean, flush?: () => void}} */
   const frame = {
     commands: [...commands],
+    immediate,
     promise: Promise.resolve(),
   }
   state.pendingFrame = frame
   frame.promise = enqueue(() => runFrame(frame))
   return frame.promise
 }
+
+// Explicit mount barriers must reach the DOM before subsequent focus/layout RPCs.
+// Keep them in the same ordered queue, including any already coalesced commands.
+export const sendMultipleImmediately = (commands) => sendMultiple(commands, true)
 
 export const invoke = (method, ...params) => {
   if (method === kSendMultiple) {

@@ -14,7 +14,7 @@ jest.unstable_mockModule('../src/parts/MainAreaWorker/MainAreaWorker.js', () => 
 }))
 
 jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () => ({
-  invoke: rendererProcessInvoke,
+  sendMultipleImmediately: rendererProcessInvoke,
 }))
 
 jest.unstable_mockModule('../src/parts/UpdateDynamicFocusContext/UpdateDynamicFocusContext.js', () => ({
@@ -44,7 +44,7 @@ test('renders the pending main area state', async () => {
 
   expect(mainAreaWorkerInvoke).toHaveBeenNthCalledWith(1, 'MainArea.diff2', 7)
   expect(mainAreaWorkerInvoke).toHaveBeenNthCalledWith(2, 'MainArea.render2', 7, diffResult)
-  expect(rendererProcessInvoke).toHaveBeenCalledWith('Viewlet.sendMultiple', commands)
+  expect(rendererProcessInvoke).toHaveBeenCalledWith(commands)
 })
 
 test('does not render when the pending state has no diff', async () => {

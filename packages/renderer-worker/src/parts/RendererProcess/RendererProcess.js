@@ -39,6 +39,10 @@ export const invoke = (method, ...params) => {
   return RendererFrameScheduler.invoke(method, ...params)
 }
 
+export const sendMultipleImmediately = (commands) => {
+  return RendererFrameScheduler.sendMultipleImmediately(commands)
+}
+
 export const invokeAndTransfer = (method, ...params) => {
   return RendererFrameScheduler.invokeAndTransfer(method, ...params)
 }
