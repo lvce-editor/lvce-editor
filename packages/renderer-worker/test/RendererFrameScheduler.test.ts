@@ -263,3 +263,79 @@ test('a suspended animation frame cannot block rendering and following RPCs', as
   expect(rpc.invoke).toHaveBeenCalledTimes(2)
   expect(frameCallbacks).toHaveLength(0)
 })
+
+test('commits an explicit render barrier without waiting for another animation frame', async () => {
+  await RendererFrameScheduler.sendMultipleImmediately([['Viewlet.send', 1, 'mount']])
+
+  expect(frameCallbacks).toHaveLength(0)
+  expect(rpc.invoke).toHaveBeenCalledWith('Viewlet.sendMultiple', [['Viewlet.send', 1, 'mount']])
+})
+
+test('flushes a waiting frame in arrival order and ignores its late animation callback', async () => {
+  jest.useFakeTimers()
+  const first = RendererFrameScheduler.sendMultiple([['Viewlet.send', 1, 'content']])
+  await flushMicrotasks()
+  const lateFrame = frameCallbacks.shift()!
+  currentTime = 5
+  const barrier = RendererFrameScheduler.sendMultipleImmediately([['Viewlet.send', 1, 'mount']])
+  await Promise.all([first, barrier])
+
+  expect(rpc.invoke.mock.calls).toEqual([
+    [
+      'Viewlet.sendMultiple',
+      [
+        ['Viewlet.send', 1, 'content'],
+        ['Viewlet.send', 1, 'mount'],
+      ],
+    ],
+  ])
+  expect(RendererFrameScheduler.state.lastFrameTime).toBe(5)
+  lateFrame(16)
+  await jest.advanceTimersByTimeAsync(100)
+  expect(rpc.invoke).toHaveBeenCalledTimes(1)
+})
+
+test('keeps an immediate render behind preceding RPCs and before following RPCs', async () => {
+  const previousRpc = Promise.withResolvers<void>()
+  rpc.invoke.mockReturnValueOnce(previousRpc.promise)
+  const previous = RendererFrameScheduler.invoke('Window.test')
+  const render = RendererFrameScheduler.sendMultipleImmediately([['Viewlet.send', 1, 'mount']])
+  const following = RendererFrameScheduler.invoke('Viewlet.focusSelector', 1, '[name="editor"]')
+  await flushMicrotasks()
+  expect(rpc.invoke).toHaveBeenCalledTimes(1)
+  previousRpc.resolve()
+  await Promise.all([previous, render, following])
+
+  expect(rpc.invoke.mock.calls).toEqual([
+    ['Window.test'],
+    ['Viewlet.sendMultiple', [['Viewlet.send', 1, 'mount']]],
+    ['Viewlet.focusSelector', 1, '[name="editor"]'],
+  ])
+  expect(frameCallbacks).toHaveLength(0)
+})
+
+test('ordinary renders still observe the frame interval after an immediate barrier', async () => {
+  await RendererFrameScheduler.sendMultipleImmediately([['Viewlet.send', 1, 'mount']])
+  const next = RendererFrameScheduler.sendMultiple([['Viewlet.send', 1, 'update']])
+  await flushMicrotasks()
+  await runAnimationFrame(8)
+  expect(rpc.invoke).toHaveBeenCalledTimes(1)
+  await runAnimationFrame(16)
+  await next
+  expect(rpc.invoke).toHaveBeenCalledTimes(2)
+})
+
+test('an immediate render failure rejects shared callers and permits recovery', async () => {
+  const error = new Error('renderer failed')
+  rpc.invoke.mockRejectedValueOnce(error)
+  const command = ['Viewlet.setCss', 1, '.item {}']
+  const first = RendererFrameScheduler.sendMultiple([command])
+  const barrier = RendererFrameScheduler.sendMultipleImmediately([command])
+  expect(await Promise.allSettled([first, barrier])).toEqual([
+    { reason: error, status: 'rejected' },
+    { reason: error, status: 'rejected' },
+  ])
+  expect(NormalizeRendererCommands.state.cssTexts.size).toBe(0)
+  await RendererFrameScheduler.sendMultipleImmediately([command])
+  expect(rpc.invoke).toHaveBeenLastCalledWith('Viewlet.sendMultiple', [command])
+})
