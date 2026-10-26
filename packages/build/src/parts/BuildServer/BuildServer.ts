@@ -19,14 +19,17 @@ const getObjectDependencies = (obj) => {
   return [obj, ...Object.values(obj.dependencies).flatMap(getObjectDependencies)]
 }
 
-export const getServerIsStaticReplacement = (commitHash: string): string => `const hasLinkedExtensions = argvSliced.some((arg) => arg === '--link' || arg.startsWith('--link='))
+export const getServerIsStaticReplacement = (
+  commitHash: string,
+): string => `const hasLinkedExtensions = argvSliced.some((arg) => arg === '--link' || arg.startsWith('--link='))
+const hasProcessExplorerWorkerOverride = !argvSliced.includes('--disable-custom-worker-paths') && argvSliced.some((arg) => arg.startsWith('--process-explorer-worker='))
 
 const isStatic = (url) => {
   if (url === '/' || url.startsWith('/?')) {
-    return !hasLinkedExtensions
+    return !hasLinkedExtensions && !hasProcessExplorerWorkerOverride
   }
   if (url === '/index.html' || url.startsWith('/index.html?')) {
-    return !hasLinkedExtensions
+    return !hasLinkedExtensions && !hasProcessExplorerWorkerOverride
   }
   if (url.startsWith('/${commitHash}')) {
     return true

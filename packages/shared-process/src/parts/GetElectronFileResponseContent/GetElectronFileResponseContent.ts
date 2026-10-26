@@ -42,8 +42,10 @@ export const getElectronFileResponseContent = async (request: any, absolutePath:
     return newContentBuffer
   }
   let content = await readFile(absolutePath)
-  const isAppIndex = typeof url === 'string' && (url === '/' || (url.startsWith(`${Platform.scheme}://-/`) && new URL(url).pathname === '/'))
-  const runtimeConfig = { platform: 'electron', workspaceUri: getWorkspaceUri(request?.url || url) }
+  const baseUrl = `${Platform.scheme}://-/`
+  const indexUrl = typeof url === 'string' && URL.canParse(url, baseUrl) ? new URL(url, baseUrl) : undefined
+  const isAppIndex = indexUrl && (indexUrl.pathname === '/' || indexUrl.pathname === '/index.html')
+  const runtimeConfig = { platform: request?.platform === 'remote' ? 'remote' : 'electron', workspaceUri: getWorkspaceUri(request?.url || url) }
   if (!Platform.isProduction && isAppIndex) {
     // @ts-ignore
     content = content.toString().replace('    <link rel="manifest" href="/manifest.json" crossorigin="use-credentials" />\n', '')
