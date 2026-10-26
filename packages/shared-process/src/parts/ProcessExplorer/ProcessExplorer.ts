@@ -14,14 +14,19 @@ export const getOrCreate = async (): Promise<any> => {
     state.ipc = ipcPromise
     ipcPromise.then(
       (ipc) => {
-        ipc.on('close', () => {
+        const handleClose = (): void => {
           // A late close from an old process must not invalidate its replacement.
           if (state.ipc !== ipcPromise) {
             return
           }
           state.ipc = undefined
           state.refCount = 0
-        })
+        }
+        if (ipc.addEventListener) {
+          ipc.addEventListener('close', handleClose)
+        } else {
+          ipc.on('close', handleClose)
+        }
       },
       () => {
         if (state.ipc === ipcPromise) {

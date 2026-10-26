@@ -91,6 +91,13 @@ test('remote mode authenticates and exposes existing workspace processes', { ski
     },
     stdio: ['ignore', 'pipe', 'pipe'],
   })
+  let serverOutput = ''
+  child.stdout.on('data', (chunk) => {
+    serverOutput += chunk.toString('utf8')
+  })
+  child.stderr.on('data', (chunk) => {
+    serverOutput += chunk.toString('utf8')
+  })
   context.after(async () => {
     stopProcessGroup(child)
     await rm(directory, { force: true, recursive: true })
@@ -138,8 +145,14 @@ test('remote mode authenticates and exposes existing workspace processes', { ski
         : JSON.stringify({
             rootPid,
             serverPid: child.pid,
+            exitCode: child.exitCode,
+            signalCode: child.signalCode,
+            serverOutput,
             ps: execFileSync('ps', ['-ax', '-o', 'pid=,ppid=,pcpu=,rss=,command='], { encoding: 'utf8' }),
           }),
     )
+    const response = await fetch(`http://127.0.0.1:${port}/`)
+    assert.equal(response.status, 404)
+    assert.equal(child.exitCode, null, serverOutput)
   }
 })
