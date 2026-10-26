@@ -71,7 +71,9 @@
   font-size: 13px;
   margin: 0;
   padding: 0 6px 0 11px;
-  contain: strict;
+  /* Clip rows without creating a separate painting layer for every result. */
+  contain: size style;
+  overflow: clip;
   gap: 6px;
   line-height: 22px;
   border-radius: 3px;
@@ -93,7 +95,7 @@
 }
 
 .QuickPickItemLabel {
-  /* The row contains painting; overflow below handles text clipping. */
+  /* The row clips overflow; labels handle text ellipsis. */
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: pre;
