@@ -49,7 +49,13 @@ test('ignores disabled extensions and undeclared lifecycle commands', async () =
   const execute = jest.fn<(command: string) => Promise<unknown>>()
   const lifecycle = createAccountLifecycle({
     execute,
-    getExtensions: async () => [{ ...extension, disabled: true }, { accountLifecycle: participant }, { commands: extension.commands }],
+    getExtensions: async () => [
+      { ...extension, disabled: true },
+      { accountLifecycle: participant },
+      { commands: extension.commands },
+      { accountLifecycle: participant, commands: {} as never },
+      { accountLifecycle: participant, commands: [null] as never },
+    ],
   })
   await lifecycle.endAccountChange(await lifecycle.beginAccountChange())
   expect(execute).not.toHaveBeenCalled()

@@ -35,7 +35,8 @@ export const createAccountLifecycle = (options: Options) => {
     const participants = extensions.flatMap((extension) => {
       const participant = extension.accountLifecycle
       if (extension.disabled || !participant || typeof participant.willChange !== 'string' || typeof participant.didChange !== 'string') return []
-      const commands = new Set(extension.commands?.map((command) => command.id))
+      if (!Array.isArray(extension.commands)) return []
+      const commands = new Set(extension.commands.map((command) => command?.id))
       if (!commands.has(participant.willChange) || !commands.has(participant.didChange)) return []
       return [participant]
     })
