@@ -10,6 +10,7 @@ jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => ({
 }))
 
 jest.unstable_mockModule('../src/parts/Preferences/Preferences.js', () => ({
+  getOverrides: jest.fn(() => ({})),
   getUserPreferences: jest.fn(() => {
     throw new Error('not implemented')
   }),
@@ -27,6 +28,7 @@ const originalArgv = process.argv
 
 afterEach(() => {
   jest.resetAllMocks()
+  jest.mocked(Preferences.getOverrides).mockReturnValue({})
   process.argv = originalArgv
 })
 
@@ -114,4 +116,32 @@ test('addCustomPathsToIndexHtml - merges and safely serializes the Electron work
 
   expect(result).toContain('"workspaceUri": "remote-ssh://user@example.com/home/project?name=\\u003cscript\\u003e\\u0026"')
   expect(JSON.parse(configElement[1])).toMatchObject({ platform: 'electron', workerUrls: {}, workspaceUri })
+})
+
+const getConfig = (content: string): any => JSON.parse([...content.matchAll(configElementPattern)][0][1])
+
+test('addCustomPathsToIndexHtml - CLI worker overrides user and packaged paths with an encoded URL', async () => {
+  jest.mocked(Preferences.getUserPreferences).mockResolvedValue({ 'develop.processExplorerWorkerPath': '/user/worker.js' })
+  jest.mocked(Preferences.getOverrides).mockReturnValue({ 'develop.processExplorerWorkerPath': '/test/process explorer#1.js' })
+  jest.mocked(LinkedWorkerPreferences.getLinkedWorkerPreferences).mockResolvedValue({})
+  const content =
+    '<title>Test</title><script id="Config" type="application/json">{"workerUrls":{"develop.processExplorerWorkerPath":"/packaged/worker.js"}}</script>'
+  const result = await AddCustomPathsToIndexHtml.addCustomPathsToIndexHtml(content)
+  expect(getConfig(result).workerUrls['develop.processExplorerWorkerPath']).toBe(GetRemoteUrl.getRemoteUrl('/test/process explorer#1.js'))
+  expect(result).toContain('process%20explorer%231.js')
+})
+
+test('addCustomPathsToIndexHtml - absent or disabled CLI override keeps the packaged worker', async () => {
+  jest.mocked(Preferences.getUserPreferences).mockResolvedValue({})
+  jest.mocked(LinkedWorkerPreferences.getLinkedWorkerPreferences).mockResolvedValue({})
+  const content =
+    '<title>Test</title><script id="Config" type="application/json">{"workerUrls":{"develop.processExplorerWorkerPath":"/packaged/worker.js"}}</script>'
+  expect(getConfig(await AddCustomPathsToIndexHtml.addCustomPathsToIndexHtml(content)).workerUrls['develop.processExplorerWorkerPath']).toBe(
+    '/packaged/worker.js',
+  )
+  process.argv = [...originalArgv, '--disable-custom-worker-paths']
+  jest.mocked(Preferences.getOverrides).mockReturnValue({ 'develop.processExplorerWorkerPath': '/test/worker.js' })
+  expect(getConfig(await AddCustomPathsToIndexHtml.addCustomPathsToIndexHtml(content)).workerUrls['develop.processExplorerWorkerPath']).toBe(
+    '/packaged/worker.js',
+  )
 })

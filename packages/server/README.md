@@ -12,8 +12,12 @@ The Electron CLI and desktop main process read persistent command-line arguments
 {
   "link": ["/path/to/extension", "/path/to/another extension"],
   "asar": true,
-  "electron-version": "44.1.2"
+  "electron-version": "44.1.2",
 }
 ```
 
 Configured values are applied before command-line arguments, so an explicit argument takes precedence. Set a boolean to `false` to leave a boolean option disabled. `--transient` uses isolated configuration and does not read the persistent file.
+
+Use `--process-explorer-worker=/path/to/worker.js` to serve a local process explorer worker at runtime. Relative paths resolve from the server working directory. The last flag overrides the user preference and packaged worker URL; `--disable-custom-worker-paths` suppresses this override. Without the flag, the existing worker configuration is retained. Explicitly linked worker packages retain their existing precedence.
+
+For local native process development, `--process-explorer=/path/to/processExplorerMain.ts` sets `develop.processExplorerPath` without rewriting installed packages.

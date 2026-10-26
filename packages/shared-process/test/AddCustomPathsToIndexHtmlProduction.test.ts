@@ -6,6 +6,7 @@ jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => ({
 }))
 
 jest.unstable_mockModule('../src/parts/Preferences/Preferences.js', () => ({
+  getOverrides: jest.fn(() => ({})),
   getUserPreferences: jest.fn(() => {
     throw new Error('not implemented')
   }),
@@ -33,4 +34,12 @@ test('addCustomPathsToIndexHtml - adds linked worker urls in production', async 
   expect(result).toContain(`"develop.mainAreaWorkerPath": "${mainAreaWorkerUrl}"`)
   expect(result).toContain(`"develop.portsViewPath": "${GetRemoteUrl.getRemoteUrl('/test/ports-view-worker')}"`)
   expect(result).toContain(`"develop.workersViewPath": "${workersViewUrl}"`)
+})
+
+test('addCustomPathsToIndexHtml - explicit worker flag is available in production', async () => {
+  jest.mocked(Preferences.getOverrides).mockReturnValue({ 'develop.processExplorerWorkerPath': '/test/process explorer.js' })
+  const content = '<title>Test</title>'
+  const result = await AddCustomPathsToIndexHtml.addCustomPathsToIndexHtml(content)
+  expect(Preferences.getUserPreferences).not.toHaveBeenCalled()
+  expect(result).toContain(`"develop.processExplorerWorkerPath": "${GetRemoteUrl.getRemoteUrl('/test/process explorer.js')}"`)
 })

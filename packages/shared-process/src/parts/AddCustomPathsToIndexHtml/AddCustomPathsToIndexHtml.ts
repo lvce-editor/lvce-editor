@@ -22,8 +22,9 @@ const serializeConfig = (config: object, indentation: string): string => {
 export const addCustomPathsToIndexHtml = async (content: any, runtimeConfig: { platform?: string; workspaceUri?: string } = {}): Promise<any> => {
   let preferences = {}
   if (!Platform.isProduction) {
-    preferences = ApplyCustomWorkerPathCliOverride.applyCustomWorkerPathCliOverride(await Preferences.getUserPreferences())
+    preferences = await Preferences.getUserPreferences()
   }
+  preferences = ApplyCustomWorkerPathCliOverride.applyCustomWorkerPathCliOverride({ ...preferences, ...Preferences.getOverrides() })
   const linkedWorkerPreferences = await LinkedWorkerPreferences.getLinkedWorkerPreferences()
   const config = { ...GetCustomPathsConfig.getCustomPathsConfig({ ...preferences, ...linkedWorkerPreferences }), ...runtimeConfig }
   if (Object.keys(config).length === 0) {
@@ -50,10 +51,12 @@ export const addCustomPathsToIndexHtml = async (content: any, runtimeConfig: { p
           }
         : {}),
     }
-    newContent = newContent.toString().replace(configElementPattern, (_match: any, openingTag: string, _config: string, closingTag: string, index: number) => {
-      const indentation = getHtmlIndentation(newContent.toString(), index)
-      return `${openingTag}\n${serializeConfig(mergedConfig, indentation)}\n${indentation}${closingTag}`
-    })
+    newContent = newContent
+      .toString()
+      .replace(configElementPattern, (_match: any, openingTag: string, _config: string, closingTag: string, index: number) => {
+        const indentation = getHtmlIndentation(newContent.toString(), index)
+        return `${openingTag}\n${serializeConfig(mergedConfig, indentation)}\n${indentation}${closingTag}`
+      })
   } else {
     newContent = newContent.toString().replace(
       '</title>',
