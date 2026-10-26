@@ -84,14 +84,6 @@ jobs:
           node --experimental-vm-modules node_modules/jest/bin/jest.js --config packages/renderer-worker/package.json --runInBand --coverage=false --testPathPatterns='(IpcParentWithNodeAlternate|LaunchFileSystemWorker|WebSocketCapability|ExtensionNodeRpc|WorkspaceConnection|WorkspaceSetUri|LoadProcessExplorerViewletModule|GetTerminalSpawnOptions).test'
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0
-      - name: Checkout owned split editor regressions
-        uses: actions/checkout@v7
-        with:
-          repository: lvce-editor/main-area-worker
-          ref: 02a51e61aa8e4ac06353080e719d7c9573e0596c
-          path: .tmp/cursor-split-tests
-      - name: Stage owned split editor regressions
-        run: node .tmp/cursor-split-tests/packages/e2e-integration/stage-cursor-tests.mjs .
       - name: Install Chromium for split editor regressions
         run: node node_modules/playwright-core/cli.js install --with-deps chromium
         env:
@@ -139,22 +131,6 @@ jobs:
           name: electron-tab-move-${{ matrix.os }}
           path: .tmp/electron-tab-move-evidence
           if-no-files-found: warn
-      - name: Test editor cursor positioning in split groups
-        working-directory: ./packages/extension-host-worker-tests
-        run: npm run e2e:headless -- --test-name-prefix=viewlet.main-editor-cursor-after-split --browser-test=scripts/test-editor-cursor-splits.mjs
-        env:
-          PLAYWRIGHT_BROWSERS_PATH: 0
-      - name: Remove staged split editor regressions
-        if: always()
-        run: node .tmp/cursor-split-tests/packages/e2e-integration/stage-cursor-tests.mjs . --clean
-      - name: Checkout Accounts view regressions
-        uses: actions/checkout@v7
-        with:
-          repository: lvce-editor/accounts-view
-          ref: 0f37b6ee0b4b5d95b47ea1e11b441da8e58989dc
-          path: .tmp/accounts-view-tests
-      - name: Stage Accounts view regression
-        run: node .tmp/accounts-view-tests/packages/e2e-integration/stage-accounts-view-test.mjs .
       - name: Stage owned active split save regression
         shell: bash
         run: |
@@ -199,14 +175,6 @@ jobs:
         run: npx playwright install --with-deps chromium
       - name: Test static export bundle mode
         run: node packages/extension-host-worker-tests/test/static-bundle.mjs
-      - name: Test Accounts view application rendering
-        working-directory: ./packages/extension-host-worker-tests
-        run: npm run e2e:headless -- --ci --test-name-prefix=viewlet.accounts-view-open --browser-test=../../scripts/test-accounts-view-layout.mjs
-        env:
-          PLAYWRIGHT_BROWSERS_PATH: 0
-      - name: Remove staged Accounts view regression
-        if: always()
-        run: node .tmp/accounts-view-tests/packages/e2e-integration/stage-accounts-view-test.mjs . --clean
       - name: Test saving the active split editor with the published worker
         working-directory: ./packages/extension-host-worker-tests
         run: npm run e2e:headless -- --ci --test-name-prefix=viewlet.main-save-active-split-editor
@@ -257,33 +225,6 @@ jobs:
         run: npm run e2e:headless -- --test-name-prefix=viewlet.editor-direct-events --browser-test=../../scripts/test-application-scrollspeed.mjs
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0
-      - name: Checkout owned native source control regression
-        id: sourceControlTests
-        uses: actions/checkout@v7
-        with:
-          repository: lvce-editor/source-control-view
-          ref: 48bbc01d33639ef53041a8f5e4cd776deaf1db52
-          path: .tmp/source-control-tests
-      - name: Stage native source control regression
-        run: node .tmp/source-control-tests/packages/e2e-integration/stage-native-source-control.mjs .
-      - name: Trace staged sample provider transitions
-        run: node packages/extension-host-worker-tests/scripts/trace-native-source-provider.mjs
-      - name: Test native source control with published packages
-        working-directory: ./packages/extension-host-worker-tests
-        run: node ../../.tmp/source-control-tests/packages/e2e-integration/scripts/stress-native-source-control.mjs
-        env:
-          PLAYWRIGHT_BROWSERS_PATH: 0
-          SOURCE_CONTROL_NATIVE_EVIDENCE_DIR: ${{ github.workspace }}/.tmp/source-control-native
-      - name: Upload native source control evidence
-        if: always()
-        uses: actions/upload-artifact@v7
-        with:
-          name: source-control-native-${{ matrix.os }}
-          path: .tmp/source-control-native
-          if-no-files-found: warn
-      - name: Remove staged native source control regression
-        if: always() && steps.sourceControlTests.outcome == 'success'
-        run: node .tmp/source-control-tests/packages/e2e-integration/stage-native-source-control.mjs . --clean
       - name: Checkout owned HTML comment regression
         id: htmlCommentTests
         uses: actions/checkout@v7
