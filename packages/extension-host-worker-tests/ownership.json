@@ -1,4 +1,7 @@
 {
+  "accounts-view": [
+    "scripts/test-accounts-view-layout.mjs"
+  ],
   "activity-bar-worker": [
     "packages/extension-host-worker-tests/src/viewlet.activity-bar-keyboard-navigation.ts",
     "packages/extension-host-worker-tests/src/viewlet.activity-bar-panel-resize.ts",
@@ -274,6 +277,7 @@
     "scripts/test-simple-browser-*.mjs"
   ],
   "source-control-view": [
+    "packages/extension-host-worker-tests/scripts/trace-native-source-provider.mjs",
     "packages/extension-host-worker-tests/src/viewlet.source-control*.ts",
     "packages/extension-host-worker-tests/src/viewlet.source-control-progress.ts",
     "packages/extension-host-worker-tests/src/viewlet.source-control-shortcut-focus.ts",
