@@ -271,7 +271,7 @@ export const commandMap = {
   'FileWatcher.watchExtension': lazy('FileWatcher.watchExtension'),
   'FileWatcher.disposeExtension': lazy('FileWatcher.disposeExtension'),
   'FileWatcher.handleEvent': lazy('FileWatcher.handleEvent'),
-  'GitIgnoreWatcher.watch': async (uid, root, directories) => (await import('../GitIgnoreWatcher/GitIgnoreWatcher.js')).watch(uid, root, directories),
+  'FileWatcher.watchGitIgnore': lazy('FileWatcher.watchGitIgnore'),
   'FileWatcher.watchFile': lazy('FileWatcher.watchFile'),
   'Focus.removeAdditionalFocus': lazy('Focus.removeAdditionalFocus'),
   'Focus.setAdditionalFocus': lazy('Focus.setAdditionalFocus'),
