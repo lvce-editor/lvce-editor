@@ -32,3 +32,15 @@ test('does not inject app configuration into non-index content', async () => {
   expect(await getElectronFileResponseContent({}, path, 'lvce-oss://-/preview.html?editorTransfer=token')).toEqual(Buffer.from('<html>app</html>'))
   expect(inject).not.toHaveBeenCalled()
 })
+
+test.each(['/', '/?workspace=file%3A%2F%2F%2Fworkspace', '/index.html', '/index.html?workspace=file%3A%2F%2F%2Fworkspace'])(
+  'injects remote runtime configuration for server index %s',
+  async (url) => {
+    inject.mockResolvedValue('<html>remote</html>')
+    expect(await getElectronFileResponseContent({ platform: 'remote', url }, path, url)).toEqual(Buffer.from('<html>remote</html>'))
+    expect(inject).toHaveBeenCalledWith('<html>app</html>', {
+      platform: 'remote',
+      workspaceUri: url.includes('workspace=') ? 'file:///workspace' : undefined,
+    })
+  },
+)

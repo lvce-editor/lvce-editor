@@ -92,3 +92,24 @@ test('setVersionsAndDependencies includes explorer processes as shared-process d
     await rm(dir, { recursive: true, force: true })
   }
 })
+
+test.each(['--process-explorer-worker=/tmp/worker.js', '--process-explorer-worker=relative worker.js'])(
+  'generated server injects runtime configuration into index documents for %s',
+  (flag) => {
+    const replacement = getServerIsStaticReplacement('abcdefg')
+    const isStatic = runInNewContext(`${replacement}; isStatic`, { argvSliced: [flag] }) as (url: string) => boolean
+    for (const url of ['/', '/?workspace=/test', '/index.html', '/index.html?workspace=/test']) {
+      expect(isStatic(url)).toBe(false)
+    }
+    expect(isStatic('/abcdefg/packages/renderer-worker.js')).toBe(true)
+  },
+)
+
+test('generated server retains static defaults when custom worker paths are disabled', () => {
+  const replacement = getServerIsStaticReplacement('abcdefg')
+  const isStatic = runInNewContext(`${replacement}; isStatic`, {
+    argvSliced: ['--process-explorer-worker=/tmp/worker.js', '--disable-custom-worker-paths'],
+  }) as (url: string) => boolean
+  expect(isStatic('/')).toBe(true)
+  expect(isStatic('/index.html')).toBe(true)
+})

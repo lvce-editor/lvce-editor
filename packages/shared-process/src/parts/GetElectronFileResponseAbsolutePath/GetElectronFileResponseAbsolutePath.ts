@@ -3,7 +3,6 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import * as Path from '../Path/Path.ts'
-import * as Platform from '../Platform/Platform.ts'
 import * as Root from '../Root/Root.ts'
 import * as StaticPath from '../StaticPath/StaticPath.ts'
 
@@ -47,10 +46,7 @@ export const getElectronFileResponseAbsolutePath = (pathName: any): any => {
   // TODO maybe have a separate protocol for remote, e.g. vscode has vscode-remote
   if (pathName.startsWith(`/remote`)) {
     const uri = pathName.slice('/remote'.length)
-    if (Platform.isWindows) {
-      return fileURLToPath(`file://` + uri)
-    }
-    return uri
+    return fileURLToPath(`file://` + uri)
   }
   if (pathName.startsWith('/process-explorer/process-explorer-theme.css')) {
     const processExplorerThemeCss = join(tmpdir(), 'process-explorer-theme.css')
