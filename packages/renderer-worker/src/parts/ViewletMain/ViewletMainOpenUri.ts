@@ -1,5 +1,6 @@
 import * as Assert from '../Assert/Assert.ts'
 import * as Command from '../Command/Command.js'
+import * as EditorWorker from '../EditorWorker/EditorWorker.ts'
 import * as Id from '../Id/Id.js'
 import * as MeasureTabWidth from '../MeasureTabWidth/MeasureTabWidth.js'
 import * as PathDisplay from '../PathDisplay/PathDisplay.js'
@@ -45,11 +46,24 @@ export const openUri = async (state, uri, focus = true, { preview = false, ...co
     height: state.height,
   }
   const { editors, activeIndex } = activeGroup
+  const applySelection = async (editor) => {
+    if (
+      moduleId === ViewletModuleId.EditorText &&
+      typeof context.startRowIndex === 'number' &&
+      typeof context.startColumnIndex === 'number' &&
+      typeof context.endRowIndex === 'number' &&
+      typeof context.endColumnIndex === 'number'
+    ) {
+      const selections = new Uint32Array([context.startRowIndex, context.startColumnIndex, context.endRowIndex, context.endColumnIndex])
+      await EditorWorker.invoke('Editor.setSelections2', editor.uid, selections, true)
+    }
+  }
 
   const previousEditor = editors[activeIndex]
   let disposeCommands
   // @ts-ignore
   if (previousEditor && previousEditor.uri === resolvedUri && previousEditor.opener === context.opener) {
+    await applySelection(previousEditor)
     return {
       newState: state,
       commands: [],
@@ -60,7 +74,9 @@ export const openUri = async (state, uri, focus = true, { preview = false, ...co
     if (editor.uri === resolvedUri) {
       // @ts-ignore
       if (editor.opener === context.opener) {
-        return ViewletMainFocusIndex.focusIndex(state, i)
+        const result = await ViewletMainFocusIndex.focusIndex(state, i)
+        await applySelection(editor)
+        return result
       }
     }
   }
