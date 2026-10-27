@@ -106,6 +106,7 @@ test('loadContent - renders before diagnostics are requested by loadContentLater
     .map(([method]) => method)
     .filter((method): method is string => typeof method === 'string' && method.startsWith('Editor.'))
   expect(editorMethods).toEqual([
+    'Editor.hasCachedCharacterWidth',
     'Editor.create2',
     'Editor.loadContent',
     'Editor.diff2',
@@ -118,6 +119,26 @@ test('loadContent - renders before diagnostics are requested by loadContentLater
   expect(createCall?.at(-2)).toBe(true)
   expect(createCall?.at(-1)).toBe(false)
   expect(newState.commands).toEqual([...initialCommands, ...selectionCommands])
+})
+
+test('loadContent skips ensuring the Fira Code font when character width is cached', async () => {
+  editorWorkerInvoke.mockImplementation((method) => (method === 'Editor.hasCachedCharacterWidth' ? true : []))
+  const state = ViewletEditorText.create(1, '/test/file.txt', 0, 0, 800, 600)
+
+  await ViewletEditorText.loadContent(state, undefined, { languageId: 'text' })
+
+  expect(editorWorkerInvoke).toHaveBeenCalledWith('Editor.hasCachedCharacterWidth', 400, 15, 'Fira Code', 0.5)
+  expect(editorWorkerInvoke).not.toHaveBeenCalledWith('Font.ensure', expect.anything(), expect.anything())
+})
+
+test('loadContent ensures the Fira Code font when character width is not cached', async () => {
+  editorWorkerInvoke.mockImplementation((method) => (method === 'Editor.hasCachedCharacterWidth' ? false : []))
+  const state = ViewletEditorText.create(1, '/test/file.txt', 0, 0, 800, 600)
+
+  await ViewletEditorText.loadContent(state, undefined, { languageId: 'text' })
+
+  expect(editorWorkerInvoke).toHaveBeenCalledWith('Editor.hasCachedCharacterWidth', 400, 15, 'Fira Code', 0.5)
+  expect(editorWorkerInvoke).toHaveBeenCalledWith('Font.ensure', 'Fira Code', "url('/fonts/FiraCode-VariableFont.ttf')")
 })
 
 test('loadContent - restores the editor worker state', async () => {
