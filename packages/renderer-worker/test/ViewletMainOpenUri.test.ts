@@ -6,8 +6,8 @@ const getModuleId = jest.fn(async () => 'editor')
 const getState = jest.fn(() => ({ pendingUid: 123 }))
 const getLabel = jest.fn((uri: string) => uri)
 const getTitle = jest.fn((uri: string) => uri)
-const invoke = jest.fn(async () => undefined)
-const focusIndex = jest.fn(async (state: unknown) => ({ newState: state, commands: [] }))
+const invoke = jest.fn(async (..._args: any[]) => undefined)
+const focusIndex = jest.fn(async (state: unknown, _index: number) => ({ newState: state, commands: [] }))
 
 jest.unstable_mockModule('../src/parts/Assert/Assert.ts', () => ({
   object: jest.fn(),

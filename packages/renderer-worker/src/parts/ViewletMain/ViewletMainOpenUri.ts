@@ -14,7 +14,8 @@ import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as ViewletMainFocusIndex from './ViewletMainFocusIndex.js'
 
-export const openUri = async (state, uri, focus = true, { preview = false, ...context } = {}) => {
+export const openUri = async (state, uri, focus = true, options: Record<string, unknown> = {}) => {
+  const { preview = false, ...context } = options
   Assert.object(state)
   Assert.string(uri)
   await Command.execute('Layout.leaveSideBarFocusMode')
