@@ -49,6 +49,10 @@ const main = async () => {
     to: join(testPath, 'src', 'sample.test.ts'),
     content: `export const test = async () => {}\n`,
   })
+  await WriteFile.writeFile({
+    to: join(testPath, 'src', 'another.test.ts'),
+    content: `export const test = async () => {}\n`,
+  })
   await Copy.copy({
     from: `packages/build/.tmp/server`,
     to: join(tmpDir, 'node_modules', `@lvce-editor`),
@@ -100,8 +104,13 @@ const main = async () => {
   assert.equal(runtimeConfig.assetDir, `/test/${commitHash}`)
   assert.equal(runtimeConfig.rendererWorkerUrl, `/test/${commitHash}/packages/renderer-worker/dist/rendererWorkerMain.js`)
   assert.ok(Object.values(runtimeConfig.workerUrls as Record<string, string>).every((url) => url.startsWith(`/test/${commitHash}/`)))
-  await ReadFile.readFile(join(tmpDir, 'dist', commitHash, 'tests', 'sample.test.html'))
-  await ReadFile.readFile(join(tmpDir, 'dist', 'tests', 'sample.test.html'))
+  for (const testId of ['sample.test', 'another.test']) {
+    const expectedTitle = `<title>${testId} - Lvce Editor</title>`
+    const hashedTestHtml = await ReadFile.readFile(join(tmpDir, 'dist', commitHash, 'tests', `${testId}.html`))
+    const stableTestHtml = await ReadFile.readFile(join(tmpDir, 'dist', 'tests', `${testId}.html`))
+    assert.ok(hashedTestHtml.includes(expectedTitle), `hashed ${testId} page should have its own title`)
+    assert.ok(stableTestHtml.includes(expectedTitle), `stable ${testId} page should have its own title`)
+  }
   const config = JSON.parse(await ReadFile.readFile(join(tmpDir, 'dist', 'config.json')))
   assert.equal(typeof config.commit, 'string')
   assert.equal(typeof config.productName, 'string')
