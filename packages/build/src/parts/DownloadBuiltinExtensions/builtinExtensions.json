@@ -579,8 +579,8 @@
   {
     "name": "builtin.theme-material",
     "repository": "github.com/lvce-editor/theme-material",
-    "version": "0.12.0",
-    "sha256": "e30a1207121b6d21a0447760a436f1007cdce0462f5db7231355e30f0e337203",
+    "version": "0.13.0",
+    "sha256": "bcc79257abc4050bc59380e0fe970c5712bc761db98c7c4eaf9bc2491c66971b",
     "created": "2022-06-16"
   },
   {
