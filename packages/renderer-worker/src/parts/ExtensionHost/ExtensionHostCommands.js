@@ -16,7 +16,26 @@ const getCommandsFromExtensions = (extensions) => {
   return extensions.flatMap(getCommandsFromExtension)
 }
 
-export const getCommands = async (assetDir, platform, applicationId) => {
+export const getCommands = async (assetDir, platform, applicationId, ifNonMatch) => {
+  if (ifNonMatch !== undefined) {
+    try {
+      const response =
+        applicationId === undefined
+          ? await ExtensionManagementWorker.invoke('Extensions.getQuickPickCommands', assetDir, platform, ifNonMatch)
+          : await ExtensionManagementWorker.invoke(
+              'Extensions.invokeForApplication',
+              applicationId,
+              'Extensions.getQuickPickCommands',
+              assetDir,
+              platform,
+              ifNonMatch,
+            )
+      return response
+    } catch (error) {
+      console.error(`Failed to get extension picks: ${error}`)
+      return undefined
+    }
+  }
   const extensions =
     applicationId === undefined
       ? await ExtensionMeta.getExtensions(assetDir, platform)

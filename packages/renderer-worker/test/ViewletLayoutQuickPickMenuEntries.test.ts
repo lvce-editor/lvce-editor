@@ -75,3 +75,13 @@ test('getAllQuickPickMenuEntries - remote deb', async () => {
   expect(await ViewletLayout.getAllQuickPickMenuEntries()).toEqual([menuEntries[1]])
   expect(mockGetAutoUpdateType).toHaveBeenCalledWith('AutoUpdater.getAutoUpdateType')
 })
+
+test('getAllQuickPickMenuEntries validates a cached hash without returning commands', async () => {
+  const response = await ViewletLayout.getAllQuickPickMenuEntries(null)
+  expect(response).toMatchObject({ commands: menuEntries, matchesCache: false })
+  if (!response || typeof response !== 'object' || !('hash' in response)) {
+    throw new Error('expected a command cache response')
+  }
+  expect(await ViewletLayout.getAllQuickPickMenuEntries(response.hash)).toEqual({ hash: response.hash, matchesCache: true })
+  expect(await ViewletLayout.getAllQuickPickMenuEntries('f'.repeat(64))).toMatchObject({ commands: menuEntries, matchesCache: false })
+})
