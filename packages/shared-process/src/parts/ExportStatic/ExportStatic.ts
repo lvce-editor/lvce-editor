@@ -695,8 +695,20 @@ const addTestFiles = async ({ commitHash, pathPrefix, root, testPath }: any): Pr
   await FileSystem.copyFile(`${root}/dist/index.html`, `${hashTestsPath}/_all.html`)
   await FileSystem.copyFile(`${root}/dist/index.html`, `${rootTestsPath}/_all.html`)
   for (const testFile of testFiles) {
-    await FileSystem.copyFile(`${root}/dist/index.html`, `${hashTestsPath}/${testFile}.html`)
-    await FileSystem.copyFile(`${root}/dist/index.html`, `${rootTestsPath}/${testFile}.html`)
+    const html = await FileSystem.readFile(`${root}/dist/index.html`)
+    const title = `${testFile} - Lvce Editor`.replace(/[&<>"']/g, (character: string) => {
+      const entities: Record<string, string> = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;',
+      }
+      return entities[character]
+    })
+    const testHtml = html.replace(/<title>[\s\S]*?<\/title>/, `<title>${title}</title>`)
+    await FileSystem.writeFile(`${hashTestsPath}/${testFile}.html`, testHtml)
+    await FileSystem.writeFile(`${rootTestsPath}/${testFile}.html`, testHtml)
   }
   const testOverviewHtml = generateTestOverviewHtml(testFiles)
   await FileSystem.writeFile(`${hashTestsPath}/index.html`, testOverviewHtml)
