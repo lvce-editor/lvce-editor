@@ -6,7 +6,7 @@ const getModuleId = jest.fn(async () => 'editor')
 const getState = jest.fn(() => ({ pendingUid: 123 }))
 const getLabel = jest.fn((uri: string) => uri)
 const getTitle = jest.fn((uri: string) => uri)
-const invoke = jest.fn(async (..._args: any[]) => undefined)
+const execute = jest.fn(async (..._args: any[]) => undefined)
 const focusIndex = jest.fn(async (state: unknown, _index: number) => ({ newState: state, commands: [] }))
 
 jest.unstable_mockModule('../src/parts/Assert/Assert.ts', () => ({
@@ -14,11 +14,11 @@ jest.unstable_mockModule('../src/parts/Assert/Assert.ts', () => ({
   string: jest.fn(),
 }))
 jest.unstable_mockModule('../src/parts/Command/Command.js', () => ({
-  execute: jest.fn(async () => {
+  execute: jest.fn(async (...args: readonly unknown[]) => {
     events.push('leave-layout')
+    execute(...args)
   }),
 }))
-jest.unstable_mockModule('../src/parts/EditorWorker/EditorWorker.ts', () => ({ invoke }))
 jest.unstable_mockModule('../src/parts/Id/Id.js', () => ({ create: jest.fn(() => 123) }))
 jest.unstable_mockModule('../src/parts/MeasureTabWidth/MeasureTabWidth.js', () => ({ measureTabWidth: jest.fn(() => 100) }))
 jest.unstable_mockModule('../src/parts/PathDisplay/PathDisplay.js', () => ({ getLabel, getTitle, getFileIcon: jest.fn(async () => '') }))
@@ -89,7 +89,7 @@ test('applies a destination selection to the active editor', async () => {
     endColumnIndex: 8,
   })
 
-  expect(invoke).toHaveBeenCalledWith('Editor.setSelections2', 456, new Uint32Array([3, 8, 3, 8]), true)
+  expect(execute).toHaveBeenCalledWith('Viewlet.executeViewletCommand', 456, 'Editor.setSelections2', new Uint32Array([3, 8, 3, 8]), true)
 })
 
 test('applies a destination selection after focusing an existing tab', async () => {
@@ -104,7 +104,7 @@ test('applies a destination selection after focusing an existing tab', async () 
     x: 0,
     y: 0,
   }
-  invoke.mockClear()
+  execute.mockClear()
   focusIndex.mockClear()
 
   await ViewletMainOpenUri.openUri(state, editor.uri, true, {
@@ -115,5 +115,5 @@ test('applies a destination selection after focusing an existing tab', async () 
   })
 
   expect(focusIndex).toHaveBeenCalledWith(state, 0)
-  expect(invoke).toHaveBeenCalledWith('Editor.setSelections2', 456, new Uint32Array([3, 8, 3, 8]), true)
+  expect(execute).toHaveBeenCalledWith('Viewlet.executeViewletCommand', 456, 'Editor.setSelections2', new Uint32Array([3, 8, 3, 8]), true)
 })
