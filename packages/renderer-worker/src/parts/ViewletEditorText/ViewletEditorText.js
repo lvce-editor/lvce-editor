@@ -131,6 +131,7 @@ export const loadContent = async (state, savedState, context) => {
   const hoverEnabled = EditorPreferences.getHoverEnabled(editorPreferences)
   const hoverDelay = EditorPreferences.getHoverDelay(editorPreferences)
   const fontFamily = EditorPreferences.getFontFamily(editorPreferences)
+  const fontWeight = EditorPreferences.getFontWeight(editorPreferences)
   const letterSpacing = EditorPreferences.getLetterSpacing(editorPreferences)
   const tabSize = EditorPreferences.getTabSize(editorPreferences)
   const links = EditorPreferences.getLinks(editorPreferences)
@@ -160,12 +161,14 @@ export const loadContent = async (state, savedState, context) => {
   let newState2 = Editor.setDeltaYFixedValue(state, savedDeltaY)
   const isFiraCode = fontFamily === 'Fira Code' || fontFamily === "'Fira Code'"
   if (isFiraCode) {
-    const fontName = UnquoteString.unquoteString(fontFamily)
-    const fontUrl = GetFontUrl.getFontUrl('/fonts/FiraCode-VariableFont.ttf')
-    await EditorWorker.invoke('Font.ensure', fontName, fontUrl)
+    const hasCachedCharacterWidth = await EditorWorker.invoke('Editor.hasCachedCharacterWidth', fontWeight, fontSize, fontFamily, letterSpacing)
+    if (!hasCachedCharacterWidth) {
+      const fontName = UnquoteString.unquoteString(fontFamily)
+      const fontUrl = GetFontUrl.getFontUrl('/fonts/FiraCode-VariableFont.ttf')
+      await EditorWorker.invoke('Font.ensure', fontName, fontUrl)
+    }
   }
   const isMonospaceFont = isFiraCode // TODO an actual check for monospace font
-  const fontWeight = EditorPreferences.getFontWeight(editorPreferences)
   const lineToReveal = context?.rowIndex || 0
   const columnToReveal = context?.columnIndex || 0
 
