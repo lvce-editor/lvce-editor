@@ -565,8 +565,8 @@
   {
     "name": "builtin.theme-gruvbox",
     "repository": "github.com/lvce-editor/theme-gruvbox",
-    "version": "1.13.0",
-    "sha256": "7428ae99049b52f541d75199290d6730005c8e58c67a067bf5d777002e83d822",
+    "version": "1.17.0",
+    "sha256": "31ca8e6a97ece254558e1f47dbc84241e509683b2b8888a90d445ef7b4702c17",
     "created": "2022-10-06"
   },
   {
