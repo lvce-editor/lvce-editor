@@ -77,11 +77,36 @@ test('getAllQuickPickMenuEntries - remote deb', async () => {
 })
 
 test('getAllQuickPickMenuEntries validates a cached hash without returning commands', async () => {
-  const response = await ViewletLayout.getAllQuickPickMenuEntries(null)
+  const response = await ViewletLayout.getAllQuickPickMenuEntries(undefined, null)
   expect(response).toMatchObject({ commands: menuEntries, matchesCache: false })
   if (!response || typeof response !== 'object' || !('hash' in response)) {
     throw new Error('expected a command cache response')
   }
-  expect(await ViewletLayout.getAllQuickPickMenuEntries(response.hash)).toEqual({ hash: response.hash, matchesCache: true })
-  expect(await ViewletLayout.getAllQuickPickMenuEntries('f'.repeat(64))).toMatchObject({ commands: menuEntries, matchesCache: false })
+  expect(await ViewletLayout.getAllQuickPickMenuEntries(undefined, response.hash)).toEqual({ hash: response.hash, matchesCache: true })
+  expect(await ViewletLayout.getAllQuickPickMenuEntries(undefined, 'f'.repeat(64))).toMatchObject({ commands: menuEntries, matchesCache: false })
+})
+
+test('dispatched layout commands distinguish layout state from the cache key', async () => {
+  const ApplicationRegistry = await import('../src/parts/ApplicationRegistry/ApplicationRegistry.ts')
+  const ViewletStates = await import('../src/parts/ViewletStates/ViewletStates.js')
+  const ViewletManager = await import('../src/parts/ViewletManager/ViewletManager.js')
+  const state = { uid: 987, applicationId: 'command-cache-test' }
+  ApplicationRegistry.create({ id: state.applicationId, layoutUid: state.uid, workspacePath: '', workspaceUri: '', href: '' })
+  ViewletStates.set(state.uid, {
+    state,
+    renderedState: state,
+    moduleId: 'Layout',
+    factory: { hasFunctionalRender: true, render: [], Commands: { getAllQuickPickMenuEntries: ViewletLayout.getAllQuickPickMenuEntries } },
+  })
+  try {
+    const invoke = (...args) => ViewletManager.executeForApplication(state.applicationId, 'Layout.getAllQuickPickMenuEntries', ...args)
+    expect(await invoke()).toEqual(menuEntries)
+    const response = await invoke(null)
+    expect(response).toMatchObject({ commands: menuEntries, matchesCache: false })
+    expect(await invoke(response.hash)).toEqual({ hash: response.hash, matchesCache: true })
+    expect(ViewletStates.getState(state.uid)).toBe(state)
+  } finally {
+    ViewletStates.remove(state.uid)
+    ApplicationRegistry.remove(state.applicationId)
+  }
 })

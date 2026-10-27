@@ -2853,7 +2853,7 @@ export const isSideBarVisible = (state: LayoutState) => {
   return sideBarVisible
 }
 
-export const getAllQuickPickMenuEntries = async (ifNonMatch?: string | null) => {
+export const getAllQuickPickMenuEntries = async (_state?: LayoutState, ifNonMatch?: string | null) => {
   const entries = MenuEntriesState.getAll()
   const autoUpdateType = await GetAutoUpdateType.getAutoUpdateType()
   let commands = entries
