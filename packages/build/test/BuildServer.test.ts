@@ -93,7 +93,12 @@ test('setVersionsAndDependencies includes explorer processes as shared-process d
   }
 })
 
-test.each(['--process-explorer-worker=/tmp/worker.js', '--process-explorer-worker=relative worker.js'])(
+test.each([
+  '--process-explorer-worker=/tmp/worker.js',
+  '--process-explorer-worker=relative worker.js',
+  '--activity-bar-worker=/tmp/activity bar.js',
+  '--activity-bar-worker=relative activity bar.js',
+])(
   'generated server injects runtime configuration into index documents for %s',
   (flag) => {
     const replacement = getServerIsStaticReplacement('abcdefg')
