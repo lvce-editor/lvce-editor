@@ -11,7 +11,7 @@ const invoke = jest.fn(async (command: string, ..._args: readonly unknown[]): Pr
 
 	return command === 'RunAndDebug.renderActions' ? [{title: 'Start'}] : undefined;
 });
-const getByUid = jest.fn(() => ({state: {uid: 7}}));
+const getByUid = jest.fn<() => {state: {uid: number}} | undefined>(() => ({state: {uid: 7}}));
 const getState = jest.fn(() => ({uid: 7, marker: 'latest'}));
 
 jest.unstable_mockModule('../src/parts/DebugWorker/DebugWorker.js', () => ({invoke}));
