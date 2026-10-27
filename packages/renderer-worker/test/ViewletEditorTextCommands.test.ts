@@ -582,7 +582,6 @@ test('pointer focus is emitted even when the worker reports no focus change', as
 
 test('pointer listeners prevent native blur while other listener options are retained', async () => {
   const Render = await import('../src/parts/ViewletEditorText/ViewletEditorTextRender.js')
-  expect(Render.immediateCommands).toEqual(['handleMouseDown'])
   const pointer = { name: 18, params: ['handleMouseDown'], stopPropagation: true }
   const input = { name: 20, params: ['handleBeforeInput'], preventDefault: true }
   editorWorkerInvoke.mockImplementation(() => [pointer, input])

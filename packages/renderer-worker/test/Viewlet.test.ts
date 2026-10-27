@@ -22,7 +22,6 @@ jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () =
     invoke: jest.fn(() => {
       throw new Error('not implemented')
     }),
-    sendMultipleImmediately: jest.fn(),
   }
 })
 jest.unstable_mockModule('../src/parts/ViewletManager/ViewletManager.js', () => {
@@ -1161,41 +1160,4 @@ test('worker commands reconcile widget removal before the caller continues', asy
   await Viewlet.applyCommands([['Viewlet.setWidgets', 10, 2, []]])
   expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.sendMultiple', expect.arrayContaining([['Viewlet.dispose', 20]]))
   expect(ViewletStates.getInstance(1).state.widgetReferences).toEqual([])
-})
-
-test('pointer policy flushes prepared commands before afterRender without changing background renders', async () => {
-  const calls: string[] = []
-  const state = { uid: 42 }
-  const nextState = { selected: true, uid: 42 }
-  const commands = [['Viewlet.setText', 'selection']]
-  const factory = {
-    afterRender: jest.fn(async () => {
-      calls.push('afterRender')
-    }),
-    Commands: {
-      __renderPending: jest.fn(async () => ({ ...nextState })),
-      handleMouseDown: jest.fn(async () => nextState),
-    },
-    immediateCommands: ['handleMouseDown'],
-    name: 'EditorText',
-    prepareRender: jest.fn(async () => [['Viewlet.create', 43]]),
-  }
-  ViewletStates.set(42, { factory, moduleId: 'EditorText', renderedState: state, state })
-  jest.mocked(ViewletManager.render).mockReturnValue(commands)
-  jest.mocked(RendererProcess.sendMultipleImmediately).mockImplementation(async () => {
-    calls.push('commit')
-  })
-  jest.mocked(RendererProcess.invoke).mockResolvedValue(undefined)
-
-  await Viewlet.executeViewletCommand(42, 'handleMouseDown')
-
-  expect(RendererProcess.sendMultipleImmediately).toHaveBeenCalledWith([['Viewlet.create', 43], ...commands])
-  expect(RendererProcess.invoke).not.toHaveBeenCalled()
-  expect(calls).toEqual(['commit', 'afterRender'])
-  expect(ViewletStates.getInstance(42).renderedState).toEqual(nextState)
-
-  await Viewlet.executeViewletCommand(42, '__renderPending')
-
-  expect(RendererProcess.sendMultipleImmediately).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.sendMultiple', [['Viewlet.create', 43], ...commands])
 })

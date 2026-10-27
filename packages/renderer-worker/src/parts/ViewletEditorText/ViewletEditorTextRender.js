@@ -21,9 +21,6 @@ export const hasFunctionalRootRender = true
 export const hasFunctionalEvents = true
 export const hasDirectRender = true
 
-// Pointer feedback uses the ordered commit barrier; background renders stay coalesced.
-export const immediateCommands = ['handleMouseDown']
-
 export const render = Editor.render
 
 export const renderEventListeners = async () => {
