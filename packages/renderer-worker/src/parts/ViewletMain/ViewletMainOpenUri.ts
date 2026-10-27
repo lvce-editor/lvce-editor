@@ -1,5 +1,6 @@
 import * as Assert from '../Assert/Assert.ts'
 import * as Command from '../Command/Command.js'
+import * as EditorWorker from '../EditorWorker/EditorWorker.ts'
 import * as Id from '../Id/Id.js'
 import * as MeasureTabWidth from '../MeasureTabWidth/MeasureTabWidth.js'
 import * as PathDisplay from '../PathDisplay/PathDisplay.js'
@@ -55,7 +56,8 @@ export const openUri = async (state, uri, focus = true, options: Record<string, 
       typeof context.endColumnIndex === 'number'
     ) {
       const selections = new Uint32Array([context.startRowIndex, context.startColumnIndex, context.endRowIndex, context.endColumnIndex])
-      await Command.execute('Viewlet.executeViewletCommand', editor.uid, 'Editor.setSelections2', selections, true)
+      await EditorWorker.invoke('Editor.setSelections2', editor.uid, selections, true)
+      await Viewlet.requestRender(editor.uid, false)
     }
   }
 
