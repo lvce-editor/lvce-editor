@@ -47,6 +47,18 @@ test('getOverrides - process explorer worker path', () => {
   }
 })
 
+test('getOverrides - activity bar worker path', () => {
+  const originalArgv = process.argv
+  process.argv = [...originalArgv.slice(0, 2), '--activity-bar-worker=/tmp/activity bar.js']
+  try {
+    expect(Preferences.getOverrides()).toEqual({
+      'develop.activityBarWorkerPath': '/tmp/activity bar.js',
+    })
+  } finally {
+    process.argv = originalArgv
+  }
+})
+
 test('getOverrides - last CLI path wins and native process is configurable', () => {
   const originalArgv = process.argv
   process.argv = [

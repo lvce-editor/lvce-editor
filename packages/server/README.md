@@ -20,4 +20,6 @@ Configured values are applied before command-line arguments, so an explicit argu
 
 Use `--process-explorer-worker=/path/to/worker.js` to serve a local process explorer worker at runtime. Relative paths resolve from the server working directory. The last flag overrides the user preference and packaged worker URL; `--disable-custom-worker-paths` suppresses this override. Without the flag, the existing worker configuration is retained. Explicitly linked worker packages retain their existing precedence.
 
+Use `--activity-bar-worker=/path/to/worker.js` to serve a local activity bar worker at runtime. Relative paths resolve from the server working directory. The flag overrides the user preference and packaged worker URL; `--disable-custom-worker-paths` suppresses this override. Without the flag, the existing worker configuration is retained.
+
 For local native process development, including with the published server, `--process-explorer=/path/to/processExplorerMain.ts` sets `develop.processExplorerPath` without rewriting installed packages.
