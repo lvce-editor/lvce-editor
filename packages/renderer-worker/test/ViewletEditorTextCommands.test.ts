@@ -571,12 +571,12 @@ test('pointer focus is emitted even when the worker reports no focus change', as
   editorWorkerInvoke.mockImplementation((method) => {
     if (method === 'Editor.getCommandIds') return ['handleMouseDown']
     if (method === 'Editor.renderDirect2') return []
-    if (method === 'Editor.handleMouseDown') return undefined
+    if (method === 'Editor.handleMouseDownAndRender') return []
     throw new Error(`unexpected method ${method}`)
   })
   const commands = await ViewletEditorTextCommands.getCommands()
   const result = await commands.handleMouseDown({ uid: 42, uri: 'memfs:///pointer.ts' }, 0, false, false, 40, 80, 1, false)
-  expect(editorWorkerInvoke).toHaveBeenCalledWith('Editor.handleMouseDown', 42, 0, false, false, 40, 80, 1, false)
+  expect(editorWorkerInvoke).toHaveBeenCalledWith('Editor.handleMouseDownAndRender', 42, 0, false, false, 40, 80, 1, false)
   expect(result.commands).toContainEqual(['Viewlet.focusSelector', 42, '.EditorInput textarea'])
 })
 
