@@ -593,8 +593,8 @@
   {
     "name": "builtin.theme-noctis-uva",
     "repository": "github.com/lvce-editor/theme-noctis-uva",
-    "version": "0.10.0",
-    "sha256": "b8ba17923c8e7bb7150679524187bd2c346c708fb048fd591aa649e4b6b552f6",
+    "version": "0.12.0",
+    "sha256": "851d8b79a77002f660c5f5ff917b99c0da8a8e4a631aae7361a235ffdb23c4d2",
     "created": "2022-10-09"
   },
   {
