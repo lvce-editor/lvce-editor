@@ -674,6 +674,9 @@ export const createFilemapsPerFixture = async (fixturesPath: any): Promise<any> 
   )
 }
 
+const htmlTitleRegex = /<title>[\s\S]*?<\/title>/
+const testIdCharactersToEscapeRegex = /[&<>"']/g
+
 const addTestFiles = async ({ commitHash, pathPrefix, root, testPath }: any): Promise<any> => {
   const testRoot = isAbsolute(testPath) ? testPath : join(root, testPath)
   await FileSystem.copy(`${testRoot}/src`, `${root}/dist/${commitHash}/packages/extension-host-worker-tests/src`)
@@ -696,17 +699,17 @@ const addTestFiles = async ({ commitHash, pathPrefix, root, testPath }: any): Pr
   await FileSystem.copyFile(`${root}/dist/index.html`, `${rootTestsPath}/_all.html`)
   for (const testFile of testFiles) {
     const html = await FileSystem.readFile(`${root}/dist/index.html`)
-    const title = `${testFile} - Lvce Editor`.replace(/[&<>"']/g, (character: string) => {
+    const title = `${testFile} - Lvce Editor`.replace(testIdCharactersToEscapeRegex, (character: string) => {
       const entities: Record<string, string> = {
+        "'": '&#39;',
+        '"': '&quot;',
         '&': '&amp;',
         '<': '&lt;',
         '>': '&gt;',
-        '"': '&quot;',
-        "'": '&#39;',
       }
       return entities[character]
     })
-    const testHtml = html.replace(/<title>[\s\S]*?<\/title>/, `<title>${title}</title>`)
+    const testHtml = html.replace(htmlTitleRegex, `<title>${title}</title>`)
     await FileSystem.writeFile(`${hashTestsPath}/${testFile}.html`, testHtml)
     await FileSystem.writeFile(`${rootTestsPath}/${testFile}.html`, testHtml)
   }
