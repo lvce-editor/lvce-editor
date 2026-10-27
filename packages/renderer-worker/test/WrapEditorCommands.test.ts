@@ -365,3 +365,24 @@ test('retains sibling rendering and pointer focus policy for split editors', asy
   expect(EditorWorker.invoke).toHaveBeenCalledWith('Editor.renderDirect2', 2, true)
   expect(result.commands).toHaveLength(2)
 })
+
+test('preserves pointer commands and renders a split opened while the pointer RPC was pending', async () => {
+  EditorWorker.invoke.mockImplementation(async (method: string, uid: number) => {
+    if (method === 'Editor.handleMouseDownAndRender') {
+      ViewletStates.set(2, {
+        factory: {},
+        moduleId: 'Editor',
+        renderedState: { uid: 2 },
+        state: { uid: 2, uri: 'file:///same.txt' },
+      })
+      return [['Viewlet.commitPending', 1, 42]]
+    }
+    if (method === 'Editor.getKeys') return ['1', '2']
+    if (method === 'Editor.renderDirect2') return uid === 1 ? [] : [['Viewlet.commitPending', 2, 43]]
+  })
+  const result = await WrapEditorCommands.wrapEditorCommand('handleMouseDown')({ uid: 1, uri: 'file:///same.txt' })
+  expect(result.commands).toEqual([
+    ['Viewlet.commitPending', 1, 42],
+    ['Viewlet.commitPending', 2, 43],
+  ])
+})
