@@ -9,6 +9,11 @@ jest.unstable_mockModule('../src/parts/FileSystemWorker/FileSystemWorker.js', ()
   invoke: jest.fn(async (_command: string, _applicationId: string, method?: string) => (method === 'exists' ? false : undefined)),
 }))
 jest.unstable_mockModule('../src/parts/ExtensionManagementWorker/ExtensionManagementWorker.js', () => ({ invoke: jest.fn(async () => {}) }))
+const getExtensionCommands = jest.fn(async () => [])
+jest.unstable_mockModule('../src/parts/ExtensionHost/ExtensionHostCommands.js', () => ({
+  executeCommand: jest.fn(async () => {}),
+  getCommands: getExtensionCommands,
+}))
 jest.unstable_mockModule('../src/parts/ViewletModule/ViewletModule.js', () => ({ load: jest.fn() }))
 jest.unstable_mockModule('../src/parts/Viewlet/Viewlet.js', () => ({
   dispose: jest.fn(async (uid) => ViewletStates.remove(uid)),
@@ -40,6 +45,7 @@ const FileSystemWorker = await import('../src/parts/FileSystemWorker/FileSystemW
 const ViewletManager = await import('../src/parts/ViewletManager/ViewletManager.js')
 const Viewlet = await import('../src/parts/Viewlet/Viewlet.js')
 const ExtensionManagementWorker = await import('../src/parts/ExtensionManagementWorker/ExtensionManagementWorker.js')
+const ExtensionHostCommands = await import('../src/parts/ExtensionHost/ExtensionHostCommands.js')
 
 const options = (id: string) => ({
   id,
@@ -86,6 +92,14 @@ test('mounts independently owned layouts into two separate host roots', async ()
   expect(ViewletManager.executeForApplication).toHaveBeenCalledWith('preview', 'Main.openInput', 'memfs:///README.md')
   await Application.resize('source', 500, 700)
   expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.setBounds', source, 0, 0, 500, 700)
+})
+
+test('passes the extension command cache key to the application command provider', async () => {
+  await Application.create(options('source'))
+
+  await Application.execute('source', 'ExtensionHost.getCommands', '/static', 1, 'a'.repeat(64))
+
+  expect(ExtensionHostCommands.getCommands).toHaveBeenCalledWith('/static', 1, 'source', 'a'.repeat(64))
 })
 
 test('failed mounting releases partial ownership and permits retrying the same application id', async () => {

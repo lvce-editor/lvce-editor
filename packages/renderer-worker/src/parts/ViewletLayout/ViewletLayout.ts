@@ -2853,13 +2853,20 @@ export const isSideBarVisible = (state: LayoutState) => {
   return sideBarVisible
 }
 
-export const getAllQuickPickMenuEntries = async () => {
+export const getAllQuickPickMenuEntries = async (_state?: LayoutState, ifNonMatch?: string | null) => {
   const entries = MenuEntriesState.getAll()
   const autoUpdateType = await GetAutoUpdateType.getAutoUpdateType()
+  let commands = entries
   if (autoUpdateType === AutoUpdateType.Deb) {
-    return entries.filter((entry) => entry.id !== 'AutoUpdater.checkForUpdates')
+    commands = entries.filter((entry) => entry.id !== 'AutoUpdater.checkForUpdates')
   }
-  return entries
+  if (ifNonMatch === undefined) {
+    return commands
+  }
+  const bytes = new TextEncoder().encode(JSON.stringify(commands))
+  const digest = await crypto.subtle.digest('SHA-256', bytes)
+  const hash = Array.from(new Uint8Array(digest), (byte) => byte.toString(16).padStart(2, '0')).join('')
+  return ifNonMatch === hash ? { hash, matchesCache: true } : { commands, hash, matchesCache: false }
 }
 
 const callGlobalEvent = async (state: LayoutState, eventName, ...args): Promise<LayoutStateResult> => {

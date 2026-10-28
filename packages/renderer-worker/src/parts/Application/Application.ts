@@ -186,7 +186,7 @@ export const execute = (applicationId: string, command: string, ...args: readonl
         ExtensionManagementWorker.invoke('Extensions.invokeForApplication', applicationId, 'Extensions.executeCommand', ...args),
       )
     case 'ExtensionHost.getCommands':
-      return ApplicationRegistry.track(applicationId, () => ExtensionHostCommands.getCommands(args[0], args[1], applicationId))
+      return ApplicationRegistry.track(applicationId, () => ExtensionHostCommands.getCommands(args[0], args[1], applicationId, args[2]))
     case 'ExtensionHostSourceControl.getEnabledProviderIds':
     case 'ExtensionHostSourceControl.getFileDecorations':
       return ApplicationRegistry.track(applicationId, () =>

@@ -40,6 +40,20 @@ test('queries only the requested application for extension commands', async () =
   expect(invoke).toHaveBeenCalledWith('Extensions.invokeForApplication', 'source', 'Extensions.getAllExtensions', '/static', 1)
 })
 
+test('validates cached extension commands in the extension management worker', async () => {
+  const response = { commands: [{ id: 'extension.command', label: 'Extension Command' }], hash: 'a'.repeat(64), matchesCache: false }
+  invoke.mockResolvedValueOnce(response)
+  await expect(ExtensionHostCommands.getCommands('/static', 1, undefined, null)).resolves.toEqual(response)
+  expect(invoke).toHaveBeenCalledWith('Extensions.getQuickPickCommands', '/static', 1, null)
+
+  invoke.mockResolvedValueOnce({ hash: response.hash, matchesCache: true })
+  await expect(ExtensionHostCommands.getCommands('/static', 1, 'source', response.hash)).resolves.toEqual({
+    hash: response.hash,
+    matchesCache: true,
+  })
+  expect(invoke).toHaveBeenCalledWith('Extensions.invokeForApplication', 'source', 'Extensions.getQuickPickCommands', '/static', 1, response.hash)
+})
+
 test('HTML file quickpick delegates to the filesystem worker', async () => {
   await expect(ExtensionHostCommands.searchFileWithHtml('html:///workspace')).resolves.toEqual(['main.ts'])
   expect(fileSystemInvoke).toHaveBeenCalledWith('FileSystemHtml.fileSearch', 'html:///workspace')
