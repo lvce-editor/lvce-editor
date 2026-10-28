@@ -130,8 +130,8 @@
   {
     "name": "builtin.remote-ssh",
     "repository": "github.com/lvce-editor/remote-ssh",
-    "version": "0.24.0",
-    "sha256": "cfea6886713dc3fe83f4e77964ef7cebeff514b904ad356a2195f3f39e65388f",
+    "version": "0.25.2",
+    "sha256": "9482f71855a7ed0215a355a0dd65f1b5c67ae44e04898a504a355dd7fa350a77",
     "created": "2026-10-24"
   },
   {
