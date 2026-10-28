@@ -82,7 +82,7 @@ export const test = async ({ page }) => {
   const results = []
   const verify = async (moduleId, selector) => {
     let baseline
-    for (const factor of [1, 1.5, 3]) {
+    for (const factor of [1, 1.5, 3, 10]) {
       await speed(factor)
       await wheel(selector, -1e7)
       await waitForDelta(moduleId, 0)
@@ -101,7 +101,7 @@ export const test = async ({ page }) => {
       await wheel(selector, 80)
       await waitForDelta(moduleId, bottom.finalDeltaY)
     }
-    for (const invalid of [0, 4, '3']) {
+    for (const invalid of [0, 10.1, '3']) {
       await speed(invalid)
       await wheel(selector, -1e7)
       await waitForDelta(moduleId, 0)
@@ -133,7 +133,7 @@ export const test = async ({ page }) => {
       )
     })
     const firstIndex = async () => Number(await page.locator('.QuickPick [role="option"]').first().getAttribute('aria-posinset'))
-    for (const factor of [1, 1.5, 3]) {
+    for (const factor of [1, 1.5, 3, 10]) {
       await speed(factor)
       await wheel('.QuickPickItems', -1e7)
       await assertEventually(firstIndex, 1, 'Quick pick top clamp')
