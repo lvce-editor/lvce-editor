@@ -347,7 +347,7 @@ test('load does not invoke the renderer for empty event listeners on a new root'
   expect(RendererProcess.invoke).not.toHaveBeenCalledWith('Viewlet.registerEventListeners', 10, [])
 })
 
-test.each([1, 1.5, 3])('load registers the current scroll speed %s for a new root', async (scrollSpeed) => {
+test.each([1, 1.5, 3, 10])('load registers the current scroll speed %s for a new root', async (scrollSpeed) => {
   PreferencesState.set('application.scrollspeed', scrollSpeed)
   // @ts-ignore
   RendererProcess.invoke.mockResolvedValue(undefined)

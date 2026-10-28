@@ -1,10 +1,10 @@
 [
   {
     "category": "applications",
-    "description": "Multiplies wheel scrolling speed in custom views. Accepts values from 1 to 3, including fractions. Invalid values use the default speed of 1.",
+    "description": "Multiplies wheel scrolling speed in custom views. Accepts values from 1 to 10, including fractions. Invalid values use the default speed of 1.",
     "heading": "Scroll Speed",
     "id": "application.scrollspeed",
-    "maximum": 3,
+    "maximum": 10,
     "minimum": 1,
     "type": "number",
     "value": 1
