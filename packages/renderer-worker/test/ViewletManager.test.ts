@@ -5,8 +5,11 @@ import * as PreferencesState from '../src/parts/PreferencesState/PreferencesStat
 import * as VirtualDomElements from '../src/parts/VirtualDomElements/VirtualDomElements.js'
 import * as ViewletStates from '../src/parts/ViewletStates/ViewletStates.js'
 
+let browser = 'chromium'
+
 beforeEach(() => {
   jest.resetAllMocks()
+  browser = 'chromium'
   PreferencesState.setAll({})
   ViewletStates.reset()
   ViewletManager.state.pendingModules = Object.create(null)
@@ -26,6 +29,7 @@ jest.unstable_mockModule('../src/parts/Id/Id.js', () => {
     },
   }
 })
+jest.unstable_mockModule('../src/parts/Browser/Browser.js', () => ({ getBrowser: () => browser }))
 
 jest.unstable_mockModule('../src/parts/ErrorHandling/ErrorHandling.js', () => {
   return {
@@ -377,6 +381,40 @@ test.each([1, 1.5, 3, 10])('load registers the current scroll speed %s for a new
   expect(commands).toEqual([
     ['Viewlet.registerEventListeners', 11, eventListeners, scrollSpeed],
     ['Viewlet.createFunctionalRoot', 'NonEmptyListenerTest', 11, true],
+  ])
+})
+
+test('load registers the Firefox-specific default speed for a new root', async () => {
+  browser = 'firefox'
+  PreferencesState.set('application.scrollspeed', 2)
+  PreferencesState.set('application.scrollspeed.firefox', 5)
+  jest.mocked(RendererProcess.invoke).mockResolvedValue(undefined)
+  const eventListeners = [{ name: 'wheel', params: ['handleWheel', 'event.deltaY'] }]
+  const mockModule = {
+    create: jest.fn(() => ({ uid: 12 })),
+    hasFunctionalEvents: true,
+    hasFunctionalRender: true,
+    hasFunctionalRootRender: true,
+    loadContent: jest.fn((state) => state),
+    render: [],
+    renderEventListeners: jest.fn(() => eventListeners),
+  }
+  const viewlet = {
+    disposed: false,
+    getModule: async () => mockModule,
+    id: 'FirefoxScrollSpeedTest',
+    shouldRenderEvents: false,
+    show: false,
+    type: 0,
+    uid: 12,
+    uri: '',
+  }
+
+  const commands = await ViewletManager.load(viewlet)
+
+  expect(commands).toEqual([
+    ['Viewlet.registerEventListeners', 12, eventListeners, 5],
+    ['Viewlet.createFunctionalRoot', 'FirefoxScrollSpeedTest', 12, true],
   ])
 })
 

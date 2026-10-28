@@ -10,6 +10,16 @@
     "value": 1
   },
   {
+    "category": "applications",
+    "description": "Overrides application.scrollspeed when running in Firefox. Accepts values from 1 to 10, including fractions. Invalid values use the default speed of 5.",
+    "heading": "Firefox Scroll Speed",
+    "id": "application.scrollspeed.firefox",
+    "maximum": 10,
+    "minimum": 1,
+    "type": "number",
+    "value": 5
+  },
+  {
     "category": "window",
     "description": "Places Linux window controls above the primary sidebar so the main and secondary sidebar extend to the top. With the primary sidebar hidden, reserves a full-width control strip. Restart the app to apply changes.",
     "heading": "Titlebarless Layout",

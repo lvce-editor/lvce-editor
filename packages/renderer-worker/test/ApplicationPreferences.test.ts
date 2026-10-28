@@ -12,11 +12,14 @@ const rendererInvoke = jest.fn<(...args: readonly unknown[]) => Promise<void>>(a
 jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () => ({ invoke: rendererInvoke }))
 const executeViewletCommand = jest.fn<(uid: number, command: string) => Promise<void>>(async () => {})
 jest.unstable_mockModule('../src/parts/Viewlet/Viewlet.js', () => ({ executeViewletCommand }))
+let browser = 'chromium'
+jest.unstable_mockModule('../src/parts/Browser/Browser.js', () => ({ getBrowser: () => browser }))
 const ApplicationPreferences = await import('../src/parts/ApplicationPreferences/ApplicationPreferences.ts')
 
 const create = (id: string, layoutUid: number) => ApplicationRegistry.create({ id, layoutUid, href: '', workspaceUri: '', workspacePath: '' })
 
 afterEach(async () => {
+  browser = 'chromium'
   await ApplicationRegistry.remove('source')
   await ApplicationRegistry.remove('preview')
   ViewletStates.reset()
@@ -107,4 +110,22 @@ test('refreshes wheel speed for existing views while isolating application overr
   expect(rendererInvoke).toHaveBeenCalledWith('Viewlet.setScrollSpeed', 5, 1.5)
   await ApplicationPreferences.update('preview', { 'application.scrollspeed': 10.1 })
   expect(rendererInvoke).toHaveBeenCalledWith('Viewlet.setScrollSpeed', 4, 1)
+})
+
+test('refreshes Firefox views from the Firefox setting while keeping application overrides isolated', async () => {
+  browser = 'firefox'
+  PreferencesState.set('application.scrollspeed', 2)
+  PreferencesState.set('application.scrollspeed.firefox', 5)
+  create('source', 1)
+  create('preview', 2)
+  ApplicationRegistry.own('source', 3)
+  ApplicationRegistry.own('preview', 4)
+  await ApplicationPreferences.update('preview', { 'application.scrollspeed.firefox': 7 })
+  expect(rendererInvoke).toHaveBeenCalledWith('Viewlet.setScrollSpeed', 4, 7)
+  rendererInvoke.mockClear()
+
+  PreferencesState.set('application.scrollspeed.firefox', 6)
+  await GlobalEventBus.emitEvent('preferences.changed')
+  expect(rendererInvoke).toHaveBeenCalledWith('Viewlet.setScrollSpeed', 3, 6)
+  expect(rendererInvoke).toHaveBeenCalledWith('Viewlet.setScrollSpeed', 4, 7)
 })
