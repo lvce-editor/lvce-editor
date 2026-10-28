@@ -23,6 +23,6 @@
     "node": ">=24"
   },
   "dependencies": {
-    "@lvce-editor/jsonc-parser": "^1.5.2"
+    "@lvce-editor/jsonc-parser": "^1.6.0"
   }
 }
