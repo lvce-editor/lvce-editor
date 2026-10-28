@@ -5,7 +5,7 @@
   width: 100%;
   height: 100%;
   overflow: hidden;
-  background: var(--EditorBackground);
+  background: var(--EditorBackground, var(--MainBackground));
   color: var(--WorkbenchForeground, white);
 }
 
@@ -38,8 +38,7 @@
 
 .WorkersViewTable {
   width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
+  border-collapse: collapse;
   table-layout: fixed;
   font-size: 13px;
   outline: none;
@@ -73,7 +72,7 @@
   top: 0;
   z-index: 1;
   border-bottom: 1px solid var(--PanelBorder, rgba(128, 128, 128, 0.35));
-  background: var(--EditorBackground);
+  background: var(--EditorBackground, var(--MainBackground));
   font-weight: 600;
 }
 

@@ -94,6 +94,16 @@ jobs:
         run: node --test scripts/test/quickpick-row-layout.test.mjs
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0
+      - name: Install Firefox for Workers header regression
+        if: runner.os == 'Linux'
+        run: node node_modules/playwright-core/cli.js install --with-deps firefox
+        env:
+          PLAYWRIGHT_BROWSERS_PATH: 0
+      - name: Test Workers header painting in Firefox and Chromium
+        if: runner.os == 'Linux'
+        run: node --test scripts/test/workers-header-paint.test.mjs
+        env:
+          PLAYWRIGHT_BROWSERS_PATH: 0
       - name: Test activity bar focus outline
         run: node --test scripts/test/activity-bar-focus-outline.test.mjs
         env:
