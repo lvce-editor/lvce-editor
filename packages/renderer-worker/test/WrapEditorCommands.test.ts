@@ -333,3 +333,56 @@ test('ordinary key releases retain ordering behind pending typing', async () => 
   expect(EditorWorker.invoke).not.toHaveBeenCalledWith('Editor.handleKeyUp', 1, 'a')
   expect(EditorWorker.invoke.mock.calls.filter(([method]) => method === 'Editor.renderDirect2')).toHaveLength(1)
 })
+
+test('combines a foreground pointer edit and render for a single text editor', async () => {
+  EditorWorker.invoke.mockResolvedValue([['Viewlet.commitPending', 1, 42]])
+  const handleMouseDown = WrapEditorCommands.wrapEditorCommand('handleMouseDown')
+  const result = await handleMouseDown({ uid: 1, uri: 'file:///one.txt' }, 0, false, false, 40, 80, 2, false)
+  expect(EditorWorker.invoke.mock.calls).toEqual([['Editor.handleMouseDownAndRender', 1, 0, false, false, 40, 80, 2, false]])
+  expect(result.commands).toEqual([['Viewlet.commitPending', 1, 42]])
+})
+
+test('retains sibling rendering and pointer focus policy for split editors', async () => {
+  ViewletStates.set(2, {
+    factory: {},
+    moduleId: 'Editor',
+    renderedState: { uid: 2 },
+    state: { uid: 2, uri: 'file:///same.txt' },
+  })
+  EditorWorker.invoke.mockImplementation(async (method: string, uid: number) => {
+    if (method === 'Editor.getKeys') return ['1', '2']
+    if (method === 'Editor.renderDirect2') return [['Viewlet.commitPending', uid, 42]]
+  })
+  const handleMouseDown = WrapEditorCommands.wrapEditorCommand('handleMouseDown')
+  const result = await handleMouseDown({ uid: 1, uri: 'file:///same.txt' }, 0, false, false, 40, 80, 2, false)
+  expect(EditorWorker.invoke.mock.calls.map((call) => call[0])).toEqual([
+    'Editor.handleMouseDown',
+    'Editor.getKeys',
+    'Editor.renderDirect2',
+    'Editor.renderDirect2',
+  ])
+  expect(EditorWorker.invoke).toHaveBeenCalledWith('Editor.renderDirect2', 1, false)
+  expect(EditorWorker.invoke).toHaveBeenCalledWith('Editor.renderDirect2', 2, true)
+  expect(result.commands).toHaveLength(2)
+})
+
+test('preserves pointer commands and renders a split opened while the pointer RPC was pending', async () => {
+  EditorWorker.invoke.mockImplementation(async (method: string, uid: number) => {
+    if (method === 'Editor.handleMouseDownAndRender') {
+      ViewletStates.set(2, {
+        factory: {},
+        moduleId: 'Editor',
+        renderedState: { uid: 2 },
+        state: { uid: 2, uri: 'file:///same.txt' },
+      })
+      return [['Viewlet.commitPending', 1, 42]]
+    }
+    if (method === 'Editor.getKeys') return ['1', '2']
+    if (method === 'Editor.renderDirect2') return uid === 1 ? [] : [['Viewlet.commitPending', 2, 43]]
+  })
+  const result = await WrapEditorCommands.wrapEditorCommand('handleMouseDown')({ uid: 1, uri: 'file:///same.txt' })
+  expect(result.commands).toEqual([
+    ['Viewlet.commitPending', 1, 42],
+    ['Viewlet.commitPending', 2, 43],
+  ])
+})

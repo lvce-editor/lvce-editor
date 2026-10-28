@@ -85,6 +85,15 @@ const runEditorCommand = async (editor, fullId, restArgs, preserveFocus = false)
   if (fullId === 'Editor.handleKeyUp' && restArgs[0] !== 'Alt') {
     return { ...editor, commands: [] }
   }
+  if (fullId === 'Editor.handleMouseDown' && !preserveFocus && getEditorUids(editor).size === 1) {
+    const commands = await EditorWorker.invoke('Editor.handleMouseDownAndRender', editor.uid, ...restArgs)
+    // A split may open while the pointer command awaits another worker.
+    if (getEditorUids(editor).size > 1) {
+      const pending = await renderPendingEditors(editor, preserveFocus)
+      return { ...pending, commands: [...commands, ...pending.commands] }
+    }
+    return { ...editor, commands }
+  }
   await EditorWorker.invoke(fullId, editor.uid, ...restArgs)
   return renderPendingEditors(editor, preserveFocus)
 }
