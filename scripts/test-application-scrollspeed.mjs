@@ -8,9 +8,10 @@ export const test = async ({ page }) => {
   assert.ok(worker, 'Renderer worker must be running')
   await worker.evaluate(async () => {
     const root = '/packages/renderer-worker/src/parts/'
-    const [Command, Preferences, ViewletStates, ViewletManager, RendererProcess, EditorWorker] = await Promise.all([
+    const [Command, Preferences, GetScrollSpeed, ViewletStates, ViewletManager, RendererProcess, EditorWorker] = await Promise.all([
       import(`${root}Command/Command.js`),
       import(`${root}Preferences/Preferences.js`),
+      import(`${root}GetScrollSpeed/GetScrollSpeed.ts`),
       import(`${root}ViewletStates/ViewletStates.js`),
       import(`${root}ViewletManager/ViewletManager.js`),
       import(`${root}RendererProcess/RendererProcess.js`),
@@ -19,6 +20,7 @@ export const test = async ({ page }) => {
     globalThis.scrollTest = {
       Command,
       Preferences,
+      getScrollSpeed: () => GetScrollSpeed.getScrollSpeed(Preferences.getAll()),
       ViewletStates,
       EditorWorker,
       async snapshot(moduleId) {
@@ -67,7 +69,13 @@ export const test = async ({ page }) => {
     }
     await Command.execute('Editor.setText', Array.from({ length: 300 }, (_, index) => `line ${index}`).join('\n'))
   })
-  const speed = (value) => worker.evaluate((value) => globalThis.scrollTest.Preferences.update({ 'application.scrollspeed': value }), value)
+  const isFirefox = await page.evaluate(() => /firefox/i.test(navigator.userAgent))
+  const defaultScrollSpeed = await worker.evaluate(() => globalThis.scrollTest.getScrollSpeed())
+  assert.equal(defaultScrollSpeed, isFirefox ? 5 : 1, 'browser-specific default scroll speed')
+  const speedSetting = isFirefox ? 'application.scrollspeed.firefox' : 'application.scrollspeed'
+  const factors = isFirefox ? [1, 1.5, 3, 5, 10] : [1, 1.5, 3]
+  const speed = (value) =>
+    worker.evaluate(({ key, value }) => globalThis.scrollTest.Preferences.update({ [key]: value }), { key: speedSetting, value })
   const snapshot = (moduleId) => worker.evaluate((moduleId) => globalThis.scrollTest.snapshot(moduleId), moduleId)
   const wheel = async (selector, deltaY) =>
     page
@@ -82,7 +90,7 @@ export const test = async ({ page }) => {
   const results = []
   const verify = async (moduleId, selector) => {
     let baseline
-    for (const factor of [1, 1.5, 3, 10]) {
+    for (const factor of factors) {
       await speed(factor)
       await wheel(selector, -1e7)
       await waitForDelta(moduleId, 0)
@@ -120,8 +128,8 @@ export const test = async ({ page }) => {
       await worker.evaluate((moduleId) => globalThis.scrollTest.seed(moduleId), moduleId)
       await verify(moduleId, selector)
       if (moduleId === 'Extensions') {
-        // Exercise the existing Firefox coefficient in the actual published handler.
-        await worker.evaluate(() => globalThis.scrollTest.seed('Extensions', 2.5))
+        // The Firefox-specific application setting now owns compensation for this view.
+        await worker.evaluate(() => globalThis.scrollTest.seed('Extensions', 1))
         await verify(moduleId, selector)
       }
     }
@@ -133,7 +141,7 @@ export const test = async ({ page }) => {
       )
     })
     const firstIndex = async () => Number(await page.locator('.QuickPick [role="option"]').first().getAttribute('aria-posinset'))
-    for (const factor of [1, 1.5, 3, 10]) {
+    for (const factor of factors) {
       await speed(factor)
       await wheel('.QuickPickItems', -1e7)
       await assertEventually(firstIndex, 1, 'Quick pick top clamp')
