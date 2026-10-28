@@ -1,7 +1,7 @@
 import * as Layout from './Layout.js'
 import * as Application from '../Application/Application.ts'
 import * as ApplicationRegistry from '../ApplicationRegistry/ApplicationRegistry.ts'
-import * as ViewletLayout from '../ViewletLayout/ViewletLayout.ts'
+import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
 const handleWorkspaceRefresh = async (changes) => {
@@ -11,7 +11,9 @@ const handleWorkspaceRefresh = async (changes) => {
   }
   const layout = ViewletStates.getInstance('Layout')
   if (layout) {
-    await ViewletLayout.handleWorkspaceRefresh(layout.state, changes)
+    const { state } = layout
+    const { uid } = state
+    await Viewlet.executeViewletCommand(uid, 'handleWorkspaceRefresh', changes)
   }
 }
 
@@ -22,7 +24,9 @@ const refreshSourceControlBadgeCount = async () => {
   }
   const layout = ViewletStates.getInstance('Layout')
   if (layout) {
-    await ViewletLayout.refreshSourceControlBadgeCount(layout.state)
+    const { state } = layout
+    const { uid } = state
+    await Viewlet.executeViewletCommand(uid, 'refreshSourceControlBadgeCount')
   }
 }
 
