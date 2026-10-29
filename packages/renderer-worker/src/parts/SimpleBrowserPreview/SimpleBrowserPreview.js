@@ -25,7 +25,9 @@ export const materialize = async (state, tab) => {
     ? state.tabs.findIndex((candidate, index) => index === state.selectedTabIndex && candidate.iframeSrc === tab.iframeSrc)
     : -1
   const parentInstance = tabIndex >= 0 ? ViewletStates.getInstance(state.uid) : undefined
-  if (parentInstance && tabIndex >= 0) {
+  // HTTP frames have a fixed tab title. Registering them in renderedState before
+  // the parent renders would claim that their DOM wrapper already exists.
+  if (!httpPreview && parentInstance && tabIndex >= 0) {
     const tabs = parentInstance.state.tabs.with(tabIndex, { ...parentInstance.state.tabs[tabIndex], previewUid: uid })
     ViewletStates.setRenderedState(state.uid, { ...parentInstance.renderedState, tabs })
   }

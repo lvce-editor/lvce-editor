@@ -102,3 +102,14 @@ test('materializes HTTP URLs using the sandboxed iframe host without an Electron
   await Preview.reload(tab)
   expect(Viewlet.executeViewletCommand).toHaveBeenCalledWith(tab.previewUid, 'reloadBrowserIframe')
 })
+
+test('HTTP materialization leaves the parent DOM snapshot unchanged until its own render', async () => {
+  jest.mocked(ViewletManager.load).mockResolvedValue([['create']])
+  const tab = { iframeSrc: 'https://remote.example.com/preview/grant/' }
+  const parent = { uid: 7, tabs: [tab], selectedTabIndex: 0 }
+  ViewletStates.set(7, { factory: {}, renderedState: parent, state: parent })
+  const materialized = await Preview.materialize({ ...parent, x: 0, y: 0, width: 300, height: 200, headerHeight: 65 }, tab)
+  expect(materialized.previewUid).toEqual(expect.any(Number))
+  expect(ViewletStates.getInstance(7).renderedState).toBe(parent)
+  expect(ViewletStates.getInstance(7).renderedState.tabs[0]).not.toHaveProperty('previewUid')
+})
