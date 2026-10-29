@@ -185,3 +185,14 @@ test('large batches bound concurrent reads and retain the order when reads finis
     jest.mocked(SharedFileSystem.readFile).mockImplementation(async () => 'http content')
   }
 })
+
+test('directory versions retain the application identity in provider routing', async () => {
+  await expect(FileSystem.execute('preview', 'getDirectoryVersion', 'remote-ssh://host/workspace')).resolves.toBe('provider content')
+  expect(Extensions.invoke).toHaveBeenLastCalledWith(
+    'Extensions.invokeForApplication',
+    'preview',
+    'Extensions.executeFileSystemProviderGetDirectoryVersion',
+    'remote-ssh',
+    'remote-ssh://host/workspace',
+  )
+})

@@ -72,6 +72,12 @@ export const stat = (uri) => {
   })
 }
 
+export const getDirectoryVersion = async (uri) => {
+  const { protocol, uri: providerUri } = getProviderProtocolPathAndUri(uri)
+  const { found, result } = await ExtensionManagementWorker.invoke('Extensions.executeFileSystemProviderGetDirectoryVersion', protocol, providerUri)
+  return found ? result : null
+}
+
 export const statWithMetadata = stat
 
 export const exists = async (uri) => {

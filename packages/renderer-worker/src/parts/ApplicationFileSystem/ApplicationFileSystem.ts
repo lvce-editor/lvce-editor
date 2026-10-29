@@ -3,6 +3,7 @@ import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as FileSystemWorker from '../FileSystemWorker/FileSystemWorker.js'
 
 const providerMethods: Readonly<Record<string, string>> = {
+  getDirectoryVersion: 'GetDirectoryVersion',
   isReadonly: 'IsReadonly',
   mkdir: 'Mkdir',
   readDirWithFileTypes: 'ReadDirWithFileTypes',

@@ -429,3 +429,16 @@ test.each([
     await mutation
   }
 })
+
+test('directory versions use the provider URI and preserve numeric stat', async () => {
+  invoke.mockResolvedValueOnce({ found: true, result: 'connection:version' })
+  await expect(FileSystem.getDirectoryVersion('remote-ssh://host/workspace')).resolves.toBe('connection:version')
+  expect(invoke).toHaveBeenLastCalledWith('Extensions.executeFileSystemProviderGetDirectoryVersion', 'remote-ssh', 'remote-ssh://host/workspace')
+  invoke.mockResolvedValueOnce({ found: true, result: 3 })
+  await expect(FileSystem.stat('remote-ssh://host/workspace')).resolves.toBe(3)
+})
+
+test('missing isolated directory version providers safely return null', async () => {
+  await expect(ExtensionHostFileSystem.getDirectoryVersion('remote-ssh://host/workspace')).resolves.toBeNull()
+  expect(ExtensionHostShared.executeProvider).not.toHaveBeenCalled()
+})
