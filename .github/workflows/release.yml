@@ -68,6 +68,7 @@ jobs:
           node-version-file: '.nvmrc'
           registry-url: 'https://registry.npmjs.org'
       - name: Setup Python 3
+        id: python
         uses: actions/setup-python@v6
         with:
           python-version: '3.11'
@@ -97,6 +98,7 @@ jobs:
         if: steps.npm-cache.outputs.cache-hit != 'true'
         env:
           DOWNLOAD_BUILTIN_EXTENSIONS: 0
+          PYTHON: ${{ steps.python.outputs.python-path }}
       - name: Compute builtin extensions cache key
         id: builtinExtensionsCacheKey
         run: echo "value=$(node packages/build/src/parts/ComputeBuiltinExtensionsCacheKey/ComputeBuiltinExtensionsCacheKey.ts)" >> $GITHUB_OUTPUT
