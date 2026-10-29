@@ -9,6 +9,7 @@ import * as BundleSharedProcessGraph from '../BundleSharedProcessGraph/BundleSha
 import * as BundleWorkers from '../BundleWorkers/BundleWorkers.ts'
 import * as CommitHash from '../CommitHash/CommitHash.ts'
 import * as Copy from '../Copy/Copy.ts'
+import * as CopyFiraCode from '../CopyFiraCode/CopyFiraCode.ts'
 import * as CopyElectronFileIcons from '../CopyElectronFileIcons/CopyElectronFileIcons.ts'
 import * as CopyElectron from '../CopyElectron/CopyElectron.ts'
 import * as CopyElectronIcons from '../CopyElectronIcons/CopyElectronIcons.ts'
@@ -29,7 +30,6 @@ import * as Remove from '../Remove/Remove.ts'
 import * as RemoveUnusedLocales from '../RemoveUnusedLocales/RemoveUnusedLocales.ts'
 import * as Replace from '../Replace/Replace.ts'
 import * as Root from '../Root/Root.ts'
-import * as RewriteCssAssetUrls from '../RewriteCssAssetUrls/RewriteCssAssetUrls.ts'
 import * as Template from '../Template/Template.ts'
 import * as WriteFile from '../WriteFile/WriteFile.ts'
 import { generateConfigJson } from '../GenerateConfigJson/GenerateConfigJson.ts'
@@ -130,6 +130,7 @@ const copyStaticFiles = async ({ resourcesPath, commitHash }) => {
     to: `${resourcesPath}/app/static/${commitHash}`,
     ignore: ['config.json', 'css'],
   })
+  await CopyFiraCode.copyFiraCode(`${resourcesPath}/app/static/${commitHash}/fonts`)
   await CopyElectronIcons.copyElectronIcons({ resourcesPath, commitHash })
   await Rename.rename({
     from: `${resourcesPath}/app/static/${commitHash}/index.html`,
@@ -177,16 +178,10 @@ const copyStaticFiles = async ({ resourcesPath, commitHash }) => {
   await Remove.remove(`${resourcesPath}/app/static/lib-css/modern-normalize.css`)
 }
 
-const copyCss = async ({ resourcesPath, commitHash, applicationName }) => {
+const copyCss = async ({ resourcesPath, commitHash }) => {
   await BundleCss.bundleCss({
     outDir: `${resourcesPath}/app/static/${commitHash}/css`,
     assetDir: `/${commitHash}`,
-  })
-  const appCssPath = `${resourcesPath}/app/static/${commitHash}/css/App.css`
-  const appCss = await ReadFile.readFile(appCssPath)
-  await WriteFile.writeFile({
-    to: appCssPath,
-    content: RewriteCssAssetUrls.rewriteElectronFontUrl(appCss, `/${commitHash}`, applicationName),
   })
 }
 
@@ -348,7 +343,7 @@ export const build = async ({
   console.timeEnd('copyStaticFiles')
 
   console.time('copyCss')
-  await copyCss({ resourcesPath, commitHash, applicationName: product.applicationName })
+  await copyCss({ resourcesPath, commitHash })
   console.timeEnd('copyCss')
 
   const assetDir = `/${commitHash}`

@@ -7,6 +7,7 @@ import * as AddRuntimeConfigToIndexHtml from '../AddRuntimeConfigToIndexHtml/Add
 import * as CommitHash from '../CommitHash/CommitHash.ts'
 import * as Console from '../Console/Console.ts'
 import * as Copy from '../Copy/Copy.ts'
+import * as CopyFiraCode from '../CopyFiraCode/CopyFiraCode.ts'
 import * as CodiconsPath from '../CodiconsPath/CodiconsPath.ts'
 import * as CopySourceFiles from '../CopySourceFiles/CopySourceFiles.ts'
 import * as GetCommitDate from '../GetCommitDate/GetCommitDate.ts'
@@ -82,10 +83,7 @@ const copyStaticFiles = async ({ pathPrefix, ignoreIconTheme, commitHash }) => {
     from: 'static/favicon.ico',
     to: `packages/build/.tmp/dist/favicon.ico`,
   })
-  await Copy.copy({
-    from: 'static/fonts',
-    to: `packages/build/.tmp/dist/${commitHash}/fonts`,
-  })
+  await CopyFiraCode.copyFiraCode(`packages/build/.tmp/dist/${commitHash}/fonts`)
   await Copy.copy({
     from: 'static/sounds',
     to: `packages/build/.tmp/dist/sounds`,

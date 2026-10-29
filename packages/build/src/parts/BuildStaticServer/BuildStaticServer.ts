@@ -4,6 +4,7 @@ import * as BundleWorkers from '../BundleWorkers/BundleWorkers.ts'
 import * as AddRuntimeConfigToIndexHtml from '../AddRuntimeConfigToIndexHtml/AddRuntimeConfigToIndexHtml.ts'
 import * as CodiconsPath from '../CodiconsPath/CodiconsPath.ts'
 import * as Copy from '../Copy/Copy.ts'
+import * as CopyFiraCode from '../CopyFiraCode/CopyFiraCode.ts'
 import * as Path from '../Path/Path.ts'
 import * as Remove from '../Remove/Remove.ts'
 import * as Replace from '../Replace/Replace.ts'
@@ -34,10 +35,7 @@ const copyStaticFiles = async ({ commitHash }) => {
     from: 'static/favicon.ico',
     to: `packages/build/.tmp/server/static-server/static/favicon.ico`,
   })
-  await Copy.copy({
-    from: 'static/fonts',
-    to: `packages/build/.tmp/server/static-server/static/${commitHash}/fonts`,
-  })
+  await CopyFiraCode.copyFiraCode(`packages/build/.tmp/server/static-server/static/${commitHash}/fonts`)
   await Copy.copy({
     from: 'static/images',
     to: `packages/build/.tmp/server/static-server/static/images`,

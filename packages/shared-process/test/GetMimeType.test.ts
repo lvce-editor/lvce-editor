@@ -11,6 +11,8 @@ test('css', () => {
 
 test('ttf', () => {
   expect(GetMimeType.getMimeType('.ttf')).toBe('font/ttf')
+  expect(GetMimeType.getMimeType('.woff')).toBe('font/woff')
+  expect(GetMimeType.getMimeType('.woff2')).toBe('font/woff2')
 })
 
 test.each([

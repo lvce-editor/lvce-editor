@@ -164,7 +164,7 @@ export const loadContent = async (state, savedState, context) => {
     const hasCachedCharacterWidth = await EditorWorker.invoke('Editor.hasCachedCharacterWidth', fontWeight, fontSize, fontFamily, letterSpacing)
     if (!hasCachedCharacterWidth) {
       const fontName = UnquoteString.unquoteString(fontFamily)
-      const fontUrl = GetFontUrl.getFontUrl('/fonts/FiraCode-VariableFont.ttf')
+      const fontUrl = GetFontUrl.getFontUrl('/fonts/files/fira-code-latin-400-normal.woff2')
       await EditorWorker.invoke('Font.ensure', fontName, fontUrl)
     }
   }

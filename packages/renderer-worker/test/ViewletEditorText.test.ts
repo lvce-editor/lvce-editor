@@ -138,7 +138,7 @@ test('loadContent ensures the Fira Code font when character width is not cached'
   await ViewletEditorText.loadContent(state, undefined, { languageId: 'text' })
 
   expect(editorWorkerInvoke).toHaveBeenCalledWith('Editor.hasCachedCharacterWidth', 400, 15, 'Fira Code', 0.5)
-  expect(editorWorkerInvoke).toHaveBeenCalledWith('Font.ensure', 'Fira Code', "url('/fonts/FiraCode-VariableFont.ttf')")
+  expect(editorWorkerInvoke).toHaveBeenCalledWith('Font.ensure', 'Fira Code', "url('/fonts/files/fira-code-latin-400-normal.woff2')")
 })
 
 test('loadContent - restores the editor worker state', async () => {
