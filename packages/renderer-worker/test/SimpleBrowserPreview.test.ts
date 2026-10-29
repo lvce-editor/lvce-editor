@@ -99,6 +99,7 @@ test('materializes HTTP URLs using the sandboxed iframe host without an Electron
   expect(ViewletManager.load).toHaveBeenCalledWith(
     expect.objectContaining({ id: 'ExtensionView', uri: `browser-iframe:///${encodeURIComponent(url)}`, parentUid: 7 }),
   )
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(1, 'Viewlet.loadModule', 'ExtensionView')
   await Preview.reload(tab)
   expect(Viewlet.executeViewletCommand).toHaveBeenCalledWith(tab.previewUid, 'reloadBrowserIframe')
 })

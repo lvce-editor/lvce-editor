@@ -31,6 +31,9 @@ export const materialize = async (state, tab) => {
     const tabs = parentInstance.state.tabs.with(tabIndex, { ...parentInstance.state.tabs[tabIndex], previewUid: uid })
     ViewletStates.setRenderedState(state.uid, { ...parentInstance.renderedState, tabs })
   }
+  // Functional event hosts otherwise start with an empty renderer factory.
+  // Their iframe command is supplied by this existing renderer module.
+  if (httpPreview) await RendererProcess.invoke('Viewlet.loadModule', ViewletModuleId.ExtensionView)
   const commands = await ViewletManager.load({
     type: 0,
     id: moduleId,
