@@ -16,11 +16,14 @@ test('getStaticContentSecurityPolicy restricts connections to same origin by def
   const policy = getStaticContentSecurityPolicy()
   expect(policy).toContain(`connect-src 'self'`)
   expect(policy).not.toMatch(broadConnectionSourceRegex)
+  expect(policy).toContain(`frame-src 'self' blob:;`)
 })
 
 test('getStaticContentSecurityPolicy allows external connections when requested', () => {
   const policy = getStaticContentSecurityPolicy({ allowExternalConnections: true })
   expect(policy).toContain(`connect-src 'self' https: wss:`)
+  expect(policy).toContain(`frame-src 'self' blob: https: http://127.0.0.1:* http://localhost:*;`)
+  expect(policy).toContain(`script-src 'self';`)
   expect(getStaticContentSecurityPolicy()).toContain(`connect-src 'self'`)
 })
 

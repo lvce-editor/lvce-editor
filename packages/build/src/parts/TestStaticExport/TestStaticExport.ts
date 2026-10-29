@@ -164,6 +164,10 @@ const main = async () => {
   const pagesChatIndexHtml = await ReadFile.readFile(join(pagesRoot, 'dist', 'chat', 'index.html'))
   assert.equal(pagesChatIndexHtml, pagesIndexHtml, 'prefixed chat route should use the same application shell as the root route')
   assert.ok(!pagesIndexHtml.includes('startupAppearance'))
+  assert.ok(
+    pagesIndexHtml.includes(`frame-src 'self' blob: https: http://127.0.0.1:* http://localhost:*;`),
+    'Pages export must permit remote HTTPS previews and local HTTP iframe navigation',
+  )
   const pagesExecutableScripts = pagesIndexHtml.match(/<script\b[^>]*>/g)?.filter((tag) => !tag.includes('type="application/json"')) || []
   assert.equal(pagesExecutableScripts.length, 1)
   assert.ok(pagesExecutableScripts[0].includes('rendererProcessMain.js'))
