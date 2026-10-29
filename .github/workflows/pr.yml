@@ -206,23 +206,13 @@ jobs:
         run: npm run test-static-export
       - name: Install Chromium for static export acceptance
         run: npx playwright install --with-deps chromium
-      - name: Resolve bundled remote account regression source
-        id: remoteAccountSource
-        if: matrix.os == 'ubuntu-24.04'
-        run: |
-          node --input-type=module - <<'JS'
-          import { readFile, appendFile } from 'node:fs/promises'
-          const entries = JSON.parse(await readFile('packages/build/src/parts/DownloadBuiltinExtensions/builtinExtensions.json', 'utf8'))
-          const entry = entries.find((item) => item.name === 'builtin.remote-server')
-          if (!entry || !/^v?\d+\.\d+\.\d+$/.test(entry.version)) throw new Error('Missing remote account extension version')
-          await appendFile(process.env.GITHUB_OUTPUT, `tag=v${entry.version.replace(/^v/, '')}\n`)
-          JS
-      - name: Checkout bundled remote account regressions
+      - name: Checkout remote account browser regressions
         if: matrix.os == 'ubuntu-24.04'
         uses: actions/checkout@v7
         with:
           repository: lvce-editor/remote-ssh
-          ref: ${{ steps.remoteAccountSource.outputs.tag }}
+          # Keep the browser runner's View > Terminal lookup compatible with the added top-level Terminal menu.
+          ref: 75e8c7d68000c7af5a35b823809af4b3c034eb70
           path: .tmp/remote-account-tests
       - name: Prepare bundled remote account regression
         if: matrix.os == 'ubuntu-24.04'
