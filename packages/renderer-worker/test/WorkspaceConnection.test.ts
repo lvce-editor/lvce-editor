@@ -7,7 +7,7 @@ interface MockWebSocket {
 }
 
 const create = jest.fn<(options: { readonly getUrl: () => Promise<string>; readonly type: string }) => Promise<MockWebSocket>>()
-const executeCommand = jest.fn<(command: string, type: string, params?: Record<string, string>) => Promise<unknown>>()
+const executeCommand = jest.fn<(command: string, type: string, params?: unknown) => Promise<unknown>>()
 const workspaceState = { workspaceUri: '' }
 
 jest.unstable_mockModule('../src/parts/WorkspaceState/WorkspaceState.js', () => ({ state: workspaceState }))
@@ -142,5 +142,11 @@ test('disposes the workspace-owned transports once when leaving the workspace', 
   await WorkspaceConnection.dispose()
   await WorkspaceConnection.dispose()
   expect(executeCommand).toHaveBeenCalledTimes(1)
-  expect(executeCommand).toHaveBeenCalledWith('remote-server.releaseWorkspace', 'remote-server://host/work')
+  expect(executeCommand).toHaveBeenCalledWith('remote-server.releaseWorkspace', 'remote-server://host/work', '')
+})
+
+test('disposes a workspace-owned connection while passing the destination URI', async () => {
+  WorkspaceConnection.set('remote-ssh://host/work', '', '', '', undefined, 'remote-ssh.disposeWorkspace')
+  await WorkspaceConnection.dispose('file:///tmp/local')
+  expect(executeCommand).toHaveBeenCalledWith('remote-ssh.disposeWorkspace', 'remote-ssh://host/work', 'file:///tmp/local')
 })
