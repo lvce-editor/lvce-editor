@@ -59,6 +59,18 @@ test('getOverrides - activity bar worker path', () => {
   }
 })
 
+test('getOverrides - auth process path', () => {
+  const originalArgv = process.argv
+  process.argv = [...originalArgv.slice(0, 2), '--auth-process=/tmp/auth process.js']
+  try {
+    expect(Preferences.getOverrides()).toEqual({
+      'develop.authProcessPath': '/tmp/auth process.js',
+    })
+  } finally {
+    process.argv = originalArgv
+  }
+})
+
 test('getOverrides - last CLI path wins and native process is configurable', () => {
   const originalArgv = process.argv
   process.argv = [

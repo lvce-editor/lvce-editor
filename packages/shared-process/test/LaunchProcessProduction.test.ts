@@ -16,10 +16,10 @@ const LaunchProcess = await import('../src/parts/LaunchProcess/LaunchProcess.js'
 const Preferences = await import('../src/parts/Preferences/Preferences.js')
 const nativePath = fileURLToPath(import.meta.url)
 const options = {
-  defaultPath: '/packaged/process.js',
+  defaultPath: '/packaged/auth-process.js',
   isElectron: false,
-  name: 'Process Explorer',
-  settingName: 'develop.processExplorerPath',
+  name: 'Auth Process',
+  settingName: 'develop.authProcessPath',
   targetRpcId: 123,
 }
 
@@ -28,21 +28,21 @@ afterEach(() => {
   jest.mocked(Preferences.getOverrides).mockReturnValue({})
 })
 
-test('packaged native process launch honors an existing explicit CLI path', async () => {
-  jest.mocked(Preferences.getOverrides).mockReturnValue({ 'develop.processExplorerPath': nativePath })
+test('packaged auth process launch honors an existing explicit CLI path', async () => {
+  jest.mocked(Preferences.getOverrides).mockReturnValue({ 'develop.authProcessPath': nativePath })
   await LaunchProcess.launchProcess(options)
   expect(IpcParent.create).toHaveBeenCalledWith(expect.objectContaining({ path: nativePath }))
   expect(Preferences.getAll).not.toHaveBeenCalled()
 })
 
-test('packaged native process launch retains its default without a CLI override', async () => {
+test('packaged auth process launch retains its default without a CLI override', async () => {
   await LaunchProcess.launchProcess(options)
   expect(IpcParent.create).toHaveBeenCalledWith(expect.objectContaining({ path: options.defaultPath }))
   expect(Preferences.getAll).not.toHaveBeenCalled()
 })
 
-test('packaged native process launch ignores a missing CLI path', async () => {
-  jest.mocked(Preferences.getOverrides).mockReturnValue({ 'develop.processExplorerPath': `${nativePath}/missing.js` })
+test('packaged auth process launch ignores a missing CLI path', async () => {
+  jest.mocked(Preferences.getOverrides).mockReturnValue({ 'develop.authProcessPath': `${nativePath}/missing.js` })
   await LaunchProcess.launchProcess(options)
   expect(IpcParent.create).toHaveBeenCalledWith(expect.objectContaining({ path: options.defaultPath }))
   expect(Preferences.getAll).not.toHaveBeenCalled()

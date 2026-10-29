@@ -53,6 +53,8 @@ export const getOverrides = (): any => {
       overrides['workbench.colorTheme'] = argv.slice('--theme='.length)
     } else if (argv.startsWith('--process-explorer=')) {
       overrides['develop.processExplorerPath'] = argv.slice('--process-explorer='.length)
+    } else if (argv.startsWith('--auth-process=')) {
+      overrides['develop.authProcessPath'] = argv.slice('--auth-process='.length)
     } else if (argv.startsWith('--process-explorer-worker=')) {
       overrides['develop.processExplorerWorkerPath'] = argv.slice('--process-explorer-worker='.length)
     } else if (argv.startsWith('--activity-bar-worker=')) {
