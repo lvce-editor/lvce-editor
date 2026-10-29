@@ -102,6 +102,10 @@ export const stat = (path) => {
   return FileSystemWorker.invoke('FileSystem.stat', /* path */ path)
 }
 
+export const getDirectoryVersion = (path) => {
+  return FileSystemWorker.invoke('FileSystem.getDirectoryVersion', toUri(path))
+}
+
 export const statWithMetadata = (path) => {
   path = toUri(path)
   return SharedProcess.invoke('FileSystem.statWithMetadata', /* path */ path)

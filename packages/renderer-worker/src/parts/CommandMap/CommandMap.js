@@ -262,6 +262,7 @@ export const commandMap = {
   'FileSystem.remove': lazy('FileSystem.remove'),
   'FileSystem.rename': lazy('FileSystem.rename'),
   'FileSystem.stat': lazy('FileSystem.stat'),
+  'FileSystem.getDirectoryVersion': lazy('FileSystem.getDirectoryVersion'),
   'FileSystem.statWithMetadata': lazy('FileSystem.statWithMetadata'),
   'FileSystem.writeBlob': lazy('FileSystem.writeBlob'),
   'FileSystem.writeFile': lazy('FileSystem.writeFile'),

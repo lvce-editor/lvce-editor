@@ -143,6 +143,12 @@ export const stat = async (uri) => {
   return fileSystem.stat(uri)
 }
 
+export const getDirectoryVersion = async (uri) => {
+  const protocol = GetProtocol.getProtocol(uri)
+  const fileSystem = await GetFileSystem.getFileSystem(protocol)
+  return typeof fileSystem.getDirectoryVersion === 'function' ? fileSystem.getDirectoryVersion(uri) : null
+}
+
 export const statWithMetadata = async (uri) => {
   const protocol = GetProtocol.getProtocol(uri)
   const fileSystem = await GetFileSystem.getFileSystem(protocol)
