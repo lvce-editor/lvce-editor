@@ -55,6 +55,8 @@ export const getOverrides = (): any => {
       overrides['develop.processExplorerPath'] = argv.slice('--process-explorer='.length)
     } else if (argv.startsWith('--process-explorer-worker=')) {
       overrides['develop.processExplorerWorkerPath'] = argv.slice('--process-explorer-worker='.length)
+    } else if (argv.startsWith('--hover-worker=')) {
+      overrides['develop.hoverWorkerPath'] = argv.slice('--hover-worker='.length)
     } else if (argv.startsWith('--activity-bar-worker=')) {
       overrides['develop.activityBarWorkerPath'] = argv.slice('--activity-bar-worker='.length)
     }

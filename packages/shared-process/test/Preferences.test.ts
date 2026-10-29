@@ -47,6 +47,18 @@ test('getOverrides - process explorer worker path', () => {
   }
 })
 
+test('getOverrides - hover worker path, last CLI flag wins', () => {
+  const originalArgv = process.argv
+  process.argv = [...originalArgv.slice(0, 2), '--hover-worker=/tmp/first.js', '--hover-worker=relative hover worker.js']
+  try {
+    expect(Preferences.getOverrides()).toEqual({
+      'develop.hoverWorkerPath': 'relative hover worker.js',
+    })
+  } finally {
+    process.argv = originalArgv
+  }
+})
+
 test('getOverrides - activity bar worker path', () => {
   const originalArgv = process.argv
   process.argv = [...originalArgv.slice(0, 2), '--activity-bar-worker=/tmp/activity bar.js']
@@ -72,6 +84,27 @@ test('getOverrides - last CLI path wins and native process is configurable', () 
       'develop.processExplorerPath': '/test/processExplorerMain.ts',
       'develop.processExplorerWorkerPath': 'relative worker.js',
     })
+  } finally {
+    process.argv = originalArgv
+  }
+})
+
+test('getAll - hover CLI path overrides settings and can be disabled', async () => {
+  const tmpDir = await getTmpDir()
+  const defaultSettingsPath = join(tmpDir, 'defaultSettings.json')
+  const userSettingsPath = join(tmpDir, 'settings.json')
+  await writeFile(defaultSettingsPath, JSON.stringify({ 'develop.hoverWorkerPath': 'default.js' }))
+  await writeFile(userSettingsPath, JSON.stringify({ 'develop.hoverWorkerPath': 'user.js' }))
+  // @ts-ignore
+  PlatformPaths.getDefaultSettingsPath.mockImplementation(() => defaultSettingsPath)
+  // @ts-ignore
+  PlatformPaths.getUserSettingsPath.mockImplementation(() => userSettingsPath)
+  const originalArgv = process.argv
+  process.argv = [...originalArgv.slice(0, 2), '--hover-worker=relative hover worker.js']
+  try {
+    expect((await Preferences.getAll())['develop.hoverWorkerPath']).toBe('relative hover worker.js')
+    process.argv.push('--disable-custom-worker-paths')
+    expect((await Preferences.getAll())['develop.hoverWorkerPath']).toBeUndefined()
   } finally {
     process.argv = originalArgv
   }

@@ -68,4 +68,6 @@ test('worker path options do not become workspace arguments', () => {
     '/workspace',
   )
   assert.equal(ArgvConfig.getWorkspaceArgument(['--process-explorer-worker=/worker.js']), '')
+  assert.equal(ArgvConfig.getWorkspaceArgument(['--hover-worker=relative hover worker.js', '/workspace']), '/workspace')
+  assert.equal(ArgvConfig.getWorkspaceArgument(['--hover-worker=/worker.js']), '')
 })
