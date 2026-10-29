@@ -39,7 +39,7 @@ export const getHeaders = ({
   if (absolutePath.endsWith('index.html')) {
     return GetHeadersDocument.getHeadersDocument({ mime, etag, isForElectronProduction, applicationName })
   }
-  if (mime === MimeType.FontTtf) {
+  if (mime === MimeType.FontTtf || mime === MimeType.FontWoff || mime === MimeType.FontWoff2) {
     // WebKit applies worker loading checks to FontFace requests from workers.
     // Keep font responses isolated and allow worker-src 'self' in the text measurement worker's CSP.
     return {

@@ -4,6 +4,9 @@ import * as CodiconsPath from '../CodiconsPath/CodiconsPath.ts'
 import { STATIC } from '../Static/Static.ts'
 import { root } from '../Root/Root.ts'
 
+const fontsourcePathCandidates = [join(root, 'packages', 'static-server', 'node_modules', '@fontsource', 'fira-code'), join(root, 'node_modules', '@fontsource', 'fira-code')]
+const fontsourcePath = fontsourcePathCandidates.find(existsSync) || fontsourcePathCandidates[0]
+
 const invalidIconsPath = join(STATIC, '__missing_vscode_icon__.svg')
 const invalidStaticPath = join(STATIC, '__invalid_path__')
 
@@ -53,6 +56,9 @@ export const getAbsolutePath = (pathName: string): string => {
   }
   if (pathName.startsWith('/packages')) {
     return getContainedPath(root, pathName)
+  }
+  if (pathName.startsWith('/fonts/')) {
+    return getContainedPath(fontsourcePath, pathName.slice('/fonts/'.length))
   }
   return getContainedPath(STATIC, pathName)
 }

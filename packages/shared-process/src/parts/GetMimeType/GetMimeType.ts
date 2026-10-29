@@ -53,6 +53,10 @@ export const getMimeType = (fileExtension: string): string => {
       return MimeType.ImageTiff
     case '.ttf':
       return MimeType.FontTtf
+    case '.woff':
+      return MimeType.FontWoff
+    case '.woff2':
+      return MimeType.FontWoff2
     case '.wav':
       return MimeType.AudioWav
     case '.webm':

@@ -91,6 +91,7 @@ try {
     socket.addEventListener('error', reject, { once: true })
   })
   const responses = []
+  const failedRequests = []
   socket.addEventListener('message', (event) => {
     const message = JSON.parse(event.data)
     if (message.id) {
@@ -100,13 +101,15 @@ try {
       else request?.resolve(message.result)
     } else if (message.method === 'Network.responseReceived') {
       responses.push(message.params.response)
+    } else if (message.method === 'Network.loadingFailed') {
+      failedRequests.push(message.params)
     }
   })
   await send('Network.enable')
   while (Date.now() < deadline) {
     if (
       await evaluate(`Boolean(document.querySelector('.Editor')?.textContent.includes('acceptance') && Array.from(document.styleSheets).some(sheet => {
-      try { return Array.from(sheet.cssRules).some(rule => rule.cssText.includes('lvce-oss-font://-/fonts/FiraCode-VariableFont.ttf')) } catch { return false }
+      try { return Array.from(sheet.cssRules).some(rule => rule.cssText.includes('/fonts/files/fira-code-latin-400-normal.woff2')) } catch { return false }
     }))`)
     )
       break
@@ -120,24 +123,20 @@ try {
   )
   assert.equal(
     await evaluate(`Array.from(document.styleSheets).some(sheet => {
-    try { return Array.from(sheet.cssRules).some(rule => rule.cssText.includes('lvce-oss-font://-/fonts/FiraCode-VariableFont.ttf')) } catch { return false }
+    try { return Array.from(sheet.cssRules).some(rule => rule.cssText.includes('/fonts/files/fira-code-latin-400-normal.woff2')) } catch { return false }
   })`),
     true,
     'Packaged CSS must reference the native directory source directly',
   )
   assert.equal(await evaluate('crossOriginIsolated'), true)
-  const fonts = await evaluate(`document.fonts.load('14px "Fira Code"', 'font acceptance').then(fonts => fonts.map(font => font.status))`)
-  assert.ok(fonts.length > 0 && fonts.every((status) => status === 'loaded'), 'Packaged CSS must load its declared native font')
-  const loaded = await evaluate(
-    `new FontFace('NativeAcceptance', 'url(lvce-oss-font://-/fonts/FiraCode-VariableFont.ttf?acceptance)').load().then(font => font.status)`,
-  )
-  assert.equal(loaded, 'loaded')
+  const fonts = await evaluate(`document.fonts.load('14px "Fira Code"', 'font acceptance').then(fonts => fonts.map(font => font.status), error => ({ error: error.message }))`)
+  assert.ok(fonts.length > 0 && fonts.every((status) => status === 'loaded'), `Packaged CSS must load its declared native font: ${JSON.stringify({ fonts, responses, failedRequests })}`)
   assert.ok(
-    responses.some((response) => response.url.endsWith('?acceptance') && response.status === 200 && response.mimeType === 'font/ttf'),
-    'Native directory source must return the font with the correct MIME type',
+    responses.some((response) => response.url.endsWith('.woff2') && response.status === 200 && response.mimeType === 'font/woff2'),
+    'The bundled application route must return the font with the correct MIME type',
   )
   // Packaged default-src blocks fetches, while font-src permits self.
-  // Use a font request to observe the legacy handler's actual 404 response.
+  // Use a font request to observe the app handler's actual 404 response.
   assert.equal(
     await evaluate(`new FontFace('MissingAcceptance', 'url(lvce-oss://-/missing-native-font.ttf)').load().then(() => 'loaded', () => 'rejected')`),
     'rejected',
@@ -152,7 +151,7 @@ try {
     'Packaged connect-src must retain its restriction on application-scheme fetches',
   )
   assert.equal(await evaluate('crossOriginIsolated'), true)
-  console.log('Packaged editor startup, native CSS font loading, MIME, isolation, and missing-resource acceptance passed.')
+  console.log('Packaged editor startup, CSS font loading, MIME, isolation, and missing-resource acceptance passed.')
 } finally {
   socket?.close()
   for (const { reject } of pending.values()) reject(new Error('Packaged font test ended'))
