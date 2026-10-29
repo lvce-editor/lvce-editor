@@ -3,8 +3,10 @@ import { mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises'
 import { createServer } from 'node:https'
 import { tmpdir } from 'node:os'
 import { join, resolve } from 'node:path'
-import { _electron, expect } from '@playwright/test'
+import { _electron, expect as baseExpect } from '@playwright/test'
 import electronPath from 'electron'
+
+const expect = baseExpect.configure({ timeout: 30_000 })
 
 const root = resolve('.')
 const profile = await mkdtemp(join(tmpdir(), 'lvce-auth-lifecycle-'))
@@ -28,7 +30,7 @@ const server = createServer(
       let body = ''
       for await (const chunk of request) body += chunk
       exchanges.push(Object.fromEntries(new URLSearchParams(body)))
-      if (exchanges.length === 3) {
+      if (exchanges.length === 4) {
         response.statusCode = 400
         response.end(JSON.stringify({ error: 'invalid_grant' }))
         return
@@ -82,7 +84,14 @@ const startLogin = (page) =>
     await renderer.ready
     globalThis.authLifecycleLogin = renderer.executeCommand('Layout.signIn')
     // Observe failures immediately, while assertions wait for the mock browser URL.
-    globalThis.authLifecycleLogin.catch(() => {})
+    globalThis.authLifecycleLogin.then(
+      (result) => {
+        globalThis.authLifecycleResult = result
+      },
+      (error) => {
+        globalThis.authLifecycleError = String(error)
+      },
+    )
   })
 let app
 const urls = () => app.evaluate(() => globalThis.authLifecycleUrls)
@@ -99,7 +108,8 @@ const observe = async (page) => {
   await expect(page.locator('.Main')).toBeVisible({ timeout: 90_000 })
 }
 const complete = async (index) => {
-  const login = new URL((await urls())[index])
+  const opened = new URL((await urls())[index])
+  const login = opened.searchParams.has('returnTo') ? new URL(opened.searchParams.get('returnTo')) : opened
   assert.equal(login.searchParams.get('client_id'), 'lvce-editor-native')
   assert.ok(login.searchParams.get('code_challenge'))
   const callback = new URL(login.searchParams.get('redirect_uri'))
@@ -120,6 +130,7 @@ try {
     env,
     timeout: 90_000,
   })
+  for (const stream of [app.process().stdout, app.process().stderr]) stream?.on('data', (data) => diagnostics.push(data.toString()))
   assert.equal(await app.evaluate(() => process.env.XDG_CONFIG_HOME), env.XDG_CONFIG_HOME)
   await app.evaluate(({ shell }) => {
     globalThis.authLifecycleUrls = []
@@ -132,38 +143,47 @@ try {
   await execute(first, 'Main.openInput', { editorInput: { type: 'process-explorer' }, focus: true })
   await expect(first.locator('.ProcessExplorer')).toBeVisible()
   await expect.poll(authPids).toEqual([])
+  // A complete single-client cycle is also the regression baseline for retained processes.
+  await startLogin(first)
+  await expect.poll(async () => (await urls()).length).toBe(1)
+  await complete(0)
+  await first.evaluate(() => globalThis.authLifecycleLogin)
+  assert.equal((await execute(first, 'Layout.getUserInfo')).userState, 'loggedIn')
+  await expect.poll(authPids).toEqual([])
   const newWindow = app.waitForEvent('window', { timeout: 90_000 })
-  await execute(first, 'Main.newWindow')
+  newWindow.catch(() => {})
+  await execute(first, 'Window.openNew')
   const second = await newWindow
   await observe(second)
   await startLogin(first)
-  await expect.poll(async () => (await urls()).length).toBe(1)
+  await expect.poll(async () => (await urls()).length).toBe(2)
   await expect.poll(async () => (await authPids()).length).toBe(1)
   const [originalPid] = await authPids()
   await startLogin(second)
-  await expect.poll(async () => (await urls()).length).toBe(2)
+  await expect.poll(async () => (await urls()).length).toBe(3)
   assert.deepEqual(await authPids(), [originalPid])
-  await complete(0)
-  await first.evaluate(() => globalThis.authLifecycleLogin)
-  assert.equal((await execute(first, 'Layout.getAuthState')).signInState, 'loggedIn')
-  assert.deepEqual(await authPids(), [originalPid], 'Completing one client must retain the other client’s process')
   await complete(1)
+  await first.evaluate(() => globalThis.authLifecycleLogin)
+  assert.equal((await execute(first, 'Layout.getUserInfo')).userState, 'loggedIn')
+  assert.deepEqual(await authPids(), [originalPid], 'Completing one client must retain the other client’s process')
+  await complete(2)
   await second.evaluate(() => globalThis.authLifecycleLogin)
   await expect.poll(authPids).toEqual([])
   await expect(first.locator('.ProcessExplorer')).not.toContainText(/auth[- ]process/i)
   await startLogin(second)
-  await expect.poll(async () => (await urls()).length).toBe(3)
+  await expect.poll(async () => (await urls()).length).toBe(4)
   const [replacementPid] = await authPids()
   assert.ok(replacementPid)
   assert.notEqual(replacementPid, originalPid)
-  await complete(2)
+  await complete(3)
   await second.evaluate(() => globalThis.authLifecycleLogin)
+  assert.ok((await execute(second, 'Layout.getUserInfo')).authErrorMessage, 'A rejected token exchange must report the auth failure')
   await expect.poll(authPids).toEqual([])
   await startLogin(second)
-  await expect.poll(async () => (await urls()).length).toBe(4)
+  await expect.poll(async () => (await urls()).length).toBe(5)
   await second.close()
   await expect.poll(authPids).toEqual([])
-  assert.equal(exchanges.length, 3)
+  assert.equal(exchanges.length, 4)
   assert.ok(exchanges.every((exchange) => exchange.code_verifier && exchange.client_id === 'lvce-editor-native'))
   if (evidence) {
     await mkdir(evidence, { recursive: true })
@@ -173,6 +193,17 @@ try {
       JSON.stringify({ originalPid, replacementPid, exchanges: exchanges.length, passed: true }, null, 2),
     )
   }
+} catch (error) {
+  diagnostics.push(String(error))
+  if (app && evidence) {
+    await mkdir(evidence, { recursive: true })
+    for (const [index, page] of app.windows().entries()) {
+      await page.screenshot({ path: join(evidence, `failure-${index}.png`) }).catch(() => {})
+      diagnostics.push(await execute(page, 'Layout.getUserInfo').catch(String))
+      diagnostics.push(await page.evaluate(() => ({ result: globalThis.authLifecycleResult, error: globalThis.authLifecycleError })).catch(String))
+    }
+  }
+  throw error
 } finally {
   if (app) await app.close()
   await new Promise((resolve) => server.close(resolve))
