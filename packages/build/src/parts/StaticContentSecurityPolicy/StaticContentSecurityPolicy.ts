@@ -9,5 +9,5 @@ export const staticContentSecurityPolicy = GetContentSecurityPolicy.getContentSe
   `media-src 'self' blob:`,
   `script-src 'self'`,
   `style-src 'self' 'unsafe-inline'`,
-  `frame-src 'self' blob:`,
+  `frame-src 'self' blob: https: http://127.0.0.1:* http://localhost:*`,
 ])

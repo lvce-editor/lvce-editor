@@ -32,6 +32,7 @@ export const create = (id, cwd = '') => {
     separateConnection: true,
     setBounds: false,
     uid: id,
+    workspaceUri: Workspace.state.workspaceUri || '',
     xtermMounted: false,
   }
 }
@@ -98,6 +99,13 @@ export const handleLink = async (state, uri) => {
   Assert.string(uri)
   if (!URL.canParse(uri) || !/^https?:\/\//i.test(uri)) {
     return state
+  }
+  const workspaceUri = state.workspaceUri || (state.cwd?.startsWith('remote-server://') ? state.cwd : Workspace.state.workspaceUri)
+  const target = new URL(uri)
+  if (workspaceUri?.startsWith('remote-server://') && ['localhost', '127.0.0.1', '[::1]'].includes(target.hostname)) {
+    const resolved = await ExtensionHostCommands.executeCommand('remote-server.resolveHttpPreview', workspaceUri, uri)
+    Assert.string(resolved)
+    uri = resolved
   }
   await Command.execute('Layout.showPreview', 'simple-browser://')
   const { previewId } = ViewletStates.getState(ViewletModuleId.Layout)

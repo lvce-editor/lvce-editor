@@ -13,6 +13,7 @@ export interface ViewletExtensionViewState {
   readonly focusSelector: string
   readonly height: number
   readonly iframeSandbox: readonly string[]
+  readonly iframeReloadVersion?: number
   readonly iframeSrc: string
   readonly kind: string
   readonly modified?: boolean

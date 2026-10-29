@@ -525,3 +525,24 @@ test('dirty changes are scoped to the owning application', async () => {
   await ViewletExtensionView.afterRender(state, { ...state, modified: true })
   expect(Command.execute).toHaveBeenCalledWith('Application.execute', 'app-2', 'Main.handleModifiedStatusChange', state.uri, true)
 })
+
+test('browser iframe host preserves HTTP URL and renders a sandboxed frame', async () => {
+  const url = 'https://remote.example.com/preview/grant/nested?q=1#part'
+  const state = { ...createState(), kind: '', uri: `browser-iframe:///${encodeURIComponent(url)}` }
+  const loaded = await ViewletExtensionView.loadContent(state, undefined)
+  expect(loaded).toMatchObject({
+    kind: 'iframe',
+    iframeSrc: url,
+    credentialless: true,
+    iframeSandbox: ['allow-scripts', 'allow-forms', 'allow-same-origin'],
+  })
+  const command = ViewletExtensionViewRender.render[0].apply(state, loaded)
+  expect(command).toEqual(['setIframe', url, loaded.iframeSandbox, '', '', true, 'remote.example.com'])
+  expect(ExtensionManagementWorker.invoke).not.toHaveBeenCalled()
+})
+
+test('browser iframe rejects executable URLs', async () => {
+  await expect(ViewletExtensionView.loadContent({ ...createState(), uri: 'browser-iframe:///javascript%3Aalert(1)' }, undefined)).rejects.toThrow(
+    'Invalid browser iframe URL',
+  )
+})

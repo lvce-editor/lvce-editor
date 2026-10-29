@@ -1,3 +1,5 @@
+import * as Platform from '../Platform/Platform.js'
+import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as SimpleBrowserWorker from '../SimpleBrowserWorker/SimpleBrowserWorker.js'
 import * as HtmlPreviewUrl from '../HtmlPreviewUrl/HtmlPreviewUrl.js'
 import * as ExtensionViewUrl from '../ExtensionViewUrl/ExtensionViewUrl.js'
@@ -83,6 +85,7 @@ const browserTabKeyBindings = [
   openHistoryKeyBinding,
 ]
 const visibleBrowserUids = new Set()
+const useIframe = () => [PlatformType.Web, PlatformType.Remote].includes(Platform.getPlatform())
 
 const getFallThroughKeyBindings = () => {
   const keyBindings = KeyBindingsState.getKeyBindings()
@@ -133,7 +136,10 @@ const createTab = ({
 
 const isHistoryUrl = (url) => typeof url === 'string' && url.startsWith(simpleBrowserHistoryUrl)
 
-const isPreviewTab = (tab) => HtmlPreviewUrl.isHtmlPreviewUrl(tab?.iframeSrc) || ExtensionViewUrl.isExtensionViewUrl(tab?.iframeSrc)
+const isPreviewTab = (tab) =>
+  (useIframe() && /^https?:\/\//i.test(tab?.iframeSrc)) ||
+  HtmlPreviewUrl.isHtmlPreviewUrl(tab?.iframeSrc) ||
+  ExtensionViewUrl.isExtensionViewUrl(tab?.iframeSrc)
 const isSpecialTab = (tab) => isHistoryTab(tab) || isPreviewTab(tab)
 const createPreviewTab = (url) => createTab({ iframeSrc: url, inputValue: url, title: 'HTML Preview' })
 const createExtensionViewTab = async (url) => {
@@ -298,6 +304,7 @@ const getUrlFromSavedState = (savedState) => {
 }
 
 export const backgroundLoadContent = async (state, savedState) => {
+  if (useIframe()) return loadContentFully(state, savedState)
   // TODO duplicate code with loadContent
   const { x, y, width, height } = state
   const iframeSrc = getUrlFromSavedState(savedState)
@@ -369,6 +376,32 @@ const loadContentFully = async (state, savedState) => {
   const shortcuts = SimpleBrowserPreferences.getShortCuts()
   const fallThroughKeyBindings = getFallThroughKeyBindings()
 
+  if (useIframe() && !isHistoryUrl(uri) && !HtmlPreviewUrl.isHtmlPreviewUrl(uri) && !ExtensionViewUrl.isExtensionViewUrl(uri)) {
+    const restoredTabs = savedTabs.length ? savedTabs : [createTab({ iframeSrc, inputValue: iframeSrc })]
+    const tabs = tabsEnabled ? restoredTabs : [restoredTabs[savedSelectedTabIndex]]
+    const selectedTabIndex = tabsEnabled ? savedSelectedTabIndex : 0
+    if (isPreviewTab(tabs[selectedTabIndex]))
+      tabs[selectedTabIndex] = await SimpleBrowserPreview.materialize({ ...state, headerHeight }, tabs[selectedTabIndex])
+    return activateTab(
+      {
+        ...state,
+        audioIndicatorEnabled,
+        suggestionsEnabled,
+        tabsEnabled,
+        tabHoverEnabled,
+        unloadTabs,
+        headerHeight,
+        searchHistory,
+        visitedSites,
+        history,
+        shortcuts,
+        isLoading: false,
+      },
+      tabs,
+      selectedTabIndex,
+    )
+  }
+
   // A transfer destination starts empty; the existing tab retains its native view.
   if (uri === 'simple-browser://transfer') {
     return {
@@ -386,7 +419,8 @@ const loadContentFully = async (state, savedState) => {
     }
   }
 
-  const specialTabRequested = isHistoryUrl(uri) || HtmlPreviewUrl.isHtmlPreviewUrl(uri) || ExtensionViewUrl.isExtensionViewUrl(uri) || isSpecialTab(savedSelectedTab)
+  const specialTabRequested =
+    isHistoryUrl(uri) || HtmlPreviewUrl.isHtmlPreviewUrl(uri) || ExtensionViewUrl.isExtensionViewUrl(uri) || isSpecialTab(savedSelectedTab)
   if (specialTabRequested) {
     const restoredTabs =
       savedSelectedTab && isSpecialTab(savedSelectedTab)
@@ -673,7 +707,7 @@ export const createNewTab = async (state, focusAddress = true, requiresNativeVie
   if (!focusAddress) {
     return newState
   }
-  await ElectronWindow.focus()
+  if (!useIframe()) await ElectronWindow.focus()
   return { ...newState, focusAddressVersion: newState.focusAddressVersion + 1 }
 }
 
@@ -759,12 +793,19 @@ export const openOrRevealTab = async (state, url) => {
 export const openTab = async (state, url, disposition) => {
   const { hasSuggestionsOverlay } = state
   const currentState = hasSuggestionsOverlay ? await closeSuggestions(state) : state
-  if (isHistoryUrl(url) || HtmlPreviewUrl.isHtmlPreviewUrl(url) || ExtensionViewUrl.isExtensionViewUrl(url)) {
+  if (
+    isHistoryUrl(url) ||
+    HtmlPreviewUrl.isHtmlPreviewUrl(url) ||
+    ExtensionViewUrl.isExtensionViewUrl(url) ||
+    (useIframe() && /^https?:\/\//i.test(url))
+  ) {
     const tab = HtmlPreviewUrl.isHtmlPreviewUrl(url)
       ? createPreviewTab(url)
       : ExtensionViewUrl.isExtensionViewUrl(url)
         ? await createExtensionViewTab(url)
-        : createHistoryTab()
+        : isHistoryUrl(url)
+          ? createHistoryTab()
+          : createTab({ iframeSrc: url, inputValue: url, title: new URL(url).host })
     const tabs = [...currentState.tabs, tab]
     if (disposition === 'background-tab') {
       return { ...currentState, tabs }
@@ -1110,9 +1151,9 @@ export const afterRender = async (oldState, newState) => {
     const palette = ViewletStates.getInstance(ViewletModuleId.QuickPick, applicationId)
     if (!QuickPickOpening.isOpening(applicationId) && !palette && FocusState.get() !== WhenExpression.FocusQuickPickInput) {
       if (newState.fullWidthAddressSelection || !newState.iframeSrc) {
-        await ElectronWindow.focus()
+        if (!useIframe()) await ElectronWindow.focus()
         await RendererProcess.invoke('Window.focusBrowserAddress', newState.uid, newState.fullWidthAddressSelection)
-      } else {
+      } else if (newState.browserViewId) {
         await ElectronWebContentsViewFunctions.focus(newState.browserViewId)
       }
     }
@@ -1460,7 +1501,8 @@ const navigate = async (state, value) => {
   if (openCookieImportView(value)) {
     return state
   }
-  const iframeSrc = HtmlPreviewUrl.isHtmlPreviewUrl(value) || ExtensionViewUrl.isExtensionViewUrl(value) ? value : IframeSrc.toIframeSrc(value, state.shortcuts)
+  const iframeSrc =
+    HtmlPreviewUrl.isHtmlPreviewUrl(value) || ExtensionViewUrl.isExtensionViewUrl(value) ? value : IframeSrc.toIframeSrc(value, state.shortcuts)
   if (HtmlPreviewUrl.isHtmlPreviewUrl(iframeSrc) || ExtensionViewUrl.isExtensionViewUrl(iframeSrc)) {
     return openTab(state, iframeSrc, 'foreground-tab')
   }
@@ -1468,6 +1510,16 @@ const navigate = async (state, value) => {
     return openTab(state, simpleBrowserHistoryUrl, 'foreground-tab')
   }
   const selectedTab = state.tabs[state.selectedTabIndex]
+  if (useIframe()) {
+    if (!/^https?:\/\//i.test(iframeSrc)) throw new Error('Browser previews require an HTTP URL')
+    await SimpleBrowserPreview.dispose(selectedTab)
+    const tab = createTab({ iframeSrc, inputValue: value, title: new URL(iframeSrc).host })
+    return switchToTab(
+      { ...state, addressValueVersion: state.addressValueVersion + 1 },
+      state.tabs.with(state.selectedTabIndex, tab),
+      state.selectedTabIndex,
+    )
+  }
   if (isSpecialTab(selectedTab)) {
     await SimpleBrowserPreview.dispose(selectedTab)
     const tab = await createUnloadedTab(state)
@@ -1783,7 +1835,7 @@ export const toggleFullWidth = (state) => {
 
 export const focusAddress = async (state) => {
   BrowserSuggestionRequests.cancel(state.uid)
-  await ElectronWindow.focus()
+  if (!useIframe()) await ElectronWindow.focus()
   await RendererProcess.invoke('Window.focusBrowserAddress', state.uid)
   Focus.setFocus(WhenExpression.FocusSimpleBrowserInput, undefined, state.uid, ViewletModuleId.SimpleBrowser)
   return state
