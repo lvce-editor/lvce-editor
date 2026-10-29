@@ -29,7 +29,7 @@ const validateWebSocketUrl = (value, name) => {
 
 /** @param {TerminalSpawnOptions} [terminalSpawnOptions] */
 export const set = (workspaceUri, command, remoteCliUrl = '', webSocketUrl = '', terminalSpawnOptions = undefined, disposeCommand = '') => {
-  if (typeof workspaceUri !== 'string' || typeof command !== 'string' || !command) {
+  if (typeof workspaceUri !== 'string' || typeof command !== 'string' || (!command && !disposeCommand)) {
     throw new TypeError('Invalid workspace connection')
   }
   validateWebSocketUrl(remoteCliUrl, 'Remote CLI URL')
@@ -61,10 +61,10 @@ export const reset = () => {
   state.terminalSpawnOptions = undefined
 }
 
-export const dispose = async () => {
+export const dispose = async (nextWorkspaceUri = '') => {
   const { disposeCommand, workspaceUri } = state
   reset()
-  if (disposeCommand) await ExtensionHostCommands.executeCommand(disposeCommand, workspaceUri)
+  if (disposeCommand) await ExtensionHostCommands.executeCommand(disposeCommand, workspaceUri, nextWorkspaceUri)
 }
 
 export const isActive = () => Boolean(state.command && WorkspaceState.state.workspaceUri === state.workspaceUri)
