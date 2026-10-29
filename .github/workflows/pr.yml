@@ -163,6 +163,31 @@ jobs:
           name: electron-tab-move-${{ matrix.os }}
           path: .tmp/electron-tab-move-evidence
           if-no-files-found: warn
+      - name: Checkout owned editor paint hold regression
+        uses: actions/checkout@v7
+        with:
+          repository: lvce-editor/main-area-worker
+          ref: f5aed2bbd92c416a637571889243d5c202961887
+          path: .tmp/editor-paint-hold-tests
+      - name: Test editor paint holding with the published worker (Linux)
+        if: runner.os == 'Linux'
+        run: xvfb-run -a node .tmp/editor-paint-hold-tests/packages/e2e-integration/scripts/test-restored-file-opening.mjs .
+        env:
+          LVCE_RESTORE_USE_PUBLISHED_WORKER: '1'
+          LVCE_RESTORE_EVIDENCE_DIR: .tmp/editor-paint-hold-evidence
+      - name: Test editor paint holding with the published worker
+        if: runner.os != 'Linux'
+        run: node .tmp/editor-paint-hold-tests/packages/e2e-integration/scripts/test-restored-file-opening.mjs .
+        env:
+          LVCE_RESTORE_USE_PUBLISHED_WORKER: '1'
+          LVCE_RESTORE_EVIDENCE_DIR: .tmp/editor-paint-hold-evidence
+      - name: Upload editor paint hold evidence
+        uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: editor-paint-hold-${{ matrix.os }}
+          path: .tmp/editor-paint-hold-evidence
+          if-no-files-found: warn
       - name: Test renderer layout blur dispatch
         if: matrix.os == 'ubuntu-24.04'
         run: node --experimental-vm-modules node_modules/jest/bin/jest.js --config packages/renderer-worker/package.json --runInBand --coverage=false --testPathPatterns=ViewletLayoutBlur.test
