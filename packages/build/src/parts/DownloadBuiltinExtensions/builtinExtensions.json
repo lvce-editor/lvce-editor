@@ -122,16 +122,16 @@
   {
     "name": "builtin.remote-server",
     "repository": "github.com/lvce-editor/remote-ssh",
-    "version": "0.26.0",
-    "assetName": "remote-server-v0.26.0.tar.br",
-    "sha256": "8a39eedc8f1328d69b75cbbf8f22a66a8e5e18a882b329135cd31cbb3a16c4e8",
+    "version": "0.27.0",
+    "assetName": "remote-server-v0.27.0.tar.br",
+    "sha256": "3c4ae51ee52a58a3bda15a4a972aaba121d3b6419ff84ed2cb3cec07f2d11b45",
     "created": "2026-10-28"
   },
   {
     "name": "builtin.remote-ssh",
     "repository": "github.com/lvce-editor/remote-ssh",
-    "version": "0.26.0",
-    "sha256": "aaec438e648de4158e355472bf5faf5ed3199bd6dc72c0dc0e77cdeea4086c7e",
+    "version": "0.27.0",
+    "sha256": "2672939af4df843d0a5a1577626f0c297d2049cfb4e397bf70b85f15f66b6fcc",
     "created": "2026-10-28"
   },
   {
