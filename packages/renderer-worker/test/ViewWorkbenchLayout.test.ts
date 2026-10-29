@@ -79,6 +79,8 @@ test('ignores detached, disabled, unchanged and omitted layout requests', async 
 
 test('does not re-enter AI-native layout when the owning chat rerenders after exiting it', async () => {
   const view = { ...ViewletExtensionView.create(4, 'sample', 0, 0, 240, 500), workbenchLayout: 'ai-native' as const }
+  const previousView = { ...view, workbenchLayout: 'ai-native' as const }
+  ViewletStates.set(4, { moduleId: 'ExtensionView', factory: {}, state: previousView, renderedState: previousView })
   const state = setup(false)
   ViewletStates.set(1, {
     moduleId: 'Layout',
@@ -89,4 +91,25 @@ test('does not re-enter AI-native layout when the owning chat rerenders after ex
 
   expect(await ViewWorkbenchLayout.prepare(view)).toEqual([])
   expect(ViewletLayout.enterSideBarFocusMode).not.toHaveBeenCalled()
+})
+
+test('allows a new AI-native request after exiting the layout', async () => {
+  const previousView = { ...ViewletExtensionView.create(4, 'sample', 0, 0, 240, 500), workbenchLayout: 'ide' as const }
+  const view = { ...previousView, workbenchLayout: 'ai-native' as const }
+  ViewletStates.set(4, { moduleId: 'ExtensionView', factory: {}, state: previousView, renderedState: previousView })
+  const state = setup(false)
+  const exitedState = { ...state, aiNativeLayoutExited: true }
+  ViewletStates.set(1, {
+    moduleId: 'Layout',
+    factory: {},
+    state: exitedState,
+    renderedState: exitedState,
+  })
+  const newState = { ...exitedState, aiNativeLayout: true, aiNativeLayoutExited: false }
+  jest.mocked(ViewletLayout.enterSideBarFocusMode).mockResolvedValue({ newState, commands: [['Viewlet.setBounds', 4, 0, 0, 1000, 700]] } as never)
+
+  await ViewWorkbenchLayout.prepare(view)
+
+  expect(ViewletLayout.enterSideBarFocusMode).toHaveBeenCalledWith(exitedState, 'primary', true)
+  expect(ViewletStates.getInstance(1).state).toEqual(newState)
 })

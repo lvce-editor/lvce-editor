@@ -15,6 +15,8 @@ export const prepare = async (view: ViewletExtensionViewState): Promise<readonly
     return []
   }
   const state = layout.state as LayoutState
+  const previousView = ViewletStates.getInstance(view.uid)
+  const sameLayoutRequest = previousView?.state.workbenchLayout === view.workbenchLayout
   const primary = ViewletStates.getInstance(state.sideBarId)
   const secondary = ViewletStates.getInstance(state.secondarySideBarId)
   const target = primary?.state.childUid === view.uid ? 'primary' : secondary?.state.childUid === view.uid ? 'secondary' : undefined
@@ -22,7 +24,11 @@ export const prepare = async (view: ViewletExtensionViewState): Promise<readonly
     return []
   }
   const enabled = view.workbenchLayout === 'ai-native'
-  if (enabled === state.aiNativeLayout || (enabled && state.aiNativeLayoutExited) || (!enabled && state.sideBarFocusModeTarget !== target)) {
+  if (
+    enabled === state.aiNativeLayout ||
+    (enabled && state.aiNativeLayoutExited && sameLayoutRequest) ||
+    (!enabled && state.sideBarFocusModeTarget !== target)
+  ) {
     return []
   }
   const result = enabled ? await ViewletLayout.enterSideBarFocusMode(state, target, true) : await ViewletLayout.leaveSideBarFocusMode(state)
