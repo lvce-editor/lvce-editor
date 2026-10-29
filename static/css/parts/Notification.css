@@ -1,13 +1,14 @@
-/* #Notifications {
-  width: 100%;
-  height: 100%;
-} */
+:root:has(.AiNativeLayout) {
+  --NotificationBackground: #ffffff;
+  --NotificationForeground: #202124;
+  --NotificationBoxShadow: 0 2px 8px rgb(60 64 67 / 30%);
+  --NotificationOptionBackground: #e8eaed;
+  --NotificationOptionForeground: #202124;
+}
 
 .Notification {
-  color: white;
-  background: red;
+  color: var(--NotificationForeground, white);
   z-index: 999;
-  background: black;
   pointer-events: all;
   position: fixed;
   right: 30px;
@@ -18,8 +19,8 @@
   display: flex;
   flex-direction: column;
   padding: 10px 5px;
-  background: rgb(40, 46, 47);
-  box-shadow: rgb(0 0 0 / 36%) 0px 0px 8px 2px;
+  background: var(--NotificationBackground, rgb(40 46 47));
+  box-shadow: var(--NotificationBoxShadow, rgb(0 0 0 / 36%) 0px 0px 8px 2px);
 }
 
 .Widgets > .Notification {
@@ -45,8 +46,8 @@
 }
 
 .NotificationOption {
-  color: rgb(255, 255, 255);
-  background-color: rgb(47, 98, 96);
+  color: var(--NotificationOptionForeground, rgb(255 255 255));
+  background-color: var(--NotificationOptionBackground, rgb(47 98 96));
   width: fit-content;
   width: -moz-fit-content;
   padding: 5px 10px;
