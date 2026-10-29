@@ -244,6 +244,7 @@ jobs:
           PLAYWRIGHT_BROWSERS_PATH: 0
           LVCE_REMOTE_WEB_FRONTEND_DIR: ${{ github.workspace }}/.tmp/remote-account-frontend
           LVCE_REMOTE_WEB_PATH_PREFIX: /lvce-editor
+          LVCE_REMOTE_WEB_TERMINAL_PREVIEW: '1'
       - name: Verify exported main-area regression pages
         shell: bash
         run: |
