@@ -95,13 +95,33 @@ const startLogin = (page) =>
   })
 let app
 const urls = () => app.evaluate(() => globalThis.authLifecycleUrls)
-const authPids = () =>
-  app.evaluate(({ app }) =>
+const knownAuthPids = new Set()
+const authPids = async () => {
+  const pids = await app.evaluate(({ app }) =>
     app
       .getAppMetrics()
       .filter((item) => /auth[- ]process/i.test(item.name || item.serviceName || ''))
       .map((item) => item.pid),
   )
+  for (const pid of pids) knownAuthPids.add(pid)
+  return pids
+}
+const expectIdle = async () => {
+  await expect.poll(authPids).toEqual([])
+  // Names can disappear before Electron finishes reaping a utility process.
+  await expect
+    .poll(() =>
+      app.evaluate(
+        ({ app }, pids) =>
+          app
+            .getAppMetrics()
+            .filter((item) => pids.includes(item.pid))
+            .map((item) => item.pid),
+        [...knownAuthPids],
+      ),
+    )
+    .toEqual([])
+}
 const observe = async (page) => {
   page.on('console', (message) => diagnostics.push(message.text()))
   page.on('pageerror', (error) => diagnostics.push(String(error)))
@@ -142,14 +162,15 @@ try {
   await observe(first)
   await execute(first, 'Main.openInput', { editorInput: { type: 'process-explorer' }, focus: true })
   await expect(first.locator('.ProcessExplorer')).toBeVisible()
-  await expect.poll(authPids).toEqual([])
+  await expectIdle()
   // A complete single-client cycle is also the regression baseline for retained processes.
   await startLogin(first)
   await expect.poll(async () => (await urls()).length).toBe(1)
+  await expect.poll(async () => (await authPids()).length).toBe(1)
   await complete(0)
   await first.evaluate(() => globalThis.authLifecycleLogin)
   assert.equal((await execute(first, 'Layout.getUserInfo')).userState, 'loggedIn')
-  await expect.poll(authPids).toEqual([])
+  await expectIdle()
   const newWindow = app.waitForEvent('window', { timeout: 90_000 })
   newWindow.catch(() => {})
   await execute(first, 'Window.openNew')
@@ -168,7 +189,7 @@ try {
   assert.deepEqual(await authPids(), [originalPid], 'Completing one client must retain the other client’s process')
   await complete(2)
   await second.evaluate(() => globalThis.authLifecycleLogin)
-  await expect.poll(authPids).toEqual([])
+  await expectIdle()
   await expect(first.locator('.ProcessExplorer')).not.toContainText(/auth[- ]process/i)
   await startLogin(second)
   await expect.poll(async () => (await urls()).length).toBe(4)
@@ -178,11 +199,13 @@ try {
   await complete(3)
   await second.evaluate(() => globalThis.authLifecycleLogin)
   assert.ok((await execute(second, 'Layout.getUserInfo')).authErrorMessage, 'A rejected token exchange must report the auth failure')
-  await expect.poll(authPids).toEqual([])
+  await expectIdle()
   await startLogin(second)
   await expect.poll(async () => (await urls()).length).toBe(5)
+  await expect.poll(async () => (await authPids()).length).toBe(1)
   await second.close()
-  await expect.poll(authPids).toEqual([])
+  await expectIdle()
+  for (const pid of knownAuthPids) await expect(first.locator('.ProcessExplorer')).not.toContainText(String(pid))
   assert.equal(exchanges.length, 4)
   assert.ok(exchanges.every((exchange) => exchange.code_verifier && exchange.client_id === 'lvce-editor-native'))
   if (evidence) {
