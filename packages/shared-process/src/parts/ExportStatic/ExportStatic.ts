@@ -28,7 +28,7 @@ export const getStaticContentSecurityPolicy = ({ allowExternalConnections = fals
     `media-src 'self' blob:`,
     `script-src 'self'`,
     `style-src 'self' 'unsafe-inline'`,
-    `frame-src 'self' blob:`,
+    allowExternalConnections ? `frame-src 'self' blob: https: http://127.0.0.1:* http://localhost:*` : `frame-src 'self' blob:`,
   ])
 
 const readExtensionManifest = async (path: any): Promise<any> => {
