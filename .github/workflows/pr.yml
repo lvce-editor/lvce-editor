@@ -248,9 +248,12 @@ jobs:
         uses: actions/checkout@v7
         with:
           repository: lvce-editor/remote-ssh
-          # Keep the browser runner's View > Terminal lookup compatible with the added top-level Terminal menu.
-          ref: 75e8c7d68000c7af5a35b823809af4b3c034eb70
+          # Include real-network Explorer cache and shell completion acceptance.
+          ref: 48523c4f3d4bd5967a8dbcd5fe990b5a51647911
           path: .tmp/remote-account-tests
+      - name: Scope the remote fixture terminal menu lookup
+        if: matrix.os == 'ubuntu-24.04'
+        run: node scripts/test/prepare-remote-cache-regression.mjs
       - name: Prepare bundled remote account regression
         if: matrix.os == 'ubuntu-24.04'
         working-directory: .tmp/remote-account-tests
