@@ -58,10 +58,7 @@ test('registers a preview child id on its parent before loading the child', asyn
   const factory = { name: 'SimpleBrowser' }
   ViewletStates.set(7, { factory, renderedState, state: parentState })
 
-  const result = await Preview.materialize(
-    { ...parentState, x: 0, y: 0, width: 300, height: 200, headerHeight: 65 },
-    tab,
-  )
+  const result = await Preview.materialize({ ...parentState, x: 0, y: 0, width: 300, height: 200, headerHeight: 65 }, tab)
 
   expect(ViewletStates.getState(7).tabs[0].previewUid).toBe(result.previewUid)
   expect(ViewletStates.getInstance(7).renderedState.tabs[0].previewUid).toBe(result.previewUid)
@@ -70,14 +67,9 @@ test('registers a preview child id on its parent before loading the child', asyn
 test('materializes and reloads a readable memfs preview URL', async () => {
   jest.mocked(ViewletManager.load).mockResolvedValue([['create']])
   const iframeSrc = 'html-preview:///memfs/inventing-on-principles.html'
-  const tab = await Preview.materialize(
-    { uid: 7, x: 10, y: 20, width: 300, height: 200, headerHeight: 65 },
-    { iframeSrc },
-  )
+  const tab = await Preview.materialize({ uid: 7, x: 10, y: 20, width: 300, height: 200, headerHeight: 65 }, { iframeSrc })
 
-  expect(ViewletManager.load).toHaveBeenCalledWith(
-    expect.objectContaining({ uri: 'memfs://inventing-on-principles.html' }),
-  )
+  expect(ViewletManager.load).toHaveBeenCalledWith(expect.objectContaining({ uri: 'memfs://inventing-on-principles.html' }))
 
   await Preview.reload(tab)
 
@@ -98,4 +90,15 @@ test('resize updates all materialized previews while leaving native tabs alone',
   expect(Viewlet.resize).toHaveBeenCalledWith(10, { x: 20, y: 95, width: 400, height: 185 })
   expect(Viewlet.resize).toHaveBeenCalledWith(11, { x: 20, y: 95, width: 400, height: 185 })
   expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.sendMultiple', [['resize'], ['resize']])
+})
+
+test('materializes HTTP URLs using the sandboxed iframe host without an Electron view', async () => {
+  jest.mocked(ViewletManager.load).mockResolvedValue([['create']])
+  const url = 'https://remote.example.com/preview/grant/nested?query=1#section'
+  const tab = await Preview.materialize({ uid: 7, x: 0, y: 0, width: 300, height: 200, headerHeight: 65 }, { iframeSrc: url })
+  expect(ViewletManager.load).toHaveBeenCalledWith(
+    expect.objectContaining({ id: 'ExtensionView', uri: `browser-iframe:///${encodeURIComponent(url)}`, parentUid: 7 }),
+  )
+  await Preview.reload(tab)
+  expect(Viewlet.executeViewletCommand).toHaveBeenCalledWith(tab.previewUid, 'reloadBrowserIframe')
 })

@@ -13,9 +13,14 @@ export const getBounds = ({ x, y, width, height, headerHeight }) => ({ x, y: y +
 export const materialize = async (state, tab) => {
   if (tab.previewUid) return tab
   const uid = Id.create()
+  const httpPreview = /^https?:\/\//i.test(tab.iframeSrc)
   const extensionView = ExtensionViewUrl.isExtensionViewUrl(tab.iframeSrc)
-  const moduleId = extensionView ? ViewletModuleId.ExtensionView : 'Preview'
-  const uri = extensionView ? ExtensionViewUrl.decode(tab.iframeSrc) : HtmlPreviewUrl.decode(tab.iframeSrc)
+  const moduleId = extensionView || httpPreview ? ViewletModuleId.ExtensionView : 'Preview'
+  const uri = httpPreview
+    ? `browser-iframe:///${encodeURIComponent(tab.iframeSrc)}`
+    : extensionView
+      ? ExtensionViewUrl.decode(tab.iframeSrc)
+      : HtmlPreviewUrl.decode(tab.iframeSrc)
   const tabIndex = Array.isArray(state.tabs)
     ? state.tabs.findIndex((candidate, index) => index === state.selectedTabIndex && candidate.iframeSrc === tab.iframeSrc)
     : -1
@@ -47,5 +52,9 @@ export const resize = async (state) => {
 }
 
 export const reload = async (tab) => {
+  if (tab.previewUid && /^https?:\/\//i.test(tab.iframeSrc)) {
+    await Viewlet.executeViewletCommand(tab.previewUid, 'reloadBrowserIframe')
+    return
+  }
   if (tab.previewUid) await Viewlet.executeViewletCommand(tab.previewUid, 'setUri', HtmlPreviewUrl.decode(tab.iframeSrc))
 }

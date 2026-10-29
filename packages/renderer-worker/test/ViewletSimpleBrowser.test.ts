@@ -496,7 +496,10 @@ test('renders the restored browser shell before creating native content', async 
     iframeSrc: 'https://selected.example/',
     isLoading: false,
     selectedTabIndex: 1,
-    tabs: [{ browserViewId: 0, title: 'Background' }, { browserViewId: 1, title: 'Selected' }],
+    tabs: [
+      { browserViewId: 0, title: 'Background' },
+      { browserViewId: 1, title: 'Selected' },
+    ],
   })
   expect(ElectronWebContentsView.createWebContentsView).toHaveBeenCalledTimes(1)
 })
@@ -2648,7 +2651,6 @@ test('rendering committed input starts local suggestions without waiting for the
   expect(BrowserSearchSuggestions.get).not.toHaveBeenCalled()
 })
 
-
 test('address focus updates synchronously while selection is computed by the browser worker', async () => {
   const pendingSelection = Promise.withResolvers()
   jest.mocked(SimpleBrowserWorker.invoke).mockReturnValue(pendingSelection.promise)
@@ -2656,7 +2658,10 @@ test('address focus updates synchronously while selection is computed by the bro
   const focused = ViewletSimpleBrowser.handleAddressFocus(state, 'https://example.com')
   expect(focused).not.toBeInstanceOf(Promise)
   expect(focused.fullWidthAddressSelection).toBeUndefined()
-  expect(SimpleBrowserWorker.invoke).toHaveBeenCalledWith('SimpleBrowser.getAddressSelection', true, 'https://example.com', false, { start: 2, end: 8 })
+  expect(SimpleBrowserWorker.invoke).toHaveBeenCalledWith('SimpleBrowser.getAddressSelection', true, 'https://example.com', false, {
+    start: 2,
+    end: 8,
+  })
   pendingSelection.resolve({ start: 2, end: 8 })
   await pendingSelection.promise
   expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.sendMultiple', [
@@ -2979,4 +2984,24 @@ test('switching between native and preview tabs preserves the native view and di
   expect(SimpleBrowserPreview.dispose).toHaveBeenCalledWith(expect.objectContaining({ previewUid: 101 }))
   expect(navigated.browserViewId).toBe(22)
   expect(navigated.tabs[1]).not.toHaveProperty('previewUid')
+})
+
+test('web loading, terminal tab opening and address navigation materialize iframes without native IPC', async () => {
+  const { runtimeConfig } = await import('../src/parts/RuntimeConfig/RuntimeConfig.ts')
+  const previousPlatform = runtimeConfig.platform
+  runtimeConfig.platform = 'web'
+  try {
+    let uid = 800
+    jest.mocked(SimpleBrowserPreview.materialize).mockImplementation(async (_state, tab) => ({ ...tab, previewUid: ++uid }))
+    const state = await loadContentFully(ViewletSimpleBrowser.create(7, 'simple-browser://', 0, 0, 300, 200), undefined)
+    const opened = await ViewletSimpleBrowser.openTab(state, 'https://remote.example.com/preview/grant/nested?q=1#part', 'foreground-tab')
+    expect(opened.browserViewId).toBe(0)
+    expect(opened.tabs[opened.selectedTabIndex].previewUid).toBeGreaterThan(800)
+    const navigated = await ViewletSimpleBrowser.setUrl(opened, 'https://example.com/other')
+    expect(navigated.iframeSrc).toBe('https://example.com/other')
+    expect(ElectronWebContentsView.createWebContentsView).not.toHaveBeenCalled()
+    expect(ElectronWebContentsViewFunctions.setIframeSrc).not.toHaveBeenCalled()
+  } finally {
+    runtimeConfig.platform = previousPlatform
+  }
 })

@@ -10,6 +10,7 @@ const renderIframe = {
   isEqual(oldState: ViewletExtensionViewState, newState: ViewletExtensionViewState): boolean {
     return (
       oldState.iframeSrc === newState.iframeSrc &&
+      oldState.iframeReloadVersion === newState.iframeReloadVersion &&
       oldState.iframeSandbox === newState.iframeSandbox &&
       oldState.csp === newState.csp &&
       oldState.credentialless === newState.credentialless

@@ -347,3 +347,31 @@ test.each([{ exitCode: 1 }, { exitCode: 127 }, { signal: 9 }])('file process exi
   expect(output).toContain('The terminal process (missing-runtime) exited with')
   expect(commandExecute).not.toHaveBeenCalledWith('Terminals.handleTerminalExit', 10)
 })
+
+test('resolves tunnel terminal loopback links before opening the browser', async () => {
+  const state = { ...ViewletTerminal2.create(1), cwd: 'remote-server://tunnel.example/workspace' }
+  const url = 'http://127.0.0.1:8080/nested?q=1#part'
+  const preview = 'https://tunnel.example/preview/grant/nested?q=1#part'
+  extensionHostExecute.mockResolvedValue(preview as never)
+  await ViewletTerminal2.handleLink(state, url)
+  expect(extensionHostExecute).toHaveBeenCalledWith('remote-server.resolveHttpPreview', state.cwd, url)
+  expect(executeViewletCommand).toHaveBeenCalledWith(71, 'openTab', preview, 'foreground-tab')
+})
+
+test('keeps tunnel terminal external links unchanged and does not open failed previews', async () => {
+  const state = { ...ViewletTerminal2.create(1), cwd: 'remote-server://tunnel.example/workspace' }
+  await ViewletTerminal2.handleLink(state, 'https://example.com/path')
+  expect(extensionHostExecute).not.toHaveBeenCalled()
+  expect(executeViewletCommand).toHaveBeenCalledWith(71, 'openTab', 'https://example.com/path', 'foreground-tab')
+  commandExecute.mockClear()
+  extensionHostExecute.mockRejectedValue(new Error('Session expired'))
+  await expect(ViewletTerminal2.handleLink(state, 'http://localhost:8080')).rejects.toThrow('Session expired')
+  expect(commandExecute).not.toHaveBeenCalled()
+})
+
+test('resolves the captured workspace URI when the remote shell cwd is an OS path', async () => {
+  const state = { ...ViewletTerminal2.create(1), cwd: '/home/user/project', workspaceUri: 'remote-server://tunnel.example/home/user/project' }
+  extensionHostExecute.mockResolvedValue('https://tunnel.example/preview/grant/' as never)
+  await ViewletTerminal2.handleLink(state, 'http://localhost:8080/')
+  expect(extensionHostExecute).toHaveBeenCalledWith('remote-server.resolveHttpPreview', state.workspaceUri, 'http://localhost:8080/')
+})

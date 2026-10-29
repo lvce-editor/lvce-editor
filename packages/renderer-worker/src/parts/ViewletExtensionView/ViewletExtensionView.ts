@@ -247,6 +247,20 @@ export const loadContent = async (
   savedState: unknown,
   options: { readonly opener?: string } = {},
 ): Promise<ViewletExtensionViewState> => {
+  // Simple Browser reuses the existing sandboxed iframe host in the web editor.
+  if (state.uri.startsWith('browser-iframe:///')) {
+    const src = decodeURIComponent(state.uri.slice('browser-iframe:///'.length))
+    const url = new URL(src)
+    if (!['http:', 'https:'].includes(url.protocol) || url.username || url.password) throw new Error('Invalid browser iframe URL')
+    return {
+      ...state,
+      kind: 'iframe',
+      iframeSrc: url.href,
+      iframeSandbox: ['allow-scripts', 'allow-forms', ...(url.origin === globalThis.location?.origin ? [] : ['allow-same-origin'])],
+      credentialless: true,
+      title: url.host,
+    }
+  }
   const view = await GetExtensionViews.getExtensionView(options.opener || state.uri, state.applicationId)
   if (!view) {
     return getDisabledState(state, 'This view is unavailable. Its extension may have been disabled or uninstalled.')
@@ -514,6 +528,8 @@ export const Commands = {
   handleViewCommand,
   handleViewEvent,
   loadContent,
+  reloadBrowserIframe: (state: ViewletExtensionViewState): ViewletExtensionViewState =>
+    state.uri.startsWith('browser-iframe:///') ? { ...state, iframeReloadVersion: (state.iframeReloadVersion || 0) + 1 } : state,
   rerender,
 }
 
