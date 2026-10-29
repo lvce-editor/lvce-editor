@@ -99,6 +99,12 @@ jobs:
         env:
           DOWNLOAD_BUILTIN_EXTENSIONS: 0
           PYTHON: ${{ steps.python.outputs.python-path }}
+      - name: Verify native build Python
+        if: runner.os == 'Windows'
+        env:
+          PYTHON: ${{ steps.python.outputs.python-path }}
+        run: |
+          node --input-type=module -e "import { realpathSync } from 'node:fs'; import PythonFinder from 'node-gyp/lib/find-python.js'; const found = await PythonFinder.findPython(); if (realpathSync(found).toLowerCase() !== realpathSync(process.env.PYTHON).toLowerCase()) throw new Error('node-gyp selected another Python'); console.log(found)"
       - name: Compute builtin extensions cache key
         id: builtinExtensionsCacheKey
         run: echo "value=$(node packages/build/src/parts/ComputeBuiltinExtensionsCacheKey/ComputeBuiltinExtensionsCacheKey.ts)" >> $GITHUB_OUTPUT
