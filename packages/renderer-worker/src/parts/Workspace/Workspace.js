@@ -175,7 +175,7 @@ export const setPath = async (path) => {
   state.workspaceUri = toWorkspaceUri(path)
   state.pathSeparator = pathSeparator
   if (workspaceChanged) {
-    await WorkspaceConnection.dispose()
+    await WorkspaceConnection.dispose(toWorkspaceUri(path))
     RemoteCli.stop()
     await TerminalWorker.resetWorkspaceConnection()
   }
@@ -193,7 +193,14 @@ export const setUri = async (uri, connectionOrPathSeparator, legacyConnection, o
   }
   if (protocol === 'remote-ssh' && !connection) {
     const prepared = await ExtensionHostCommands.executeCommand('remote-ssh.prepareWorkspace', uri)
-    if (prepared !== true || changeId !== workspaceChangeId) return false
+    if (
+      !prepared ||
+      (prepared !== true && (typeof prepared !== 'object' || typeof prepared.disposeCommand !== 'string')) ||
+      changeId !== workspaceChangeId
+    ) {
+      return false
+    }
+    if (typeof prepared === 'object') connection = prepared
   }
   const path = connection?.workspacePath || (protocol === 'file' ? fileUriToPath(uri) : uri)
   if (
@@ -220,7 +227,7 @@ export const setUri = async (uri, connectionOrPathSeparator, legacyConnection, o
     await GlobalEventBus.emitEvent('workspace.beforeChange', state.workspacePath, path)
   }
   if (changeId !== workspaceChangeId) return false
-  if (state.workspaceUri !== uri) await WorkspaceConnection.dispose()
+  if (state.workspaceUri !== uri) await WorkspaceConnection.dispose(uri)
   if (changeId !== workspaceChangeId) return false
   state.workspacePath = path
   state.workspaceUri = uri
@@ -228,7 +235,7 @@ export const setUri = async (uri, connectionOrPathSeparator, legacyConnection, o
   if (connection) {
     WorkspaceConnection.set(
       uri,
-      connection.command,
+      connection.command || '',
       connection.remoteCliUrl,
       connection.webSocketUrl,
       connection.terminalSpawnOptions,

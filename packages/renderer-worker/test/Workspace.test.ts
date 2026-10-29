@@ -278,6 +278,39 @@ test('opening a recent remote-server folder prepares its transport before changi
   WorkspaceConnection.reset()
 })
 
+test('disposes an SSH workspace connection before switching to a local folder', async () => {
+  const uri = 'remote-ssh://user@host/home/test/project'
+  const { promise: cleanup, resolve: finishCleanup } = Promise.withResolvers<void>()
+  const { promise: started, resolve: markStarted } = Promise.withResolvers<void>()
+  jest.mocked(RendererProcess.invoke).mockResolvedValue(undefined)
+  WorkspaceConnection.reset()
+  jest.mocked(ExtensionHostCommands.executeCommand).mockImplementation(async (command) => {
+    if (command === 'remote-ssh.prepareWorkspace') {
+      return { disposeCommand: 'remote-ssh.disposeWorkspace' }
+    }
+    if (command === 'remote-ssh.disposeWorkspace') {
+      markStarted()
+      await cleanup
+    }
+    return undefined
+  })
+  expect(await Workspace.setUri(uri)).toBe(true)
+  expect(WorkspaceConnection.getCommand()).toBe('')
+
+  const changing = Workspace.setPath('/tmp/local')
+  let changeCompleted = false
+  void changing.then(() => {
+    changeCompleted = true
+  })
+  await started
+  expect(changeCompleted).toBe(false)
+  finishCleanup()
+  await changing
+  expect(ExtensionHostCommands.executeCommand).toHaveBeenCalledWith('remote-ssh.disposeWorkspace', uri, 'file:///tmp/local')
+  expect(Workspace.getWorkspaceUri()).toBe('file:///tmp/local')
+  WorkspaceConnection.reset()
+})
+
 test('canceling remote preparation keeps the existing folder', async () => {
   Workspace.state.workspacePath = '/old'
   Workspace.state.workspaceUri = 'file:///old'
