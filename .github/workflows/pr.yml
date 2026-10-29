@@ -94,6 +94,10 @@ jobs:
         run: node --test scripts/test/quickpick-row-layout.test.mjs
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0
+      - name: Test notification theme layout changes
+        run: node --test scripts/test/notification-theme.test.mjs
+        env:
+          PLAYWRIGHT_BROWSERS_PATH: 0
       - name: Install Firefox for Workers header regression
         if: runner.os == 'Linux'
         run: node node_modules/playwright-core/cli.js install --with-deps firefox
