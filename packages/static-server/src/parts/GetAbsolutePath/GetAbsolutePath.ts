@@ -1,11 +1,11 @@
 import { existsSync } from 'node:fs'
-import { isAbsolute, join, relative, resolve, sep } from 'node:path'
+import { dirname, isAbsolute, join, relative, resolve, sep } from 'node:path'
+import { fileURLToPath } from 'node:url'
 import * as CodiconsPath from '../CodiconsPath/CodiconsPath.ts'
 import { STATIC } from '../Static/Static.ts'
 import { root } from '../Root/Root.ts'
 
-const fontsourcePathCandidates = [join(root, 'packages', 'static-server', 'node_modules', '@fontsource', 'fira-code'), join(root, 'node_modules', '@fontsource', 'fira-code')]
-const fontsourcePath = fontsourcePathCandidates.find(existsSync) || fontsourcePathCandidates[0]
+const fontsourcePath = dirname(fileURLToPath(import.meta.resolve('@fontsource/fira-code/400.css')))
 
 const invalidIconsPath = join(STATIC, '__missing_vscode_icon__.svg')
 const invalidStaticPath = join(STATIC, '__invalid_path__')

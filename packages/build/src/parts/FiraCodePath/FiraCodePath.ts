@@ -1,7 +1,6 @@
-import { existsSync } from 'node:fs'
+import { dirname } from 'node:path'
+import { fileURLToPath } from 'node:url'
 import * as Path from '../Path/Path.ts'
 
-const candidates = [Path.absolute('packages/build/node_modules/@fontsource/fira-code'), Path.absolute('node_modules/@fontsource/fira-code')]
-
-export const firaCodePath = candidates.find(existsSync) || candidates[0]
+export const firaCodePath = dirname(fileURLToPath(import.meta.resolve('@fontsource/fira-code/400.css')))
 export const firaCodeFilesPath = Path.join(firaCodePath, 'files')
