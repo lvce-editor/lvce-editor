@@ -144,6 +144,23 @@ jobs:
           path: .tmp/electron-tab-move-tests
       - name: Install Electron for tab move regressions
         run: node node_modules/electron/install.js
+      - name: Test native authentication process lifecycle (Linux)
+        if: runner.os == 'Linux'
+        run: xvfb-run -a node scripts/test-auth-process-lifecycle.mjs
+        env:
+          LVCE_AUTH_EVIDENCE_DIR: .tmp/auth-process-lifecycle
+      - name: Test native authentication process lifecycle
+        if: runner.os != 'Linux'
+        run: node scripts/test-auth-process-lifecycle.mjs
+        env:
+          LVCE_AUTH_EVIDENCE_DIR: .tmp/auth-process-lifecycle
+      - name: Upload native authentication lifecycle evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: auth-process-lifecycle-${{ matrix.os }}
+          path: .tmp/auth-process-lifecycle
+          if-no-files-found: warn
       - name: Test moving tabs with the published worker (Linux)
         if: runner.os == 'Linux'
         run: xvfb-run -a node .tmp/electron-tab-move-tests/packages/e2e-integration/scripts/test-move-to-new-window.mjs .
