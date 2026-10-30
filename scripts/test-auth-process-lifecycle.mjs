@@ -11,6 +11,7 @@ const expect = baseExpect.configure({ timeout: 30_000 })
 const root = resolve('.')
 const profile = await mkdtemp(join(tmpdir(), 'lvce-auth-lifecycle-'))
 const evidence = process.env.LVCE_AUTH_EVIDENCE_DIR
+const applicationName = process.env.LVCE_AUTH_APPLICATION_NAME || 'lvce-oss'
 const diagnostics = []
 const exchanges = []
 const server = createServer(
@@ -57,9 +58,9 @@ if (process.env.LVCE_AUTH_PACKAGED === '1') {
   env.LVCE_SHARED_PROCESS_PATH = join(root, 'packages/shared-process/src/sharedProcessMain.ts')
   env.DEV = '1'
 }
-await mkdir(join(env.XDG_CONFIG_HOME, 'lvce-oss'), { recursive: true })
+await mkdir(join(env.XDG_CONFIG_HOME, applicationName), { recursive: true })
 await writeFile(
-  join(env.XDG_CONFIG_HOME, 'lvce-oss/settings.json'),
+  join(env.XDG_CONFIG_HOME, applicationName, 'settings.json'),
   JSON.stringify({
     'layout.backendUrl': backend,
     'sessionReplay.enabled': false,
