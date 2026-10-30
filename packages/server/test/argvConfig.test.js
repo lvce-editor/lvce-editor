@@ -69,3 +69,18 @@ test('worker path options do not become workspace arguments', () => {
   )
   assert.equal(ArgvConfig.getWorkspaceArgument(['--process-explorer-worker=/worker.js']), '')
 })
+
+test('resolves an auth worker path supplied with equals syntax', () => {
+  assert.deepEqual(ArgvConfig.resolveAuthWorkerPath(['--auth-worker-path=relative/auth worker.js'], '/test/workspace'), [
+    '--auth-worker-path=/test/workspace/relative/auth worker.js',
+  ])
+})
+
+test('resolves an auth worker path supplied as a separate argument', () => {
+  assert.deepEqual(ArgvConfig.resolveAuthWorkerPath(['--auth-worker-path', 'relative/auth worker.js', '/workspace'], '/test'), [
+    '--auth-worker-path=/test/relative/auth worker.js',
+    '/workspace',
+  ])
+  assert.equal(ArgvConfig.getWorkspaceArgument(['--auth-worker-path=/test/auth worker.js', '/workspace']), '/workspace')
+  assert.equal(ArgvConfig.getWorkspaceArgument(['--auth-worker-path', '/test/auth worker.js', '/workspace']), '/workspace')
+})

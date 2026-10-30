@@ -19,7 +19,7 @@ if (env.LVCE_ARGV_CONFIG_LOADED !== '1') {
 }
 
 // TODO pass argv to shared process instead of using environment variables / global variables
-const argvSliced = argv.slice(2)
+const argvSliced = ArgvConfig.resolveAuthWorkerPath(argv.slice(2))
 let argv2 = ArgvConfig.getWorkspaceArgument(argvSliced)
 for (const arg of argvSliced) {
   if (arg.startsWith('--only-extension=')) {

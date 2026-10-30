@@ -48,7 +48,8 @@ export const getDefaultPreferences = async (): Promise<any> => {
 export const getOverrides = (): any => {
   const argvSliced = Process.argv.slice(2)
   const overrides: Record<string, any> = {}
-  for (const argv of argvSliced) {
+  for (let index = 0; index < argvSliced.length; index++) {
+    const argv = argvSliced[index]
     if (argv.startsWith('--theme=')) {
       overrides['workbench.colorTheme'] = argv.slice('--theme='.length)
     } else if (argv.startsWith('--process-explorer=')) {
@@ -59,6 +60,10 @@ export const getOverrides = (): any => {
       overrides['develop.processExplorerWorkerPath'] = argv.slice('--process-explorer-worker='.length)
     } else if (argv.startsWith('--activity-bar-worker=')) {
       overrides['develop.activityBarWorkerPath'] = argv.slice('--activity-bar-worker='.length)
+    } else if (argv === '--auth-worker-path' && argvSliced[index + 1]) {
+      overrides['develop.authWorkerPath'] = argvSliced[++index]
+    } else if (argv.startsWith('--auth-worker-path=')) {
+      overrides['develop.authWorkerPath'] = argv.slice('--auth-worker-path='.length)
     }
   }
   return overrides

@@ -71,6 +71,18 @@ test('getOverrides - auth process path', () => {
   }
 })
 
+test('getOverrides - auth worker path with spaces', () => {
+  const originalArgv = process.argv
+  process.argv = [...originalArgv.slice(0, 2), '--auth-worker-path=/tmp/auth worker.js']
+  try {
+    expect(Preferences.getOverrides()).toEqual({
+      'develop.authWorkerPath': '/tmp/auth worker.js',
+    })
+  } finally {
+    process.argv = originalArgv
+  }
+})
+
 test('getOverrides - last CLI path wins and native process is configurable', () => {
   const originalArgv = process.argv
   process.argv = [
