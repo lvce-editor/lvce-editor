@@ -131,6 +131,16 @@ test('addCustomPathsToIndexHtml - CLI worker overrides user and packaged paths w
   expect(result).toContain('process%20explorer%231.js')
 })
 
+test('addCustomPathsToIndexHtml - auth worker CLI path is converted to an encoded remote URL', async () => {
+  jest.mocked(Preferences.getUserPreferences).mockResolvedValue({})
+  jest.mocked(Preferences.getOverrides).mockReturnValue({ 'develop.authWorkerPath': '/test/auth worker#1.js' })
+  jest.mocked(LinkedWorkerPreferences.getLinkedWorkerPreferences).mockResolvedValue({})
+  const content = '<title>Test</title><script id="Config" type="application/json">{"workerUrls":{"develop.authWorkerPath":"/packaged/auth-worker.js"}}</script>'
+  const result = await AddCustomPathsToIndexHtml.addCustomPathsToIndexHtml(content)
+  expect(getConfig(result).workerUrls['develop.authWorkerPath']).toBe(GetRemoteUrl.getRemoteUrl('/test/auth worker#1.js'))
+  expect(result).toContain('auth%20worker%231.js')
+})
+
 test('addCustomPathsToIndexHtml - absent or disabled CLI override keeps the packaged worker', async () => {
   jest.mocked(Preferences.getUserPreferences).mockResolvedValue({})
   jest.mocked(LinkedWorkerPreferences.getLinkedWorkerPreferences).mockResolvedValue({})

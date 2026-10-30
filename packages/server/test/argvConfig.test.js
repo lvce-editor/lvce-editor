@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict'
-import { join } from 'node:path'
+import { join, resolve } from 'node:path'
 import test from 'node:test'
 import * as ArgvConfig from '../src/argvConfig.js'
 
@@ -68,4 +68,21 @@ test('worker path options do not become workspace arguments', () => {
     '/workspace',
   )
   assert.equal(ArgvConfig.getWorkspaceArgument(['--process-explorer-worker=/worker.js']), '')
+})
+
+test('resolves an auth worker path supplied with equals syntax', () => {
+  const workingDirectory = '/test/workspace'
+  assert.deepEqual(ArgvConfig.resolveAuthWorkerPath(['--auth-worker-path=relative/auth worker.js'], workingDirectory), [
+    `--auth-worker-path=${resolve(workingDirectory, 'relative/auth worker.js')}`,
+  ])
+})
+
+test('resolves an auth worker path supplied as a separate argument', () => {
+  const workingDirectory = '/test'
+  assert.deepEqual(ArgvConfig.resolveAuthWorkerPath(['--auth-worker-path', 'relative/auth worker.js', '/workspace'], '/test'), [
+    `--auth-worker-path=${resolve(workingDirectory, 'relative/auth worker.js')}`,
+    '/workspace',
+  ])
+  assert.equal(ArgvConfig.getWorkspaceArgument(['--auth-worker-path=/test/auth worker.js', '/workspace']), '/workspace')
+  assert.equal(ArgvConfig.getWorkspaceArgument(['--auth-worker-path', '/test/auth worker.js', '/workspace']), '/workspace')
 })

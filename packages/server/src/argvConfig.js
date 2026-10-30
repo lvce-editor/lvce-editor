@@ -1,11 +1,11 @@
 import { parse } from '@lvce-editor/jsonc-parser'
 import { readFile } from 'node:fs/promises'
 import { homedir, tmpdir } from 'node:os'
-import { join } from 'node:path'
+import { join, resolve } from 'node:path'
 
 const applicationName = 'lvce-oss'
 const keyPattern = /^[a-zA-Z0-9][a-zA-Z0-9._-]*$/
-const optionsWithSeparateValues = new Set(['--connection-token', '--idle-timeout', '--link', '--only-extension', '--port', '--test-path'])
+const optionsWithSeparateValues = new Set(['--auth-worker-path', '--connection-token', '--idle-timeout', '--link', '--only-extension', '--port', '--test-path'])
 const reclaimerFeatureName = 'PartitionAllocMemoryReclaimer'
 const reclaimerFeature = `${reclaimerFeatureName}:interval/1800s`
 
@@ -135,4 +135,26 @@ export const getWorkspaceArgument = (args) => {
     }
   }
   return ''
+}
+
+export const resolveAuthWorkerPath = (args, workingDirectory = process.cwd()) => {
+  const resolvedArgs = [...args]
+  for (let index = 0; index < resolvedArgs.length; index++) {
+    const argument = resolvedArgs[index]
+    if (argument === '--auth-worker-path') {
+      const value = resolvedArgs[index + 1]
+      if (!value || value.startsWith('--')) {
+        throw new TypeError('--auth-worker-path requires a filesystem path')
+      }
+      resolvedArgs[index] = `--auth-worker-path=${resolve(workingDirectory, value)}`
+      resolvedArgs.splice(index + 1, 1)
+    } else if (argument.startsWith('--auth-worker-path=')) {
+      const value = argument.slice('--auth-worker-path='.length)
+      if (!value) {
+        throw new TypeError('--auth-worker-path requires a filesystem path')
+      }
+      resolvedArgs[index] = `--auth-worker-path=${resolve(workingDirectory, value)}`
+    }
+  }
+  return resolvedArgs
 }
