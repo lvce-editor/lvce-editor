@@ -46,6 +46,11 @@ const server = createServer(
     response.end('{}')
   },
 )
+const sockets = new Set()
+server.on('connection', (socket) => {
+  sockets.add(socket)
+  socket.once('close', () => sockets.delete(socket))
+})
 await new Promise((resolve) => server.listen(0, '127.0.0.1', resolve))
 const backend = `https://127.0.0.1:${server.address().port}`
 const env = { ...process.env }
@@ -229,11 +234,20 @@ try {
   }
   throw error
 } finally {
-  if (app) await app.close()
-  await new Promise((resolve) => server.close(resolve))
   if (evidence) {
     await mkdir(evidence, { recursive: true })
     await writeFile(join(evidence, 'diagnostics.json'), JSON.stringify(diagnostics, null, 2))
   }
+  if (app) {
+    console.log('Closing authentication test application')
+    // Match the existing Electron tab-move harness: macOS can keep graceful quit pending.
+    await app.evaluate(({ app }) => app.exit(0)).catch(() => {})
+    await app.close().catch(() => {})
+  }
+  console.log('Closing mock authentication service')
+  const serverClosed = new Promise((resolve) => server.close(resolve))
+  for (const socket of sockets) socket.destroy()
+  await serverClosed
   await rm(profile, { recursive: true, force: true })
+  console.log('Authentication test cleanup complete')
 }

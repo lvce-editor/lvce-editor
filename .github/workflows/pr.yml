@@ -145,11 +145,13 @@ jobs:
       - name: Install Electron for tab move regressions
         run: node node_modules/electron/install.js
       - name: Test native authentication process lifecycle (Linux)
+        timeout-minutes: 5
         if: runner.os == 'Linux'
         run: xvfb-run -a node scripts/test-auth-process-lifecycle.mjs
         env:
           LVCE_AUTH_EVIDENCE_DIR: .tmp/auth-process-lifecycle
       - name: Test native authentication process lifecycle
+        timeout-minutes: 5
         if: runner.os != 'Linux'
         run: node scripts/test-auth-process-lifecycle.mjs
         env:
