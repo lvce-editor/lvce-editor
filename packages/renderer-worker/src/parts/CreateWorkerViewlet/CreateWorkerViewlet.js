@@ -275,6 +275,9 @@ const createWorkerViewletInternal = ({ adapter, config, context, worker }) => {
   const loadContent = (currentState, savedState, ...args) => {
     return runLoadContent(currentState, savedState, args, methods.create, methods.loadContent, false)
   }
+  const loadContentForHotReload = (currentState, savedState, ...args) => {
+    return runLoadContent(currentState, savedState, args, methods.hotReloadCreate || methods.create, methods.hotReloadLoadContent || methods.loadContent, true)
+  }
 
   const runCommandRenderPipelineInternal = async (currentState, args) => {
     const invocation = createInvocation(currentState, context, { args })
@@ -450,7 +453,7 @@ const createWorkerViewletInternal = ({ adapter, config, context, worker }) => {
       if (currentState.isHotReloading) {
         return currentState
       }
-      const savedState = await adapter.getHotReloadSavedState(currentState, saveState)
+      const savedState = await adapter.getHotReloadSavedState(currentState, saveState, worker)
       await worker.restart(methods.terminate.name)
       const loadingState = adapter.prepareHotReloadState({ ...currentState, isHotReloading: true })
       const newState = await runLoadContent(
@@ -490,6 +493,7 @@ const createWorkerViewletInternal = ({ adapter, config, context, worker }) => {
     hasFunctionalRootRender: Boolean(capabilities.rootRender),
     hotReload,
     loadContent,
+    loadContentForHotReload,
     menus: [],
     name,
     render: createRender(config.renderComparison),
