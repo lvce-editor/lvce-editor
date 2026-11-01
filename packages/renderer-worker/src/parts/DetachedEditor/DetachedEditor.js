@@ -8,6 +8,10 @@ import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as Workspace from '../Workspace/Workspace.js'
 
+// Keep in sync with main-area-worker's positive loading state values.
+const LoadedState = 3
+const BinaryState = 4
+
 export const openNewWithEditorInput = async (editorInput, editorUid, isDirty) => {
   const windowId = await GetWindowId.getWindowId()
   const payload = { editorInput, workspaceUri: Workspace.getWorkspaceUri(), isDirty }
@@ -33,7 +37,7 @@ export const openTransferredEditor = async (href) => {
     const state = await MainAreaWorker.invoke('MainArea.getComponentState', main.state.uid)
     const group = state.layout.groups.find((candidate) => candidate.id === state.layout.activeGroupId)
     const tab = group?.tabs.find((candidate) => candidate.id === group.activeTabId)
-    if (!tab || !['loaded', 'binary'].includes(tab.loadingState)) {
+    if (!tab || !['loaded', 'binary', LoadedState, BinaryState].includes(tab.loadingState)) {
       throw new Error(tab?.errorMessage || 'Could not open the detached editor')
     }
     if (payload.text !== undefined) {
