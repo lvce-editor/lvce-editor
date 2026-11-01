@@ -98,6 +98,8 @@ test.each([
   '--process-explorer-worker=relative worker.js',
   '--activity-bar-worker=/tmp/activity bar.js',
   '--activity-bar-worker=relative activity bar.js',
+  '--blob-worker=/tmp/blobWorkerMain.js',
+  '--blob-worker=relative blobWorkerMain.js',
 ])(
   'generated server injects runtime configuration into index documents for %s',
   (flag) => {
