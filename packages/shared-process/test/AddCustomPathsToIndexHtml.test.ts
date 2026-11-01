@@ -141,6 +141,16 @@ test('addCustomPathsToIndexHtml - auth worker CLI path is converted to an encode
   expect(result).toContain('auth%20worker%231.js')
 })
 
+test('addCustomPathsToIndexHtml - blob worker CLI path overrides configured paths with an encoded URL', async () => {
+  jest.mocked(Preferences.getUserPreferences).mockResolvedValue({ 'develop.blobWorkerPath': '/user/blob-worker.js' })
+  jest.mocked(Preferences.getOverrides).mockReturnValue({ 'develop.blobWorkerPath': '/test/blob worker#1.js' })
+  jest.mocked(LinkedWorkerPreferences.getLinkedWorkerPreferences).mockResolvedValue({})
+  const content = '<title>Test</title><script id="Config" type="application/json">{"workerUrls":{"develop.blobWorkerPath":"/packaged/blob-worker.js"}}</script>'
+  const result = await AddCustomPathsToIndexHtml.addCustomPathsToIndexHtml(content)
+  expect(getConfig(result).workerUrls['develop.blobWorkerPath']).toBe(GetRemoteUrl.getRemoteUrl('/test/blob worker#1.js'))
+  expect(result).toContain('blob%20worker%231.js')
+})
+
 test('addCustomPathsToIndexHtml - absent or disabled CLI override keeps the packaged worker', async () => {
   jest.mocked(Preferences.getUserPreferences).mockResolvedValue({})
   jest.mocked(LinkedWorkerPreferences.getLinkedWorkerPreferences).mockResolvedValue({})
@@ -153,5 +163,10 @@ test('addCustomPathsToIndexHtml - absent or disabled CLI override keeps the pack
   jest.mocked(Preferences.getOverrides).mockReturnValue({ 'develop.processExplorerWorkerPath': '/test/worker.js' })
   expect(getConfig(await AddCustomPathsToIndexHtml.addCustomPathsToIndexHtml(content)).workerUrls['develop.processExplorerWorkerPath']).toBe(
     '/packaged/worker.js',
+  )
+  jest.mocked(Preferences.getOverrides).mockReturnValue({ 'develop.blobWorkerPath': '/test/blob-worker.js' })
+  const blobContent = '<title>Test</title><script id="Config" type="application/json">{"workerUrls":{"develop.blobWorkerPath":"/packaged/blob-worker.js"}}</script>'
+  expect(getConfig(await AddCustomPathsToIndexHtml.addCustomPathsToIndexHtml(blobContent)).workerUrls['develop.blobWorkerPath']).toBe(
+    '/packaged/blob-worker.js',
   )
 })

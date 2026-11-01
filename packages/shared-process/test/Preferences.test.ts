@@ -59,6 +59,18 @@ test('getOverrides - activity bar worker path', () => {
   }
 })
 
+test('getOverrides - blob worker path', () => {
+  const originalArgv = process.argv
+  process.argv = [...originalArgv.slice(0, 2), '--blob-worker=/tmp/blob worker.js']
+  try {
+    expect(Preferences.getOverrides()).toEqual({
+      'develop.blobWorkerPath': '/tmp/blob worker.js',
+    })
+  } finally {
+    process.argv = originalArgv
+  }
+})
+
 test('getOverrides - auth process path', () => {
   const originalArgv = process.argv
   process.argv = [...originalArgv.slice(0, 2), '--auth-process=/tmp/auth process.js']
