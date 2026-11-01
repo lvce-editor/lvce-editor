@@ -211,7 +211,7 @@ try {
   await expect.poll(async () => (await authPids()).length).toBe(1)
   await second.close()
   await expectIdle()
-  for (const pid of knownAuthPids) await expect(first.locator('.ProcessExplorer')).not.toContainText(String(pid))
+  for (const pid of knownAuthPids) await expect(first.locator('.ProcessExplorer')).not.toContainText(new RegExp(`(?<!\\d)${pid}(?!\\d)`))
   assert.equal(exchanges.length, 4)
   assert.ok(exchanges.every((exchange) => exchange.code_verifier && exchange.client_id === 'lvce-editor-native'))
   if (evidence) {
