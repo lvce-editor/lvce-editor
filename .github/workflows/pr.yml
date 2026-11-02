@@ -16,7 +16,7 @@ jobs:
     timeout-minutes: 20
     env:
       DOWNLOAD_BUILTIN_EXTENSIONS: 0
-      npm_config_logs_dir: ${{ runner.temp }}/native-install-logs
+      npm_config_logs_dir: ${{ github.workspace }}/.tmp/native-install-logs
       npm_config_loglevel: verbose
     steps:
       - uses: actions/checkout@v7
@@ -37,7 +37,7 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: native-install-${{ matrix.attempt }}
-          path: ${{ runner.temp }}/native-install-logs
+          path: .tmp/native-install-logs
           if-no-files-found: error
 
   pr:
