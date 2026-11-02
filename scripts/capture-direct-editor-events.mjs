@@ -1,5 +1,7 @@
+import assert from 'node:assert/strict'
 import { mkdir, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
+import { expect } from '@playwright/test'
 import { test as runTest } from '../.tmp/direct-editor-tests/packages/e2e-integration/scripts/test-direct-editor-events.mjs'
 
 export const test = async (args) => {
@@ -23,6 +25,35 @@ export const test = async (args) => {
   }
   try {
     await runTest(args)
+    const input = page.locator('.Editor textarea').last()
+    await input.focus()
+    const getDocumentText = () =>
+      page.evaluate(async () => {
+        const entry = [...document.querySelectorAll('script[type="module"][src]')].find((script) => script.src.includes('rendererProcessMain')).src
+        const renderer = await import(entry)
+        const textDocument = await renderer.executeCommand('GetActiveEditor.getTextDocument')
+        return textDocument.text
+      })
+    const waitForText = (text) => expect.poll(getDocumentText).toBe(text)
+    await page.keyboard.press('ControlOrMeta+a')
+    await page.keyboard.type('  indentation')
+    await waitForText('  indentation')
+    await page.keyboard.press('ControlOrMeta+[')
+    await waitForText('indentation')
+    assert.equal(await getDocumentText(), 'indentation')
+
+    await page.keyboard.press('ControlOrMeta+]')
+    await waitForText('  indentation')
+    await page.keyboard.press('Shift+Tab')
+    await waitForText('indentation')
+
+    await page.keyboard.press('ControlOrMeta+a')
+    await page.keyboard.type('plain text')
+    await waitForText('plain text')
+    await page.keyboard.press('ControlOrMeta+[')
+    await waitForText('plain text')
+    assert.equal(await getDocumentText(), 'plain text')
+    assert.equal(await page.getByText('Command EditorText.indentLess not found in renderer worker').count(), 0)
   } catch (error) {
     try {
       const output = process.env.LVCE_DIRECT_EVENTS_EVIDENCE_DIR || '.tmp/direct-editor-events'
