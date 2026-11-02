@@ -3,7 +3,8 @@ import { fileURLToPath } from 'node:url'
 import * as ExitCode from '../ExitCode/ExitCode.ts'
 import * as Process from '../Process/Process.ts'
 
-const installCommands = ['npm ci --ignore-scripts', 'npm rebuild --workspaces', 'npm run postinstall']
+// Serialize native builds to avoid overlapping package builds during retries.
+const installCommands = ['npm ci --ignore-scripts', 'npm rebuild --workspaces --foreground-scripts', 'npm run postinstall']
 
 /**
  * @typedef {{stdio: 'inherit'}} InstallCommandOptions
@@ -19,27 +20,20 @@ const installCommands = ['npm ci --ignore-scripts', 'npm rebuild --workspaces', 
  * @param {number} [maxAttempts]
  */
 export const installDependenciesWithRetry = (execSyncFn, log = console.log, maxAttempts = 3) => {
-  let lastError
-
-  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
-    try {
-      for (const command of installCommands) {
+  for (const command of installCommands) {
+    for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+      try {
         execSyncFn(command, { stdio: 'inherit' })
+        break
+      } catch (error) {
+        if (attempt === maxAttempts) {
+          throw error
+        }
+
+        log(`${command} failed on attempt ${attempt}/${maxAttempts}, retrying...`)
       }
-
-      return
-    } catch (error) {
-      lastError = error
-
-      if (attempt === maxAttempts) {
-        throw error
-      }
-
-      log(`npm install failed on attempt ${attempt}, retrying...`)
     }
   }
-
-  throw lastError
 }
 
 const main = () => {
