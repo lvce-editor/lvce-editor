@@ -106,7 +106,6 @@ test('loadContent - renders before diagnostics are requested by loadContentLater
     .map(([method]) => method)
     .filter((method): method is string => typeof method === 'string' && method.startsWith('Editor.'))
   expect(editorMethods).toEqual([
-    'Editor.hasCachedCharacterWidth',
     'Editor.create2',
     'Editor.loadContent',
     'Editor.diff2',
@@ -121,24 +120,17 @@ test('loadContent - renders before diagnostics are requested by loadContentLater
   expect(newState.commands).toEqual([...initialCommands, ...selectionCommands])
 })
 
-test('loadContent skips ensuring the Fira Code font when character width is cached', async () => {
-  editorWorkerInvoke.mockImplementation((method) => (method === 'Editor.hasCachedCharacterWidth' ? true : []))
+test('loadContent ensures the Fira Code font before creating the editor', async () => {
+  editorWorkerInvoke.mockImplementation(() => [])
   const state = ViewletEditorText.create(1, '/test/file.txt', 0, 0, 800, 600)
 
   await ViewletEditorText.loadContent(state, undefined, { languageId: 'text' })
 
-  expect(editorWorkerInvoke).toHaveBeenCalledWith('Editor.hasCachedCharacterWidth', 400, 15, 'Fira Code', 0.5)
-  expect(editorWorkerInvoke).not.toHaveBeenCalledWith('Font.ensure', expect.anything(), expect.anything())
-})
-
-test('loadContent ensures the Fira Code font when character width is not cached', async () => {
-  editorWorkerInvoke.mockImplementation((method) => (method === 'Editor.hasCachedCharacterWidth' ? false : []))
-  const state = ViewletEditorText.create(1, '/test/file.txt', 0, 0, 800, 600)
-
-  await ViewletEditorText.loadContent(state, undefined, { languageId: 'text' })
-
-  expect(editorWorkerInvoke).toHaveBeenCalledWith('Editor.hasCachedCharacterWidth', 400, 15, 'Fira Code', 0.5)
   expect(editorWorkerInvoke).toHaveBeenCalledWith('Font.ensure', 'Fira Code', "url('/fonts/files/fira-code-latin-400-normal.woff2')")
+  const ensureFontIndex = editorWorkerInvoke.mock.calls.findIndex(([method]) => method === 'Font.ensure')
+  const createEditorIndex = editorWorkerInvoke.mock.calls.findIndex(([method]) => method === 'Editor.create2')
+  expect(ensureFontIndex).toBeGreaterThanOrEqual(0)
+  expect(ensureFontIndex).toBeLessThan(createEditorIndex)
 })
 
 test('loadContent - restores the editor worker state', async () => {
