@@ -186,7 +186,7 @@ jobs:
         uses: actions/checkout@v7
         with:
           repository: lvce-editor/main-area-worker
-          ref: f5aed2bbd92c416a637571889243d5c202961887
+          ref: 99839d1a6eecce996154f8254d822a59c9be0eb8
           path: .tmp/editor-paint-hold-tests
       - name: Test editor paint holding with the published worker (Linux)
         if: runner.os == 'Linux'
