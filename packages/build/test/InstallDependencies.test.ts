@@ -13,10 +13,10 @@ describe('installDependenciesWithRetry', () => {
 
     installDependenciesWithRetry(execSyncFn, () => {})
 
-    expect(commands).toEqual(['npm ci --ignore-scripts', 'npm rebuild --workspaces', 'npm run postinstall'])
+    expect(commands).toEqual(['npm ci --ignore-scripts', 'npm rebuild --workspaces --foreground-scripts', 'npm run postinstall'])
   })
 
-  test('retries the full install flow until it succeeds', () => {
+  test('retries npm ci until it succeeds', () => {
     const commands: string[] = []
     let attempt = 0
     const execSyncFn: ExecSyncFn = (command) => {
@@ -35,7 +35,7 @@ describe('installDependenciesWithRetry', () => {
       'npm ci --ignore-scripts',
       'npm ci --ignore-scripts',
       'npm ci --ignore-scripts',
-      'npm rebuild --workspaces',
+      'npm rebuild --workspaces --foreground-scripts',
       'npm run postinstall',
     ])
   })
@@ -53,5 +53,55 @@ describe('installDependenciesWithRetry', () => {
     ).toThrow('persistent failure')
 
     expect(logCount).toBe(2)
+  })
+
+  test('retries a failed native rebuild without deleting installed dependencies', () => {
+    const commands: string[] = []
+    let rebuildAttempts = 0
+    const execSyncFn: ExecSyncFn = (command) => {
+      commands.push(command)
+      if (command === 'npm rebuild --workspaces --foreground-scripts' && ++rebuildAttempts < 3) {
+        throw new Error('Completion callback never invoked!')
+      }
+    }
+
+    installDependenciesWithRetry(execSyncFn, () => {})
+
+    expect(commands).toEqual([
+      'npm ci --ignore-scripts',
+      'npm rebuild --workspaces --foreground-scripts',
+      'npm rebuild --workspaces --foreground-scripts',
+      'npm rebuild --workspaces --foreground-scripts',
+      'npm run postinstall',
+    ])
+  })
+
+  test('retries postinstall without repeating a successful native rebuild', () => {
+    const commands: string[] = []
+    let postinstallAttempts = 0
+    const execSyncFn: ExecSyncFn = (command) => {
+      commands.push(command)
+      if (command === 'npm run postinstall' && ++postinstallAttempts < 2) {
+        throw new Error('transient failure')
+      }
+    }
+
+    installDependenciesWithRetry(execSyncFn, () => {})
+
+    expect(commands).toEqual(['npm ci --ignore-scripts', 'npm rebuild --workspaces --foreground-scripts', 'npm run postinstall', 'npm run postinstall'])
+  })
+
+  test('stops after a persistent rebuild failure and preserves its error', () => {
+    const commands: string[] = []
+    const failure = new Error('native compilation failed')
+    const execSyncFn: ExecSyncFn = (command) => {
+      commands.push(command)
+      if (command === 'npm rebuild --workspaces --foreground-scripts') {
+        throw failure
+      }
+    }
+
+    expect(() => installDependenciesWithRetry(execSyncFn, () => {}, 2)).toThrow(failure)
+    expect(commands).toEqual(['npm ci --ignore-scripts', 'npm rebuild --workspaces --foreground-scripts', 'npm rebuild --workspaces --foreground-scripts'])
   })
 })
