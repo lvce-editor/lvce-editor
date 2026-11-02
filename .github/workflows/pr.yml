@@ -6,6 +6,40 @@ on:
       - main
 
 jobs:
+  cold-windows-install:
+    name: Cold Windows install (${{ matrix.attempt }})
+    strategy:
+      fail-fast: false
+      matrix:
+        attempt: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+    runs-on: windows-2025
+    timeout-minutes: 20
+    env:
+      DOWNLOAD_BUILTIN_EXTENSIONS: 0
+      npm_config_logs_dir: ${{ runner.temp }}/native-install-logs
+      npm_config_loglevel: verbose
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: '.nvmrc'
+      - name: Setup Python 3
+        id: python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+      - name: Cold dependency install
+        run: node packages/build/src/parts/InstallDependencies/InstallDependencies.ts
+        env:
+          PYTHON: ${{ steps.python.outputs.python-path }}
+      - name: Upload native install diagnostics
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: native-install-${{ matrix.attempt }}
+          path: ${{ runner.temp }}/native-install-logs
+          if-no-files-found: error
+
   pr:
     strategy:
       fail-fast: false
