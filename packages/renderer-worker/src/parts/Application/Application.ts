@@ -19,16 +19,16 @@ import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as Workspace from '../Workspace/Workspace.js'
 
 export interface ApplicationOptions {
-  readonly extensions?: readonly any[]
-  readonly files?: Readonly<Record<string, string>>
   readonly height: number
   readonly href: string
   readonly id: string
   readonly rootId: string
-  readonly textFileExtensions?: readonly string[]
   readonly width: number
   readonly workspacePath: string
   readonly workspaceUri: string
+  readonly extensions?: readonly any[]
+  readonly files?: Readonly<Record<string, string>>
+  readonly textFileExtensions?: readonly string[]
 }
 
 const disposals = new Map<string, Promise<void>>()
@@ -42,18 +42,18 @@ const initialize = async (options: ApplicationOptions, layoutUid: number): Promi
   const commands = await ViewletManager.load(
     {
       applicationId: options.id,
-      focus: false,
       getModule: ViewletModule.load,
       id: ViewletModuleId.Layout,
-      show: false,
       type: 0,
       uid: layoutUid,
       uri: '',
+      show: false,
+      focus: false,
     },
     false,
     false,
     {
-      Layout: { bounds: { windowHeight: options.height, windowWidth: options.width } },
+      Layout: { bounds: { windowWidth: options.width, windowHeight: options.height } },
       restore: false,
     },
   )
@@ -74,12 +74,12 @@ export const create = async (options: ApplicationOptions): Promise<number> => {
   }
   const layoutUid = Id.create()
   ApplicationRegistry.create({
-    href: options.href,
     id: options.id,
     layoutUid,
-    textFileExtensions: options.textFileExtensions,
+    href: options.href,
     workspacePath: options.workspacePath,
     workspaceUri: options.workspaceUri,
+    textFileExtensions: options.textFileExtensions,
   })
   try {
     return await ApplicationRegistry.track(options.id, () => initialize(options, layoutUid))
@@ -105,7 +105,7 @@ export const execute = (applicationId: string, command: string, ...args: readonl
       return ApplicationRegistry.track(applicationId, () =>
         ViewletManager.executeForApplication(applicationId, command, {
           ...options,
-          editorInput: { ...options.editorInput, forceText: true, type: 'editor' },
+          editorInput: { ...options.editorInput, type: 'editor', forceText: true },
         }),
       )
     }
@@ -116,7 +116,7 @@ export const execute = (applicationId: string, command: string, ...args: readonl
     if (application.textFileExtensions.some((extension) => uri.endsWith(extension))) {
       return ApplicationRegistry.track(applicationId, () =>
         ViewletManager.executeForApplication(applicationId, 'Main.openInput', {
-          editorInput: { forceText: true, type: 'editor', uri },
+          editorInput: { type: 'editor', uri, forceText: true },
           focus: typeof input === 'string' ? focus : input.focus,
           preview: typeof input === 'string' ? false : input.preview,
           reuseExisting: typeof input === 'string' ? true : input.reuseExisting,
@@ -153,26 +153,40 @@ export const execute = (applicationId: string, command: string, ...args: readonl
     })
   }
   switch (command) {
+    case 'EditorKeymap.register':
+      return ApplicationRegistry.track(applicationId, () => EditorKeymap.register(args[0], applicationId))
+    case 'EditorKeymap.remove':
+      return ApplicationRegistry.track(applicationId, () => EditorKeymap.remove(args[0], applicationId))
+    case 'Viewlet.executeViewletCommand':
+      return ApplicationRegistry.track(applicationId, () => {
+        const [uid, method, ...commandArgs] = args
+        if (ApplicationRegistry.getOwner(uid) !== applicationId) {
+          throw new Error(`Component not found in application ${applicationId}: ${uid}`)
+        }
+        return Viewlet.executeViewletCommand(uid, method, ...commandArgs)
+      })
+    case 'Notification.create':
+      return ApplicationRegistry.track(applicationId, () => RendererProcess.invoke('Notification.create', args[0], args[1], application.layoutUid))
     case 'Dialog.show':
       return ApplicationRegistry.track(applicationId, () => Viewlet.openWidgetForApplication(applicationId, ViewletModuleId.Dialog, args[0]))
     case 'Dialog.showWarning':
       return ApplicationRegistry.track(applicationId, () =>
         Viewlet.openWidgetForApplication(applicationId, ViewletModuleId.Dialog, { ...args[0], type: 'warning' }),
       )
-    case 'EditorKeymap.register':
-      return ApplicationRegistry.track(applicationId, () => EditorKeymap.register(args[0], applicationId))
-    case 'EditorKeymap.remove':
-      return ApplicationRegistry.track(applicationId, () => EditorKeymap.remove(args[0], applicationId))
+    case 'Viewlet.openWidget':
+      return ApplicationRegistry.track(applicationId, () => Viewlet.openWidgetForApplication(applicationId, args[0], ...args.slice(1)))
+    case 'QuickPick.showCustom':
+      return ApplicationRegistry.track(applicationId, () => QuickPick.showCustom(args[0], args[1], applicationId))
+    case 'ExtensionHostQuickPick.showQuickPick':
+      return ApplicationRegistry.track(applicationId, () => ExtensionHostQuickPick.showQuickPick(args[0], applicationId))
+    case 'ExtensionHostQuickPick.showQuickInput':
+      return ApplicationRegistry.track(applicationId, () => ExtensionHostQuickPick.showQuickInput(args[0], applicationId))
     case 'ExtensionHost.executeCommand':
       return ApplicationRegistry.track(applicationId, () =>
         ExtensionManagementWorker.invoke('Extensions.invokeForApplication', applicationId, 'Extensions.executeCommand', ...args),
       )
     case 'ExtensionHost.getCommands':
       return ApplicationRegistry.track(applicationId, () => ExtensionHostCommands.getCommands(args[0], args[1], applicationId, args[2]))
-    case 'ExtensionHostQuickPick.showQuickInput':
-      return ApplicationRegistry.track(applicationId, () => ExtensionHostQuickPick.showQuickInput(args[0], applicationId))
-    case 'ExtensionHostQuickPick.showQuickPick':
-      return ApplicationRegistry.track(applicationId, () => ExtensionHostQuickPick.showQuickPick(args[0], applicationId))
     case 'ExtensionHostSourceControl.getEnabledProviderIds':
     case 'ExtensionHostSourceControl.getFileDecorations':
       return ApplicationRegistry.track(applicationId, () =>
@@ -190,32 +204,28 @@ export const execute = (applicationId: string, command: string, ...args: readonl
         }
         await ViewletManager.executeForApplication(applicationId, 'Layout.handleWorkspaceRefresh')
       })
-    case 'GetActiveEditor.applyOpenTextDocumentEdit':
-      return ApplicationRegistry.track(applicationId, () => GetActiveEditor.applyOpenTextDocumentEdit(args[0], args[1], args[2], applicationId))
-    case 'GetActiveEditor.getActiveEditorId':
-      return ApplicationRegistry.track(applicationId, async () => GetActiveEditor.getActiveEditorId(applicationId))
-    case 'GetActiveEditor.getActiveEditorInfo':
-      return ApplicationRegistry.track(applicationId, async () => GetActiveEditor.getActiveEditorInfo(applicationId))
-    case 'GetActiveEditor.getActiveUri':
-      return ApplicationRegistry.track(applicationId, () => GetActiveEditor.getActiveUri(applicationId))
     case 'GetActiveEditor.getDiagnostics':
       return ApplicationRegistry.track(applicationId, () => GetActiveEditor.getDiagnostics(applicationId))
-    case 'GetActiveEditor.getOpenTextDocument':
-      return ApplicationRegistry.track(applicationId, () => GetActiveEditor.getOpenTextDocument(args[0], applicationId))
-    case 'GetActiveEditor.getSelections':
-      return ApplicationRegistry.track(applicationId, () => GetActiveEditor.getSelections(applicationId))
-    case 'GetActiveEditor.getTextDocument':
-      return ApplicationRegistry.track(applicationId, () => GetActiveEditor.getTextDocument(applicationId))
-    case 'GetActiveEditor.getVisibleEditorUris':
-      return ApplicationRegistry.track(applicationId, () => GetActiveEditor.getVisibleEditorUris(applicationId))
+    case 'GetActiveEditor.getActiveEditorInfo':
+      return ApplicationRegistry.track(applicationId, async () => GetActiveEditor.getActiveEditorInfo(applicationId))
     case 'GetActiveEditor.openColorPicker':
       return ApplicationRegistry.track(applicationId, () => GetActiveEditor.openColorPicker(args[0], args[1], applicationId))
+    case 'GetActiveEditor.getActiveEditorId':
+      return ApplicationRegistry.track(applicationId, async () => GetActiveEditor.getActiveEditorId(applicationId))
+    case 'GetActiveEditor.getVisibleEditorUris':
+      return ApplicationRegistry.track(applicationId, () => GetActiveEditor.getVisibleEditorUris(applicationId))
+    case 'GetActiveEditor.getActiveUri':
+      return ApplicationRegistry.track(applicationId, () => GetActiveEditor.getActiveUri(applicationId))
+    case 'GetActiveEditor.getSelections':
+      return ApplicationRegistry.track(applicationId, () => GetActiveEditor.getSelections(applicationId))
     case 'GetActiveEditor.setSelections':
       return ApplicationRegistry.track(applicationId, () => GetActiveEditor.setSelections(args[0], applicationId))
-    case 'Layout.getHref':
-      return Promise.resolve(application.href)
-    case 'Notification.create':
-      return ApplicationRegistry.track(applicationId, () => RendererProcess.invoke('Notification.create', args[0], args[1], application.layoutUid))
+    case 'GetActiveEditor.getTextDocument':
+      return ApplicationRegistry.track(applicationId, () => GetActiveEditor.getTextDocument(applicationId))
+    case 'GetActiveEditor.getOpenTextDocument':
+      return ApplicationRegistry.track(applicationId, () => GetActiveEditor.getOpenTextDocument(args[0], applicationId))
+    case 'GetActiveEditor.applyOpenTextDocumentEdit':
+      return ApplicationRegistry.track(applicationId, () => GetActiveEditor.applyOpenTextDocumentEdit(args[0], args[1], args[2], applicationId))
     case 'PortProvider.forwardPort':
       return ApplicationRegistry.track(applicationId, async () => {
         const { forwardPort } = await import('../PortProvider/PortProvider.ts')
@@ -231,30 +241,20 @@ export const execute = (applicationId: string, command: string, ...args: readonl
         const { stopForwardPort } = await import('../PortProvider/PortProvider.ts')
         await stopForwardPort(application.workspaceUri, args[0], applicationId)
       })
-    case 'Preferences.get':
-      return Promise.resolve(ApplicationPreferences.get(applicationId, args[0]))
-    case 'Preferences.update':
-      return ApplicationPreferences.update(applicationId, args[0])
-    case 'QuickPick.showCustom':
-      return ApplicationRegistry.track(applicationId, () => QuickPick.showCustom(args[0], args[1], applicationId))
-    case 'Viewlet.executeViewletCommand':
-      return ApplicationRegistry.track(applicationId, () => {
-        const [uid, method, ...commandArgs] = args
-        if (ApplicationRegistry.getOwner(uid) !== applicationId) {
-          throw new Error(`Component not found in application ${applicationId}: ${uid}`)
-        }
-        return Viewlet.executeViewletCommand(uid, method, ...commandArgs)
-      })
-    case 'Viewlet.openWidget':
-      return ApplicationRegistry.track(applicationId, () => Viewlet.openWidgetForApplication(applicationId, args[0], ...args.slice(1)))
+    case 'Workspace.getUri':
+    case 'Workspace.getWorkspaceUri':
+      return Promise.resolve(application.workspaceUri)
     case 'Workspace.getHomeDir':
       return Promise.resolve(Workspace.getHomeDir())
     case 'Workspace.getPath':
     case 'Workspace.getWorkspacePath':
       return Promise.resolve(application.workspacePath)
-    case 'Workspace.getUri':
-    case 'Workspace.getWorkspaceUri':
-      return Promise.resolve(application.workspaceUri)
+    case 'Layout.getHref':
+      return Promise.resolve(application.href)
+    case 'Preferences.get':
+      return Promise.resolve(ApplicationPreferences.get(applicationId, args[0]))
+    case 'Preferences.update':
+      return ApplicationPreferences.update(applicationId, args[0])
     default:
       return ApplicationRegistry.track(applicationId, () => ViewletManager.executeForApplication(applicationId, command, ...args))
   }
@@ -312,7 +312,7 @@ const disposeApplication = async (applicationId: string): Promise<void> => {
   ApplicationRegistry.close(applicationId)
   await ApplicationRegistry.waitForOperations(applicationId)
   const errors: unknown[] = []
-  for (const uid of ApplicationRegistry.getUids(applicationId).toReversed()) {
+  for (const uid of [...ApplicationRegistry.getUids(applicationId)].reverse()) {
     try {
       if (ViewletStates.getByUid(uid)) {
         await Viewlet.dispose(uid)
