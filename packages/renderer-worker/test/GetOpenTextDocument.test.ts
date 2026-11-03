@@ -1,4 +1,6 @@
 import { afterEach, beforeEach, expect, jest, test } from '@jest/globals'
+import * as ViewletModuleId from '../src/parts/ViewletModuleId/ViewletModuleId.js'
+import * as ViewletStates from '../src/parts/ViewletStates/ViewletStates.js'
 import * as ApplicationRegistry from '../src/parts/ApplicationRegistry/ApplicationRegistry.ts'
 import { applyOpenTextDocumentEditWithInvoke, getOpenTextDocumentWithInvoke } from '../src/parts/GetActiveEditor/GetActiveEditor.js'
 
@@ -7,9 +9,21 @@ beforeEach(() => {
   ApplicationRegistry.create({ href: '/', id: 'chat-preview', layoutUid: 502, workspacePath: '/project', workspaceUri: 'memfs:///project/' })
   ApplicationRegistry.own('chat-source', 41)
   ApplicationRegistry.own('chat-preview', 42)
+  for (const [id, applicationId] of [
+    [41, 'chat-source'],
+    [42, 'chat-preview'],
+  ] as const) {
+    ViewletStates.set(id, {
+      factory: {},
+      moduleId: ViewletModuleId.EditorText,
+      renderedState: { uid: id },
+      state: { applicationId, id, uid: id, uri: 'memfs:///project/auth.ts' },
+    })
+  }
 })
 
 afterEach(async () => {
+  ViewletStates.reset()
   await ApplicationRegistry.remove('chat-source')
   await ApplicationRegistry.remove('chat-preview')
 })
@@ -84,4 +98,10 @@ test('saves a successful conditional edit and confirms the original document', a
   expect(invoke).toHaveBeenCalledWith('Editor.compareAndSetText', 41, 'memfs:///project/auth.ts', 'source unsaved', 'updated', 'chat-source')
   expect(invoke).toHaveBeenCalledWith('Editor.save', 41, true)
   expect(execute).toHaveBeenCalledWith('Viewlet.executeViewletCommand', 41, 'renderPending')
+})
+
+test('reading a closed file does not transfer unrelated open document contents', async () => {
+  const invoke = createInvoke()
+  await expect(getOpenTextDocumentWithInvoke(invoke, 'memfs:///project/closed.ts', 'chat-source')).resolves.toBeUndefined()
+  expect(invoke).not.toHaveBeenCalled()
 })

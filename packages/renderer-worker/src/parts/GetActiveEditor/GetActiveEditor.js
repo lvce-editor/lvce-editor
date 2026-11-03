@@ -69,10 +69,16 @@ export const getOpenTextDocumentWithInvoke = async (invoke, uri, applicationId) 
   if (!applicationId || !ApplicationRegistry.isOpen(applicationId)) {
     return undefined
   }
-  const keys = await invoke('Editor.getKeys')
-  for (const key of keys) {
-    const id = Number(key)
-    if (ApplicationRegistry.getOwner(id) !== applicationId) {
+  // Inspect local editor metadata first. Searching a closed file must not
+  // transfer the contents of every open editor across the worker boundary.
+  for (const instance of ViewletStates.getValues()) {
+    const { state: metadata, moduleId } = instance
+    const { id, uid, uri: candidateUri } = metadata
+    if (
+      (moduleId !== ViewletModuleId.EditorText && moduleId !== 'EditorText') ||
+      candidateUri !== uri ||
+      ApplicationRegistry.getOwner(uid) !== applicationId
+    ) {
       continue
     }
     const state = await invoke('Editor.getComponentState', id)
