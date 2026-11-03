@@ -56,7 +56,7 @@ test('a rejected conditional edit cannot save or render another version', async 
     }
     return base(method, args[0] as number)
   })
-  const execute = jest.fn(async () => {})
+  const execute = jest.fn(async (..._args: readonly unknown[]) => {})
   await expect(
     applyOpenTextDocumentEditWithInvoke(invoke, execute, 'memfs:///project/auth.ts', 'older text', 'updated', 'chat-source'),
   ).rejects.toThrow('File changed')
@@ -77,7 +77,7 @@ test('saves a successful conditional edit and confirms the original document', a
     }
     return base(method, args[0] as number)
   })
-  const execute = jest.fn(async () => {})
+  const execute = jest.fn(async (..._args: readonly unknown[]) => {})
   await expect(
     applyOpenTextDocumentEditWithInvoke(invoke, execute, 'memfs:///project/auth.ts', 'source unsaved', 'updated', 'chat-source'),
   ).resolves.toBe(true)
