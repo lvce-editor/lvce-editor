@@ -3,6 +3,8 @@ import * as GetActiveEditor from './GetActiveEditor.js'
 export const name = 'GetActiveEditor'
 
 export const Commands = {
+  getOpenTextDocument: GetActiveEditor.getOpenTextDocument,
+  applyOpenTextDocumentEdit: GetActiveEditor.applyOpenTextDocumentEdit,
   getActiveEditorInfo: GetActiveEditor.getActiveEditorInfo,
   openColorPicker: GetActiveEditor.openColorPicker,
   getActiveEditorId: GetActiveEditor.getActiveEditorId,

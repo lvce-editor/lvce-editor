@@ -20,16 +20,16 @@ export const getActiveEditorId = (applicationId) => {
   return instance.state.id
 }
 
-export const getDiagnosticsWithInvoke = async (invoke) => {
-  const instance = ViewletStates.getInstance(ViewletModuleId.EditorText)
+export const getDiagnosticsWithInvoke = async (invoke, applicationId) => {
+  const instance = ViewletStates.getInstance(ViewletModuleId.EditorText, applicationId)
   if (!instance) {
     return []
   }
   return invoke('Editor.getDiagnostics', instance.state.id)
 }
 
-export const getDiagnostics = async () => {
-  return getDiagnosticsWithInvoke(EditorWorker.invoke)
+export const getDiagnostics = async (applicationId) => {
+  return getDiagnosticsWithInvoke(EditorWorker.invoke, applicationId)
 }
 
 export const getTextDocumentWithInvoke = async (invoke, applicationId) => {
@@ -65,13 +65,65 @@ export const getTextDocument = async (applicationId) => {
   return getTextDocumentWithInvoke(EditorWorker.invoke, applicationId)
 }
 
+export const getOpenTextDocumentWithInvoke = async (invoke, uri, applicationId) => {
+  if (!applicationId || !ApplicationRegistry.isOpen(applicationId)) {
+    return undefined
+  }
+  // Inspect local editor metadata first. Searching a closed file must not
+  // transfer the contents of every open editor across the worker boundary.
+  for (const instance of ViewletStates.getValues()) {
+    const { state: metadata, moduleId } = instance
+    const { id, uid, uri: candidateUri } = metadata
+    if (
+      (moduleId !== ViewletModuleId.EditorText && moduleId !== 'EditorText') ||
+      candidateUri !== uri ||
+      ApplicationRegistry.getOwner(uid) !== applicationId
+    ) {
+      continue
+    }
+    const state = await invoke('Editor.getComponentState', id)
+    const { uri: editorUri, applicationId: owner, lines, modified } = state || {}
+    if (editorUri === uri && owner === applicationId && Array.isArray(lines)) {
+      return { id, uri, text: lines.join('\n'), modified: modified === true }
+    }
+  }
+  return undefined
+}
+
+export const getOpenTextDocument = (uri, applicationId) => {
+  return getOpenTextDocumentWithInvoke(EditorWorker.invoke, uri, applicationId)
+}
+
+export const applyOpenTextDocumentEditWithInvoke = async (invoke, execute, uri, expectedText, text, applicationId) => {
+  const document = await getOpenTextDocumentWithInvoke(invoke, uri, applicationId)
+  if (!document) {
+    return false
+  }
+  await invoke('Editor.compareAndSetText', document.id, uri, expectedText, text, applicationId)
+  await invoke('Editor.save', document.id, true)
+  await execute('Viewlet.executeViewletCommand', document.id, 'renderPending')
+  const state = await invoke('Editor.getComponentState', document.id)
+  const { modified, uri: savedUri, applicationId: owner } = state || {}
+  if (savedUri !== uri || owner !== applicationId) {
+    throw new Error(`The editor closed before the edit to ${uri} could be confirmed.`)
+  }
+  if (modified) {
+    throw new Error(`Failed to save ${uri}. The edited contents remain open in the editor.`)
+  }
+  return true
+}
+
+export const applyOpenTextDocumentEdit = (uri, expectedText, text, applicationId) => {
+  return applyOpenTextDocumentEditWithInvoke(EditorWorker.invoke, Command.execute, uri, expectedText, text, applicationId)
+}
+
 export const getSelectionsWithInvoke = async (invoke, applicationId) => {
   const instance = ViewletStates.getInstance(ViewletModuleId.EditorText, applicationId)
   if (!instance) {
     return []
   }
   const selections = await invoke('Editor.getSelections2', instance.state.id)
-  return Array.from(selections)
+  return [...selections]
 }
 
 export const getSelections = async (applicationId) => {
@@ -84,7 +136,7 @@ export const getSelectionTextWithInvoke = async (invoke) => {
     return ''
   }
   const [text, selectionsValue] = await Promise.all([invoke('Editor.getText', instance.state.id), invoke('Editor.getSelections2', instance.state.id)])
-  const selections = Array.from(selectionsValue)
+  const selections = [...selectionsValue]
   if (selections.length < 4) {
     return ''
   }

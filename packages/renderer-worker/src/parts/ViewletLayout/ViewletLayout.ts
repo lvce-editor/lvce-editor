@@ -55,6 +55,16 @@ import type { LayoutState, LayoutStateResult, SideBarFocusModeLayoutStateSnapsho
 
 const mainMinWidth = 100
 const defaultSecondarySideBarViewletId = 'chat2.views.chat'
+const chatRoutePattern = /(?:^|\/)chat\/?$/u
+
+const isChatRoute = (uid: number): boolean => {
+  const applicationId = ApplicationRegistry.getOwner(uid)
+  if (!applicationId || !ApplicationRegistry.isOpen(applicationId)) {
+    return false
+  }
+  const { href } = ApplicationRegistry.get(applicationId)
+  return URL.canParse(href) && chatRoutePattern.test(new URL(href).pathname)
+}
 
 const getTwoPreviewAreasWidth = (state: LayoutState): number => {
   return state.previewOrientation === PreviewOrientation.Vertical ? state.windowWidth / 2 : state.windowWidth / 3
@@ -510,6 +520,7 @@ export const loadContent = (state: LayoutState, savedState: any): LayoutState =>
   const restore = savedState?.restore !== false
   const isStandalone = bounds.isStandalone === true
   const standaloneMobile = restore && isStandalone && windowWidth <= 600
+  const chatRoute = restore && isChatRoute(state.uid)
   const stateToRestore = restore ? savedState : undefined
   const {
     panelHeight,
@@ -528,11 +539,14 @@ export const loadContent = (state: LayoutState, savedState: any): LayoutState =>
   } = getSavedPoints(stateToRestore)
   const savedSecondaryView = getSavedSecondarySideBarView(stateToRestore)
   const savedPrimaryView = getSavedSideBarView(stateToRestore)
-  const savedView = standaloneMobile
-    ? defaultSecondarySideBarViewletId
-    : savedPrimaryView === defaultSecondarySideBarViewletId && savedSecondaryView === defaultSecondarySideBarViewletId
-      ? ViewletModuleId.Explorer
-      : savedPrimaryView
+  const savedView =
+    standaloneMobile || chatRoute
+      ? defaultSecondarySideBarViewletId
+      : savedState?.aiNativeLayout !== true &&
+          savedPrimaryView === defaultSecondarySideBarViewletId &&
+          savedSecondaryView === defaultSecondarySideBarViewletId
+        ? ViewletModuleId.Explorer
+        : savedPrimaryView
   const savedSecondaryViewlets = getSavedSecondarySideBarViewlets(stateToRestore)
   const previewUri = stateToRestore?.previewUri || ''
   const previewViewletId = getSavedPreviewViewletId(stateToRestore)
@@ -628,7 +642,7 @@ export const loadContent = (state: LayoutState, savedState: any): LayoutState =>
     )
   }
   const newState = getPoints(intermediateState, sideBarLocation)
-  if (!restore || (savedState?.aiNativeLayout !== true && !standaloneMobile)) {
+  if (!restore || (savedState?.aiNativeLayout !== true && !standaloneMobile && !chatRoute)) {
     return newState
   }
   return getPoints(

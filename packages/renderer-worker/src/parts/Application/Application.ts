@@ -204,6 +204,8 @@ export const execute = (applicationId: string, command: string, ...args: readonl
         }
         await ViewletManager.executeForApplication(applicationId, 'Layout.handleWorkspaceRefresh')
       })
+    case 'GetActiveEditor.getDiagnostics':
+      return ApplicationRegistry.track(applicationId, () => GetActiveEditor.getDiagnostics(applicationId))
     case 'GetActiveEditor.getActiveEditorInfo':
       return ApplicationRegistry.track(applicationId, async () => GetActiveEditor.getActiveEditorInfo(applicationId))
     case 'GetActiveEditor.openColorPicker':
@@ -220,6 +222,10 @@ export const execute = (applicationId: string, command: string, ...args: readonl
       return ApplicationRegistry.track(applicationId, () => GetActiveEditor.setSelections(args[0], applicationId))
     case 'GetActiveEditor.getTextDocument':
       return ApplicationRegistry.track(applicationId, () => GetActiveEditor.getTextDocument(applicationId))
+    case 'GetActiveEditor.getOpenTextDocument':
+      return ApplicationRegistry.track(applicationId, () => GetActiveEditor.getOpenTextDocument(args[0], applicationId))
+    case 'GetActiveEditor.applyOpenTextDocumentEdit':
+      return ApplicationRegistry.track(applicationId, () => GetActiveEditor.applyOpenTextDocumentEdit(args[0], args[1], args[2], applicationId))
     case 'PortProvider.forwardPort':
       return ApplicationRegistry.track(applicationId, async () => {
         const { forwardPort } = await import('../PortProvider/PortProvider.ts')
