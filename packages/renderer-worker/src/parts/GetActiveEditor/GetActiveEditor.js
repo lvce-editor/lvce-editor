@@ -66,7 +66,7 @@ export const getTextDocument = async (applicationId) => {
 }
 
 export const getOpenTextDocumentWithInvoke = async (invoke, uri, applicationId) => {
-  if (!applicationId || !ApplicationRegistry.isOpen(applicationId)) {
+  if (applicationId !== undefined && (!applicationId || !ApplicationRegistry.isOpen(applicationId))) {
     return undefined
   }
   // Inspect local editor metadata first. Searching a closed file must not

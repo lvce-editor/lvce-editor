@@ -105,3 +105,26 @@ test('reading a closed file does not transfer unrelated open document contents',
   await expect(getOpenTextDocumentWithInvoke(invoke, 'memfs:///project/closed.ts', 'chat-source')).resolves.toBeUndefined()
   expect(invoke).not.toHaveBeenCalled()
 })
+
+test('reads a legacy window buffer without accessing application-owned editors', async () => {
+  ViewletStates.set(43, {
+    factory: {},
+    moduleId: ViewletModuleId.EditorText,
+    renderedState: { uid: 43 },
+    state: { id: 43, uid: 43, uri: 'memfs:///project/auth.ts' },
+  })
+  const invoke = jest.fn(async (_method: string, _id: number) => ({
+    applicationId: undefined,
+    lines: ['legacy unsaved'],
+    modified: true,
+    uri: 'memfs:///project/auth.ts',
+  }))
+  await expect(getOpenTextDocumentWithInvoke(invoke, 'memfs:///project/auth.ts', undefined)).resolves.toEqual({
+    id: 43,
+    modified: true,
+    text: 'legacy unsaved',
+    uri: 'memfs:///project/auth.ts',
+  })
+  expect(invoke).toHaveBeenCalledTimes(1)
+  expect(invoke).toHaveBeenCalledWith('Editor.getComponentState', 43)
+})
