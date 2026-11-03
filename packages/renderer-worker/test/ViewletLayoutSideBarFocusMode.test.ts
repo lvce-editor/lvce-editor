@@ -440,3 +440,32 @@ test('AI-native activity bar visibility survives reload and exiting AI-native re
     }),
   )
 })
+
+test('restoring AI-native chat keeps the primary chat when the secondary default is also chat', async () => {
+  const state = { ...createState(), sideBarView: 'chat2.views.chat', secondarySideBarView: 'chat2.views.chat' }
+  const focused = await ViewletLayout.enterSideBarFocusMode(state, 'primary', true)
+  const restored = ViewletLayout.loadContent(ViewletLayout.create(2), {
+    ...ViewletLayout.saveState(focused.newState),
+    Layout: { bounds: { windowWidth: 1200, windowHeight: 800 } },
+  })
+  expect(restored.sideBarView).toBe('chat2.views.chat')
+  expect(restored.aiNativeLayout).toBe(true)
+})
+
+test('a fresh application at the chat route opens chat without saved layout state', async () => {
+  const applications = await import('../src/parts/ApplicationRegistry/ApplicationRegistry.ts')
+  applications.create({
+    href: 'https://editor.example/chat-view-2/chat/',
+    id: 'fresh-chat-route',
+    layoutUid: 9501,
+    workspacePath: '',
+    workspaceUri: '',
+  })
+  try {
+    const restored = ViewletLayout.loadContent(ViewletLayout.create(9501), { Layout: { bounds: { windowWidth: 1200, windowHeight: 800 } } })
+    expect(restored.sideBarView).toBe('chat2.views.chat')
+    expect(restored.aiNativeLayout).toBe(true)
+  } finally {
+    await applications.remove('fresh-chat-route')
+  }
+})

@@ -97,7 +97,10 @@ export const applyOpenTextDocumentEditWithInvoke = async (invoke, execute, uri, 
   await invoke('Editor.save', document.id, true)
   await execute('Viewlet.executeViewletCommand', document.id, 'renderPending')
   const state = await invoke('Editor.getComponentState', document.id)
-  const { modified } = state || {}
+  const { modified, uri: savedUri, applicationId: owner } = state || {}
+  if (savedUri !== uri || owner !== applicationId) {
+    throw new Error(`The editor closed before the edit to ${uri} could be confirmed.`)
+  }
   if (modified) {
     throw new Error(`Failed to save ${uri}. The edited contents remain open in the editor.`)
   }

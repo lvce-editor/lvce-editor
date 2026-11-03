@@ -63,3 +63,25 @@ test('a rejected conditional edit cannot save or render another version', async 
   expect(invoke).not.toHaveBeenCalledWith('Editor.save', 41, true)
   expect(execute).not.toHaveBeenCalled()
 })
+
+test('saves a successful conditional edit and confirms the original document', async () => {
+  const base = createInvoke()
+  let saved = false
+  const invoke = jest.fn(async (method: string, ...args: readonly unknown[]) => {
+    if (method === 'Editor.save') {
+      saved = true
+      return undefined
+    }
+    if (method === 'Editor.getComponentState' && saved) {
+      return { applicationId: 'chat-source', modified: false, uri: 'memfs:///project/auth.ts' }
+    }
+    return base(method, args[0] as number)
+  })
+  const execute = jest.fn(async () => {})
+  await expect(
+    applyOpenTextDocumentEditWithInvoke(invoke, execute, 'memfs:///project/auth.ts', 'source unsaved', 'updated', 'chat-source'),
+  ).resolves.toBe(true)
+  expect(invoke).toHaveBeenCalledWith('Editor.compareAndSetText', 41, 'memfs:///project/auth.ts', 'source unsaved', 'updated', 'chat-source')
+  expect(invoke).toHaveBeenCalledWith('Editor.save', 41, true)
+  expect(execute).toHaveBeenCalledWith('Viewlet.executeViewletCommand', 41, 'renderPending')
+})
