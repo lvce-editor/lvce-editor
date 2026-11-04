@@ -160,7 +160,9 @@ export const startup = async (initData, platform, assetDir) => {
   if (hasAuthCallback) {
     await CleanAuthCallbackUrl.cleanAuthCallbackUrl(initData.Location.href)
   }
-  const authState = shouldInitializeAuth(hasAuthCallback, promptOptions !== undefined)
+  // Browser callbacks are stored by the static callback page before it returns
+  // to the app, so initialize auth on web startup even when the URL is clean.
+  const authState = shouldInitializeAuth(hasAuthCallback, promptOptions !== undefined, platform === PlatformType.Web)
     ? await StartupAuth.initializeAuth(platform, initData.Location.href)
     : undefined
 
