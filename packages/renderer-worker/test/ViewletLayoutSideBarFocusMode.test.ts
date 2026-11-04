@@ -10,12 +10,18 @@ jest.unstable_mockModule('../src/parts/Viewlet/Viewlet.js', () => ({
   disposeFunctional: () => [],
   resize: async () => [],
 }))
-jest.unstable_mockModule('../src/parts/ViewletStates/ViewletStates.js', () => ({ getInstance: () => undefined }))
+const layoutStates = new Map<number, unknown>()
+jest.unstable_mockModule('../src/parts/ViewletStates/ViewletStates.js', () => ({
+  getInstance: () => undefined,
+  getState: (uid: number) => layoutStates.get(uid),
+  setState: (uid: number, state: unknown) => layoutStates.set(uid, state),
+}))
 jest.unstable_mockModule('../src/parts/SaveState/SaveState.js', () => ({
   saveViewletState: async () => undefined,
   saveViewletStateWithStorageId: async () => undefined,
 }))
-jest.unstable_mockModule('../src/parts/ViewletManager/ViewletManager.js', () => ({ load: async () => [] }))
+const viewletLoad = jest.fn<(...args: readonly any[]) => Promise<any[]>>(async () => [])
+jest.unstable_mockModule('../src/parts/ViewletManager/ViewletManager.js', () => ({ load: viewletLoad }))
 const LayoutPoints = await import('../src/parts/ViewletLayout/LayoutPoints.ts')
 const ViewletLayout = await import('../src/parts/ViewletLayout/ViewletLayout.ts')
 
@@ -115,6 +121,42 @@ test('leaveSideBarFocusMode restores the previous layout', async () => {
       sideBarWidth: state.sideBarWidth,
     }),
   )
+})
+
+test('returning from a cold AI-native reload creates missing IDE parts before referencing them', async () => {
+  const state = createState()
+  const focused = await ViewletLayout.enterSideBarFocusMode(state, 'primary', true)
+  const saved = ViewletLayout.saveState(focused.newState)
+  const reloaded = ViewletLayout.loadContent(ViewletLayout.create(2), {
+    ...saved,
+    Layout: { bounds: { windowWidth: state.windowWidth, windowHeight: state.windowHeight } },
+  })
+  viewletLoad.mockClear()
+  const result = await ViewletLayout.leaveSideBarFocusMode(reloaded)
+  expect(result.newState.mainId).not.toBe(-1)
+  expect(result.newState.titleBarId).not.toBe(-1)
+  expect(result.newState.statusBarId).not.toBe(-1)
+  expect(viewletLoad.mock.calls.map(([options]) => options.id)).toEqual(expect.arrayContaining(['Main', 'TitleBar', 'StatusBar']))
+  expect(viewletLoad.mock.calls.every(([options]) => options.parentUid === reloaded.uid)).toBe(true)
+})
+
+test('returning to an initialized IDE reuses its existing workbench parts', async () => {
+  const state = {
+    ...createState(),
+    mainId: 11,
+    activityBarId: 12,
+    sideBarId: 13,
+    secondarySideBarId: 14,
+    titleBarId: 15,
+    statusBarId: 16,
+    panelId: 17,
+    previewId: 18,
+  }
+  const focused = await ViewletLayout.enterSideBarFocusMode(state, 'primary', true)
+  viewletLoad.mockClear()
+  const result = await ViewletLayout.leaveSideBarFocusMode(focused.newState)
+  expect(result.newState.mainId).toBe(11)
+  expect(viewletLoad).not.toHaveBeenCalled()
 })
 
 test('toggleSideBar toggles Chat 2 sessions in AI-native layout', async () => {
