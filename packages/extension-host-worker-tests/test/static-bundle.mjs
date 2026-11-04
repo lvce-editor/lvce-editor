@@ -114,9 +114,26 @@ try {
     const errors = []
     page.on('worker', (worker) => workers.push(new URL(worker.url()).pathname))
     page.on('pageerror', (error) => errors.push(error.message))
+    const startupFailures = []
+    const recordStartupFailure = (failure) => {
+      startupFailures.push(failure)
+      if (startupFailures.length > 20) startupFailures.shift()
+    }
+    page.on('requestfailed', (request) => recordStartupFailure({ url: request.url(), error: request.failure()?.errorText }))
+    page.on('response', (response) => {
+      if (response.status() >= 400) recordStartupFailure({ url: response.url(), status: response.status() })
+    })
+    page.on('console', (message) => {
+      if (message.type() === 'error') recordStartupFailure({ console: message.text() })
+    })
     const start = Date.now()
-    await page.goto(`http://127.0.0.1:${address.port}${prefix}/`)
-    await page.getByRole('tab', { name: 'Explorer', exact: true }).waitFor()
+    try {
+      await page.goto(`http://127.0.0.1:${address.port}${prefix}/`)
+      await page.getByRole('tab', { name: 'Explorer', exact: true }).waitFor()
+    } catch (error) {
+      console.error('Static bundle startup evidence:', JSON.stringify({ bundleMode: name, workers, errors, startupFailures }))
+      throw error
+    }
     const startupMs = Date.now() - start
     const moduleUrl = `${prefix}/${commitHash}/packages/renderer-process/dist/${entry}`
     const tunnelAccessUrl = await page.evaluate(async (url) => {
