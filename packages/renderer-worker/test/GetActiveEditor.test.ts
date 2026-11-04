@@ -490,3 +490,36 @@ test('color picker supports an explicitly targeted workbench editor', async () =
   await GetActiveEditor.openColorPickerWithCommand(executeCommand, 42, undefined)
   expect(executeCommand).toHaveBeenCalledWith('Viewlet.executeViewletCommand', 42, 'openColorPicker', undefined)
 })
+
+test('open editor URIs include hidden tabs and remain scoped when a different application is focused', async () => {
+  for (const [uid, applicationId] of [
+    [141, 'source'],
+    [142, 'preview'],
+  ]) {
+    ApplicationRegistry.create({ id: applicationId, layoutUid: uid + 100 })
+    ViewletStates.set(uid, {
+      factory: {},
+      moduleId: 'Main',
+      renderedState: { uid },
+      state: { uid, applicationId },
+    })
+  }
+  ViewletStates.setFocusedInstanceByType(142, 'Main')
+  const invoke = jest.fn(async (_command, uid) => ({
+    layout: {
+      groups: [
+        { activeTabId: 1, tabs: [{ id: 1, uri: `memfs:///${uid}/active.ts` }, { id: 2, uri: `memfs:///${uid}/hidden.ts` }, { id: 3 }] },
+        { activeTabId: 4, tabs: [{ id: 4, uri: `memfs:///${uid}/second.ts` }] },
+      ],
+    },
+  }))
+  await expect(GetActiveEditor.getOpenEditorUrisWithInvoke(invoke, 'source')).resolves.toEqual([
+    'memfs:///141/active.ts',
+    'memfs:///141/hidden.ts',
+    'memfs:///141/second.ts',
+  ])
+  expect(invoke).toHaveBeenCalledWith('MainArea.saveState', 141)
+  invoke.mockClear()
+  await expect(GetActiveEditor.getOpenEditorUrisWithInvoke(invoke, 'missing')).resolves.toEqual([])
+  expect(invoke).not.toHaveBeenCalled()
+})

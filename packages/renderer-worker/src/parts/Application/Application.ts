@@ -212,6 +212,8 @@ export const execute = (applicationId: string, command: string, ...args: readonl
       return ApplicationRegistry.track(applicationId, () => GetActiveEditor.openColorPicker(args[0], args[1], applicationId))
     case 'GetActiveEditor.getActiveEditorId':
       return ApplicationRegistry.track(applicationId, async () => GetActiveEditor.getActiveEditorId(applicationId))
+    case 'GetActiveEditor.getOpenEditorUris':
+      return ApplicationRegistry.track(applicationId, () => GetActiveEditor.getOpenEditorUris(applicationId))
     case 'GetActiveEditor.getVisibleEditorUris':
       return ApplicationRegistry.track(applicationId, () => GetActiveEditor.getVisibleEditorUris(applicationId))
     case 'GetActiveEditor.getActiveUri':

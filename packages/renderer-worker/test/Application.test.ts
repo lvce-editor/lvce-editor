@@ -32,6 +32,7 @@ jest.unstable_mockModule('../src/parts/ViewletManager/ViewletManager.js', () => 
 
 jest.unstable_mockModule('../src/parts/GetActiveEditor/GetActiveEditor.js', () => ({
   getActiveEditorInfo: jest.fn(async () => ({ id: 42, uri: 'memfs:///preview.css' })),
+  getOpenEditorUris: jest.fn(async () => ['memfs:///source.ts', 'memfs:///hidden.ts']),
   openColorPicker: jest.fn(async () => {}),
   getSelections: jest.fn(async () => [0, 1, 0, 4]),
   setSelections: jest.fn(async () => {}),
@@ -382,4 +383,13 @@ test('editor snapshot and explicit color picker route retain their application s
   expect(GetActiveEditor.getActiveEditorInfo).toHaveBeenCalledWith('preview')
   await Application.execute('preview', 'GetActiveEditor.openColorPicker', 42, '#ff8800')
   expect(GetActiveEditor.openColorPicker).toHaveBeenCalledWith(42, '#ff8800', 'preview')
+})
+
+test('open editor snapshot includes inactive tabs from the requesting application', async () => {
+  await Application.create(options('source'))
+  await Application.create(options('preview'))
+  jest.clearAllMocks()
+  await expect(Application.execute('source', 'GetActiveEditor.getOpenEditorUris')).resolves.toEqual(['memfs:///source.ts', 'memfs:///hidden.ts'])
+  expect(GetActiveEditor.getOpenEditorUris).toHaveBeenCalledWith('source')
+  expect(ViewletManager.executeForApplication).not.toHaveBeenCalled()
 })
