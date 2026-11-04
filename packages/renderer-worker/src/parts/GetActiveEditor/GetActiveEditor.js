@@ -155,8 +155,8 @@ export const getSelectionText = async () => {
   return getSelectionTextWithInvoke(EditorWorker.invoke)
 }
 
-export const getOpenEditorUrisWithInvoke = async (invoke) => {
-  const instance = ViewletStates.getInstance(ViewletModuleId.Main)
+export const getOpenEditorUrisWithInvoke = async (invoke, applicationId) => {
+  const instance = ViewletStates.getInstance(ViewletModuleId.Main, applicationId)
   if (!instance) {
     return []
   }
@@ -164,8 +164,8 @@ export const getOpenEditorUrisWithInvoke = async (invoke) => {
   return savedState.layout.groups.flatMap((group) => group.tabs.map((tab) => tab.uri).filter((uri) => typeof uri === 'string'))
 }
 
-export const getOpenEditorUris = () => {
-  return getOpenEditorUrisWithInvoke(MainAreaWorker.invoke)
+export const getOpenEditorUris = (applicationId) => {
+  return getOpenEditorUrisWithInvoke(MainAreaWorker.invoke, applicationId)
 }
 
 export const getVisibleEditorUrisWithInvoke = async (invoke, applicationId) => {
