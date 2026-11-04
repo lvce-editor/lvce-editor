@@ -22,6 +22,7 @@ import * as LayoutKeys from '../LayoutKeys/LayoutKeys.js'
 import * as LayoutModules from '../LayoutModules/LayoutModules.ts'
 import * as MenuEntriesState from '../MenuEntriesState/MenuEntriesState.js'
 import * as Location from '../Location/Location.js'
+import { state as locationState } from '../LocationState/LocationState.js'
 import * as PanelWorker from '../PanelWorker/PanelWorker.js'
 import * as OpenTextSearch from '../OpenTextSearch/OpenTextSearch.ts'
 import * as Platform from '../Platform/Platform.js'
@@ -59,10 +60,10 @@ const chatRoutePattern = /(?:^|\/)chat\/?$/u
 
 const isChatRoute = (uid: number): boolean => {
   const applicationId = ApplicationRegistry.getOwner(uid)
-  if (!applicationId || !ApplicationRegistry.isOpen(applicationId)) {
+  if (applicationId !== undefined && !ApplicationRegistry.isOpen(applicationId)) {
     return false
   }
-  const { href } = ApplicationRegistry.get(applicationId)
+  const { href } = applicationId === undefined ? locationState : ApplicationRegistry.get(applicationId)
   return URL.canParse(href) && chatRoutePattern.test(new URL(href).pathname)
 }
 
@@ -931,7 +932,7 @@ export const leaveSideBarFocusMode = async (state: LayoutState): Promise<LayoutS
       commands: [],
     }
   }
-  const newState = getPoints({
+  let newState = getPoints({
     ...state,
     ...state.sideBarFocusModeLayout,
     aiNativeLayout: false,
@@ -940,10 +941,29 @@ export const leaveSideBarFocusMode = async (state: LayoutState): Promise<LayoutS
     sideBarFocusModeLayout: undefined,
     sideBarFocusModeTarget: 'primary',
   })
+  const restoredCommands: any[] = []
+  // Cold AI-native startup skips hidden parts. Create their roots before the
+  // restored layout references them; resizing only handles existing instances.
+  for (const module of [
+    LayoutModules.Main,
+    LayoutModules.ActivityBar,
+    LayoutModules.SideBar,
+    LayoutModules.SecondarySideBar,
+    LayoutModules.TitleBar,
+    LayoutModules.StatusBar,
+    LayoutModules.Panel,
+    LayoutModules.Preview,
+    LayoutModules.SecondaryPreview,
+  ]) {
+    if (!newState[module.kVisible] || newState[module.kId] !== -1) continue
+    const result = await show({ ...newState, [module.kVisible]: false }, module, module === LayoutModules.SideBar ? newState.sideBarView : undefined)
+    newState = result.newState
+    restoredCommands.push(...result.commands)
+  }
   const activityBarCommands = state.aiNativeLayout ? await setActivityBarAiNativeLayout(newState.activityBarId, false) : []
   return {
     newState,
-    commands: [...activityBarCommands, ...(await getResizeCommands(state, newState))],
+    commands: [...restoredCommands, ...activityBarCommands, ...(await getResizeCommands(state, newState))],
   }
 }
 
