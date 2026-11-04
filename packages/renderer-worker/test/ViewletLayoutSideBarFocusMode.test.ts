@@ -142,6 +142,21 @@ test('returning from a cold AI-native reload creates missing IDE parts before re
   expect(viewletLoad.mock.calls.every(([options]) => options.parentUid === reloaded.uid)).toBe(true)
 })
 
+test('a fresh direct chat route selects chat in the default window without an application owner', async () => {
+  const { state: location } = await import('../src/parts/LocationState/LocationState.js')
+  const previous = location.href
+  location.href = 'https://example.com/chat-view-2/chat/'
+  try {
+    const restored = ViewletLayout.loadContent(ViewletLayout.create(517), {
+      Layout: { bounds: { windowWidth: 1200, windowHeight: 800 } },
+    })
+    expect(restored.aiNativeLayout).toBe(true)
+    expect(restored.sideBarView).toBe('chat2.views.chat')
+  } finally {
+    location.href = previous
+  }
+})
+
 test('returning to an initialized IDE reuses its existing workbench parts', async () => {
   const state = {
     ...createState(),

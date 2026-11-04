@@ -22,6 +22,7 @@ import * as LayoutKeys from '../LayoutKeys/LayoutKeys.js'
 import * as LayoutModules from '../LayoutModules/LayoutModules.ts'
 import * as MenuEntriesState from '../MenuEntriesState/MenuEntriesState.js'
 import * as Location from '../Location/Location.js'
+import { state as locationState } from '../LocationState/LocationState.js'
 import * as PanelWorker from '../PanelWorker/PanelWorker.js'
 import * as OpenTextSearch from '../OpenTextSearch/OpenTextSearch.ts'
 import * as Platform from '../Platform/Platform.js'
@@ -59,10 +60,10 @@ const chatRoutePattern = /(?:^|\/)chat\/?$/u
 
 const isChatRoute = (uid: number): boolean => {
   const applicationId = ApplicationRegistry.getOwner(uid)
-  if (!applicationId || !ApplicationRegistry.isOpen(applicationId)) {
+  if (applicationId !== undefined && !ApplicationRegistry.isOpen(applicationId)) {
     return false
   }
-  const { href } = ApplicationRegistry.get(applicationId)
+  const { href } = applicationId === undefined ? locationState : ApplicationRegistry.get(applicationId)
   return URL.canParse(href) && chatRoutePattern.test(new URL(href).pathname)
 }
 
