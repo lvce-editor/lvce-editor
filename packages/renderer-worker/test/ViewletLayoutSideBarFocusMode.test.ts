@@ -20,7 +20,9 @@ jest.unstable_mockModule('../src/parts/SaveState/SaveState.js', () => ({
   saveViewletState: async () => undefined,
   saveViewletStateWithStorageId: async () => undefined,
 }))
-const viewletLoad = jest.fn<(...args: readonly any[]) => Promise<any[]>>(async () => [])
+const viewletLoad = jest.fn<(options: { readonly id: string; readonly parentUid: number }, ...args: readonly unknown[]) => Promise<unknown[]>>(
+  async () => [],
+)
 jest.unstable_mockModule('../src/parts/ViewletManager/ViewletManager.js', () => ({ load: viewletLoad }))
 const LayoutPoints = await import('../src/parts/ViewletLayout/LayoutPoints.ts')
 const ViewletLayout = await import('../src/parts/ViewletLayout/ViewletLayout.ts')
