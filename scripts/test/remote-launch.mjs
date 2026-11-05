@@ -2,7 +2,8 @@ import assert from 'node:assert/strict'
 import { readFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { chromium } from '@playwright/test'
-import { WebSocket } from 'ws'
+import { createServer } from 'node:http'
+import { connect } from 'node:net'
 import { createFixture } from '../../.tmp/remote-account-tests/packages/e2e/scripts/remote-web-fixture.js'
 
 // Stub only account metadata and DNS routing. Exchange real account grants,
@@ -10,6 +11,8 @@ import { createFixture } from '../../.tmp/remote-account-tests/packages/e2e/scri
 const first = await createFixture({ accountOnly: true })
 let second
 let browser
+let proxy
+const proxySockets = new Set()
 try {
   const previous = process.env.LVCE_REMOTE_WEB_FRONTEND_URL
   process.env.LVCE_REMOTE_WEB_FRONTEND_URL = first.url
@@ -23,7 +26,32 @@ try {
     ['first.test', first],
     ['second.test', second],
   ])
-  browser = await chromium.launch({ headless: true })
+  proxy = createServer((request, response) => response.writeHead(502).end())
+  proxy.on('connect', (request, client, head) => {
+    const hostname = request.url.split(':')[0]
+    const fixture = targets.get(hostname)
+    if (!fixture) {
+      client.destroy()
+      return
+    }
+    const endpoint = new URL(fixture.publicUrl)
+    const upstream = connect(Number(endpoint.port), '127.0.0.1', () => {
+      client.write('HTTP/1.1 200 Connection Established\r\n\r\n')
+      if (head.length) upstream.write(head)
+      client.pipe(upstream)
+      upstream.pipe(client)
+    })
+    for (const socket of [client, upstream]) {
+      proxySockets.add(socket)
+      socket.on('close', () => proxySockets.delete(socket))
+    }
+    upstream.on('error', () => client.destroy())
+    client.on('error', () => upstream.destroy())
+    client.on('close', () => upstream.destroy())
+    upstream.on('close', () => client.destroy())
+  })
+  await new Promise((resolve) => proxy.listen(0, '127.0.0.1', resolve))
+  browser = await chromium.launch({ headless: true, proxy: { server: `http://127.0.0.1:${proxy.address().port}`, bypass: 'localhost,127.0.0.1' } })
   for (const [hostname, fixture] of targets) {
     const context = await browser.newContext({ ignoreHTTPSErrors: true })
     try {
@@ -48,23 +76,6 @@ try {
             const session = await response.json()
             await route.fulfill({ response, json: { ...session, websocketUrl: `wss://${target}/` } })
           } else await route.fulfill({ response })
-        })
-        await context.routeWebSocket(`wss://${target}/**`, (socket) => {
-          const url = new URL(socket.url())
-          const upstream = new URL(url.pathname + url.search, remote.publicUrl.replace('https:', 'wss:'))
-          const connection = new WebSocket(upstream, { origin: new URL(first.url).origin, rejectUnauthorized: false })
-          const pending = []
-          socket.onMessage((message) => {
-            if (connection.readyState === WebSocket.OPEN) connection.send(message)
-            else pending.push(message)
-          })
-          connection.on('open', () => {
-            for (const message of pending) connection.send(message)
-          })
-          connection.on('message', (data, binary) => socket.send(binary ? data : data.toString()))
-          connection.on('error', () => socket.close({ code: 1011, reason: 'Fixture upstream connection failed' }))
-          connection.on('close', () => socket.close())
-          socket.onClose(() => connection.close())
         })
       }
       const page = await context.newPage()
@@ -148,6 +159,8 @@ try {
   }
 } finally {
   await browser?.close()
+  for (const socket of proxySockets) socket.destroy()
+  if (proxy) await new Promise((resolve) => proxy.close(resolve))
   await second?.dispose()
   await first.dispose()
 }
