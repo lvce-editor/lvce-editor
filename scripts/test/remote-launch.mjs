@@ -2,6 +2,7 @@ import assert from 'node:assert/strict'
 import { readFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { chromium } from '@playwright/test'
+import { WebSocket } from 'ws'
 import { createFixture } from '../../.tmp/remote-account-tests/packages/e2e/scripts/remote-web-fixture.js'
 
 // Stub only account metadata and DNS routing. Exchange real account grants,
@@ -51,10 +52,31 @@ try {
         await context.routeWebSocket(`wss://${target}/**`, (socket) => {
           const url = new URL(socket.url())
           const upstream = new URL(url.pathname + url.search, remote.publicUrl.replace('https:', 'wss:'))
-          socket.connectToServer(upstream.href)
+          const connection = new WebSocket(upstream, { origin: new URL(first.url).origin, rejectUnauthorized: false })
+          const pending = []
+          socket.onMessage((message) => {
+            if (connection.readyState === WebSocket.OPEN) connection.send(message)
+            else pending.push(message)
+          })
+          connection.on('open', () => {
+            for (const message of pending) connection.send(message)
+          })
+          connection.on('message', (data, binary) => socket.send(binary ? data : data.toString()))
+          connection.on('error', () => socket.close({ code: 1011, reason: 'Fixture upstream connection failed' }))
+          connection.on('close', () => socket.close())
+          socket.onClose(() => connection.close())
         })
       }
       const page = await context.newPage()
+      const diagnostics = []
+      page.on('console', (message) => {
+        if (message.type() === 'error') diagnostics.push({ console: message.text() })
+      })
+      page.on('pageerror', (error) => diagnostics.push({ error: error.message }))
+      page.on('requestfailed', (request) => diagnostics.push({ path: new URL(request.url()).pathname, failure: request.failure()?.errorText }))
+      page.on('response', (response) => {
+        if (response.status() >= 400) diagnostics.push({ path: new URL(response.url()).pathname, status: response.status() })
+      })
       await page.goto(new URL('account-browser-test.html', first.url).href)
       await page.evaluate(async (backendUrl) => {
         localStorage.setItem('settings', JSON.stringify({ 'layout.backendUrl': backendUrl }))
@@ -95,7 +117,15 @@ try {
       const launchUrl = new URL(first.url)
       launchUrl.searchParams.set('remoteServer', hostname)
       await page.goto(launchUrl.href)
-      await page.getByRole('treeitem', { name: 'hello.txt', exact: true }).waitFor({ timeout: 30000 })
+      try {
+        await page.getByRole('treeitem', { name: 'hello.txt', exact: true }).waitFor({ timeout: 30000 })
+      } catch (error) {
+        console.error(
+          'Remote launch evidence:',
+          JSON.stringify({ hostname, authorizations, diagnostics, text: await page.locator('body').innerText() }),
+        )
+        throw error
+      }
       assert.deepEqual(authorizations, [hostname], 'Launch must authorize only the selected machine')
       const workspaceUri = `remote-server://${hostname}${fixture.workspace}`
       await page.waitForURL((url) => url.hash === `#workspace=${encodeURIComponent(workspaceUri)}`)
