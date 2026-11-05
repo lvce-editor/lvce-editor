@@ -79,3 +79,20 @@ test('initializeAuth falls back to product backend url', async () => {
   expect(AuthWorker.initialize).toHaveBeenCalledWith('https://default.example', 2, 'https://app.example/')
   expect(result).toEqual(authState)
 })
+
+test('initializeAuth returns a safe logged out state when auth initialization fails', async () => {
+  // @ts-ignore
+  Preferences.get.mockReturnValue('https://configured.example')
+  // @ts-ignore
+  AuthWorker.initialize.mockRejectedValue(new Error('ResponseBodyError: sensitive response payload'))
+
+  const result = await StartupAuth.initializeAuth(1, 'https://app.example/')
+
+  expect(result).toEqual({
+    authAccessToken: '',
+    authErrorMessage: 'Sign in could not be completed. Please try again.',
+    userName: '',
+    userState: 'loggedOut',
+  })
+  expect(result.authErrorMessage).not.toContain('sensitive response payload')
+})
