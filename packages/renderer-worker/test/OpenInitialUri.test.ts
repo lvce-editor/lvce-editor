@@ -2,17 +2,17 @@ import { beforeEach, expect, jest, test } from '@jest/globals'
 
 const Command = await import('../src/parts/Command/Command.js')
 const getAccounts = jest.fn<() => Promise<unknown[]>>()
-const connect = jest.fn<(...args: unknown[]) => Promise<void>>()
-const notify = jest.fn<(...args: unknown[]) => Promise<void>>()
+const connect = jest.fn<(...args: readonly unknown[]) => Promise<void>>()
+const notify = jest.fn<(...args: readonly unknown[]) => Promise<void>>()
 const signIn = jest.fn<() => Promise<void>>()
-jest.unstable_mockModule('../src/parts/Authentication/Authentication.ts', () => ({ getAccounts }))
-jest.unstable_mockModule('../src/parts/ExtensionHost/ExtensionHostCommands.js', () => ({ executeCommand: connect }))
-jest.unstable_mockModule('../src/parts/Notification/Notification.js', () => ({ create: notify }))
 const OpenInitialUri = await import('../src/parts/OpenInitialUri/OpenInitialUri.js')
 const openUri = jest.fn()
 
 Command.register('Main.openUri', openUri)
 Command.register('Layout.signIn', signIn)
+Command.register('Authentication.getAccounts', getAccounts)
+Command.register('ExtensionHost.executeCommand', connect)
+Command.register('Notification.create', notify)
 
 beforeEach(() => {
   jest.resetAllMocks()
