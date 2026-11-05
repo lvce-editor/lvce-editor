@@ -51,6 +51,25 @@ test('retries a transient HTTP failure with a fresh request and output', async (
   expect(readFileSync(outFile, 'utf8')).toBe('valid archive')
 })
 
+test('retries repeated gateway timeouts with a fresh request and output', async () => {
+  let requests = 0
+  const url = await createTestServer((_request, response) => {
+    requests++
+    if (requests <= 4) {
+      response.writeHead(504)
+      response.end('gateway timeout')
+      return
+    }
+    response.end('valid archive')
+  })
+  const outFile = await createOutputFile()
+
+  await downloadUrl(url, outFile, { retryDelayMs: 0 })
+
+  expect(requests).toBe(5)
+  expect(readFileSync(outFile, 'utf8')).toBe('valid archive')
+})
+
 test('stops after the retry limit and removes the partial output', async () => {
   let requests = 0
   const url = await createTestServer((_request, response) => {
@@ -60,7 +79,7 @@ test('stops after the retry limit and removes the partial output', async () => {
   })
   const outFile = await createOutputFile()
 
-  await expect(downloadUrl(url, outFile, { retryDelayMs: 0 })).rejects.toThrow(/status code 500/)
+  await expect(downloadUrl(url, outFile, { retryLimit: 2, retryDelayMs: 0 })).rejects.toThrow(/status code 500/)
 
   expect(requests).toBe(3)
   expect(existsSync(outFile)).toBe(false)
