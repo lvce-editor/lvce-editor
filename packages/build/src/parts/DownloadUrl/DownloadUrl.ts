@@ -5,7 +5,7 @@ import { dirname } from 'node:path'
 import { pipeline } from 'node:stream/promises'
 import { VError } from '@lvce-editor/verror'
 
-const DOWNLOAD_RETRY_LIMIT = 2
+const DOWNLOAD_RETRY_LIMIT = 4
 const DOWNLOAD_RETRY_DELAY_MS = 1000
 
 const TRANSIENT_HTTP_STATUS_CODES = new Set([408, 429, 500, 502, 503, 504, 521, 522, 524])
@@ -55,7 +55,8 @@ export const downloadUrl = async (url, outFile, options: { retryLimit?: number; 
         if (!isRetryableDownloadError(error) || attempt === retryLimit) {
           throw error
         }
-        await wait(retryDelayMs * 2 ** attempt)
+        const retryDelayCeilingMs = retryDelayMs * 2 ** attempt
+        await wait(Math.random() * retryDelayCeilingMs)
       }
     }
   } catch (error) {
