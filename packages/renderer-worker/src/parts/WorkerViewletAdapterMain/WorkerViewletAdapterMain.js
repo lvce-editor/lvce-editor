@@ -1,4 +1,5 @@
 import * as Viewlet from '../Viewlet/Viewlet.js'
+import * as SaveState from '../SaveState/SaveState.js'
 import { getKeyBindings } from '../ViewletMain/ViewletMainKeyBindings.js'
 import { getQuickPickMenuEntries, menus } from '../ViewletMain/ViewletMainMenuEntries.js'
 import { openUri } from '../ViewletMain/ViewletMainOpenUri.ts'
@@ -30,6 +31,18 @@ const openEditorWithType = async () => {
 
 const saveWithoutFormatting = wrapMainAreaCommand('saveWithoutFormatting')
 
+export const getHotReloadSavedState = async (state, _saveState, worker) => {
+  const { layout } = await worker.invoke('MainArea.getComponentState', state.uid)
+  for (const group of layout.groups) {
+    for (const tab of group.tabs) {
+      if (tab.editorUid !== -1 && tab.editorInput?.type === 'editor') {
+        await SaveState.saveViewletState(tab.editorUid)
+      }
+    }
+  }
+  return { layout, hotReload: true }
+}
+
 export const extendModule = (workerViewlet, { worker }) => ({
   dispose({ uid }) {
     return worker.invoke('MainArea.dispose', uid)
@@ -37,8 +50,9 @@ export const extendModule = (workerViewlet, { worker }) => ({
   focus,
   getKeyBindings,
   getQuickPickMenuEntries,
-  hotReload(state) {
-    return workerViewlet.loadContent(state, {})
+  async hotReload(state) {
+    const savedState = await getHotReloadSavedState(state, undefined, worker)
+    return workerViewlet.loadContentForHotReload(state, savedState)
   },
   menus,
   openEditorWithType,
