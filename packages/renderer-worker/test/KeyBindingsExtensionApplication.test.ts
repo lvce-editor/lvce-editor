@@ -10,8 +10,8 @@ const KeyBindingsState = await import('../src/parts/KeyBindingsState/KeyBindings
 
 for (const applicationId of ['chat-window', undefined]) {
   test(`dispatches a focused extension shortcut to ${applicationId || 'the legacy runtime'}`, async () => {
-    const scoped = jest.fn(async () => {})
-    const global = jest.fn(async () => {})
+    const scoped = jest.fn<(...args: unknown[]) => Promise<void>>(async () => {})
+    const global = jest.fn<(...args: unknown[]) => Promise<void>>(async () => {})
     Command.register('Application.execute', scoped)
     Command.register('ExtensionHost.executeCommand', global)
     if (applicationId) {
