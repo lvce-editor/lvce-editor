@@ -133,7 +133,9 @@ const getExtensionViewMetadata = async (moduleId, applicationId) => {
 // }
 
 export const handleSideBarViewletChange = async (state, moduleId, restore = true) => {
-  console.assert(typeof moduleId === 'string')
+  if (typeof moduleId !== 'string') {
+    moduleId = ViewletModuleId.Explorer
+  }
   if (!moduleId) {
     // const currentViewletState = ViewletStates.getState(state.currentViewletId)
     // const currentViewletUid = currentViewletState.uid
