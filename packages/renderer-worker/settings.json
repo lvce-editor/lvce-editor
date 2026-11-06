@@ -80,6 +80,20 @@
     "value": false
   },
   {
+    "category": "application",
+    "description": "Specifies the color theme used in the AI-native layout",
+    "heading": "AI Layout Color Theme",
+    "id": "application.aiLayoutColorTheme",
+    "type": "string"
+  },
+  {
+    "category": "application",
+    "description": "Specifies the application color theme",
+    "heading": "Color Theme",
+    "id": "application.colorTheme",
+    "type": "string"
+  },
+  {
     "category": "workbench",
     "description": "Controls whether expired cache entries are cleaned up occasionally after startup",
     "heading": "Cache Cleanup",

@@ -11,13 +11,17 @@ import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import { VError } from '../VError/VError.js'
 // TODO by default color theme should come from local storage, session storage, cache storage, indexeddb or blob url -> fast initial load
 // actual color theme can be computed after workbench has loaded (most times will be the same and doesn't need to be computed)
 
+/** @type {{ colorThemeCss: string, watchedTheme: string, aiNativeLayout: boolean | undefined, colorTheme?: string }} */
 export const state = {
   colorThemeCss: '',
   watchedTheme: '',
+  aiNativeLayout: undefined,
 }
 
 const FALLBACK_COLOR_THEME_ID = 'slime'
@@ -63,7 +67,7 @@ export const setColorTheme = async (colorThemeId) => {
     return error
   }
   // TODO should preferences throw errors or should it call handleError directly?
-  await Preferences.set('workbench.colorTheme', colorThemeId)
+  await Preferences.set(getColorThemePreferenceId(), colorThemeId)
   await Command.execute('Layout.handleColorThemeChanged', colorThemeId)
   return undefined
 }
@@ -77,7 +81,46 @@ export const watch = async (id) => {
 }
 
 const getPreferredColorTheme = () => {
-  return Preferences.get('workbench.colorTheme') || FALLBACK_COLOR_THEME_ID
+  if (isAiNativeLayout()) {
+    return Preferences.get('application.aiLayoutColorTheme') || getPreferredIdeColorTheme()
+  }
+  return getPreferredIdeColorTheme()
+}
+
+const getPreferredIdeColorTheme = () => {
+  return Preferences.get('application.colorTheme') || Preferences.get('workbench.colorTheme') || FALLBACK_COLOR_THEME_ID
+}
+
+const isAiNativeLayout = () => {
+  const { aiNativeLayout } = state
+  if (typeof aiNativeLayout === 'boolean') {
+    return aiNativeLayout
+  }
+  if (!ViewletStates.hasState(ViewletModuleId.Layout)) {
+    return false
+  }
+  return ViewletStates.getState(ViewletModuleId.Layout).aiNativeLayout === true
+}
+
+const getColorThemePreferenceId = () => {
+  return isAiNativeLayout() ? 'application.aiLayoutColorTheme' : 'application.colorTheme'
+}
+
+export const setAiNativeLayout = async (aiNativeLayout, notify = true) => {
+  state.aiNativeLayout = aiNativeLayout
+  try {
+    await applyPreferredColorTheme()
+  } catch (error) {
+    if (notify) {
+      throw error
+    }
+    await ErrorHandling.handleError(error)
+    return
+  }
+  if (notify) {
+    const { colorTheme } = state
+    await Command.execute('Layout.handleColorThemeChanged', colorTheme)
+  }
 }
 
 const applyPreferredColorTheme = async (forceReload = false) => {
