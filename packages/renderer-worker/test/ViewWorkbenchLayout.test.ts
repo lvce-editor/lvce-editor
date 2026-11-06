@@ -1,4 +1,5 @@
 import { beforeEach, expect, jest, test } from '@jest/globals'
+import * as ApplicationRegistry from '../src/parts/ApplicationRegistry/ApplicationRegistry.ts'
 import type { LayoutState } from '../src/parts/ViewletLayout/LayoutState.ts'
 import * as ViewletStates from '../src/parts/ViewletStates/ViewletStates.js'
 
@@ -112,4 +113,30 @@ test('allows a new AI-native request after exiting the layout', async () => {
 
   expect(ViewletLayout.enterSideBarFocusMode).toHaveBeenCalledWith(exitedState, 'primary', true)
   expect(ViewletStates.getInstance(1).state).toEqual(newState)
+})
+
+test.each(['primary', 'secondary'] as const)('resolves named %s sidebars within the requesting application', async (target) => {
+  const applicationId = 'chat-layout'
+  ApplicationRegistry.create({ href: 'lvce://-/', id: applicationId, layoutUid: 8101, workspacePath: '', workspaceUri: '' })
+  try {
+    const legacy = { childUid: 99, uid: 2 }
+    ViewletStates.set('SideBar', { moduleId: 'SideBar', factory: {}, state: legacy, renderedState: legacy })
+    ViewletStates.set('SecondarySideBar', { moduleId: 'SecondarySideBar', factory: {}, state: legacy, renderedState: legacy })
+    const state = { applicationId, aiNativeLayout: false, sideBarId: 'SideBar', secondarySideBarId: 'SecondarySideBar', uid: 8101 }
+    ViewletStates.set(8101, { moduleId: 'Layout', factory: {}, state, renderedState: state })
+    const sidebar = { applicationId, childUid: 8103, uid: 8102 }
+    const moduleId = target === 'primary' ? 'SideBar' : 'SecondarySideBar'
+    ViewletStates.set(8102, { moduleId, factory: {}, state: sidebar, renderedState: sidebar })
+    const newState = { ...state, aiNativeLayout: true }
+    jest.mocked(ViewletLayout.enterSideBarFocusMode).mockResolvedValue({ newState, commands: [] } as never)
+    const view = { ...ViewletExtensionView.create(8103, 'sample', 0, 0, 240, 500), applicationId, workbenchLayout: 'ai-native' as const }
+
+    await ViewWorkbenchLayout.prepare(view)
+
+    expect(ViewletLayout.enterSideBarFocusMode).toHaveBeenCalledWith(state, target, true)
+    expect(ViewletStates.getInstance('SideBar').state).toBe(legacy)
+    expect(ViewletStates.getInstance(8101).state).toEqual(newState)
+  } finally {
+    await ApplicationRegistry.remove(applicationId)
+  }
 })

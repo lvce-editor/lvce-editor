@@ -17,8 +17,8 @@ export const prepare = async (view: ViewletExtensionViewState): Promise<readonly
   const state = layout.state as LayoutState
   const previousView = ViewletStates.getInstance(view.uid)
   const sameLayoutRequest = previousView?.state.workbenchLayout === view.workbenchLayout
-  const primary = ViewletStates.getInstance(state.sideBarId)
-  const secondary = ViewletStates.getInstance(state.secondarySideBarId)
+  const primary = ViewletStates.getInstance(state.sideBarId, view.applicationId)
+  const secondary = ViewletStates.getInstance(state.secondarySideBarId, view.applicationId)
   const target = primary?.state.childUid === view.uid ? 'primary' : secondary?.state.childUid === view.uid ? 'secondary' : undefined
   if (target === undefined) {
     return []
