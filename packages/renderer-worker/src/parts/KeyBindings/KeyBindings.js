@@ -1,6 +1,7 @@
 import * as Command from '../Command/Command.js'
 import * as Assert from '../Assert/Assert.ts'
 import * as ExtensionKeyBindings from '../ExtensionKeyBindings/ExtensionKeyBindings.js'
+import * as ExtensionViewContext from '../ExtensionViewContext/ExtensionViewContext.js'
 import * as KeyBindingsState from '../KeyBindingsState/KeyBindingsState.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
@@ -39,6 +40,13 @@ export const handleKeyBinding = async (identifier, editorUid) => {
     const command = qualified ? keyBinding.command : keyBinding.command.slice('Editor.'.length)
     await Viewlet.executeViewletCommand(editorUid, command, ...(keyBinding.args || []))
     return
+  }
+  if (keyBinding.command === 'ExtensionHost.executeCommand') {
+    const applicationId = ExtensionViewContext.getApplicationIdForContext(keyBinding.when)
+    if (applicationId !== undefined) {
+      await Command.execute('Application.execute', applicationId, keyBinding.command, ...(keyBinding.args || []))
+      return
+    }
   }
   await Command.execute(
     /* command */ keyBinding.command,
