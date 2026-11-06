@@ -9,6 +9,7 @@ import * as AuthAccessToken from '../AuthAccessToken/AuthAccessToken.js'
 import * as AuthWorker from '../AuthWorker/AuthWorker.js'
 import * as AutoUpdateType from '../AutoUpdateType/AutoUpdateType.js'
 import * as ChatViewWorker from '../ChatViewWorker/ChatViewWorker.js'
+import * as ColorTheme from '../ColorTheme/ColorTheme.js'
 import * as Command from '../Command/Command.js'
 import * as Commit from '../Commit/Commit.js'
 import * as ExtensionManagementWorker from '../ExtensionManagementWorker/ExtensionManagementWorker.js'
@@ -646,7 +647,7 @@ export const loadContent = (state: LayoutState, savedState: any): LayoutState =>
   if (!restore || (savedState?.aiNativeLayout !== true && !standaloneMobile && !chatRoute)) {
     return newState
   }
-  return getPoints(
+  const aiNativeState = getPoints(
     {
       ...newState,
       aiNativeActivityBarVisible: stateToRestore?.aiNativeActivityBarVisible ?? true,
@@ -661,6 +662,14 @@ export const loadContent = (state: LayoutState, savedState: any): LayoutState =>
     },
     sideBarLocation,
   )
+  return aiNativeState
+}
+
+export const contentLoaded = async (state: LayoutState): Promise<any[]> => {
+  if (state.aiNativeLayout) {
+    await ColorTheme.setAiNativeLayout(true, false)
+  }
+  return []
 }
 
 const show = async (state: LayoutState, module, currentViewletId, restore?: boolean) => {
@@ -919,6 +928,9 @@ export const enterSideBarFocusMode = async (
     sideBarFocusModeTarget: target,
   })
   const activityBarCommands = aiNativeLayout ? await setActivityBarAiNativeLayout(newState.activityBarId, true) : []
+  if (aiNativeLayout) {
+    await ColorTheme.setAiNativeLayout(true)
+  }
   return {
     newState,
     commands: [...activityBarCommands, ...(await getResizeCommands(state, newState))],
@@ -961,6 +973,9 @@ export const leaveSideBarFocusMode = async (state: LayoutState): Promise<LayoutS
     restoredCommands.push(...result.commands)
   }
   const activityBarCommands = state.aiNativeLayout ? await setActivityBarAiNativeLayout(newState.activityBarId, false) : []
+  if (state.aiNativeLayout) {
+    await ColorTheme.setAiNativeLayout(false)
+  }
   return {
     newState,
     commands: [...restoredCommands, ...activityBarCommands, ...(await getResizeCommands(state, newState))],

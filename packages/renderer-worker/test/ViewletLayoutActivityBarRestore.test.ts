@@ -8,8 +8,10 @@ const activityBarInvoke = jest.fn<(...args: unknown[]) => Promise<unknown[]>>(as
 })
 const viewletLoad = jest.fn<(...args: unknown[]) => Promise<any[]>>(async () => [['Viewlet.loaded']])
 let savedState: any
+const setAiNativeLayout = jest.fn(async (_aiNativeLayout: boolean, _notify?: boolean) => undefined)
 
 jest.unstable_mockModule('../src/parts/ActivityBarWorker/ActivityBarWorker.js', () => ({ invoke: activityBarInvoke }))
+jest.unstable_mockModule('../src/parts/ColorTheme/ColorTheme.js', () => ({ setAiNativeLayout }))
 jest.unstable_mockModule('../src/parts/ViewletManager/ViewletManager.js', () => ({ load: viewletLoad }))
 jest.unstable_mockModule('../src/parts/ViewletStates/ViewletStates.js', () => ({
   getInstance: () => undefined,
@@ -42,6 +44,8 @@ test('restored AI-native layout filters the activity bar after loading it', asyn
     ...ViewletLayout.saveState(focused.newState),
     Layout: { bounds: { windowWidth: original.windowWidth, windowHeight: original.windowHeight } },
   })
+  await ViewletLayout.contentLoaded(restoredState)
+  expect(setAiNativeLayout).toHaveBeenCalledWith(true, false)
   savedState = restoredState
   activityBarInvoke.mockClear()
   viewletLoad.mockClear()

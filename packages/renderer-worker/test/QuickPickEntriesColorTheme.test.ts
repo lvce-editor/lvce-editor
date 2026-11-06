@@ -13,6 +13,8 @@ jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () =
     }),
   }
 })
+const execute = jest.fn()
+jest.unstable_mockModule('../src/parts/Command/Command.js', () => ({ execute }))
 jest.unstable_mockModule('../src/parts/ExtensionManagementWorker/ExtensionManagementWorker.js', () => {
   return {
     invoke: jest.fn(() => {
@@ -50,22 +52,17 @@ test('getPicks - error', async () => {
   await expect(QuickPickEntriesColorTheme.getPicks()).rejects.toThrow(error)
 })
 
-test.skip('selectPick', () => {
-  expect(
-    QuickPickEntriesColorTheme.selectPick({
-      label: 'slime',
-    }),
-  ).rejects.toThrow(new Error('Color theme "undefined" not found in extensions folder'))
-})
-
-test.skip('selectPick - error', async () => {
-  expect(
-    await QuickPickEntriesColorTheme.selectPick({
-      label: 'slime',
-    }),
-  ).toEqual({
+test('selectPick applies the selected theme and hides the quickpick', async () => {
+  await expect(QuickPickEntriesColorTheme.selectPick('slime')).resolves.toEqual({
     command: QuickPickReturnValue.Hide,
   })
+  expect(execute).toHaveBeenCalledWith('ColorTheme.setColorTheme', 'slime')
+})
+
+test('focusPick applies the previewed theme', async () => {
+  await QuickPickEntriesColorTheme.focusPick('cobalt2')
+
+  expect(execute).toHaveBeenCalledWith('ColorTheme.setColorTheme', 'cobalt2')
 })
 
 test('getNoResults', () => {

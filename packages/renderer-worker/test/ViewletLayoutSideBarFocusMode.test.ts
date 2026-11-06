@@ -4,8 +4,10 @@ import { getLayoutVirtualDom } from '../src/parts/GetLayoutVirtualDom/GetLayoutV
 
 const activityBarInvoke = jest.fn<(...args: unknown[]) => Promise<unknown[]>>(async () => [])
 const commandExecute = jest.fn(async (..._args: readonly unknown[]) => undefined)
+const setAiNativeLayout = jest.fn(async (_aiNativeLayout: boolean, _notify?: boolean) => undefined)
 jest.unstable_mockModule('../src/parts/ActivityBarWorker/ActivityBarWorker.js', () => ({ invoke: activityBarInvoke }))
 jest.unstable_mockModule('../src/parts/Command/Command.js', () => ({ execute: commandExecute }))
+jest.unstable_mockModule('../src/parts/ColorTheme/ColorTheme.js', () => ({ setAiNativeLayout }))
 jest.unstable_mockModule('../src/parts/Viewlet/Viewlet.js', () => ({
   disposeFunctional: () => [],
   resize: async () => [],
