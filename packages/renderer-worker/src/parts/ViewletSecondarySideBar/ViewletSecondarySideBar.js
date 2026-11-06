@@ -45,7 +45,7 @@ const getContentDimensions = (dimensions, titleAreaHeight) => {
 
 export const handleSecondarySideBarViewletChange = async (state, moduleId) => {
   console.assert(typeof moduleId === 'string')
-  if (!moduleId) {
+  if (!moduleId || (moduleId === state.currentViewletId && ViewletStates.getByUid(state.childUid))) {
     return state
   }
   const { currentViewletId, titleAreaHeight } = state
