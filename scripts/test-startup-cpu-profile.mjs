@@ -207,12 +207,12 @@ try {
       assert.equal(mode, 'provider-timeout', 'Only a timed out provider may produce an incomplete trace')
       assert.match(manifest.errors.join('\n'), /CPU trace:.*timed out/i)
     } else {
-      const trace = JSON.parse(await readFile(join(output, manifest.trace), 'utf8'))
-      assert.ok(trace.traceEvents.length > 0)
+      // Electron 45 writes contentTracing output as Perfetto protobuf instead of legacy JSON.
+      const trace = await readFile(join(output, manifest.trace))
+      assert.ok(trace.length > 0)
       if (!failure) {
-        const nodes = trace.traceEvents.flatMap((event) => event.args?.data?.cpuProfile?.nodes || [])
         assert.ok(
-          nodes.some((node) => node.callFrame.functionName === 'cpuProfileDiagnosticWork'),
+          trace.includes(Buffer.from('cpuProfileDiagnosticWork')),
           'Delayed diagnostic work was not captured',
         )
       }
