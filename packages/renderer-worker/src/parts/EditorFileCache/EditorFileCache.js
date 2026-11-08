@@ -1,7 +1,6 @@
 import * as ApplicationFileSystem from '../ApplicationFileSystem/ApplicationFileSystem.ts'
 import * as CacheWorker from '../CacheWorker/CacheWorker.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
-import * as Mime from '../Mime/Mime.js'
 
 const cacheName = 'editor-file-cache'
 const maxBytes = 10 * 1024 * 1024
@@ -55,8 +54,7 @@ const getFingerprint = (stat) => {
 
 const getContentType = (uri) => {
   const path = uri.split(uriSuffixRegex, 1)[0]
-  const mime = Mime.getTextMime(path)
-  const contentType = mime === 'text/javascript' ? 'application/javascript' : mime || 'text/plain'
+  const contentType = path.endsWith('.json') ? 'application/json' : 'text/plain'
   return `${contentType}; charset=utf-8`
 }
 
@@ -77,6 +75,10 @@ export const get = async (applicationId, uri, fingerprint) => {
   await writeQueues.get(key)?.catch(() => {})
   const item = await CacheWorker.invoke('Cache.getCacheStorageItem', key, cacheName)
   if (!item || item.headers['x-lvce-editor-file-stat'] !== fingerprint) {
+    return null
+  }
+  if (!['text/plain; charset=utf-8', 'application/json; charset=utf-8'].includes(item.headers['content-type'])) {
+    void CacheWorker.invoke('Cache.removeCacheStorageItem', key, cacheName).catch(() => {})
     return null
   }
   const expires = Date.parse(item.headers.expires || '')

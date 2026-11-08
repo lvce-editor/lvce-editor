@@ -29,6 +29,7 @@ test('getEditorFileCache reads only a matching, unexpired text entry', async () 
   cacheWorkerInvoke.mockResolvedValue({
     body,
     headers: {
+      'content-type': 'text/plain; charset=utf-8',
       expires: new Date(Date.now() + 60_000).toUTCString(),
       'x-lvce-editor-file-stat': '[7,14,123]',
     },
@@ -126,10 +127,11 @@ test('setEditorFileCache stores text with an expiry after confirming freshness',
 })
 
 test.each([
-  ['application', 'remote-ssh:///project/script.js?raw#source', 'application/javascript; charset=utf-8'],
-  ['', 'file:///project/script.mjs#source', 'application/javascript; charset=utf-8'],
-  ['', 'file:///project/style.css?theme=dark', 'text/css; charset=utf-8'],
-  ['application', 'remote-ssh:///project/index.html?raw', 'text/html; charset=utf-8'],
+  ['application', 'remote-ssh:///project/script.js?raw#source', 'text/plain; charset=utf-8'],
+  ['', 'file:///project/script.mjs#source', 'text/plain; charset=utf-8'],
+  ['', 'file:///project/style.css?theme=dark', 'text/plain; charset=utf-8'],
+  ['application', 'remote-ssh:///project/index.html?raw', 'text/plain; charset=utf-8'],
+  ['', 'file:///project/data.json?raw', 'application/json; charset=utf-8'],
   ['', 'file:///project/data.unknown#source', 'text/plain; charset=utf-8'],
 ])('setEditorFileCache selects a text content type for %s %s', async (applicationId, uri, contentType) => {
   applicationFileSystemExecute.mockResolvedValue({ mtimeMs: 123, size: 4, type: 7 })
@@ -145,6 +147,22 @@ test.each([
     'editor-file-cache',
     expect.objectContaining({ 'content-type': contentType }),
   )
+})
+
+test('getEditorFileCache invalidates cached entries with a disallowed content type', async () => {
+  cacheWorkerInvoke.mockResolvedValue({
+    body: new TextEncoder().encode('old cached content').buffer,
+    headers: {
+      'content-type': 'application/javascript; charset=utf-8',
+      expires: new Date(Date.now() + 60_000).toUTCString(),
+      'x-lvce-editor-file-stat': '[7,14,123]',
+    },
+  })
+
+  await expect(EditorFileCache.get('', 'file:///project/script.js', '[7,14,123]')).resolves.toBeNull()
+  await new Promise((resolve) => setImmediate(resolve))
+
+  expect(cacheWorkerInvoke).toHaveBeenCalledWith('Cache.removeCacheStorageItem', expect.any(String), 'editor-file-cache')
 })
 
 test.each([
