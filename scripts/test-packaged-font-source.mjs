@@ -13,6 +13,7 @@ let socket
 let output = ''
 const pending = new Map()
 let sequence = 0
+const rendererErrors = []
 const send = (method, params = {}) =>
   new Promise((resolve, reject) => {
     const id = ++sequence
@@ -58,6 +59,7 @@ try {
       '--wait',
       '--no-sandbox',
       '--disable-gpu',
+      '--enable-logging=stderr',
       '--password-store=basic',
       '--remote-debugging-port=0',
       `--user-data-dir=${directory}/chromium`,
@@ -103,9 +105,13 @@ try {
       responses.push(message.params.response)
     } else if (message.method === 'Network.loadingFailed') {
       failedRequests.push(message.params)
+    } else if (message.method === 'Runtime.exceptionThrown' || message.method === 'Log.entryAdded') {
+      rendererErrors.push(message.params)
     }
   })
   await send('Network.enable')
+  await send('Runtime.enable')
+  await send('Log.enable')
   while (Date.now() < deadline) {
     if (
       await evaluate(`Boolean(document.querySelector('.Editor')?.textContent.includes('acceptance') && Array.from(document.styleSheets).some(sheet => {
@@ -115,7 +121,11 @@ try {
       break
     await delay(100)
   }
-  assert.equal(await evaluate(`Boolean(document.querySelector('.Editor'))`), true, 'Packaged editor and renderer worker must start')
+  assert.equal(
+    await evaluate(`Boolean(document.querySelector('.Editor'))`),
+    true,
+    `Packaged editor and renderer worker must start. Diagnostics: ${JSON.stringify({ output, rendererErrors, failedRequests })}`,
+  )
   assert.equal(
     await evaluate(`document.querySelector('.Editor').textContent.includes('acceptance')`),
     true,
