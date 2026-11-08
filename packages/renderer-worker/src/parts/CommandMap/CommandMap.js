@@ -680,6 +680,8 @@ export const commandMap = {
   'Layout.hideActivityBar': lazy('Layout.hideActivityBar'),
   'Layout.hideMain': lazy('Layout.hideMain'),
   'Layout.hidePanel': lazy('Layout.hidePanel'),
+  'Layout.openSettings': lazy('Layout.openSettings'),
+  'Layout.closeSettings': lazy('Layout.closeSettings'),
   'Layout.hidePreview': lazy('Layout.hidePreview'),
   'Layout.hideSecondaryPreview': lazy('Layout.hideSecondaryPreview'),
   'Layout.hideSideBar': lazy('Layout.hideSideBar'),

@@ -144,6 +144,23 @@ const getSecondarySideBarDom = (secondarySideBarId: number) => {
   }
 }
 
+const getSettingsDom = (uid: number) => [
+  { type: VirtualDomElements.Div, className: 'AiNativeSettings', childCount: 2 },
+  { type: VirtualDomElements.Div, className: 'AiNativeSettingsHeader', childCount: 2 },
+  { type: VirtualDomElements.Div, className: 'AiNativeSettingsTitle', childCount: 1 },
+  text('Settings'),
+  {
+    type: VirtualDomElements.Button,
+    className: 'IconButton AiNativeSettingsClose',
+    ariaLabel: 'Close Settings',
+    title: 'Close Settings',
+    onClick: 'closeSettings',
+    childCount: 1,
+  },
+  { type: VirtualDomElements.Div, className: 'MaskIcon MaskIconClose', childCount: 0 },
+  { type: VirtualDomElements.Reference, uid },
+]
+
 const getMainDom = (mainId: number) => {
   if (mainId === -1) {
     return {
@@ -292,7 +309,10 @@ const getContentAreaVirtualDomLeft = (state: LayoutState) => {
     children.push(...getSashSideBarDom())
     delta--
   }
-  if (mainVisible) {
+  if (state.aiNativeSettingsId !== undefined) {
+    children.push(...getSettingsDom(state.aiNativeSettingsId))
+    delta -= 6
+  } else if (mainVisible) {
     children.push(getMainDom(mainId))
   }
 
@@ -329,13 +349,19 @@ const getContentAreaVirtualDomRight = (state: LayoutState) => {
   } = state
   const children: any[] = []
   let delta = 0
-  if (secondarySideBarVisible) {
+  if (secondarySideBarVisible && state.aiNativeSettingsId === undefined) {
     children.push(getSecondarySideBarDom(secondarySideBarId))
     children.push(...getSashSecondarySideBarDom())
     delta--
   }
-  if (mainVisible) {
+  if (state.aiNativeSettingsId !== undefined) {
+    children.push(...getSettingsDom(state.aiNativeSettingsId))
+    delta -= 6
+  } else if (mainVisible) {
     children.push(getMainDom(mainId))
+  }
+  if (secondarySideBarVisible && state.aiNativeSettingsId !== undefined) {
+    children.push(getSecondarySideBarDom(secondarySideBarId))
   }
   if (sideBarSashVisible) {
     children.push(...getSashSideBarDom())
@@ -528,6 +554,7 @@ export const getLayoutVirtualDom = (state: LayoutState) => {
 
   if (state.aiNativeLayout) {
     dom[0].className += ' AiNativeLayout'
+    if (state.aiNativeSettingsId !== undefined) dom[0].className += ' AiNativeSettingsOpen'
     if (state.sideBarLocation === SideBarLocationType.Right) dom[0].className += ' AiNativeLayoutRight'
   } else if (state.aiNativeLayoutExited) dom[0].className += ' IdeLayoutFromAi'
 

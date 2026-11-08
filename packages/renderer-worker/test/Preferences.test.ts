@@ -10,6 +10,8 @@ beforeEach(() => {
   }
 })
 
+jest.unstable_mockModule('../src/parts/Command/Command.js', () => ({ execute: jest.fn() }))
+
 jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () => {
   return {
     invoke: jest.fn(() => {
@@ -57,6 +59,8 @@ const IsTest = await import('../src/parts/IsTest/IsTest.js')
 const OpenUri = await import('../src/parts/OpenUri/OpenUri.js')
 const Preferences = await import('../src/parts/Preferences/Preferences.js')
 
+const Command = await import('../src/parts/Command/Command.js')
+
 const Main = await import('../src/parts/ViewletMain/ViewletMain.js')
 
 test.skip('openSettingsJson', async () => {
@@ -71,10 +75,9 @@ test.skip('openSettingsJson', async () => {
   expect(Main.openUri).toHaveBeenCalledWith('app:///settings.json')
 })
 
-test('openSettingsUi', async () => {
+test('openSettingsUi uses the layout-aware settings command', async () => {
   await Preferences.openSettingsUi()
-  expect(OpenUri.openUri).toHaveBeenCalledTimes(1)
-  expect(OpenUri.openUri).toHaveBeenCalledWith('settings:///')
+  expect(Command.execute).toHaveBeenCalledWith('Layout.openSettings', true)
 })
 
 test('openKeyBindingsJson', async () => {

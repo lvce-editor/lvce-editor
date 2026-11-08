@@ -40,6 +40,8 @@ export const Commands = {
 }
 
 export const CommandsWithSideEffects = {
+  openSettings: AiNativeLayout.openSettings,
+  closeSettings: AiNativeLayout.closeSettings,
   handleCancelWorkspaceProgress: ViewletLayout.handleCancelWorkspaceProgress,
   enterAiNativeLayout: AiNativeLayout.enter,
   toggleSimpleBrowserFullWidthInternal: BrowserFullWidth.toggleInternal,

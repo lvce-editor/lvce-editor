@@ -94,6 +94,8 @@ export const hasFunctionalEvents = true
 const renderDom = {
   isEqual(oldState: LayoutState, newState: LayoutState) {
     return (
+      oldState.aiNativeSettingsId === newState.aiNativeSettingsId &&
+      oldState.aiNativeLayout === newState.aiNativeLayout &&
       oldState.browserFullWidth === newState.browserFullWidth &&
       oldState.browserTabDragSource === newState.browserTabDragSource &&
       oldState.secondaryPreviewPlacement === newState.secondaryPreviewPlacement &&
@@ -240,6 +242,7 @@ const renderCss = {
 
 export const renderEventListeners = () => {
   return [
+    { name: 'closeSettings', params: ['closeSettings'] },
     {
       name: DomEventListenersFunctions.HandleClickCancelWorkspaceProgress,
       params: ['handleCancelWorkspaceProgress'],
