@@ -117,6 +117,7 @@ export interface LayoutState {
   readonly sideBarSashVisible: boolean
   readonly sideBarTop: number
   readonly sideBarView: string
+  readonly aiNativeSettingsId?: number
   readonly aiNativeLayout?: boolean
   readonly aiNativeActivityBarVisible?: boolean
   readonly aiNativeLayoutExited?: boolean

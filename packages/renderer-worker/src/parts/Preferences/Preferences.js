@@ -17,7 +17,7 @@ export const openSettingsJson = async () => {
 }
 
 export const openSettingsUi = async () => {
-  await OpenUri.openUri('settings:///')
+  await Command.execute('Layout.openSettings', true)
 }
 
 export const openKeyBindingsJson = async () => {

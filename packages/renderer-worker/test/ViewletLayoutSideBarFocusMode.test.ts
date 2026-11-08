@@ -2,6 +2,7 @@ import { expect, jest, test } from '@jest/globals'
 import * as SideBarLocationType from '../src/parts/SideBarLocationType/SideBarLocationType.js'
 import { getLayoutVirtualDom } from '../src/parts/GetLayoutVirtualDom/GetLayoutVirtualDom.ts'
 
+const disposeFunctional = jest.fn((_uid: number) => [])
 const activityBarInvoke = jest.fn<(...args: unknown[]) => Promise<unknown[]>>(async () => [])
 const commandExecute = jest.fn(async (..._args: readonly unknown[]) => undefined)
 const setAiNativeLayout = jest.fn(async (_aiNativeLayout: boolean, _notify?: boolean) => undefined)
@@ -9,7 +10,7 @@ jest.unstable_mockModule('../src/parts/ActivityBarWorker/ActivityBarWorker.js', 
 jest.unstable_mockModule('../src/parts/Command/Command.js', () => ({ execute: commandExecute }))
 jest.unstable_mockModule('../src/parts/ColorTheme/ColorTheme.js', () => ({ setAiNativeLayout }))
 jest.unstable_mockModule('../src/parts/Viewlet/Viewlet.js', () => ({
-  disposeFunctional: () => [],
+  disposeFunctional,
   resize: async () => [],
 }))
 const layoutStates = new Map<number, unknown>()
@@ -529,4 +530,15 @@ test('a fresh application at the chat route opens chat without saved layout stat
   } finally {
     await applications.remove('fresh-chat-route')
   }
+})
+
+test('leaving AI-native layout disposes the transient settings view', async () => {
+  const focused = await ViewletLayout.enterSideBarFocusMode(createState(), 'primary', true)
+  const { openSettings } = await import('../src/parts/AiNativeLayout/AiNativeLayout.ts')
+  const opened = await openSettings(focused.newState)
+  const result = await ViewletLayout.leaveSideBarFocusMode(opened.newState)
+  expect(disposeFunctional).toHaveBeenCalledWith(opened.newState.aiNativeSettingsId as number)
+  expect(result.newState.aiNativeSettingsId).toBeUndefined()
+  expect(result.newState.aiNativeLayout).toBe(false)
+  expect(result.newState.sideBarFocusMode).toBe(false)
 })

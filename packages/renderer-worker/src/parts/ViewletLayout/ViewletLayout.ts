@@ -1,3 +1,4 @@
+import * as AiNativeLayout from '../AiNativeLayout/AiNativeLayout.ts'
 import * as RuntimeConfig from '../RuntimeConfig/RuntimeConfig.ts'
 import * as HtmlPreviewUrl from '../HtmlPreviewUrl/HtmlPreviewUrl.js'
 import * as BrowserFullWidth from '../BrowserFullWidth/BrowserFullWidth.js'
@@ -944,6 +945,8 @@ export const leaveSideBarFocusMode = async (state: LayoutState): Promise<LayoutS
       commands: [],
     }
   }
+  const settingsResult = await AiNativeLayout.closeSettings(state)
+  state = settingsResult.newState
   let newState = getPoints({
     ...state,
     ...state.sideBarFocusModeLayout,
@@ -953,7 +956,7 @@ export const leaveSideBarFocusMode = async (state: LayoutState): Promise<LayoutS
     sideBarFocusModeLayout: undefined,
     sideBarFocusModeTarget: 'primary',
   })
-  const restoredCommands: any[] = []
+  const restoredCommands: any[] = [...settingsResult.commands]
   // Cold AI-native startup skips hidden parts. Create their roots before the
   // restored layout references them; resizing only handles existing instances.
   for (const module of [
@@ -2517,7 +2520,7 @@ export const getResizeCommands = async (oldState: LayoutState, newState: LayoutS
       return [...activityBarCommands, ...resizeCommands]
     }),
   )
-  const commands = individualCommands.flat(1)
+  const commands = [...individualCommands.flat(1), ...(await AiNativeLayout.resizeSettings(newState))]
   return commands
 }
 
@@ -3557,3 +3560,6 @@ export const handleBrowserTabDrop = async (state: LayoutState, x: number, y: num
 getSideBarFocusMode.returnValue = true
 getActiveSideBarView.returnValue = true
 getSideBarVisible.returnValue = true
+
+export const getOwnedViewletIds = (state: LayoutState): readonly number[] =>
+  state.aiNativeSettingsId === undefined ? [] : [state.aiNativeSettingsId]
