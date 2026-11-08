@@ -42,6 +42,16 @@ test('getKeyBindings - toggle terminal panel', () => {
   )
 })
 
+test('getKeyBindings - open a new terminal', () => {
+  const keyBindings = ViewletLayoutKeyBindings.getKeyBindings()
+
+  expect(keyBindings).toContainEqual({
+    args: [''],
+    command: 'Layout.openIntegratedTerminal',
+    key: KeyModifier.CtrlCmd | KeyModifier.Shift | KeyCode.Backquote,
+  })
+})
+
 test('getKeyBindings - open text search', () => {
   const keyBindings = ViewletLayoutKeyBindings.getKeyBindings()
 
