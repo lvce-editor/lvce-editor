@@ -19,12 +19,13 @@ jest.unstable_mockModule('../src/parts/FileSystem/FileSystem.js', () => ({
 const EditorFileCache = await import('../src/parts/EditorFileCache/EditorFileCache.js')
 
 afterEach(() => {
+  jest.useRealTimers()
   cacheWorkerInvoke.mockReset()
   applicationFileSystemExecute.mockReset()
   fileSystemStat.mockReset()
 })
 
-test('getEditorFileCache reads only a matching, unexpired text entry', async () => {
+test('getEditorFileCache reads a matching, unexpired legacy entry without a creation header', async () => {
   const body = new TextEncoder().encode('cached content').buffer
   cacheWorkerInvoke.mockResolvedValue({
     body,
@@ -112,8 +113,12 @@ test('getEditorFileCache removes expired entries', async () => {
   expect(cacheWorkerInvoke).toHaveBeenCalledWith('Cache.removeCacheStorageItem', expect.any(String), 'editor-file-cache')
 })
 
-test('setEditorFileCache stores text with an expiry after confirming freshness', async () => {
+test('setEditorFileCache stores a creation date and expiry from the same write time', async () => {
+  jest.useFakeTimers()
+  const firstWriteTime = new Date('2026-01-02T03:04:05.000Z')
+  jest.setSystemTime(firstWriteTime)
   applicationFileSystemExecute.mockResolvedValue({ mtimeMs: 123, size: 4, type: 7 })
+  fileSystemStat.mockResolvedValue({ mtimeMs: 123, size: 4, type: 7 })
   cacheWorkerInvoke.mockResolvedValue({ success: true })
 
   await EditorFileCache.set('application', 'remote-ssh:///project/file.txt', '[7,4,123]', 'text')
@@ -123,7 +128,16 @@ test('setEditorFileCache stores text with an expiry after confirming freshness',
   expect(headers['content-type']).toBe('text/plain; charset=utf-8')
   expect(headers['content-length']).toBe('4')
   expect(headers['x-lvce-editor-file-stat']).toBe('[7,4,123]')
-  expect(Date.parse(headers.expires)).toBeGreaterThan(Date.now() + 89 * 24 * 60 * 60 * 1000)
+  expect(headers['x-lvce-created-at']).toBe(firstWriteTime.toUTCString())
+  expect(Date.parse(headers.expires) - Date.parse(headers['x-lvce-created-at'])).toBe(90 * 24 * 60 * 60 * 1000)
+
+  const replacementWriteTime = new Date('2026-01-02T03:04:06.000Z')
+  jest.setSystemTime(replacementWriteTime)
+  await EditorFileCache.set('application', 'remote-ssh:///project/file.txt', '[7,4,123]', 'text')
+
+  const replacementHeaders = cacheWorkerInvoke.mock.calls[1][4]
+  expect(replacementHeaders['x-lvce-created-at']).toBe(replacementWriteTime.toUTCString())
+  expect(Date.parse(replacementHeaders.expires) - Date.parse(replacementHeaders['x-lvce-created-at'])).toBe(90 * 24 * 60 * 60 * 1000)
 })
 
 test.each([

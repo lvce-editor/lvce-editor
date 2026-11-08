@@ -121,12 +121,15 @@ export const set = async (applicationId, uri, fingerprint, content) => {
     if (getFingerprint(currentStat) !== fingerprint) {
       return
     }
-    const expires = new Date(Date.now() + expiresIn).toUTCString()
+    const createdAt = Date.now()
+    const createdAtHeader = new Date(createdAt).toUTCString()
+    const expires = new Date(createdAt + expiresIn).toUTCString()
     const result = await CacheWorker.invoke('Cache.setCacheStorageItem', key, content, cacheName, {
       'cache-control': 'public, max-age=7776000',
       'content-length': String(contentLength),
       'content-type': getContentType(uri),
       expires,
+      'x-lvce-created-at': createdAtHeader,
       'x-lvce-editor-file-stat': fingerprint,
     })
     if (!result?.success) {
