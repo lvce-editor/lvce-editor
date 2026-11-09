@@ -115,20 +115,20 @@ test('setColorTheme stores a separate preference for the AI-native layout', asyn
 
   await ColorTheme.setColorTheme('cobalt2')
 
-  expect(Preferences.state['application.aiLayoutColorTheme']).toBe('cobalt2')
+  expect(Preferences.state['application.aiColorTheme']).toBe('cobalt2')
   expect(Preferences.state['application.colorTheme']).toBe('slime')
   expect(ColorTheme.getColorTheme()).toBe('cobalt2')
 })
 
 test('switching layouts applies each layout preference without changing either preference', async () => {
   Preferences.state['application.colorTheme'] = 'slime'
-  Preferences.state['application.aiLayoutColorTheme'] = 'cobalt2'
+  Preferences.state['application.aiColorTheme'] = 'cobalt2'
 
   await ColorTheme.setAiNativeLayout(true, false)
   expect(ColorTheme.getColorTheme()).toBe('cobalt2')
   await ColorTheme.setAiNativeLayout(false, false)
   expect(ColorTheme.getColorTheme()).toBe('slime')
-  expect(Preferences.state['application.aiLayoutColorTheme']).toBe('cobalt2')
+  expect(Preferences.state['application.aiColorTheme']).toBe('cobalt2')
   expect(Preferences.state['application.colorTheme']).toBe('slime')
 })
 
@@ -136,4 +136,33 @@ test('IDE color theme falls back to the legacy workbench preference', () => {
   Preferences.state['workbench.colorTheme'] = 'cobalt2'
 
   expect(ColorTheme.getColorTheme()).toBe('cobalt2')
+})
+
+test('AI color theme takes priority over the legacy AI layout preference', async () => {
+  Preferences.state['application.aiColorTheme'] = 'cobalt2'
+  Preferences.state['application.aiLayoutColorTheme'] = 'slime'
+
+  await ColorTheme.setAiNativeLayout(true, false)
+
+  expect(ColorTheme.getColorTheme()).toBe('cobalt2')
+})
+
+test('AI color theme falls back to the legacy AI layout preference', async () => {
+  Preferences.state['application.colorTheme'] = 'slime'
+  Preferences.state['application.aiLayoutColorTheme'] = 'cobalt2'
+
+  await ColorTheme.setAiNativeLayout(true, false)
+
+  expect(ColorTheme.getColorTheme()).toBe('cobalt2')
+  expect(Preferences.state['application.aiColorTheme']).toBeUndefined()
+})
+
+test('selecting an IDE theme preserves the AI color theme', async () => {
+  Preferences.state['application.aiColorTheme'] = 'cobalt2'
+  await ColorTheme.setAiNativeLayout(false, false)
+
+  await ColorTheme.setColorTheme('slime')
+
+  expect(Preferences.state['application.colorTheme']).toBe('slime')
+  expect(Preferences.state['application.aiColorTheme']).toBe('cobalt2')
 })
