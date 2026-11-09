@@ -214,7 +214,7 @@ const getCss = (newState: LayoutState) => {
   --TitleBarWidth: ${getPixelValue(newState.titleBarWidth)};
   --SashPreviewLeft: ${getRoundedPixelValue(previewLeft)};
   --NotificationRight: ${previewVisible ? `calc(100vw - ${getPixelValue(previewLeft)} + 30px)` : '30px'};
-  --NotificationMaxWidth: ${previewVisible ? `min(250px, calc(${getPixelValue(previewLeft)} - 60px), calc(100vw - 60px))` : 'min(250px, calc(100vw - 60px))'};
+  --NotificationMaxWidth: ${previewVisible ? `min(350px, calc(${getPixelValue(previewLeft)} - 60px), calc(100vw - 60px))` : 'min(350px, calc(100vw - 60px))'};
   --PreviewAreasWidth: ${getPixelValue(previewAreasWidth)};
   --PreviewHeight: ${getPixelValue(previewHeight)};
   --PreviewWidth: ${getPixelValue(previewWidth)};

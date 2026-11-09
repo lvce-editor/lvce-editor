@@ -65,7 +65,7 @@ test('renderCss serializes valid layout bounds', () => {
   --TitleBarWidth: 0px;
   --SashPreviewLeft: 800px;
   --NotificationRight: 30px;
-  --NotificationMaxWidth: min(250px, calc(100vw - 60px));
+  --NotificationMaxWidth: min(350px, calc(100vw - 60px));
   --PreviewAreasWidth: 400px;
   --PreviewHeight: 765px;
   --PreviewWidth: 400px;
@@ -130,7 +130,7 @@ test('renderCss serializes explicit application bounds', () => {
   --TitleBarWidth: 0px;
   --SashPreviewLeft: 800px;
   --NotificationRight: calc(100vw - 799.6px + 30px);
-  --NotificationMaxWidth: min(250px, calc(799.6px - 60px), calc(100vw - 60px));
+  --NotificationMaxWidth: min(350px, calc(799.6px - 60px), calc(100vw - 60px));
   --PreviewAreasWidth: 400px;
   --PreviewHeight: 285px;
   --PreviewWidth: 400px;
