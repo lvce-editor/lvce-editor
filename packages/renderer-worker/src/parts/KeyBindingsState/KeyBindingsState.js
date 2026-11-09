@@ -40,11 +40,12 @@ const matchesContext = (keyBinding) => {
 
 const getMatchingKeyBindings = (keyBindingSets) => {
   const userKeyBindings = keyBindingSets.user || []
+  const extensionKeyBindings = keyBindingSets.extensions || []
   const defaultKeyBindings = Object.entries(keyBindingSets)
-    .filter(([id]) => id !== 'user')
+    .filter(([id]) => id !== 'user' && id !== 'extensions')
     .map(([, keyBindings]) => keyBindings)
     .reverse()
-  return [userKeyBindings, ...defaultKeyBindings].flat(1).filter(matchesContext)
+  return [userKeyBindings, extensionKeyBindings, ...defaultKeyBindings].flat(1).filter(matchesContext)
 }
 
 const getAvailableKeyBindings = (keyBindings) => {

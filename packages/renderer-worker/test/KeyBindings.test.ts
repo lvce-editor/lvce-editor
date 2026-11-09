@@ -24,6 +24,7 @@ jest.unstable_mockModule('../src/parts/UserKeyBindings/UserKeyBindings.js', () =
   }
 })
 
+const Context = await import('../src/parts/Context/Context.js')
 const ExtensionKeyBindings = await import('../src/parts/ExtensionKeyBindings/ExtensionKeyBindings.js')
 const KeyBindings = await import('../src/parts/KeyBindings/KeyBindings.js')
 const KeyBindingsState = await import('../src/parts/KeyBindingsState/KeyBindingsState.js')
@@ -33,6 +34,7 @@ const UserKeyBindings = await import('../src/parts/UserKeyBindings/UserKeyBindin
 
 beforeEach(() => {
   jest.resetAllMocks()
+  Context.reset()
   jest.mocked(ExtensionKeyBindings.getKeyBindings).mockResolvedValue([])
   jest.mocked(UserKeyBindings.getKeyBindings).mockResolvedValue([])
   KeyBindingsState.state.keyBindings = []
@@ -215,4 +217,30 @@ test('user keybindings take precedence when a component loads afterwards', () =>
   KeyBindingsState.setKeyBindings('Editor', [componentKeyBinding])
 
   expect(KeyBindingsState.getKeyBinding(29)).toBe(userKeyBinding)
+})
+
+test.each([true, false])('extension shortcuts take precedence when extensions are registered first: %s', (extensionsFirst) => {
+  const extensionKeyBinding = { command: 'ExtensionHost.executeCommand', args: ['chat2.newChat'], key: 2090, when: 'chat2.composerFocus' }
+  const layoutKeyBinding = { command: 'Explorer.newFile', key: 2090 }
+  const registerExtension = () => KeyBindingsState.setKeyBindings('extensions', [extensionKeyBinding])
+  const registerLayout = () => KeyBindingsState.setKeyBindings('Layout', [layoutKeyBinding])
+  const register = extensionsFirst ? [registerExtension, registerLayout] : [registerLayout, registerExtension]
+  for (const registerKeyBindings of register) {
+    registerKeyBindings()
+  }
+
+  expect(KeyBindingsState.getKeyBinding(2090)).toBe(layoutKeyBinding)
+
+  Context.set('chat2.composerFocus', true)
+  KeyBindingsState.update()
+  expect(KeyBindingsState.getKeyBinding(2090)).toBe(extensionKeyBinding)
+
+  const userKeyBinding = { command: 'test.user', key: 2090 }
+  KeyBindingsState.setKeyBindings('user', [userKeyBinding])
+  expect(KeyBindingsState.getKeyBinding(2090)).toBe(userKeyBinding)
+
+  KeyBindingsState.setKeyBindings('user', [])
+  Context.remove('chat2.composerFocus')
+  KeyBindingsState.update()
+  expect(KeyBindingsState.getKeyBinding(2090)).toBe(layoutKeyBinding)
 })
