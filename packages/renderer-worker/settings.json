@@ -82,8 +82,8 @@
   {
     "category": "application",
     "description": "Specifies the color theme used in the AI-native layout",
-    "heading": "AI Layout Color Theme",
-    "id": "application.aiLayoutColorTheme",
+    "heading": "AI Color Theme",
+    "id": "application.aiColorTheme",
     "type": "string"
   },
   {

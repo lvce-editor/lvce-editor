@@ -82,7 +82,7 @@ export const watch = async (id) => {
 
 const getPreferredColorTheme = () => {
   if (isAiNativeLayout()) {
-    return Preferences.get('application.aiLayoutColorTheme') || getPreferredIdeColorTheme()
+    return Preferences.get('application.aiColorTheme') || Preferences.get('application.aiLayoutColorTheme') || getPreferredIdeColorTheme()
   }
   return getPreferredIdeColorTheme()
 }
@@ -103,7 +103,7 @@ const isAiNativeLayout = () => {
 }
 
 const getColorThemePreferenceId = () => {
-  return isAiNativeLayout() ? 'application.aiLayoutColorTheme' : 'application.colorTheme'
+  return isAiNativeLayout() ? 'application.aiColorTheme' : 'application.colorTheme'
 }
 
 export const setAiNativeLayout = async (aiNativeLayout, notify = true) => {

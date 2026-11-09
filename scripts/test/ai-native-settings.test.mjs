@@ -102,6 +102,37 @@ test('AI-native settings keep sessions, edit preferences, resize, and return to 
     await expect(search).toBeVisible()
     await search.fill('application.scrollspeed')
     await expect(settings.getByRole('spinbutton').first()).toHaveValue('2')
+
+    await page.getByRole('button', { name: 'Close Settings' }).click()
+    const readSettings = async () => JSON.parse(await readFile(join(config, 'settings.json'), 'utf8'))
+    const selectTheme = async (theme) => {
+      await page.locator('.ActivityBar [title="Settings"]').click()
+      await page.getByText('Color Theme', { exact: true }).click()
+      await page
+        .locator('.QuickPickItem')
+        .filter({ hasText: new RegExp(`^${theme}$`) })
+        .click()
+      await expect(page.locator('.QuickPick')).toBeHidden()
+    }
+    const themeBackground = () => page.locator('body').evaluate((element) => getComputedStyle(element).getPropertyValue('--MainBackground').trim())
+    await selectTheme('cobalt2')
+    await expect.poll(themeBackground).toBe('#193549')
+    await expect.poll(async () => (await readSettings())['application.aiColorTheme']).toBe('cobalt2')
+    assert.equal((await readSettings())['application.colorTheme'], undefined)
+    assert.equal((await readSettings())['application.aiLayoutColorTheme'], undefined)
+    await page.keyboard.press('F1')
+    await page.locator('.QuickPick input').fill('>View: Toggle AI-Native / IDE Layout')
+    await page.locator('.QuickPickItem').filter({ hasText: 'View: Toggle AI-Native / IDE Layout' }).click()
+    await expect(page.locator('.Workbench')).not.toHaveClass(/AiNativeLayout/)
+    await selectTheme('slime')
+    await expect.poll(themeBackground).toBe('#1e2324')
+    await expect.poll(async () => (await readSettings())['application.colorTheme']).toBe('slime')
+    assert.equal((await readSettings())['application.aiColorTheme'], 'cobalt2')
+    await page.getByRole('button', { name: 'Focus entirely on chat' }).click()
+    await expect(page.locator('.Workbench')).toHaveClass(/AiNativeLayout/)
+    assert.equal((await readSettings())['application.aiColorTheme'], 'cobalt2')
+    assert.equal((await readSettings())['application.colorTheme'], 'slime')
+    await expect.poll(themeBackground).toBe('#193549')
   } finally {
     await browser?.close()
     if (server && server.exitCode === null) {
