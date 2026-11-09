@@ -42,7 +42,7 @@
   },
   "dependencies": {
     "@fontsource/fira-code": "^5.3.0",
-    "@lvce-editor/rpc": "^6.23.0"
+    "@lvce-editor/rpc": "^6.24.0"
   },
   "devDependencies": {
     "@jest/globals": "^30.5.2"
