@@ -35,7 +35,7 @@
     "electron-builder": "^26.15.3",
     "execa": "^9.6.1",
     "extract-zip": "^2.0.1",
-    "glob": "^14.0.3"
+    "glob": "^14.0.4"
   },
   "dependencies": {
     "@fontsource/fira-code": "^5.3.0",
@@ -45,7 +45,7 @@
     "bytes": "^3.1.2",
     "esbuild": "^0.28.2",
     "fs-extra": "^11.4.1",
-    "got": "^16.1.0",
+    "got": "^16.2.0",
     "gzip-size": "^7.0.0",
     "minimist": "^1.2.8",
     "p-map": "^7.1.1",
