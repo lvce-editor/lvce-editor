@@ -1323,7 +1323,7 @@
           "name": "Panel.loadContent",
           "parameters": [
             { "source": "state", "name": "uid" },
-            { "source": "literal", "value": {} },
+            { "source": "argument", "name": "savedState" },
             { "source": "context", "name": "workspaceUri" }
           ]
         },
