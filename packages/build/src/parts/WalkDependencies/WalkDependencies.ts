@@ -16,14 +16,14 @@ const getHiddenDependencyPath = (path, dependency) => {
   }
 }
 
-export const walkDependencies = (object, fn) => {
+const visitDependencies = (object, fn) => {
   const shouldContinue = fn(object)
   if (!shouldContinue) {
     return
   }
   const visibleDependencies = Object.values(object.dependencies || {})
   for (const value of visibleDependencies) {
-    walkDependencies(value, fn)
+    visitDependencies(value, fn)
   }
 
   // npm does not include optional dependencies in `dependencies` when they
@@ -33,7 +33,7 @@ export const walkDependencies = (object, fn) => {
     return !object.dependencies?.[dependency]
   })
   for (const hiddenDependency of hiddenDependencies) {
-    walkDependencies(
+    visitDependencies(
       {
         path: getHiddenDependencyPath(object.path, hiddenDependency),
         name: hiddenDependency,
@@ -41,4 +41,34 @@ export const walkDependencies = (object, fn) => {
       fn,
     )
   }
+}
+
+const visitAllDependencies = (object, fn, includeParent = false) => {
+  const includeDependency = fn(object, includeParent)
+  const include = includeParent || includeDependency
+  const visibleDependencies = Object.values(object.dependencies || {})
+  for (const value of visibleDependencies) {
+    visitAllDependencies(value, fn, include)
+  }
+  const hiddenDependencies = Object.keys(object._dependencies || {}).filter((dependency) => {
+    return !object.dependencies?.[dependency]
+  })
+  for (const hiddenDependency of hiddenDependencies) {
+    visitAllDependencies(
+      {
+        path: getHiddenDependencyPath(object.path, hiddenDependency),
+        name: hiddenDependency,
+      },
+      fn,
+      include,
+    )
+  }
+}
+
+export const walkDependenciesWithIncludedParents = (object, fn) => {
+  visitAllDependencies(object, fn)
+}
+
+export const walkDependencies = (object, fn) => {
+  visitDependencies(object, fn)
 }

@@ -11,7 +11,8 @@ export const getActions = () => {
     },
     {
       type: ActionType.Button,
-      id: 'more actions',
+      id: 'More Actions',
+      onClick: 'handleExtensionsMoreActions',
       icon: 'Ellipsis',
     },
   ]

@@ -1,6 +1,7 @@
 import { beforeEach, expect, jest, test } from '@jest/globals'
 
 const commandExecute = jest.fn()
+const executeForApplication = jest.fn()
 const executeViewletCommand = jest.fn()
 const panelWorkerInvocations: any[] = []
 
@@ -9,6 +10,8 @@ jest.unstable_mockModule('../src/parts/Command/Command.js', () => {
     execute: commandExecute,
   }
 })
+
+jest.unstable_mockModule('../src/parts/ViewletManager/ViewletManager.js', () => ({ executeForApplication }))
 
 jest.unstable_mockModule('../src/parts/PanelWorker/PanelWorker.js', () => {
   return {
@@ -35,6 +38,7 @@ const ViewletStates = await import('../src/parts/ViewletStates/ViewletStates.js'
 
 beforeEach(() => {
   commandExecute.mockClear()
+  executeForApplication.mockClear()
   executeViewletCommand.mockReset()
   panelWorkerInvocations.length = 0
   ViewletStates.reset()
@@ -150,4 +154,32 @@ test('renders the output panel before selecting the requested channel', async ()
 
   expect(commandExecute).toHaveBeenCalledWith('Output.selectChannel', 'Window')
   expect(result).toEqual({ newState: state, commands: [] })
+})
+
+test('selects the output channel in the application that opened the panel', async () => {
+  const state = { ...ViewletLayout.create(1), applicationId: 'preview' }
+  await ViewletLayout.openOutput(state, 'sample-build')
+  expect(executeViewletCommand).toHaveBeenCalledWith(state.uid, 'showPanel', 'Output', 'sample-build')
+  expect(executeForApplication).toHaveBeenCalledWith('preview', 'Output.selectChannel', 'sample-build')
+  expect(commandExecute).not.toHaveBeenCalled()
+})
+
+test('terminal execution waits for the panel and preserves process arguments', async () => {
+  const panelRendered = Promise.withResolvers<void>()
+  executeViewletCommand.mockImplementation(() => panelRendered.promise)
+  const state = ViewletLayout.create(1)
+  const execution = { command: 'node', args: ['/workspace/a ; $(touch nope).js'], cwd: '/workspace' }
+  const pending = ViewletLayout.runInTerminal(state, execution)
+  expect(commandExecute).not.toHaveBeenCalled()
+  panelRendered.resolve()
+  await pending
+  expect(commandExecute).toHaveBeenCalledWith('Terminals.addTerminal', execution.cwd, { ...execution, keepOpen: true })
+})
+
+test('terminal execution targets its owning application', async () => {
+  const state = { ...ViewletLayout.create(1), applicationId: 'preview' }
+  const execution = { command: 'bash', args: ['/workspace/test.sh'], cwd: '/workspace' }
+  await ViewletLayout.runInTerminal(state, execution)
+  expect(executeForApplication).toHaveBeenCalledWith('preview', 'Terminals.addTerminal', execution.cwd, { ...execution, keepOpen: true })
+  expect(commandExecute).not.toHaveBeenCalled()
 })

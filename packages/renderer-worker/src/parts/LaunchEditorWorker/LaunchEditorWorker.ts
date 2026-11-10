@@ -1,11 +1,13 @@
 import * as EditorWorkerUrl from '../EditorWorkerUrl/EditorWorkerUrl.js'
 import * as GetConfiguredWorkerUrl from '../GetConfiguredWorkerUrl/GetConfiguredWorkerUrl.ts'
+import * as GetPortTuple from '../GetPortTuple/GetPortTuple.js'
+import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as HandleIpc from '../HandleIpc/HandleIpc.js'
 import * as Id from '../Id/Id.js'
 import * as IpcParent from '../IpcParent/IpcParent.js'
 import * as IpcParentType from '../IpcParentType/IpcParentType.js'
 import * as IpcParentWithModuleWorkerAndWorkaroundForChromeDevtoolsBug from '../IpcParentWithModuleWorkerAndWorkaroundForChromeDevtoolsBug/IpcParentWithModuleWorkerAndWorkaroundForChromeDevtoolsBug.js'
-import * as IpcState from '../IpcState/IpcState.js'
+import * as ShouldUsePreloadedWorker from '../ShouldUsePreloadedWorker/ShouldUsePreloadedWorker.ts'
 import * as JsonRpc from '../JsonRpc/JsonRpc.js'
 import * as Transferrable from '../Transferrable/Transferrable.js'
 
@@ -18,7 +20,7 @@ export const launchEditorWorker = async () => {
     name: 'Editor Worker',
     id,
   })
-  if (IpcState.getConfig()) {
+  if (ShouldUsePreloadedWorker.shouldUsePreloadedWorker('editorWorker')) {
     // TODO should renderer process send port to renderer worker or vice versa?
     const port = Transferrable.acquire(id)
     // TODO wrap port to create ipc
@@ -30,5 +32,10 @@ export const launchEditorWorker = async () => {
   const syntaxHighlightingWorker = true
   const syncIncremental = true
   await JsonRpc.invoke(ipc, 'Initialize.initialize', syntaxHighlightingWorker, syncIncremental)
+  const { port1, port2 } = GetPortTuple.getPortTuple()
+  await Promise.all([
+    JsonRpc.invokeAndTransfer(ipc, 'Editor.handleDirectMessagePort', port1),
+    RendererProcess.invokeAndTransfer('HandleMessagePort.handleMessagePort', port2, 'Editor'),
+  ])
   return ipc
 }

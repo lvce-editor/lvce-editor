@@ -12,6 +12,7 @@ export default defineConfig([
   ...config.recommendedTsconfig,
   ...config.recommendedActions,
   ...config.recommendedRegex,
+  ...config.recommendedQuickPickCss,
   {
     files: ['packages/shared-process/**/*.{ts,js}'],
     rules: {

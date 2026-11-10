@@ -44,3 +44,47 @@ test('transfer retains live native view and metadata with exactly one owning pan
   expect(Native.createWebContentsView).not.toHaveBeenCalled()
   expect(Native.disposeWebContentsView).not.toHaveBeenCalled()
 })
+
+test('transfer appends to a populated destination and selects the moved tab', async () => {
+  const moved = { browserViewId: 10, title: 'Draft', inputValue: 'http://localhost/draft' }
+  const source = {
+    ...Browser.create(1, 'simple-browser://', 600, 0, 600, 800),
+    tabs: [moved],
+    browserViewId: 10,
+    draggedTab: moved,
+    isDraggingTab: true,
+  }
+  const existingTab = { browserViewId: 20, title: 'Existing' }
+  const target = {
+    state: {
+      ...Browser.create(2, 'simple-browser://', 600, 0, 600, 800),
+      tabs: [existingTab],
+      browserViewId: 20,
+    },
+  }
+  jest.mocked(States.getInstance).mockReturnValue(target)
+  await Browser.moveTabToBrowser(source, 10, 2)
+  const adopted = jest.mocked(Viewlet.setStateFunctional).mock.calls.at(-1)?.[1]
+  expect(adopted.tabs).toMatchObject([existingTab, moved])
+  expect(adopted.selectedTabIndex).toBe(1)
+  expect(adopted.browserViewId).toBe(10)
+  expect(adopted.inputValue).toBe('http://localhost/draft')
+})
+
+test('moving the final source tab keeps an empty source tab available', async () => {
+  const moved = { browserViewId: 10, title: 'Draft' }
+  const source = {
+    ...Browser.create(1, 'simple-browser://', 600, 0, 600, 800),
+    tabs: [moved],
+    browserViewId: 10,
+    draggedTab: moved,
+    isDraggingTab: true,
+  }
+  const target = { state: Browser.create(2, 'simple-browser://', 600, 0, 600, 800) }
+  jest.mocked(States.getInstance).mockReturnValue(target)
+  const result = await Browser.moveTabToBrowser(source, 10, 2)
+  expect(result.tabs).toHaveLength(1)
+  expect(result.tabs[0]).not.toBe(moved)
+  expect(result.tabs[0].browserViewId).toBe(0)
+  expect(result.isDraggingTab).toBe(false)
+})

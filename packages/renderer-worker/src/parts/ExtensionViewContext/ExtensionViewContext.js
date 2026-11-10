@@ -1,3 +1,4 @@
+import * as ApplicationRegistry from '../ApplicationRegistry/ApplicationRegistry.ts'
 import * as Context from '../Context/Context.js'
 import * as KeyBindingsState from '../KeyBindingsState/KeyBindingsState.js'
 
@@ -43,4 +44,13 @@ export const handleViewContextChange = (uid, viewId, context) => {
   }
   addAllContexts()
   KeyBindingsState.update()
+}
+
+export const getApplicationIdForContext = (key) => {
+  for (const [uid, context] of Object.entries(contexts)) {
+    if (context[key] === true) {
+      return ApplicationRegistry.getOwner(Number(uid))
+    }
+  }
+  return undefined
 }

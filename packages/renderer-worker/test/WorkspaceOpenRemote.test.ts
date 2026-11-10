@@ -11,10 +11,7 @@ const getInstance = jest.fn<() => { state: Record<string, unknown> } | undefined
 const getPath = jest.fn<() => string>()
 
 jest.unstable_mockModule('../src/parts/Command/Command.js', () => ({ execute }))
-jest.unstable_mockModule(
-  '../src/parts/ExtensionManagementWorker/ExtensionManagementWorker.js',
-  () => ({ invoke: invokeWorkspaceRequest }),
-)
+jest.unstable_mockModule('../src/parts/ExtensionManagementWorker/ExtensionManagementWorker.js', () => ({ invoke: invokeWorkspaceRequest }))
 jest.unstable_mockModule('../src/parts/GetRemoteHomepage/GetRemoteHomepage.js', () => ({ getRemoteHomepage }))
 jest.unstable_mockModule('../src/parts/Notification/Notification.js', () => ({ create }))
 jest.unstable_mockModule('../src/parts/Preferences/Preferences.js', () => ({ get: getPreference }))
@@ -32,7 +29,7 @@ beforeEach(() => {
   invoke.mockResolvedValue('git@github.com:owner/repository.git')
   invokeWorkspaceRequest.mockResolvedValue('git@github.com:owner/repository.git')
   getRemoteHomepage.mockReturnValue('https://github.com/owner/repository')
-  getInstance.mockReturnValue(undefined)
+  getInstance.mockReturnValue({ state: { previewId: 41 } })
   execute.mockResolvedValue(undefined)
   executeViewletCommand.mockResolvedValue(undefined)
   create.mockResolvedValue(undefined)
@@ -54,8 +51,8 @@ test('reads the Git remote from the remote workspace host', async () => {
 
   expect(invokeWorkspaceRequest).toHaveBeenCalledWith('Extensions.executeWorkspaceRequest', 'remote-ssh://host/workspace', 'git-remote')
   expect(invoke).not.toHaveBeenCalled()
-  expect(execute).toHaveBeenNthCalledWith(1, 'Layout.showPreview', 'simple-browser://')
-  expect(execute).toHaveBeenNthCalledWith(2, 'SimpleBrowser.openOrRevealTab', 'https://github.com/owner/repository')
+  expect(execute).toHaveBeenCalledWith('Layout.showPreview', 'simple-browser://')
+  expect(executeViewletCommand).toHaveBeenCalledWith(41, 'openOrRevealTab', 'https://github.com/owner/repository')
   expect(create).not.toHaveBeenCalled()
 })
 
@@ -76,11 +73,19 @@ test('reports errors while opening the Simple Browser', async () => {
   expect(create).toHaveBeenCalledWith('error', 'Failed to open Git remote: Simple Browser unavailable')
 })
 
+test('reports errors while opening a remote in the Simple Browser preview', async () => {
+  executeViewletCommand.mockRejectedValueOnce(new Error('Simple Browser unavailable'))
+
+  await WorkspaceOpenRemote.openRemote()
+
+  expect(create).toHaveBeenCalledWith('error', 'Failed to open Git remote: Simple Browser unavailable')
+})
+
 test('opens the remote in a new Simple Browser preview', async () => {
   await WorkspaceOpenRemote.openRemote()
 
-  expect(execute).toHaveBeenNthCalledWith(1, 'Layout.showPreview', 'simple-browser://')
-  expect(execute).toHaveBeenNthCalledWith(2, 'SimpleBrowser.openOrRevealTab', 'https://github.com/owner/repository')
+  expect(execute).toHaveBeenCalledWith('Layout.showPreview', 'simple-browser://')
+  expect(executeViewletCommand).toHaveBeenCalledWith(41, 'openOrRevealTab', 'https://github.com/owner/repository')
   expect(create).not.toHaveBeenCalled()
 })
 

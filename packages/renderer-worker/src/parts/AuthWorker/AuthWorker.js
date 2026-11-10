@@ -11,8 +11,9 @@ export const initialize = (backendUrl, platform, href) => {
   })
 }
 
-export const signIn = (backendUrl, platform) => {
+export const signIn = (backendUrl, platform, authUseRedirect) => {
   return invoke('Auth.login', {
+    authUseRedirect,
     backendUrl,
     platform,
   })
@@ -23,5 +24,15 @@ export const signOut = (backendUrl) => {
     backendUrl,
   })
 }
+
+export const getAccounts = () => invoke('Auth.getAccounts')
+
+export const getConnectedAccounts = () => invoke('Auth.getConnectedAccounts')
+
+export const disconnectConnectedAccount = (provider) => invoke('Auth.disconnectConnectedAccount', provider)
+
+export const useAccount = (id) => invoke('Auth.useAccount', id)
+
+export const removeAccount = (id) => invoke('Auth.removeAccount', id)
 
 export { invoke, invokeAndTransfer, restart }

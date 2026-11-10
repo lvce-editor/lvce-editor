@@ -1,5 +1,6 @@
 import { existsSync } from 'node:fs'
-import { isAbsolute, join, relative, resolve, sep } from 'node:path'
+import { dirname, isAbsolute, join, relative, resolve, sep } from 'node:path'
+import { fileURLToPath } from 'node:url'
 import * as CodiconsPath from '../CodiconsPath/CodiconsPath.ts'
 import { STATIC } from '../Static/Static.ts'
 import { root } from '../Root/Root.ts'
@@ -53,6 +54,10 @@ export const getAbsolutePath = (pathName: string): string => {
   }
   if (pathName.startsWith('/packages')) {
     return getContainedPath(root, pathName)
+  }
+  if (pathName.startsWith('/fonts/')) {
+    const fontsourcePath = dirname(fileURLToPath(import.meta.resolve('@fontsource/fira-code/400.css')))
+    return getContainedPath(fontsourcePath, pathName.slice('/fonts/'.length))
   }
   return getContainedPath(STATIC, pathName)
 }

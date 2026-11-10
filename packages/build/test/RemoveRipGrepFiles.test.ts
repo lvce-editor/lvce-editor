@@ -1,8 +1,8 @@
 import { describe, expect, test } from '@jest/globals'
-import { mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises'
+import { access, mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
-import { removeRipGrepFiles } from '../src/parts/RemoveRipgrepFiles/RemoveRipGrepFiles.ts'
+import { removeRipGrepFiles, removeRipGrepPackages } from '../src/parts/RemoveRipgrepFiles/RemoveRipGrepFiles.ts'
 
 const createRipGrepPackage = async (indexContent: string): Promise<string> => {
   const root = await mkdtemp(join(tmpdir(), 'lvce-ripgrep-'))
@@ -43,4 +43,27 @@ describe('removeRipGrepFiles', () => {
       await rm(root, { recursive: true, force: true })
     }
   })
+})
+
+test('removes ripgrep packages from Debian app contents', async () => {
+  const root = await mkdtemp(join(tmpdir(), 'lvce-debian-ripgrep-'))
+  const nodeModules = join(root, 'packages', 'shared-process', 'node_modules')
+  const ripgrepPackages = [
+    join(nodeModules, '@lvce-editor', 'ripgrep'),
+    join(nodeModules, '@vscode', 'ripgrep'),
+    join(nodeModules, '@vscode', 'ripgrep-linux-x64'),
+    join(nodeModules, '@vscode', 'other-package'),
+  ]
+
+  try {
+    await Promise.all(ripgrepPackages.map((path) => mkdir(path, { recursive: true })))
+    await removeRipGrepPackages(join(root, 'packages', 'shared-process'))
+
+    await expect(access(ripgrepPackages[0])).rejects.toThrow()
+    await expect(access(ripgrepPackages[1])).rejects.toThrow()
+    await expect(access(ripgrepPackages[2])).rejects.toThrow()
+    await expect(access(ripgrepPackages[3])).resolves.toBeUndefined()
+  } finally {
+    await rm(root, { recursive: true, force: true })
+  }
 })

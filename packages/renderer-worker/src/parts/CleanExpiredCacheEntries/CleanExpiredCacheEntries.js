@@ -3,8 +3,12 @@ import * as Logger from '../Logger/Logger.js'
 import * as WebStorage from '../WebStorage/WebStorage.js'
 import * as WebStorageType from '../WebStorageType/WebStorageType.js'
 
-const cleanupInterval = 24 * 60 * 60 * 1000
+const cleanupInterval = 7 * 24 * 60 * 60 * 1000
 const lastCleanupKey = 'cacheStorage.lastCleanup'
+
+const isDisabled = (href) => new URL(href).searchParams.has('noCacheCleanup')
+
+export const shouldRunCleanup = (href, isTestRun, cleanupEnabled = true) => cleanupEnabled && !isTestRun && !isDisabled(href)
 
 export const shouldClean = (lastCleanup, now) => {
   if (!lastCleanup) {

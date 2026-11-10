@@ -28,3 +28,9 @@ export const removeRipGrepFiles = async (to, platform, arch) => {
   }
   await removeLegacyDownloadRipGrepExport(indexJsPath)
 }
+
+export const removeRipGrepPackages = async (to) => {
+  await Remove.remove(`${to}/node_modules/@lvce-editor/ripgrep`)
+  await Remove.remove(`${to}/node_modules/@vscode/ripgrep`)
+  await Remove.removeMatching(`${to}/node_modules/@vscode`, 'ripgrep-*')
+}

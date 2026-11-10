@@ -14,14 +14,14 @@ const getCacheFn = (config) => {
   }
 }
 
-export const getColorThemeCssCached = async (colorThemeId, getData) => {
+export const getColorThemeCssCached = async (colorThemeId, getData, forceReload = false) => {
   const config = Preferences.get('colorTheme.cache')
   const module = await getCacheFn(config)
-  const cachedData = await module.get(colorThemeId)
+  const cachedData = forceReload ? '' : await module.get(colorThemeId)
   if (cachedData) {
     return cachedData
   }
-  const newData = await getData(colorThemeId)
+  const newData = await getData(colorThemeId, forceReload)
   await module.set(colorThemeId, newData)
   return newData
 }

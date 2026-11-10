@@ -38,6 +38,17 @@
   outline: none;
 }
 
+.MenuItem:not(.MenuItemDisabled):not([disabled]):not([aria-disabled='true']):hover {
+  background: var(--MenuItemHoverBackground, #687f7b33);
+  color: var(--MenuItemHoverForeground, inherit);
+  outline: none;
+}
+
+.Menu:has(.MenuItem:not(.MenuItemDisabled):not([disabled]):not([aria-disabled='true']):hover) .MenuItemFocused:not(:hover) {
+  background: transparent;
+  color: inherit;
+}
+
 .MenuItemDisabled,
 .MenuItem[disabled],
 .MenuItem[aria-disabled='true'] {

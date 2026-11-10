@@ -10,6 +10,9 @@ const disposeAllRuntimes = () => {
   return invoke('Extensions.disposeAllRuntimes')
 }
 
+const handleFileChanges = (changes) => invoke('Extensions.handleFileChanges', changes)
+
 export const hydrate = () => {
+  GlobalEventBus.addListener('fileSystem.changed', handleFileChanges)
   GlobalEventBus.addListener('workspace.beforeChange', disposeAllRuntimes)
 }

@@ -1,4 +1,5 @@
 .ActivityBar {
+  outline: none;
   color: var(--ActivityBarForeground);
   display: flex;
   flex-direction: column;

@@ -6,6 +6,7 @@ import * as GetWebViews from '../GetWebViews/GetWebViews.ts'
 import * as IframeWorker from '../IframeWorker/IframeWorker.js'
 import * as IsGitpod from '../IsGitpod/IsGitpod.ts'
 import * as Platform from '../Platform/Platform.js'
+import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as Scheme from '../Scheme/Scheme.ts'
@@ -65,6 +66,9 @@ export const createWebViewWorkerRpc2 = (rpcInfo: any, port: MessagePort): Promis
 
 export const compat = {
   sharedProcessInvoke(...args) {
+    if (Platform.getPlatform() === PlatformType.Web) {
+      return Promise.resolve(undefined)
+    }
     return SharedProcess.invoke(...args)
   },
   async rendererProcessInvoke(...args) {

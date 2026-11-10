@@ -1,4 +1,5 @@
 export const name = 'Terminals'
+export const workspaceChangeEvent = 'workspace.change'
 
 export * from './ViewletTerminals.js'
 export * from './ViewletTerminalsComponentState.js'

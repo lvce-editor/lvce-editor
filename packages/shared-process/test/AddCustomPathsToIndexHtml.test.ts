@@ -2,12 +2,15 @@ import { afterEach, expect, jest, test } from '@jest/globals'
 import * as GetRemoteUrl from '../src/parts/GetRemoteUrl/GetRemoteUrl.js'
 
 const configElementPattern = /<script\b[^>]*\bid="Config"[^>]*>([\s\S]*?)<\/script>/g
+const workerUrlsPattern = /\n\s+"workerUrls": \{\n\s+"develop\./
+const formattedConfigPattern = /<script id="Config" type="application\/json">\n\s{6}\{\n\s{8}"assetDir"/
 
 jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => ({
   isProduction: false,
 }))
 
 jest.unstable_mockModule('../src/parts/Preferences/Preferences.js', () => ({
+  getOverrides: jest.fn(() => ({})),
   getUserPreferences: jest.fn(() => {
     throw new Error('not implemented')
   }),
@@ -25,6 +28,7 @@ const originalArgv = process.argv
 
 afterEach(() => {
   jest.resetAllMocks()
+  jest.mocked(Preferences.getOverrides).mockReturnValue({})
   process.argv = originalArgv
 })
 
@@ -67,16 +71,22 @@ test('addCustomPathsToIndexHtml - merges linked worker urls into the existing ap
     'develop.mainAreaWorkerPath': '/test/main-area-worker',
   })
   const content =
-    '<title>Test</title><script id="Config" type="application/json">{"assetDir":"/editor/1.2.3","platform":"web","rendererWorkerUrl":"/editor/1.2.3/packages/renderer-worker/dist/rendererWorkerMain.js","workerUrls":{"develop.mainAreaWorkerPath":"/old/main-area-worker"}}</script>'
+    '<title>Test</title>\n    <script id="Config" type="application/json">{"assetDir":"/editor/1.2.3","platform":"web","rendererWorkerUrl":"/editor/1.2.3/packages/renderer-worker/dist/rendererWorkerMain.js","html":"\\u003c/script\\u003e\\u003cscript>alert(1)\\u003c/script\\u003e","workerUrls":{"develop.mainAreaWorkerPath":"/old/main-area-worker"}}</script>'
   const mainAreaWorkerUrl = GetRemoteUrl.getRemoteUrl('/test/main-area-worker')
 
   const result = await AddCustomPathsToIndexHtml.addCustomPathsToIndexHtml(content)
   const configElements = [...result.matchAll(configElementPattern)]
 
   expect(configElements).toHaveLength(1)
+  expect(result).toMatch(formattedConfigPattern)
+  expect(result).toContain('\n      }\n    </script>')
+  expect(configElements[0][1]).toMatch(workerUrlsPattern)
+  expect(configElements[0][1]).toContain('\\u003c/script\\u003e\\u003cscript\\u003ealert(1)\\u003c/script\\u003e')
+  expect(result).not.toContain('</script><script>alert(1)</script>')
   expect(JSON.parse(configElements[0][1])).toEqual({
     assetDir: '/editor/1.2.3',
     editorWorkerUrl: GetRemoteUrl.getRemoteUrl('/test/editor-worker'),
+    html: '</script><script>alert(1)</script>',
     platform: 'web',
     rendererWorkerUrl: '/editor/1.2.3/packages/renderer-worker/dist/rendererWorkerMain.js',
     workerUrls: {
@@ -94,4 +104,69 @@ test('addCustomPathsToIndexHtml - Electron runtime overrides the shared web conf
   const configElements = [...result.matchAll(configElementPattern)]
   expect(configElements).toHaveLength(1)
   expect(JSON.parse(configElements[0][1])).toEqual({ assetDir: '', platform: 'electron', workerUrls: {} })
+})
+
+test('addCustomPathsToIndexHtml - merges and safely serializes the Electron workspace URI', async () => {
+  jest.mocked(Preferences.getUserPreferences).mockResolvedValue({})
+  jest.mocked(LinkedWorkerPreferences.getLinkedWorkerPreferences).mockResolvedValue({})
+  const content = '<title>Test</title><script id="Config" type="application/json">{"platform":"web","workerUrls":{}}</script>'
+  const workspaceUri = 'remote-ssh://user@example.com/home/project?name=<script>&'
+  const result = await AddCustomPathsToIndexHtml.addCustomPathsToIndexHtml(content, { platform: 'electron', workspaceUri })
+  const configElement = [...result.matchAll(configElementPattern)][0]
+
+  expect(result).toContain('"workspaceUri": "remote-ssh://user@example.com/home/project?name=\\u003cscript\\u003e\\u0026"')
+  expect(JSON.parse(configElement[1])).toMatchObject({ platform: 'electron', workerUrls: {}, workspaceUri })
+})
+
+const getConfig = (content: string): any => JSON.parse([...content.matchAll(configElementPattern)][0][1])
+
+test('addCustomPathsToIndexHtml - CLI worker overrides user and packaged paths with an encoded URL', async () => {
+  jest.mocked(Preferences.getUserPreferences).mockResolvedValue({ 'develop.processExplorerWorkerPath': '/user/worker.js' })
+  jest.mocked(Preferences.getOverrides).mockReturnValue({ 'develop.processExplorerWorkerPath': '/test/process explorer#1.js' })
+  jest.mocked(LinkedWorkerPreferences.getLinkedWorkerPreferences).mockResolvedValue({})
+  const content =
+    '<title>Test</title><script id="Config" type="application/json">{"workerUrls":{"develop.processExplorerWorkerPath":"/packaged/worker.js"}}</script>'
+  const result = await AddCustomPathsToIndexHtml.addCustomPathsToIndexHtml(content)
+  expect(getConfig(result).workerUrls['develop.processExplorerWorkerPath']).toBe(GetRemoteUrl.getRemoteUrl('/test/process explorer#1.js'))
+  expect(result).toContain('process%20explorer%231.js')
+})
+
+test('addCustomPathsToIndexHtml - auth worker CLI path is converted to an encoded remote URL', async () => {
+  jest.mocked(Preferences.getUserPreferences).mockResolvedValue({})
+  jest.mocked(Preferences.getOverrides).mockReturnValue({ 'develop.authWorkerPath': '/test/auth worker#1.js' })
+  jest.mocked(LinkedWorkerPreferences.getLinkedWorkerPreferences).mockResolvedValue({})
+  const content = '<title>Test</title><script id="Config" type="application/json">{"workerUrls":{"develop.authWorkerPath":"/packaged/auth-worker.js"}}</script>'
+  const result = await AddCustomPathsToIndexHtml.addCustomPathsToIndexHtml(content)
+  expect(getConfig(result).workerUrls['develop.authWorkerPath']).toBe(GetRemoteUrl.getRemoteUrl('/test/auth worker#1.js'))
+  expect(result).toContain('auth%20worker%231.js')
+})
+
+test('addCustomPathsToIndexHtml - blob worker CLI path overrides configured paths with an encoded URL', async () => {
+  jest.mocked(Preferences.getUserPreferences).mockResolvedValue({ 'develop.blobWorkerPath': '/user/blob-worker.js' })
+  jest.mocked(Preferences.getOverrides).mockReturnValue({ 'develop.blobWorkerPath': '/test/blob worker#1.js' })
+  jest.mocked(LinkedWorkerPreferences.getLinkedWorkerPreferences).mockResolvedValue({})
+  const content = '<title>Test</title><script id="Config" type="application/json">{"workerUrls":{"develop.blobWorkerPath":"/packaged/blob-worker.js"}}</script>'
+  const result = await AddCustomPathsToIndexHtml.addCustomPathsToIndexHtml(content)
+  expect(getConfig(result).workerUrls['develop.blobWorkerPath']).toBe(GetRemoteUrl.getRemoteUrl('/test/blob worker#1.js'))
+  expect(result).toContain('blob%20worker%231.js')
+})
+
+test('addCustomPathsToIndexHtml - absent or disabled CLI override keeps the packaged worker', async () => {
+  jest.mocked(Preferences.getUserPreferences).mockResolvedValue({})
+  jest.mocked(LinkedWorkerPreferences.getLinkedWorkerPreferences).mockResolvedValue({})
+  const content =
+    '<title>Test</title><script id="Config" type="application/json">{"workerUrls":{"develop.processExplorerWorkerPath":"/packaged/worker.js"}}</script>'
+  expect(getConfig(await AddCustomPathsToIndexHtml.addCustomPathsToIndexHtml(content)).workerUrls['develop.processExplorerWorkerPath']).toBe(
+    '/packaged/worker.js',
+  )
+  process.argv = [...originalArgv, '--disable-custom-worker-paths']
+  jest.mocked(Preferences.getOverrides).mockReturnValue({ 'develop.processExplorerWorkerPath': '/test/worker.js' })
+  expect(getConfig(await AddCustomPathsToIndexHtml.addCustomPathsToIndexHtml(content)).workerUrls['develop.processExplorerWorkerPath']).toBe(
+    '/packaged/worker.js',
+  )
+  jest.mocked(Preferences.getOverrides).mockReturnValue({ 'develop.blobWorkerPath': '/test/blob-worker.js' })
+  const blobContent = '<title>Test</title><script id="Config" type="application/json">{"workerUrls":{"develop.blobWorkerPath":"/packaged/blob-worker.js"}}</script>'
+  expect(getConfig(await AddCustomPathsToIndexHtml.addCustomPathsToIndexHtml(blobContent)).workerUrls['develop.blobWorkerPath']).toBe(
+    '/packaged/blob-worker.js',
+  )
 })

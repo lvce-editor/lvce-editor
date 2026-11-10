@@ -1,17 +1,22 @@
 import * as HtmlFile from '../HtmlFile/HtmlFile.js'
 
+/** @typedef {FileSystemFileHandle | {kind: 'file', name: string, file: File, readonly: true}} FileHandle */
+
 /**
  *
- * @param {FileSystemFileHandle} handle
+ * @param {FileHandle} handle
  * @returns
  */
 export const getFile = (handle) => {
+  if ('file' in handle) {
+    return handle.file
+  }
   return handle.getFile()
 }
 
 /**
  *
- * @param {FileSystemFileHandle} handle
+ * @param {FileHandle} handle
  * @returns
  */
 export const getBinaryString = async (handle) => {
@@ -26,6 +31,9 @@ export const getBinaryString = async (handle) => {
  * @param {string} content
  */
 export const write = async (handle, content) => {
+  if ('readonly' in handle && handle.readonly) {
+    throw new Error(`File ${handle.name} is read-only`)
+  }
   // @ts-ignore
   const writable = await handle.createWritable()
   await writable.write(content)
@@ -34,10 +42,13 @@ export const write = async (handle, content) => {
 
 /**
  *
- * @param {FileSystemFileHandle} handle
+ * @param {FileHandle} handle
  * @param {Response} response
  */
 export const writeResponse = async (handle, response) => {
+  if ('readonly' in handle && handle.readonly) {
+    throw new Error(`File ${handle.name} is read-only`)
+  }
   // @ts-ignore
   const writable = await handle.createWritable()
   // @ts-ignore

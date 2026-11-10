@@ -26,7 +26,7 @@ const removeCloseListener = (ipc: any, listener: any): void => {
   }
 }
 
-export const watch = async (ipc: any, id: any, { exclude, roots, useGitIgnore }: any): Promise<any> => {
+export const watch = async (ipc: any, id: any, { childNames, depth, exclude, roots, useGitIgnore }: any): Promise<any> => {
   const internalId = Id.create()
   const handleClose = async (): Promise<void> => {
     removeCloseListener(ipc, handleClose)
@@ -35,12 +35,27 @@ export const watch = async (ipc: any, id: any, { exclude, roots, useGitIgnore }:
   }
   addCloseListener(ipc, handleClose)
   internalIdMap[internalId] = { handleClose, id, ipc }
-  return FileWatcherProcess.invoke('FileWatcher.watchFolders', {
-    exclude,
-    id: internalId,
-    roots,
-    ...(useGitIgnore === undefined ? {} : { useGitIgnore }),
-  })
+  try {
+    const result = await FileWatcherProcess.invoke('FileWatcher.watchFolders', {
+      exclude,
+      id: internalId,
+      roots,
+      ...(childNames === undefined ? {} : { childNames }),
+      ...(depth === undefined ? {} : { depth }),
+      ...(useGitIgnore === undefined ? {} : { useGitIgnore }),
+    })
+    if (!internalIdMap[internalId]) {
+      await disposeFileWatcher(internalId)
+      throw new Error('File watcher connection closed during registration')
+    }
+    if (result?.ok === false) {
+      await handleClose()
+    }
+    return result
+  } catch (error) {
+    await handleClose()
+    throw error
+  }
 }
 
 const disposeFileWatcher = async (internalId: any): Promise<any> => {
@@ -81,4 +96,17 @@ export const handleChange = (event: any): any => {
     return
   }
   handleEvents(ref.id, ref.ipc, event)
+}
+
+export const handleProcessClose = (): void => {
+  for (const [internalId, ref] of Object.entries(internalIdMap)) {
+    const { handleClose, id, ipc } = ref as any
+    removeCloseListener(ipc, handleClose)
+    delete internalIdMap[internalId]
+    handleEvents(id, ipc, {
+      error: { message: 'File watcher process disconnected', name: 'Error' },
+      eventName: 'error',
+      uri: '',
+    })
+  }
 }

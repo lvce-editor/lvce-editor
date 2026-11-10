@@ -12,5 +12,5 @@ export const renderMainAreaPending = async (uid: number): Promise<void> => {
   if (commands.length === 0) {
     return
   }
-  await RendererProcess.invoke('Viewlet.sendMultiple', commands)
+  await RendererProcess.sendMultipleImmediately(commands)
 }

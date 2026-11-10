@@ -290,7 +290,7 @@ const renderDom = {
   },
   apply(oldState, newState) {
     const newDom = getDom(newState)
-    if (oldState.browserViewId === 0) {
+    if (!oldState.tabs?.length && oldState.browserViewId === 0) {
       return [['Viewlet.setDom2', newState.uid, newDom]]
     }
     const patches = diffTree(getDom(oldState), newDom)

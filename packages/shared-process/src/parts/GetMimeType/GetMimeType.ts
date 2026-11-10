@@ -59,6 +59,10 @@ export const getMimeType = (fileExtension: string): string => {
       return MimeType.VideoWebm
     case '.webp':
       return MimeType.ImageWebp
+    case '.woff':
+      return MimeType.FontWoff
+    case '.woff2':
+      return MimeType.FontWoff2
     default:
       console.warn(`[shared-process] unsupported file extension: ${fileExtension}`)
       return ''

@@ -7,6 +7,10 @@ import * as Platform from '../Platform/Platform.ts'
 import * as Preferences from '../Preferences/Preferences.ts'
 
 const getConfiguredUrl = async (settingName: any, defaultPath: any): Promise<any> => {
+  const cliPath = Preferences.getOverrides()[settingName]
+  if (cliPath && existsSync(cliPath)) {
+    return cliPath
+  }
   if (Platform.isProduction) {
     return defaultPath
   }

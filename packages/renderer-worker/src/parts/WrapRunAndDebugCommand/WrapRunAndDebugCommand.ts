@@ -16,6 +16,11 @@ export const wrapRunAndDebugCommand = (key: string, getExtraArgs?: () => readonl
     if (commands.length === 0) {
       return state
     }
+    // Deferred commands can outlive the viewlet that started them. Do not
+    // resolve the module ID here: it may now refer to a newly opened instance.
+    if (!ViewletStates.getByUid(state.uid)) {
+      return state
+    }
     const latest = ViewletStates.getState(ViewletModuleId.RunAndDebug)
     return {
       ...latest,

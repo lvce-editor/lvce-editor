@@ -33,6 +33,18 @@ test.each(['{}', 'invalid json'])('getKeyBindings ignores invalid persisted cont
   await expect(UserKeyBindings.getKeyBindings()).resolves.toEqual([])
 })
 
+test('getKeyBindings skips parsing empty persisted content', async () => {
+  jest.mocked(FileSystem.readFile).mockResolvedValue('')
+  const parse = jest.spyOn(JSON, 'parse')
+
+  try {
+    await expect(UserKeyBindings.getKeyBindings()).resolves.toEqual([])
+    expect(parse).not.toHaveBeenCalled()
+  } finally {
+    parse.mockRestore()
+  }
+})
+
 test('getKeyBindings ignores read errors', async () => {
   jest.mocked(FileSystem.readFile).mockRejectedValue(new Error('EACCES'))
 

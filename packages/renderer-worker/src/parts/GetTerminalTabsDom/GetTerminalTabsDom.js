@@ -113,7 +113,7 @@ const createTabDom = (tab, index, terminalUid, splitIndex, splitCount, isSelecte
 }
 
 export const hasVisibleTabs = (tabs) => {
-  return tabs.length > 0
+  return tabs.reduce((count, tab) => count + getTerminalUids(tab).length, 0) > 1
 }
 
 export const getTerminalTabsDom = (tabs, x, y, width, height, selectedIndex, activeTerminalUids = [], renamingTabUid = -1) => {

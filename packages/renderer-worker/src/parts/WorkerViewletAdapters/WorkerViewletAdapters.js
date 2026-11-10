@@ -1,4 +1,7 @@
+import * as GetActiveEditor from '../GetActiveEditor/GetActiveEditor.js'
+import * as Id from '../Id/Id.js'
 import * as InputSource from '../InputSource/InputSource.js'
+import * as LayoutWidgets from '../LayoutWidgets/LayoutWidgets.ts'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as StorageKey from '../StorageKey/StorageKey.ts'
 import * as UpdateExtensionSearchRenderState from '../UpdateExtensionSearchRenderState/UpdateExtensionSearchRenderState.js'
@@ -21,6 +24,7 @@ import { wrapExplorerCommand } from '../WrapExplorerCommand/WrapExplorerCommand.
 import { wrapExtensionSearchCommand } from '../WrapExtensionSearchCommand/WrapExtensionSearchCommand.ts'
 import { wrapProblemsCommand } from '../WrapProblemsCommand/WrapProblemsCommand.ts'
 import { wrapProcessExplorerCommand } from '../WrapProcessExplorerCommand/WrapProcessExplorerCommand.ts'
+import * as ViewletSourceControlHandleFocus from '../ViewletSourceControl/ViewletSourceControlHandleFocus.js'
 
 export const activityBar = {
   extendModule() {
@@ -102,7 +106,10 @@ export const explorer = {
       return { ...state, ...dimensions, commands }
     }
     return {
-      dispose() {},
+      async dispose(state) {
+        const GitIgnoreWatcher = await import('../GitIgnoreWatcher/GitIgnoreWatcher.js')
+        await GitIgnoreWatcher.dispose(state.uid)
+      },
       getDisplayName: getExplorerDisplayName,
       async getMouseActions() {
         try {
@@ -191,6 +198,12 @@ export const preview = {
 }
 
 export const problems = {
+  async afterLoadContent({ context, state, worker }) {
+    if (context.applicationId !== undefined) {
+      const activeUri = await GetActiveEditor.getActiveUri(context.applicationId)
+      await worker.invoke('Problems.handleActiveEditorChange', state.uid, activeUri)
+    }
+  },
   extendModule(_workerViewlet, { worker }) {
     const resizeWithDependencies = async (state, dimensions, invoke) => {
       await invoke('Problems.resize', state.uid, dimensions)
@@ -210,6 +223,19 @@ export const problems = {
     }
   },
   wrapCommand: wrapProblemsCommand,
+}
+
+export const sourceControl = {
+  wrapCommand(command, defaultWrapCommand) {
+    const wrappedCommand = defaultWrapCommand(command)
+    if (command !== 'handleFocus') {
+      return wrappedCommand
+    }
+    return async (state, ...args) => {
+      const focusedState = await ViewletSourceControlHandleFocus.handleFocus(state)
+      return wrappedCommand(focusedState, ...args)
+    }
+  },
 }
 
 export const processExplorer = {
@@ -281,10 +307,6 @@ export const textSearch = {
         return { ...state }
       },
       focus(state) {
-        const { isSearchEditor } = state
-        if (!isSearchEditor) {
-          return state
-        }
         return {
           ...state,
           commands: [['Viewlet.focusSelector', '[name="SearchValue"]']],
@@ -326,6 +348,15 @@ export const textSearch = {
 }
 
 export const titleBar = {
+  prepareLoadState(state) {
+    const { menuUid, uid } = state
+    return { ...state, menuUid: menuUid || Id.create(), menuRevision: LayoutWidgets.getNextRevision(uid) }
+  },
+  async afterLoadContent({ state, worker }) {
+    if (Preferences.get('window.titleBarless.enabled') === true) {
+      await worker.invoke('TitleBar.setShowSideBarThings', state.uid, false)
+    }
+  },
   extendModule() {
     return {
       afterRender: TitleBarMenuOverlay.afterRender,
@@ -353,6 +384,7 @@ export const titleBar = {
     return {
       ...state,
       controlsOverlayEnabled: Preferences.get('window.controlsOverlay.enabled') === true && Preferences.get('window.titleBarless.enabled') !== true,
+      showSideBarThings: Preferences.get('window.titleBarless.enabled') !== true,
       titleBarStyleCustom: Preferences.get('window.titleBarStyle') === 'custom' || Preferences.get('window.titleBarless.enabled') === true,
     }
   },

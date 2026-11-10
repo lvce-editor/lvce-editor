@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict'
-import { spawn } from 'node:child_process'
+import { execFileSync, spawn } from 'node:child_process'
 import { mkdtemp, readFile, rm } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
@@ -91,6 +91,13 @@ test('remote mode authenticates and exposes existing workspace processes', { ski
     },
     stdio: ['ignore', 'pipe', 'pipe'],
   })
+  let serverOutput = ''
+  child.stdout.on('data', (chunk) => {
+    serverOutput += chunk.toString('utf8')
+  })
+  child.stderr.on('data', (chunk) => {
+    serverOutput += chunk.toString('utf8')
+  })
   context.after(async () => {
     stopProcessGroup(child)
     await rm(directory, { force: true, recursive: true })
@@ -130,6 +137,22 @@ test('remote mode authenticates and exposes existing workspace processes', { ski
     assert.equal(Number.isSafeInteger(rootPid), true)
     const processes = await invokeProcessExplorer('ListProcessesWithMemoryUsage.listProcessesWithMemoryUsage', rootPid, false)
     assert.equal(Array.isArray(processes), true)
-    assert.equal(processes.length > 0, true)
+    assert.equal(
+      processes.length > 0,
+      true,
+      processes.length
+        ? undefined
+        : JSON.stringify({
+            rootPid,
+            serverPid: child.pid,
+            exitCode: child.exitCode,
+            signalCode: child.signalCode,
+            serverOutput,
+            ps: execFileSync('ps', ['-ax', '-o', 'pid=,ppid=,pcpu=,rss=,command='], { encoding: 'utf8' }),
+          }),
+    )
+    const response = await fetch(`http://127.0.0.1:${port}/`)
+    assert.equal(response.status, 404)
+    assert.equal(child.exitCode, null, serverOutput)
   }
 })

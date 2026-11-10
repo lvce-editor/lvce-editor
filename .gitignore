@@ -127,3 +127,5 @@ dist
 .pnp.*
 
 /packages/main-process/pages
+
+/packages/shared-process/language-servers/

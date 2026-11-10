@@ -92,6 +92,14 @@ test('loadContent places chat 2 in the secondary side bar by default', () => {
   })
 })
 
+test('loadContent preserves standalone display mode for authentication', () => {
+  const result = ViewletLayout.loadContent(ViewletLayout.create(1), {
+    Layout: { bounds: { isStandalone: true, windowWidth: 412, windowHeight: 915 } },
+  })
+
+  expect(result.isStandalone).toBe(true)
+})
+
 test('toggleSecondarySideBar opens the default chat 2 view', async () => {
   const initial = ViewletLayout.loadContent(ViewletLayout.create(1), {
     Layout: { bounds: { windowWidth: 1200, windowHeight: 800 } },
@@ -381,6 +389,26 @@ test('showPreview enables preview sash', async () => {
     previewVisible: true,
     previewSashVisible: true,
     previewUri: 'html-preview:///file/test.html',
+    previewViewletId: 'SimpleBrowser',
+  })
+})
+
+test('showPreview opens memfs HTML with a readable preview URL', async () => {
+  const state = {
+    ...ViewletLayout.create(1),
+    activityBarVisible: true,
+    activityBarWidth: 48,
+    statusBarHeight: 20,
+    titleBarHeight: 35,
+    windowHeight: 800,
+    windowWidth: 1200,
+  }
+
+  const result = await ViewletLayout.showPreview(state, 'memfs://inventing-on-principles.html')
+
+  expect(result.newState).toMatchObject({
+    previewVisible: true,
+    previewUri: 'html-preview:///memfs/inventing-on-principles.html',
     previewViewletId: 'SimpleBrowser',
   })
 })
@@ -1066,4 +1094,62 @@ test('invalid browser drops leave preview slots and source intact', async () => 
   expect(result.newState).toEqual({ ...state, browserTabDragSource: undefined })
   expect(ViewletManager.load).not.toHaveBeenCalled()
   expect(Viewlet.executeViewletCommand).not.toHaveBeenCalled()
+})
+
+test('allows a bottom-left browser tab drag back to a right Simple Browser preview', async () => {
+  const source = { draggedTab: { browserViewId: 10 }, isDraggingTab: true }
+  // @ts-ignore
+  ViewletStates.getInstance.mockReturnValue({ state: source })
+  const state = {
+    ...ViewletLayout.create(1),
+    browserTabDragSource: 3,
+    previewId: 4,
+    previewLeft: 600,
+    previewVisible: true,
+    previewViewletId: 'SimpleBrowser',
+    secondaryPreviewId: 3,
+    secondaryPreviewPlacement: 'bottomLeft' as const,
+    secondaryPreviewVisible: true,
+    titleBarVisible: true,
+    titleBarHeight: 40,
+    windowHeight: 800,
+    windowWidth: 1200,
+  }
+  const result = await ViewletLayout.handleBrowserTabDrop(state, 900, 500)
+  expect(result.newState).toEqual({ ...state, browserTabDragSource: undefined })
+  expect(Viewlet.executeViewletCommand).toHaveBeenCalledWith(3, 'moveTabToBrowser', 10, 4)
+})
+
+test('begins a return drag only from a bottom-left browser with an active tab drag', async () => {
+  const source = { draggedTab: { browserViewId: 10 }, isDraggingTab: true, loginChallenges: [] }
+  // @ts-ignore
+  ViewletStates.getInstance.mockReturnValue({ state: source })
+  const state = {
+    ...ViewletLayout.create(1),
+    previewId: 4,
+    previewVisible: true,
+    previewViewletId: 'SimpleBrowser',
+    secondaryPreviewId: 3,
+    secondaryPreviewPlacement: 'bottomLeft' as const,
+    secondaryPreviewVisible: true,
+  }
+  const result = await ViewletLayout.beginBrowserTabDrag(state, 3)
+  expect(result.newState.browserTabDragSource).toBe(3)
+  expect(Viewlet.executeViewletCommand).toHaveBeenCalledWith(4, 'hideForTabDrag')
+  const unsupported = (await ViewletLayout.beginBrowserTabDrag({ ...state, previewViewletId: 'Preview' }, 3)).newState
+  expect(unsupported.previewViewletId).toBe('Preview')
+  expect(unsupported.browserTabDragSource).toBeUndefined()
+})
+
+test('restores the right preview after a cancelled return drag', async () => {
+  const state = {
+    ...ViewletLayout.create(1),
+    browserTabDragSource: 3,
+    previewId: 4,
+    secondaryPreviewId: 3,
+    secondaryPreviewPlacement: 'bottomLeft' as const,
+  }
+  const result = await ViewletLayout.endBrowserTabDrag(state, 3)
+  expect(result.newState).toEqual({ ...state, browserTabDragSource: undefined })
+  expect(Viewlet.executeViewletCommand).toHaveBeenCalledWith(4, 'showAfterTabDrag')
 })

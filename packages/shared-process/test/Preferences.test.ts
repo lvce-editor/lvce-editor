@@ -28,11 +28,90 @@ const Logger = await import('../src/parts/Logger/Logger.js')
 
 const PlatformPaths = await import('../src/parts/PlatformPaths/PlatformPaths.js')
 const getAllErrorRegex = /^Failed to get all preferences: Failed to load default preferences: File not found/
-const startupPreferencesErrorRegex = /^\[shared-process\] Failed to load preferences on startup, continuing with defaults: VError: Failed to get all preferences:/
+const startupPreferencesErrorRegex =
+  /^\[shared-process\] Failed to load preferences on startup, continuing with defaults: VError: Failed to get all preferences:/
 
 const getTmpDir = (): any => {
   return mkdtemp(join(tmpdir(), 'foo-'))
 }
+
+test('getOverrides - process explorer worker path', () => {
+  const originalArgv = process.argv
+  process.argv = [...originalArgv.slice(0, 2), '--process-explorer-worker=/tmp/process explorer.js']
+  try {
+    expect(Preferences.getOverrides()).toEqual({
+      'develop.processExplorerWorkerPath': '/tmp/process explorer.js',
+    })
+  } finally {
+    process.argv = originalArgv
+  }
+})
+
+test('getOverrides - activity bar worker path', () => {
+  const originalArgv = process.argv
+  process.argv = [...originalArgv.slice(0, 2), '--activity-bar-worker=/tmp/activity bar.js']
+  try {
+    expect(Preferences.getOverrides()).toEqual({
+      'develop.activityBarWorkerPath': '/tmp/activity bar.js',
+    })
+  } finally {
+    process.argv = originalArgv
+  }
+})
+
+test('getOverrides - blob worker path', () => {
+  const originalArgv = process.argv
+  process.argv = [...originalArgv.slice(0, 2), '--blob-worker=/tmp/blob worker.js']
+  try {
+    expect(Preferences.getOverrides()).toEqual({
+      'develop.blobWorkerPath': '/tmp/blob worker.js',
+    })
+  } finally {
+    process.argv = originalArgv
+  }
+})
+
+test('getOverrides - auth process path', () => {
+  const originalArgv = process.argv
+  process.argv = [...originalArgv.slice(0, 2), '--auth-process=/tmp/auth process.js']
+  try {
+    expect(Preferences.getOverrides()).toEqual({
+      'develop.authProcessPath': '/tmp/auth process.js',
+    })
+  } finally {
+    process.argv = originalArgv
+  }
+})
+
+test('getOverrides - auth worker path with spaces', () => {
+  const originalArgv = process.argv
+  process.argv = [...originalArgv.slice(0, 2), '--auth-worker-path=/tmp/auth worker.js']
+  try {
+    expect(Preferences.getOverrides()).toEqual({
+      'develop.authWorkerPath': '/tmp/auth worker.js',
+    })
+  } finally {
+    process.argv = originalArgv
+  }
+})
+
+test('getOverrides - last CLI path wins and native process is configurable', () => {
+  const originalArgv = process.argv
+  process.argv = [
+    ...originalArgv.slice(0, 2),
+    '--process-explorer-worker=first.js',
+    '--process-explorer=/test/processExplorerMain.ts',
+    '--process-explorer-worker=relative worker.js',
+  ]
+  try {
+    expect(Preferences.getOverrides()).toEqual({
+      'develop.processExplorerPath': '/test/processExplorerMain.ts',
+      'develop.processExplorerWorkerPath': 'relative worker.js',
+    })
+  } finally {
+    process.argv = originalArgv
+  }
+})
 
 // test.skip('getAll - no preferences exist', async () => {
 //   const tmpDir = await getTmpDir()
@@ -157,9 +236,7 @@ test('getAllSafe - error', async () => {
     'window.titleBarStyle': 'custom',
   })
   expect(Logger.error).toHaveBeenCalledTimes(1)
-  expect(Logger.error).toHaveBeenCalledWith(
-    expect.stringMatching(startupPreferencesErrorRegex),
-  )
+  expect(Logger.error).toHaveBeenCalledWith(expect.stringMatching(startupPreferencesErrorRegex))
 })
 
 // test('getDefaultPreferences - error', async () => {

@@ -75,7 +75,6 @@ const getNewTabVirtualDom = (value) => {
       autocomplete: 'off',
       spellcheck: false,
       onInput: DomEventListenerFunctions.HandleInput,
-      onFocus: DomEventListenerFunctions.HandleFocus,
       onBlur: DomEventListenerFunctions.HandleBlurSimpleBrowserAddress,
       value,
     },

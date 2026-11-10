@@ -24,6 +24,7 @@ export const Commands = {
   handleRenameTerminalKeyDown: ViewletTerminals.handleRenameTerminalKeyDown,
   handleMouseDown: ViewletTerminals.handleMouseDown,
   handleTerminalExit: ViewletTerminals.handleTerminalExit,
+  handleWorkspaceChange: ViewletTerminals.handleWorkspaceChange,
   killTerminal: ViewletTerminals.killTerminal,
   sendText: ViewletTerminals.sendText,
   splitTerminal: ViewletTerminals.splitTerminal,

@@ -6,8 +6,20 @@ test('getLabel - process explorer', () => {
   expect(PathDisplay.getLabel('process-explorer://')).toBe('Process Explorer')
 })
 
+test('getLabel - accounts view', () => {
+  expect(PathDisplay.getLabel('accounts:///1')).toBe('Accounts')
+})
+
+test('getFileIcon - accounts view', () => {
+  expect(PathDisplay.getFileIcon('accounts:///1')).toBe('MaskIconRecordKey')
+})
+
 test('getFileIcon - process explorer', () => {
   expect(PathDisplay.getFileIcon('process-explorer://')).toBe('MaskIconDebugAlt2')
+})
+
+test('getFileIcon - Workers view', () => {
+  expect(PathDisplay.getFileIcon('workers:///1')).toBe('MaskIconDebugAlt2')
 })
 
 test('getLabel - file watcher explorer', () => {

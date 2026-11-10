@@ -68,3 +68,18 @@ test('handleSecondarySideBarViewletChange loads extension views through Extensio
   })
   expect(result.childUid).not.toBe(-1)
 })
+
+test('reopening the current view preserves the mounted child and its state', async () => {
+  const ViewletStates = await import('../src/parts/ViewletStates/ViewletStates.js')
+  const childState = { uid: 42 }
+  ViewletStates.set(42, { moduleId: 'ExtensionView', factory: {}, state: childState, renderedState: childState })
+  const state = { ...ViewletSecondarySideBar.create(1, '', 0, 0, 300, 500), currentViewletId: 'chat2.views.chat', childUid: 42 }
+  try {
+    const result = await ViewletSecondarySideBar.handleSecondarySideBarViewletChange(state, 'chat2.views.chat')
+    expect(result).toBe(state)
+    expect(ViewletManager.load).not.toHaveBeenCalled()
+    expect(RendererProcess.invoke).not.toHaveBeenCalled()
+  } finally {
+    ViewletStates.reset()
+  }
+})

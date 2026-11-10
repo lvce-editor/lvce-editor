@@ -1,3 +1,4 @@
+import { bundleTypeScriptLanguageServer } from '../BundleTypeScriptLanguageServer/BundleTypeScriptLanguageServer.ts'
 import * as BundleFileSystemProcess from '../BundleFileSystemProcess/BundleFileSystemProcess.ts'
 import * as CopyDependencies from '../CopyDependencies/CopyDependencies.ts'
 import * as FilterSharedProcessDependencies from '../FilterSharedProcessDependencies/FilterSharedProcessDependencies.ts'
@@ -77,6 +78,9 @@ export const bundleSharedProcessDependencies = async ({ to, arch, electronVersio
   await Remove.remove(`${to}/node_modules/which/bin`)
   await RemoveSourceMaps.removeSourceMaps(`${to}/node_modules/cacheable-request`)
   await RemoveSourceMaps.removeSourceMaps(`${to}/node_modules/symlink-dir`)
+  // A prepared local shared-process dependency can contain the build host's server.
+  // Only the application-owned, explicitly selected target below belongs in the app.
+  await Remove.removeMatching(`${to}/node_modules`, '**/language-servers/typescript')
   await Remove.removeMatching(`${to}/node_modules`, '**/*.d.ts')
   await Remove.removeMatching(`${to}/node_modules`, '**/*.d.ts.map')
   await Remove.removeMatching(`${to}/node_modules`, '**/*.d.cts')
@@ -84,4 +88,5 @@ export const bundleSharedProcessDependencies = async ({ to, arch, electronVersio
   await RemoveBarePrebuilds.removeBarePrebuilds(to, platform, arch)
   await RemoveRipgrepFiles.removeRipGrepFiles(to, platform, arch)
   await BundleFileSystemProcess.bundleFileSystemProcess({ to })
+  await bundleTypeScriptLanguageServer({ to: `${to}/language-servers/typescript`, platform, arch })
 }

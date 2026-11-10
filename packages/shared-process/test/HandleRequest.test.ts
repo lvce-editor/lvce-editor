@@ -99,3 +99,10 @@ test('omits the body for not modified responses', async () => {
 
   expect(result.hasBody).toBe(false)
 })
+
+test('marks dynamically served app HTML as remote', async () => {
+  jest.mocked(GetElectronFileResponse.getElectronFileResponse).mockResolvedValue({ body: Buffer.from('app'), init: { headers: {}, status: 200 } })
+  const request = { headers: {}, method: 'GET', url: '/index.html' }
+  await HandleRequest.handleRequest(request)
+  expect(GetElectronFileResponse.getElectronFileResponse).toHaveBeenCalledWith('/index.html', { ...request, platform: 'remote' })
+})

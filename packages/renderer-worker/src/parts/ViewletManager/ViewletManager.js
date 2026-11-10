@@ -1,6 +1,9 @@
 // @ts-nocheck
 import * as InvokeViewletEvent from '../InvokeViewletEvent/InvokeViewletEvent.js'
 import * as Assert from '../Assert/Assert.ts'
+import * as ApplicationPreferences from '../ApplicationPreferences/ApplicationPreferences.ts'
+import * as GetScrollSpeed from '../GetScrollSpeed/GetScrollSpeed.ts'
+import * as Preferences from '../Preferences/Preferences.js'
 import * as ApplicationRegistry from '../ApplicationRegistry/ApplicationRegistry.ts'
 import * as FilterFocusCommands from '../FilterFocusCommands/FilterFocusCommands.js'
 import * as Command from '../Command/Command.js'
@@ -12,6 +15,7 @@ import * as GetViewletErrorVirtualDom from '../GetViewletErrorVirtualDom/GetView
 import * as Id from '../Id/Id.js'
 import * as KeyBindingsState from '../KeyBindingsState/KeyBindingsState.js'
 import * as LayoutWidgets from '../LayoutWidgets/LayoutWidgets.ts'
+import * as Logger from '../Logger/Logger.js'
 import * as MenuEntriesRegistryState from '../MenuEntriesRegistryState/MenuEntriesRegistryState.js'
 import * as MouseActions from '../MouseActions/MouseActions.ts'
 import * as NameAnonymousFunction from '../NameAnonymousFunction/NameAnonymousFunction.js'
@@ -24,6 +28,14 @@ import * as ViewletCommandQueue from '../ViewletCommandQueue/ViewletCommandQueue
 import * as ViewletManagerVisitor from '../ViewletManagerVisitor/ViewletManagerVisitor.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
+
+const pendingMainLoads = new Set()
+
+const waitForMainShell = async (id, applicationId) => {
+  if (id !== 'Main') return
+  const pending = [...pendingMainLoads].find((load) => applicationId === undefined || load.applicationId === applicationId)
+  await pending?.ready
+}
 
 export const state = {
   pendingModules: Object.create(null),
@@ -60,7 +72,10 @@ export const waitForLoadContentLater = async (uid) => {
 
 export const runLoadContentLaterForCreatedViewlets = (commands) => {
   for (const command of commands) {
-    if (command[0] === 'Viewlet.create' || command[0] === 'Viewlet.createFunctionalRoot') {
+    if (
+      (command[0] === 'Viewlet.create' || command[0] === 'Viewlet.createFunctionalRoot') &&
+      !ViewletStates.getInstance(command[2])?.deferLoadContentLater
+    ) {
       runLoadContentLater(command[2])
     }
   }
@@ -88,7 +103,7 @@ const kDispose = 'Viewlet.dispose'
 
 const runFnInternal = async (instance, id, key, fn, args) => {
   if (!instance) {
-    console.info(`cannot execute viewlet command ${id}.${key}: no active instance for ${id}`)
+    Logger.info(`cannot execute viewlet command ${id}.${key}: no active instance for ${id}`)
     return
   }
   id = instance.state.uid
@@ -123,9 +138,6 @@ const runFnInternal = async (instance, id, key, fn, args) => {
     ) {
       return newState
     }
-    if (!newState) {
-      console.log({ fn })
-    }
     Assert.object(newState)
     // console.log({ fn, newState })
     if (oldState === newState) {
@@ -148,7 +160,7 @@ const runFnInternal = async (instance, id, key, fn, args) => {
 
 const runFnWithSideEffectInternal = async (instance, id, key, fn, ...args) => {
   if (!instance) {
-    console.info(`cannot execute viewlet command ${id}.${key}: no active instance for ${id}`)
+    Logger.info(`cannot execute viewlet command ${id}.${key}: no active instance for ${id}`)
     return
   }
   id = instance.state.uid
@@ -240,6 +252,7 @@ const wrapViewletCommand = (id, key, fn) => {
     }
     if (!activeInstance) {
       // Fallback to first instance if none focused
+      await waitForMainShell(id)
       activeInstance = ViewletStates.getInstance(id)
     }
     const result = await runFn(activeInstance, id, key, fn, args)
@@ -300,6 +313,9 @@ export const executeForApplication = async (applicationId, command, ...args) => 
   const separator = command.indexOf('.')
   const moduleId = command.slice(0, separator)
   const key = command.slice(separator + 1)
+  if (!ViewletStates.getInstance(moduleId, applicationId)) {
+    await waitForMainShell(moduleId, applicationId)
+  }
   const instance = ViewletStates.getInstance(moduleId, applicationId)
   if (!instance) {
     throw new Error(`No ${moduleId} instance in application ${applicationId}`)
@@ -390,7 +406,25 @@ const getRenderCommands = (module, oldState, newState, uid = newState.uid || mod
     const title = module.renderTitle.apply(oldState, newState)
     if (parentId > 0) {
       const parentInstance = ViewletStates.getInstance(parentId)
-      if (parentInstance?.factory?.setTitle && parentInstance.state.childUid === uid) {
+      if (parentInstance?.factory?.setChildTitle) {
+        const oldParentState = parentInstance.state
+        const oldParentRenderedState = parentInstance.renderedState
+        const newParentState = parentInstance.factory.setChildTitle(oldParentState, uid, title)
+        if (newParentState !== oldParentState) {
+          const newParentRenderedState = parentInstance.factory.setChildTitle(oldParentRenderedState, uid, title)
+          parentInstance.state = newParentState
+          parentInstance.renderedState = newParentRenderedState
+          commands.push(
+            ...getRenderCommands(
+              parentInstance.factory,
+              oldParentRenderedState,
+              newParentRenderedState,
+              newParentRenderedState.uid,
+              newParentRenderedState.parentUid,
+            ),
+          )
+        }
+      } else if (parentInstance?.factory?.setTitle && parentInstance.state.childUid === uid) {
         const oldParentRenderedState = parentInstance.renderedState
         parentInstance.state = parentInstance.factory.setTitle(parentInstance.state, title)
         const newParentRenderedState = parentInstance.factory.setTitle(oldParentRenderedState, title)
@@ -533,7 +567,7 @@ const maybeRegisterEvents = (module) => {
         return
       }
       if (module.shouldApplyNewstate && !module.shouldApplyNewState(newState)) {
-        console.log('[viewlet manager] return', newState)
+        Logger.info('[viewlet manager] return', newState)
         return
       }
       const uid = instance.uid || instance.state.uid
@@ -559,7 +593,7 @@ const maybeRegisterEvents = (module) => {
         return
       }
       if (module.shouldApplyNewstate && !module.shouldApplyNewState(newState)) {
-        console.log('[viewlet manager] return', newState)
+        Logger.info('[viewlet manager] return', newState)
         return
       }
       const uid = instance.uid || instance.state.uid
@@ -588,7 +622,7 @@ const maybeRegisterEvents = (module) => {
             return
           }
           if (module.shouldApplyNewstate && !module.shouldApplyNewState(newState)) {
-            console.log('[viewlet manager] return', newState)
+            Logger.info('[viewlet manager] return', newState)
             return
           }
           const uid = instance.uid || instance.state.uid
@@ -672,6 +706,24 @@ const pendingLoads = new Set()
  * @param {any} restoreState
  */
 export const load = async (viewlet, focus = false, restore = false, restoreState = undefined) => {
+  if (viewlet.id !== 'Main') {
+    return loadTracked(viewlet, focus, restore, restoreState)
+  }
+  const deferred = Promise.withResolvers()
+  const pending = {
+    applicationId: viewlet.applicationId ?? ApplicationRegistry.getOwner(viewlet.parentUid),
+    ready: deferred.promise,
+  }
+  pendingMainLoads.add(pending)
+  try {
+    return await loadTracked(viewlet, focus, restore, restoreState)
+  } finally {
+    pendingMainLoads.delete(pending)
+    deferred.resolve()
+  }
+}
+
+const loadTracked = async (viewlet, focus = false, restore = false, restoreState = undefined) => {
   const applicationId = viewlet.applicationId ?? ApplicationRegistry.getOwner(viewlet.parentUid)
   if (applicationId === undefined) {
     return loadInternal(viewlet, focus, restore, restoreState)
@@ -704,7 +756,7 @@ const loadInternal = async (viewlet, focus, restore, restoreState) => {
     viewlet.setBounds = false
   }
   if (viewlet.type !== 0) {
-    console.log('viewlet must be empty')
+    Logger.info('viewlet must be empty')
     throw new Error('viewlet must be empty')
   }
   const shouldRender = viewlet.render ?? true
@@ -774,10 +826,12 @@ const loadInternal = async (viewlet, focus, restore, restoreState) => {
       // TODO reuse event listeners between components
       eventListeners = await module.renderEventListeners(newState)
       if (eventListeners.length > 0) {
+        const preferences = applicationId === undefined ? Preferences.getAll() : ApplicationPreferences.getAll(applicationId)
+        const scrollSpeed = GetScrollSpeed.getScrollSpeed(preferences)
         if (shouldRenderEvents === false) {
-          commands.push(['Viewlet.registerEventListeners', viewletUid, eventListeners])
+          commands.push(['Viewlet.registerEventListeners', viewletUid, eventListeners, scrollSpeed])
         } else {
-          await RendererProcess.invoke('Viewlet.registerEventListeners', viewletUid, eventListeners)
+          await RendererProcess.invoke('Viewlet.registerEventListeners', viewletUid, eventListeners, scrollSpeed)
         }
       }
     }
@@ -837,7 +891,7 @@ const loadInternal = async (viewlet, focus, restore, restoreState) => {
     }
     if (viewletState.version !== oldVersion) {
       newState = viewletState
-      console.log('version mismatch')
+      Logger.info('version mismatch')
       // TODO not sure if Object.assign is a good idea
       // Object.assign(viewletState, newState)
     }
@@ -863,6 +917,7 @@ const loadInternal = async (viewlet, focus, restore, restoreState) => {
 
     const instance = {
       actionsUid: viewlet.actionsUid,
+      deferLoadContentLater: viewlet.deferLoadContentLater === true,
       cssLoaded: true,
       state: newState,
       renderedState: viewletState,

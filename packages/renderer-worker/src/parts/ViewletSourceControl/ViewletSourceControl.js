@@ -2,8 +2,6 @@ import * as Assert from '../Assert/Assert.ts'
 import * as ApplicationRegistry from '../ApplicationRegistry/ApplicationRegistry.ts'
 import * as Application from '../Application/Application.ts'
 import * as Command from '../Command/Command.js'
-import * as DirentType from '../DirentType/DirentType.js'
-import * as IconTheme from '../IconTheme/IconTheme.js'
 import * as SourceControlActions from '../SourceControlActions/SourceControlActions.js'
 import * as SourceControlWorker from '../SourceControlWorker/SourceControlWorker.js'
 import * as Workspace from '../Workspace/Workspace.js'
@@ -40,6 +38,8 @@ export const create = (id, uri, x, y, width, height, args, parentUid) => {
     assetDir: AssetDir.assetDir,
   }
 }
+
+export const saveState = ({ uid }) => SourceControlWorker.invoke('SourceControl.saveState', uid)
 
 export const loadContent = async (state, savedState) => {
   const { platform, assetDir } = state
@@ -109,27 +109,9 @@ export const setComponentState = async (state, componentState) => {
   return WrapSourceControlCommand.renderPendingSourceControl(state)
 }
 
-const updateIcon = (displayItem) => {
-  if (displayItem.type === DirentType.File) {
-    return {
-      ...displayItem,
-      icon: IconTheme.getFileIcon({ name: displayItem.file }),
-    }
-  }
-  return displayItem
-}
-
-export const updateIcons = (state) => {
-  const { items } = state
-  const newDisplayItems = items.map(updateIcon)
-  return {
-    ...state,
-    items: newDisplayItems,
-  }
-}
-
-export const handleIconThemeChange = (state) => {
-  return updateIcons(state)
+export const handleIconThemeChange = async (state) => {
+  await SourceControlWorker.invoke('SourceControl.updateIcons', state.uid)
+  return WrapSourceControlCommand.renderPendingSourceControl(state)
 }
 
 export const handleMouseOver = async (state, index) => {

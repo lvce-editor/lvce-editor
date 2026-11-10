@@ -119,7 +119,10 @@
 }
 
 .EditorCursor {
-  width: 2px;
+  width: var(--EditorCursorWidth, 2px);
+  opacity: var(--EditorCursorOpacity, 1);
+  font-family: var(--EditorFontFamily);
+  font-size: var(--EditorFontSize);
   height: var(--EditorRowHeight, var(--EditorLineHeight));
   position: absolute;
   top: 0;

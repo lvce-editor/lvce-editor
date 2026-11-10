@@ -3,8 +3,12 @@ import { beforeEach, expect, jest, test } from '@jest/globals'
 jest.unstable_mockModule('../src/parts/Command/Command.js', () => ({
   execute: jest.fn(),
 }))
+jest.unstable_mockModule('../src/parts/Browser/Browser.js', () => ({
+  getBrowserName: jest.fn(() => undefined),
+}))
 
 const Command = await import('../src/parts/Command/Command.js')
+const Browser = await import('../src/parts/Browser/Browser.js')
 const OpenFolderWeb = await import('../src/parts/OpenFolderWeb/OpenFolderWeb.js')
 const execute = jest.mocked(Command.execute)
 
@@ -41,6 +45,30 @@ test('openFolder - unsupported', async () => {
 
   expect(Command.execute).toHaveBeenNthCalledWith(2, 'Dialog.showWarning', {
     message: "Your browser doesn't support opening local folders.",
+    title: 'Opening Local Folders is Unsupported',
+  })
+})
+
+test('openFolder - unsupported in Firefox', async () => {
+  jest.mocked(Browser.getBrowserName).mockReturnValueOnce('Firefox')
+  execute.mockRejectedValueOnce(new Error('showDirectoryPicker not supported on this browser'))
+
+  await OpenFolderWeb.openFolder()
+
+  expect(Command.execute).toHaveBeenNthCalledWith(2, 'Dialog.showWarning', {
+    message: "Firefox doesn't support opening local folders.",
+    title: 'Opening Local Folders is Unsupported',
+  })
+})
+
+test('openFolder - unsupported in Safari', async () => {
+  jest.mocked(Browser.getBrowserName).mockReturnValueOnce('Safari')
+  execute.mockRejectedValueOnce(new Error('showDirectoryPicker not supported on this browser'))
+
+  await OpenFolderWeb.openFolder()
+
+  expect(Command.execute).toHaveBeenNthCalledWith(2, 'Dialog.showWarning', {
+    message: "Safari doesn't support opening local folders.",
     title: 'Opening Local Folders is Unsupported',
   })
 })

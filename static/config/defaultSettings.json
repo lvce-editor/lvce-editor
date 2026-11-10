@@ -2,7 +2,10 @@
   "git.remoteHosts": { "github.com": "https://github.com" },
   "application.updateMode": "none",
   "application.memoryUsage": "default",
+  "application.useProtocolRegisterSource": false,
   "application.useOnLoadJson": false,
+
+  "cache.cleanupEnabled": true,
 
   "breadcrumbs.enabled": false,
 
@@ -90,6 +93,7 @@
   "workbench.editor.showTabsWhileLoading": false,
   "workbench.sideBar.visible": true,
   "workbench.sideBarLocation": "right",
+  "workbench.panel.alignment": "justify",
   "workbench.saveStateOnVisibilityChange": true,
 
   "workspace.defaultWorkspace": "fetch:///playground",

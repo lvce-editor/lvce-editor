@@ -10,6 +10,10 @@ export const getMimeType = (fileExtension: string): string => {
       return MimeType.TextCss
     case '.ttf':
       return MimeType.FontTtf
+    case '.woff':
+      return MimeType.FontWoff
+    case '.woff2':
+      return MimeType.FontWoff2
     case '.js':
     case '.mjs':
     case '.ts':
@@ -44,7 +48,6 @@ export const getMimeType = (fileExtension: string): string => {
     case '':
       return MimeType.TextPlain
     default:
-      console.warn(`[static-server] unsupported file extension: ${fileExtension}`)
-      return ''
+      return MimeType.ApplicationOctetStream
   }
 }

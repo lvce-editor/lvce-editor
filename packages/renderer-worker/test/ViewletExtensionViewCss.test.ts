@@ -19,6 +19,8 @@ const extensionViews = {
 
 beforeEach(() => {
   jest.clearAllMocks()
+  extensionViews.view.css = '/extensions/sample/view.css'
+  Object.assign(extensionViews.view, { iframe: undefined, kind: 'virtualDom' })
   // @ts-ignore
   ExtensionManagementWorker.invoke.mockImplementation(async (method) => {
     if (method === 'Extensions.getViewActionsDom') {
@@ -99,12 +101,19 @@ test('renderEventListeners includes context menu coordinates', () => {
 })
 
 test('loadContent loads css from extension view metadata', async () => {
+  extensionViews.view.css = 'lvce://-/24cb34e/extensions/sample/view.css'
+  globalThis.fetch = jest.fn(async () => {
+    return {
+      ok: true,
+      text: async () => '.Testing { mask: url("./icons/archive.svg"); }',
+    }
+  }) as any
   const state = ViewletExtensionView.create(1, 'sample.views.testing', 0, 0, 100, 100)
 
   const newState = await ViewletExtensionView.loadContent(state, undefined)
 
-  expect(fetch).toHaveBeenCalledWith('/extensions/sample/view.css')
-  expect(newState.css).toBe('.Testing { color: red; }')
+  expect(fetch).toHaveBeenCalledWith('lvce://-/24cb34e/extensions/sample/view.css')
+  expect(newState.css).toBe('.Testing { mask: url("lvce://-/24cb34e/extensions/sample/icons/archive.svg"); }')
   expect(newState.cssId).toBe('ExtensionView:sample.views.testing')
 })
 
@@ -125,6 +134,28 @@ test('loadContent stores virtual dom without duplicate commands', async () => {
   expect(newState.eventListeners).toBe(extensionViews.view.eventListeners)
   expect(newState.focusSelector).toBe('')
   expect(newState.patches).toEqual([])
+})
+
+test('loadContent continues to load available iframe views', async () => {
+  Object.assign(extensionViews.view, {
+    iframe: {
+      csp: "default-src 'self'",
+      credentialless: true,
+      sandbox: ['allow-scripts'],
+      src: 'https://extension.test/view.html',
+    },
+    kind: 'iframe',
+  })
+  const state = ViewletExtensionView.create(1, 'sample.views.testing', 0, 0, 100, 100)
+
+  const newState = await ViewletExtensionView.loadContent(state, undefined)
+
+  expect(newState).toMatchObject({
+    csp: "default-src 'self'",
+    iframeSandbox: ['allow-scripts'],
+    iframeSrc: 'https://extension.test/view.html',
+    kind: 'iframe',
+  })
 })
 
 test('loadContent prefers event listeners registered through the isolated extension api', async () => {
@@ -414,7 +445,7 @@ test('handleClick stores focus selector from render result', async () => {
 
   expect(newState.focusSelector).toBe('[name="newCardTitle:list-1"]')
   expect(ViewletExtensionViewRender.render[3].apply(state as any, newState as any)).toEqual([
-    ['Viewlet.focusSelector', 1, '[name="newCardTitle:list-1"]'],
+    ['Viewlet.focusSelectorAfterRender', 1, '[name="newCardTitle:list-1"]'],
   ])
 })
 

@@ -33,6 +33,14 @@ test('reads the documented auto-closing brackets setting', () => {
   expect(getPreference).toHaveBeenCalledWith('editor.autoClosingBrackets')
 })
 
+test('format actions defaults to post-save and honors the pre-save setting', () => {
+  getPreference.mockReturnValue(undefined)
+  expect(EditorPreferences.getFormatActions()).toBe('post-save')
+  expect(getPreference).toHaveBeenCalledWith('editor.formatActions')
+  expect(EditorPreferences.getFormatActions({ 'editor.formatActions': 'pre-save' })).toBe('pre-save')
+  expect(EditorPreferences.getFormatActions({ 'editor.formatActions': 'invalid' })).toBe('post-save')
+})
+
 test.each([
   [18, 10, 18],
   [18, 18, 18],

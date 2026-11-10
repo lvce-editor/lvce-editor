@@ -124,6 +124,17 @@ test('CPU profiling opens only the requested file in the requested project', asy
   expect(url.searchParams.get('cpuProfile')).toBe('1')
 })
 
+test('--no-cache-cleanup disables startup cleanup in the app window', async () => {
+  await AppWindow.createAppWindow({
+    parsedArgs: { _: [], 'no-cache-cleanup': true },
+    preferences: {},
+    preloadUrl: 'file:///preload.js',
+    workingDirectory: otherPath,
+  })
+  const call = (ParentIpc.invoke as any).mock.calls[0]
+  expect(new URL(call[5]).searchParams.get('noCacheCleanup')).toBe('1')
+})
+
 test('CPU profiling rejects a missing file before creating a window', async () => {
   await expect(
     AppWindow.createAppWindow({

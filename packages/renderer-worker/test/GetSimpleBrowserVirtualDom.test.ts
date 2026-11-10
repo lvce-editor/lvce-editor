@@ -243,6 +243,15 @@ test('tracks focus anywhere in the simple browser chrome', () => {
   expect(dom[0]).toMatchObject({ onFocusIn: 'handleFocusInSimpleBrowser' })
 })
 
+test('does not attach an unregistered focus listener to the new tab search input', () => {
+  const dom = GetSimpleBrowserVirtualDom.getSimpleBrowserVirtualDom(false, false, false, '', '', [], -1, [{ browserViewId: 0 }])
+  const searchInput = dom.find((node) => node.className === 'SimpleBrowserNewTabSearchInput')
+
+  expect(searchInput).toBeDefined()
+  expect(searchInput).not.toHaveProperty('onFocus')
+  expect(dom[0]).toHaveProperty('onFocusIn', 'handleFocusInSimpleBrowser')
+})
+
 test('renders accessible search suggestions above an undimmed snapshot', () => {
   const dom = GetSimpleBrowserVirtualDom.getSimpleBrowserVirtualDom(
     true,

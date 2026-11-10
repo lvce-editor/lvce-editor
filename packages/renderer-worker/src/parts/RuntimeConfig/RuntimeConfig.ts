@@ -1,7 +1,15 @@
 export type RuntimeConfig = {
+  initialLayout?: Readonly<
+    Partial<
+      Record<'activityBarVisible' | 'statusBarVisible' | 'titleBarVisible' | 'sideBarVisible' | 'secondarySideBarVisible' | 'panelVisible', boolean>
+    >
+  >
+  previewOutputEnabled?: boolean
+  staticFileIcons?: Readonly<Record<string, string>>
   assetDir?: string
-  platform?: number
+  platform?: number | 'electron' | 'remote' | 'web'
   workerUrls?: Readonly<Record<string, string>>
+  preloadWorkers?: readonly string[]
 }
 
 export const runtimeConfig: RuntimeConfig = {}

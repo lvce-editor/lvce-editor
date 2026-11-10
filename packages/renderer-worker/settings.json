@@ -1,5 +1,25 @@
 [
   {
+    "category": "applications",
+    "description": "Multiplies wheel scrolling speed in custom views. Accepts values from 1 to 10, including fractions. Invalid values use the default speed of 1.",
+    "heading": "Scroll Speed",
+    "id": "application.scrollspeed",
+    "maximum": 10,
+    "minimum": 1,
+    "type": "number",
+    "value": 1
+  },
+  {
+    "category": "applications",
+    "description": "Overrides application.scrollspeed when running in Firefox. Accepts values from 1 to 10, including fractions. Invalid values use the default speed of 5.",
+    "heading": "Firefox Scroll Speed",
+    "id": "application.scrollspeed.firefox",
+    "maximum": 10,
+    "minimum": 1,
+    "type": "number",
+    "value": 5
+  },
+  {
     "category": "window",
     "description": "Places Linux window controls above the primary sidebar so the main and secondary sidebar extend to the top. With the primary sidebar hidden, reserves a full-width control strip. Restart the app to apply changes.",
     "heading": "Titlebarless Layout",
@@ -29,6 +49,14 @@
   },
   {
     "category": "applications",
+    "description": "Loads bundled desktop resources through Electron's native loader. Applies to packaged desktop builds after restarting the application.",
+    "heading": "Native Resource Loading",
+    "id": "application.useProtocolRegisterSource",
+    "type": "boolean",
+    "value": false
+  },
+  {
+    "category": "applications",
     "description": "Emulates the current application version for update checks. Use numeric major.minor.patch format, or leave empty to use the installed version.",
     "heading": "Emulate Current Version",
     "id": "update.emulateCurrentVersion",
@@ -37,11 +65,41 @@
   },
   {
     "category": "applications",
+    "description": "Show update download progress in the status bar",
+    "heading": "Update Status Bar Progress",
+    "id": "update.showProgress",
+    "type": "boolean",
+    "value": true
+  },
+  {
+    "category": "applications",
     "description": "Loads and executes commands from config/onLoadCommands.json on web startup",
     "heading": "Use On Load JSON",
     "id": "application.useOnLoadJson",
     "type": "boolean",
     "value": false
+  },
+  {
+    "category": "application",
+    "description": "Specifies the color theme used in the AI-native layout",
+    "heading": "AI Color Theme",
+    "id": "application.aiColorTheme",
+    "type": "string"
+  },
+  {
+    "category": "application",
+    "description": "Specifies the application color theme",
+    "heading": "Color Theme",
+    "id": "application.colorTheme",
+    "type": "string"
+  },
+  {
+    "category": "workbench",
+    "description": "Controls whether expired cache entries are cleaned up occasionally after startup",
+    "heading": "Cache Cleanup",
+    "id": "cache.cleanupEnabled",
+    "type": "boolean",
+    "value": true
   },
   {
     "category": "workbench",
@@ -97,6 +155,14 @@
     "description": "Caches editor state for faster restoration",
     "heading": "Editor Cache",
     "id": "editor.cache",
+    "type": "boolean",
+    "value": true
+  },
+  {
+    "category": "text-editor",
+    "description": "Caches eligible editor files for faster reopening",
+    "heading": "Editor File Cache",
+    "id": "editor.fileCache",
     "type": "boolean",
     "value": true
   },
@@ -163,6 +229,14 @@
     "id": "terminal.backend",
     "type": "string",
     "value": "real"
+  },
+  {
+    "category": "features",
+    "description": "Controls whether the terminal cursor blinks",
+    "heading": "Terminal Cursor Blinking",
+    "id": "terminal.cursorBlink",
+    "type": "boolean",
+    "value": false
   },
   {
     "category": "features",
@@ -302,6 +376,20 @@
     ],
     "type": "enum",
     "value": "right"
+  },
+  {
+    "category": "workbench",
+    "description": "Controls how the panel is aligned with the side bars",
+    "heading": "Panel Alignment",
+    "id": "workbench.panel.alignment",
+    "options": [
+      { "id": "center", "label": "Center" },
+      { "id": "justify", "label": "Justify" },
+      { "id": "left", "label": "Left" },
+      { "id": "right", "label": "Right" }
+    ],
+    "type": "enum",
+    "value": "justify"
   },
   {
     "category": "workbench",

@@ -72,7 +72,21 @@ const waitForExit = async (configHome) => {
       }
     }
     if (!remaining.length) return
-    assert.ok(Date.now() < deadline, `Application processes remain: ${remaining.join(', ')}`)
+    if (Date.now() >= deadline) {
+      const details = await Promise.all(
+        remaining.map(async (pid) => {
+          const [command, status] = await Promise.all(
+            ['cmdline', 'status'].map((name) => readFile(`/proc/${pid}/${name}`, 'utf8').catch((error) => `<${error.code}>`)),
+          )
+          const identity = status
+            .split('\n')
+            .filter((line) => /^(Name|State|PPid):/.test(line))
+            .join('; ')
+          return `${pid}: ${command.replaceAll('\0', ' ')} (${identity})`
+        }),
+      )
+      assert.fail(`Application processes remain: ${details.join('\n')}`)
+    }
     await delay(100)
   }
 }
@@ -128,6 +142,7 @@ try {
     [
       ...(packaged ? [] : [join(root, 'packages/main-process')]),
       '--no-sandbox',
+      '--enable-logging=stderr',
       '--password-store=basic',
       `--user-data-dir=${join(directory, 'chromium')}`,
       previous,
@@ -155,6 +170,7 @@ try {
     const args = [
       ...(packaged ? [] : [join(root, 'packages/main-process')]),
       '--no-sandbox',
+      '--enable-logging=stderr',
       '--password-store=basic',
       `--user-data-dir=${join(directory, 'chromium')}`,
       project,
@@ -191,12 +207,12 @@ try {
       assert.equal(mode, 'provider-timeout', 'Only a timed out provider may produce an incomplete trace')
       assert.match(manifest.errors.join('\n'), /CPU trace:.*timed out/i)
     } else {
-      const trace = JSON.parse(await readFile(join(output, manifest.trace), 'utf8'))
-      assert.ok(trace.traceEvents.length > 0)
+      // Electron 45 writes contentTracing output as Perfetto protobuf instead of legacy JSON.
+      const trace = await readFile(join(output, manifest.trace))
+      assert.ok(trace.length > 0)
       if (!failure) {
-        const nodes = trace.traceEvents.flatMap((event) => event.args?.data?.cpuProfile?.nodes || [])
         assert.ok(
-          nodes.some((node) => node.callFrame.functionName === 'cpuProfileDiagnosticWork'),
+          trace.includes(Buffer.from('cpuProfileDiagnosticWork')),
           'Delayed diagnostic work was not captured',
         )
       }

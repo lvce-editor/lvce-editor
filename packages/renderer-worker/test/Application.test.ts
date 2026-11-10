@@ -2,12 +2,18 @@ import { afterEach, beforeEach, expect, jest, test } from '@jest/globals'
 import * as ApplicationRegistry from '../src/parts/ApplicationRegistry/ApplicationRegistry.ts'
 import * as Id from '../src/parts/Id/Id.js'
 import * as ViewletStates from '../src/parts/ViewletStates/ViewletStates.js'
+import * as WorkspaceState from '../src/parts/WorkspaceState/WorkspaceState.js'
 
 jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () => ({ invoke: jest.fn(async () => {}) }))
 jest.unstable_mockModule('../src/parts/FileSystemWorker/FileSystemWorker.js', () => ({
   invoke: jest.fn(async (_command: string, _applicationId: string, method?: string) => (method === 'exists' ? false : undefined)),
 }))
 jest.unstable_mockModule('../src/parts/ExtensionManagementWorker/ExtensionManagementWorker.js', () => ({ invoke: jest.fn(async () => {}) }))
+const getExtensionCommands = jest.fn(async () => [])
+jest.unstable_mockModule('../src/parts/ExtensionHost/ExtensionHostCommands.js', () => ({
+  executeCommand: jest.fn(async () => {}),
+  getCommands: getExtensionCommands,
+}))
 jest.unstable_mockModule('../src/parts/ViewletModule/ViewletModule.js', () => ({ load: jest.fn() }))
 jest.unstable_mockModule('../src/parts/Viewlet/Viewlet.js', () => ({
   dispose: jest.fn(async (uid) => ViewletStates.remove(uid)),
@@ -24,12 +30,23 @@ jest.unstable_mockModule('../src/parts/ViewletManager/ViewletManager.js', () => 
   executeForApplication: jest.fn(async () => {}),
 }))
 
+jest.unstable_mockModule('../src/parts/GetActiveEditor/GetActiveEditor.js', () => ({
+  getActiveEditorInfo: jest.fn(async () => ({ id: 42, uri: 'memfs:///preview.css' })),
+  getOpenEditorUris: jest.fn(async () => ['memfs:///source.ts', 'memfs:///hidden.ts']),
+  openColorPicker: jest.fn(async () => {}),
+  getSelections: jest.fn(async () => [0, 1, 0, 4]),
+  setSelections: jest.fn(async () => {}),
+}))
+
+const GetActiveEditor = await import('../src/parts/GetActiveEditor/GetActiveEditor.js')
 const Application = await import('../src/parts/Application/Application.ts')
+const LayoutIpc = await import('../src/parts/Layout/Layout.ipc.js')
 const RendererProcess = await import('../src/parts/RendererProcess/RendererProcess.js')
 const FileSystemWorker = await import('../src/parts/FileSystemWorker/FileSystemWorker.js')
 const ViewletManager = await import('../src/parts/ViewletManager/ViewletManager.js')
 const Viewlet = await import('../src/parts/Viewlet/Viewlet.js')
 const ExtensionManagementWorker = await import('../src/parts/ExtensionManagementWorker/ExtensionManagementWorker.js')
+const ExtensionHostCommands = await import('../src/parts/ExtensionHost/ExtensionHostCommands.js')
 
 const options = (id: string) => ({
   id,
@@ -44,6 +61,7 @@ const options = (id: string) => ({
 beforeEach(() => {
   jest.clearAllMocks()
   Id.state.id = 0
+  WorkspaceState.state.workspaceUri = ''
   ViewletStates.reset()
 })
 
@@ -67,11 +85,22 @@ test('mounts independently owned layouts into two separate host roots', async ()
   ])
   expect(await Application.execute('source', 'Workspace.getUri')).toBe('memfs:///source')
   expect(await Application.execute('preview', 'Workspace.getPath')).toBe('preview')
+  WorkspaceState.state.homeDir = '/home/test'
+  expect(await Application.execute('source', 'Workspace.getHomeDir')).toBe('/home/test')
+  expect(ViewletManager.executeForApplication).not.toHaveBeenCalledWith('source', 'Workspace.getHomeDir')
   expect(await Application.execute('source', 'Layout.getHref')).toBe('/samples')
   await Application.executeForView(preview, 'Main.openInput', 'memfs:///README.md')
   expect(ViewletManager.executeForApplication).toHaveBeenCalledWith('preview', 'Main.openInput', 'memfs:///README.md')
   await Application.resize('source', 500, 700)
   expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.setBounds', source, 0, 0, 500, 700)
+})
+
+test('passes the extension command cache key to the application command provider', async () => {
+  await Application.create(options('source'))
+
+  await Application.execute('source', 'ExtensionHost.getCommands', '/static', 1, 'a'.repeat(64))
+
+  expect(ExtensionHostCommands.getCommands).toHaveBeenCalledWith('/static', 1, 'source', 'a'.repeat(64))
 })
 
 test('failed mounting releases partial ownership and permits retrying the same application id', async () => {
@@ -80,6 +109,16 @@ test('failed mounting releases partial ownership and permits retrying the same a
   expect(() => ApplicationRegistry.get('preview')).toThrow('Application not found')
   expect(ApplicationRegistry.getOwner(1)).toBeUndefined()
   expect(await Application.create(options('preview'))).toBe(2)
+})
+
+test('worker callbacks execute commands only on views owned by their application', async () => {
+  const source = await Application.create(options('source'))
+  const preview = await Application.create(options('preview'))
+  await Application.execute('source', 'Viewlet.executeViewletCommand', source, 'handleBlur')
+  expect(Viewlet.executeViewletCommand).toHaveBeenCalledWith(source, 'handleBlur')
+  jest.mocked(Viewlet.executeViewletCommand).mockClear()
+  await expect(Application.execute('source', 'Viewlet.executeViewletCommand', preview, 'handleBlur')).rejects.toThrow('Component not found')
+  expect(Viewlet.executeViewletCommand).not.toHaveBeenCalled()
 })
 
 test('concurrent disposal shares one teardown and preserves the sibling layout', async () => {
@@ -205,6 +244,19 @@ test('extension reload refreshes existing application views without disposing th
   expect(ApplicationRegistry.getOwner(100)).toBe('preview')
 })
 
+test('global workspace refresh dispatches to each open application on the first command invocation', async () => {
+  await Application.create(options('source'))
+  await Application.create(options('preview'))
+  jest.mocked(ViewletManager.executeForApplication).mockClear()
+  await LayoutIpc.Commands.handleWorkspaceRefresh({ changed: ['memfs:///sample/src/main.ts'] })
+  expect(ViewletManager.executeForApplication).toHaveBeenNthCalledWith(1, 'source', 'Layout.handleWorkspaceRefresh', {
+    changed: ['memfs:///sample/src/main.ts'],
+  })
+  expect(ViewletManager.executeForApplication).toHaveBeenNthCalledWith(2, 'preview', 'Layout.handleWorkspaceRefresh', {
+    changed: ['memfs:///sample/src/main.ts'],
+  })
+})
+
 test('a failed extension replacement leaves application views mounted and does not refresh them', async () => {
   await Application.create(options('preview'))
   jest.mocked(ExtensionManagementWorker.invoke).mockRejectedValueOnce(new Error('reload failed'))
@@ -223,6 +275,24 @@ test('loads workspace ports before the initial panel is registered', async () =>
     'onPorts:codespaces',
     'ExtensionApi.providePorts',
     'codespaces://test/app',
+  )
+})
+
+test('routes Remote SSH forwarding from the main workspace view', async () => {
+  WorkspaceState.state.workspaceUri = 'remote-ssh://host/work'
+  jest.mocked(ExtensionManagementWorker.invoke).mockResolvedValueOnce({ localPort: 3000 })
+  await expect(Application.executeForView(12345, 'PortProvider.forwardPort', 3000)).resolves.toEqual({ localPort: 3000 })
+  expect(ExtensionManagementWorker.invoke).toHaveBeenCalledWith('Extensions.executeCommand', 'remote-ssh.forwardPort', 'remote-ssh://host/work', 3000)
+})
+
+test('routes stopping Remote SSH forwarding from the main workspace view', async () => {
+  WorkspaceState.state.workspaceUri = 'remote-ssh://host/work'
+  await Application.executeForView(12345, 'PortProvider.stopForwardPort', 3000)
+  expect(ExtensionManagementWorker.invoke).toHaveBeenCalledWith(
+    'Extensions.executeCommand',
+    'remote-ssh.stopForwardPort',
+    'remote-ssh://host/work',
+    3000,
   )
 })
 
@@ -276,5 +346,50 @@ test('dialog entry points create a widget in the calling application before an i
   await Application.execute('source', 'Dialog.show', { message: 'Source dialog', type: 'info' })
   expect(Viewlet.openWidgetForApplication).toHaveBeenNthCalledWith(1, 'preview', 'Dialog', { ...warning, type: 'warning' })
   expect(Viewlet.openWidgetForApplication).toHaveBeenNthCalledWith(2, 'source', 'Dialog', { message: 'Source dialog', type: 'info' })
+  expect(ViewletManager.executeForApplication).not.toHaveBeenCalled()
+})
+
+test('routes public selection APIs through the requesting application', async () => {
+  await Application.create(options('source'))
+  await Application.create(options('preview'))
+  await expect(Application.execute('preview', 'GetActiveEditor.getSelections')).resolves.toEqual([0, 1, 0, 4])
+  expect(GetActiveEditor.getSelections).toHaveBeenCalledWith('preview')
+  const selections = [0, 4, 0, 4]
+  await Application.execute('preview', 'GetActiveEditor.setSelections', selections)
+  expect(GetActiveEditor.setSelections).toHaveBeenCalledWith(selections, 'preview')
+})
+
+test('dispatches editor lifecycle commands only to components owned by the application', async () => {
+  await Application.create(options('source'))
+  await Application.create(options('preview'))
+  ApplicationRegistry.own('source', 100)
+  ApplicationRegistry.own('preview', 101)
+  await Application.execute('source', 'Viewlet.executeViewletCommand', 100, 'handleBlur')
+  expect(Viewlet.executeViewletCommand).toHaveBeenCalledWith(100, 'handleBlur')
+  expect(ViewletManager.executeForApplication).not.toHaveBeenCalledWith('source', 'Viewlet.executeViewletCommand', 100, 'handleBlur')
+  jest.mocked(Viewlet.executeViewletCommand).mockClear()
+  await expect(Application.execute('source', 'Viewlet.executeViewletCommand', 101, 'handleBlur')).rejects.toThrow(
+    'Component not found in application source: 101',
+  )
+  await expect(Application.execute('source', 'Viewlet.executeViewletCommand', 999, 'handleBlur')).rejects.toThrow(
+    'Component not found in application source: 999',
+  )
+  expect(Viewlet.executeViewletCommand).not.toHaveBeenCalled()
+})
+
+test('editor snapshot and explicit color picker route retain their application scope', async () => {
+  await Application.create(options('preview'))
+  expect(await Application.execute('preview', 'GetActiveEditor.getActiveEditorInfo')).toEqual({ id: 42, uri: 'memfs:///preview.css' })
+  expect(GetActiveEditor.getActiveEditorInfo).toHaveBeenCalledWith('preview')
+  await Application.execute('preview', 'GetActiveEditor.openColorPicker', 42, '#ff8800')
+  expect(GetActiveEditor.openColorPicker).toHaveBeenCalledWith(42, '#ff8800', 'preview')
+})
+
+test('open editor snapshot includes inactive tabs from the requesting application', async () => {
+  await Application.create(options('source'))
+  await Application.create(options('preview'))
+  jest.clearAllMocks()
+  await expect(Application.execute('source', 'GetActiveEditor.getOpenEditorUris')).resolves.toEqual(['memfs:///source.ts', 'memfs:///hidden.ts'])
+  expect(GetActiveEditor.getOpenEditorUris).toHaveBeenCalledWith('source')
   expect(ViewletManager.executeForApplication).not.toHaveBeenCalled()
 })

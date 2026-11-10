@@ -147,6 +147,44 @@ test('bundles the application memory usage setting', async () => {
   }
 })
 
+test('bundles the Process Explorer update interval from its worker package', async () => {
+  const workersUrl = new URL('../../renderer-worker/src/parts/Workers/Workers.json', import.meta.url)
+  const workers = JSON.parse(await readFile(workersUrl, 'utf8'))
+  const toRoot = await mkdtemp(join(tmpdir(), 'lvce-process-explorer-settings-'))
+  try {
+    await bundleBuiltinSettings({ toRoot, workers })
+
+    const index = JSON.parse(await readFile(join(toRoot, 'builtin-settings', 'index.json'), 'utf8'))
+    const settings = await Promise.all(
+      index.map(async (fileName) => ({
+        fileName,
+        settings: JSON.parse(await readFile(join(toRoot, 'builtin-settings', fileName), 'utf8')),
+      })),
+    )
+    const matches = settings.flatMap(({ fileName, settings: contributions }) =>
+      contributions.filter(({ id }) => id === 'processExplorer.updateInterval').map((setting) => ({ fileName, setting })),
+    )
+
+    expect(matches).toEqual([
+      {
+        fileName: 'process-explorer-worker.json',
+        setting: {
+          category: 'workbench',
+          description: 'Controls how often the Process Explorer refreshes, in milliseconds',
+          heading: 'Process Explorer Update Interval',
+          id: 'processExplorer.updateInterval',
+          maximum: 5000,
+          minimum: 500,
+          type: 'number',
+          value: 1000,
+        },
+      },
+    ])
+  } finally {
+    await rm(toRoot, { force: true, recursive: true })
+  }
+})
+
 test('declares every default setting', async () => {
   const defaultSettingsUrl = new URL('../../../static/config/defaultSettings.json', import.meta.url)
   const workersUrl = new URL('../../renderer-worker/src/parts/Workers/Workers.json', import.meta.url)

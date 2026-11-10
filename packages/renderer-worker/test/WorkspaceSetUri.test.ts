@@ -1,6 +1,9 @@
 import { beforeEach, expect, jest, test } from '@jest/globals'
 import * as PlatformType from '../src/parts/PlatformType/PlatformType.js'
 
+const prepareWorkspace = jest.fn<(id: string, uri: string) => Promise<unknown>>(async () => true)
+jest.unstable_mockModule('../src/parts/ExtensionHost/ExtensionHostCommands.js', () => ({ executeCommand: prepareWorkspace }))
+
 const exists = jest.fn<(uri: string) => Promise<boolean>>(async () => true)
 const createNotification = jest.fn<(type: string, text: string) => Promise<void>>(async () => {})
 const setWindowTitle = jest.fn<(title: string) => Promise<void>>(async () => {})
@@ -71,6 +74,8 @@ const Workspace = await import('../src/parts/Workspace/Workspace.js')
 const WorkspaceConnection = await import('../src/parts/WorkspaceConnection/WorkspaceConnection.js')
 
 beforeEach(() => {
+  prepareWorkspace.mockReset()
+  prepareWorkspace.mockResolvedValue(true)
   execute.mockClear()
   createNotification.mockClear()
   exists.mockClear()
@@ -92,43 +97,104 @@ beforeEach(() => {
   Workspace.state.workspaceUri = ''
 })
 
-test('delays workspace progress and clears it when the operation finishes', async () => {
+test('delays workspace progress, updates its message, and clears it when the operation finishes', async () => {
   jest.useFakeTimers()
   const listener = jest.fn()
   GlobalEventBus.addListener('workspace.progress', listener)
 
   const id = Workspace.startProgress('Opening Remote Workspace…')
-  jest.advanceTimersByTime(199)
+  jest.advanceTimersByTime(200)
+  Workspace.updateProgress(id, 'Installing the LVCE Editor server…')
+  jest.advanceTimersByTime(99)
   await Promise.resolve()
   expect(listener).not.toHaveBeenCalled()
 
   jest.advanceTimersByTime(1)
   await Promise.resolve()
-  expect(listener).toHaveBeenCalledWith('Opening Remote Workspace…')
+  expect(listener).toHaveBeenCalledWith({ id, message: 'Installing the LVCE Editor server…' })
+
+  Workspace.updateProgress(id, 'Starting the LVCE Editor server…')
+  await Promise.resolve()
+  expect(listener).toHaveBeenLastCalledWith({ id, message: 'Starting the LVCE Editor server…' })
 
   Workspace.endProgress(id)
   await Promise.resolve()
-  expect(listener).toHaveBeenLastCalledWith('')
+  expect(listener).toHaveBeenLastCalledWith({ id, message: '' })
   jest.useRealTimers()
 })
 
-test('ignores completion from a superseded workspace operation', async () => {
+test('cancels a superseded progress operation without affecting its replacement', async () => {
   jest.useFakeTimers()
   const listener = jest.fn()
   GlobalEventBus.addListener('workspace.progress', listener)
 
   const firstId = Workspace.startProgress('First')
-  jest.advanceTimersByTime(200)
+  jest.advanceTimersByTime(300)
   await Promise.resolve()
   const secondId = Workspace.startProgress('Second')
+  expect(Workspace.isProgressCancelled(firstId)).toBe(true)
+  expect(Workspace.isProgressCancelled(secondId)).toBe(false)
+  Workspace.updateProgress(firstId, 'Stale stage')
   Workspace.endProgress(firstId)
-  jest.advanceTimersByTime(200)
+  jest.advanceTimersByTime(300)
   await Promise.resolve()
 
-  expect(listener.mock.calls).toEqual([['First'], [''], ['Second']])
+  expect(listener.mock.calls).toEqual([[{ id: firstId, message: 'First' }], [{ id: firstId, message: '' }], [{ id: secondId, message: 'Second' }]])
   Workspace.endProgress(secondId)
   await Promise.resolve()
-  expect(listener).toHaveBeenLastCalledWith('')
+  expect(listener).toHaveBeenLastCalledWith({ id: secondId, message: '' })
+  jest.useRealTimers()
+})
+
+test('cancelling progress hides the dialog and retains cancellation until it ends', async () => {
+  jest.useFakeTimers()
+  const listener = jest.fn()
+  GlobalEventBus.addListener('workspace.progress', listener)
+  const id = Workspace.startProgress('Connecting…')
+  jest.advanceTimersByTime(300)
+  await Promise.resolve()
+
+  Workspace.cancelProgress(id)
+
+  expect(listener).toHaveBeenLastCalledWith({ id, message: '' })
+  expect(Workspace.isProgressCancelled(id)).toBe(true)
+  expect(Workspace.isProgressCancelled(id)).toBe(true)
+  Workspace.endProgress(id)
+  expect(Workspace.isProgressCancelled(id)).toBe(false)
+  jest.useRealTimers()
+})
+
+test('does not show progress when a workspace operation completes quickly', async () => {
+  jest.useFakeTimers()
+  const listener = jest.fn()
+  GlobalEventBus.addListener('workspace.progress', listener)
+
+  const id = Workspace.startProgress('Opening Remote Workspace…')
+  Workspace.endProgress(id)
+  jest.advanceTimersByTime(300)
+  await Promise.resolve()
+
+  expect(listener).not.toHaveBeenCalled()
+  jest.useRealTimers()
+})
+
+test('uses extension progress and ignores a response after the workspace operation changes', async () => {
+  jest.useFakeTimers()
+  const listener = jest.fn()
+  GlobalEventBus.addListener('workspace.progress', listener)
+  const id = Workspace.startProgress('Opening workspace…')
+  jest.advanceTimersByTime(300)
+  Workspace.handleExtensionProgressChange(id, { message: 'Starting remote server…', status: 'in-progress' })
+  expect(listener).toHaveBeenLastCalledWith({ id, message: 'Starting remote server…' })
+  Workspace.handleExtensionProgressChange(id, { message: 'Could not connect', status: 'error' })
+  expect(listener).toHaveBeenLastCalledWith({ id, message: 'Error: Could not connect' })
+
+  const nextId = Workspace.startProgress('Opening another workspace…')
+  Workspace.handleExtensionProgressChange(id, { message: 'Stale remote server', status: 'error' })
+  jest.advanceTimersByTime(300)
+  expect(listener).toHaveBeenLastCalledWith({ id: nextId, message: 'Opening another workspace…' })
+  expect(listener).not.toHaveBeenCalledWith({ id, message: 'Stale remote server' })
+  Workspace.endProgress(nextId)
   jest.useRealTimers()
 })
 
@@ -283,4 +349,46 @@ test('opens a requested file after switching workspace', async () => {
   await Workspace.setUri('remote-ssh://host/work', undefined, undefined, 'remote-ssh://host/work/readme.md')
   expect(Workspace.getUri()).toBe('remote-ssh://host/work')
   expect(execute).toHaveBeenCalledWith('Main.openUri', 'remote-ssh://host/work/readme.md')
+})
+
+test('remote URI preparation cancellation preserves the current workspace and location', async () => {
+  await Workspace.setPath('/original')
+  setWorkspaceUri.mockClear()
+  setWindowTitle.mockClear()
+  prepareWorkspace.mockResolvedValue(false)
+  await Workspace.setUri('remote-ssh://host/work')
+  expect(prepareWorkspace).toHaveBeenCalledWith('remote-ssh.prepareWorkspace', 'remote-ssh://host/work')
+  expect(Workspace.getPath()).toBe('/original')
+  expect(setWorkspaceUri).not.toHaveBeenCalled()
+  expect(setWindowTitle).not.toHaveBeenCalled()
+})
+
+test('remote URI waits for successful preparation before switching workspace', async () => {
+  await Workspace.setPath('/original')
+  const { promise, resolve } = Promise.withResolvers<boolean>()
+  prepareWorkspace.mockReturnValue(promise)
+  const opening = Workspace.setUri('remote-ssh://host/work')
+  await new Promise((resolve) => setTimeout(resolve, 0))
+  expect(Workspace.getPath()).toBe('/original')
+  resolve(true)
+  await opening
+  expect(Workspace.getUri()).toBe('remote-ssh://host/work')
+})
+
+test('superseded preparation cannot replace a newer workspace', async () => {
+  const { promise, resolve } = Promise.withResolvers<boolean>()
+  prepareWorkspace.mockReturnValue(promise)
+  const opening = Workspace.setUri('remote-ssh://host/work')
+  await Workspace.setPath('/newer')
+  resolve(true)
+  await opening
+  expect(Workspace.getPath()).toBe('/newer')
+})
+
+test('legacy recent remote paths use cancellable preparation too', async () => {
+  await Workspace.setPath('/original')
+  prepareWorkspace.mockResolvedValue(false)
+  await Workspace.setPath('remote-ssh://host/work')
+  expect(Workspace.getPath()).toBe('/original')
+  expect(prepareWorkspace).toHaveBeenCalledWith('remote-ssh.prepareWorkspace', 'remote-ssh://host/work')
 })

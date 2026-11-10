@@ -1,6 +1,6 @@
 import { expect, jest, test } from '@jest/globals'
 
-const getModuleId = jest.fn(async (_uri?: string, _opener?: string) => 'WebView')
+const getModuleId = jest.fn(async (_uri?: string, _opener?: string, _applicationId?: string) => 'WebView')
 
 jest.unstable_mockModule('../src/parts/ViewletMap/ViewletMap.js', () => ({
   getModuleId,
@@ -12,5 +12,12 @@ test('forwards explicit opener when resolving viewlet module id', async () => {
   const state = ViewletLayout.create(1)
 
   await expect(ViewletLayout.getModuleId(state, '/workspace/readme.md', 'builtin.markdown-preview')).resolves.toBe('WebView')
-  expect(getModuleId).toHaveBeenCalledWith('/workspace/readme.md', 'builtin.markdown-preview')
+  expect(getModuleId).toHaveBeenCalledWith('/workspace/readme.md', 'builtin.markdown-preview', undefined)
+})
+
+test('resolves file types within the owning application', async () => {
+  const state = { ...ViewletLayout.create(1), applicationId: 'preview' }
+
+  await ViewletLayout.getModuleId(state, '/workspace/first.count')
+  expect(getModuleId).toHaveBeenCalledWith('/workspace/first.count', undefined, 'preview')
 })

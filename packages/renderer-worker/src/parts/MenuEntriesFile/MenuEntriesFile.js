@@ -31,7 +31,7 @@ export const getMenuEntries = () => {
     {
       id: 'openFolder',
       label: FileStrings.openFolder(),
-      flags: MenuItemFlags.RestoreFocus,
+      flags: MenuItemFlags.None,
       command: 'Dialog.openFolder',
     },
     {

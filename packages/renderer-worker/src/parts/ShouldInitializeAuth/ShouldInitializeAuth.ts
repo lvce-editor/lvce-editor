@@ -1,3 +1,3 @@
-export const shouldInitializeAuth = (hasAuthCallback: boolean, isPromptMode: boolean): boolean => {
-  return hasAuthCallback || isPromptMode
+export const shouldInitializeAuth = (hasAuthCallback: boolean, isPromptMode: boolean, isWeb: boolean): boolean => {
+  return hasAuthCallback || isPromptMode || isWeb
 }

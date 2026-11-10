@@ -102,7 +102,7 @@ export const getKeyBindings = () => {
 
     {
       key: KeyModifier.CtrlCmd | KeyCode.Comma,
-      command: 'Preferences.openSettingsJson',
+      command: 'Layout.openSettings',
     },
 
     {

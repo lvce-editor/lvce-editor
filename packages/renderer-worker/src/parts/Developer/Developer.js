@@ -198,7 +198,7 @@ export const reloadIconTheme = async (platform, assetDir) => {
 }
 
 export const reloadColorTheme = async () => {
-  await ColorTheme.hydrate()
+  await ColorTheme.hydrate(true)
 }
 
 export const showColorThemeCss = async () => {

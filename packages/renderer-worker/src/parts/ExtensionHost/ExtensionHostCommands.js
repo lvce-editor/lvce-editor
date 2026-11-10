@@ -2,7 +2,7 @@ import * as AssetDir from '../AssetDir/AssetDir.js'
 import * as DirentType from '../DirentType/DirentType.js'
 import * as ExtensionMeta from '../ExtensionMeta/ExtensionMeta.js'
 import * as ExtensionManagementWorker from '../ExtensionManagementWorker/ExtensionManagementWorker.js'
-import * as FileSystemHtml from '../FileSystem/FileSystemHtml.js'
+import * as FileSystemWorker from '../FileSystemWorker/FileSystemWorker.js'
 import * as FileSystemMemory from '../FileSystem/FileSystemMemory.js'
 
 const getCommandsFromExtension = (extension) => {
@@ -16,7 +16,26 @@ const getCommandsFromExtensions = (extensions) => {
   return extensions.flatMap(getCommandsFromExtension)
 }
 
-export const getCommands = async (assetDir, platform, applicationId) => {
+export const getCommands = async (assetDir, platform, applicationId, ifNonMatch) => {
+  if (ifNonMatch !== undefined) {
+    try {
+      const response =
+        applicationId === undefined
+          ? await ExtensionManagementWorker.invoke('Extensions.getQuickPickCommands', assetDir, platform, ifNonMatch)
+          : await ExtensionManagementWorker.invoke(
+              'Extensions.invokeForApplication',
+              applicationId,
+              'Extensions.getQuickPickCommands',
+              assetDir,
+              platform,
+              ifNonMatch,
+            )
+      return response
+    } catch (error) {
+      console.error(`Failed to get extension picks: ${error}`)
+      return undefined
+    }
+  }
   const extensions =
     applicationId === undefined
       ? await ExtensionMeta.getExtensions(assetDir, platform)
@@ -39,21 +58,7 @@ export const searchFileWithFetch = async (path) => {
   return fileList.map((item) => item.replace(/^\//, '').slice(prefixLength))
 }
 
-const searchDirectory = async (uri, prefix = '') => {
-  const entries = await FileSystemHtml.readDirWithFileTypes(uri)
-  const results = []
-  for (const entry of entries) {
-    const relativePath = prefix ? `${prefix}/${entry.name}` : entry.name
-    if (entry.type === DirentType.Directory) {
-      results.push(...(await searchDirectory(`${uri}/${entry.name}`, relativePath)))
-    } else {
-      results.push(relativePath)
-    }
-  }
-  return results
-}
-
-export const searchFileWithHtml = (uri) => searchDirectory(uri)
+export const searchFileWithHtml = (uri) => FileSystemWorker.invoke('FileSystemHtml.fileSearch', uri)
 
 export const searchFileWithMemory = async () => {
   return Object.entries(await FileSystemMemory.getFiles())

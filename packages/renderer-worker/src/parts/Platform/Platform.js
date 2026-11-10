@@ -10,8 +10,18 @@ import * as RuntimeConfig from '../RuntimeConfig/RuntimeConfig.ts'
  * @returns {number}
  */
 export const getPlatform = () => {
-  if (RuntimeConfig.runtimeConfig.platform) {
-    return RuntimeConfig.runtimeConfig.platform
+  const configuredPlatform = RuntimeConfig.runtimeConfig.platform
+  if (typeof configuredPlatform === 'number') {
+    return configuredPlatform
+  }
+  if (configuredPlatform === 'electron') {
+    return PlatformType.Electron
+  }
+  if (configuredPlatform === 'remote') {
+    return PlatformType.Remote
+  }
+  if (configuredPlatform === 'web') {
+    return PlatformType.Web
   }
   // @ts-ignore
   if (typeof PLATFORM !== 'undefined') {

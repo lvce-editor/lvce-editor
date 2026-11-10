@@ -2,6 +2,7 @@ import { VError } from '@lvce-editor/verror'
 import { readdir, readFile, rm } from 'node:fs/promises'
 import * as Copy from '../Copy/Copy.ts'
 import * as EagerLoadedCss from '../EagerLoadedCss/EagerLoadedCss.ts'
+import * as FiraCodePath from '../FiraCodePath/FiraCodePath.ts'
 import * as EncodingType from '../EncodingType/EncodingType.ts'
 import * as Path from '../Path/Path.ts'
 import * as Root from '../Root/Root.ts'
@@ -86,6 +87,12 @@ export const bundleCss = async ({ outDir, additionalCss = '', assetDir = '', pat
       css += `/*************/\n`
       css += content
       await rm(absolutePath, { recursive: true, force: true })
+    }
+
+    css = css.replaceAll(/@import url\('\/fonts\/(?:300|400|500|600|700)\.css'\);\n/g, '')
+    for (const weight of [300, 400, 500, 600, 700]) {
+      const fontCss = await readFile(Path.join(FiraCodePath.firaCodePath, `${weight}.css`), EncodingType.Utf8)
+      css += `\n${fontCss.replaceAll('./files/', '/fonts/files/')}\n`
     }
 
     const appCssPath = Path.join(outDir, 'App.css')

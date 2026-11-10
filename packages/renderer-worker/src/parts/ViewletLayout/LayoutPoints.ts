@@ -154,12 +154,23 @@ export const getPoints = (source: LayoutState, sideBarLocation = source.sideBarL
     const contentTop = titleBarVisible ? titleBarHeight : titleBarlessClearance
     const contentBottom = statusBarVisible ? windowHeight - statusBarHeight : windowHeight
     const focusSecondarySideBar = source.sideBarFocusModeTarget === 'secondary'
-    const aiActivityBarWidth = source.aiNativeLayout ? Math.min(48, windowWidth) : 0
+    const aiActivityBarVisible = Boolean(source.aiNativeLayout && activityBarVisible)
+    const aiActivityBarWidth = aiActivityBarVisible ? Math.min(48, windowWidth) : 0
     const aiActivityBarOnRight = source.aiNativeLayout && sideBarLocation === SideBarLocationType.Right
+    const settingsOpen = source.aiNativeLayout && source.aiNativeSettingsId !== undefined
+    const availableWidth = Math.max(0, windowWidth - aiActivityBarWidth)
+    const sessionsWidth = settingsOpen ? Math.min(280, availableWidth * 0.32) : availableWidth
+    const settingsWidth = availableWidth - sessionsWidth
+    const sessionsOnRight = sideBarLocation === SideBarLocationType.Right
+    const contentLeft = aiActivityBarOnRight ? 0 : aiActivityBarWidth
     return {
       ...source,
+      mainLeft: contentLeft + (sessionsOnRight ? 0 : sessionsWidth),
+      mainTop: contentTop,
+      mainWidth: settingsWidth,
+      mainHeight: Math.max(0, contentBottom - contentTop),
       activityBarSashVisible: false,
-      activityBarVisible: Boolean(source.aiNativeLayout),
+      activityBarVisible: aiActivityBarVisible,
       activityBarWidth: aiActivityBarWidth,
       activityBarLeft: aiActivityBarOnRight ? Math.max(0, windowWidth - aiActivityBarWidth) : 0,
       activityBarTop: contentTop,
@@ -172,16 +183,16 @@ export const getPoints = (source: LayoutState, sideBarLocation = source.sideBarL
       secondaryPreviewSashVisible: false,
       secondaryPreviewVisible: false,
       secondarySideBarHeight: Math.max(0, contentBottom - contentTop),
-      secondarySideBarLeft: 0,
+      secondarySideBarLeft: contentLeft + (settingsOpen && sessionsOnRight ? settingsWidth : 0),
       secondarySideBarTop: contentTop,
       secondarySideBarVisible: focusSecondarySideBar,
-      secondarySideBarWidth: focusSecondarySideBar ? windowWidth : secondarySideBarWidth,
+      secondarySideBarWidth: focusSecondarySideBar ? sessionsWidth : secondarySideBarWidth,
       sideBarHeight: Math.max(0, contentBottom - contentTop),
-      sideBarLeft: aiActivityBarOnRight ? 0 : aiActivityBarWidth,
+      sideBarLeft: contentLeft + (settingsOpen && sessionsOnRight ? settingsWidth : 0),
       sideBarSashVisible: false,
       sideBarTop: contentTop,
       sideBarVisible: !focusSecondarySideBar,
-      sideBarWidth: focusSecondarySideBar ? sideBarWidth : Math.max(0, windowWidth - aiActivityBarWidth),
+      sideBarWidth: focusSecondarySideBar ? sideBarWidth : sessionsWidth,
       statusBarTop: contentBottom,
       statusBarWidth: windowWidth,
       titleBarWidth: windowWidth,

@@ -32,6 +32,8 @@ export const load = (moduleId) => {
       return import('../CacheStorage/CacheStorage.ipc.js')
     case ModuleId.Callback:
       return import('../Callback/Callback.ipc.js')
+    case ModuleId.Authentication:
+      return import('../Authentication/Authentication.ipc.js')
     case ModuleId.Chrome:
       return import('../Chrome/Chrome.ipc.js')
     case ModuleId.ClipBoard:
@@ -154,6 +156,8 @@ export const load = (moduleId) => {
       return import('../Url/Url.ipc.js')
     case ModuleId.Viewlet:
       return import('../Viewlet/Viewlet.ipc.js')
+    case ModuleId.SideBar:
+      return import('../ViewletSideBar/ViewletSideBar.ipc.js')
     case ModuleId.Window:
       return import('../Window/Window.ipc.js')
     case ModuleId.Workspace:

@@ -22,6 +22,7 @@ export const HandlePointerOverSimpleBrowserTab = 'handlePointerOverSimpleBrowser
 export const HandlePointerOutSimpleBrowserTabs = 'handlePointerOutSimpleBrowserTabs'
 export const HandlePointerOverSimpleBrowserTabs = 'handlePointerOverSimpleBrowserTabs'
 export const HandleClickClose = 'handleClickClose'
+export const HandleClickCancelWorkspaceProgress = 'handleClickCancelWorkspaceProgress'
 export const HandleClickCloseSecondaryPreview = 'handleClickCloseSecondaryPreview'
 export const HandleClickMaximize = 'handleClickMaximize'
 export const HandleClickContinue = 'handleClickContinue'

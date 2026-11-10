@@ -1,11 +1,13 @@
 import { parse } from '@lvce-editor/jsonc-parser'
 import { readFile } from 'node:fs/promises'
 import { homedir, tmpdir } from 'node:os'
-import { join } from 'node:path'
+import { join, resolve } from 'node:path'
 
 const applicationName = 'lvce-oss'
 const keyPattern = /^[a-zA-Z0-9][a-zA-Z0-9._-]*$/
-const optionsWithSeparateValues = new Set(['--connection-token', '--idle-timeout', '--link', '--only-extension', '--port', '--test-path'])
+const optionsWithSeparateValues = new Set(['--auth-worker-path', '--connection-token', '--idle-timeout', '--link', '--only-extension', '--port', '--test-path'])
+const reclaimerFeatureName = 'PartitionAllocMemoryReclaimer'
+const reclaimerFeature = `${reclaimerFeatureName}:interval/1800s`
 
 const getArgument = (key, value) => {
   return `--${key}=${value}`
@@ -63,6 +65,64 @@ export const prepend = (argv, argumentsToPrepend) => {
   argv.splice(2, 0, ...argumentsToPrepend)
 }
 
+const getFeatureName = (feature) => feature.split(/[:<]/, 1)[0].trim()
+
+export const addDefaultMemoryReclaimerFeature = (args) => {
+  const enabledFeatures = []
+  const disabledFeatures = []
+  const keptArgs = []
+  for (let index = 0; index < args.length; index++) {
+    const arg = args[index]
+    if (arg === '--enable-features' || arg === '--disable-features') {
+      const target = arg === '--enable-features' ? enabledFeatures : disabledFeatures
+      target.push(
+        ...(args[index + 1] || '')
+          .split(',')
+          .map((feature) => feature.trim())
+          .filter(Boolean),
+      )
+      index++
+      continue
+    }
+    if (arg.startsWith('--enable-features=')) {
+      enabledFeatures.push(
+        ...arg
+          .slice('--enable-features='.length)
+          .split(',')
+          .map((feature) => feature.trim())
+          .filter(Boolean),
+      )
+      continue
+    }
+    if (arg.startsWith('--disable-features=')) {
+      disabledFeatures.push(
+        ...arg
+          .slice('--disable-features='.length)
+          .split(',')
+          .map((feature) => feature.trim())
+          .filter(Boolean),
+      )
+      continue
+    }
+    keptArgs.push(arg)
+  }
+
+  if (disabledFeatures.some((feature) => getFeatureName(feature) === reclaimerFeatureName)) {
+    return args
+  }
+
+  const reclaimerIndices = enabledFeatures.flatMap((feature, index) => (getFeatureName(feature) === reclaimerFeatureName ? [index] : []))
+  const explicitReclaimerIndex = reclaimerIndices.findLast((index) => enabledFeatures[index].includes(':'))
+  const featureIndex = reclaimerIndices[0] ?? enabledFeatures.length
+  const selectedReclaimerFeature = explicitReclaimerIndex === undefined ? reclaimerFeature : enabledFeatures[explicitReclaimerIndex]
+  const mergedFeatures = enabledFeatures.filter((feature) => getFeatureName(feature) !== reclaimerFeatureName)
+  mergedFeatures.splice(featureIndex, 0, selectedReclaimerFeature)
+
+  const featureArguments = [`--enable-features=${mergedFeatures.join(',')}`]
+  keptArgs.unshift(...featureArguments)
+  return keptArgs
+}
+
 export const getWorkspaceArgument = (args) => {
   for (let index = 0; index < args.length; index++) {
     const argument = args[index]
@@ -75,4 +135,26 @@ export const getWorkspaceArgument = (args) => {
     }
   }
   return ''
+}
+
+export const resolveAuthWorkerPath = (args, workingDirectory = process.cwd()) => {
+  const resolvedArgs = [...args]
+  for (let index = 0; index < resolvedArgs.length; index++) {
+    const argument = resolvedArgs[index]
+    if (argument === '--auth-worker-path') {
+      const value = resolvedArgs[index + 1]
+      if (!value || value.startsWith('--')) {
+        throw new TypeError('--auth-worker-path requires a filesystem path')
+      }
+      resolvedArgs[index] = `--auth-worker-path=${resolve(workingDirectory, value)}`
+      resolvedArgs.splice(index + 1, 1)
+    } else if (argument.startsWith('--auth-worker-path=')) {
+      const value = argument.slice('--auth-worker-path='.length)
+      if (!value) {
+        throw new TypeError('--auth-worker-path requires a filesystem path')
+      }
+      resolvedArgs[index] = `--auth-worker-path=${resolve(workingDirectory, value)}`
+    }
+  }
+  return resolvedArgs
 }

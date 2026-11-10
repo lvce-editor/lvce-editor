@@ -13,6 +13,7 @@ test('passes editor context to the created viewlet', async () => {
   const state = ViewletLayout.create(1)
   const bounds = { height: 600, width: 800, x: 0, y: 35 }
   const editorContext = {
+    deferLoadContentLater: true,
     endColumnIndex: 17,
     endRowIndex: 42,
     startColumnIndex: 12,
@@ -24,6 +25,7 @@ test('passes editor context to the created viewlet', async () => {
   expect(ViewletManager.load).toHaveBeenCalledWith(
     expect.objectContaining({
       args: [editorContext],
+      deferLoadContentLater: true,
       id: 'EditorText',
       uri: 'file:///definition.ts',
       uid: 2,

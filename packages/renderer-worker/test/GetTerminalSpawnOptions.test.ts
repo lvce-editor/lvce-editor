@@ -1,5 +1,7 @@
 import { beforeEach, expect, jest, test } from '@jest/globals'
 
+let platform = 2
+jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => ({ getPlatform: () => platform }))
 const invoke = jest.fn<(...args: unknown[]) => Promise<unknown>>()
 const extensionInvoke = jest.fn(async (..._args: readonly unknown[]): Promise<unknown> => '')
 jest.unstable_mockModule('../src/parts/ExtensionManagementWorker/ExtensionManagementWorker.js', () => ({ invoke: extensionInvoke }))
@@ -12,6 +14,7 @@ const WorkspaceConnection = await import('../src/parts/WorkspaceConnection/Works
 const { getTerminalSpawnOptions } = await import('../src/parts/GetTerminalSpawnOptions/GetTerminalSpawnOptions.js')
 
 beforeEach(() => {
+  platform = 2
   WorkspaceConnection.reset()
   workspaceState.workspaceUri = 'codespaces://test/work'
   extensionInvoke.mockReset()
@@ -88,5 +91,23 @@ test('discovers the remote shell through its transport extension', async () => {
   extensionInvoke.mockResolvedValueOnce('remote-ssh://host/work').mockResolvedValueOnce({ command: 'bash', args: ['-l'] })
   await expect(getTerminalSpawnOptions()).resolves.toEqual({ command: 'bash', args: ['-l'] })
   expect(extensionInvoke).toHaveBeenLastCalledWith('Extensions.executeWorkspaceRequest', 'remote-ssh://host/work', 'terminal-options')
+  expect(invoke).not.toHaveBeenCalled()
+})
+
+test('static web workspaces do not discover a shell through an absent shared process', async () => {
+  platform = 1
+  workspaceState.workspaceUri = 'memfs:///threejs'
+  await expect(getTerminalSpawnOptions()).resolves.toMatchObject({
+    args: [],
+    command: '',
+    spawnError: expect.stringContaining('Terminals are unavailable'),
+  })
+  expect(invoke).not.toHaveBeenCalled()
+})
+
+test('web workspaces retain terminal options supplied by a remote connection', async () => {
+  platform = 1
+  WorkspaceConnection.set(workspaceState.workspaceUri, 'codespaces.getWebSocketUrl', '', '', { command: 'bash', args: ['-i'] })
+  await expect(getTerminalSpawnOptions()).resolves.toEqual({ command: 'bash', args: ['-i'] })
   expect(invoke).not.toHaveBeenCalled()
 })

@@ -50,6 +50,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.CacheStorage
     case 'Callback':
       return ModuleId.Callback
+    case 'Authentication':
+      return ModuleId.Authentication
     case 'Chrome':
       return ModuleId.Chrome
     case 'ClipBoard':
@@ -167,6 +169,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.Reload
     case 'SaveFileAs':
       return ModuleId.SaveFileAs
+    case 'SideBar':
+      return ModuleId.SideBar
     case 'SaveState':
       return ModuleId.SaveState
     case 'SessionReplay':

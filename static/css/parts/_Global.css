@@ -1,8 +1,8 @@
-@font-face {
-  font-family: 'Fira Code';
-  src: url(/fonts/FiraCode-VariableFont.ttf) format('truetype');
-  font-display: block;
-}
+@import url('/fonts/300.css');
+@import url('/fonts/400.css');
+@import url('/fonts/500.css');
+@import url('/fonts/600.css');
+@import url('/fonts/700.css');
 
 .App.ModernUi {
   --MainTabActiveBackground: color-mix(in srgb, var(--TabActiveBackground) 88%, var(--TabsBackground));

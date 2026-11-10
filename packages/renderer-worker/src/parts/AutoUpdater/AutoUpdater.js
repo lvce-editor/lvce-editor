@@ -19,17 +19,17 @@ export const checkForUpdatesWithDependencies = async (updateSetting, silent, dep
     await dependencies.startUpdate(updateSetting, repository)
     return
   }
-  await dependencies.notify('info', 'Checking for updates...')
+  const notificationId = await dependencies.notify('info', 'Checking for updates...')
   try {
     const latest = await dependencies.getLatestVersion()
     if (!latest) {
-      await dependencies.notify('info', 'No Update available')
+      await dependencies.updateNotification(notificationId, 'No Update available')
       return
     }
-    await dependencies.notify('info', `Update ${latest.version} is available.`)
+    await dependencies.updateNotification(notificationId, `Update ${latest.version} is available.`)
     await dependencies.startUpdate(updateSetting, repository)
   } catch (error) {
-    await dependencies.notify('error', `Failed to check for updates: ${getErrorMessage(error)}`)
+    await dependencies.updateNotification(notificationId, `Failed to check for updates: ${getErrorMessage(error)}`)
   }
 }
 
@@ -52,6 +52,7 @@ export const checkForUpdates = async (updateSetting, silent = Boolean(updateSett
   await checkForUpdatesWithDependencies(updateSetting, silent, {
     getLatestVersion: GetLatestVersion.getLatestVersion,
     notify: Notification.create,
+    updateNotification: Notification.update,
     startUpdate: async (setting, repository) => {
       const result = await UpdateWorker.invoke('Update.checkForUpdates', setting, repository)
       if (result?.error) {

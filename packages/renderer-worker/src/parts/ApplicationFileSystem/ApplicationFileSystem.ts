@@ -3,12 +3,14 @@ import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as FileSystemWorker from '../FileSystemWorker/FileSystemWorker.js'
 
 const providerMethods: Readonly<Record<string, string>> = {
+  getDirectoryVersion: 'GetDirectoryVersion',
   isReadonly: 'IsReadonly',
   mkdir: 'Mkdir',
   readDirWithFileTypes: 'ReadDirWithFileTypes',
   readFile: 'ReadFile',
   remove: 'Remove',
   rename: 'Rename',
+  statWithMetadata: 'Stat',
   writeFile: 'WriteFile',
 }
 
@@ -64,6 +66,22 @@ export const execute = async (id: string, method: string, ...args: readonly any[
   }
   if (uri.startsWith('memfs://')) {
     return FileSystemWorker.invoke('ApplicationFileSystem.execute', id, method, ...args)
+  }
+  if (/^https?:/.test(uri) && method === 'getFileSize') {
+    return FileSystem.getFileSize(uri)
+  }
+  if (method === 'getFileSize') {
+    const { found, result } = await ExtensionManagementWorker.invoke(
+      'Extensions.invokeForApplication',
+      id,
+      'Extensions.executeFileSystemProviderReadFile',
+      uri.slice(0, uri.indexOf(':')),
+      uri,
+    )
+    if (!found) {
+      throw new Error(`No ${uri.slice(0, uri.indexOf(':'))} filesystem provider in application ${id}`)
+    }
+    return result instanceof Blob ? result.size : new Blob([result]).size
   }
   if (/^https?:/.test(uri) && (method === 'readFile' || method === 'getBlob')) {
     return FileSystem[method](...args)

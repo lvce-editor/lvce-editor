@@ -15,6 +15,7 @@ jest.unstable_mockModule('../src/parts/Preferences/Preferences.js', () => {
 jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () => {
   return {
     invoke: jest.fn(),
+    sendMultipleImmediately: jest.fn(),
   }
 })
 
@@ -41,6 +42,8 @@ beforeEach(() => {
   Preferences.get.mockReturnValue(false)
   // @ts-ignore
   RendererProcess.invoke.mockResolvedValue(undefined)
+  // @ts-ignore
+  RendererProcess.sendMultipleImmediately.mockResolvedValue(undefined)
   // @ts-ignore
   ResolveInternalSourceUri.resolveInternalSourceUri.mockImplementation(async (uri: string) => uri)
 })
@@ -72,6 +75,7 @@ test('returns final render commands for a fast open', async () => {
     commands: finalCommands,
   })
   expect(RendererProcess.invoke).not.toHaveBeenCalled()
+  expect(RendererProcess.sendMultipleImmediately).not.toHaveBeenCalled()
 })
 
 test('resolves an internal URI before opening it in the main area worker', async () => {
@@ -120,8 +124,8 @@ test('renders a pending loading state after 500ms and returns the final render',
   const resultPromise = wrapMainAreaCommand('openUri')(state, 'file:///test.txt')
   await jest.advanceTimersByTimeAsync(500)
 
-  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.sendMultiple', loadingCommands)
+  expect(RendererProcess.sendMultipleImmediately).toHaveBeenCalledTimes(1)
+  expect(RendererProcess.sendMultipleImmediately).toHaveBeenCalledWith(loadingCommands)
 
   open.resolve(undefined)
   await expect(resultPromise).resolves.toEqual({
@@ -152,6 +156,7 @@ test('does not schedule a loading render when the preference is disabled', async
 
   expect(MainAreaWorker.invoke).toHaveBeenCalledTimes(1)
   expect(RendererProcess.invoke).not.toHaveBeenCalled()
+  expect(RendererProcess.sendMultipleImmediately).not.toHaveBeenCalled()
 
   open.resolve(undefined)
   await expect(resultPromise).resolves.toEqual({
@@ -177,6 +182,7 @@ test('does not schedule a loading render for unrelated commands', async () => {
 
   expect(MainAreaWorker.invoke).toHaveBeenCalledTimes(1)
   expect(RendererProcess.invoke).not.toHaveBeenCalled()
+  expect(RendererProcess.sendMultipleImmediately).not.toHaveBeenCalled()
 
   close.resolve(undefined)
   await expect(resultPromise).resolves.toBe(state)
@@ -207,6 +213,7 @@ test('continues waiting when the pending state has no render diff', async () => 
   await jest.advanceTimersByTimeAsync(500)
 
   expect(RendererProcess.invoke).not.toHaveBeenCalled()
+  expect(RendererProcess.sendMultipleImmediately).not.toHaveBeenCalled()
 
   open.resolve(undefined)
   await expect(resultPromise).resolves.toEqual({
@@ -227,6 +234,7 @@ test('clears the timeout when opening fails before the delay', async () => {
 
   expect(MainAreaWorker.invoke).toHaveBeenCalledTimes(1)
   expect(RendererProcess.invoke).not.toHaveBeenCalled()
+  expect(RendererProcess.sendMultipleImmediately).not.toHaveBeenCalled()
 })
 
 test('renders pending state for tab selection commands', async () => {
@@ -251,7 +259,7 @@ test('renders pending state for tab selection commands', async () => {
   const resultPromise = wrapMainAreaCommand('selectTab')(state, 0, 1)
   await jest.advanceTimersByTimeAsync(500)
 
-  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.sendMultiple', loadingCommands)
+  expect(RendererProcess.sendMultipleImmediately).toHaveBeenCalledWith(loadingCommands)
 
   select.resolve(undefined)
   await resultPromise

@@ -39,5 +39,6 @@ Extension development:
 Diagnostics:
   --trace-ipc=<worker-ids>  Trace comma-separated worker IDs (or *) to JSONL.
                             Traces can be large and contain source code.
+  --no-cache-cleanup        Skip occasional expired cache cleanup on startup.
 `)
 })

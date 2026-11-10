@@ -10,6 +10,7 @@ const renderIframe = {
   isEqual(oldState: ViewletExtensionViewState, newState: ViewletExtensionViewState): boolean {
     return (
       oldState.iframeSrc === newState.iframeSrc &&
+      oldState.iframeReloadVersion === newState.iframeReloadVersion &&
       oldState.iframeSandbox === newState.iframeSandbox &&
       oldState.csp === newState.csp &&
       oldState.credentialless === newState.credentialless
@@ -43,7 +44,7 @@ const renderFocus = {
     return newState.kind !== 'virtualDom' || !newState.focusSelector || oldState.focusSelector === newState.focusSelector
   },
   apply(oldState: ViewletExtensionViewState, newState: ViewletExtensionViewState): readonly unknown[] {
-    return [['Viewlet.focusSelector', newState.uid, newState.focusSelector]]
+    return [['Viewlet.focusSelectorAfterRender', newState.uid, newState.focusSelector]]
   },
   multiple: true,
 }

@@ -12,6 +12,7 @@ import * as Path from '../Path/Path.ts'
 import * as Process from '../Process/Process.ts'
 import { computeFileSha256, isSha256 } from '../Sha256/Sha256.ts'
 import { downloadUrl } from '../DownloadUrl/DownloadUrl.ts'
+import { getBuiltinExtensionAssetName } from '../GetBuiltinExtensionAssetName/GetBuiltinExtensionAssetName.ts'
 import extensions from './builtinExtensions.json' with { type: 'json' }
 
 const downloadExtension = async (extension) => {
@@ -27,10 +28,9 @@ const downloadExtension = async (extension) => {
     if (!extension.repository.startsWith('github.com/')) {
       throw new VError('currenly only extensions from github releases are supported')
     }
-    const baseName = Path.baseName(extension.repository)
-    const assetName = extension.assetName || `${baseName}-v${extension.version}.tar.br`
+    const assetName = getBuiltinExtensionAssetName(extension)
     Assert.string(assetName)
-    const cacheName = baseName + '-' + extension.version + '.tar.br'
+    const cacheName = extension.name + '-' + extension.version + '-' + assetName
     const cachedPath = Path.absolute(Path.join('packages', 'build', '.tmp', `cachedExtensions`, cacheName))
     const outPath = Path.absolute(Path.join(`extensions`, extension.name))
     if (existsSync(cachedPath) && (await computeFileSha256(cachedPath)) !== extension.sha256) {
@@ -62,7 +62,16 @@ const applyExtensionMetadata = async (extension, outPath) => {
   const manifestPath = Path.join(outPath, 'extension.json')
   const manifest = await JsonFile.readJson(manifestPath)
   const disabled = extension.enabled === false
-  if (manifest.created === extension.created && manifest.disabled === disabled) {
+  const outputChannelOptions: Record<string, Record<string, unknown>> = extension.outputChannelOptions || {}
+  const outputChannels = (manifest.outputChannels || []).map((outputChannel) => ({
+    ...outputChannel,
+    ...outputChannelOptions[outputChannel.id],
+  }))
+  const hasMatchingOutputChannelOptions = Object.entries(outputChannelOptions).every(([id, options]) => {
+    const outputChannel = outputChannels.find((candidate) => candidate.id === id)
+    return outputChannel && Object.entries(options).every(([key, value]) => outputChannel[key] === value)
+  })
+  if (manifest.created === extension.created && manifest.disabled === disabled && hasMatchingOutputChannelOptions) {
     return
   }
   await JsonFile.writeJson({
@@ -71,6 +80,7 @@ const applyExtensionMetadata = async (extension, outPath) => {
       ...manifest,
       created: extension.created,
       disabled,
+      outputChannels,
     },
   })
 }

@@ -5,7 +5,7 @@
   width: 100%;
   height: 100%;
   overflow: hidden;
-  background: var(--EditorBackground);
+  background: var(--EditorBackground, var(--MainBackground));
   color: var(--WorkbenchForeground, white);
 }
 
@@ -22,6 +22,18 @@
   flex: 1;
   min-height: 0;
   overflow: auto;
+}
+
+.WorkersViewTableContainer::-webkit-scrollbar {
+  width: 14px;
+}
+
+.WorkersViewTableContainer::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.WorkersViewTableContainer::-webkit-scrollbar-thumb {
+  background: var(--EditorScrollBarBackground);
 }
 
 .WorkersViewTable {
@@ -60,7 +72,7 @@
   top: 0;
   z-index: 1;
   border-bottom: 1px solid var(--PanelBorder, rgba(128, 128, 128, 0.35));
-  background: var(--EditorBackground);
+  background: var(--EditorBackground, var(--MainBackground));
   font-weight: 600;
 }
 

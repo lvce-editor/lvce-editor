@@ -20,6 +20,7 @@ export const exportStaticSite = async ({ root, serverRoot }: { root: string; ser
   const serverSharedProcessPath = join(packagesPath, 'shared-process', 'index.js')
   const sharedProcess = await import(pathToFileURL(Path.absolute(serverSharedProcessPath)).toString())
   return sharedProcess.exportStatic({
+    cspOptions: { allowExternalConnections: true },
     extensionPath: '',
     root,
   })

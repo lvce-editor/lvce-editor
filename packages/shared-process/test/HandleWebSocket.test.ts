@@ -85,3 +85,13 @@ test('handleWebSocket - allows shared process upgrade from forwarded origin', as
   expect(HandleWebSocketModule.load).toHaveBeenCalledWith('shared-process')
   expect(moduleHandleWebSocket).toHaveBeenCalledWith(message, socket, 'shared-process')
 })
+
+test('handleWebSocket - contains asynchronous extension process startup failures', async () => {
+  const socket = createSocket()
+  const message = { headers: {}, remoteAuthorityAuthenticated: true, url: '/websocket/extension-node-process?extensionId=missing&rpcId=missing' }
+  moduleHandleWebSocket.mockImplementationOnce(async () => {
+    throw new Error('Extension is not installed')
+  })
+  await expect(HandleWebSocket.handleWebSocket(socket, message)).rejects.toThrow('Failed to connect to websocket')
+  expect(socket.destroy).toHaveBeenCalledTimes(1)
+})

@@ -1,6 +1,4 @@
 import * as ShellCommand from '../ShellCommand/ShellCommand.js'
-import * as AssetDir from '../AssetDir/AssetDir.js'
-import * as GetWebAssetUrl from '../GetWebAssetUrl/GetWebAssetUrl.js'
 
 export const getQuickPickMenuEntries = async () => {
   return [
@@ -31,7 +29,7 @@ export const getQuickPickMenuEntries = async () => {
     {
       id: 'Main.openUri',
       label: 'Accounts: Show Accounts',
-      args: [GetWebAssetUrl.getWebAssetUrl(AssetDir.assetDir, 'packages/renderer-worker/node_modules/@lvce-editor/accounts-view/index.html')],
+      args: ['accounts:///1'],
       aliases: ['Account', 'Accounts'],
     },
     {

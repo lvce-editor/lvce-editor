@@ -8,13 +8,13 @@ export const getColorThemeCssFromJson = async (colorThemeId, colorThemeJson) => 
   return ExtensionManagementWorker.invoke('Extensions.getColorThemeCssFromJson', colorThemeId, colorThemeJson)
 }
 
-const getColorThemeCssNew = async (colorThemeId) => {
+const getColorThemeCssNew = async (colorThemeId, forceReload = false) => {
   const platform = Platform.getPlatform()
-  const colorThemeJson = await GetColorThemeJson.getColorThemeJson(colorThemeId, platform, AssetDir.assetDir)
+  const colorThemeJson = await GetColorThemeJson.getColorThemeJson(colorThemeId, platform, AssetDir.assetDir, forceReload)
   const colorThemeCss = await getColorThemeCssFromJson(colorThemeId, colorThemeJson)
   return colorThemeCss
 }
 
-export const getColorThemeCss = (colorThemeId) => {
-  return GetColorThemeCssCached.getColorThemeCssCached(colorThemeId, getColorThemeCssNew)
+export const getColorThemeCss = (colorThemeId, forceReload = false) => {
+  return GetColorThemeCssCached.getColorThemeCssCached(colorThemeId, getColorThemeCssNew, forceReload)
 }

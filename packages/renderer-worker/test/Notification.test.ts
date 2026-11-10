@@ -32,6 +32,15 @@ test('dispose', async () => {
   expect(RendererProcess.invoke).toHaveBeenCalledWith('Notification.dispose', 1)
 })
 
+test('update', async () => {
+  // @ts-ignore
+  RendererProcess.invoke.mockResolvedValue(true)
+  const updated = await Notification.update('Notification-42', 'No Update available')
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Notification.update', 'Notification-42', 'No Update available')
+  expect(updated).toBe(true)
+})
+
 test.each([0, 1, undefined])('showWithOptions returns the renderer choice %s', async (choice) => {
   // @ts-ignore
   RendererProcess.invoke.mockResolvedValue(choice)

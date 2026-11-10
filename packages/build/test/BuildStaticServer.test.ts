@@ -10,6 +10,10 @@ test('includes JSON language features in server builds', () => {
   expect(shouldBeCopied('builtin.language-features-json')).toBe(true)
 })
 
+test('includes Codex in server builds', () => {
+  expect(shouldBeCopied('builtin.codex')).toBe(true)
+})
+
 test('excludes unrelated extensions from server builds', () => {
   expect(shouldBeCopied('builtin.markdown-preview')).toBe(false)
   expect(shouldBeCopied('builtin.language-features-typescript')).toBe(false)

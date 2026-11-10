@@ -3,6 +3,7 @@ import { basename, extname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { LanguageServerMessageParser } from '../LanguageServerMessageParser/LanguageServerMessageParser.ts'
 import { normalizeLanguageServerDocumentUri } from '../NormalizeLanguageServerDocumentUri/NormalizeLanguageServerDocumentUri.ts'
+import { typeScriptLanguageServerPath } from '../TypeScriptLanguageServerPath/TypeScriptLanguageServerPath.ts'
 
 interface JsonRpcMessage {
   readonly error?: {
@@ -21,12 +22,18 @@ interface PendingRequest {
 }
 
 interface PendingDiagnostics {
+  readonly publish: (value: readonly unknown[]) => void
   readonly reject: (error: Error) => void
   readonly resolve: (value: readonly unknown[]) => void
 }
 
 interface InitializeResult {
   readonly capabilities?: {
+    readonly hoverProvider?: unknown
+    readonly implementationProvider?: unknown
+    readonly renameProvider?: unknown
+    readonly signatureHelpProvider?: unknown
+    readonly typeDefinitionProvider?: unknown
     readonly codeActionProvider?: unknown
     readonly diagnosticProvider?: unknown
     readonly documentFormattingProvider?: unknown
@@ -62,7 +69,7 @@ export const getSpawnOptions = (
   uri: string,
   argv: readonly string[],
 ): { readonly args: readonly string[]; readonly command: string; readonly env?: NodeJS.ProcessEnv } => {
-  const executablePath = fileURLToPath(uri)
+  const executablePath = uri === 'lvce-language-server:typescript' ? typeScriptLanguageServerPath : fileURLToPath(uri)
   const extension = extname(executablePath).toLowerCase()
   if (extension === '.js' || extension === '.mjs' || extension === '.cjs') {
     return {
@@ -147,6 +154,9 @@ const wait = (duration: number): Promise<void> => {
 }
 
 const PublishDiagnosticsTimeout = 1_000
+// Push servers can publish several diagnostic stages, including an unchanged
+// intermediate result after didChange. Collect the burst before returning it.
+const PublishDiagnosticsSettleTime = 300
 
 export class LanguageServerConnection {
   private readonly child: ChildProcessWithoutNullStreams
@@ -164,6 +174,7 @@ export class LanguageServerConnection {
   private nextRequestId = 1
   private running = true
   private stderr = ''
+  private capabilities: NonNullable<InitializeResult['capabilities']> = {}
   private supportsCodeActions = false
   private supportsDocumentFormatting = false
   private supportsDocumentSymbols = false
@@ -207,7 +218,7 @@ export class LanguageServerConnection {
     this.rejectPendingRequests(new Error('Language server was disposed'))
   }
 
-  async codeAction(textDocument: TextDocument, offset: number): Promise<readonly unknown[]> {
+  async codeAction(textDocument: TextDocument, offset: number, only?: string): Promise<readonly unknown[]> {
     await this.ready
     if (!this.supportsCodeActions) {
       return []
@@ -216,6 +227,7 @@ export class LanguageServerConnection {
     const position = getPosition(textDocument.text, offset)
     const result = await this.sendRequest('textDocument/codeAction', {
       context: {
+        ...(only && { only: [only] }),
         diagnostics: diagnostics.filter((diagnostic) => containsPosition(diagnostic, position)),
       },
       range: {
@@ -267,7 +279,7 @@ export class LanguageServerConnection {
     const previous = this.documents.get(textDocument.uri)
     const documentChanged = !previous || previous.languageId !== textDocument.languageId || previous.text !== textDocument.text
     const cached = this.publishedDiagnostics.get(textDocument.uri)
-    if (!documentChanged && cached) {
+    if (!documentChanged && cached && !this.diagnosticWaiters.has(textDocument.uri)) {
       return cached
     }
     const diagnostics = this.waitForPublishedDiagnostics(textDocument.uri)
@@ -320,6 +332,37 @@ export class LanguageServerConnection {
     return Array.isArray(result) ? result : []
   }
 
+  async feature(textDocument: TextDocument, method: string, offset: number, newName?: string): Promise<unknown> {
+    await this.ready
+    const capabilityByMethod: Readonly<Record<string, keyof NonNullable<InitializeResult['capabilities']>>> = {
+      hover: 'hoverProvider',
+      implementation: 'implementationProvider',
+      prepareRename: 'renameProvider',
+      rename: 'renameProvider',
+      signatureHelp: 'signatureHelpProvider',
+      typeDefinition: 'typeDefinitionProvider',
+    }
+    const capability = capabilityByMethod[method]
+    if (!capability) {
+      throw new Error(`Unsupported language server feature: ${method}`)
+    }
+    if (!this.capabilities[capability]) {
+      return undefined
+    }
+    if (method === 'prepareRename') {
+      const provider = this.capabilities.renameProvider
+      if (!provider || typeof provider !== 'object' || !('prepareProvider' in provider) || !provider.prepareProvider) {
+        return undefined
+      }
+    }
+    this.syncDocument(textDocument)
+    return this.sendRequest(`textDocument/${method}`, {
+      ...(method === 'rename' && { newName }),
+      position: getPosition(textDocument.text, offset),
+      textDocument: { uri: textDocument.uri },
+    })
+  }
+
   async references(textDocument: TextDocument, offset: number): Promise<readonly unknown[]> {
     await this.ready
     if (!this.supportsReferences) {
@@ -362,12 +405,15 @@ export class LanguageServerConnection {
             dynamicRegistration: false,
             hierarchicalDocumentSymbolSupport: true,
           },
+          hover: { contentFormat: ['markdown', 'plaintext'] },
           publishDiagnostics: {
             relatedInformation: true,
           },
           references: {
             dynamicRegistration: false,
           },
+          rename: { prepareSupport: true },
+          signatureHelp: { signatureInformation: { documentationFormat: ['plaintext'] } },
           synchronization: {
             didSave: true,
             dynamicRegistration: false,
@@ -393,6 +439,7 @@ export class LanguageServerConnection {
         },
       ],
     })) as InitializeResult
+    this.capabilities = result?.capabilities || {}
     this.supportsCodeActions = Boolean(result?.capabilities?.codeActionProvider)
     this.supportsDocumentFormatting = Boolean(result?.capabilities?.documentFormattingProvider)
     this.supportsDocumentSymbols = Boolean(result?.capabilities?.documentSymbolProvider)
@@ -423,6 +470,7 @@ export class LanguageServerConnection {
         version: 1,
       }
       this.documents.set(textDocument.uri, next)
+      this.publishedDiagnostics.delete(textDocument.uri)
       this.sendNotification('textDocument/didOpen', {
         textDocument: {
           languageId: next.languageId,
@@ -442,6 +490,7 @@ export class LanguageServerConnection {
       version: previous.version + 1,
     }
     this.documents.set(textDocument.uri, next)
+    this.publishedDiagnostics.delete(textDocument.uri)
     this.sendNotification('textDocument/didChange', {
       contentChanges: [
         {
@@ -508,9 +557,8 @@ export class LanguageServerConnection {
     if (!waiters) {
       return
     }
-    this.diagnosticWaiters.delete(normalizedUri)
     for (const waiter of waiters) {
-      waiter.resolve(diagnostics)
+      waiter.publish(diagnostics)
     }
   }
 
@@ -612,22 +660,31 @@ export class LanguageServerConnection {
     return new Promise<readonly unknown[]>((resolve, reject) => {
       const waiters = this.diagnosticWaiters.get(uri) || new Set()
       let timeout: ReturnType<typeof setTimeout>
-      const waiter = {
-        reject(error: Error): void {
-          clearTimeout(timeout)
-          reject(error)
-        },
-        resolve(value: readonly unknown[]): void {
-          clearTimeout(timeout)
-          resolve(value)
-        },
-      }
-      timeout = setTimeout(() => {
+      let settling: ReturnType<typeof setTimeout> | undefined
+      const removeWaiter = (): void => {
+        clearTimeout(timeout)
+        clearTimeout(settling)
         waiters.delete(waiter)
         if (waiters.size === 0) {
           this.diagnosticWaiters.delete(uri)
         }
-        resolve(this.publishedDiagnostics.get(uri) || [])
+      }
+      const waiter = {
+        publish(value: readonly unknown[]): void {
+          clearTimeout(settling)
+          settling = setTimeout(() => waiter.resolve(value), PublishDiagnosticsSettleTime)
+        },
+        reject(error: Error): void {
+          removeWaiter()
+          reject(error)
+        },
+        resolve(value: readonly unknown[]): void {
+          removeWaiter()
+          resolve(value)
+        },
+      }
+      timeout = setTimeout(() => {
+        waiter.resolve(this.publishedDiagnostics.get(uri) || [])
       }, PublishDiagnosticsTimeout)
       waiters.add(waiter)
       this.diagnosticWaiters.set(uri, waiters)

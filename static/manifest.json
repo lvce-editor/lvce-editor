@@ -2,6 +2,7 @@
   "name": "Code Editor Web - OSS",
   "short_name": "Web - OSS",
   "start_url": "/",
+  "scope": "/",
   "background_color": "#282e2f",
   "theme_color": "#282e2f",
   "description": "Web Code Editor.",

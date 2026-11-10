@@ -36,11 +36,7 @@ interface WindowWorkspace {
   readonly uri: string
 }
 
-const getWindowWorkspace = (href: string): WindowWorkspace | undefined => {
-  if (!href) {
-    return undefined
-  }
-  const workspaceUri = new URL(href).searchParams.get('workspace')
+const getWindowWorkspace = (workspaceUri: string): WindowWorkspace | undefined => {
   if (!workspaceUri) {
     return undefined
   }
@@ -57,9 +53,9 @@ const getWindowWorkspace = (href: string): WindowWorkspace | undefined => {
   }
 }
 
-export const resolveRoot = async (href = ''): Promise<any> => {
+export const resolveRoot = async (href = '', workspaceUri = ''): Promise<any> => {
   if (IsElectron.isElectron) {
-    const windowWorkspace = getWindowWorkspace(href)
+    const windowWorkspace = getWindowWorkspace(workspaceUri)
     if (windowWorkspace) {
       return {
         homeDir: PlatformPaths.getHomeDir(),

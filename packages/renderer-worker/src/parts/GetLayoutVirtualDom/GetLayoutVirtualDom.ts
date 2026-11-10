@@ -4,6 +4,7 @@ import * as SideBarLocationType from '../SideBarLocationType/SideBarLocationType
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.js'
 import * as PreviewOrientation from '../PreviewOrientation/PreviewOrientation.js'
 import type { LayoutState } from '../ViewletLayout/LayoutState.ts'
+import { text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
 const getMainContentsVirtualDom = (state: LayoutState) => {
   const { mainVisible, mainId, panelSashVisible, panelVisible, panelId } = state
@@ -142,6 +143,23 @@ const getSecondarySideBarDom = (secondarySideBarId: number) => {
     uid: secondarySideBarId,
   }
 }
+
+const getSettingsDom = (uid: number) => [
+  { type: VirtualDomElements.Div, className: 'AiNativeSettings', childCount: 2 },
+  { type: VirtualDomElements.Div, className: 'AiNativeSettingsHeader', childCount: 2 },
+  { type: VirtualDomElements.Div, className: 'AiNativeSettingsTitle', childCount: 1 },
+  text('Settings'),
+  {
+    type: VirtualDomElements.Button,
+    className: 'IconButton AiNativeSettingsClose',
+    ariaLabel: 'Close Settings',
+    title: 'Close Settings',
+    onClick: 'closeSettings',
+    childCount: 1,
+  },
+  { type: VirtualDomElements.Div, className: 'MaskIcon MaskIconClose', childCount: 0 },
+  { type: VirtualDomElements.Reference, uid },
+]
 
 const getMainDom = (mainId: number) => {
   if (mainId === -1) {
@@ -291,7 +309,10 @@ const getContentAreaVirtualDomLeft = (state: LayoutState) => {
     children.push(...getSashSideBarDom())
     delta--
   }
-  if (mainVisible) {
+  if (state.aiNativeSettingsId !== undefined) {
+    children.push(...getSettingsDom(state.aiNativeSettingsId))
+    delta -= 6
+  } else if (mainVisible) {
     children.push(getMainDom(mainId))
   }
 
@@ -328,13 +349,19 @@ const getContentAreaVirtualDomRight = (state: LayoutState) => {
   } = state
   const children: any[] = []
   let delta = 0
-  if (secondarySideBarVisible) {
+  if (secondarySideBarVisible && state.aiNativeSettingsId === undefined) {
     children.push(getSecondarySideBarDom(secondarySideBarId))
     children.push(...getSashSecondarySideBarDom())
     delta--
   }
-  if (mainVisible) {
+  if (state.aiNativeSettingsId !== undefined) {
+    children.push(...getSettingsDom(state.aiNativeSettingsId))
+    delta -= 6
+  } else if (mainVisible) {
     children.push(getMainDom(mainId))
+  }
+  if (secondarySideBarVisible && state.aiNativeSettingsId !== undefined) {
+    children.push(getSecondarySideBarDom(secondarySideBarId))
   }
   if (sideBarSashVisible) {
     children.push(...getSashSideBarDom())
@@ -527,6 +554,7 @@ export const getLayoutVirtualDom = (state: LayoutState) => {
 
   if (state.aiNativeLayout) {
     dom[0].className += ' AiNativeLayout'
+    if (state.aiNativeSettingsId !== undefined) dom[0].className += ' AiNativeSettingsOpen'
     if (state.sideBarLocation === SideBarLocationType.Right) dom[0].className += ' AiNativeLayoutRight'
   } else if (state.aiNativeLayoutExited) dom[0].className += ' IdeLayoutFromAi'
 
@@ -551,7 +579,10 @@ export const getLayoutVirtualDom = (state: LayoutState) => {
   }
 
   const mountedSources = Object.values(mountedViewletsBySource)
-  const mountedViewlets = new Set(mountedSources.flat())
+  const mountedViewlets = new Set([
+    ...mountedSources.flat(),
+    ...dom.filter((node) => node.type === VirtualDomElements.Reference).map((node) => node.uid),
+  ])
   const showAllWidgets = mountedSources.length === 0
   for (const widget of widgetReferences) {
     if (showAllWidgets || mountedViewlets.has(widget.parentUid)) {
@@ -565,15 +596,55 @@ export const getLayoutVirtualDom = (state: LayoutState) => {
 
   if (state.browserTabDragSource !== undefined) {
     workbenchChildCount++
+    const returningToPreview = state.browserTabDragSource === state.secondaryPreviewId && state.secondaryPreviewPlacement === 'bottomLeft'
     dom.push({
       type: VirtualDomElements.Div,
-      className: 'BrowserBottomLeftDropTarget',
+      className: returningToPreview ? 'BrowserPreviewDropTarget' : 'BrowserBottomLeftDropTarget',
       childCount: 0,
       onDragOver: 'handleBrowserTabDragOver',
       onDrop: 'handleBrowserTabDrop',
       role: 'region',
-      ariaLabel: 'Move browser tab below editor',
+      ariaLabel: returningToPreview ? 'Move browser tab to preview' : 'Move browser tab below editor',
     })
+  }
+
+  if (state.workspaceProgressMessage) {
+    const isContainerProgress = state.workspaceProgressKind === 'container'
+    const progressTitle = isContainerProgress ? 'Reopening in Container…' : 'Loading Remote SSH Workspace…'
+    const cancelLabel = isContainerProgress ? 'Cancel reopening in container' : 'Cancel opening Remote SSH workspace'
+    workbenchChildCount++
+    dom.push(
+      {
+        type: VirtualDomElements.Div,
+        className: 'WorkspaceProgressOverlay',
+        childCount: 1,
+      },
+      {
+        type: VirtualDomElements.Div,
+        className: 'WorkspaceProgressDialog',
+        role: 'dialog',
+        ariaLabel: progressTitle,
+        ariaModal: true,
+        childCount: 3,
+      },
+      {
+        type: VirtualDomElements.Button,
+        className: 'WorkspaceProgressClose IconButton',
+        ariaLabel: cancelLabel,
+        title: cancelLabel,
+        onClick: DomEventListenerFunctions.HandleClickCancelWorkspaceProgress,
+        childCount: 1,
+      },
+      {
+        type: VirtualDomElements.Div,
+        className: 'MaskIcon MaskIconClose',
+        childCount: 0,
+      },
+      { type: VirtualDomElements.Span, className: 'WorkspaceProgressTitle', childCount: 1 },
+      text(progressTitle),
+      { type: VirtualDomElements.Span, className: 'WorkspaceProgressStage', childCount: 1 },
+      text(state.workspaceProgressMessage),
+    )
   }
 
   // Update workbench childCount

@@ -21,10 +21,6 @@ export const filterDependencies = (rawDependencies, exclude = [] as any[]) => {
     if (exclude.includes(dependency.name)) {
       return false
     }
-    if (dependency.name === '@lvce-editor/ripgrep') {
-      dependencyPaths.push(dependency.path)
-      return false
-    }
     dependencyPaths.push(dependency.path)
     return true
   }

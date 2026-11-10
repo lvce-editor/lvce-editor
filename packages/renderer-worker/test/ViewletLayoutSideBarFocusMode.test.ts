@@ -2,8 +2,31 @@ import { expect, jest, test } from '@jest/globals'
 import * as SideBarLocationType from '../src/parts/SideBarLocationType/SideBarLocationType.js'
 import { getLayoutVirtualDom } from '../src/parts/GetLayoutVirtualDom/GetLayoutVirtualDom.ts'
 
+const disposeFunctional = jest.fn((_uid: number) => [])
 const activityBarInvoke = jest.fn<(...args: unknown[]) => Promise<unknown[]>>(async () => [])
+const commandExecute = jest.fn(async (..._args: readonly unknown[]) => undefined)
+const setAiNativeLayout = jest.fn(async (_aiNativeLayout: boolean, _notify?: boolean) => undefined)
 jest.unstable_mockModule('../src/parts/ActivityBarWorker/ActivityBarWorker.js', () => ({ invoke: activityBarInvoke }))
+jest.unstable_mockModule('../src/parts/Command/Command.js', () => ({ execute: commandExecute }))
+jest.unstable_mockModule('../src/parts/ColorTheme/ColorTheme.js', () => ({ setAiNativeLayout }))
+jest.unstable_mockModule('../src/parts/Viewlet/Viewlet.js', () => ({
+  disposeFunctional,
+  resize: async () => [],
+}))
+const layoutStates = new Map<number, unknown>()
+jest.unstable_mockModule('../src/parts/ViewletStates/ViewletStates.js', () => ({
+  getInstance: () => undefined,
+  getState: (uid: number) => layoutStates.get(uid),
+  setState: (uid: number, state: unknown) => layoutStates.set(uid, state),
+}))
+jest.unstable_mockModule('../src/parts/SaveState/SaveState.js', () => ({
+  saveViewletState: async () => undefined,
+  saveViewletStateWithStorageId: async () => undefined,
+}))
+const viewletLoad = jest.fn<(options: { readonly id: string; readonly parentUid: number }, ...args: readonly unknown[]) => Promise<unknown[]>>(
+  async () => [],
+)
+jest.unstable_mockModule('../src/parts/ViewletManager/ViewletManager.js', () => ({ load: viewletLoad }))
 const LayoutPoints = await import('../src/parts/ViewletLayout/LayoutPoints.ts')
 const ViewletLayout = await import('../src/parts/ViewletLayout/ViewletLayout.ts')
 
@@ -105,6 +128,67 @@ test('leaveSideBarFocusMode restores the previous layout', async () => {
   )
 })
 
+test('returning from a cold AI-native reload creates missing IDE parts before referencing them', async () => {
+  const state = createState()
+  const focused = await ViewletLayout.enterSideBarFocusMode(state, 'primary', true)
+  const saved = ViewletLayout.saveState(focused.newState)
+  const reloaded = ViewletLayout.loadContent(ViewletLayout.create(2), {
+    ...saved,
+    Layout: { bounds: { windowWidth: state.windowWidth, windowHeight: state.windowHeight } },
+  })
+  viewletLoad.mockClear()
+  const result = await ViewletLayout.leaveSideBarFocusMode(reloaded)
+  expect(result.newState.mainId).not.toBe(-1)
+  expect(result.newState.titleBarId).not.toBe(-1)
+  expect(result.newState.statusBarId).not.toBe(-1)
+  expect(viewletLoad.mock.calls.map(([options]) => options.id)).toEqual(expect.arrayContaining(['Main', 'TitleBar', 'StatusBar']))
+  expect(viewletLoad.mock.calls.every(([options]) => options.parentUid === reloaded.uid)).toBe(true)
+})
+
+test('a fresh direct chat route selects chat in the default window without an application owner', async () => {
+  const { state: location } = await import('../src/parts/LocationState/LocationState.js')
+  const previous = location.href
+  location.href = 'https://example.com/chat-view-2/chat/'
+  try {
+    const restored = ViewletLayout.loadContent(ViewletLayout.create(517), {
+      Layout: { bounds: { windowWidth: 1200, windowHeight: 800 } },
+    })
+    expect(restored.aiNativeLayout).toBe(true)
+    expect(restored.sideBarView).toBe('chat2.views.chat')
+  } finally {
+    location.href = previous
+  }
+})
+
+test('returning to an initialized IDE reuses its existing workbench parts', async () => {
+  const state = {
+    ...createState(),
+    mainId: 11,
+    activityBarId: 12,
+    sideBarId: 13,
+    secondarySideBarId: 14,
+    titleBarId: 15,
+    statusBarId: 16,
+    panelId: 17,
+    previewId: 18,
+  }
+  const focused = await ViewletLayout.enterSideBarFocusMode(state, 'primary', true)
+  viewletLoad.mockClear()
+  const result = await ViewletLayout.leaveSideBarFocusMode(focused.newState)
+  expect(result.newState.mainId).toBe(11)
+  expect(viewletLoad).not.toHaveBeenCalled()
+})
+
+test('toggleSideBar toggles Chat 2 sessions in AI-native layout', async () => {
+  const state = createState()
+  const aiNativeState = { ...state, aiNativeLayout: true, sideBarFocusMode: true }
+
+  const result = await ViewletLayout.toggleSideBar(aiNativeState)
+
+  expect(commandExecute).toHaveBeenCalledWith('ExtensionHost.executeCommand', 'chat2.toggleSessionsList')
+  expect(result).toEqual({ newState: aiNativeState, commands: [] })
+})
+
 test('leaveSideBarFocusMode restores the secondary side bar width', async () => {
   const state = createState()
   const focused = await ViewletLayout.enterSideBarFocusMode(state, 'secondary')
@@ -168,6 +252,97 @@ test('saveState preserves the normal secondary side bar width while focused', as
   )
 })
 
+test('AI-native layout is restored while keeping the IDE layout available to return to', async () => {
+  const state = createState()
+  const focused = await ViewletLayout.enterSideBarFocusMode(state, 'primary', true)
+  const saved = ViewletLayout.saveState(focused.newState)
+  const restored = ViewletLayout.loadContent(ViewletLayout.create(2), {
+    ...saved,
+    Layout: { bounds: { windowWidth: state.windowWidth, windowHeight: state.windowHeight } },
+  })
+
+  expect(saved.aiNativeLayout).toBe(true)
+  expect(restored).toEqual(
+    expect.objectContaining({
+      aiNativeLayout: true,
+      sideBarFocusMode: true,
+      sideBarFocusModeTarget: 'primary',
+      sideBarFocusModeLayout: expect.objectContaining({
+        activityBarVisible: true,
+        mainVisible: true,
+        panelVisible: true,
+        sideBarVisible: true,
+        sideBarWidth: state.sideBarWidth,
+      }),
+      sideBarWidth: state.windowWidth - 48,
+      titleBarVisible: false,
+      statusBarVisible: false,
+    }),
+  )
+
+  const returnedToIde = await ViewletLayout.leaveSideBarFocusMode(restored)
+  expect(returnedToIde.newState).toEqual(
+    expect.objectContaining({
+      aiNativeLayout: false,
+      sideBarFocusMode: false,
+      sideBarWidth: state.sideBarWidth,
+      mainVisible: true,
+      panelVisible: true,
+      sideBarVisible: true,
+    }),
+  )
+})
+
+test('a mobile standalone launch opens Chat 2 in the AI-native layout', () => {
+  const restored = ViewletLayout.loadContent(ViewletLayout.create(2), {
+    Layout: { bounds: { isStandalone: true, windowWidth: 390, windowHeight: 844 } },
+  })
+
+  expect(restored).toEqual(
+    expect.objectContaining({
+      aiNativeLayout: true,
+      sideBarFocusMode: true,
+      sideBarView: 'chat2.views.chat',
+      sideBarVisible: true,
+      sideBarFocusModeLayout: expect.objectContaining({
+        mainVisible: true,
+        sideBarVisible: true,
+        sideBarWidth: expect.any(Number),
+      }),
+    }),
+  )
+})
+
+test('standalone launches on desktop retain the IDE layout', () => {
+  const restored = ViewletLayout.loadContent(ViewletLayout.create(2), {
+    Layout: { bounds: { isStandalone: true, windowWidth: 1200, windowHeight: 800 } },
+  })
+
+  expect(restored.aiNativeLayout).toBeFalsy()
+  expect(restored.sideBarView).toBe('Explorer')
+})
+
+test.each([
+  ['older saved state', {}],
+  ['restore false', { aiNativeLayout: true, restore: false }],
+])('%s does not restore AI-native layout', (_name, savedState) => {
+  const state = createState()
+  const restored = ViewletLayout.loadContent(ViewletLayout.create(2), {
+    ...savedState,
+    Layout: { bounds: { windowWidth: state.windowWidth, windowHeight: state.windowHeight } },
+  })
+
+  expect(restored.aiNativeLayout).toBeFalsy()
+  expect(restored).toEqual(
+    expect.objectContaining({
+      sideBarFocusMode: false,
+      mainVisible: true,
+      titleBarVisible: true,
+      statusBarVisible: true,
+    }),
+  )
+})
+
 test('hidden layout visibility commands are no-ops while focus mode is active', async () => {
   const focused = await ViewletLayout.enterSideBarFocusMode(createState())
 
@@ -176,6 +351,10 @@ test('hidden layout visibility commands are no-ops while focus mode is active', 
     commands: [],
   })
   expect(await ViewletLayout.showActivityBar(focused.newState)).toEqual({
+    newState: focused.newState,
+    commands: [],
+  })
+  expect(await ViewletLayout.hideActivityBar(focused.newState)).toEqual({
     newState: focused.newState,
     commands: [],
   })
@@ -256,4 +435,110 @@ test('AI-native layout restricts the existing activity bar and restores it on ex
   activityBarInvoke.mockClear()
   await ViewletLayout.leaveSideBarFocusMode(focused.newState)
   expect(activityBarInvoke).toHaveBeenCalledWith('ActivityBar.setAiNativeLayout', 42, false)
+})
+
+test.each([SideBarLocationType.Left, SideBarLocationType.Right])(
+  'AI-native activity bar can be hidden, stays hidden after resize, and can be shown on sidebar location %s',
+  async (sideBarLocation) => {
+    const state = LayoutPoints.getPoints({ ...createState(), sideBarLocation })
+    const focused = await ViewletLayout.enterSideBarFocusMode(state, 'primary', true)
+    const hidden = await ViewletLayout.hideActivityBar(focused.newState)
+
+    expect(hidden.newState).toEqual(
+      expect.objectContaining({
+        activityBarVisible: false,
+        activityBarWidth: 0,
+        sideBarLeft: 0,
+        sideBarWidth: 1200,
+      }),
+    )
+    const resized = await ViewletLayout.handleResize(hidden.newState, 900, 600)
+    expect(resized.newState).toEqual(
+      expect.objectContaining({
+        activityBarVisible: false,
+        activityBarWidth: 0,
+        sideBarWidth: 900,
+      }),
+    )
+
+    const shown = await ViewletLayout.showActivityBar(resized.newState)
+    expect(shown.newState).toEqual(
+      expect.objectContaining({
+        activityBarVisible: true,
+        activityBarWidth: 48,
+        sideBarWidth: 852,
+      }),
+    )
+  },
+)
+
+test('AI-native activity bar visibility survives reload and exiting AI-native restores the IDE layout', async () => {
+  const state = createState()
+  const focused = await ViewletLayout.enterSideBarFocusMode(state, 'primary', true)
+  const hidden = await ViewletLayout.hideActivityBar(focused.newState)
+  const saved = ViewletLayout.saveState(hidden.newState)
+  const restored = ViewletLayout.loadContent(ViewletLayout.create(2), {
+    ...saved,
+    Layout: { bounds: { windowWidth: state.windowWidth, windowHeight: state.windowHeight } },
+  })
+
+  expect(restored).toEqual(
+    expect.objectContaining({
+      aiNativeLayout: true,
+      aiNativeActivityBarVisible: false,
+      activityBarVisible: false,
+      activityBarWidth: 0,
+      sideBarWidth: state.windowWidth,
+    }),
+  )
+
+  const returnedToIde = await ViewletLayout.leaveSideBarFocusMode(restored)
+  expect(returnedToIde.newState).toEqual(
+    expect.objectContaining({
+      aiNativeLayout: false,
+      aiNativeActivityBarVisible: false,
+      activityBarVisible: true,
+      activityBarWidth: 48,
+    }),
+  )
+})
+
+test('restoring AI-native chat keeps the primary chat when the secondary default is also chat', async () => {
+  const state = { ...createState(), sideBarView: 'chat2.views.chat', secondarySideBarView: 'chat2.views.chat' }
+  const focused = await ViewletLayout.enterSideBarFocusMode(state, 'primary', true)
+  const restored = ViewletLayout.loadContent(ViewletLayout.create(2), {
+    ...ViewletLayout.saveState(focused.newState),
+    Layout: { bounds: { windowWidth: 1200, windowHeight: 800 } },
+  })
+  expect(restored.sideBarView).toBe('chat2.views.chat')
+  expect(restored.aiNativeLayout).toBe(true)
+})
+
+test('a fresh application at the chat route opens chat without saved layout state', async () => {
+  const applications = await import('../src/parts/ApplicationRegistry/ApplicationRegistry.ts')
+  applications.create({
+    href: 'https://editor.example/chat-view-2/chat/',
+    id: 'fresh-chat-route',
+    layoutUid: 9501,
+    workspacePath: '',
+    workspaceUri: '',
+  })
+  try {
+    const restored = ViewletLayout.loadContent(ViewletLayout.create(9501), { Layout: { bounds: { windowWidth: 1200, windowHeight: 800 } } })
+    expect(restored.sideBarView).toBe('chat2.views.chat')
+    expect(restored.aiNativeLayout).toBe(true)
+  } finally {
+    await applications.remove('fresh-chat-route')
+  }
+})
+
+test('leaving AI-native layout disposes the transient settings view', async () => {
+  const focused = await ViewletLayout.enterSideBarFocusMode(createState(), 'primary', true)
+  const { openSettings } = await import('../src/parts/AiNativeLayout/AiNativeLayout.ts')
+  const opened = await openSettings(focused.newState)
+  const result = await ViewletLayout.leaveSideBarFocusMode(opened.newState)
+  expect(disposeFunctional).toHaveBeenCalledWith(opened.newState.aiNativeSettingsId as number)
+  expect(result.newState.aiNativeSettingsId).toBeUndefined()
+  expect(result.newState.aiNativeLayout).toBe(false)
+  expect(result.newState.sideBarFocusMode).toBe(false)
 })

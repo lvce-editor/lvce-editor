@@ -38,6 +38,7 @@
 }
 
 .ProcessExplorerRowFocused {
+  outline: none;
   background: var(--ListActiveSelectionBackground);
   color: var(--ListActiveSelectionForeground, white);
 }

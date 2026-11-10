@@ -9,6 +9,7 @@ beforeEach(() => {
   ColorTheme.state.colorThemeCss = ''
   delete ColorTheme.state.colorTheme
   ColorTheme.state.watchedTheme = ''
+  ColorTheme.state.aiNativeLayout = undefined
 })
 
 jest.unstable_mockModule('../src/parts/Command/Command.js', () => ({
@@ -49,7 +50,7 @@ test('reload applies slime when no color theme is selected', async () => {
   await ColorTheme.reload()
 
   expect(GetColorThemeNames.getColorThemeNames).not.toHaveBeenCalled()
-  expect(GetColorThemeCss.getColorThemeCss).toHaveBeenCalledWith('slime')
+  expect(GetColorThemeCss.getColorThemeCss).toHaveBeenCalledWith('slime', true)
   expect(Css.addCssStyleSheet).toHaveBeenCalledWith('ContributedColorTheme', ':root { --theme-id: "slime"; }')
   expect(ColorTheme.getColorThemeCss()).toBe(':root { --theme-id: "slime"; }')
 })
@@ -60,8 +61,8 @@ test('reload switches to slime when the selected color theme is no longer contri
   await ColorTheme.reload()
 
   expect(GetColorThemeCss.getColorThemeCss).not.toHaveBeenCalledWith('disabled-theme')
-  expect(GetColorThemeCss.getColorThemeCss).toHaveBeenCalledWith('slime')
-  expect(Preferences.state['workbench.colorTheme']).toBe('slime')
+  expect(GetColorThemeCss.getColorThemeCss).toHaveBeenCalledWith('slime', false)
+  expect(Preferences.state['application.colorTheme']).toBe('slime')
   expect(Command.execute).toHaveBeenCalledWith('Layout.handleColorThemeChanged', 'slime')
 })
 
@@ -70,8 +71,8 @@ test('hydrate falls back to slime when the selected color theme cannot be loaded
 
   await ColorTheme.hydrate()
 
-  expect(GetColorThemeCss.getColorThemeCss).toHaveBeenNthCalledWith(1, 'missing-theme')
-  expect(GetColorThemeCss.getColorThemeCss).toHaveBeenNthCalledWith(2, 'slime')
+  expect(GetColorThemeCss.getColorThemeCss).toHaveBeenNthCalledWith(1, 'missing-theme', false)
+  expect(GetColorThemeCss.getColorThemeCss).toHaveBeenNthCalledWith(2, 'slime', false)
   expect(ErrorHandling.handleError).toHaveBeenCalledTimes(1)
   expect(Css.addCssStyleSheet).toHaveBeenCalledWith('ContributedColorTheme', ':root { --theme-id: "slime"; }')
 })
@@ -79,7 +80,7 @@ test('hydrate falls back to slime when the selected color theme cannot be loaded
 test('setColorTheme notifies viewlets when the color theme changes', async () => {
   await ColorTheme.setColorTheme('cobalt2')
 
-  expect(Preferences.state['workbench.colorTheme']).toBe('cobalt2')
+  expect(Preferences.state['application.colorTheme']).toBe('cobalt2')
   expect(Command.execute).toHaveBeenCalledWith('Layout.handleColorThemeChanged', 'cobalt2')
 })
 
@@ -106,4 +107,62 @@ test('getColorTheme falls back to the preferred color theme', () => {
   Preferences.state['workbench.colorTheme'] = 'cobalt2'
 
   expect(ColorTheme.getColorTheme()).toBe('cobalt2')
+})
+
+test('setColorTheme stores a separate preference for the AI-native layout', async () => {
+  Preferences.state['application.colorTheme'] = 'slime'
+  await ColorTheme.setAiNativeLayout(true, false)
+
+  await ColorTheme.setColorTheme('cobalt2')
+
+  expect(Preferences.state['application.aiColorTheme']).toBe('cobalt2')
+  expect(Preferences.state['application.colorTheme']).toBe('slime')
+  expect(ColorTheme.getColorTheme()).toBe('cobalt2')
+})
+
+test('switching layouts applies each layout preference without changing either preference', async () => {
+  Preferences.state['application.colorTheme'] = 'slime'
+  Preferences.state['application.aiColorTheme'] = 'cobalt2'
+
+  await ColorTheme.setAiNativeLayout(true, false)
+  expect(ColorTheme.getColorTheme()).toBe('cobalt2')
+  await ColorTheme.setAiNativeLayout(false, false)
+  expect(ColorTheme.getColorTheme()).toBe('slime')
+  expect(Preferences.state['application.aiColorTheme']).toBe('cobalt2')
+  expect(Preferences.state['application.colorTheme']).toBe('slime')
+})
+
+test('IDE color theme falls back to the legacy workbench preference', () => {
+  Preferences.state['workbench.colorTheme'] = 'cobalt2'
+
+  expect(ColorTheme.getColorTheme()).toBe('cobalt2')
+})
+
+test('AI color theme takes priority over the legacy AI layout preference', async () => {
+  Preferences.state['application.aiColorTheme'] = 'cobalt2'
+  Preferences.state['application.aiLayoutColorTheme'] = 'slime'
+
+  await ColorTheme.setAiNativeLayout(true, false)
+
+  expect(ColorTheme.getColorTheme()).toBe('cobalt2')
+})
+
+test('AI color theme falls back to the legacy AI layout preference', async () => {
+  Preferences.state['application.colorTheme'] = 'slime'
+  Preferences.state['application.aiLayoutColorTheme'] = 'cobalt2'
+
+  await ColorTheme.setAiNativeLayout(true, false)
+
+  expect(ColorTheme.getColorTheme()).toBe('cobalt2')
+  expect(Preferences.state['application.aiColorTheme']).toBeUndefined()
+})
+
+test('selecting an IDE theme preserves the AI color theme', async () => {
+  Preferences.state['application.aiColorTheme'] = 'cobalt2'
+  await ColorTheme.setAiNativeLayout(false, false)
+
+  await ColorTheme.setColorTheme('slime')
+
+  expect(Preferences.state['application.colorTheme']).toBe('slime')
+  expect(Preferences.state['application.aiColorTheme']).toBe('cobalt2')
 })

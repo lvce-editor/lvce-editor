@@ -84,6 +84,18 @@ test('passes test mode to the explorer worker', async () => {
   expect(invoke.mock.calls[0]).toEqual(['Explorer.create', 7, 'test://explorer', 1, 2, 300, 200, null, 5, 2, 'test://assets', true])
 })
 
+test('uses static explorer menus instead of unsupported dynamic menu discovery', () => {
+  const viewlet = createWorkerViewletWithDependencies({
+    adapter: getWorkerViewletAdapter('explorer'),
+    config: getWorkerViewletConfig('explorer'),
+    worker: { invoke: jest.fn(), restart: jest.fn() },
+  })
+
+  expect(viewlet.getMenus).toBeUndefined()
+  expect(viewlet.menus).toHaveLength(1)
+  expect(typeof viewlet.menus[0].getMenuEntries).toBe('function')
+})
+
 test('exposes the configured workspace change behavior', () => {
   const viewlet = createWorkerViewletWithDependencies({
     config: createConfig({ workspaceChangeEvent: 'workspace.titleChange', workspaceChangeEventPrepend: true }),
@@ -406,6 +418,30 @@ test('returns preview runtime diagnostics without treating them as viewlet state
   expect(invoke).toHaveBeenCalledWith('Preview.getRuntimeDiagnostics', 12)
 })
 
+test('updates preview title when pending render has no DOM changes', async () => {
+  let title = 'Initial title'
+  const invoke = jest.fn(async (method: string, ..._args: readonly unknown[]) => {
+    if (method === 'Preview.diff2') return []
+    if (method === 'Preview.render2') return []
+    if (method === 'Preview.getTitle') return title
+    return undefined
+  })
+  const viewlet = createWorkerViewletWithDependencies({
+    adapter: getWorkerViewletAdapter('preview'),
+    config: getWorkerViewletConfig('preview'),
+    worker: { invoke, restart: jest.fn() },
+  })
+  const state = { ...viewlet.create(12, 'file:///workspace/index.html', 0, 0, 640, 480, undefined, 5), title }
+  expect(state.parentUid).toBe(5)
+
+  title = 'Updated title'
+  const result = await viewlet.Commands.__renderPending(state)
+
+  expect(result.title).toBe('Updated title')
+  expect(result.parentUid).toBe(5)
+  expect(invoke).toHaveBeenCalledWith('Preview.getTitle', 12)
+})
+
 test('gets and sets authoritative worker component state', async () => {
   const config: any = createConfig()
   config.methods.getComponentState = { name: 'Example.getComponentState', parameters: [stateParameter('uid')] }
@@ -697,4 +733,91 @@ test('quick pick view commands preserve the renderer custom-input callback', asy
   expect(commands).not.toHaveProperty('executeCallback')
   expect(commands.selectCurrentIndex).toEqual(expect.any(Function))
   expect(commands.close).toEqual(expect.any(Function))
+})
+
+test('Main restores its shell before deferring content and disposes the worker instance', async () => {
+  const content = Promise.withResolvers<void>()
+  const invoke = jest.fn((method: string, ..._args: readonly unknown[]) => {
+    if (method === 'MainArea.loadContentLater') {
+      return content.promise
+    }
+    if (method === 'MainArea.getCommandIds') {
+      return Promise.resolve(['openUri'])
+    }
+    if (method === 'MainArea.diff2' || method === 'MainArea.render2') {
+      return Promise.resolve([])
+    }
+    return Promise.resolve(undefined)
+  })
+  const viewlet = createWorkerViewletWithDependencies({
+    adapter: getWorkerViewletAdapter('mainArea'),
+    config: getWorkerViewletConfig('mainArea'),
+    context: { assetDir: 'test://assets', platform: 2 },
+    worker: { invoke, restart: jest.fn() },
+  })
+  const state = viewlet.create(7, '', 1, 2, 300, 200)
+  await viewlet.loadContent(state, { restored: true })
+  expect(invoke).toHaveBeenCalledWith('MainArea.loadContentShell', 7, { restored: true })
+  expect(invoke).not.toHaveBeenCalledWith('MainArea.loadContentLater', 7)
+  const commands = await viewlet.getCommands!()
+  const loading = commands.loadContentLater(state)
+  expect(invoke).toHaveBeenCalledWith('MainArea.loadContentLater', 7)
+  await viewlet.dispose!(state)
+  expect(invoke).toHaveBeenCalledWith('MainArea.dispose', 7)
+  content.resolve()
+  expect(await loading).toBe(state)
+})
+
+test('passes application context to output creation and hot reload', async () => {
+  const invoke = jest.fn(async (method: string, ..._args: readonly unknown[]) => (method === 'Output.getCommandIds' ? [] : undefined))
+  const viewlet = createWorkerViewletWithDependencies({
+    config: getWorkerViewletConfig('output'),
+    context: { platform: 2, applicationId: 'preview' },
+    worker: { invoke, restart: jest.fn() },
+  })
+  const state = viewlet.create(7, 'sample-build', 1, 2, 300, 200, undefined, 9)
+  await viewlet.loadContent(state, {})
+  expect(invoke).toHaveBeenCalledWith('Output.create', 7, 'sample-build', 1, 2, 300, 200, 2, 9, 'preview')
+  invoke.mockClear()
+  await viewlet.hotReload!(state)
+  expect(invoke).toHaveBeenCalledWith('Output.create', 7, 'sample-build', 1, 2, 300, 200, 2, 9, 'preview')
+})
+
+test('passes application context to status bar creation and hot reload', async () => {
+  const invoke = jest.fn(async (method: string, ..._args: readonly unknown[]) => (method === 'StatusBar.getCommandIds' ? [] : undefined))
+  const viewlet = createWorkerViewletWithDependencies({
+    config: getWorkerViewletConfig('statusBar'),
+    context: { platform: 1, assetDir: '/runtime/release', applicationId: 'preview' },
+    worker: { invoke, restart: jest.fn() },
+  })
+  const state = viewlet.create(7, '', 1, 2, 300, 200)
+  await viewlet.loadContent(state, {})
+  expect(invoke).toHaveBeenCalledWith('StatusBar.create', 7, '', 1, 2, 300, 200, 1, '/runtime/release', 'preview')
+  invoke.mockClear()
+  await viewlet.hotReload!(state)
+  expect(invoke).toHaveBeenCalledWith('StatusBar.create', 7, '', 1, 2, 300, 200, 1, '/runtime/release', 'preview')
+})
+
+test('passes application ownership to the panel that creates its child views', async () => {
+  const invoke = jest.fn(async (method: string, ..._args: readonly unknown[]) => (method === 'Panel.getCommandIds' ? [] : undefined))
+  const viewlet = createWorkerViewletWithDependencies({
+    config: getWorkerViewletConfig('panel'),
+    context: { platform: 2, assetDir: '/runtime/test', applicationId: 'preview' },
+    worker: { invoke, restart: jest.fn() },
+  })
+  const state = viewlet.create(7, '', 1, 2, 300, 200)
+  await viewlet.loadContent(state, {})
+  expect(invoke).toHaveBeenCalledWith('Panel.create', 7, '', 1, 2, 300, 200, 2, '/runtime/test', 'preview')
+})
+
+test('passes application ownership to Problems creation', async () => {
+  const invoke = jest.fn(async (method: string, ..._args: readonly unknown[]) => (method === 'Problems.getCommandIds' ? [] : undefined))
+  const viewlet = createWorkerViewletWithDependencies({
+    config: getWorkerViewletConfig('problemsViewWorker'),
+    context: { workspaceUri: 'memfs:///preview', applicationId: 'preview' },
+    worker: { invoke, restart: jest.fn() },
+  })
+  const state = viewlet.create(7, '', 1, 2, 300, 200)
+  await viewlet.loadContent(state, {})
+  expect(invoke).toHaveBeenCalledWith('Problems.create', 7, '', 1, 2, 300, 200, 'memfs:///preview', 'preview')
 })

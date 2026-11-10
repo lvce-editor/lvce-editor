@@ -5,9 +5,11 @@ import * as BundleCss from '../BundleCss/BundleCss.ts'
 import * as BundleMainProcessCached from '../BundleMainProcessCached/BundleMainProcessCached.ts'
 import * as BundleOptions from '../BundleOptions/BundleOptions.ts'
 import * as BundleSharedProcessCached from '../BundleSharedProcessCached/BundleSharedProcessCached.ts'
+import * as BundleSharedProcessGraph from '../BundleSharedProcessGraph/BundleSharedProcessGraph.ts'
 import * as BundleWorkers from '../BundleWorkers/BundleWorkers.ts'
 import * as CommitHash from '../CommitHash/CommitHash.ts'
 import * as Copy from '../Copy/Copy.ts'
+import * as CopyFiraCode from '../CopyFiraCode/CopyFiraCode.ts'
 import * as CopyElectronFileIcons from '../CopyElectronFileIcons/CopyElectronFileIcons.ts'
 import * as CopyElectron from '../CopyElectron/CopyElectron.ts'
 import * as CopyElectronIcons from '../CopyElectronIcons/CopyElectronIcons.ts'
@@ -15,6 +17,7 @@ import * as CopyElectronLicense from '../CopyElectronLicense/CopyElectronLicense
 import * as GetCommitDate from '../GetCommitDate/GetCommitDate.ts'
 import * as GetElectronVersion from '../GetElectronVersion/GetElectronVersion.ts'
 import * as GetIconThemeEtag from '../GetIconThemeEtag/GetIconThemeEtag.ts'
+import * as GetNativeDependencyCachePath from '../GetNativeDependencyCachePath/GetNativeDependencyCachePath.ts'
 import * as Hash from '../Hash/Hash.ts'
 import * as Rename from '../Rename/Rename.ts'
 import * as Logger from '../Logger/Logger.ts'
@@ -32,13 +35,23 @@ import * as WriteFile from '../WriteFile/WriteFile.ts'
 import { generateConfigJson } from '../GenerateConfigJson/GenerateConfigJson.ts'
 import * as AddRuntimeConfigToIndexHtml from '../AddRuntimeConfigToIndexHtml/AddRuntimeConfigToIndexHtml.ts'
 
-const getDependencyCacheHash = async ({ electronVersion, arch, supportsAutoUpdate, isMacos, isArchLinux, isAppImage, bundleMainProcess }) => {
+const getDependencyCacheHash = async ({
+  electronVersion,
+  platform,
+  arch,
+  supportsAutoUpdate,
+  isMacos,
+  isArchLinux,
+  isAppImage,
+  bundleMainProcess,
+}) => {
   const files = [
     'packages/main-process/package-lock.json',
     'packages/shared-process/package-lock.json',
     'packages/build/src/parts/BundleElectronApp/BundleElectronApp.ts',
     'packages/build/src/parts/BundleElectronAppDependencies/BundleElectronAppDependencies.ts',
     'packages/build/src/parts/BundleSharedProcessDependencies/BundleSharedProcessDependencies.ts',
+    'packages/build/src/parts/BundleTypeScriptLanguageServer/BundleTypeScriptLanguageServer.ts',
     'packages/build/src/parts/FilterSharedProcessDependencies/FilterSharedProcessDependencies.ts',
     'packages/build/src/parts/CopyDependencies/CopyDependencies.ts',
     'packages/build/src/parts/BundleMainProcessDependencies/BundleMainProcessDependencies.ts',
@@ -47,12 +60,14 @@ const getDependencyCacheHash = async ({ electronVersion, arch, supportsAutoUpdat
     'packages/build/src/parts/NpmDependencies/NpmDependencies.ts',
     'packages/build/src/parts/WalkDependencies/WalkDependencies.ts',
     'packages/build/src/parts/Rebuild/Rebuild.ts',
+    'packages/build/src/parts/GetNativeDependencyCachePath/GetNativeDependencyCachePath.ts',
   ]
   const absolutePaths = files.map(Path.absolute)
   const contents = await Promise.all(absolutePaths.map(ReadFile.readFile))
   const hash = Hash.computeHash(
     contents +
       electronVersion +
+      platform +
       arch +
       String(supportsAutoUpdate) +
       String(isMacos) +
@@ -115,6 +130,7 @@ const copyStaticFiles = async ({ resourcesPath, commitHash }) => {
     to: `${resourcesPath}/app/static/${commitHash}`,
     ignore: ['config.json', 'css'],
   })
+  await CopyFiraCode.copyFiraCode(`${resourcesPath}/app/static/${commitHash}/fonts`)
   await CopyElectronIcons.copyElectronIcons({ resourcesPath, commitHash })
   await Rename.rename({
     from: `${resourcesPath}/app/static/${commitHash}/index.html`,
@@ -191,6 +207,7 @@ export const build = async ({
   const bundleMainProcess = BundleOptions.bundleMainProcess
   const dependencyCacheHash = await getDependencyCacheHash({
     electronVersion,
+    platform,
     arch,
     supportsAutoUpdate,
     isMacos,
@@ -198,7 +215,7 @@ export const build = async ({
     isAppImage,
     bundleMainProcess,
   })
-  const dependencyCachePath = Path.join(Path.absolute('packages/build/.tmp/cachedDependencies'), dependencyCacheHash)
+  const dependencyCachePath = GetNativeDependencyCachePath.getNativeDependencyCachePath(Root.root, dependencyCacheHash)
   const dependencyCachePathFinished = Path.join(dependencyCachePath, 'finished')
   const commitHash = await CommitHash.getCommitHash()
   const date = await GetCommitDate.getCommitDate(commitHash)
@@ -225,7 +242,7 @@ export const build = async ({
     Logger.info('[build step skipped] bundleElectronAppDependencies')
   } else {
     console.time('bundleElectronAppDependencies')
-    await Remove.remove(Path.absolute('packages/build/.tmp/cachedDependencies'))
+    await Remove.remove(Path.dirname(dependencyCachePath))
     const BundleElectronAppDependencies = await import('../BundleElectronAppDependencies/BundleElectronAppDependencies.ts')
     await BundleElectronAppDependencies.bundleElectronAppDependencies({
       cachePath: dependencyCachePath,
@@ -310,6 +327,8 @@ export const build = async ({
     to: `${resourcesPath}/app/packages/shared-process`,
   })
   console.timeEnd('copySharedProcessFiles')
+
+  await BundleSharedProcessGraph.bundleSharedProcessGraph(Path.absolute(`${resourcesPath}/app/packages/shared-process`))
 
   console.time('copyExtensions')
   await copyExtensions({ resourcesPath, commitHash })

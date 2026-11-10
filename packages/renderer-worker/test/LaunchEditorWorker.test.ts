@@ -11,8 +11,17 @@ jest.unstable_mockModule('../src/parts/IpcParent/IpcParent.js', () => ({
 
 jest.unstable_mockModule('../src/parts/JsonRpc/JsonRpc.js', () => ({
   invoke: jest.fn(),
+  invokeAndTransfer: jest.fn(),
 }))
 
+jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () => ({
+  invokeAndTransfer: jest.fn(),
+}))
+jest.unstable_mockModule('../src/parts/GetPortTuple/GetPortTuple.js', () => ({
+  getPortTuple: () => ({ port1: 'worker-port', port2: 'renderer-port' }),
+}))
+const JsonRpc = await import('../src/parts/JsonRpc/JsonRpc.js')
+const RendererProcess = await import('../src/parts/RendererProcess/RendererProcess.js')
 const IpcParent = await import('../src/parts/IpcParent/IpcParent.js')
 const LaunchEditorWorker = await import('../src/parts/LaunchEditorWorker/LaunchEditorWorker.ts')
 
@@ -28,6 +37,8 @@ test('launches the editor worker configured by --link', async () => {
 
   await LaunchEditorWorker.launchEditorWorker()
 
+  expect(JsonRpc.invokeAndTransfer).toHaveBeenCalledWith(expect.anything(), 'Editor.handleDirectMessagePort', 'worker-port')
+  expect(RendererProcess.invokeAndTransfer).toHaveBeenCalledWith('HandleMessagePort.handleMessagePort', 'renderer-port', 'Editor')
   expect(IpcParent.create).toHaveBeenCalledWith(
     expect.objectContaining({
       name: 'Editor Worker',

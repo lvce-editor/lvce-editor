@@ -1688,7 +1688,7 @@ const restoreJsonRpcError = error => {
     return restoredError;
   }
   if (error && error.message) {
-    const restoredError = constructError(error.message, error.type, error.name);
+    const restoredError = constructError(error.message, error.type || error.data?.type, error.name || error.data?.name);
     if (error.data) {
       if (error.data.stack && error.data.type && error.message) {
         restoredError.stack = error.data.type + ': ' + error.message + NewLine + error.data.stack + NewLine + currentStack;
@@ -1703,9 +1703,9 @@ const restoreJsonRpcError = error => {
         // @ts-ignore
         restoredError.code = error.data.code;
       }
-      if (error.data.type) {
+      if (error.data.name || error.data.type) {
         // @ts-ignore
-        restoredError.name = error.data.type;
+        restoredError.name = error.data.name || error.data.type;
       }
     } else {
       if (error.stack) {

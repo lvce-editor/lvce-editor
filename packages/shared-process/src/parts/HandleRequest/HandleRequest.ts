@@ -23,6 +23,6 @@ export const handleRequest = async (request: any): Promise<any> => {
     const response = await GetTestRequestResponse.getTestRequestResponse(request, indexHtmlPath)
     return toHttpResponse(request, response)
   }
-  const response = await GetElectronFileResponse.getElectronFileResponse(request.url, request)
+  const response = await GetElectronFileResponse.getElectronFileResponse(request.url, { ...request, platform: 'remote' })
   return toHttpResponse(request, response)
 }

@@ -4,6 +4,7 @@ import * as ExtensionManifestInputType from '../ExtensionManifestInputType/Exten
 import * as ExtensionManifestsGetFromFolder from './ExtensionManifestsFromFolder.ts'
 import * as ExtensionManifestsGetFromLinkedExtension from './ExtensionManifestsFromLinkedExtension.ts'
 import * as ExtensionManifestsGetFromOnlyExtension from './ExtensionManifestsFromOnlyExtension.ts'
+import { selectExtensionManifestFields } from './SelectExtensionManifestFields.ts'
 
 const getModule = (type: any): any => {
   switch (type) {
@@ -18,9 +19,9 @@ const getModule = (type: any): any => {
   }
 }
 
-const get = (input: any): any => {
+const get = (input: any, fields?: readonly string[]): any => {
   const module = getModule(input.type)
-  return module.getExtensionManifests(input.path)
+  return fields === undefined ? module.getExtensionManifests(input.path) : module.getExtensionManifests(input.path, fields)
 }
 
 const isBuiltin = (extension: any): any => {
@@ -37,11 +38,13 @@ const addExtensionDisabledStatus = (uniqueExtensions: any, disabledExtensionIds:
   })
 }
 
-export const getAll = async (inputs: any, builtinExtensionsPath: any = undefined): Promise<any> => {
-  const manifests = await Promise.all(inputs.map(get))
+export const getAll = async (inputs: any, builtinExtensionsPath: any = undefined, fields?: readonly string[]): Promise<any> => {
+  // Keep identity and enablement fields until deduplication and live enablement have been applied.
+  const inputFields = fields === undefined ? undefined : [...new Set([...fields, 'id', 'path', 'disabled'])]
+  const manifests = await Promise.all(inputs.map((input: any) => get(input, inputFields)))
   const { disabledExtensionIds, enabledExtensionIds } = await getExtensionEnablement()
   const flatManifests = manifests.flat(1)
   const uniqueExtensions = DeduplicateExtensions.deduplicateExtensions(flatManifests, builtinExtensionsPath)
   const filteredExtensions = addExtensionDisabledStatus(uniqueExtensions, disabledExtensionIds, enabledExtensionIds)
-  return filteredExtensions
+  return selectExtensionManifestFields(filteredExtensions, fields)
 }

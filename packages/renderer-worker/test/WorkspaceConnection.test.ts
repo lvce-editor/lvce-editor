@@ -7,7 +7,7 @@ interface MockWebSocket {
 }
 
 const create = jest.fn<(options: { readonly getUrl: () => Promise<string>; readonly type: string }) => Promise<MockWebSocket>>()
-const executeCommand = jest.fn<(command: string, type: string) => Promise<unknown>>()
+const executeCommand = jest.fn<(command: string, type: string, params?: unknown) => Promise<unknown>>()
 const workspaceState = { workspaceUri: '' }
 
 jest.unstable_mockModule('../src/parts/WorkspaceState/WorkspaceState.js', () => ({ state: workspaceState }))
@@ -114,7 +114,10 @@ test('bridges a message port to the workspace connection', async () => {
   })
   const getUrl = create.mock.calls[0]?.[0].getUrl
   await expect(getUrl()).resolves.toBe('wss://workspace.example.com/process?token=secret&extensionId=builtin.codex&rpcId=builtin.codex.app-server')
-  expect(executeCommand).toHaveBeenCalledWith('workspace-provider.getWebSocketUrl', 'extension-node-process')
+  expect(executeCommand).toHaveBeenCalledWith('workspace-provider.getWebSocketUrl', 'extension-node-process', {
+    extensionId: 'builtin.codex',
+    rpcId: 'builtin.codex.app-server',
+  })
   port.onmessage?.({ data: ['request'] })
   expect(webSocket.send).toHaveBeenCalledWith('["request"]')
   webSocket.onmessage?.({ data: '["response"]' })
@@ -132,4 +135,18 @@ test('transfers terminal ports to the workspace extension without opening a rend
     port1.close()
     port2.close()
   }
+})
+
+test('disposes the workspace-owned transports once when leaving the workspace', async () => {
+  WorkspaceConnection.set('remote-server://host/work', 'remote-server.getWebSocketUrl', '', '', undefined, 'remote-server.releaseWorkspace')
+  await WorkspaceConnection.dispose()
+  await WorkspaceConnection.dispose()
+  expect(executeCommand).toHaveBeenCalledTimes(1)
+  expect(executeCommand).toHaveBeenCalledWith('remote-server.releaseWorkspace', 'remote-server://host/work', '')
+})
+
+test('disposes a workspace-owned connection while passing the destination URI', async () => {
+  WorkspaceConnection.set('remote-ssh://host/work', '', '', '', undefined, 'remote-ssh.disposeWorkspace')
+  await WorkspaceConnection.dispose('file:///tmp/local')
+  expect(executeCommand).toHaveBeenCalledWith('remote-ssh.disposeWorkspace', 'remote-ssh://host/work', 'file:///tmp/local')
 })

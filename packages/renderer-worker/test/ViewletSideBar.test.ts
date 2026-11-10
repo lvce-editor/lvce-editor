@@ -197,6 +197,23 @@ test('handleSideBarViewletChange uses child title', async () => {
   })
 })
 
+test('handleSideBarViewletChange falls back to Explorer for a non-string view id', async () => {
+  const state = ViewletSideBar.create(1, '', 0, 0, 300, 500)
+
+  await ViewletSideBar.handleSideBarViewletChange(state, 123)
+
+  expect(ViewletManager.load).toHaveBeenCalledWith(
+    expect.objectContaining({
+      id: 'Explorer',
+      uri: 'Explorer',
+    }),
+    false,
+    true,
+    undefined,
+  )
+  expect(state.currentViewletId).toBe('Explorer')
+})
+
 test('handleSideBarViewletChange saves the concrete sidebar child under the viewlet storage id', async () => {
   const state = {
     ...ViewletSideBar.create(1, '', 0, 0, 300, 500),

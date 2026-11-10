@@ -20,8 +20,11 @@ test('focuses the search input in a search editor', () => {
   })
 })
 
-test('does not change focus in the search sidebar', () => {
+test('focuses the search input when activating the search sidebar', () => {
   const state = { commands: [], isSearchEditor: false }
 
-  expect(adapter.focus(state)).toBe(state)
+  expect(adapter.focus(state)).toEqual({
+    commands: [['Viewlet.focusSelector', '[name="SearchValue"]']],
+    isSearchEditor: false,
+  })
 })

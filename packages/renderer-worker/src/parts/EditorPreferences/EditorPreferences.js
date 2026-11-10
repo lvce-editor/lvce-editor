@@ -2,6 +2,8 @@ import * as Preferences from '../Preferences/Preferences.js'
 import * as SupportsLetterSpacing from '../SupportsLetterSpacing/SupportsLetterSpacing.js'
 import * as Logger from '../Logger/Logger.js'
 
+const getPreference = (key, preferences) => (preferences ? preferences[key] : Preferences.get(key))
+
 const kLineHeight = 'editor.lineHeight'
 const kFontSize = 'editor.fontSize'
 const kFontFamily = 'editor.fontFamily'
@@ -10,6 +12,7 @@ const kLinks = 'editor.links'
 const kTabSize = 'editor.tabSize'
 const kLineNumbers = 'editor.lineNumbers'
 const kFormatOnSave = 'editor.formatOnSave'
+const kFormatActions = 'editor.formatActions'
 const kDiagnostics = 'editor.diagnostics'
 const kQuickSuggestions = 'editor.quickSuggestions'
 const kAutoClosingQuotes = 'editor.autoClosingQuotes'
@@ -30,16 +33,16 @@ const warnIfChanged = (setting, value, bound, direction) => {
   Logger.warn(`[renderer-worker] ${setting} value ${value} is too ${direction}; using ${bound}`)
 }
 
-export const isAutoClosingBracketsEnabled = () => {
-  return Boolean(Preferences.get(kAutoClosingBrackets))
+export const isAutoClosingBracketsEnabled = (preferences) => {
+  return Boolean(getPreference(kAutoClosingBrackets, preferences))
 }
 
-export const isAutoClosingQuotesEnabled = () => {
-  return Boolean(Preferences.get(kAutoClosingQuotes))
+export const isAutoClosingQuotesEnabled = (preferences) => {
+  return Boolean(getPreference(kAutoClosingQuotes, preferences))
 }
 
-export const isQuickSuggestionsEnabled = () => {
-  return Boolean(Preferences.get(kQuickSuggestions))
+export const isQuickSuggestionsEnabled = (preferences) => {
+  return Boolean(getPreference(kQuickSuggestions, preferences))
 }
 
 export const isAutoClosingTagsEnabled = () => {
@@ -47,7 +50,7 @@ export const isAutoClosingTagsEnabled = () => {
 }
 
 export const getRowHeight = (preferences) => {
-  const lineHeight = preferences ? preferences[kLineHeight] : Preferences.get(kLineHeight)
+  const lineHeight = getPreference(kLineHeight, preferences)
   const fontSize = getFontSize(preferences)
   if (typeof lineHeight !== 'number' || !Number.isFinite(lineHeight) || lineHeight === 0) {
     lastWarnings.delete(kLineHeight)
@@ -66,7 +69,7 @@ export const getRowHeight = (preferences) => {
 }
 
 export const getFontSize = (preferences) => {
-  const fontSize = preferences ? preferences[kFontSize] : Preferences.get(kFontSize)
+  const fontSize = getPreference(kFontSize, preferences)
   if (typeof fontSize !== 'number' || !Number.isFinite(fontSize)) {
     lastWarnings.delete(kFontSize)
     return 15
@@ -83,49 +86,53 @@ export const getFontSize = (preferences) => {
   return fontSize
 }
 
-export const getHoverEnabled = () => {
-  return Preferences.get(kHover) ?? false
+export const getHoverEnabled = (preferences) => {
+  return getPreference(kHover, preferences) ?? false
 }
 
-export const getHoverDelay = () => {
-  return Preferences.get(kHoverDelay) ?? 200
+export const getHoverDelay = (preferences) => {
+  return getPreference(kHoverDelay, preferences) ?? 200
 }
 
-export const getFontFamily = () => {
-  return Preferences.get(kFontFamily) || 'Fira Code'
+export const getFontFamily = (preferences) => {
+  return getPreference(kFontFamily, preferences) || 'Fira Code'
 }
 
-export const getLetterSpacing = () => {
+export const getLetterSpacing = (preferences) => {
   if (!SupportsLetterSpacing.supportsLetterSpacing()) {
     return 0
   }
-  return Preferences.get(kLetterSpacing) ?? 0.5
+  return getPreference(kLetterSpacing, preferences) ?? 0.5
 }
 
-export const getTabSize = () => {
-  return Preferences.get(kTabSize) || 2
+export const getTabSize = (preferences) => {
+  return getPreference(kTabSize, preferences) || 2
 }
 
-export const getLinks = () => {
-  return Preferences.get(kLinks) || false
+export const getLinks = (preferences) => {
+  return getPreference(kLinks, preferences) || false
 }
 
-export const getLineNumbers = () => {
-  return Preferences.get(kLineNumbers) ?? false
+export const getLineNumbers = (preferences) => {
+  return getPreference(kLineNumbers, preferences) ?? false
 }
 
 export const getCompletionTriggerCharacters = () => {
   return ['.', '/']
 }
 
-export const getFormatOnSave = () => {
-  return Preferences.get(kFormatOnSave) ?? false
+export const getFormatOnSave = (preferences) => {
+  return getPreference(kFormatOnSave, preferences) ?? false
 }
 
-export const diagnosticsEnabled = () => {
-  return Preferences.get(kDiagnostics) ?? false
+export const getFormatActions = (preferences) => {
+  return getPreference(kFormatActions, preferences) === 'pre-save' ? 'pre-save' : 'post-save'
 }
 
-export const getFontWeight = () => {
-  return Preferences.get(kFontWeight) ?? 400
+export const diagnosticsEnabled = (preferences) => {
+  return getPreference(kDiagnostics, preferences) ?? false
+}
+
+export const getFontWeight = (preferences) => {
+  return getPreference(kFontWeight, preferences) ?? 400
 }

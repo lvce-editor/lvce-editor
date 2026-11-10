@@ -1,0 +1,33 @@
+html.AiNativeLayoutStartup {
+  --AiNativeLayoutStartupBackground: #fff;
+  --ActivityBarBackground: #fff;
+  --EditorBackground: #fff;
+  --MainBackground: #fff;
+  --SideBarBackground: #fff;
+  --StatusBarBackground: #fff;
+  --TitleBarBackground: #fff;
+  --WorkbenchBackground: #fff;
+  background: var(--AiNativeLayoutStartupBackground);
+}
+
+html.AiNativeLayoutStartup.AiNativeLayoutStartupClaude {
+  --AiNativeLayoutStartupBackground: #faf9f6;
+  --ActivityBarBackground: #faf9f6;
+  --EditorBackground: #faf9f6;
+  --MainBackground: #faf9f6;
+  --SideBarBackground: #faf9f6;
+  --StatusBarBackground: #faf9f6;
+  --TitleBarBackground: #faf9f6;
+  --WorkbenchBackground: #faf9f6;
+}
+
+html.AiNativeLayoutStartup body,
+html.AiNativeLayoutStartup .Workbench:not(.AiNativeLayout),
+html.AiNativeLayoutStartup .Main,
+html.AiNativeLayoutStartup .SideBar,
+html.AiNativeLayoutStartup .SecondarySideBar,
+html.AiNativeLayoutStartup .ActivityBar,
+html.AiNativeLayoutStartup .StatusBar,
+html.AiNativeLayoutStartup .TitleBar {
+  background-color: var(--AiNativeLayoutStartupBackground, #fff);
+}

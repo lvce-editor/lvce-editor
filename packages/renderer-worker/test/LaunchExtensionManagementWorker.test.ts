@@ -53,7 +53,9 @@ test('launchExtensionManagementWorker - launches web worker without shared proce
   )
   expect(IpcParent.create).toHaveBeenCalledWith({
     method: IpcParentType.ModuleWorkerAndWorkaroundForChromeDevtoolsBug,
+    id: expect.any(Number),
     name: 'Extension Management Worker',
+    parentName: 'Renderer Worker',
     url: 'https://example.com/extension-management-worker.js',
   })
   expect(HandleIpc.handleIpc).toHaveBeenCalledWith(ipc)
@@ -71,4 +73,28 @@ test('launchExtensionManagementWorker - loads development config for remote work
 
   expect(SharedProcess.invoke).toHaveBeenCalledWith('ExtensionManagement.getLinkedExtensionDevelopmentConfig')
   expect(JsonRpc.invoke).toHaveBeenCalledWith(ipc, 'Extensions.initialize', PlatformType.Remote, developmentConfig)
+})
+
+
+test('initializes the precreated extension worker through its transferred port', async () => {
+  const IpcState = await import('../src/parts/IpcState/IpcState.js')
+  const RuntimeConfig = await import('../src/parts/RuntimeConfig/RuntimeConfig.ts')
+  const Transferrable = await import('../src/parts/Transferrable/Transferrable.js')
+  const port = {}
+  IpcState.setConfig(true)
+  RuntimeConfig.initialize({ preloadWorkers: ['extensionManagementWorker'] })
+  jest.mocked(Platform.getPlatform).mockReturnValue(PlatformType.Web)
+  jest.mocked(IpcParent.create).mockImplementation(async ({ id }) => {
+    Transferrable.transfer(id, port)
+    return undefined
+  })
+  try {
+    const ipc = await LaunchExtensionManagementWorker.launchExtensionManagementWorker()
+    expect(ipc.port).toBe(port)
+    expect(HandleIpc.handleIpc).toHaveBeenCalledWith(ipc)
+    expect(JsonRpc.invoke).toHaveBeenCalledWith(ipc, 'Extensions.initialize', PlatformType.Web, undefined)
+  } finally {
+    IpcState.setConfig(false)
+    RuntimeConfig.initialize()
+  }
 })

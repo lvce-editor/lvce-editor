@@ -2,6 +2,7 @@ import * as ComputeCacheKey from '../ComputeCacheKey/ComputeCacheKey.ts'
 
 const locations = [
   '.nvmrc',
+  'packages/build/.nvmrc',
   'package.json',
   'package-lock.json',
   'packages/build/package-lock.json',
