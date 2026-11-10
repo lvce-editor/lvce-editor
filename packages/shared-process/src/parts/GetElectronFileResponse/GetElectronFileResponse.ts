@@ -1,5 +1,5 @@
 import { pathToFileURL } from 'node:url'
-import * as GetBadRequestResponse from '../GetBadRequestResponse/GetBadRequestResponse.js'
+import * as GetBadRequestResponse from '../GetBadRequestResponse/GetBadRequestResponse.ts'
 import * as GetByteRange from '../GetByteRange/GetByteRange.ts'
 import * as GetContentResponse from '../GetContentResponse/GetContentResponse.ts'
 import * as GetElectronFileResponseAbsolutePath from '../GetElectronFileResponseAbsolutePath/GetElectronFileResponseAbsolutePath.ts'
