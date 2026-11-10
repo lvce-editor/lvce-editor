@@ -20,6 +20,14 @@ test('saveState lets the panel worker save its active child', async () => {
   expect(result).toEqual({ currentViewletId: 'Problems' })
 })
 
+test('loads the panel worker with its saved state', async () => {
+  const savedState = { currentViewletId: 'Terminals' }
+
+  await ViewletPanel.loadContent({ uid: 13 }, savedState)
+
+  expect(PanelWorker.invoke).toHaveBeenCalledWith('Panel.loadContent', 13, savedState, expect.any(String))
+})
+
 test('gets and sets component state through the panel worker', async () => {
   const state = { uid: 13 }
   const result = await ViewletPanel.getComponentState(state)
