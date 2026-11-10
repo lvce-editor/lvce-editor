@@ -316,6 +316,7 @@ export const saveState = (state: LayoutState) => {
     activityBarVisible,
     panelHeight,
     panelVisible,
+    panelView,
     previewUri,
     previewViewletId,
     previewVisible,
@@ -343,6 +344,7 @@ export const saveState = (state: LayoutState) => {
     activityBarVisible,
     panelHeight,
     panelVisible,
+    panelView,
     panelAlignment,
     previewUri,
     previewViewletId,
@@ -448,6 +450,13 @@ const getSavedSideBarView = (savedState) => {
     return savedState.sideBarView
   }
   return ViewletModuleId.Explorer
+}
+
+const getSavedPanelView = (savedState) => {
+  if (savedState && typeof savedState.panelView === 'string' && savedState.panelView) {
+    return savedState.panelView
+  }
+  return ViewletModuleId.Problems
 }
 
 const getSavedSecondarySideBarView = (savedState) => {
@@ -569,6 +578,7 @@ export const loadContent = (state: LayoutState, savedState: any): LayoutState =>
     sideBarMaxWidth: 9999999,
     secondarySideBarMaxWidth: 9999999,
     panelVisible,
+    panelView: getSavedPanelView(stateToRestore),
 
     sideBarMinWidth: 170,
     secondarySideBarMinWidth: 220,
