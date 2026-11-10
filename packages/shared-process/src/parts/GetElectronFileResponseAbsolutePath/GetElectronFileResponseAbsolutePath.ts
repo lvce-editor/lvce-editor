@@ -8,6 +8,17 @@ import * as StaticPath from '../StaticPath/StaticPath.ts'
 
 const invalidIconsPath = Path.join(Root.root, 'static', '__missing_vscode_icon__.svg')
 
+export class InvalidRemotePathError extends Error {
+  constructor(pathName: string) {
+    super(`Invalid remote path: ${pathName}`)
+    this.name = 'InvalidRemotePathError'
+  }
+}
+
+export const isInvalidRemotePathError = (error: unknown): boolean => {
+  return error instanceof InvalidRemotePathError
+}
+
 const getIconAbsolutePath = (pathName: any): any => {
   const relativePath = pathName.startsWith('/static/icons/') ? pathName.slice('/static/icons/'.length) : pathName.slice('/icons/'.length)
   if (!relativePath || relativePath.includes('/') || relativePath.includes('\\') || relativePath.includes('..')) {
@@ -22,6 +33,25 @@ const getIconAbsolutePath = (pathName: any): any => {
     return staticIconPath
   }
   return invalidIconsPath
+}
+
+const driveLetterWithoutSlashPath = /^\/?[A-Za-z]:[^/]/
+const driveLetterPath = /^\/?[A-Za-z]:\//
+
+const getRemoteAbsolutePath = (pathName: string): string => {
+  const uri = pathName.slice('/remote'.length)
+  if (!uri) {
+    throw new InvalidRemotePathError(pathName)
+  }
+  const normalized = uri.replaceAll('\\', '/')
+  if (driveLetterWithoutSlashPath.test(normalized)) {
+    throw new InvalidRemotePathError(pathName)
+  }
+  const normalizedUri = normalized.startsWith('/') ? normalized : `/${normalized}`
+  if (driveLetterPath.test(normalized)) {
+    return fileURLToPath(`file://` + normalizedUri)
+  }
+  return decodeURIComponent(normalized)
 }
 
 // TODO clean up this code
@@ -45,8 +75,7 @@ export const getElectronFileResponseAbsolutePath = (pathName: any): any => {
   }
   // TODO maybe have a separate protocol for remote, e.g. vscode has vscode-remote
   if (pathName.startsWith(`/remote`)) {
-    const uri = pathName.slice('/remote'.length)
-    return fileURLToPath(`file://` + uri)
+    return getRemoteAbsolutePath(pathName)
   }
   if (pathName.startsWith('/process-explorer/process-explorer-theme.css')) {
     const processExplorerThemeCss = join(tmpdir(), 'process-explorer-theme.css')
