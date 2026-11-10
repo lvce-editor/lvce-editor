@@ -1,4 +1,4 @@
-import * as HttpStatusCode from '../HttpStatusCode/HttpStatusCode.ts'
+import * as HttpStatusCode from '../HttpStatusCode/HttpStatusCode.js'
 
 export const getBadRequestResponse = () => {
   return {

@@ -3,7 +3,6 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import * as Path from '../Path/Path.ts'
-import * as Platform from '../Platform/Platform.ts'
 import * as Root from '../Root/Root.ts'
 import * as StaticPath from '../StaticPath/StaticPath.ts'
 
@@ -36,8 +35,8 @@ const getIconAbsolutePath = (pathName: any): any => {
   return invalidIconsPath
 }
 
-const driveLetterPath = /^\/?[A-Za-z]:\//
 const driveLetterWithoutSlashPath = /^\/?[A-Za-z]:[^/]/
+const driveLetterPath = /^\/?[A-Za-z]:\//
 
 const getRemoteAbsolutePath = (pathName: string): string => {
   const uri = pathName.slice('/remote'.length)
@@ -45,14 +44,14 @@ const getRemoteAbsolutePath = (pathName: string): string => {
     throw new InvalidRemotePathError(pathName)
   }
   const normalized = uri.replaceAll('\\', '/')
-  if (Platform.isWindows || driveLetterPath.test(normalized) || driveLetterWithoutSlashPath.test(normalized)) {
-    if (driveLetterWithoutSlashPath.test(normalized)) {
-      throw new InvalidRemotePathError(pathName)
-    }
-    const normalizedUri = normalized.startsWith('/') ? normalized : `/${normalized}`
+  if (driveLetterWithoutSlashPath.test(normalized)) {
+    throw new InvalidRemotePathError(pathName)
+  }
+  const normalizedUri = normalized.startsWith('/') ? normalized : `/${normalized}`
+  if (driveLetterPath.test(normalized)) {
     return fileURLToPath(`file://` + normalizedUri)
   }
-  return normalized
+  return decodeURIComponent(normalized)
 }
 
 // TODO clean up this code
