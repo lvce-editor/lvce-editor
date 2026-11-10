@@ -16,7 +16,7 @@ export class InvalidRemotePathError extends Error {
   }
 }
 
-export const isInvalidRemotePathError = (error: unknown) => {
+export const isInvalidRemotePathError = (error: unknown): boolean => {
   return error instanceof InvalidRemotePathError
 }
 
@@ -39,7 +39,7 @@ const getIconAbsolutePath = (pathName: any): any => {
 const driveLetterPath = /^\/?[A-Za-z]:\//
 const driveLetterWithoutSlashPath = /^\/?[A-Za-z]:[^/]/
 
-const getRemoteAbsolutePath = (pathName: string) => {
+const getRemoteAbsolutePath = (pathName: string): string => {
   const uri = pathName.slice('/remote'.length)
   if (!uri) {
     throw new InvalidRemotePathError(pathName)
