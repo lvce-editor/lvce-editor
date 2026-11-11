@@ -91,7 +91,7 @@ test('writeFile - keybindings reloads runtime keybindings after persisting', asy
 
   await FileSystemApp.writeFile('keybindings.json', '[]')
 
-  expect(FileSystem.writeFile).toHaveBeenCalledWith('~/.config/app/keybindings.json', '[]')
+  expect(FileSystem.writeFile).toHaveBeenCalledWith('~/.config/app/keybindings.json', '[]', 'utf8', false)
   expect(KeyBindings.reloadUserKeyBindings).toHaveBeenCalledTimes(1)
 })
 
@@ -201,8 +201,8 @@ test('writeFile - settings - error parent folder does not exist', async () => {
   })
   await FileSystemApp.writeFile('settings.json', '')
   expect(FileSystem.writeFile).toHaveBeenCalledTimes(2)
-  expect(FileSystem.writeFile).toHaveBeenNthCalledWith(1, '~/.config/app/settings.json', '')
-  expect(FileSystem.writeFile).toHaveBeenNthCalledWith(2, '~/.config/app/settings.json', '')
+  expect(FileSystem.writeFile).toHaveBeenNthCalledWith(1, '~/.config/app/settings.json', '', 'utf8', false)
+  expect(FileSystem.writeFile).toHaveBeenNthCalledWith(2, '~/.config/app/settings.json', '', 'utf8', false)
   expect(FileSystem.mkdir).toHaveBeenCalledTimes(1)
   expect(FileSystem.mkdir).toHaveBeenCalledWith('~/.config/app')
 })
@@ -226,7 +226,7 @@ test('writeFile - settings - creates windows parent folder', async () => {
   await FileSystemApp.writeFile('settings.json', '{}')
 
   expect(FileSystem.mkdir).toHaveBeenCalledWith(String.raw`C:\Users\test\.config\lvce-oss`)
-  expect(FileSystem.writeFile).toHaveBeenLastCalledWith(settingsPath, '{}')
+  expect(FileSystem.writeFile).toHaveBeenLastCalledWith(settingsPath, '{}', 'utf8', false)
 })
 
 test.each(['app://settings.json', 'app:///settings.json'])('writeFile - settings %s', async (uri) => {
@@ -235,5 +235,5 @@ test.each(['app://settings.json', 'app:///settings.json'])('writeFile - settings
 
   await FileSystemApp.writeFile(uri, '{"editor.fontSize":17}')
 
-  expect(FileSystem.writeFile).toHaveBeenCalledWith('~/.config/app/settings.json', '{"editor.fontSize":17}')
+  expect(FileSystem.writeFile).toHaveBeenCalledWith('~/.config/app/settings.json', '{"editor.fontSize":17}', 'utf8', false)
 })

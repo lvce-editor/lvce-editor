@@ -10,12 +10,15 @@ const notifyFileSystemChanged = async (changes = {}, refreshWorkspaceViews = tru
   if (refreshWorkspaceViews) {
     effects.push(Command.execute('Layout.handleWorkspaceRefresh', changes))
   } else {
-    // A handler may call editor RPC while the editor is waiting for this write.
-    // Deliver the event without holding that save command open.
-    void Promise.allSettled([GlobalEventBus.emitEvent('fileSystem.changed', changes)])
+    effects.push(GlobalEventBus.emitEvent('fileSystem.changed', changes))
   }
   effects.push(Command.execute('Layout.refreshSourceControlBadgeCount'))
-  await Promise.allSettled(effects)
+  // Editor input is queued behind its save. Extension handlers and Git badge
+  // scans must not hold that queue after the file has been written.
+  const refreshed = Promise.allSettled(effects)
+  if (refreshWorkspaceViews) {
+    await refreshed
+  }
 }
 
 export const readFile = async (uri, encoding = EncodingType.Utf8) => {
