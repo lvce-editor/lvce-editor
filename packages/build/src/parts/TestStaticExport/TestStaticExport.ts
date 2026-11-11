@@ -121,8 +121,9 @@ const main = async () => {
   const chat2 = webExtensions.find((extension) => extension.id === 'builtin.chat-view-2')
   assert.ok(chat2, 'static export should retain the builtin Chat 2 web extension')
   assert.equal(chat2.path, `/test/${commitHash}/extensions/builtin.chat-view-2`)
+  assert.ok(!webExtensions.some((extension) => extension.id === 'builtin.chat'), 'static export should omit the legacy builtin Chat View extension')
   assert.ok(
-    webExtensions.some((extension) => extension.id === 'builtin.chat'),
+    webExtensions.some((extension) => extension.id === 'builtin.git'),
     'static export should retain other builtin web extensions',
   )
   assert.ok(
