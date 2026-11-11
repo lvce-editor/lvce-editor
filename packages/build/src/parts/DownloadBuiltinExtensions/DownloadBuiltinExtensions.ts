@@ -138,6 +138,7 @@ const printError = (error) => {
 
 const main = async () => {
   try {
+    await rm(Path.absolute('extensions/builtin.chat'), { recursive: true, force: true })
     await downloadExtensions(extensions)
   } catch (error) {
     printError(error)

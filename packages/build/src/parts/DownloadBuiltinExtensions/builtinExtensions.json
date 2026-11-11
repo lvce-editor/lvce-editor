@@ -41,13 +41,6 @@
     "created": "2024-10-13"
   },
   {
-    "name": "builtin.chat",
-    "repository": "github.com/lvce-editor/chat",
-    "version": "2.1.0",
-    "sha256": "f54475bd98f13c4d0f589ad043d26e03d94a7040175cc8edae6e76b66a2eae9d",
-    "created": "2025-02-10"
-  },
-  {
     "name": "builtin.codex",
     "repository": "github.com/lvce-editor/codex",
     "version": "1.14.1",
