@@ -564,6 +564,34 @@ test('preserves command short-circuit and phase-specific diff parameters', async
   expect(invoke).not.toHaveBeenCalledWith('Example.render3', 5, [])
 })
 
+test('renders worker state while a configured command is pending', async () => {
+  const commandPromise = Promise.withResolvers<void>()
+  const requestRender = jest.fn(async (_uid: number) => {})
+  const invoke = jest.fn(async (method: string, ..._args: readonly unknown[]) => {
+    if (method === 'Example.getCommandIds') return ['select']
+    if (method === 'Example.select') return commandPromise.promise
+    if (method === 'Example.diff3') return ['diff']
+    if (method === 'Example.render3') return [['setText', 'ready']]
+    return undefined
+  })
+  const config: any = createConfig({ commandRenderWhenPending: ['select'] })
+  const viewlet = createWorkerViewletWithDependencies({
+    config,
+    context: { platform: 1 },
+    requestRender,
+    worker: { invoke, restart: jest.fn() },
+  })
+  const commands = await viewlet.getCommands!()
+  const state = viewlet.create(5)
+  const command = commands.select(state)
+
+  await new Promise((resolve) => setTimeout(resolve, 0))
+  expect(requestRender).toHaveBeenCalledWith(5)
+  commandPromise.resolve()
+  await expect(command).resolves.toMatchObject({ commands: [['setText', 'ready']] })
+  expect(invoke).toHaveBeenNthCalledWith(4, 'Example.render3', 5, ['diff'])
+})
+
 test('resizes, saves, and hot reloads through configured methods', async () => {
   const restart = jest.fn(async (_method: string) => {})
   const invoke = jest.fn(async (method: string, ..._args: readonly unknown[]) => {
