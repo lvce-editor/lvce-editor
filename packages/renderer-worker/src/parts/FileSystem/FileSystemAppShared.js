@@ -1,5 +1,6 @@
 import * as Assert from '../Assert/Assert.ts'
 import * as Command from '../Command/Command.js'
+import * as EncodingType from '../EncodingType/EncodingType.js'
 import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
 import * as GetPathDirName from '../GetPathDirName/GetPathDirName.js'
 import * as LocalStorage from '../LocalStorage/LocalStorage.js'
@@ -105,7 +106,7 @@ const writeFileWeb = async (path, content) => {
 const writeFileNode = async (path, content) => {
   // TODO handle enoent and other errors gracefully
   try {
-    await FileSystem.writeFile(path, content)
+    await FileSystem.writeFile(path, content, EncodingType.Utf8, false)
   } catch (error) {
     // TODO error should just have enoent code that could be checked
 
@@ -113,7 +114,7 @@ const writeFileNode = async (path, content) => {
       try {
         const dirname = GetPathDirName.getPathDirName(path)
         await FileSystem.mkdir(dirname)
-        await FileSystem.writeFile(path, content)
+        await FileSystem.writeFile(path, content, EncodingType.Utf8, false)
         return
       } catch (error) {
         throw new VError(error, `Failed to write ${path}`)
