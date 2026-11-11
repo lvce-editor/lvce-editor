@@ -164,8 +164,19 @@ const createRenderTitle = (title) => {
   }
 }
 
-const createWorkerViewletInternal = ({ adapter, config, context, worker }) => {
-  const { capabilities = {}, css = [], methods, name, state, variables = [], workspaceChangeEvent, workspaceChangeEventPrepend, workspaceProgressEvent } = config
+/** @param {{ adapter: any, config: any, context: any, worker: any, requestRender?: (uid: number) => Promise<void> }} options */
+const createWorkerViewletInternal = ({ adapter, config, context, worker, requestRender }) => {
+  const {
+    capabilities = {},
+    css = [],
+    methods,
+    name,
+    state,
+    variables = [],
+    workspaceChangeEvent,
+    workspaceChangeEventPrepend,
+    workspaceProgressEvent,
+  } = config
   const Commands = {}
   const Events = {}
   const { idKey } = state
@@ -276,7 +287,14 @@ const createWorkerViewletInternal = ({ adapter, config, context, worker }) => {
     return runLoadContent(currentState, savedState, args, methods.create, methods.loadContent, false)
   }
   const loadContentForHotReload = (currentState, savedState, ...args) => {
-    return runLoadContent(currentState, savedState, args, methods.hotReloadCreate || methods.create, methods.hotReloadLoadContent || methods.loadContent, true)
+    return runLoadContent(
+      currentState,
+      savedState,
+      args,
+      methods.hotReloadCreate || methods.create,
+      methods.hotReloadLoadContent || methods.loadContent,
+      true,
+    )
   }
 
   const runCommandRenderPipelineInternal = async (currentState, args) => {
@@ -313,7 +331,22 @@ const createWorkerViewletInternal = ({ adapter, config, context, worker }) => {
 
   const wrapCommand = (command) => {
     return async (currentState, ...args) => {
-      await worker.invoke(`${config.commandPrefix}.${command}`, currentState[idKey], ...args)
+      const commandPromise = worker.invoke(`${config.commandPrefix}.${command}`, currentState[idKey], ...args)
+      if (config.commandRenderWhenPending?.includes(command)) {
+        const pending = Symbol('commandPending')
+        const result = await Promise.race([commandPromise, new Promise((resolve) => setTimeout(resolve, 0, pending))])
+        if (result === pending) {
+          if (requestRender) {
+            await requestRender(currentState[idKey])
+          } else {
+            const Viewlet = await import('../Viewlet/Viewlet.js')
+            await Viewlet.requestRender(currentState[idKey])
+          }
+          await commandPromise
+        }
+      } else {
+        await commandPromise
+      }
       return runCommandRenderPipeline(currentState, args)
     }
   }
@@ -518,14 +551,16 @@ const createWorkerViewletInternal = ({ adapter, config, context, worker }) => {
   )
 }
 
+/** @param {{ adapter?: any, config: any, context?: any, worker: any, requestRender?: (uid: number) => Promise<void> }} options */
 export const createWorkerViewletWithDependencies = ({
   adapter = WorkerViewletAdapterMap.getWorkerViewletAdapter(''),
   config,
   context = {},
   worker,
+  requestRender,
 }) => {
   WorkerViewletConfig.validateWorkerViewletConfig('test', config)
-  return createWorkerViewletInternal({ adapter, config, context, worker })
+  return createWorkerViewletInternal({ adapter, config, context, worker, requestRender })
 }
 
 export const createWorkerViewlet = ({ workerId, getPlatform = Platform.getPlatform }) => {

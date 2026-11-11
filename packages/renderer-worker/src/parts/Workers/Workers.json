@@ -757,6 +757,7 @@
       ],
       "state": { "idKey": "uid", "fields": ["uri", "x", "y", "width", "height"], "defaults": { "name": "" } },
       "commandPrefix": "ExtensionDetail",
+      "commandRenderWhenPending": ["handleTabsClick", "selectTab"],
       "commandSkipRenderWhenDiffEmpty": true,
       "ignoreKeyBindingErrors": true,
       "methods": {
