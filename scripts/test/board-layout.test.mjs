@@ -62,7 +62,14 @@ test('board layout connects Trello, recovers errors and navigates IDE/chat/board
     browser = await chromium.launch({ headless: true, executablePath: process.env.CHROME_BIN })
     const page = await browser.newPage({ viewport: { width: 1280, height: 800 } })
     await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 90_000 })
-    await expect(page.getByRole('tab', { name: 'Chat 2', exact: true })).toBeVisible({ timeout: 60_000 })
+    const chatTab = page.getByRole('tab', { name: 'Chat 2', exact: true })
+    await expect(chatTab).toBeVisible({ timeout: 60_000 })
+    // Establish keyboard focus through an interactive view before sending F1.
+    // Activity-bar visibility alone does not establish focus in headless Windows.
+    await chatTab.click()
+    const initialComposer = page.getByRole('textbox', { name: 'Message', exact: true })
+    await initialComposer.focus()
+    await expect(initialComposer).toBeFocused()
     let status = 200
     const fixture = {
       id: 'board',
