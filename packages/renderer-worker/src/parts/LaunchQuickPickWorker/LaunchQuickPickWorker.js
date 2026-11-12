@@ -16,9 +16,12 @@ export const launchQuickPickWorker = async () => {
   })
   HandleIpc.handleIpc(ipc)
   const { port1, port2 } = GetPortTuple.getPortTuple()
+  const { port1: extensionHostPort1, port2: extensionHostPort2 } = GetPortTuple.getPortTuple()
   await Promise.all([
     JsonRpc.invokeAndTransfer(ipc, 'QuickPick.handleRendererProcessMessagePort', port1),
     RendererProcess.invokeAndTransfer('HandleMessagePort.handleMessagePort', port2, 'QuickPick'),
+    JsonRpc.invokeAndTransfer(ipc, 'QuickPick.handleMessagePort', extensionHostPort1),
+    RendererProcess.handleQuickPickExtensionHostMessagePort(extensionHostPort2),
   ])
   return ipc
 }

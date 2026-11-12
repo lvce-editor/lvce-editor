@@ -47,6 +47,10 @@ export const invokeAndTransfer = (method, ...params) => {
   return RendererFrameScheduler.invokeAndTransfer(method, ...params)
 }
 
+export const handleQuickPickExtensionHostMessagePort = (messagePort) => {
+  return PlainMessagePortRpc.create({ commandMap: CommandMapRef.commandMapRef, messagePort })
+}
+
 export const sendAndTransfer = (message, transferables) => {
   state.rpc.ipc.sendAndTransfer(message, transferables)
 }
