@@ -2,6 +2,7 @@ import * as Command from '../Command/Command.js'
 import { executeCallback2, registerCallback } from '../QuickPickEntriesCustom/QuickPickEntriesCustom.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
 export const show = async (...args) => {
   // TODO show custom quickpick
@@ -22,7 +23,13 @@ export const openGoToLine = () => {
 }
 
 export const showEveryThing = () => {
-  return show('everything')
+  let aiNativeLayout = false
+  try {
+    aiNativeLayout = ViewletStates.getState(ViewletModuleId.Layout).aiNativeLayout === true
+  } catch {
+    // Layout state may not be initialized when quick pick is first opened.
+  }
+  return show(aiNativeLayout ? 'chats' : 'everything')
 }
 
 export const showColorTheme = () => {
