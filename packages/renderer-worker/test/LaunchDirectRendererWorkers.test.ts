@@ -25,6 +25,7 @@ jest.unstable_mockModule('../src/parts/JsonRpc/JsonRpc.js', () => ({
   invokeAndTransfer: jest.fn(async () => undefined),
 }))
 jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () => ({
+  handleQuickPickExtensionHostMessagePort: jest.fn(async () => undefined),
   invokeAndTransfer: jest.fn(async () => undefined),
 }))
 jest.unstable_mockModule('../src/parts/ExtensionManagementWorker/ExtensionManagementWorker.js', () => ({
@@ -107,9 +108,12 @@ test.each([
 ] as const)('%s worker connects directly to the renderer process', async (_name, launch, command, rpcId) => {
   await launch()
 
-  expect(GetPortTuple.getPortTuple).toHaveBeenCalledTimes(1)
+  expect(GetPortTuple.getPortTuple).toHaveBeenCalledTimes(launch === LaunchQuickPickWorker.launchQuickPickWorker ? 2 : 1)
   expect(JsonRpc.invokeAndTransfer).toHaveBeenCalledWith(ipc, command, 'worker-port')
   expect(RendererProcess.invokeAndTransfer).toHaveBeenCalledWith('HandleMessagePort.handleMessagePort', 'renderer-process-port', rpcId)
+  if (launch === LaunchQuickPickWorker.launchQuickPickWorker) {
+    expect(RendererProcess.handleQuickPickExtensionHostMessagePort).toHaveBeenCalledWith('renderer-process-port')
+  }
 })
 
 test('Iframe Inspector retains its legacy renderer connection', async () => {
