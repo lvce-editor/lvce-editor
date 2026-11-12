@@ -15,14 +15,18 @@ let lastGestureDirection = 0
 export const enter = (state: LayoutState) => ViewletLayout.enterSideBarFocusMode(state, 'primary', true)
 
 export const handleActivityBarWheel = async (state: LayoutState, deltaY: number): Promise<LayoutState> => {
-  if (!Number.isFinite(deltaY) || deltaY === 0 || deltaY < 0 === Boolean(state.aiNativeLayout)) return state
+  if (!Number.isFinite(deltaY) || deltaY === 0) return state
+  const board = state.aiNativeLayout && state.sideBarView === 'chat2.views.board'
+  if ((deltaY > 0 && !state.aiNativeLayout) || (deltaY < 0 && board)) return state
+  const command = board ? 'chat2.showAiNativeLayout' : deltaY < 0 && state.aiNativeLayout ? 'chat2.showBoardLayout' : 'chat2.toggleAiNativeLayout'
   const now = Date.now()
-  if (Math.sign(deltaY) === lastGestureDirection && now - lastGestureTime < 700) return state
+  const sameBurst = Math.sign(deltaY) === lastGestureDirection && now - lastGestureTime < 700
   lastGestureTime = now
   lastGestureDirection = Math.sign(deltaY)
+  if (sameBurst) return state
   const commands = await ExtensionHostCommands.getCommands(state.assetDir, state.platform, state.applicationId)
-  if (!commands.some((command) => command.id === 'chat2.toggleAiNativeLayout')) return state
-  await Command.execute('ExtensionHost.executeCommand', 'chat2.toggleAiNativeLayout')
+  if (!commands.some((item) => item.id === command)) return state
+  await Command.execute('ExtensionHost.executeCommand', command)
   return state
 }
 handleActivityBarWheel.returnValue = true
