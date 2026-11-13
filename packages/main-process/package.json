@@ -33,7 +33,7 @@
   },
   "devDependencies": {
     "@jest/globals": "^30.5.2",
-    "ws": "^8.22.2"
+    "ws": "^8.23.0"
   },
   "allowScripts": {
     "@parcel/watcher@2.6.0": true
