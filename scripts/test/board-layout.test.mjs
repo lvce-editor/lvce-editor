@@ -105,7 +105,8 @@ test('board layout connects Trello, recovers errors and navigates IDE/chat/board
       await page.locator('.QuickPickItem').filter({ hasText: label }).click()
     }
     await command('View: Open Board Layout')
-    await expect(page.locator('.BoardSetupTitle')).toHaveText('Connect a Trello board')
+    await expect(page.locator('.BoardSetupTitle')).toHaveText('Connect a board')
+    await page.getByRole('button', { name: 'Connect Trello', exact: true }).click()
     await expect(page.locator('.Workbench')).toHaveClass(/AiNativeLayout/)
     await page.getByRole('textbox', { name: 'Board URL or ID', exact: true }).fill('https://trello.com/b/5k8NLHLh/work')
     await page.getByRole('textbox', { name: 'Trello API key', exact: true }).fill('testkey')
