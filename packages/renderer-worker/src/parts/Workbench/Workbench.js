@@ -8,6 +8,7 @@ import * as CleanUpWorkersAfterLoad from '../CleanUpWorkersAfterLoad/CleanUpWork
 import * as DevelopFileWatcher from '../DevelopFileWatcher/DevelopFileWatcher.js'
 import * as ExecuteCurrentTest from '../ExecuteCurrentTest/ExecuteCurrentTest.js'
 import * as ExtensionManagementWorker from '../ExtensionManagementWorker/ExtensionManagementWorker.js'
+import * as ExtensionManagement from '../ExtensionManagement/ExtensionManagement.js'
 import * as FileSystemMap from '../FileSystemMap/FileSystemMap.js'
 import * as FileSystemState from '../FileSystemState/FileSystemState.js'
 import * as Focus from '../Focus/Focus.js'
@@ -214,6 +215,7 @@ export const startup = async (initData, platform, assetDir) => {
   Performance.mark(PerformanceMarkerType.WillShowLayout)
   const layout = ViewletManager.create(ViewletModule.load, ViewletModuleId.Layout, 0, '', 0, 0, 0, 0)
   layout.uid = Id.create()
+  const { uid } = layout
   const layoutState = cpuProfile ? undefined : await SaveState.getSavedViewletState(ViewletModuleId.Layout)
   const commands = await ViewletManager.load(
     {
@@ -224,7 +226,7 @@ export const startup = async (initData, platform, assetDir) => {
       uri: '',
       show: false,
       focus: false,
-      uid: layout.uid,
+      uid,
     },
     false,
     false,
@@ -236,7 +238,7 @@ export const startup = async (initData, platform, assetDir) => {
   // const layoutModule = ViewletStates.getInstance(ViewletModuleId.Layout)
   // const placeholderCommands = layoutModule.factory.getInitialPlaceholderCommands(layoutModule.state)
   // commands.push(...placeholderCommands)
-  commands.push(['Viewlet.appendToBody', layout.uid])
+  commands.push(['Viewlet.appendToBody', uid])
   await RendererProcess.invoke('Viewlet.executeCommands', commands)
   if (authState) {
     await Command.execute('Layout.setAuthState', authState)
@@ -287,6 +289,7 @@ export const startup = async (initData, platform, assetDir) => {
   Performance.mark(PerformanceMarkerType.WillLoadLocation)
   await Location.hydrate()
   Performance.mark(PerformanceMarkerType.DidLoadLocation)
+  await ExtensionManagement.activateByEvent('onStartupFinished', assetDir, platform)
 
   const watcherPromises = Promise.all([
     DevelopFileWatcher.hydrate(),

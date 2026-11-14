@@ -17,13 +17,19 @@ const files: Readonly<Record<string, StaticFile>> = {
   '/': {
     headers: indexHeaders,
   },
+  '/abc': {
+    headers: specialHeaders,
+  },
   '/auth/callback': {
     headers: indexHeaders,
   },
-  '/def': {
-    headers: specialHeaders,
+  '/board': {
+    headers: indexHeaders,
   },
-  '/abc': {
+  '/chat': {
+    headers: indexHeaders,
+  },
+  '/def': {
     headers: specialHeaders,
   },
 }

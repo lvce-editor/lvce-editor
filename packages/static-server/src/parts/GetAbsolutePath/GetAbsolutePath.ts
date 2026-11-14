@@ -2,11 +2,13 @@ import { existsSync } from 'node:fs'
 import { dirname, isAbsolute, join, relative, resolve, sep } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import * as CodiconsPath from '../CodiconsPath/CodiconsPath.ts'
-import { STATIC } from '../Static/Static.ts'
 import { root } from '../Root/Root.ts'
+import { STATIC } from '../Static/Static.ts'
 
 const invalidIconsPath = join(STATIC, '__missing_vscode_icon__.svg')
 const invalidStaticPath = join(STATIC, '__invalid_path__')
+const appRoutePattern = /(?:^|\/)(chat|board)\/?$/
+const leadingSlashesPattern = /^[/\\]+/
 
 const getContainedPath = (basePath: string, pathName: string): string => {
   let decodedPathName
@@ -15,7 +17,7 @@ const getContainedPath = (basePath: string, pathName: string): string => {
   } catch {
     return invalidStaticPath
   }
-  const absolutePath = resolve(basePath, decodedPathName.replace(/^[/\\]+/, ''))
+  const absolutePath = resolve(basePath, decodedPathName.replace(leadingSlashesPattern, ''))
   const relativePath = relative(basePath, absolutePath)
   if (relativePath === '..' || relativePath.startsWith(`..${sep}`) || isAbsolute(relativePath)) {
     return invalidStaticPath
@@ -40,6 +42,10 @@ const getIconAbsolutePath = (pathName: string): string => {
 }
 
 export const getAbsolutePath = (pathName: string): string => {
+  const appRoute = pathName.match(appRoutePattern)
+  if (appRoute) {
+    return join(STATIC, appRoute[1], 'index.html')
+  }
   if (pathName === '/') {
     return join(STATIC, 'index.html')
   }

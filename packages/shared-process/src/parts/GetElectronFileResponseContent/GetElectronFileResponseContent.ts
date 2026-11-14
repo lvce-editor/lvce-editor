@@ -6,6 +6,7 @@ import * as ShouldTranspileTypescript from '../ShouldTranspileTypescript/ShouldT
 import * as TranspileTypeScript from '../TranspileTypeScript/TranspileTypeScript.ts'
 
 const useCache = false // TODO enable this
+const appRoutePattern = /(?:^|\/)(?:board|chat)\/?$/
 
 const getWorkspaceUri = (url: string): string | undefined => {
   const baseUrl = `${Platform.scheme}://-/`
@@ -44,7 +45,7 @@ export const getElectronFileResponseContent = async (request: any, absolutePath:
   let content = await readFile(absolutePath)
   const baseUrl = `${Platform.scheme}://-/`
   const indexUrl = typeof url === 'string' && URL.canParse(url, baseUrl) ? new URL(url, baseUrl) : undefined
-  const isAppIndex = indexUrl && (indexUrl.pathname === '/' || indexUrl.pathname === '/index.html')
+  const isAppIndex = indexUrl && (indexUrl.pathname === '/' || indexUrl.pathname === '/index.html' || appRoutePattern.test(indexUrl.pathname))
   const runtimeConfig = { platform: request?.platform === 'remote' ? 'remote' : 'electron', workspaceUri: getWorkspaceUri(request?.url || url) }
   if (!Platform.isProduction && isAppIndex) {
     // @ts-ignore

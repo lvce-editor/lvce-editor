@@ -1,26 +1,35 @@
+import type { Request } from '../Request/Request.ts'
 import * as Files from '../Files/Files.ts'
 import * as GetAbsolutePath from '../GetAbsolutePath/GetAbsolutePath.ts'
 import * as HttpHeader from '../HttpHeader/HttpHeader.ts'
 import * as HttpStatusCode from '../HttpStatusCode/HttpStatusCode.ts'
 import { isSupportedMethod } from '../IsSupportedMethod/IsSupportedMethod.ts'
 import * as MatchesEtag from '../MatchesEtag/MatchesEtag.ts'
-import type { Request } from '../Request/Request.ts'
 
-export const getResponseInfoProduction = (request: Request) => {
+const appRoutePattern = /(?:^|\/)(chat|board)\/?$/
+
+interface ResponseInfo {
+  absolutePath: string
+  headers: Record<string, string>
+  status: number
+}
+
+export const getResponseInfoProduction = (request: Request): ResponseInfo => {
   if (!isSupportedMethod(request.method)) {
     return {
       absolutePath: '',
-      status: HttpStatusCode.MethodNotAllowed,
       headers: {},
+      status: HttpStatusCode.MethodNotAllowed,
     }
   }
-  const pathName = request.path || request.url?.split('?')[0] || '/'
-  const result = Files.get(pathName)
+  const pathName = request.path || request.url?.split('?', 1)[0] || '/'
+  const appRoute = pathName.match(appRoutePattern)
+  const result = Files.get(pathName) || (appRoute && Files.get(`/${appRoute[1]}`))
   if (!result) {
     return {
       absolutePath: '',
-      status: HttpStatusCode.NotFound,
       headers: {},
+      status: HttpStatusCode.NotFound,
     }
   }
   const headers = result.headers || result
@@ -28,16 +37,16 @@ export const getResponseInfoProduction = (request: Request) => {
   if (etag && MatchesEtag.matchesEtag(request, etag)) {
     return {
       absolutePath: '',
-      status: HttpStatusCode.NotModifed,
       headers: {
         [HttpHeader.Etag]: etag,
       },
+      status: HttpStatusCode.NotModifed,
     }
   }
   const absolutePath = GetAbsolutePath.getAbsolutePath(pathName)
   return {
     absolutePath,
-    status: HttpStatusCode.Ok,
     headers,
+    status: HttpStatusCode.Ok,
   }
 }

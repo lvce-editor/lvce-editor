@@ -4,6 +4,7 @@ import * as GetResponseInfo from '../src/parts/GetResponseInfo/GetResponseInfo.t
 import * as HttpStatusCode from '../src/parts/HttpStatusCode/HttpStatusCode.ts'
 
 const normalizePath = (path: string): string => path.replaceAll('\\', '/')
+const staticIndexHtmlPattern = /\/static\/(?:chat|board)\/index\.html$/
 
 test('maps /icons requests to renderer-worker vscode icons package', () => {
   const absolutePath = GetAbsolutePath.getAbsolutePath('/icons/chevron-right.svg')
@@ -29,6 +30,12 @@ test('maps oauth callback route to callback html', () => {
   expect(normalizePath(absolutePath)).toContain('/static/auth/callback.html')
 })
 
+test.each(['/board', '/board/', '/prefix/board', '/chat'])('maps app route %s to an index document', (pathName) => {
+  const absolutePath = GetAbsolutePath.getAbsolutePath(pathName)
+
+  expect(normalizePath(absolutePath)).toMatch(staticIndexHtmlPattern)
+})
+
 test.each(['/auth/../../secret', '/css/../../secret', '/css/%2e%2e/%2e%2e/secret', '/packages/../../secret.js'])(
   'prevents path traversal for %s',
   (pathName) => {
@@ -40,12 +47,12 @@ test.each(['/auth/../../secret', '/css/../../secret', '/css/%2e%2e/%2e%2e/secret
 
 test('returns 200 for oauth callback route with query params', async () => {
   const response = await GetResponseInfo.getResponseInfo({
+    isImmutable: false,
     request: {
       headers: {},
       method: 'GET',
       url: '/auth/callback?code=code-1&state=state-1',
     },
-    isImmutable: false,
   })
 
   expect(response.status).toBe(HttpStatusCode.Ok)
@@ -53,27 +60,27 @@ test('returns 200 for oauth callback route with query params', async () => {
 
 test('returns 404 for missing vscode icon in development', async () => {
   const response = await GetResponseInfo.getResponseInfo({
+    isImmutable: false,
     request: {
       method: 'GET',
       url: '/icons/__missing__.svg',
     },
-    isImmutable: false,
   })
 
   expect(response).toEqual({
     absolutePath: '',
-    status: HttpStatusCode.NotFound,
     headers: {},
+    status: HttpStatusCode.NotFound,
   })
 })
 
 test('returns 200 for the menu submenu chevron icon', async () => {
   const response = await GetResponseInfo.getResponseInfo({
+    isImmutable: false,
     request: {
       method: 'GET',
       url: '/icons/chevron-right.svg',
     },
-    isImmutable: false,
   })
 
   expect(response.status).toBe(HttpStatusCode.Ok)
