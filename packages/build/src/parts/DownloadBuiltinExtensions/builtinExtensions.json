@@ -50,9 +50,9 @@
   {
     "name": "builtin.chat-view-2",
     "repository": "github.com/lvce-editor/chat-view-2",
-    "version": "1.37.1",
-    "sha256": "a1d4f9bff61cc129deda16da2fbe2c00853d1656eced23945db72d1f343c79aa",
-    "created": "2026-09-13"
+    "version": "1.37.2",
+    "sha256": "2fe207a3feee6d560cb699045f1949e9311fdbe3a3313fd17948a07044177839",
+    "created": "2026-11-14"
   },
   {
     "name": "builtin.gpt-voice",

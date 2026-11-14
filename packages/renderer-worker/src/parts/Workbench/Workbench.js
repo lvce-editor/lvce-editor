@@ -289,8 +289,15 @@ export const startup = async (initData, platform, assetDir) => {
   Performance.mark(PerformanceMarkerType.WillLoadLocation)
   await Location.hydrate()
   Performance.mark(PerformanceMarkerType.DidLoadLocation)
-  await ExtensionManagement.activateByEvent('onStartupFinished', assetDir, platform)
-
+  const { pathname } = new URL(await Location.getHref())
+  const initialLayoutActivationEvent = pathname.endsWith('/board')
+    ? 'onCommand:chat2.showBoardLayout'
+    : pathname.endsWith('/chat')
+      ? 'onCommand:chat2.show'
+      : undefined
+  if (initialLayoutActivationEvent) {
+    await ExtensionManagement.activateByEvent(initialLayoutActivationEvent, assetDir, platform)
+  }
   const watcherPromises = Promise.all([
     DevelopFileWatcher.hydrate(),
     PreferencesFileWatcher.hydrate(),
