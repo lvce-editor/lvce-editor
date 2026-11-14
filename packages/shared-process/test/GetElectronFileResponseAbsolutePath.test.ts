@@ -6,11 +6,18 @@ import * as GetElectronFileResponseRelativePath from '../src/parts/GetElectronFi
 import * as GetRemoteUrl from '../src/parts/GetRemoteUrl/GetRemoteUrl.js'
 
 const normalizePath = (path: any): any => path.replaceAll('\\', '/')
+const indexHtmlPattern = /\/index\.html$/
 
 test('maps /icons requests to renderer-worker codicons', () => {
   const absolutePath = GetElectronFileResponseAbsolutePath.getElectronFileResponseAbsolutePath('/icons/chevron-right.svg')
 
   expect(normalizePath(absolutePath)).toContain('/packages/renderer-worker/node_modules/@vscode/codicons/src/icons/chevron-right.svg')
+})
+
+test.each(['/board', '/board/', '/prefix/board', '/chat'])('maps application route %s to index.html', (pathName) => {
+  const absolutePath = GetElectronFileResponseAbsolutePath.getElectronFileResponseAbsolutePath(pathName)
+
+  expect(normalizePath(absolutePath)).toMatch(indexHtmlPattern)
 })
 
 test('falls back to static/icons for non-codicon assets', () => {

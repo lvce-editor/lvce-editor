@@ -96,6 +96,11 @@ const copyStaticFiles = async ({ commitHash }) => {
     from: `packages/build/.tmp/server/static-server/static/index.html`,
     to: `packages/build/.tmp/server/static-server/static/chat/index.html`,
   })
+  await Mkdir.mkdir('packages/build/.tmp/server/static-server/static/board')
+  await Copy.copyFile({
+    from: `packages/build/.tmp/server/static-server/static/index.html`,
+    to: `packages/build/.tmp/server/static-server/static/board/index.html`,
+  })
   await BundleCss.bundleCss({
     outDir: `packages/build/.tmp/server/static-server/static/${commitHash}/css`,
     assetDir: `/${commitHash}`,

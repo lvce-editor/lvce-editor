@@ -37,6 +37,7 @@ const getIconAbsolutePath = (pathName: any): any => {
 
 const driveLetterWithoutSlashPath = /^\/?[A-Za-z]:[^/]/
 const driveLetterPath = /^\/?[A-Za-z]:\//
+const appRoutePattern = /(?:^|\/)(?:board|chat)\/?$/
 
 const getRemoteAbsolutePath = (pathName: string): string => {
   const uri = pathName.slice('/remote'.length)
@@ -56,6 +57,10 @@ const getRemoteAbsolutePath = (pathName: string): string => {
 
 // TODO clean up this code
 export const getElectronFileResponseAbsolutePath = (pathName: any): any => {
+  if (appRoutePattern.test(pathName)) {
+    const staticPath = StaticPath.getStaticPath()
+    return Path.join(staticPath, 'index.html')
+  }
   // TODO remove if/else in prod (use replacement)
   if (pathName === `/` || pathName.startsWith(`/?`)) {
     const staticPath = StaticPath.getStaticPath()

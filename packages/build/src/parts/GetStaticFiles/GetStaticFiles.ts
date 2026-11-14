@@ -33,7 +33,7 @@ const generateHeadersCode = (ours, indexes, uris) => {
   return lines.join('\n')
 }
 
-const generateFilesCodeMap = (indexes, uris) => {
+export const generateFilesCodeMap = (indexes, uris) => {
   const map = Object.create(null)
   const length = indexes.length
   for (let i = 0; i < length; i++) {
@@ -43,6 +43,8 @@ const generateFilesCodeMap = (indexes, uris) => {
   }
   map['/'] = map['/index.html']
   map['/auth/callback'] = map['/auth/callback.html']
+  map['/chat'] = map['/chat/index.html']
+  map['/board'] = map['/board/index.html']
   return map
 }
 

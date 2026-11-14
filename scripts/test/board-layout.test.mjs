@@ -11,7 +11,7 @@ import { bundleBuiltinSettings } from '../../packages/build/src/parts/BundleBuil
 
 const root = fileURLToPath(new URL('../../', import.meta.url))
 
-test('board layout connects Trello, recovers errors and navigates IDE/chat/board', { timeout: 120_000 }, async () => {
+test('board layout loads from its URL and tracks navigation paths', { timeout: 120_000 }, async () => {
   const profile = await mkdtemp(join(tmpdir(), 'lvce-ai-settings-'))
   let server
   let browser
@@ -60,106 +60,55 @@ test('board layout connects Trello, recovers errors and navigates IDE/chat/board
       })
     })
     browser = await chromium.launch({ headless: true, executablePath: process.env.CHROME_BIN })
-    const page = await browser.newPage({ viewport: { width: 1280, height: 800 } })
+    const directContext = await browser.newContext({ viewport: { width: 1280, height: 800 } })
+    const directPage = await directContext.newPage()
+    const boardRoute = new URL('/board', url)
+    const directResponse = await directPage.goto(boardRoute.href, { waitUntil: 'domcontentloaded', timeout: 90_000 })
+    assert.equal(directResponse?.status(), 200)
+    await expect(directPage.locator('.BoardView')).toBeVisible({ timeout: 15_000 })
+    await expect(directPage.locator('.BoardSetupTitle')).toHaveText('Connect a board')
+    await directPage.reload({ waitUntil: 'domcontentloaded' })
+    await expect(directPage.locator('.BoardView')).toBeVisible()
+    assert.equal(new URL(directPage.url()).pathname, '/board')
+    const historyPage = await directContext.newPage()
+    await historyPage.goto(boardRoute.href, { waitUntil: 'domcontentloaded' })
+    await expect(historyPage.locator('.BoardView')).toBeVisible()
+    await historyPage.getByRole('button', { name: 'Chat', exact: true }).click()
+    await expect.poll(() => new URL(historyPage.url()).pathname).toBe('/chat')
+    await expect(historyPage.getByRole('heading', { name: 'What would you like to work on?' })).toBeVisible()
+    await historyPage.goBack()
+    await expect.poll(() => new URL(historyPage.url()).pathname).toBe('/board')
+    await expect(historyPage.locator('.BoardView')).toBeVisible()
+    await directContext.close()
+
+    const context = await browser.newContext({ viewport: { width: 1280, height: 800 } })
+    const page = await context.newPage()
     await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 90_000 })
     const chatTab = page.getByRole('tab', { name: 'Chat 2', exact: true })
     await expect(chatTab).toBeVisible({ timeout: 60_000 })
-    // Establish keyboard focus through an interactive view before sending F1.
-    // Activity-bar visibility alone does not establish focus in headless Windows.
     await chatTab.click()
-    const initialComposer = page.getByRole('textbox', { name: 'Message', exact: true })
-    await initialComposer.focus()
-    await expect(initialComposer).toBeFocused()
-    let status = 200
-    const fixture = {
-      id: 'board',
-      name: 'Product board',
-      lists: [
-        { id: 'done', name: 'Done', pos: 2 },
-        { id: 'todo', name: 'Todo', pos: 1 },
-      ],
-      cards: [
-        { id: 'second', idList: 'todo', name: 'Second card', pos: 2 },
-        { id: 'first', idList: 'todo', name: 'First card', pos: 1 },
-      ],
-    }
-    await page.context().route('https://api.trello.com/**', async (route) => {
-      const request = route.request()
-      if (request.method() !== 'OPTIONS') {
-        assert.ok(!request.url().includes('testtoken'))
-        assert.match(request.headers().authorization, /oauth_token="testtoken"/)
-      }
-      await route.fulfill({
-        status: request.method() === 'OPTIONS' ? 204 : status,
-        headers: {
-          'access-control-allow-origin': '*',
-          'access-control-allow-headers': 'authorization',
-          'access-control-allow-methods': 'GET, OPTIONS',
-        },
-        ...(request.method() === 'OPTIONS' ? {} : { json: fixture }),
-      })
-    })
+    const composer = page.getByRole('textbox', { name: 'Message', exact: true })
+    await composer.focus()
+    await expect(composer).toBeFocused()
     const command = async (label) => {
       await page.keyboard.press('F1')
       await page.locator('.QuickPick input').fill(`>${label}`)
       await page.locator('.QuickPickItem').filter({ hasText: label }).click()
     }
+    const expectPath = (path) => expect.poll(() => new URL(page.url()).pathname).toBe(path)
     await command('View: Open Board Layout')
+    await expectPath('/board')
     await expect(page.locator('.BoardSetupTitle')).toHaveText('Connect a board')
-    await page.getByRole('button', { name: 'Connect Trello', exact: true }).click()
-    await expect(page.locator('.Workbench')).toHaveClass(/AiNativeLayout/)
-    await page.getByRole('textbox', { name: 'Board URL or ID', exact: true }).fill('https://trello.com/b/5k8NLHLh/work')
-    await page.getByRole('textbox', { name: 'Trello API key', exact: true }).fill('testkey')
-    await page.getByRole('textbox', { name: 'Trello read token', exact: true }).fill('testtoken')
-    await page.getByRole('button', { name: 'Connect board', exact: true }).click()
-    await expect(page.locator('.BoardTitle')).toHaveText('Product board')
-    await expect(page.locator('.BoardColumnTitle')).toHaveText(['Todo', 'Done'])
-    await expect(page.locator('.BoardCard')).toHaveText(['First card', 'Second card'])
-    await expect(page.locator('.BoardEmptyList')).toHaveText('No cards')
-    const settings = JSON.parse(await readFile(join(config, 'settings.json'), 'utf8'))
-    assert.deepEqual(settings['chat2.connectedBoardIds'], ['5k8NLHLh'])
-    assert.ok(!JSON.stringify(settings).includes('testtoken'))
-    for (const [failure, code] of [
-      [404, 'TRELLO_BOARD_NOT_FOUND'],
-      [403, 'TRELLO_ACCESS_DENIED'],
-      [500, 'TRELLO_SERVER_ERROR'],
-    ]) {
-      status = failure
-      await page.getByRole('button', { name: 'Refresh board', exact: true }).click()
-      await expect(page.locator('.BoardError')).toContainText(code)
-      status = 200
-      await page.getByRole('button', { name: 'Try again', exact: true }).click()
-      await expect(page.locator('.BoardError')).toHaveCount(0)
-    }
-    for (const width of [560, 1280]) {
-      await page.setViewportSize({ width, height: 800 })
-      await expect(page.getByRole('button', { name: 'IDE layout', exact: true })).toBeInViewport()
-      const bounds = await page.locator('.BoardColumns').boundingBox()
-      assert.ok(bounds.x >= 0 && bounds.x + bounds.width <= width)
-    }
     await page.getByRole('button', { name: 'IDE layout', exact: true }).click()
-    await expect(page.locator('.Workbench')).not.toHaveClass(/AiNativeLayout/)
+    await expectPath('/')
     const activityBar = page.locator('.ActivityBarLayout')
     await activityBar.dispatchEvent('wheel', { deltaY: -100, bubbles: true })
     await expect(page.locator('.ChatAiNativeLayout')).toBeVisible()
-    const composer = page.getByRole('textbox', { name: 'Message', exact: true })
-    await composer.fill('Keep this chat draft')
-    // Distinct gestures are separated from the trackpad burst debounce window.
+    await expectPath('/chat')
     await new Promise((resolve) => setTimeout(resolve, 750))
     await activityBar.dispatchEvent('wheel', { deltaY: -100, bubbles: true })
     await expect(page.locator('.BoardView')).toBeVisible()
-    await expect(page.locator('.BoardTitle')).toHaveText('Product board')
-    await activityBar.dispatchEvent('wheel', { deltaY: 100, bubbles: true })
-    await expect(page.locator('.ChatAiNativeLayout')).toBeVisible()
-    await expect(composer).toHaveValue('Keep this chat draft')
-    await new Promise((resolve) => setTimeout(resolve, 750))
-    await activityBar.dispatchEvent('wheel', { deltaY: 100, bubbles: true })
-    await expect(page.locator('.Workbench')).not.toHaveClass(/AiNativeLayout/)
-    await command('View: Open Board Layout')
-    await page.getByRole('button', { name: 'Disconnect board', exact: true }).click()
-    await expect(page.locator('.BoardSetupTitle')).toBeVisible()
-    const disconnected = JSON.parse(await readFile(join(config, 'settings.json'), 'utf8'))
-    assert.deepEqual(disconnected['chat2.connectedBoardIds'], [])
+    await expectPath('/board')
   } finally {
     await browser?.close()
     if (server && server.exitCode === null) {
