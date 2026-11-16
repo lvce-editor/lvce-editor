@@ -114,6 +114,16 @@ test('board layout loads from its URL and tracks navigation paths', { timeout: 1
     expect(directChatGeometry.composerWidth).toBeGreaterThan(500)
     await expectPath('/chat')
     const activityBar = page.locator('.ActivityBarLayout')
+    for (let index = 0; index < 2; index++) {
+      await command('Layout: Toggle Activity Bar')
+      await expect(activityBar).toBeHidden()
+      await command('Layout: Toggle Activity Bar')
+      await expect(activityBar).toBeVisible()
+      await expect(activityBar.getByRole('button', { name: 'Settings', exact: true })).toBeVisible()
+      await expect(activityBar.getByRole('tab')).toHaveCount(0)
+      await expect(page.locator('.ChatAiNativeLayout')).toBeVisible()
+      await expectPath('/chat')
+    }
     await new Promise((resolve) => setTimeout(resolve, 750))
     await activityBar.dispatchEvent('wheel', { deltaY: -100, bubbles: true })
     await expect(page.locator('.BoardView')).toBeVisible()
