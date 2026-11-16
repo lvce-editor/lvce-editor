@@ -766,6 +766,9 @@ const show = async (state: LayoutState, module, currentViewletId, restore?: bool
   }
   const restoreState: any = shouldRestore ? undefined : { restore: false }
   const commands = await ViewletManager.load(viewlet, false, shouldRestore, restoreState)
+  if (module === LayoutModules.ActivityBar && state.aiNativeLayout) {
+    commands.push(...(await setActivityBarAiNativeLayout(childUid, true)))
+  }
   addPreviewBoundsCommand(commands, childUid, intermediateState, module)
   if (commands) {
     // commands.push(['Viewlet.append', uid, childUid])

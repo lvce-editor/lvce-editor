@@ -71,3 +71,28 @@ test('IDE layout loads the activity bar without applying AI-native filtering', a
 
   expect(activityBarInvoke).not.toHaveBeenCalled()
 })
+
+for (const aiNativeLayout of [true, false]) {
+  test(`hiding and showing the activity bar preserves ${aiNativeLayout ? 'chat' : 'IDE'} layout`, async () => {
+    const state = createState(aiNativeLayout)
+    const hidden = await ViewletLayout.hideActivityBar(state)
+    expect(hidden.newState.activityBarVisible).toBe(false)
+    activityBarInvoke.mockClear()
+    viewletLoad.mockClear()
+
+    const shown = await ViewletLayout.showActivityBar(hidden.newState)
+
+    expect(shown.newState.activityBarVisible).toBe(true)
+    expect(viewletLoad).toHaveBeenCalledTimes(1)
+    expect(activityBarInvoke.mock.calls).toEqual(
+      aiNativeLayout
+        ? [
+            ['ActivityBar.setAiNativeLayout', shown.newState.activityBarId, true],
+            ['ActivityBar.diff2', shown.newState.activityBarId],
+            ['ActivityBar.render2', shown.newState.activityBarId, []],
+          ]
+        : [],
+    )
+    expect(shown.commands).toEqual(aiNativeLayout ? [['Viewlet.loaded'], ['ActivityBar.rendered']] : [['Viewlet.loaded']])
+  })
+}
