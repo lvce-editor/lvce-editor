@@ -64,6 +64,17 @@ test('AI-native settings keep sessions, edit preferences, resize, and return to 
     const sessions = page.locator('.ChatSessions')
     await expect(sessions).toBeVisible()
     const sessionTitle = await sessions.locator('.ChatTaskButton').first().innerText()
+    const settingsPath = join(config, 'settings.json')
+    const readSettings = async () => {
+      for (let attempt = 0; attempt < 4; attempt++) {
+        try {
+          return JSON.parse(await readFile(settingsPath, 'utf8'))
+        } catch (error) {
+          if (!(error instanceof SyntaxError) || attempt === 3) throw error
+          await new Promise((resolve) => setTimeout(resolve, 10))
+        }
+      }
+    }
     await sessions.locator('.ChatTaskButton').first().click()
     const composer = page.getByRole('textbox', { name: 'Message', exact: true })
     await composer.fill('Unsent draft')
@@ -83,7 +94,7 @@ test('AI-native settings keep sessions, edit preferences, resize, and return to 
     await expect(speed).toBeVisible()
     await speed.fill('2')
     await speed.press('Tab')
-    await expect.poll(async () => JSON.parse(await readFile(join(config, 'settings.json'), 'utf8'))['application.scrollspeed']).toBe(2)
+    await expect.poll(async () => (await readSettings())['application.scrollspeed']).toBe(2)
     for (const width of [560, 1280]) {
       await page.setViewportSize({ width, height: 800 })
       const close = page.getByRole('button', { name: 'Close Settings' })
@@ -104,7 +115,6 @@ test('AI-native settings keep sessions, edit preferences, resize, and return to 
     await expect(settings.getByRole('spinbutton').first()).toHaveValue('2')
 
     await page.getByRole('button', { name: 'Close Settings' }).click()
-    const readSettings = async () => JSON.parse(await readFile(join(config, 'settings.json'), 'utf8'))
     const selectTheme = async (theme) => {
       await page.locator('.ActivityBar [title="Settings"]').click()
       await page.getByText('Color Theme', { exact: true }).click()
