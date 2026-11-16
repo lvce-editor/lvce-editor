@@ -933,6 +933,7 @@ export const enterSideBarFocusMode = async (
         }
       : {}),
     aiNativeLayoutExited: false,
+    aiNativeLayoutExitedViewUid: undefined,
     ...(aiNativeLayout ? { titleBarVisible: false, statusBarVisible: false } : {}),
     sideBarFocusMode: true,
     sideBarFocusModeLayout: getSideBarFocusModeLayoutSnapshot(state),
@@ -957,11 +958,14 @@ export const leaveSideBarFocusMode = async (state: LayoutState): Promise<LayoutS
   }
   const settingsResult = await AiNativeLayout.closeSettings(state)
   state = settingsResult.newState
+  const exitedSideBarId = state.sideBarFocusModeTarget === 'secondary' ? state.secondarySideBarId : state.sideBarId
+  const exitedViewUid = ViewletStates.getInstance(exitedSideBarId)?.state.childUid
   let newState = getPoints({
     ...state,
     ...state.sideBarFocusModeLayout,
     aiNativeLayout: false,
     aiNativeLayoutExited: state.aiNativeLayout,
+    aiNativeLayoutExitedViewUid: state.aiNativeLayout ? exitedViewUid : undefined,
     sideBarFocusMode: false,
     sideBarFocusModeLayout: undefined,
     sideBarFocusModeTarget: 'primary',
