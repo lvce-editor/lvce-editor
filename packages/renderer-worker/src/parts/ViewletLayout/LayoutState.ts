@@ -121,6 +121,7 @@ export interface LayoutState {
   readonly aiNativeLayout?: boolean
   readonly aiNativeActivityBarVisible?: boolean
   readonly aiNativeLayoutExited?: boolean
+  readonly aiNativeLayoutExitedViewUid?: number
   readonly sideBarFocusMode: boolean
   readonly sideBarFocusModeLayout: SideBarFocusModeLayoutStateSnapshot | undefined
   readonly sideBarFocusModeTarget: 'primary' | 'secondary'
