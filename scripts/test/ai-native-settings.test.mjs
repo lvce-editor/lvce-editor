@@ -20,6 +20,15 @@ test('AI-native settings keep sessions, edit preferences, resize, and return to 
     const config = join(profile, 'config', 'lvce-oss')
     await mkdir(config, { recursive: true })
     await writeFile(join(config, 'settings.json'), JSON.stringify({ 'chat2.useMockBackend': true, 'chat2.experimentalFocusMode': true }))
+    // Preference writes can briefly expose an incomplete JSON document. Retry the
+    // read, while leaving every assertion about the saved values unchanged.
+    const readSettings = async () => {
+      let settings
+      await expect(async () => {
+        settings = JSON.parse(await readFile(join(config, 'settings.json'), 'utf8'))
+      }).toPass({ timeout: 5000 })
+      return settings
+    }
     const workers = JSON.parse(await readFile(join(root, 'packages/renderer-worker/src/parts/Workers/Workers.json'), 'utf8'))
     await bundleBuiltinSettings({ toRoot: join(root, 'packages/renderer-worker/node_modules'), workers })
     server = spawn(process.execPath, ['packages/server/bin/server.js'], {
@@ -83,7 +92,7 @@ test('AI-native settings keep sessions, edit preferences, resize, and return to 
     await expect(speed).toBeVisible()
     await speed.fill('2')
     await speed.press('Tab')
-    await expect.poll(async () => JSON.parse(await readFile(join(config, 'settings.json'), 'utf8'))['application.scrollspeed']).toBe(2)
+    await expect.poll(async () => (await readSettings())['application.scrollspeed']).toBe(2)
     for (const width of [560, 1280]) {
       await page.setViewportSize({ width, height: 800 })
       const close = page.getByRole('button', { name: 'Close Settings' })
@@ -104,7 +113,6 @@ test('AI-native settings keep sessions, edit preferences, resize, and return to 
     await expect(settings.getByRole('spinbutton').first()).toHaveValue('2')
 
     await page.getByRole('button', { name: 'Close Settings' }).click()
-    const readSettings = async () => JSON.parse(await readFile(join(config, 'settings.json'), 'utf8'))
     const selectTheme = async (theme) => {
       await page.locator('.ActivityBar [title="Settings"]').click()
       await page.getByText('Color Theme', { exact: true }).click()
