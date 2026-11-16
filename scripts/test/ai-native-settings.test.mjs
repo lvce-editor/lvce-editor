@@ -20,6 +20,15 @@ test('AI-native settings keep sessions, edit preferences, resize, and return to 
     const config = join(profile, 'config', 'lvce-oss')
     await mkdir(config, { recursive: true })
     await writeFile(join(config, 'settings.json'), JSON.stringify({ 'chat2.useMockBackend': true, 'chat2.experimentalFocusMode': true }))
+    // Preference writes can briefly expose an incomplete JSON document. Retry the
+    // read, while leaving every assertion about the saved values unchanged.
+    const readSettings = async () => {
+      let settings
+      await expect(async () => {
+        settings = JSON.parse(await readFile(join(config, 'settings.json'), 'utf8'))
+      }).toPass({ timeout: 5000 })
+      return settings
+    }
     const workers = JSON.parse(await readFile(join(root, 'packages/renderer-worker/src/parts/Workers/Workers.json'), 'utf8'))
     await bundleBuiltinSettings({ toRoot: join(root, 'packages/renderer-worker/node_modules'), workers })
     server = spawn(process.execPath, ['packages/server/bin/server.js'], {
