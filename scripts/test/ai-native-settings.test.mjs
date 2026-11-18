@@ -73,17 +73,6 @@ test('AI-native settings keep sessions, edit preferences, resize, and return to 
     const sessions = page.locator('.ChatSessions')
     await expect(sessions).toBeVisible()
     const sessionTitle = await sessions.locator('.ChatTaskButton').first().innerText()
-    const settingsPath = join(config, 'settings.json')
-    const readSettings = async () => {
-      for (let attempt = 0; attempt < 4; attempt++) {
-        try {
-          return JSON.parse(await readFile(settingsPath, 'utf8'))
-        } catch (error) {
-          if (!(error instanceof SyntaxError) || attempt === 3) throw error
-          await new Promise((resolve) => setTimeout(resolve, 10))
-        }
-      }
-    }
     await sessions.locator('.ChatTaskButton').first().click()
     const composer = page.getByRole('textbox', { name: 'Message', exact: true })
     await composer.fill('Unsent draft')
