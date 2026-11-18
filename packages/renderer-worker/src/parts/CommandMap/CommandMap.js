@@ -617,6 +617,7 @@ export const commandMap = {
   'Window.zoomOut': lazy('Window.zoomOut'),
   'Window.zoomReset': lazy('Window.zoomReset'),
   'WindowTitle.set': lazy('WindowTitle.set'),
+  'WindowTitle.setFavicon': lazy('WindowTitle.setFavicon'),
   'Workspace.openRemote': lazy('Workspace.openRemote'),
   'Workspace.close': lazy('Workspace.close'),
   'Workspace.getHomeDir': lazy('Workspace.getHomeDir'),

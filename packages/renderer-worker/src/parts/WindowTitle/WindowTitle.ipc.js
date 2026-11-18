@@ -4,4 +4,5 @@ export const name = 'WindowTitle'
 
 export const Commands = {
   set: WindowTitle.set,
+  setFavicon: WindowTitle.setFavicon,
 }

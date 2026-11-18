@@ -1,30 +1,28 @@
-import { beforeEach, expect, jest, test } from '@jest/globals'
-import * as PlatformType from '../src/parts/PlatformType/PlatformType.js'
+import { afterEach, beforeEach, expect, jest, test } from '@jest/globals'
+import * as RendererFrameScheduler from '../src/parts/RendererFrameScheduler/RendererFrameScheduler.js'
+import { Commands } from '../src/parts/WindowTitle/WindowTitle.ipc.js'
+import * as WindowTitle from '../src/parts/WindowTitle/WindowTitle.js'
+
+const rpc = { invoke: jest.fn(async (..._args: readonly unknown[]) => {}) }
 
 beforeEach(() => {
-  jest.resetAllMocks()
+  jest.clearAllMocks()
+  RendererFrameScheduler.reset(rpc)
 })
 
-jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () => {
-  return {
-    invoke: jest.fn(() => {
-      throw new Error('not implemented')
-    }),
-  }
+afterEach(() => {
+  RendererFrameScheduler.reset(undefined)
 })
-
-const RendererProcess = await import('../src/parts/RendererProcess/RendererProcess.js')
 
 test('setTitle', async () => {
-  jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
-    return {
-      platform: PlatformType.Web,
-    }
-  })
-  const WindowTitle = await import('../src/parts/WindowTitle/WindowTitle.js')
-  // @ts-ignore
-  RendererProcess.invoke.mockImplementation(() => {})
   await WindowTitle.set('test')
-  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith('WindowTitle.set', 'test')
+  expect(rpc.invoke).toHaveBeenCalledTimes(1)
+  expect(rpc.invoke).toHaveBeenCalledWith('WindowTitle.set', 'test')
+})
+
+test.each(['https://trello.com/icon.png', ''])('forwards the dedicated favicon command: %s', async (href) => {
+  expect(Commands.setFavicon).toBe(WindowTitle.setFavicon)
+  await Commands.setFavicon(href)
+  expect(rpc.invoke).toHaveBeenCalledTimes(1)
+  expect(rpc.invoke).toHaveBeenCalledWith('Favicon.set', href)
 })
