@@ -96,6 +96,9 @@ jobs:
           node --experimental-vm-modules node_modules/jest/bin/jest.js --config packages/renderer-worker/package.json --runInBand --coverage=false --testPathPatterns='(IpcParentWithNodeAlternate|LaunchFileSystemWorker|WebSocketCapability|ExtensionNodeRpc|WorkspaceConnection|WorkspaceSetUri|LoadProcessExplorerViewletModule|GetTerminalSpawnOptions).test'
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0
+      - name: Configure apt download retries
+        if: runner.os == 'Linux'
+        run: echo 'Acquire::Retries "5";' | sudo tee /etc/apt/apt.conf.d/80-retries > /dev/null
       - name: Install Chromium for split editor regressions
         run: node node_modules/playwright-core/cli.js install --with-deps chromium
         env:
