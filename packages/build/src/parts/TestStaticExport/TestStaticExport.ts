@@ -121,6 +121,10 @@ const main = async () => {
   const commitConfig = JSON.parse(await ReadFile.readFile(join(tmpDir, 'dist', commitHash, 'config.json')))
   assert.deepEqual(commitConfig, config)
   const webExtensions = JSON.parse(await ReadFile.readFile(join(tmpDir, 'dist', commitHash, 'config', 'webExtensions.json')))
+  for (const route of ['board', 'boards']) {
+    const boardHtml = await ReadFile.readFile(join(tmpDir, 'dist', route, 'index.html'))
+    assert.ok(boardHtml.includes(`/test/${commitHash}/packages/renderer-process/dist/rendererProcessMain.js`))
+  }
   const chat2 = webExtensions.find((extension) => extension.id === 'builtin.chat-view-2')
   assert.ok(chat2, 'static export should retain the builtin Chat 2 web extension')
   assert.equal(chat2.path, `/test/${commitHash}/extensions/builtin.chat-view-2`)
