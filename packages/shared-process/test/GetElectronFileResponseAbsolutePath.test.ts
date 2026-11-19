@@ -14,11 +14,14 @@ test('maps /icons requests to renderer-worker codicons', () => {
   expect(normalizePath(absolutePath)).toContain('/packages/renderer-worker/node_modules/@vscode/codicons/src/icons/chevron-right.svg')
 })
 
-test.each(['/board', '/board/', '/prefix/board', '/chat'])('maps application route %s to index.html', (pathName) => {
-  const absolutePath = GetElectronFileResponseAbsolutePath.getElectronFileResponseAbsolutePath(pathName)
+test.each(['/board', '/board/', '/boards', '/boards/', '/prefix/board', '/prefix/boards/', '/chat'])(
+  'maps application route %s to index.html',
+  (pathName) => {
+    const absolutePath = GetElectronFileResponseAbsolutePath.getElectronFileResponseAbsolutePath(pathName)
 
-  expect(normalizePath(absolutePath)).toMatch(indexHtmlPattern)
-})
+    expect(normalizePath(absolutePath)).toMatch(indexHtmlPattern)
+  },
+)
 
 test('falls back to static/icons for non-codicon assets', () => {
   const absolutePath = GetElectronFileResponseAbsolutePath.getElectronFileResponseAbsolutePath('/icons/squiggly-error.svg')

@@ -7,11 +7,18 @@ import { join } from 'node:path'
 import { test } from 'node:test'
 import { fileURLToPath } from 'node:url'
 import { chromium, expect } from '@playwright/test'
+import { testLayoutTransition } from '../../packages/build/src/parts/TestBoardWorkerIntegration/test-layout-transition.ts'
 import { bundleBuiltinSettings } from '../../packages/build/src/parts/BundleBuiltinSettings/BundleBuiltinSettings.ts'
 
 const root = fileURLToPath(new URL('../../', import.meta.url))
 
-test('board layout loads from its URL and tracks navigation paths', { timeout: 120_000 }, async () => {
+const executeCommand = async (page, label) => {
+  await page.keyboard.press('F1')
+  await page.locator('.QuickPick input').fill(`>${label}`)
+  await page.locator('.QuickPickItem').filter({ hasText: label }).click()
+}
+
+const withWorkbench = async (settings, run) => {
   const profile = await mkdtemp(join(tmpdir(), 'lvce-ai-settings-'))
   let server
   let browser
@@ -19,7 +26,7 @@ test('board layout loads from its URL and tracks navigation paths', { timeout: 1
   try {
     const config = join(profile, 'config', 'lvce-oss')
     await mkdir(config, { recursive: true })
-    await writeFile(join(config, 'settings.json'), JSON.stringify({ 'chat2.useMockBackend': true, 'chat2.experimentalFocusMode': true }))
+    await writeFile(join(config, 'settings.json'), JSON.stringify(settings))
     const workers = JSON.parse(await readFile(join(root, 'packages/renderer-worker/src/parts/Workers/Workers.json'), 'utf8'))
     await bundleBuiltinSettings({ toRoot: join(root, 'packages/renderer-worker/node_modules'), workers })
     server = spawn(
@@ -60,6 +67,38 @@ test('board layout loads from its URL and tracks navigation paths', { timeout: 1
       })
     })
     browser = await chromium.launch({ headless: true, executablePath: process.env.CHROME_BIN })
+    await run(browser, url)
+  } finally {
+    await browser?.close()
+    if (server && server.exitCode === null) {
+      const exited = once(server, 'exit')
+      server.kill()
+      await exited
+    }
+    await rm(profile, { recursive: true, force: true })
+  }
+}
+
+test('board layout loads independently and tracks navigation paths', { timeout: 180_000 }, async () => {
+  const boardManifest = JSON.parse(await readFile(join(root, 'extensions/builtin.board-view/extension.json'), 'utf8'))
+  const chatManifest = JSON.parse(await readFile(join(root, 'extensions/builtin.chat-view-2/extension.json'), 'utf8'))
+  assert.equal(boardManifest.isolated, true)
+  assert.equal(boardManifest.browser, 'dist/boardWorkerMain.js')
+  assert.ok(boardManifest.views.some((view) => view.id === 'chat2.views.board'))
+  assert.ok(!chatManifest.views.some((view) => view.id === 'chat2.views.board'))
+  await withWorkbench({ 'chat2.useMockBackend': true, 'chat2.experimentalFocusMode': true }, async (browser, url) => {
+    for (const route of ['/board', '/board/', '/boards', '/boards/']) {
+      const context = await browser.newContext()
+      try {
+        const page = await context.newPage()
+        await page.goto(new URL(route, url).href)
+        await expect(page.locator('.BoardView')).toBeVisible()
+        await page.reload()
+        await expect(page.locator('.BoardView')).toBeVisible()
+      } finally {
+        await context.close()
+      }
+    }
     const directContext = await browser.newContext({ viewport: { width: 1280, height: 800 } })
     const directPage = await directContext.newPage()
     const boardRoute = new URL('/board', url)
@@ -73,7 +112,7 @@ test('board layout loads from its URL and tracks navigation paths', { timeout: 1
     const historyPage = await directContext.newPage()
     await historyPage.goto(boardRoute.href, { waitUntil: 'domcontentloaded' })
     await expect(historyPage.locator('.BoardView')).toBeVisible()
-    await historyPage.getByRole('button', { name: 'Chat', exact: true }).click()
+    await executeCommand(historyPage, 'View: Open AI-Native Chat Layout')
     await expect.poll(() => new URL(historyPage.url()).pathname).toBe('/chat')
     await expect(historyPage.getByRole('heading', { name: 'What would you like to work on?' })).toBeVisible()
     await historyPage.goBack()
@@ -83,18 +122,12 @@ test('board layout loads from its URL and tracks navigation paths', { timeout: 1
 
     const context = await browser.newContext({ viewport: { width: 1280, height: 800 } })
     const page = await context.newPage()
-    await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 90_000 })
-    const chatTab = page.getByRole('tab', { name: 'Chat 2', exact: true })
-    await expect(chatTab).toBeVisible({ timeout: 60_000 })
-    await chatTab.click()
+    await page.goto(`${url}/chat`, { waitUntil: 'domcontentloaded', timeout: 90_000 })
+    await expect(page.locator('.ChatAiNativeLayout')).toBeVisible()
     const composer = page.getByRole('textbox', { name: 'Message', exact: true })
     await composer.focus()
     await expect(composer).toBeFocused()
-    const command = async (label) => {
-      await page.keyboard.press('F1')
-      await page.locator('.QuickPick input').fill(`>${label}`)
-      await page.locator('.QuickPickItem').filter({ hasText: label }).click()
-    }
+    const command = (label) => executeCommand(page, label)
     const expectPath = (path) => expect.poll(() => new URL(page.url()).pathname).toBe(path)
     const getChatGeometry = () =>
       page.locator('.ChatAiNativeLayout').evaluate((chat) => {
@@ -104,7 +137,7 @@ test('board layout loads from its URL and tracks navigation paths', { timeout: 1
         return { chatWidth: rect.width, detailWidth: detail?.width ?? 0, composerWidth: composer?.width ?? 0 }
       })
     await command('View: Open Board Layout')
-    await expectPath('/board')
+    await expectPath('/boards')
     await expect(page.locator('.BoardSetupTitle')).toHaveText('Connect a board')
     await page.goto(`${url}/chat`, { waitUntil: 'domcontentloaded' })
     await expect(page.locator('.ChatAiNativeLayout')).toBeVisible()
@@ -127,7 +160,7 @@ test('board layout loads from its URL and tracks navigation paths', { timeout: 1
     await new Promise((resolve) => setTimeout(resolve, 750))
     await activityBar.dispatchEvent('wheel', { deltaY: -100, bubbles: true })
     await expect(page.locator('.BoardView')).toBeVisible()
-    await expectPath('/board')
+    await expectPath('/boards')
     await new Promise((resolve) => setTimeout(resolve, 750))
     await activityBar.dispatchEvent('wheel', { deltaY: 100, bubbles: true })
     await expect(page.locator('.ChatAiNativeLayout')).toBeVisible()
@@ -140,7 +173,7 @@ test('board layout loads from its URL and tracks navigation paths', { timeout: 1
       await new Promise((resolve) => setTimeout(resolve, 750))
       await activityBar.dispatchEvent('wheel', { deltaY: -100, bubbles: true })
       await expect(page.locator('.BoardView')).toBeVisible()
-      await expectPath('/board')
+      await expectPath('/boards')
       await expect.poll(async () => (await page.locator('.BoardView').boundingBox())?.width ?? 0).toBeGreaterThan(900)
       await new Promise((resolve) => setTimeout(resolve, 750))
       await activityBar.dispatchEvent('wheel', { deltaY: 100, bubbles: true })
@@ -148,13 +181,11 @@ test('board layout loads from its URL and tracks navigation paths', { timeout: 1
       await expectPath('/chat')
       await expect.poll(getChatGeometry).toEqual(resizedChatGeometry)
     }
-  } finally {
-    await browser?.close()
-    if (server && server.exitCode === null) {
-      const exited = once(server, 'exit')
-      server.kill()
-      await exited
-    }
-    await rm(profile, { recursive: true, force: true })
-  }
+  })
+})
+
+test('board stays visible while the separate chat worker initializes', { timeout: 120_000 }, async () => {
+  await withWorkbench({ 'chat2.backendUrl': 'https://layout-transition.test', 'chat2.useMockBackend': false }, async (browser, url) => {
+    await testLayoutTransition(browser, `${url}/`)
+  })
 })

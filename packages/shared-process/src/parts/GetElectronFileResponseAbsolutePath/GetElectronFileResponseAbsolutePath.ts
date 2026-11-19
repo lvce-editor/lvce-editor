@@ -37,7 +37,7 @@ const getIconAbsolutePath = (pathName: any): any => {
 
 const driveLetterWithoutSlashPath = /^\/?[A-Za-z]:[^/]/
 const driveLetterPath = /^\/?[A-Za-z]:\//
-const appRoutePattern = /(?:^|\/)(?:board|chat)\/?$/
+const appRoutePattern = /(?:^|\/)(?:boards|board|chat)\/?$/
 
 const getRemoteAbsolutePath = (pathName: string): string => {
   const uri = pathName.slice('/remote'.length)

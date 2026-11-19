@@ -290,7 +290,7 @@ export const startup = async (initData, platform, assetDir) => {
   await Location.hydrate()
   Performance.mark(PerformanceMarkerType.DidLoadLocation)
   const { pathname } = new URL(await Location.getHref())
-  const initialLayoutActivationEvent = pathname.endsWith('/board')
+  const initialLayoutActivationEvent = /\/(?:boards|board)\/?$/.test(pathname)
     ? 'onCommand:chat2.showBoardLayout'
     : pathname.endsWith('/chat')
       ? 'onCommand:chat2.show'

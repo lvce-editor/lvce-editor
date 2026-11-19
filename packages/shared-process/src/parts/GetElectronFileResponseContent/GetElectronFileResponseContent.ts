@@ -6,7 +6,7 @@ import * as ShouldTranspileTypescript from '../ShouldTranspileTypescript/ShouldT
 import * as TranspileTypeScript from '../TranspileTypeScript/TranspileTypeScript.ts'
 
 const useCache = false // TODO enable this
-const appRoutePattern = /(?:^|\/)(?:board|chat)\/?$/
+const appRoutePattern = /(?:^|\/)(?:boards|board|chat)\/?$/
 
 const getWorkspaceUri = (url: string): string | undefined => {
   const baseUrl = `${Platform.scheme}://-/`

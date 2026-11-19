@@ -45,6 +45,7 @@ export const generateFilesCodeMap = (indexes, uris) => {
   map['/auth/callback'] = map['/auth/callback.html']
   map['/chat'] = map['/chat/index.html']
   map['/board'] = map['/board/index.html']
+  map['/boards'] = map['/boards/index.html']
   return map
 }
 
