@@ -330,8 +330,8 @@ jobs:
           path: ./packages/build/.tmp/server
           include-hidden-files: true
 
-  publish-release:
-    name: publish-release
+  publish-packages:
+    name: publish-packages
     needs: ['create-release', 'build-release']
     runs-on: ubuntu-24.04
     steps:
@@ -353,9 +353,15 @@ jobs:
       - name: Clean up
         run: rm -rf packages/build/.tmp
         shell: bash
+
+  publish-release:
+    name: publish-release
+    needs: ['create-release', 'build-release', 'publish-packages']
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
       - name: Publish GitHub release
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          VERSION="${{ needs.create-release.outputs.rg_version }}"
-          gh release edit $VERSION --draft=false
+          RELEASE_VERSION: ${{ needs.create-release.outputs.rg_version }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: node scripts/publish-github-release.mjs

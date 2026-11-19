@@ -22,6 +22,8 @@ jobs:
           node-version-file: '.nvmrc'
       - name: Test duplicate release run guard
         run: node --test scripts/test/check-duplicate-release-run.test.mjs
+      - name: Test retryable release finalization
+        run: node --test scripts/test/publish-github-release.test.mjs
       - name: Setup Python 3
         id: python
         uses: actions/setup-python@v6
