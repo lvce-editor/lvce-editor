@@ -45,14 +45,18 @@ test.each(['/', '/?workspace=file%3A%2F%2F%2Fworkspace', '/index.html', '/index.
   },
 )
 
-test.each(['/board', '/chat', '/prefix/board?workspace=file%3A%2F%2F%2Fworkspace'])(
-  'injects remote runtime configuration for application route %s',
-  async (url) => {
-    inject.mockResolvedValue('<html>remote</html>')
-    expect(await getElectronFileResponseContent({ platform: 'remote', url }, path, url)).toEqual(Buffer.from('<html>remote</html>'))
-    expect(inject).toHaveBeenCalledWith('<html>app</html>', {
-      platform: 'remote',
-      workspaceUri: url.includes('workspace=') ? 'file:///workspace' : undefined,
-    })
-  },
-)
+test.each([
+  '/board',
+  '/boards',
+  '/boards/',
+  '/chat',
+  '/prefix/board?workspace=file%3A%2F%2F%2Fworkspace',
+  '/prefix/boards?workspace=file%3A%2F%2F%2Fworkspace',
+])('injects remote runtime configuration for application route %s', async (url) => {
+  inject.mockResolvedValue('<html>remote</html>')
+  expect(await getElectronFileResponseContent({ platform: 'remote', url }, path, url)).toEqual(Buffer.from('<html>remote</html>'))
+  expect(inject).toHaveBeenCalledWith('<html>app</html>', {
+    platform: 'remote',
+    workspaceUri: url.includes('workspace=') ? 'file:///workspace' : undefined,
+  })
+})

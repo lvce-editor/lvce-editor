@@ -85,7 +85,10 @@ const main = async () => {
   assert.equal(executableScripts[0].includes('startupAppearance'), false)
   const configElement = indexHtml.match(/<script id="Config" type="application\/json">([\s\S]*?)<\/script>/)
   assert.ok(configElement, 'static export index.html should include runtime configuration')
-  assert.ok(indexHtml.includes('<script id="Config" type="application/json">\n      {\n        "assetDir":'), 'static export runtime configuration should start on an indented new line')
+  assert.ok(
+    indexHtml.includes('<script id="Config" type="application/json">\n      {\n        "assetDir":'),
+    'static export runtime configuration should start on an indented new line',
+  )
   assert.ok(indexHtml.includes('\n      }\n    </script>'), 'static export runtime configuration should align with its script element')
   assert.ok(configElement[1].includes('\n        "workerUrls": {\n'), 'static export runtime configuration should be formatted across multiple lines')
   const runtimeConfig = JSON.parse(configElement[1])
@@ -144,6 +147,16 @@ const main = async () => {
   for (const asset of chat2Assets) {
     await ReadFile.readFile(join(tmpDir, 'dist', commitHash, 'extensions', 'builtin.chat-view-2', asset))
   }
+  const board = webExtensions.find((extension) => extension.id === 'builtin.board-view')
+  assert.ok(board, 'static export should include the independent board worker')
+  assert.equal(board.path, `/test/${commitHash}/extensions/builtin.board-view`)
+  const boardManifest = JSON.parse(await ReadFile.readFile(join(tmpDir, 'dist', commitHash, 'extensions', 'builtin.board-view', 'extension.json')))
+  assert.equal(boardManifest.browser, 'dist/boardWorkerMain.js')
+  assert.ok(boardManifest.views.some((view) => view.id === 'chat2.views.board'))
+  assert.ok(!chat2Manifest.views.some((view) => view.id === 'chat2.views.board'))
+  for (const asset of [boardManifest.browser, boardManifest.icon, 'media/board.css']) {
+    await ReadFile.readFile(join(tmpDir, 'dist', commitHash, 'extensions', 'builtin.board-view', asset))
+  }
   await ReadFile.readFile(join(tmpDir, 'dist', commitHash, 'extensions', 'test', 'dist', 'main.js'))
   await ReadFile.readFile(join(tmpDir, 'dist', commitHash, 'extensions', 'test', 'dist', 'worker.js'))
   await ReadFile.readFile(join(tmpDir, 'dist', commitHash, 'extensions', 'test', 'media', 'icon.svg'))
@@ -176,9 +189,15 @@ const main = async () => {
   assert.equal(pagesExecutableScripts[0].includes('startupAppearance'), false)
   const pagesConfigElement = pagesIndexHtml.match(/<script id="Config" type="application\/json">([\s\S]*?)<\/script>/)
   assert.ok(pagesConfigElement, 'Pages export index.html should include runtime configuration')
-  assert.ok(pagesIndexHtml.includes('<script id="Config" type="application/json">\n      {\n        "assetDir":'), 'Pages runtime configuration should start on an indented new line')
+  assert.ok(
+    pagesIndexHtml.includes('<script id="Config" type="application/json">\n      {\n        "assetDir":'),
+    'Pages runtime configuration should start on an indented new line',
+  )
   assert.ok(pagesIndexHtml.includes('\n      }\n    </script>'), 'Pages runtime configuration should align with its script element')
-  assert.ok(pagesConfigElement[1].includes('\n        "workerUrls": {\n'), 'Pages export runtime configuration should be formatted across multiple lines')
+  assert.ok(
+    pagesConfigElement[1].includes('\n        "workerUrls": {\n'),
+    'Pages export runtime configuration should be formatted across multiple lines',
+  )
   const pagesRuntimeConfig = JSON.parse(pagesConfigElement[1])
   assert.equal(pagesRuntimeConfig.platform, 'web')
   assert.deepEqual(pagesRuntimeConfig.preloadWorkers, [
@@ -197,7 +216,9 @@ const main = async () => {
   assert.ok(
     Object.values(pagesRuntimeConfig.workerUrls as Record<string, string>).every((url) => url.startsWith(`/lvce-editor/${pagesResult.commitHash}/`)),
   )
-  const pagesRendererWorker = await ReadFile.readFile(join(pagesRoot, 'dist', pagesResult.commitHash, 'packages/renderer-worker/dist/rendererWorkerMain.js'))
+  const pagesRendererWorker = await ReadFile.readFile(
+    join(pagesRoot, 'dist', pagesResult.commitHash, 'packages/renderer-worker/dist/rendererWorkerMain.js'),
+  )
   assert.ok(pagesRendererWorker.includes('\n'), 'Pages renderer worker should retain readable line breaks')
   assert.ok(pagesRendererWorker.includes('var main = async () => {'), 'Pages renderer worker should retain readable function names')
   await ReadFile.readFile(join(pagesRoot, 'dist', pagesResult.commitHash, 'css', 'App.css'))
