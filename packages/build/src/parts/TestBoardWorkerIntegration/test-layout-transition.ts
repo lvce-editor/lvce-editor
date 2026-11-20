@@ -34,8 +34,13 @@ export const testLayoutTransition = async (browser: Browser, baseUrl: string): P
     try {
       await page.goto(new URL('board/', baseUrl).href)
       const board = page.locator('.BoardView')
-      await board.waitFor()
+      // Direct startup can render the board in the IDE sidebar before expanding it.
+      await page.waitForFunction(() => {
+        const board = globalThis.document.querySelector('.Workbench.AiNativeLayout .BoardView')
+        return board && board.getBoundingClientRect().width > globalThis.innerWidth / 2
+      })
       const bounds = await board.boundingBox()
+      assert.ok(bounds, 'The expanded board must be visible before opening chat')
       const workbench = page.locator('.Workbench')
       const classes = await workbench.getAttribute('class')
       await page.keyboard.press('Control+Shift+P')
