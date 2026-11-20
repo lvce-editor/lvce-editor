@@ -184,6 +184,34 @@ test('board layout loads independently and tracks navigation paths', { timeout: 
   })
 })
 
+test('activity bar Settings switches between IDE, Chat, and Board layouts', { timeout: 120_000 }, async () => {
+  await withWorkbench({ 'chat2.useMockBackend': true, 'chat2.experimentalFocusMode': true }, async (browser, url) => {
+    const page = await browser.newPage({ viewport: { width: 1280, height: 800 } })
+    await page.goto(url)
+    const activityBar = page.locator('.ActivityBarLayout')
+    const chat = page.locator('.ChatAiNativeLayout')
+    const board = page.locator('.BoardView')
+    const expectPath = (path) => expect.poll(() => new URL(page.url()).pathname).toBe(path)
+    const selectLayout = async (label) => {
+      await activityBar.getByRole('button', { name: 'Settings', exact: true }).click()
+      await page.getByRole('menuitem', { name: 'Layout', exact: true }).hover()
+      await page.getByRole('menuitem', { name: label, exact: true }).click()
+    }
+
+    await selectLayout('Chat')
+    await expectPath('/chat')
+    await expect(chat).toBeVisible()
+    await selectLayout('Board')
+    await expectPath('/boards')
+    await expect(board).toBeVisible()
+    await selectLayout('IDE')
+    await expectPath('/')
+    await expect(activityBar.getByRole('tab', { name: 'Explorer' })).toBeVisible()
+    await expect(board).toBeHidden()
+    await expect(chat).toBeHidden()
+  })
+})
+
 test('board stays visible while the separate chat worker initializes', { timeout: 120_000 }, async () => {
   await withWorkbench({ 'chat2.backendUrl': 'https://layout-transition.test', 'chat2.useMockBackend': false }, async (browser, url) => {
     await testLayoutTransition(browser, `${url}/`)
