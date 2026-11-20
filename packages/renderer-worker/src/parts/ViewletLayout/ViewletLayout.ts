@@ -13,6 +13,7 @@ import * as ChatViewWorker from '../ChatViewWorker/ChatViewWorker.js'
 import * as ColorTheme from '../ColorTheme/ColorTheme.js'
 import * as Command from '../Command/Command.js'
 import * as Commit from '../Commit/Commit.js'
+import * as ElectronWindow from '../ElectronWindow/ElectronWindow.js'
 import * as ExtensionManagementWorker from '../ExtensionManagementWorker/ExtensionManagementWorker.js'
 import * as GetActiveEditor from '../GetActiveEditor/GetActiveEditor.js'
 import * as GetActionsVirtualDom from '../GetActionsVirtualDom/GetActionsVirtualDom.js'
@@ -3452,6 +3453,13 @@ export const getModuleId = (state: LayoutState, uri: string, opener?: string) =>
 export const getHref = (state: LayoutState) => {
   return Location.getHref()
 }
+
+export const focusWindow = async ({ platform }: Pick<LayoutState, 'platform'>): Promise<void> => {
+  if (platform === PlatformType.Electron) {
+    await ElectronWindow.show()
+  }
+}
+focusWindow.returnValue = true
 
 export const setHash = (state: LayoutState, hash: string) => {
   return Location.setHash(hash)

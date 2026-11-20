@@ -23,6 +23,11 @@ test('toggleDevtools', async () => {
   expect(ParentIpc.invoke).toHaveBeenCalledWith('ElectronWindow.executeWindowFunction', 1, 'toggleDevtools')
 })
 
+test('shows the requested native window', async () => {
+  await ElectronWindow.show(2)
+  expect(ParentIpc.invoke).toHaveBeenCalledWith('ElectronWindow.executeWindowFunction', 2, 'show')
+})
+
 test('toggleFullScreen', async () => {
   await ElectronWindow.toggleFullScreen(1)
   expect(ParentIpc.invoke).toHaveBeenCalledTimes(1)
