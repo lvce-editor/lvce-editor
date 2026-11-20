@@ -31,6 +31,7 @@ export const Commands = {
   getBackendUrl: ViewletLayout.getBackendUrl,
   getBadgeCounts: ViewletLayout.getBadgeCounts,
   getHref: ViewletLayout.getHref,
+  focusWindow: ViewletLayout.focusWindow,
   setHash: ViewletLayout.setHash,
   setPathName: ViewletLayout.setPathName,
   getModuleId: ViewletLayout.getModuleId,

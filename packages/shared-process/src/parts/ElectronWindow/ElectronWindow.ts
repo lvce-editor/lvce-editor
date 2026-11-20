@@ -116,6 +116,10 @@ export const focus = (windowId: any): any => {
   return ParentIpc.invoke('ElectronWindow.executeWebContentsFunction', windowId, 'focus')
 }
 
+export const show = (windowId: number): Promise<void> => {
+  return ParentIpc.invoke('ElectronWindow.executeWindowFunction', windowId, 'show')
+}
+
 export const handleClose = (windowId: any): any => {
   // TODO
 }

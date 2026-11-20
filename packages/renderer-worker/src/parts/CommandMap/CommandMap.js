@@ -643,6 +643,7 @@ export const commandMap = {
   'Layout.getSideBarVisible': lazy('Layout.getSideBarVisible'),
   'Layout.getSideBarFocusMode': lazy('Layout.getSideBarFocusMode'),
   'Layout.getHref': lazy('ViewletLayout.getHref'),
+  'Layout.focusWindow': lazy('ViewletLayout.focusWindow'),
   'Layout.setHash': lazy('ViewletLayout.setHash'),
   'Layout.setPathName': lazy('ViewletLayout.setPathName'),
   'Layout.getAssetDir': lazy('Layout.getAssetDir'),

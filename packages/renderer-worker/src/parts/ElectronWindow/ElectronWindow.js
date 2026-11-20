@@ -34,6 +34,8 @@ export const zoomReset = forward('ElectronWindow.zoomReset')
 
 export const focus = forward('ElectronWindow.focus')
 
+export const show = forward('ElectronWindow.show')
+
 export const setBrowserFullWidthGestureEnabled = forward('ElectronWindow.setBrowserFullWidthGestureEnabled')
 
 export const openNewWithUri = forward('ElectronWindow.openNewWithUri')
