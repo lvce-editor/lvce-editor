@@ -121,7 +121,7 @@
   "devDependencies": {
     "@jest/globals": "^30.5.2",
     "@lvce-editor/chat-message-parsing-worker": "^1.8.0",
-    "@types/node": "^26.1.1",
+    "@types/node": "^26.6.6",
     "@vscode/codicons": "^0.0.45"
   },
   "allowScripts": {
