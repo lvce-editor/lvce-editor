@@ -162,7 +162,7 @@ export const loadContent = async (state, savedState, context) => {
   const isFiraCode = fontFamily === 'Fira Code' || fontFamily === "'Fira Code'"
   if (isFiraCode) {
     const fontName = UnquoteString.unquoteString(fontFamily)
-    const fontUrl = GetFontUrl.getFontUrl('/fonts/files/fira-code-latin-400-normal.woff2')
+    const fontUrl = GetFontUrl.getFontUrl('/fonts/files/fira-code-latin-wght-normal.woff2')
     await EditorWorker.invoke('Font.ensure', fontName, fontUrl)
   }
   const isMonospaceFont = isFiraCode // TODO an actual check for monospace font

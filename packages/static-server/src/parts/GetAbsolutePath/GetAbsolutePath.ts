@@ -62,7 +62,7 @@ export const getAbsolutePath = (pathName: string): string => {
     return getContainedPath(root, pathName)
   }
   if (pathName.startsWith('/fonts/')) {
-    const fontsourcePath = dirname(fileURLToPath(import.meta.resolve('@fontsource/fira-code/400.css')))
+    const fontsourcePath = dirname(fileURLToPath(import.meta.resolve('@fontsource-variable/fira-code/package.json')))
     return getContainedPath(fontsourcePath, pathName.slice('/fonts/'.length))
   }
   return getContainedPath(STATIC, pathName)

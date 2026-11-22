@@ -2,5 +2,6 @@
 @import '/static/lib-css/modern-normalize.css';
 
 /* application css */
+@import './parts/FiraCode.css';
 @import './parts/_Global.css';
 @import './parts/StartupAppearance.css';
