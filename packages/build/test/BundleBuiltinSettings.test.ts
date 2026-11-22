@@ -239,7 +239,7 @@ test('rejects conflicting settings contributions', () => {
   ).toThrow('Conflicting builtin setting chat.enabled')
 })
 
-test('bundles session replay declarations from their owning worker with disabled defaults', async () => {
+test('bundles session replay defaults from their owning worker', async () => {
   const toRoot = await mkdtemp(join(tmpdir(), 'lvce-session-replay-settings-'))
   try {
     const workersUrl = new URL('../../renderer-worker/src/parts/Workers/Workers.json', import.meta.url)
@@ -253,7 +253,12 @@ test('bundles session replay declarations from their owning worker with disabled
         settings: JSON.parse(await readFile(join(toRoot, 'builtin-settings', fileName), 'utf8')),
       })),
     )
-    for (const id of ['sessionReplay.enabled', 'sessionReplay.uploadEnabled', 'sessionReplay.allowAnonymousUploads']) {
+    for (const [id, value] of Object.entries({
+      'sessionReplay.allowAnonymousUploads': false,
+      'sessionReplay.enabled': false,
+      'sessionReplay.recordPointerMovement': true,
+      'sessionReplay.uploadEnabled': false,
+    })) {
       const owners = contributions.filter(({ settings }) => settings.some((setting) => setting.id === id))
       expect(owners.map(({ fileName }) => fileName)).toEqual(['session-replay-worker.json'])
       expect(owners[0].settings.find((setting) => setting.id === id)).toMatchObject({
@@ -261,7 +266,7 @@ test('bundles session replay declarations from their owning worker with disabled
         description: expect.any(String),
         heading: expect.any(String),
         type: 'boolean',
-        value: false,
+        value,
       })
     }
   } finally {
