@@ -5,6 +5,7 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { setTimeout as delay } from 'node:timers/promises'
 
+const fontPath = '/fonts/files/fira-code-latin-wght-normal.woff2'
 const electron = process.env.LVCE_ELECTRON_PATH
 assert.ok(electron, 'Set LVCE_ELECTRON_PATH to the packaged Electron executable')
 const directory = await mkdtemp(join(tmpdir(), 'lvce-packaged-font-'))
@@ -115,7 +116,7 @@ try {
   while (Date.now() < deadline) {
     if (
       await evaluate(`Boolean(document.querySelector('.Editor')?.textContent.includes('acceptance') && Array.from(document.styleSheets).some(sheet => {
-      try { return Array.from(sheet.cssRules).some(rule => rule.cssText.includes('/fonts/files/fira-code-latin-400-normal.woff2')) } catch { return false }
+      try { return Array.from(sheet.cssRules).some(rule => rule.cssText.includes('${fontPath}')) } catch { return false }
     }))`)
     )
       break
@@ -133,17 +134,21 @@ try {
   )
   assert.equal(
     await evaluate(`Array.from(document.styleSheets).some(sheet => {
-    try { return Array.from(sheet.cssRules).some(rule => rule.cssText.includes('/fonts/files/fira-code-latin-400-normal.woff2')) } catch { return false }
+    try { return Array.from(sheet.cssRules).some(rule => rule.cssText.includes('${fontPath}')) } catch { return false }
   })`),
     true,
     'Packaged CSS must reference the native directory source directly',
   )
   assert.equal(await evaluate('crossOriginIsolated'), true)
-  const fonts = await evaluate(`document.fonts.load('14px "Fira Code"', 'font acceptance').then(fonts => fonts.map(font => font.status), error => ({ error: error.message }))`)
-  assert.ok(fonts.length > 0 && fonts.every((status) => status === 'loaded'), `Packaged CSS must load its declared native font: ${JSON.stringify({ fonts, responses, failedRequests })}`)
+  const fonts = await evaluate(`Promise.all([300, 400, 700].map(async weight => {
+    const faces = await document.fonts.load(weight + ' 14px "Fira Code"', 'font acceptance')
+    return faces.map(face => ({ status: face.status, weight: face.weight }))
+  }))`)
+  const expectedFace = { status: 'loaded', weight: '300 700' }
+  assert.deepEqual(fonts, [[expectedFace], [expectedFace], [expectedFace]], 'Fira Code must load as a variable face across the weight range')
   assert.ok(
-    responses.some((response) => response.url.endsWith('.woff2') && response.status === 200 && response.mimeType === 'font/woff2'),
-    'The bundled application route must return the font with the correct MIME type',
+    responses.some((response) => response.url.endsWith(fontPath) && response.status === 200 && response.mimeType === 'font/woff2'),
+    'The bundled application route must return the variable font with the correct MIME type',
   )
   // Packaged default-src blocks fetches, while font-src permits self.
   // Use a font request to observe the app handler's actual 404 response.

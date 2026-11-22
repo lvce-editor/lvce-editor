@@ -5,8 +5,8 @@ import { getAbsolutePath } from '../src/parts/GetAbsolutePath/GetAbsolutePath.ts
 test.each([
   '/repo/static/fonts/FiraCode-VariableFont.ttf',
   String.raw`D:\repo\static\fonts\FiraCode-VariableFont.ttf`,
-  '/repo/static/fonts/fira-code-latin-400-normal.woff',
-  '/repo/static/fonts/fira-code-latin-400-normal.woff2',
+  '/repo/static/fonts/fira-code-latin-wght-normal.woff',
+  '/repo/static/fonts/fira-code-latin-wght-normal.woff2',
 ])('font response supports isolated WebKit workers for %s', (absolutePath) => {
   const headers = getHeaders({ absolutePath, etag: 'test', isForElectronProduction: false, isImmutable: true })
   expect(headers['Content-Type']).toMatch(/^font\//)
@@ -17,8 +17,7 @@ test.each([
 })
 
 test('development font paths resolve to the installed npm package', () => {
-  expect(getAbsolutePath('/fonts/400.css')).toMatch(/@fontsource[/\\]fira-code[/\\]400\.css$/)
-  expect(getAbsolutePath('/fonts/files/fira-code-latin-400-normal.woff2')).toMatch(/@fontsource[/\\]fira-code[/\\]files[/\\]fira-code-latin-400-normal\.woff2$/)
+  expect(getAbsolutePath('/fonts/files/fira-code-latin-wght-normal.woff2')).toMatch(/@fontsource-variable[/\\]fira-code[/\\]files[/\\]fira-code-latin-wght-normal\.woff2$/)
 })
 
 test('text measurement worker permits WebKit font requests while retaining isolation', () => {

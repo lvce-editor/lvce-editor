@@ -403,7 +403,7 @@ public licenses.
 Creative Commons may be contacted at creativecommons.org.
 
 
-2) License Notice for static/${commitHash}/fonts (from https://www.npmjs.com/package/@fontsource/fira-code)
+2) License Notice for static/${commitHash}/fonts (from https://www.npmjs.com/package/@fontsource-variable/fira-code)
 ---------------------------------------
 
 Copyright (c) 2014, The Fira Code Project Authors (https://github.com/tonsky/FiraCode)

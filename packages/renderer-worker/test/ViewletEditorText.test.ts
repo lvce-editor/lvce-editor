@@ -126,7 +126,7 @@ test('loadContent ensures the Fira Code font before creating the editor', async 
 
   await ViewletEditorText.loadContent(state, undefined, { languageId: 'text' })
 
-  expect(editorWorkerInvoke).toHaveBeenCalledWith('Font.ensure', 'Fira Code', "url('/fonts/files/fira-code-latin-400-normal.woff2')")
+  expect(editorWorkerInvoke).toHaveBeenCalledWith('Font.ensure', 'Fira Code', "url('/fonts/files/fira-code-latin-wght-normal.woff2')")
   const ensureFontIndex = editorWorkerInvoke.mock.calls.findIndex(([method]) => method === 'Font.ensure')
   const createEditorIndex = editorWorkerInvoke.mock.calls.findIndex(([method]) => method === 'Editor.create2')
   expect(ensureFontIndex).toBeGreaterThanOrEqual(0)
