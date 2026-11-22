@@ -50,6 +50,28 @@ test('removes eagerly loaded main area CSS', () => {
   ])
 })
 
+test('removes eagerly loaded panel CSS and preserves lazy CSS', () => {
+  const workers = [
+    {
+      id: 'panel',
+      viewlet: {
+        css: ['/css/parts/ViewletPanel.css', '/css/parts/Markdown.css', '/css/parts/ViewletPanelTabs.css'],
+        name: 'Panel',
+      },
+    },
+  ]
+
+  expect(filterWorkerViewletCss(workers)).toEqual([
+    {
+      id: 'panel',
+      viewlet: {
+        css: ['/css/parts/Markdown.css'],
+        name: 'Panel',
+      },
+    },
+  ])
+})
+
 test('preserves workers without viewlet CSS', () => {
   const workers = [{ id: 'fileSystemWorker' }, { id: 'aboutWorker', viewlet: { name: 'About' } }]
 

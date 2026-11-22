@@ -793,7 +793,7 @@ test('bundleCss preserves readable native select options', async () => {
   }
 }, 30_000)
 
-test('bundleCss eagerly loads main area css and rewrites icon urls', async () => {
+test('bundleCss eagerly loads main area and panel css and rewrites icon urls', async () => {
   const dir = await mkdtemp(join(tmpdir(), 'lvce-bundle-css-'))
 
   try {
@@ -807,11 +807,15 @@ test('bundleCss eagerly loads main area css and rewrites icon urls', async () =>
     expect(css).toContain(`/* ViewletMainDragOverlay.css */`)
     expect(css).toContain(`/* ViewletMainEditorGroup.css */`)
     expect(css).toContain(`/* ViewletMainWaterMark.css */`)
+    expect(css).toContain(`/* ViewletPanel.css */`)
+    expect(css).toContain(`/* ViewletPanelTabs.css */`)
     expect(css).toContain(`mask-image: url(/abc1234/icons/icon.svg);`)
     expect(css).not.toContain(`url(/icons/`)
     await expect(readFile(join(dir, 'parts', 'ViewletMainDragOverlay.css'), 'utf8')).rejects.toThrow()
     await expect(readFile(join(dir, 'parts', 'ViewletMainEditorGroup.css'), 'utf8')).rejects.toThrow()
     await expect(readFile(join(dir, 'parts', 'ViewletMainWaterMark.css'), 'utf8')).rejects.toThrow()
+    await expect(readFile(join(dir, 'parts', 'ViewletPanel.css'), 'utf8')).rejects.toMatchObject({ code: 'ENOENT' })
+    await expect(readFile(join(dir, 'parts', 'ViewletPanelTabs.css'), 'utf8')).rejects.toMatchObject({ code: 'ENOENT' })
   } finally {
     await rm(dir, { recursive: true, force: true })
   }
