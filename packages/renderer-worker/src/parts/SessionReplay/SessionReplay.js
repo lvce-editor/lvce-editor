@@ -18,7 +18,8 @@ export const startRecording = async (authState, startup = false) => {
   if (Preferences.get('sessionReplay.allowAnonymousUploads') === true || new URL(href).searchParams.get('allowAnonymous') === 'true') {
     endpoint.searchParams.set('allowAnonymous', 'true')
   }
-  const options = { local, upload, endpoint: endpoint.href, token: authState?.token || authState?.accessToken || '' }
+  const recordPointerMovement = Preferences.get('sessionReplay.recordPointerMovement') !== false
+  const options = { local, upload, recordPointerMovement, endpoint: endpoint.href, token: authState?.token || authState?.accessToken || '' }
   const configuration = JSON.stringify(options)
   if (configuration === state.configuration) return
   if (startup && (local || upload)) {

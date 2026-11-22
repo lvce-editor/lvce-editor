@@ -33,25 +33,26 @@ test('late opt-in requests a reload without preventing other preference listener
   await SessionReplay.initialize(undefined)
   const listener = jest.fn<any>()
   GlobalEventBus.addListener('preferences.changed', listener)
-  get.mockImplementation((key) => key === 'sessionReplay.enabled')
+  get.mockImplementation((key) => (key === 'sessionReplay.enabled' ? true : undefined))
   await GlobalEventBus.emitEvent('preferences.changed')
   expect(configureSessionReplay).not.toHaveBeenCalled()
   expect(execute).toHaveBeenCalledWith('Notification.create', 'info', expect.stringContaining('Reload the window'))
   expect(listener).toHaveBeenCalledTimes(1)
   await GlobalEventBus.emitEvent('preferences.changed')
   expect(execute).toHaveBeenCalledTimes(1)
-  get.mockReturnValue(false)
+  get.mockReturnValue(undefined)
   await GlobalEventBus.emitEvent('preferences.changed')
   expect(invoke).toHaveBeenLastCalledWith('SessionReplay.configure', {
     endpoint: 'https://lvce-editor.dev/session-replay',
     local: false,
+    recordPointerMovement: true,
     token: '',
     upload: false,
   })
 })
 
 test('startup opt-in uses the proxy and disabling capture takes effect immediately', async () => {
-  get.mockImplementation((key) => key === 'sessionReplay.enabled')
+  get.mockImplementation((key) => (key === 'sessionReplay.enabled' ? true : undefined))
   const SessionReplay = await import('../src/parts/SessionReplay/SessionReplay.js')
   const GlobalEventBus = await import('../src/parts/GlobalEventBus/GlobalEventBus.js')
   const GetSessionId = await import('../src/parts/GetSessionId/GetSessionId.js')
@@ -59,15 +60,17 @@ test('startup opt-in uses the proxy and disabling capture takes effect immediate
   expect(configureSessionReplay).toHaveBeenCalledWith({
     endpoint: 'https://lvce-editor.dev/session-replay',
     local: true,
+    recordPointerMovement: true,
     token: '',
     upload: false,
   })
   expect(GetSessionId.state.sessionId).toBe('session-id')
-  get.mockReturnValue(false)
+  get.mockReturnValue(undefined)
   await GlobalEventBus.emitEvent('preferences.changed')
   expect(invoke).toHaveBeenCalledWith('SessionReplay.configure', {
     endpoint: 'https://lvce-editor.dev/session-replay',
     local: false,
+    recordPointerMovement: true,
     token: '',
     upload: false,
   })
@@ -95,6 +98,7 @@ test.each([undefined, false, 'true', 1, true])('anonymous upload permission requ
     local: false,
     upload: true,
     endpoint: `https://backend.example/session-replay${value === true ? '?allowAnonymous=true' : ''}`,
+    recordPointerMovement: true,
     token: 'test-token',
   })
 })
@@ -116,6 +120,7 @@ test('changing anonymous upload permission stops capture and requests a reload',
       local: false,
       upload: false,
       endpoint: `https://lvce-editor.dev/session-replay${enabled ? '?allowAnonymous=true' : ''}`,
+      recordPointerMovement: true,
       token: '',
     })
   }
@@ -127,7 +132,7 @@ test('changing anonymous upload permission stops capture and requests a reload',
 })
 
 test.each(['true', 'false', '1'])('the anonymous upload URL opt-in remains supported: %s', async (value) => {
-  get.mockImplementation((key) => key === 'sessionReplay.uploadEnabled')
+  get.mockImplementation((key) => (key === 'sessionReplay.uploadEnabled' ? true : undefined))
   getHref.mockResolvedValue(`https://lvce-editor.dev/?allowAnonymous=${value}`)
   const SessionReplay = await import('../src/parts/SessionReplay/SessionReplay.js')
   await SessionReplay.initialize(undefined)
@@ -135,6 +140,18 @@ test.each(['true', 'false', '1'])('the anonymous upload URL opt-in remains suppo
     local: false,
     upload: true,
     endpoint: `https://lvce-editor.dev/session-replay${value === 'true' ? '?allowAnonymous=true' : ''}`,
+    recordPointerMovement: true,
     token: '',
   })
+})
+
+test('startup recording forwards an explicit pointer movement opt-out', async () => {
+  get.mockImplementation((key) => {
+    if (key === 'sessionReplay.enabled') return true
+    if (key === 'sessionReplay.recordPointerMovement') return false
+    return undefined
+  })
+  const SessionReplay = await import('../src/parts/SessionReplay/SessionReplay.js')
+  await SessionReplay.initialize(undefined)
+  expect(configureSessionReplay).toHaveBeenCalledWith(expect.objectContaining({ local: true, recordPointerMovement: false }))
 })

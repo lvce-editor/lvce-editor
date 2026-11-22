@@ -14,12 +14,13 @@ jest.unstable_mockModule('../src/parts/Product/Product.js', () => ({ getBackendU
 const SessionReplay = await import('../src/parts/SessionReplay/SessionReplay.js')
 
 test('local recording and upload have independent settings', async () => {
-  get.mockImplementation((key) => key === 'sessionReplay.uploadEnabled')
+  get.mockImplementation((key) => (key === 'sessionReplay.uploadEnabled' ? true : undefined))
   invoke.mockResolvedValue('session-id')
   await SessionReplay.startRecording({ accessToken: 'test-token' }, true)
   expect(configureSessionReplay).toHaveBeenCalledWith({
     endpoint: 'https://backend.example/session-replay?allowAnonymous=true',
     local: false,
+    recordPointerMovement: true,
     token: 'test-token',
     upload: true,
   })
