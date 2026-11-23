@@ -1,6 +1,7 @@
 import { readFile, readdir } from 'fs/promises'
 import * as BundleCss from '../BundleCss/BundleCss.ts'
 import * as BundleWorkers from '../BundleWorkers/BundleWorkers.ts'
+import { applicationPagePreloadWorkers, applicationPageRoutes } from '../../../../shared-process/src/parts/PageWorkerPreloads/PageWorkerPreloads.js'
 import * as AddRuntimeConfigToIndexHtml from '../AddRuntimeConfigToIndexHtml/AddRuntimeConfigToIndexHtml.ts'
 import * as CodiconsPath from '../CodiconsPath/CodiconsPath.ts'
 import * as Copy from '../Copy/Copy.ts'
@@ -91,16 +92,19 @@ const copyStaticFiles = async ({ commitHash }) => {
     platform: 'remote',
     assetDir: `/${commitHash}`,
   })
-  await Mkdir.mkdir('packages/build/.tmp/server/static-server/static/chat')
-  await Copy.copyFile({
-    from: `packages/build/.tmp/server/static-server/static/index.html`,
-    to: `packages/build/.tmp/server/static-server/static/chat/index.html`,
-  })
-  for (const route of ['board', 'boards']) {
-    await Mkdir.mkdir(`packages/build/.tmp/server/static-server/static/${route}`)
+  for (const route of applicationPageRoutes) {
+    const dir = `packages/build/.tmp/server/static-server/static/${route}`
+    const path = `${dir}/index.html`
+    await Mkdir.mkdir(dir)
     await Copy.copyFile({
-      from: `packages/build/.tmp/server/static-server/static/index.html`,
-      to: `packages/build/.tmp/server/static-server/static/${route}/index.html`,
+      from: 'packages/build/.tmp/server/static-server/static/index.html',
+      to: path,
+    })
+    await AddRuntimeConfigToIndexHtml.addRuntimeConfigToIndexHtml({
+      path,
+      platform: 'remote',
+      assetDir: `/${commitHash}`,
+      preloadWorkers: applicationPagePreloadWorkers,
     })
   }
   await BundleCss.bundleCss({

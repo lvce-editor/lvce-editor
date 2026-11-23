@@ -47,7 +47,17 @@ const serializeConfig = (config: object, indentation: string): string => {
   return json.replaceAll('\n', `\n${contentIndentation}`).replace(/^/, contentIndentation)
 }
 
-export const addRuntimeConfigToIndexHtml = async ({ path, platform, assetDir }) => {
+export const addRuntimeConfigToIndexHtml = async ({
+  path,
+  platform,
+  assetDir,
+  preloadWorkers,
+}: {
+  path: string
+  platform: string
+  assetDir: string
+  preloadWorkers?: readonly string[]
+}) => {
   const content = await readFile(path, 'utf8')
   const configElement = content.match(/<script id="Config" type="application\/json">([\s\S]*?)<\/script>/)
   const existingConfig = configElement?.[1] ? JSON.parse(configElement[1]) : {}
@@ -55,7 +65,7 @@ export const addRuntimeConfigToIndexHtml = async ({ path, platform, assetDir }) 
   const config = {
     ...existingConfig,
     ...runtimeConfig,
-    preloadWorkers: existingConfig.preloadWorkers ?? runtimeConfig.preloadWorkers,
+    preloadWorkers: preloadWorkers ?? existingConfig.preloadWorkers ?? runtimeConfig.preloadWorkers,
     workerUrls: {
       ...runtimeConfig.workerUrls,
       ...existingConfig.workerUrls,
@@ -65,7 +75,7 @@ export const addRuntimeConfigToIndexHtml = async ({ path, platform, assetDir }) 
   const script = configElement
     ? `<script id="Config" type="application/json">\n${serializeConfig(config, indentation)}\n${indentation}</script>`
     : `    <script id="Config" type="application/json">\n${serializeConfig(config, indentation)}\n    </script>`
-  const newContent = configElement ? content.replace(configElement[0], script) : content.replace('</head>', `${script}\n  </head>`)
+  const newContent = configElement ? content.replace(configElement[0], () => script) : content.replace('</head>', `${script}\n  </head>`)
   if (newContent === content && !configElement) {
     throw new Error(`Could not add runtime configuration to ${path}`)
   }
