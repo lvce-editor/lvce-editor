@@ -60,6 +60,10 @@
   color: var(--TabForeground);
 }
 
+.EditorTabCloseButton .MaskIconCircleFilled {
+  mask-image: radial-gradient(circle closest-side, #000 47%, transparent 53%);
+}
+
 .EditorTabCloseButton:hover {
   background: rgba(255, 255, 255, 0.05);
   transition: all 0.1s;
