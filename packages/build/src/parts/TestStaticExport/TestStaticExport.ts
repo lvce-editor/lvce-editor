@@ -13,6 +13,27 @@ import * as TranspileFiles from '../TranspileFiles/TranspileFiles.ts'
 import * as WriteFile from '../WriteFile/WriteFile.ts'
 import * as ExportStaticSite from '../ExportStaticSite/ExportStaticSite.ts'
 
+const pagePreloadWorkers = [
+  'rendererWorker',
+  'extensionManagementWorker',
+  'activityBarWorker',
+  'mainAreaWorker',
+  'statusBarWorker',
+  'iconThemeWorker',
+]
+
+const assertApplicationPages = async (dir: string, rootHtml: string, platform: string) => {
+  const configPattern = /<script id="Config" type="application\/json">([\s\S]*?)<\/script>/
+  const rootConfig = JSON.parse(rootHtml.match(configPattern)![1])
+  assert.equal(rootConfig.platform, platform)
+  for (const route of ['chat', 'board', 'boards']) {
+    const html = await ReadFile.readFile(join(dir, route, 'index.html'))
+    const config = JSON.parse(html.match(configPattern)![1])
+    assert.equal(html.replace(configPattern, ''), rootHtml.replace(configPattern, ''), route)
+    assert.deepEqual(config, { ...rootConfig, preloadWorkers: pagePreloadWorkers }, route)
+  }
+}
+
 const main = async () => {
   const indexPath = Path.absolute('packages/build/.tmp/server/shared-process/index.js')
   const indexUri = pathToFileURL(indexPath).toString()
@@ -67,6 +88,7 @@ const main = async () => {
     const result = await module.exportStatic({
       extensionPath,
       extensionPaths: [secondExtensionPath],
+      page: 'chat',
       testPath,
       root: tmpDir,
     })
@@ -75,8 +97,10 @@ const main = async () => {
     throw new VError(error, `static export failed`)
   }
   const indexHtml = await ReadFile.readFile(join(tmpDir, 'dist', 'index.html'))
-  const chatIndexHtml = await ReadFile.readFile(join(tmpDir, 'dist', 'chat', 'index.html'))
-  assert.equal(chatIndexHtml, indexHtml, 'chat route should use the same processed application shell as the root route')
+  await assertApplicationPages(join(tmpDir, 'dist'), indexHtml, 'web')
+  const serverStaticDir = Path.absolute('packages/build/.tmp/server/static-server/static')
+  const serverIndexHtml = await ReadFile.readFile(join(serverStaticDir, 'index.html'))
+  await assertApplicationPages(serverStaticDir, serverIndexHtml, 'remote')
   assert.ok(!indexHtml.includes('startupAppearance'))
   const executableScripts = indexHtml.match(/<script\b[^>]*>/g)?.filter((tag) => !tag.includes('type="application/json"')) || []
   assert.equal(executableScripts.length, 1)
@@ -93,17 +117,7 @@ const main = async () => {
   assert.ok(configElement[1].includes('\n        "workerUrls": {\n'), 'static export runtime configuration should be formatted across multiple lines')
   const runtimeConfig = JSON.parse(configElement[1])
   assert.equal(runtimeConfig.platform, 'web')
-  assert.deepEqual(runtimeConfig.preloadWorkers, [
-    'rendererWorker',
-    'editorWorker',
-    'syntaxHighlightingWorker',
-    'extensionManagementWorker',
-    'fileSystemWorker',
-    'activityBarWorker',
-    'mainAreaWorker',
-    'statusBarWorker',
-    'iconThemeWorker',
-  ])
+  assert.deepEqual(runtimeConfig.preloadWorkers, pagePreloadWorkers)
   assert.equal(runtimeConfig.assetDir, `/test/${commitHash}`)
   assert.equal(runtimeConfig.rendererWorkerUrl, `/test/${commitHash}/packages/renderer-worker/dist/rendererWorkerMain.js`)
   assert.ok(Object.values(runtimeConfig.workerUrls as Record<string, string>).every((url) => url.startsWith(`/test/${commitHash}/`)))
@@ -179,8 +193,7 @@ const main = async () => {
     serverRoot: Path.absolute('packages/build/.tmp/server'),
   })
   const pagesIndexHtml = await ReadFile.readFile(join(pagesRoot, 'dist', 'index.html'))
-  const pagesChatIndexHtml = await ReadFile.readFile(join(pagesRoot, 'dist', 'chat', 'index.html'))
-  assert.equal(pagesChatIndexHtml, pagesIndexHtml, 'prefixed chat route should use the same application shell as the root route')
+  await assertApplicationPages(join(pagesRoot, 'dist'), pagesIndexHtml, 'web')
   assert.ok(!pagesIndexHtml.includes('startupAppearance'))
   assert.ok(
     pagesIndexHtml.includes(`frame-src 'self' blob: https: http://127.0.0.1:* http://localhost:*;`),
@@ -254,8 +267,7 @@ const main = async () => {
   })
   const rootWebExtensions = JSON.parse(await ReadFile.readFile(join(rootPrefix, 'dist', rootPrefixResult.commitHash, 'config', 'webExtensions.json')))
   const rootIndexHtml = await ReadFile.readFile(join(rootPrefix, 'dist', 'index.html'))
-  const rootChatIndexHtml = await ReadFile.readFile(join(rootPrefix, 'dist', 'chat', 'index.html'))
-  assert.equal(rootChatIndexHtml, rootIndexHtml, 'root chat route should use the same application shell as the root route')
+  await assertApplicationPages(join(rootPrefix, 'dist'), rootIndexHtml, 'web')
   const rootChat2 = rootWebExtensions.find((extension) => extension.id === 'builtin.chat-view-2')
   assert.ok(rootChat2, 'root export should retain the builtin Chat 2 web extension')
   assert.equal(rootChat2.path, `/${rootPrefixResult.commitHash}/extensions/builtin.chat-view-2`)

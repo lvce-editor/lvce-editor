@@ -19,7 +19,10 @@ const serializeConfig = (config: object, indentation: string): string => {
   return `${contentIndentation}${json.replaceAll('\n', `\n${contentIndentation}`)}`
 }
 
-export const addCustomPathsToIndexHtml = async (content: any, runtimeConfig: { platform?: string; workspaceUri?: string } = {}): Promise<any> => {
+export const addCustomPathsToIndexHtml = async (
+  content: any,
+  runtimeConfig: { platform?: string; preloadWorkers?: readonly string[]; workspaceUri?: string } = {},
+): Promise<any> => {
   let preferences = {}
   if (!Platform.isProduction) {
     preferences = await Preferences.getUserPreferences()

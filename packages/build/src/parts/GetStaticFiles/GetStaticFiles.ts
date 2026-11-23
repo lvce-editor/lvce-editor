@@ -1,6 +1,7 @@
 import { readdir } from 'node:fs/promises'
 import { join } from 'node:path'
 import { pathToFileURL } from 'node:url'
+import { applicationPageRoutes } from '../../../../shared-process/src/parts/PageWorkerPreloads/PageWorkerPreloads.js'
 import * as Path from '../Path/Path.ts'
 import { root } from '../Root/Root.ts'
 import * as WriteFile from '../WriteFile/WriteFile.ts'
@@ -43,9 +44,11 @@ export const generateFilesCodeMap = (indexes, uris) => {
   }
   map['/'] = map['/index.html']
   map['/auth/callback'] = map['/auth/callback.html']
-  map['/chat'] = map['/chat/index.html']
-  map['/board'] = map['/board/index.html']
-  map['/boards'] = map['/boards/index.html']
+  for (const route of applicationPageRoutes) {
+    const index = map[`/${route}/index.html`]
+    map[`/${route}`] = index
+    map[`/${route}/`] = index
+  }
   return map
 }
 

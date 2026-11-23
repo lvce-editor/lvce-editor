@@ -6,6 +6,7 @@ import workers from '../../../../renderer-worker/src/parts/Workers/Workers.json'
 import * as FileSystem from '../FileSystem/FileSystem.ts'
 import * as GetContentSecurityPolicy from '../GetContentSecurityPolicy/GetContentSecurityPolicy.ts'
 import * as JsonFile from '../JsonFile/JsonFile.ts'
+import { applicationPagePreloadWorkers, applicationPageRoutes } from '../PageWorkerPreloads/PageWorkerPreloads.js'
 import * as Path from '../Path/Path.ts'
 
 const testFileExtensionRegex = /\.(js|ts)$/
@@ -155,15 +156,16 @@ export const validateRendererProcessArtifacts = ({ commitHash, root }: any): any
   }
 }
 
-const applyRuntimeConfigOverrides = async ({ root }: any): Promise<void> => {
-  const indexHtmlPath = Path.join(root, 'dist', 'index.html')
-  const content = await readFile(indexHtmlPath, 'utf8')
+const configureWebIndexHtml = (content: string, path: string, preloadWorkers?: readonly string[]): string => {
   const configElement = content.match(runtimeConfigScriptRegex)
   if (!configElement) {
-    throw new Error(`runtime config not found in ${indexHtmlPath}`)
+    throw new Error(`runtime config not found in ${path}`)
   }
   const config = JSON.parse(configElement[1])
   config.platform = 'web'
+  if (preloadWorkers) {
+    config.preloadWorkers = preloadWorkers
+  }
   const configIndex = content.indexOf(configElement[0])
   const lineStart = content.lastIndexOf('\n', configIndex - 1) + 1
   const lineIndentation = content.slice(lineStart, configIndex)
@@ -174,12 +176,13 @@ const applyRuntimeConfigOverrides = async ({ root }: any): Promise<void> => {
     .replaceAll('>', '\\u003e')
     .replaceAll('&', '\\u0026')
     .replaceAll('\n', `\n${contentIndentation}`)}`
-  const newContent = content.replace(configElement[0], `<script id="Config" type="application/json">\n${serializedConfig}\n${indentation}</script>`)
-  await writeFile(indexHtmlPath, newContent)
+  return content.replace(configElement[0], () => `<script id="Config" type="application/json">\n${serializedConfig}\n${indentation}</script>`)
 }
 
-const applyOverrides = async ({ commitHash, cspOptions, pathPrefix, root, serverStaticPath }: any): Promise<any> => {
-  await applyRuntimeConfigOverrides({ root })
+const applyOverrides = async ({ commitHash, cspOptions, page, pathPrefix, root, serverStaticPath }: any): Promise<any> => {
+  const indexHtmlPath = Path.join(root, 'dist', 'index.html')
+  const html = await readFile(indexHtmlPath, 'utf8')
+  await writeFile(indexHtmlPath, configureWebIndexHtml(html, indexHtmlPath, page ? applicationPagePreloadWorkers : undefined))
   const extensionDirents = await FileSystem.readDir(Path.join(serverStaticPath, commitHash, 'extensions'))
 
   const languageBasicsDirents = extensionDirents.filter(isLanguageBasics)
@@ -249,7 +252,6 @@ const applyOverrides = async ({ commitHash, cspOptions, pathPrefix, root, server
       Path.join(root, 'dist', commitHash, 'icon-themes', `${iconThemeId}.json`),
     )
   }
-  const indexHtmlPath = Path.join(root, 'dist', 'index.html')
   await replace(indexHtmlPath, `/${commitHash}`, `${pathPrefix}/${commitHash}`)
 
   await replace(
@@ -771,7 +773,7 @@ const getExtensionPaths = (extensionPath: any, extensionPaths: any): any => {
 
 /**
  *
- * @param {{root:string, pathPrefix:string , extensionPath:string, extensionPaths?:string[], onLoadCommands?:readonly unknown[], cspOptions?: {allowExternalConnections?: boolean}, testPath:string, useSimpleWebExtensionFile?:boolean, serverStaticPath?:string, bundleMode?:boolean }} param0
+ * @param {{root:string, pathPrefix:string , extensionPath:string, extensionPaths?:string[], onLoadCommands?:readonly unknown[], page?: 'chat' | 'board', cspOptions?: {allowExternalConnections?: boolean}, testPath:string, useSimpleWebExtensionFile?:boolean, serverStaticPath?:string, bundleMode?:boolean }} param0
  */
 export const exportStatic = async ({
   bundleMode = false,
@@ -779,6 +781,7 @@ export const exportStatic = async ({
   extensionPath,
   extensionPaths,
   onLoadCommands = [],
+  page,
   pathPrefix,
   root,
   serverStaticPath,
@@ -823,6 +826,7 @@ export const exportStatic = async ({
   await applyOverrides({
     commitHash,
     cspOptions,
+    page,
     pathPrefix,
     root,
     serverStaticPath,
@@ -860,10 +864,13 @@ export const exportStatic = async ({
     })
     console.timeEnd('addTestFiles')
   }
-  for (const route of ['chat', 'board', 'boards']) {
-    const routePath = Path.join(root, 'dist', route)
-    await FileSystem.mkdir(routePath)
-    await FileSystem.copyFile(Path.join(root, 'dist', 'index.html'), Path.join(routePath, 'index.html'))
+  const indexHtmlPath = Path.join(root, 'dist', 'index.html')
+  const indexHtml = await readFile(indexHtmlPath, 'utf8')
+  const pageHtml = configureWebIndexHtml(indexHtml, indexHtmlPath, applicationPagePreloadWorkers)
+  for (const route of applicationPageRoutes) {
+    const pagePath = Path.join(root, 'dist', route)
+    await FileSystem.mkdir(pagePath)
+    await writeFile(Path.join(pagePath, 'index.html'), pageHtml)
   }
   return {
     commitHash,

@@ -3,6 +3,7 @@ import { readFile, readdir } from 'node:fs/promises'
 import * as BundleCss from '../BundleCss/BundleCss.ts'
 import * as BundleRendererProcess from '../BundleRendererProcess/BundleRendererProcess.ts'
 import * as BundleWorkers from '../BundleWorkers/BundleWorkers.ts'
+import { applicationPagePreloadWorkers, applicationPageRoutes } from '../../../../shared-process/src/parts/PageWorkerPreloads/PageWorkerPreloads.js'
 import * as AddRuntimeConfigToIndexHtml from '../AddRuntimeConfigToIndexHtml/AddRuntimeConfigToIndexHtml.ts'
 import * as CommitHash from '../CommitHash/CommitHash.ts'
 import * as Console from '../Console/Console.ts'
@@ -153,11 +154,21 @@ const copyStaticFiles = async ({ pathPrefix, ignoreIconTheme, commitHash }) => {
     platform: 'web',
     assetDir: `${pathPrefix}/${commitHash}`,
   })
-  await Mkdir.mkdir('packages/build/.tmp/dist/chat')
-  await Copy.copyFile({
-    from: 'packages/build/.tmp/dist/index.html',
-    to: 'packages/build/.tmp/dist/chat/index.html',
-  })
+  for (const route of applicationPageRoutes) {
+    const dir = `packages/build/.tmp/dist/${route}`
+    const path = `${dir}/index.html`
+    await Mkdir.mkdir(dir)
+    await Copy.copyFile({
+      from: 'packages/build/.tmp/dist/index.html',
+      to: path,
+    })
+    await AddRuntimeConfigToIndexHtml.addRuntimeConfigToIndexHtml({
+      path,
+      platform: 'web',
+      assetDir: `${pathPrefix}/${commitHash}`,
+      preloadWorkers: applicationPagePreloadWorkers,
+    })
+  }
   await BundleCss.bundleCss({
     outDir: `packages/build/.tmp/dist/${commitHash}/css`,
     assetDir: `${pathPrefix}/${commitHash}`,

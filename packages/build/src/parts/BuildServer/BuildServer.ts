@@ -1,3 +1,4 @@
+import { applicationPageRoutes } from '../../../../shared-process/src/parts/PageWorkerPreloads/PageWorkerPreloads.js'
 import * as BuildStaticServer from '../BuildStaticServer/BuildStaticServer.ts'
 import * as BundleOptions from '../BundleOptions/BundleOptions.ts'
 import * as BundleSharedProcessCached from '../BundleSharedProcessCached/BundleSharedProcessCached.ts'
@@ -28,7 +29,7 @@ const isStatic = (url) => {
   if (url === '/' || url.startsWith('/?')) {
     return !hasLinkedExtensions && !hasCustomWorkerPathOverride
   }
-  if (url === '/index.html' || url.startsWith('/index.html?')) {
+  if (url === '/index.html' || url.startsWith('/index.html?') || /^\\/(?:${applicationPageRoutes.join('|')})\\/?(?:\\?|$)/.test(url)) {
     return !hasLinkedExtensions && !hasCustomWorkerPathOverride
   }
   if (url.startsWith('/${commitHash}')) {

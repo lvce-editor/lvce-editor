@@ -1,6 +1,7 @@
 import { open, readFile } from 'node:fs/promises'
 import type { ByteRange } from '../GetByteRange/GetByteRange.ts'
 import * as AddCustomPathsToIndexHtml from '../AddCustomPathsToIndexHtml/AddCustomPathsToIndexHtml.ts'
+import { applicationPagePreloadWorkers } from '../PageWorkerPreloads/PageWorkerPreloads.js'
 import * as Platform from '../Platform/Platform.ts'
 import * as ShouldTranspileTypescript from '../ShouldTranspileTypescript/ShouldTranspileTypescript.ts'
 import * as TranspileTypeScript from '../TranspileTypeScript/TranspileTypeScript.ts'
@@ -45,8 +46,13 @@ export const getElectronFileResponseContent = async (request: any, absolutePath:
   let content = await readFile(absolutePath)
   const baseUrl = `${Platform.scheme}://-/`
   const indexUrl = typeof url === 'string' && URL.canParse(url, baseUrl) ? new URL(url, baseUrl) : undefined
-  const isAppIndex = indexUrl && (indexUrl.pathname === '/' || indexUrl.pathname === '/index.html' || appRoutePattern.test(indexUrl.pathname))
-  const runtimeConfig = { platform: request?.platform === 'remote' ? 'remote' : 'electron', workspaceUri: getWorkspaceUri(request?.url || url) }
+  const isApplicationPage = indexUrl && appRoutePattern.test(indexUrl.pathname)
+  const isAppIndex = indexUrl && (indexUrl.pathname === '/' || indexUrl.pathname === '/index.html' || isApplicationPage)
+  const runtimeConfig = {
+    platform: request?.platform === 'remote' ? 'remote' : 'electron',
+    workspaceUri: getWorkspaceUri(request?.url || url),
+    ...(isApplicationPage ? { preloadWorkers: applicationPagePreloadWorkers } : {}),
+  }
   if (!Platform.isProduction && isAppIndex) {
     // @ts-ignore
     content = content.toString().replace('    <link rel="manifest" href="/manifest.json" crossorigin="use-credentials" />\n', '')
