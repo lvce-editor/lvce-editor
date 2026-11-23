@@ -103,6 +103,14 @@ const main = async (): Promise<void> => {
       assert.equal(response.headers.get('cross-origin-opener-policy'), expectedHeaders['Cross-Origin-Opener-Policy'])
       assert.equal(response.headers.get('cross-origin-resource-policy'), expectedHeaders['Cross-Origin-Resource-Policy'])
     }
+    for (const route of ['chat', 'board', 'boards']) {
+      const pageHtml = await readFile(join(staticServerRoot, 'static', route, 'index.html'), 'utf8')
+      for (const path of [`/${route}`, `/${route}/?workspace=/test`]) {
+        const response = await fetch(`http://localhost:${port}${path}`)
+        assert.equal(response.status, 200, path)
+        assert.equal(await response.text(), pageHtml, path)
+      }
+    }
   } finally {
     if (child) {
       await stopServer(child)

@@ -6,7 +6,7 @@ import * as HttpStatusCode from '../HttpStatusCode/HttpStatusCode.ts'
 import { isSupportedMethod } from '../IsSupportedMethod/IsSupportedMethod.ts'
 import * as MatchesEtag from '../MatchesEtag/MatchesEtag.ts'
 
-const appRoutePattern = /(?:^|\/)(chat|board)\/?$/
+const appRoutePattern = /(?:^|\/)(chat|boards?)\/?$/
 
 interface ResponseInfo {
   absolutePath: string

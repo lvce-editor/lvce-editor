@@ -21,6 +21,10 @@ test('generated server sends index documents through the static server', () => {
   expect(isStatic('/?workspace=/test')).toBe(true)
   expect(isStatic('/index.html')).toBe(true)
   expect(isStatic('/index.html?workspace=/test')).toBe(true)
+  expect(isStatic('/chat')).toBe(true)
+  expect(isStatic('/board/?workspace=/test')).toBe(true)
+  expect(isStatic('/boards')).toBe(true)
+  expect(isStatic('/board-settings')).toBe(false)
   expect(isStatic('/abcdefg/packages/renderer-worker.js')).toBe(true)
   expect(isStatic('/api/status')).toBe(false)
 })
@@ -37,6 +41,7 @@ test('generated server sends index documents through the shared process when ext
   expect(isStatic('/?workspace=/test')).toBe(false)
   expect(isStatic('/index.html')).toBe(false)
   expect(isStatic('/index.html?workspace=/test')).toBe(false)
+  expect(isStatic('/board')).toBe(false)
   expect(isStatic('/abcdefg/packages/renderer-worker.js')).toBe(true)
 })
 

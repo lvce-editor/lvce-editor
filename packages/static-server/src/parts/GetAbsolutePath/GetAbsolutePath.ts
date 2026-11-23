@@ -7,7 +7,7 @@ import { STATIC } from '../Static/Static.ts'
 
 const invalidIconsPath = join(STATIC, '__missing_vscode_icon__.svg')
 const invalidStaticPath = join(STATIC, '__invalid_path__')
-const appRoutePattern = /(?:^|\/)(chat|board)\/?$/
+const appRoutePattern = /(?:^|\/)(chat|boards?)\/?$/
 const leadingSlashesPattern = /^[/\\]+/
 
 const getContainedPath = (basePath: string, pathName: string): string => {

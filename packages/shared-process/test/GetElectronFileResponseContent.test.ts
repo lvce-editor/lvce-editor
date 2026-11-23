@@ -57,6 +57,7 @@ test.each([
   expect(await getElectronFileResponseContent({ platform: 'remote', url }, path, url)).toEqual(Buffer.from('<html>remote</html>'))
   expect(inject).toHaveBeenCalledWith('<html>app</html>', {
     platform: 'remote',
+    preloadWorkers: ['rendererWorker', 'extensionManagementWorker', 'activityBarWorker', 'mainAreaWorker', 'statusBarWorker', 'iconThemeWorker'],
     workspaceUri: url.includes('workspace=') ? 'file:///workspace' : undefined,
   })
 })

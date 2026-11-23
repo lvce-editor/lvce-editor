@@ -26,6 +26,9 @@ const files: Readonly<Record<string, StaticFile>> = {
   '/board': {
     headers: indexHeaders,
   },
+  '/boards': {
+    headers: indexHeaders,
+  },
   '/chat': {
     headers: indexHeaders,
   },
