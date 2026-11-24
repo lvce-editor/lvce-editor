@@ -51,7 +51,7 @@
     "@playwright/test": "1.65.1",
     "@types/jest": "^30.0.0",
     "@types/node": "^25.9.9",
-    "electron": "45.4.1",
+    "electron": "45.3.3",
     "esbuild": "^0.28.2",
     "eslint": "^10.15.0",
     "jest": "^30.5.2",
