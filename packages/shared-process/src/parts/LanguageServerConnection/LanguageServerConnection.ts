@@ -546,6 +546,9 @@ export class LanguageServerConnection {
   }
 
   private handleMessage(message: JsonRpcMessage): void {
+    if (!this.running) {
+      return
+    }
     if (message.method === 'textDocument/publishDiagnostics') {
       this.handlePublishedDiagnostics(message.params)
       return
