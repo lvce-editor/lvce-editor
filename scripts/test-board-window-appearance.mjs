@@ -60,7 +60,7 @@ test('native window colors follow the Board layout', { timeout: 180_000 }, async
       await selectLayout(page, 'chat2.showBoardLayout')
       await expect(page.locator('.BoardView')).toBeVisible()
       await expect.poll(background).toBe('#ffffff')
-      await expect.poll(overlay).toEqual({ color: '#00000000', symbolColor: '#202124', height: 29 })
+      await expect.poll(overlay).toEqual({ color: '#ffffff', symbolColor: '#202124', height: 29 })
 
       await selectLayout(page, 'chat2.showIdeLayout')
       await expect(page.locator('.BoardView')).toBeHidden()

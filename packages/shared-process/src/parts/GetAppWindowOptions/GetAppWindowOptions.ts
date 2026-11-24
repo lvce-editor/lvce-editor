@@ -6,10 +6,11 @@ const fallbackBackground = '#1e2324'
 const fallbackSymbolColor = '#74b1be'
 
 // Board uses a light surface independently of the workbench color theme.
+const boardBackground = '#ffffff'
 const appearanceByName = {
   board: {
-    backgroundColor: '#ffffff',
-    titleBarOverlay: { color: '#00000000', symbolColor: '#202124' },
+    backgroundColor: boardBackground,
+    titleBarOverlay: { color: boardBackground, symbolColor: '#202124' },
   },
 }
 
