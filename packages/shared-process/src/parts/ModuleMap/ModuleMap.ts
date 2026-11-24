@@ -227,6 +227,7 @@ export const getModuleId = (commandId: any): any => {
     case 'LanguageServer.disposeAll':
     case 'LanguageServer.documentSymbols':
     case 'LanguageServer.format':
+    case 'LanguageServer.observeDiagnostics':
     case 'LanguageServer.references':
       return ModuleId.LanguageServer
     case 'ListProcessesWithMemoryUsage.listProcessesWithMemoryUsage':

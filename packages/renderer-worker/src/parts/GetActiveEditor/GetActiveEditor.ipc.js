@@ -15,6 +15,7 @@ export const Commands = {
   getSelections: GetActiveEditor.getSelections,
   getTextDocument: GetActiveEditor.getTextDocument,
   setSelections: GetActiveEditor.setSelections,
+  refreshLanguageServerDiagnostics: GetActiveEditor.refreshLanguageServerDiagnostics,
   updateAllDiagnostics: GetActiveEditor.updateAllDiagnostics,
   updateDiagnostics: GetActiveEditor.updateDiagnostics,
 }

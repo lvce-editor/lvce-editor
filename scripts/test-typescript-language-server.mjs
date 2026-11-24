@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict'
-import { mkdtemp, rm, writeFile } from 'node:fs/promises'
+import { EventEmitter, on } from 'node:events'
+import { mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
@@ -12,6 +13,7 @@ import {
   disposeAll,
   documentSymbols,
   feature,
+  observeDiagnostics,
   references,
 } from '../packages/shared-process/src/parts/LanguageServer/LanguageServer.ts'
 
@@ -21,7 +23,7 @@ const uri = process.env.LVCE_TYPESCRIPT_SERVER_PATH
   : 'lvce-language-server:typescript'
 const documentUri = pathToFileURL(join(temporary, 'main.ts')).href
 const text = 'export function greet(name: string) { return name.toUpperCase() }\nconst value: string = 123\ngreet("hello")\n'
-await writeFile(join(temporary, 'tsconfig.json'), JSON.stringify({ compilerOptions: { strict: true }, include: ['*.ts'] }))
+await writeFile(join(temporary, 'tsconfig.json'), JSON.stringify({ compilerOptions: { strict: true, types: ['node'] }, include: ['*.ts'] }))
 await writeFile(join(temporary, 'main.ts'), text)
 await writeFile(join(temporary, 'other.ts'), 'import { greet } from "./main";\ngreet("world");\n')
 const options = {
@@ -89,8 +91,35 @@ try {
     (await diagnostic(options)).some((item) => item.code === 2322),
     'server restarts after disposal',
   )
+  const importUri = pathToFileURL(join(temporary, 'node-import.ts')).href
+  const importText = 'import { readFile } from "node:fs/promises";\nexport const read = () => readFile("example");\n'
+  await writeFile(fileURLToPath(importUri), importText)
+  const importOptions = { ...options, textDocument: { ...options.textDocument, text: importText, uri: importUri } }
+  const missingNodeTypes = ({ code }) => code === 2591
+  assert((await diagnostic(importOptions)).some(missingNodeTypes), 'expected missing Node types before installation')
+
+  const observer = new EventEmitter()
+  observer.send = ({ method, params }) => {
+    if (method === 'GetActiveEditor.refreshLanguageServerDiagnostics' && params[0] === options.rootUri) {
+      observer.emit('refresh')
+    }
+  }
+  observeDiagnostics(observer)
+  const refreshes = on(observer, 'refresh', { signal: AbortSignal.timeout(5_000) })
+  try {
+    const types = join(temporary, 'node_modules', '@types', 'node')
+    await mkdir(types, { recursive: true })
+    await writeFile(join(types, 'package.json'), '{"name":"@types/node","types":"index.d.ts"}')
+    await writeFile(join(types, 'index.d.ts'), 'declare module "node:fs/promises" { export function readFile(path: string): Promise<string> }\n')
+    for await (const _ of refreshes) {
+      if ((await diagnostic(importOptions)).length === 0) break
+    }
+  } finally {
+    await refreshes.return()
+    observer.emit('close')
+  }
   console.log(
-    'Verified real TS7: completions, diagnostic edits, hover, definition, symbols, project references, rename, signature help, code actions and restart',
+    'Verified real TS7: completions, diagnostic edits, hover, definition, symbols, project references, rename, signature help, code actions, restart and dependency diagnostic refresh',
   )
 } finally {
   disposeAll()

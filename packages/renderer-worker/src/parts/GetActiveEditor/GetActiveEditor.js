@@ -7,6 +7,7 @@ import * as MainAreaWorker from '../MainAreaWorker/MainAreaWorker.js'
 import * as TextDocument from '../TextDocument/TextDocument.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
+import * as Workspace from '../Workspace/Workspace.js'
 
 export const getActiveEditor = () => {
   return ViewletStates.getState(ViewletModuleId.EditorText)
@@ -233,6 +234,12 @@ export const updateAllDiagnosticsWithCommand = async (invoke) => {
 
 export const updateAllDiagnostics = async () => {
   await updateAllDiagnosticsWithCommand(EditorWorker.invoke)
+}
+
+export const refreshLanguageServerDiagnostics = async (workspace) => {
+  if (workspace === Workspace.getPath()) {
+    await updateAllDiagnostics()
+  }
 }
 
 // Return both fields from the same synchronous state snapshot.

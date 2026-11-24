@@ -1,6 +1,7 @@
 import { spawn, type ChildProcessWithoutNullStreams } from 'node:child_process'
 import { basename, extname } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { LanguageServerFileWatcher } from '../LanguageServerFileWatcher/LanguageServerFileWatcher.ts'
 import { LanguageServerMessageParser } from '../LanguageServerMessageParser/LanguageServerMessageParser.ts'
 import { normalizeLanguageServerDocumentUri } from '../NormalizeLanguageServerDocumentUri/NormalizeLanguageServerDocumentUri.ts'
 import { typeScriptLanguageServerPath } from '../TypeScriptLanguageServerPath/TypeScriptLanguageServerPath.ts'
@@ -61,6 +62,7 @@ interface DocumentState {
 
 export interface LanguageServerConnectionOptions {
   readonly argv: readonly string[]
+  readonly refreshDiagnostics?: () => void
   readonly rootUri: string
   readonly uri: string
 }
@@ -170,6 +172,8 @@ export class LanguageServerConnection {
   private readonly publishedDiagnostics = new Map<string, readonly unknown[]>()
   private readonly ready: Promise<void>
   private readonly rootUri: string
+  private readonly fileWatcher: LanguageServerFileWatcher | undefined
+  private readonly refreshDiagnostics: (() => void) | undefined
   private initializationProgressWasStarted = false
   private nextRequestId = 1
   private running = true
@@ -181,12 +185,21 @@ export class LanguageServerConnection {
   private supportsPullDiagnostics = false
   private supportsReferences = false
 
-  constructor({ argv, rootUri, uri }: LanguageServerConnectionOptions) {
+  constructor({ argv, refreshDiagnostics, rootUri, uri }: LanguageServerConnectionOptions) {
     this.rootUri = rootUri
+    this.refreshDiagnostics = refreshDiagnostics
+    if (rootUri.startsWith('file:')) {
+      this.fileWatcher = new LanguageServerFileWatcher(rootUri, (changes) => {
+        this.sendNotification('workspace/didChangeWatchedFiles', { changes })
+      })
+    }
     const { args, command, env } = getSpawnOptions(uri, argv)
     this.child = spawn(command, [...args], {
       env,
       stdio: ['pipe', 'pipe', 'pipe'],
+    })
+    this.child.stdin.on('error', () => {
+      this.dispose()
     })
     this.child.stdout.on('data', (chunk: Buffer) => {
       this.handleData(chunk)
@@ -214,6 +227,7 @@ export class LanguageServerConnection {
       return
     }
     this.running = false
+    this.fileWatcher?.dispose()
     this.child.kill()
     this.rejectPendingRequests(new Error('Language server was disposed'))
   }
@@ -424,6 +438,8 @@ export class LanguageServerConnection {
         },
         workspace: {
           configuration: true,
+          ...(this.fileWatcher && { didChangeWatchedFiles: { dynamicRegistration: true, relativePatternSupport: true } }),
+          ...(this.refreshDiagnostics && { diagnostics: { refreshSupport: true } }),
           workspaceFolders: true,
         },
       },
@@ -525,7 +541,7 @@ export class LanguageServerConnection {
       return
     }
     if (message.method && message.id !== undefined && message.id !== null) {
-      this.handleServerRequest(message)
+      void this.handleServerRequest(message)
       return
     }
     if (message.id === undefined || message.id === null) {
@@ -573,7 +589,7 @@ export class LanguageServerConnection {
     this.initializationProgressEnded.resolve()
   }
 
-  private handleServerRequest(message: JsonRpcMessage): void {
+  private async handleServerRequest(message: JsonRpcMessage): Promise<void> {
     try {
       let result: unknown = null
       if (message.method === 'workspace/configuration') {
@@ -582,6 +598,21 @@ export class LanguageServerConnection {
       } else if (message.method === 'window/workDoneProgress/create') {
         this.initializationProgressWasStarted = true
         this.initializationProgressStarted.resolve()
+      } else if (message.method === 'client/registerCapability') {
+        await Promise.all((message.params?.registrations ?? []).map(async (registration: any) => {
+          if (registration.method === 'workspace/didChangeWatchedFiles') {
+            await this.fileWatcher?.register(registration.id, registration.registerOptions.watchers)
+          }
+        }))
+      } else if (message.method === 'client/unregisterCapability') {
+        // The field is spelled this way in the LSP specification.
+        for (const registration of message.params?.unregisterations ?? []) {
+          if (registration.method === 'workspace/didChangeWatchedFiles') {
+            this.fileWatcher?.unregister(registration.id)
+          }
+        }
+      } else if (message.method === 'workspace/diagnostic/refresh') {
+        this.refreshDiagnostics?.()
       } else if (message.method === 'workspace/workspaceFolders') {
         result = [
           {
@@ -615,6 +646,7 @@ export class LanguageServerConnection {
       return
     }
     this.running = false
+    this.fileWatcher?.dispose()
     this.rejectPendingRequests(error)
   }
 
@@ -692,6 +724,9 @@ export class LanguageServerConnection {
   }
 
   private sendMessage(message: unknown): void {
+    if (!this.running) {
+      return
+    }
     const content = JSON.stringify(message)
     const header = `Content-Length: ${Buffer.byteLength(content)}\r\n\r\n`
     this.child.stdin.write(header + content)
