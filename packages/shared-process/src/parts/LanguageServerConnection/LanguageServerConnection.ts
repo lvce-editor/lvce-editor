@@ -1,6 +1,7 @@
 import { spawn, type ChildProcessWithoutNullStreams } from 'node:child_process'
 import { basename, extname } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { LanguageServerFileWatcher } from '../LanguageServerFileWatcher/LanguageServerFileWatcher.ts'
 import { LanguageServerMessageParser } from '../LanguageServerMessageParser/LanguageServerMessageParser.ts'
 import { normalizeLanguageServerDocumentUri } from '../NormalizeLanguageServerDocumentUri/NormalizeLanguageServerDocumentUri.ts'
 import { typeScriptLanguageServerPath } from '../TypeScriptLanguageServerPath/TypeScriptLanguageServerPath.ts'
@@ -61,6 +62,7 @@ interface DocumentState {
 
 export interface LanguageServerConnectionOptions {
   readonly argv: readonly string[]
+  readonly refreshDiagnostics?: () => void
   readonly rootUri: string
   readonly uri: string
 }
@@ -131,13 +133,16 @@ const containsPosition = (value: unknown, position: Position): boolean => {
   )
 }
 
-const getWorkspaceName = (rootUri: string): string => {
+const getWorkspacePath = (rootUri: string): string | undefined => {
   try {
-    return basename(fileURLToPath(rootUri)) || 'workspace'
+    return fileURLToPath(rootUri)
   } catch {
-    return 'workspace'
+    // A language server can use roots that the local filesystem cannot watch.
+    return undefined
   }
 }
+
+const getWorkspaceName = (rootUri: string): string => basename(getWorkspacePath(rootUri) ?? '') || 'workspace'
 
 const createDeferred = (): Deferred => {
   let resolve = (): void => {}
@@ -170,6 +175,9 @@ export class LanguageServerConnection {
   private readonly publishedDiagnostics = new Map<string, readonly unknown[]>()
   private readonly ready: Promise<void>
   private readonly rootUri: string
+  private readonly fileWatcher: LanguageServerFileWatcher | undefined
+  private readonly isBundledTypeScript: boolean
+  private readonly refreshDiagnostics: (() => void) | undefined
   private initializationProgressWasStarted = false
   private nextRequestId = 1
   private running = true
@@ -181,12 +189,23 @@ export class LanguageServerConnection {
   private supportsPullDiagnostics = false
   private supportsReferences = false
 
-  constructor({ argv, rootUri, uri }: LanguageServerConnectionOptions) {
+  constructor({ argv, refreshDiagnostics, rootUri, uri }: LanguageServerConnectionOptions) {
     this.rootUri = rootUri
+    this.isBundledTypeScript = uri === 'lvce-language-server:typescript'
+    this.refreshDiagnostics = refreshDiagnostics
+    const workspacePath = getWorkspacePath(rootUri)
+    if (workspacePath) {
+      this.fileWatcher = new LanguageServerFileWatcher(workspacePath, (changes) => {
+        this.sendNotification('workspace/didChangeWatchedFiles', { changes })
+      })
+    }
     const { args, command, env } = getSpawnOptions(uri, argv)
     this.child = spawn(command, [...args], {
       env,
       stdio: ['pipe', 'pipe', 'pipe'],
+    })
+    this.child.stdin.on('error', () => {
+      this.dispose()
     })
     this.child.stdout.on('data', (chunk: Buffer) => {
       this.handleData(chunk)
@@ -214,6 +233,7 @@ export class LanguageServerConnection {
       return
     }
     this.running = false
+    this.fileWatcher?.dispose()
     this.child.kill()
     this.rejectPendingRequests(new Error('Language server was disposed'))
   }
@@ -265,12 +285,20 @@ export class LanguageServerConnection {
   async diagnostic(textDocument: TextDocument): Promise<readonly unknown[]> {
     await this.ready
     if (this.supportsPullDiagnostics) {
+      // The bundled server can return its first diagnostics before registering
+      // file watches. Capture any intervening edits for that registration.
+      if (this.isBundledTypeScript) {
+        await this.fileWatcher?.prepare()
+      }
       this.syncDocument(textDocument)
       const result = await this.sendRequest('textDocument/diagnostic', {
         textDocument: {
           uri: textDocument.uri,
         },
       })
+      // The server can return diagnostics while the initial watch is scanning.
+      // Changes made in response to those diagnostics need an active watch.
+      await this.fileWatcher?.waitUntilReady()
       if (result && typeof result === 'object' && Array.isArray((result as { readonly items?: unknown }).items)) {
         return (result as { readonly items: readonly unknown[] }).items
       }
@@ -424,6 +452,8 @@ export class LanguageServerConnection {
         },
         workspace: {
           configuration: true,
+          ...(this.fileWatcher && { didChangeWatchedFiles: { dynamicRegistration: true, relativePatternSupport: true } }),
+          ...(this.refreshDiagnostics && { diagnostics: { refreshSupport: true } }),
           workspaceFolders: true,
         },
       },
@@ -516,6 +546,9 @@ export class LanguageServerConnection {
   }
 
   private handleMessage(message: JsonRpcMessage): void {
+    if (!this.running) {
+      return
+    }
     if (message.method === 'textDocument/publishDiagnostics') {
       this.handlePublishedDiagnostics(message.params)
       return
@@ -525,7 +558,7 @@ export class LanguageServerConnection {
       return
     }
     if (message.method && message.id !== undefined && message.id !== null) {
-      this.handleServerRequest(message)
+      void this.handleServerRequest(message)
       return
     }
     if (message.id === undefined || message.id === null) {
@@ -573,7 +606,7 @@ export class LanguageServerConnection {
     this.initializationProgressEnded.resolve()
   }
 
-  private handleServerRequest(message: JsonRpcMessage): void {
+  private async handleServerRequest(message: JsonRpcMessage): Promise<void> {
     try {
       let result: unknown = null
       if (message.method === 'workspace/configuration') {
@@ -582,6 +615,21 @@ export class LanguageServerConnection {
       } else if (message.method === 'window/workDoneProgress/create') {
         this.initializationProgressWasStarted = true
         this.initializationProgressStarted.resolve()
+      } else if (message.method === 'client/registerCapability') {
+        await Promise.all((message.params?.registrations ?? []).map(async (registration: any) => {
+          if (registration.method === 'workspace/didChangeWatchedFiles') {
+            await this.fileWatcher?.register(registration.id, registration.registerOptions.watchers)
+          }
+        }))
+      } else if (message.method === 'client/unregisterCapability') {
+        // The field is spelled this way in the LSP specification.
+        for (const registration of message.params?.unregisterations ?? []) {
+          if (registration.method === 'workspace/didChangeWatchedFiles') {
+            this.fileWatcher?.unregister(registration.id)
+          }
+        }
+      } else if (message.method === 'workspace/diagnostic/refresh') {
+        this.refreshDiagnostics?.()
       } else if (message.method === 'workspace/workspaceFolders') {
         result = [
           {
@@ -615,6 +663,7 @@ export class LanguageServerConnection {
       return
     }
     this.running = false
+    this.fileWatcher?.dispose()
     this.rejectPendingRequests(error)
   }
 
@@ -692,6 +741,9 @@ export class LanguageServerConnection {
   }
 
   private sendMessage(message: unknown): void {
+    if (!this.running) {
+      return
+    }
     const content = JSON.stringify(message)
     const header = `Content-Length: ${Buffer.byteLength(content)}\r\n\r\n`
     this.child.stdin.write(header + content)

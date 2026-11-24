@@ -12,5 +12,6 @@ export const Commands = {
   documentSymbols: LanguageServer.documentSymbols,
   feature: LanguageServer.feature,
   format: LanguageServer.format,
+  observeDiagnostics: LanguageServer.observeDiagnostics,
   references: LanguageServer.references,
 }
