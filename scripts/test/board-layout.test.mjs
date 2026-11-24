@@ -198,6 +198,7 @@ test('activity bar Settings switches between IDE, Chat, and Board layouts', { ti
       await page.getByRole('menuitem', { name: label, exact: true }).click()
     }
 
+    await expect(page.getByRole('tree', { name: 'Files Explorer' })).toBeVisible()
     await selectLayout('Chat')
     await expectPath('/chat')
     await expect(chat).toBeVisible()
