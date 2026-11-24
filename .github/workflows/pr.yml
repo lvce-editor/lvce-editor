@@ -59,6 +59,9 @@ jobs:
         env:
           DOWNLOAD_BUILTIN_EXTENSIONS: 0
           PYTHON: ${{ steps.python.outputs.python-path }}
+      - name: Prepare sample workspace on dependency cache hits
+        if: steps.npm-cache.outputs.cache-hit == 'true'
+        run: node scripts/use-sample-data.js
       - name: Verify native build Python
         if: runner.os == 'Windows'
         env:
