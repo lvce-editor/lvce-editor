@@ -446,8 +446,8 @@
   {
     "name": "builtin.language-basics-shellscript",
     "repository": "github.com/lvce-editor/language-basics-shellscript",
-    "version": "1.14.2",
-    "sha256": "09c3d9b954219e643a22c472e8a8add55f53e2fbde777f66f8c2fc6806926e16",
+    "version": "1.14.3",
+    "sha256": "a271871edfec0e071b903f00e0b354bf502ed19e8936077cba9ba8ef54034184",
     "created": "2022-06-16"
   },
   {
