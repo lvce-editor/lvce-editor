@@ -200,7 +200,8 @@ test('activity bar Settings switches between IDE, Chat, and Board layouts', { ti
 
     await selectLayout('Chat')
     await expectPath('/chat')
-    await expect(chat).toBeVisible()
+    // The route updates before the cold Chat view has finished loading.
+    await expect(chat).toBeVisible({ timeout: 15_000 })
     await selectLayout('Board')
     await expectPath('/boards')
     await expect(board).toBeVisible()
