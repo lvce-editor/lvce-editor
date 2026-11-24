@@ -92,6 +92,7 @@ export const getModuleId = (commandId: any): any => {
     case 'ElectronWindow.openNewWithEditorInput':
     case 'ElectronWindow.openNewWithUri':
     case 'ElectronWindow.reload':
+    case 'ElectronWindow.setAppearance':
     case 'ElectronWindow.setBrowserFullWidthGestureEnabled':
     case 'ElectronWindow.show':
     case 'ElectronWindow.takeEditorTransfer':
