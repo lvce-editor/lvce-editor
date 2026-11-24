@@ -59,6 +59,11 @@ jobs:
         env:
           DOWNLOAD_BUILTIN_EXTENSIONS: 0
           PYTHON: ${{ steps.python.outputs.python-path }}
+      - name: Trace native TypeScript watcher on Windows
+        if: matrix.os == 'windows-2025'
+        run: |
+          node packages/build/scripts/prepare-typescript-language-server.ts
+          node --import ./scripts/trace-typescript-watch-ci.mjs scripts/test-typescript-language-server.mjs
       - name: Verify native build Python
         if: runner.os == 'Windows'
         env:
