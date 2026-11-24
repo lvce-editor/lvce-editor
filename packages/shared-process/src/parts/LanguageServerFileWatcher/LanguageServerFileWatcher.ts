@@ -36,8 +36,8 @@ export class LanguageServerFileWatcher {
   private readonly changes: FileChange[] = []
   private flushTimer: ReturnType<typeof setTimeout> | undefined
 
-  constructor(rootUri: string, sendChanges: (changes: readonly FileChange[]) => void) {
-    this.workspace = fileURLToPath(rootUri)
+  constructor(workspacePath: string, sendChanges: (changes: readonly FileChange[]) => void) {
+    this.workspace = workspacePath
     this.sendChanges = sendChanges
   }
 

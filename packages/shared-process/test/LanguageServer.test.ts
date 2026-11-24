@@ -331,12 +331,14 @@ test('references returns no locations when the language server does not support 
   ).resolves.toEqual([])
 })
 
-test('diagnostic supports published diagnostics and uses the provided workspace root', async () => {
+const diagnosticWorkspaceRoots = ['file:///tmp/sample-workspace', 'file:///tmp/sample%2Fworkspace']
+
+test.each(diagnosticWorkspaceRoots)('diagnostic uses the provided workspace root %s', async (rootUri) => {
   const options = {
     argv: [pushDiagnosticsServerScript],
     extensionId: 'sample.extension',
     id: 'sample.push-diagnostics-fixture',
-    rootUri: 'file:///tmp/sample-workspace',
+    rootUri,
     textDocument: {
       languageId: 'elm',
       text: 'invalid',
@@ -347,7 +349,7 @@ test('diagnostic supports published diagnostics and uses the provided workspace 
 
   await expect(diagnostic(options)).resolves.toEqual([
     {
-      message: 'fixtureDiagnostic:invalid:file:///tmp/sample-workspace',
+      message: `fixtureDiagnostic:invalid:${rootUri}`,
       range: {
         end: { character: 3, line: 0 },
         start: { character: 0, line: 0 },

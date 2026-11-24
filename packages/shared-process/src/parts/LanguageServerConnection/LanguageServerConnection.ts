@@ -133,13 +133,16 @@ const containsPosition = (value: unknown, position: Position): boolean => {
   )
 }
 
-const getWorkspaceName = (rootUri: string): string => {
+const getWorkspacePath = (rootUri: string): string | undefined => {
   try {
-    return basename(fileURLToPath(rootUri)) || 'workspace'
+    return fileURLToPath(rootUri)
   } catch {
-    return 'workspace'
+    // A language server can use roots that the local filesystem cannot watch.
+    return undefined
   }
 }
+
+const getWorkspaceName = (rootUri: string): string => basename(getWorkspacePath(rootUri) ?? '') || 'workspace'
 
 const createDeferred = (): Deferred => {
   let resolve = (): void => {}
@@ -188,8 +191,9 @@ export class LanguageServerConnection {
   constructor({ argv, refreshDiagnostics, rootUri, uri }: LanguageServerConnectionOptions) {
     this.rootUri = rootUri
     this.refreshDiagnostics = refreshDiagnostics
-    if (rootUri.startsWith('file:')) {
-      this.fileWatcher = new LanguageServerFileWatcher(rootUri, (changes) => {
+    const workspacePath = getWorkspacePath(rootUri)
+    if (workspacePath) {
+      this.fileWatcher = new LanguageServerFileWatcher(workspacePath, (changes) => {
         this.sendNotification('workspace/didChangeWatchedFiles', { changes })
       })
     }
