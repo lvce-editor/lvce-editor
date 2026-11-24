@@ -289,6 +289,9 @@ export class LanguageServerConnection {
           uri: textDocument.uri,
         },
       })
+      // The server can return diagnostics while the initial watch is scanning.
+      // Changes made in response to those diagnostics need an active watch.
+      await this.fileWatcher?.waitUntilReady()
       if (result && typeof result === 'object' && Array.isArray((result as { readonly items?: unknown }).items)) {
         return (result as { readonly items: readonly unknown[] }).items
       }

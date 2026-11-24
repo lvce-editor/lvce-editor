@@ -64,6 +64,14 @@ export class LanguageServerFileWatcher {
     }
   }
 
+  async waitUntilReady(): Promise<void> {
+    try {
+      await this.subscription?.ready
+    } catch {
+      // The registration request reports the watcher failure.
+    }
+  }
+
   unregister(id: string): void {
     this.patterns.delete(id)
     if (this.patterns.size === 0) {
