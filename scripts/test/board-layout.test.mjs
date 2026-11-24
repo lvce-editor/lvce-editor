@@ -187,6 +187,12 @@ test('board layout loads independently and tracks navigation paths', { timeout: 
 test('activity bar Settings switches between IDE, Chat, and Board layouts', { timeout: 120_000 }, async () => {
   await withWorkbench({ 'chat2.useMockBackend': true, 'chat2.experimentalFocusMode': true }, async (browser, url) => {
     const page = await browser.newPage({ viewport: { width: 1280, height: 800 } })
+    const browserErrors = []
+    page.on('console', (message) => {
+      if (message.type() === 'error') browserErrors.push(message.text())
+    })
+    page.on('pageerror', (error) => browserErrors.push(error.message))
+    page.on('requestfailed', (request) => browserErrors.push(`${new URL(request.url()).pathname} ${request.failure()?.errorText}`))
     await page.goto(url)
     const activityBar = page.locator('.ActivityBarLayout')
     const chat = page.locator('.ChatAiNativeLayout')
@@ -198,10 +204,21 @@ test('activity bar Settings switches between IDE, Chat, and Board layouts', { ti
       await page.getByRole('menuitem', { name: label, exact: true }).click()
     }
 
+    const getLayoutState = () =>
+      page.evaluate(() => ({
+        workbench: document.querySelector('.Workbench')?.className,
+        explorer: Boolean(document.querySelector('.Explorer')),
+        chatViews: [...document.querySelectorAll('[class*="ChatAiNative"], .ChatDetailView')].map((element) => element.className).slice(0, 10),
+      }))
+    const beforeChat = await getLayoutState()
     await selectLayout('Chat')
     await expectPath('/chat')
-    // The route updates before the cold Chat view has finished loading.
-    await expect(chat).toBeVisible({ timeout: 15_000 })
+    try {
+      await expect(chat).toBeVisible()
+    } catch (error) {
+      console.error('Chat layout switch failed', { beforeChat, afterChat: await getLayoutState(), browserErrors: browserErrors.slice(-20) })
+      throw error
+    }
     await selectLayout('Board')
     await expectPath('/boards')
     await expect(board).toBeVisible()
