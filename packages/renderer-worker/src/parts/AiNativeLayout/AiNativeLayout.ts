@@ -1,3 +1,4 @@
+import { boardViewId } from '../BoardLayout/BoardLayout.js'
 import * as Id from '../Id/Id.js'
 import * as OpenUri from '../OpenUri/OpenUri.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
@@ -16,7 +17,7 @@ export const enter = (state: LayoutState) => ViewletLayout.enterSideBarFocusMode
 
 export const handleActivityBarWheel = async (state: LayoutState, deltaY: number): Promise<LayoutState> => {
   if (!Number.isFinite(deltaY) || deltaY === 0) return state
-  const board = state.aiNativeLayout && state.sideBarView === 'chat2.views.board'
+  const board = state.aiNativeLayout && state.sideBarView === boardViewId
   if ((deltaY > 0 && !state.aiNativeLayout) || (deltaY < 0 && board)) return state
   const command = board ? 'chat2.showAiNativeLayout' : deltaY < 0 && state.aiNativeLayout ? 'chat2.showBoardLayout' : 'chat2.toggleAiNativeLayout'
   const now = Date.now()

@@ -3,6 +3,7 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import * as Path from '../Path/Path.ts'
+import { removeQueryParameters } from '../RemoveQueryParameters/RemoveQueryParameters.ts'
 import * as Root from '../Root/Root.ts'
 import * as StaticPath from '../StaticPath/StaticPath.ts'
 
@@ -57,7 +58,7 @@ const getRemoteAbsolutePath = (pathName: string): string => {
 
 // TODO clean up this code
 export const getElectronFileResponseAbsolutePath = (pathName: any): any => {
-  if (appRoutePattern.test(pathName)) {
+  if (appRoutePattern.test(removeQueryParameters(pathName))) {
     const staticPath = StaticPath.getStaticPath()
     return Path.join(staticPath, 'index.html')
   }

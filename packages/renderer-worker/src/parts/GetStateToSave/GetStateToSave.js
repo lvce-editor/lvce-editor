@@ -10,11 +10,6 @@ export const getStateToSave = async () => {
   return {
     instances: GetWorkspaceScopedViewletStates.getWorkspaceScopedViewletStates(savedInstances, workspaceUri),
     mainEditors: [],
-    workspace: {
-      path: Workspace.state.workspacePath,
-      homeDir: Workspace.state.homeDir,
-      pathSeparator: Workspace.state.pathSeparator,
-      uri: Workspace.state.workspaceUri,
-    },
+    workspace: Workspace.getWorkspaceToSave(),
   }
 }
