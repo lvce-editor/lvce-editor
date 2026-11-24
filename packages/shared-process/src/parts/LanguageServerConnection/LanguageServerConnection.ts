@@ -176,6 +176,7 @@ export class LanguageServerConnection {
   private readonly ready: Promise<void>
   private readonly rootUri: string
   private readonly fileWatcher: LanguageServerFileWatcher | undefined
+  private readonly isBundledTypeScript: boolean
   private readonly refreshDiagnostics: (() => void) | undefined
   private initializationProgressWasStarted = false
   private nextRequestId = 1
@@ -190,6 +191,7 @@ export class LanguageServerConnection {
 
   constructor({ argv, refreshDiagnostics, rootUri, uri }: LanguageServerConnectionOptions) {
     this.rootUri = rootUri
+    this.isBundledTypeScript = uri === 'lvce-language-server:typescript'
     this.refreshDiagnostics = refreshDiagnostics
     const workspacePath = getWorkspacePath(rootUri)
     if (workspacePath) {
@@ -283,6 +285,11 @@ export class LanguageServerConnection {
   async diagnostic(textDocument: TextDocument): Promise<readonly unknown[]> {
     await this.ready
     if (this.supportsPullDiagnostics) {
+      // The bundled server can return its first diagnostics before registering
+      // file watches. Capture any intervening edits for that registration.
+      if (this.isBundledTypeScript) {
+        await this.fileWatcher?.prepare()
+      }
       this.syncDocument(textDocument)
       const result = await this.sendRequest('textDocument/diagnostic', {
         textDocument: {

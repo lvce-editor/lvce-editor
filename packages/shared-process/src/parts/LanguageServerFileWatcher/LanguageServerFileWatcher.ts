@@ -11,6 +11,11 @@ interface FileChange {
   readonly uri: string
 }
 
+interface WatchEvent {
+  readonly event: keyof typeof eventTypes
+  readonly file: string
+}
+
 interface Pattern {
   readonly glob: string
   readonly kind: number
@@ -34,6 +39,7 @@ export class LanguageServerFileWatcher {
   private readonly sendChanges: (changes: readonly FileChange[]) => void
   private subscription: { readonly controller: AbortController; readonly ready: Promise<void> } | undefined
   private readonly changes: FileChange[] = []
+  private pendingEvents: WatchEvent[] | undefined
   private flushTimer: ReturnType<typeof setTimeout> | undefined
 
   constructor(workspacePath: string, sendChanges: (changes: readonly FileChange[]) => void) {
@@ -44,13 +50,12 @@ export class LanguageServerFileWatcher {
   async register(id: string, watchers: readonly Watcher[]): Promise<void> {
     const patterns = watchers.map((watcher) => parseWatcher(this.workspace, watcher))
     this.patterns.set(id, patterns)
-    // Keep one workspace watch per connection. Language servers can request
-    // broad patterns outside the project (for example, in its parent directory).
-    if (!this.subscription) {
-      const controller = new AbortController()
-      this.subscription = { controller, ready: this.subscribe(controller.signal) }
+    const pendingEvents = this.pendingEvents
+    this.pendingEvents = undefined
+    for (const { event, file } of pendingEvents ?? []) {
+      this.handleEvent(event, file)
     }
-    const subscription = this.subscription
+    const subscription = this.start()
     try {
       await subscription.ready
     } catch (error) {
@@ -61,6 +66,21 @@ export class LanguageServerFileWatcher {
         this.unregister(id)
       }
       throw error
+    }
+  }
+
+  async prepare(): Promise<void> {
+    if (!this.subscription) {
+      this.pendingEvents = []
+    }
+    const subscription = this.start()
+    try {
+      await subscription.ready
+    } catch (error) {
+      if (this.subscription === subscription) {
+        this.dispose()
+        console.warn(`[language-server] File watcher for ${this.workspace} failed: ${String(error)}`)
+      }
     }
   }
 
@@ -86,7 +106,18 @@ export class LanguageServerFileWatcher {
     clearTimeout(this.flushTimer)
     this.flushTimer = undefined
     this.changes.length = 0
+    this.pendingEvents = undefined
     subscription?.controller.abort()
+  }
+
+  private start(): NonNullable<LanguageServerFileWatcher['subscription']> {
+    // Keep one workspace watch per connection. Language servers can request
+    // broad patterns outside the project (for example, in its parent directory).
+    if (!this.subscription) {
+      const controller = new AbortController()
+      this.subscription = { controller, ready: this.subscribe(controller.signal) }
+    }
+    return this.subscription
   }
 
   private async subscribe(signal: AbortSignal): Promise<void> {
@@ -129,6 +160,10 @@ export class LanguageServerFileWatcher {
   }
 
   private handleEvent(event: keyof typeof eventTypes, file: string): void {
+    if (this.pendingEvents) {
+      this.pendingEvents.push({ event, file })
+      return
+    }
     const [kind, type] = eventTypes[event]
     const path = toGlobPath(file)
     const matches = [...this.patterns.values()].some((patterns) =>
