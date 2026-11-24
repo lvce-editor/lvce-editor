@@ -1,4 +1,5 @@
 import * as Bounds from '../Bounds/Bounds.js'
+import { boardViewId, isBoardPath } from '../BoardLayout/BoardLayout.js'
 import * as Application from '../Application/Application.ts'
 import * as ColorTheme from '../ColorTheme/ColorTheme.js'
 import * as Command from '../Command/Command.js'
@@ -129,7 +130,8 @@ export const startup = async (initData, platform, assetDir) => {
 
   Performance.mark(PerformanceMarkerType.WillStartupWorkbench)
   Location.initialize(initData.Location.href)
-  const detachedEditor = platform === PlatformType.Electron && new URL(initData.Location.href).searchParams.has('editorTransfer')
+  const { pathname: startupPath, searchParams } = new URL(initData.Location.href)
+  const detachedEditor = platform === PlatformType.Electron && searchParams.has('editorTransfer')
   const cpuProfile = platform === PlatformType.Electron && StartupCpuProfile.isEnabled(initData.Location.href)
   if (platform !== PlatformType.Web) {
     await LaunchSharedProcess.launchSharedProcess()
@@ -179,9 +181,26 @@ export const startup = async (initData, platform, assetDir) => {
 
   LifeCycle.mark(LifeCyclePhase.Twelve)
 
+  const isApplicationHost = platform === PlatformType.Web && searchParams.has('applicationHost')
+  const restoreLayout = !cpuProfile && !detachedEditor
+  const canDeferRemoteSsh =
+    platform === PlatformType.Electron && promptOptions === undefined && restoreLayout && !initData.Location.href.includes('/tests/')
+  // Layout is stored globally so it can be read before resolving the workspace.
+  const startupLayout = canDeferRemoteSsh ? await SaveState.getSavedViewletState(ViewletModuleId.Layout) : undefined
+  const deferRemoteSsh =
+    canDeferRemoteSsh &&
+    !searchParams.has('openUri') &&
+    (isBoardPath(startupPath) ||
+      (startupLayout?.aiNativeLayout === true && startupLayout.sideBarView === boardViewId && !/\/chat\/?$/.test(startupPath)))
+
   Performance.mark(PerformanceMarkerType.WillOpenWorkspace)
-  const isApplicationHost = platform === PlatformType.Web && new URL(initData.Location.href).searchParams.has('applicationHost')
-  if (!isApplicationHost) await Workspace.hydrate({ ...initData.Location, workspaceUri: initData.Config?.workspaceUri })
+  if (!isApplicationHost) {
+    await Workspace.hydrate({
+      ...initData.Location,
+      workspaceUri: initData.Config?.workspaceUri,
+      deferRemoteSsh,
+    })
+  }
   Performance.mark(PerformanceMarkerType.DidOpenWorkspace)
 
   if (promptOptions !== undefined) {
@@ -216,7 +235,7 @@ export const startup = async (initData, platform, assetDir) => {
   const layout = ViewletManager.create(ViewletModule.load, ViewletModuleId.Layout, 0, '', 0, 0, 0, 0)
   layout.uid = Id.create()
   const { uid } = layout
-  const layoutState = cpuProfile ? undefined : await SaveState.getSavedViewletState(ViewletModuleId.Layout)
+  const layoutState = canDeferRemoteSsh ? startupLayout : cpuProfile ? undefined : await SaveState.getSavedViewletState(ViewletModuleId.Layout)
   const commands = await ViewletManager.load(
     {
       getModule: ViewletModule.load,
@@ -230,7 +249,7 @@ export const startup = async (initData, platform, assetDir) => {
     },
     false,
     false,
-    { ...initData, ...layoutState, restore: !isTestRun && !cpuProfile && !detachedEditor, detachedEditor },
+    { ...initData, ...layoutState, restore: restoreLayout && !isTestRun, detachedEditor },
   )
   commands.splice(1, 1)
 
@@ -290,7 +309,7 @@ export const startup = async (initData, platform, assetDir) => {
   await Location.hydrate()
   Performance.mark(PerformanceMarkerType.DidLoadLocation)
   const { pathname } = new URL(await Location.getHref())
-  const initialLayoutActivationEvent = /\/(?:boards|board)\/?$/.test(pathname)
+  const initialLayoutActivationEvent = isBoardPath(pathname)
     ? 'onCommand:chat2.showBoardLayout'
     : pathname.endsWith('/chat')
       ? 'onCommand:chat2.show'
