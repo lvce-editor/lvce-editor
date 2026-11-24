@@ -161,6 +161,9 @@ jobs:
         if: runner.os == 'Linux'
         timeout-minutes: 5
         run: xvfb-run -a node --test scripts/test-board-window-appearance.mjs
+      - name: Test Boards startup with a saved Remote SSH workspace
+        if: runner.os == 'Linux'
+        run: xvfb-run -a node --test scripts/test/board-remote-ssh.test.mjs
       - name: Test native authentication process lifecycle (Linux)
         timeout-minutes: 5
         if: runner.os == 'Linux'

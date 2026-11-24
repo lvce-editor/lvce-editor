@@ -5,6 +5,7 @@ import * as BrowserFullWidth from '../BrowserFullWidth/BrowserFullWidth.js'
 import * as ActivityBarWorker from '../ActivityBarWorker/ActivityBarWorker.js'
 import * as ApplicationRegistry from '../ApplicationRegistry/ApplicationRegistry.ts'
 import * as Assert from '../Assert/Assert.ts'
+import { boardViewId } from '../BoardLayout/BoardLayout.js'
 import { assetDir } from '../AssetDir/AssetDir.js'
 import * as AuthAccessToken from '../AuthAccessToken/AuthAccessToken.js'
 import * as AuthWorker from '../AuthWorker/AuthWorker.js'
@@ -1007,6 +1008,9 @@ export const showSideBar = async (state: LayoutState, moduleId?: string, restore
   const { restore: defaultRestore, sideBarView: currentSideBarView } = state
   const shouldRestore = restore ?? defaultRestore
   const sideBarView = moduleId || currentSideBarView || ViewletModuleId.Explorer
+  if (state.applicationId === undefined && state.sideBarView === boardViewId && sideBarView !== boardViewId) {
+    await Workspace.resumeDeferredWorkspace()
+  }
   if (state.sideBarVisible) {
     const switchResult =
       state.sideBarView === sideBarView

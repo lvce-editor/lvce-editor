@@ -28,6 +28,7 @@ const workspaceProgressDelay = 300
 let workspaceChangeId = 0
 let nextWorkspaceProgressId = 0
 let currentWorkspaceProgress
+let deferredWorkspaceRoot
 const cancelledWorkspaceProgressIds = new Set()
 
 const clearWorkspaceProgressTimer = () => {
@@ -171,6 +172,7 @@ export const setPath = async (path) => {
   if (changeId !== workspaceChangeId) return
   // @ts-ignore
   state.workspacePath = path
+  deferredWorkspaceRoot = undefined
   // @ts-ignore
   state.workspaceUri = toWorkspaceUri(path)
   state.pathSeparator = pathSeparator
@@ -230,6 +232,7 @@ export const setUri = async (uri, connectionOrPathSeparator, legacyConnection, o
   if (state.workspaceUri !== uri) await WorkspaceConnection.dispose(uri)
   if (changeId !== workspaceChangeId) return false
   state.workspacePath = path
+  deferredWorkspaceRoot = undefined
   state.workspaceUri = uri
   state.pathSeparator = pathSeparator
   if (connection) {
@@ -335,7 +338,7 @@ const onWorkspaceChange = async () => {
   await GlobalEventBus.emitEvent('workspace.change', workspacePath)
 }
 
-export const hydrate = async ({ href, workspaceUri = '' }) => {
+export const hydrate = async ({ href, workspaceUri = '', deferRemoteSsh = false }) => {
   if (state.workspacePath) {
     return
   }
@@ -351,6 +354,29 @@ export const hydrate = async ({ href, workspaceUri = '' }) => {
   if (state.homeDir !== resolvedRoot.homeDir) {
     state.homeDir = resolvedRoot.homeDir
   }
+  if (deferRemoteSsh && resolvedRoot.uri?.startsWith('remote-ssh://')) {
+    deferredWorkspaceRoot = resolvedRoot
+    return
+  }
+  await restoreResolvedRoot(resolvedRoot)
+}
+
+export const getWorkspaceToSave = () => ({
+  homeDir: state.homeDir,
+  path: deferredWorkspaceRoot?.path ?? state.workspacePath,
+  pathSeparator: state.pathSeparator,
+  uri: deferredWorkspaceRoot?.uri ?? state.workspaceUri,
+})
+
+export const resumeDeferredWorkspace = async () => {
+  const resolvedRoot = deferredWorkspaceRoot
+  if (resolvedRoot) {
+    deferredWorkspaceRoot = undefined
+    await restoreResolvedRoot(resolvedRoot)
+  }
+}
+
+const restoreResolvedRoot = async (resolvedRoot) => {
   if (!FileSystem.canBeRestored(resolvedRoot.path)) {
     return
   }
