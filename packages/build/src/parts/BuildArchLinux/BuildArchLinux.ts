@@ -44,13 +44,6 @@ const copyElectronResult = async ({ product, version }) => {
     occurrence: `const ripGrepPath = getRipGrepPath() || rgPath`,
     replacement: `const ripGrepPath = 'rg'`,
   })
-
-  // because of using system electron, argv will be /usr/lib/electron /usr/lib/appName <path>
-  await Replace.replace({
-    path: `packages/build/.tmp/arch-linux/x64/usr/lib/${product.applicationName}/packages/main-process/src/parts/ParseCliArgs/ParseCliArgs.js`,
-    occurrence: `const relevantArgv = argv.slice(1)`,
-    replacement: `const relevantArgv = argv.slice(2)`,
-  })
 }
 
 const copyMetaFiles = async ({ product }) => {
