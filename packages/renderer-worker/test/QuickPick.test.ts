@@ -36,6 +36,14 @@ test('showEverything opens chat search in AI-native layout', async () => {
   expect(execute).toHaveBeenCalledWith('Viewlet.openWidget', 'QuickPick', 'chats')
 })
 
+test('showEverything opens the command palette in Boards layout', async () => {
+  getState.mockReturnValue({ aiNativeLayout: true, sideBarView: 'chat2.views.board' })
+
+  await QuickPick.showEveryThing()
+
+  expect(execute).toHaveBeenCalledWith('Viewlet.openWidget', 'QuickPick', 'everything')
+})
+
 test('showEverything preserves file search in IDE layout', async () => {
   getState.mockReturnValue({ aiNativeLayout: false })
 
