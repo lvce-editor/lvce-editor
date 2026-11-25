@@ -213,7 +213,7 @@ test('activity bar Settings switches between IDE, Chat, and Board layouts', { ti
   })
 })
 
-test('board stays visible while the separate chat worker initializes', { timeout: 120_000 }, async () => {
+test('Boards waits for Chat only when switching to Chat layout', { timeout: 120_000 }, async () => {
   await withWorkbench({ 'chat2.backendUrl': 'https://layout-transition.test', 'chat2.useMockBackend': false }, async (browser, url) => {
     await testLayoutTransition(browser, `${url}/`)
   })
