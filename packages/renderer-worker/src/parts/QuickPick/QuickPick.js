@@ -1,3 +1,4 @@
+import { boardViewId } from '../BoardLayout/BoardLayout.js'
 import * as Command from '../Command/Command.js'
 import { executeCallback2, registerCallback } from '../QuickPickEntriesCustom/QuickPickEntriesCustom.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
@@ -23,13 +24,14 @@ export const openGoToLine = () => {
 }
 
 export const showEveryThing = () => {
-  let aiNativeLayout = false
+  let useChatSearch = false
   try {
-    aiNativeLayout = ViewletStates.getState(ViewletModuleId.Layout).aiNativeLayout === true
+    const { aiNativeLayout, sideBarView } = ViewletStates.getState(ViewletModuleId.Layout)
+    useChatSearch = aiNativeLayout === true && sideBarView !== boardViewId
   } catch {
     // Layout state may not be initialized when quick pick is first opened.
   }
-  return show(aiNativeLayout ? 'chats' : 'everything')
+  return show(useChatSearch ? 'chats' : 'everything')
 }
 
 export const showColorTheme = () => {
