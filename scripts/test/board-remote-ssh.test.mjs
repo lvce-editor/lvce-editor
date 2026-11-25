@@ -22,7 +22,7 @@ const execute = (page, command, ...args) =>
     { command, args },
   )
 
-test('restoring Boards defers the saved Remote SSH workspace until switching layouts', { timeout: 180_000 }, async () => {
+test('Boards defers the saved Remote SSH workspace and allows native window close', { timeout: 180_000 }, async () => {
   const profile = await mkdtemp(join(tmpdir(), 'lvce-board-remote-ssh-'))
   const env = {
     ...process.env,
@@ -58,6 +58,7 @@ test('restoring Boards defers the saved Remote SSH workspace until switching lay
     const expectBoardsWithoutSsh = async () => {
       await expect(page.locator('.BoardSetupTitle')).toHaveText('Connect a board', { timeout: 30_000 })
       assert.equal(await execute(page, 'Workspace.getUri'), '')
+      assert.equal(await execute(page, 'Main.hasDirtyTabs'), false)
       const extensions = await execute(page, 'ExtensionManagement.getRunningExtensions')
       assert.ok(!extensions.some(({ id }) => id === 'builtin.remote-ssh'))
       await expect(page.getByText('Loading Remote SSH Workspace…')).toHaveCount(0)
@@ -80,8 +81,17 @@ test('restoring Boards defers the saved Remote SSH workspace until switching lay
     boardUrl.searchParams.set('workspace', workspaceUri)
     await page.goto(boardUrl.href)
     await expectBoardsWithoutSsh()
+
+    const nativeWindow = await app.browserWindow(page)
+    const closed = page.waitForEvent('close', { timeout: 10_000 })
+    await Promise.all([
+      closed,
+      nativeWindow.evaluate((window) => {
+        setImmediate(() => window.close())
+      }),
+    ])
   } finally {
-    // A Boards-only window can have no Main view to answer the normal close handshake.
+    // Force cleanup if the native close handshake fails.
     const child = app?.process()
     if (child?.exitCode === null && child.signalCode === null) {
       const exited = once(child, 'exit')

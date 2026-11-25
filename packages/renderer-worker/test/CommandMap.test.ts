@@ -1,6 +1,7 @@
 import { expect, jest, test } from '@jest/globals'
 import * as ClipBoardIpc from '../src/parts/ClipBoard/ClipBoard.ipc.js'
 import { commandMap } from '../src/parts/CommandMap/CommandMap.js'
+import * as ViewletStates from '../src/parts/ViewletStates/ViewletStates.js'
 
 test('registers the go-to-line quick pick command', () => {
   expect(commandMap['QuickPick.openGoToLine']).toBeDefined()
@@ -77,6 +78,10 @@ test('registers only direct extension node process commands', () => {
   expect(commandMap['ExtensionNodeRpc.invoke']).toBeUndefined()
 })
 
+test('the window-close RPC reports no dirty tabs before the Main view is loaded', async () => {
+  await expect(commandMap['Main.hasDirtyTabs']()).resolves.toBe(false)
+})
+
 test('window-close RPC commands preserve dirty results and save failures', async () => {
   const Command = await import('../src/parts/Command/Command.js')
   const dirty = jest.fn(() => true)
@@ -85,6 +90,13 @@ test('window-close RPC commands preserve dirty results and save failures', async
   Command.register('Main.saveAll', async () => {
     throw failure
   })
-  await expect(commandMap['Main.hasDirtyTabs']()).resolves.toBe(true)
-  await expect(commandMap['Main.saveAll']()).rejects.toBe(failure)
+  ViewletStates.set('Main', { factory: {}, renderedState: { uid: 2 }, state: { uid: 2 } })
+  try {
+    await expect(commandMap['Main.hasDirtyTabs']()).resolves.toBe(true)
+    await expect(commandMap['Main.saveAll']()).rejects.toBe(failure)
+  } finally {
+    ViewletStates.remove('Main')
+  }
+  await expect(commandMap['Main.hasDirtyTabs']()).resolves.toBe(false)
+  expect(dirty).toHaveBeenCalledTimes(1)
 })
