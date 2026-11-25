@@ -50,8 +50,8 @@
   {
     "name": "builtin.board-view",
     "repository": "github.com/lvce-editor/board-view-worker",
-    "version": "0.4.0",
-    "sha256": "8f7578a217ed2a19af82031d7ed5a46ef2d4eb013b67afa38ee4e234021fbf1f",
+    "version": "0.5.2",
+    "sha256": "67b106a911e8434fd7792a9bb39825023c81c347bd89c160e166d861b0e976b5",
     "created": "2026-11-19"
   },
   {
