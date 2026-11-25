@@ -5,6 +5,15 @@ import * as Platform from '../Platform/Platform.ts'
 const fallbackBackground = '#1e2324'
 const fallbackSymbolColor = '#74b1be'
 
+// Board uses a light surface independently of the workbench color theme.
+const boardBackground = '#ffffff'
+const appearanceByName = {
+  board: {
+    backgroundColor: boardBackground,
+    titleBarOverlay: { color: boardBackground, symbolColor: '#202124' },
+  },
+}
+
 const getColor = (colors: any, keys: any, fallback: any): any => {
   for (const key of keys) {
     if (colors[key]) {
@@ -53,15 +62,18 @@ export const getAppWindowOptions = async ({ preferences, preloadUrl, screenHeigh
       }
     : undefined
 
-  return GetBrowserWindowOptions.getBrowserWindowOptions({
-    background,
-    frame,
-    height: screenHeight,
-    preloadUrl,
-    titleBarOverlay,
-    titleBarStyle,
-    width: 800,
-    x: screenWidth - 800,
-    y: 0,
-  })
+  return {
+    ...GetBrowserWindowOptions.getBrowserWindowOptions({
+      background,
+      frame,
+      height: screenHeight,
+      preloadUrl,
+      titleBarOverlay,
+      titleBarStyle,
+      width: 800,
+      x: screenWidth - 800,
+      y: 0,
+    }),
+    appearanceByName,
+  }
 }

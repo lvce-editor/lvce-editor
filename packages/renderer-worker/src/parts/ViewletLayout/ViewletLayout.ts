@@ -3474,6 +3474,13 @@ export const setPathName = (state: LayoutState, pathName: string) => {
 }
 
 export const afterRender = async (oldState: LayoutState, newState: LayoutState) => {
+  if (newState.platform === PlatformType.Electron) {
+    const wasBoard = oldState.aiNativeLayout === true && oldState.sideBarView === 'chat2.views.board'
+    const isBoard = newState.aiNativeLayout === true && newState.sideBarView === 'chat2.views.board'
+    if (wasBoard !== isBoard) {
+      await ElectronWindow.setAppearance(isBoard ? 'board' : null)
+    }
+  }
   await BrowserFullWidth.afterRender(oldState, newState)
   const oldShowSideBarThings = !oldState.titleBarless && oldState.browserFullWidth?.hideTitleBar !== true
   const showSideBarThings = !newState.titleBarless && newState.browserFullWidth?.hideTitleBar !== true
