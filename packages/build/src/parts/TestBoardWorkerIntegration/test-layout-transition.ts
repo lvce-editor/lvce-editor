@@ -41,6 +41,15 @@ export const testLayoutTransition = async (browser: Browser, baseUrl: string): P
       })
       const bounds = await board.boundingBox()
       assert.ok(bounds, 'The expanded board must be visible before opening chat')
+      if (layout === 'IDE') {
+        await page.locator('.ActivityBarLayout').getByRole('button', { name: 'Settings', exact: true }).click()
+        await page.getByRole('menuitem', { name: 'Layout', exact: true }).hover()
+        await page.getByRole('menuitem', { name: 'IDE', exact: true }).click()
+        await board.waitFor({ state: 'hidden', timeout: 10_000 })
+        await page.locator('.Main').waitFor()
+        await page.waitForURL(new URL(baseUrl).href)
+        continue
+      }
       const workbench = page.locator('.Workbench')
       const classes = await workbench.getAttribute('class')
       await page.keyboard.press('Control+Shift+P')
@@ -64,16 +73,15 @@ export const testLayoutTransition = async (browser: Browser, baseUrl: string): P
       const chat = page.locator('.ChatView').first()
       await chat.waitFor()
       await board.waitFor({ state: 'detached' })
-      await page.waitForFunction((native) => {
+      await page.waitForFunction(() => {
         const workbench = globalThis.document.querySelector('.Workbench')
         const chat = globalThis.document.querySelector('.ChatView')
-        return workbench?.classList.contains('AiNativeLayout') === native && chat?.classList.contains('ChatAiNativeLayout') === native
-      }, layout === 'AI-Native Chat')
-      if (layout === 'IDE') await page.locator('.Main').waitFor()
+        return workbench?.classList.contains('AiNativeLayout') && chat?.classList.contains('ChatAiNativeLayout')
+      })
     } finally {
       finishLoading()
       await context.close()
     }
   }
-  process.stdout.write('board layout preserved while chat initializes: pass\n')
+  process.stdout.write('Boards transitions to Chat and IDE: pass\n')
 }
