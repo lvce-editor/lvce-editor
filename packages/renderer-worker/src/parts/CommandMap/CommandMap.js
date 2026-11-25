@@ -1,5 +1,6 @@
 import { waitForHost } from '../ApplicationHostReady/ApplicationHostReady.ts'
 import { execute, loadCommand } from '../Command/Command.js'
+import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
 const lazy =
   (key) =>
@@ -319,7 +320,12 @@ export const commandMap = {
   'LocalStorage.getText': lazy('LocalStorage.getText'),
   'LocalStorage.setJson': lazy('LocalStorage.setJson'),
   'LocalStorage.setText': lazy('LocalStorage.setText'),
-  'Main.hasDirtyTabs': lazy('Main.hasDirtyTabs'),
+  'Main.hasDirtyTabs': async () => {
+    if (!ViewletStates.hasState('Main')) {
+      return false
+    }
+    return execute('Main.hasDirtyTabs')
+  },
   'Main.saveAll': lazy('Main.saveAll'),
   'Main.focus': lazy('Main.focus'),
   'Main.handleClickClose': lazy('Main.handleClickClose'),
