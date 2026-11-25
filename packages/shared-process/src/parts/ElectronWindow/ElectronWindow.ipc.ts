@@ -13,6 +13,7 @@ export const Commands = {
   openNewWithEditorInput: ElectronWindow.openNewWithEditorInput,
   openNewWithUri: ElectronWindow.openNewWithUri,
   reload: ElectronWindow.reload,
+  setAppearance: ElectronWindow.setAppearance,
   setBrowserFullWidthGestureEnabled: ElectronWindow.setBrowserFullWidthGestureEnabled,
   show: ElectronWindow.show,
   takeEditorTransfer: ElectronWindow.takeEditorTransfer,

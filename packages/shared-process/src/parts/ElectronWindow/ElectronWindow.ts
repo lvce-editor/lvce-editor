@@ -136,4 +136,12 @@ export const setBrowserFullWidthGestureEnabled = (windowId: number, enabled: boo
   )
 }
 
+export const setAppearance = (windowId: number, appearance: string | null): Promise<void> => {
+  Assert.number(windowId)
+  if (appearance !== null) {
+    Assert.string(appearance)
+  }
+  return ParentIpc.invoke('ElectronWindow.setAppearance', windowId, appearance)
+}
+
 export { openNewWithEditorInput, takeEditorTransfer, completeEditorTransfer } from '../EditorTransfer/EditorTransfer.ts'

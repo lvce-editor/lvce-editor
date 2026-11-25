@@ -160,6 +160,10 @@ jobs:
           path: .tmp/electron-tab-move-tests
       - name: Install Electron for tab move regressions
         run: node node_modules/electron/install.js
+      - name: Test Board window colors in Electron (Linux)
+        if: runner.os == 'Linux'
+        timeout-minutes: 5
+        run: xvfb-run -a node --test scripts/test-board-window-appearance.mjs
       - name: Test Boards startup with a saved Remote SSH workspace
         if: runner.os == 'Linux'
         run: xvfb-run -a node --test scripts/test/board-remote-ssh.test.mjs

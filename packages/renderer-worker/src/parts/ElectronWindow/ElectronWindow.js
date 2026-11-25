@@ -38,4 +38,6 @@ export const show = forward('ElectronWindow.show')
 
 export const setBrowserFullWidthGestureEnabled = forward('ElectronWindow.setBrowserFullWidthGestureEnabled')
 
+export const setAppearance = forward('ElectronWindow.setAppearance')
+
 export const openNewWithUri = forward('ElectronWindow.openNewWithUri')
